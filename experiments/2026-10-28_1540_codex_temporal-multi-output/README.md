@@ -1,13 +1,35 @@
 # Shared multi-output training and 2026 study holdouts
 
-Status: **Both H100 fits are optimizing; first 1,000-update validation results available. Final validation/test verification remains pending.**
+Status: **Both 51,099-update H100 fits completed. Saved validation/test targets, losses and metrics passed independent verification; serving replay passed on TRAIN probes.**
 Agent/model: Codex / GPT-6. Date: 2026-10-28 UTC.
 
 [Prospective specification](../agents/codex/plans/2026-10-28_temporal-multi-output.md)
 · [live report](http://127.0.0.1:54502/dashboard.html)
 · [canonical registry](../experiment_log.md).
 
-## First validation checkpoint (provisional)
+
+## Final verified results
+
+[Full side-by-side report](results/summary.md), [prediction verification](results/prediction-verification.json) and [validation-only selection](results/validation-decision.json) are complete. Seed42 is the prespecified validation-selected condition; seed43 remains reported, including cases where it has stronger test metrics. Both completed fits exposed all3,493,132TRAIN observations; selected checkpoints occurred earlier (step7,000/32,000).
+
+| Metric | Seed42 | Seed43 |
+|---|---:|---:|
+| Literal IC50 validation Spearman, I | .4995 | .5344 |
+| Literal IC50 validation Spearman, II | .4248 | .4580 |
+| Literal IC50 older-study test Spearman, I (100exact) | .2392 | .2629 |
+| Literal IC50 older-study test Spearman, II (267exact) | .5199 | .6034 |
+|2026KD-via-IC50 test Spearman, I (592exact) | .4648 | .7250 |
+|2026same-protein ligand test AUROC, I | .9625 | .9687 |
+|2026same-protein ligand test AUROC, II | .8061 | .8188 |
+|Older source-reported MS positive/nondetection test AUROC, I | .1012 | .2119 |
+
+Generated unobserved backgrounds and measured assay-scoped nondetections are different populations; the last row is an important failure, not qualified general ligand discrimination. Many output/class cells lack validation or test support. The full report includes exact/censored loss, Pearson, RMSE,500nM decisions, AUPRC, source strata, uncertainty, gradient/feature coverage and register diagnostics. No native processing, DO:DM or TCR mechanism is qualified by these fits.
+
+The independent target replay allows1e-14relative/absolute tolerance for platform `log10` rounding; observed Linux/macOS differences were at most8.88e-16. Original failed and successful verification attempts are retained. No targets or predictions were changed.
+
+Later source curation/recovery is evaluated in the separate2026-10-29curated-data-retrain family. It does not alter this experiment's artifacts. The provisional progress notes below are historical snapshots.
+
+## First validation checkpoint (historical, provisional)
 
 Both seeds completed their first 1,000-update validation on the same frozen older
 study holdouts. These are worker-reported intermediate results, not final selected
@@ -74,7 +96,7 @@ and the live report. Repeated admission/dependency/sampler scans accounted for t
 long CPU startup. Current source CI at `dc307af6` passes both hosted runs
 40821271664 and 40821252677. The active H100 runtime remains the pinned `aa2b3f7a`.
 
-After collection and independent verification, the existing continuation generates
+Collection and independent verification generated
 `results/summary.md` with both seeds side by side: quantitative output/class/era
 metrics, generated and source-reported ligand comparisons, 500 nM classification,
 zero-support cells, actual exposures and selected/completed checkpoint coverage.
@@ -160,8 +182,9 @@ preserved. Dropped local log/controller connections do not restart the remote bu
 
 Predictive resources: requested `H100!`, maximum two workers, CPU8/64GiB RAM each.
 The original workers reported NVIDIA H100 80GB HBM3,85,009,367,040device bytes, Torch2.14.1+cu130,
-CUDA13.0; TF32/AMP/compile disabled. Fit runtime and held-out metrics remain pending.
-There is no preferred new checkpoint yet.
+CUDA13.0; TF32/AMP/compile disabled. Fit wall times were 35,615 / 47,121 s
+(optimizer 24,587 / 32,180 s). Seed 42 was selected by validation loss; both
+seeds and all held-out results are preserved above and in the final report.
 
 Software evidence: the final full shared suite passed **2,854 tests/four skips**
 in 327.09 seconds; 112 focused source checks and 37 family fixtures pass. The earlier

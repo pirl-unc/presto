@@ -14660,3 +14660,39 @@ right-limit rows, and 535,026 unused supplementary MS rows with unknown PTM.
 All admitted original labels are IEDB in this snapshot; CEDAR adds no unique
 index assays. Source recuration/admission and model experiments remain in the
 common-path backlog; no labels, held-outs or frozen fits changed.
+
+## 2026-10-29 — Implement measurement curation and recover source data
+
+Spec: experiments/agents/codex/plans/2026-10-29_measurement-curation-recovery.md.
+- [x] Trace method-tag ownership; file focused upstream issues and fix local interpretation.
+- [x] Integrate upper/lower censor detection and evidence provenance in common admission.
+- [x] Repair supplementary modification transport and recover source-qualified records.
+- [ ] Acquire and reconcile additional public pMHC measurement sources.
+- [ ] Verify shared implementation, source deltas and reproducibility; update PR/registry.
+
+## 2026-10-29 — Assess identity-pretraining ideas and file experiments
+
+Spec: experiments/agents/codex/plans/2026-10-29_identity-pretraining-issues.md.
+- [x] Inspect existing identity/resolution code, prior results and related issues.
+- [x] Review primary evidence and distinguish metadata, pairing and phenotype labels.
+- [x] Publish focused experiments, verify issue contents and record priorities.
+
+Review: Presto issues #133–#137 cover all seven proposed annotation tasks and the
+two-stage/override comparison, extending #46/#115/#123/#130. GitHub read-back
+matches all five reviewed drafts. Existing identity/resolver plumbing is reused;
+the current trained checkpoint has those heads disabled. The old reference-
+membership negative result is retained. This task launches no experiments and
+changes no model or dataset.
+## 2026-10-29 — Continue data improvements and retrain
+
+Spec: experiments/agents/codex/plans/2026-10-29_curated-data-retrain.md.
+- [ ] Finish upstream transport release and verify recovered source forms.
+- [x] Prepare and independently verify a frozen combined cohort with fixed holdouts.
+- [x] Launch two common H100! fits and publish live side-by-side validation.
+- [ ] Verify final metrics, compare parent results and close experiment artifacts.
+
+Retrain review: 3,519,577 frozen TRAIN rows, 51,471 updates per seed. Both saved
+H100 calls submitted; full preflight/optimization and final results pending. The
+source-positive blacklist amendment removes exactly 35 generated TRAIN rows and
+flags three fixed TEST labels. 172 focused checks and independent CPU preparation
+pass. Hitlist PR 872 merged at ff5247f; clean-main release gate 40948383762 running.

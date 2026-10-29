@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Presto — curated data retraining</title>
+<style>body{font:16px/1.5 system-ui,sans-serif;color:#18252d;background:#f6f8fa;margin:32px auto;max-width:1400px;padding:0 24px}h1{font-size:28px;margin-bottom:8px}p{max-width:1000px}.muted{color:#526673;font-size:13px}table{border-collapse:collapse;background:white;width:100%;margin:20px 0}th,td{padding:12px 14px;border-bottom:1px solid #dce3e7;text-align:left;vertical-align:top}th{background:#eaf0f3}td.num{font-variant-numeric:tabular-nums}#state{padding:16px;border-left:4px solid #287c74;background:#edf5f3}.scroll{overflow:auto}a{color:#176a76}</style>
+<h1>Presto: retraining after data curation</h1>
+<p>Same shared model and study holdouts. New data include source-scoped inequality corrections and recovered MHC-II ligands. Parent columns show previously selected checkpoints; new columns show the latest completed validation. These are different training stages, not matched-step comparisons.</p>
+<p id="stamp" class="muted">Loading local status…</p><div id="state"></div>
+<div class="scroll"><table id="metrics"></table></div>
+<p class="muted">Quantitative cells: Spearman ρ · RMSE in log₁₀(nM), except half-life in log₁₀(minutes), koff in log₁₀(1/s), and td50 in °C. Binary cells: AUROC · AUPRC. Bounds contribute inequality loss and are excluded from rank/RMSE metrics. Generated ligand comparators are unobserved peptides, not measured nonbinders.</p>
+<p><a href="results/live.json">Live data</a> · <a href="results/summary.md">Final verified report when available</a> · <a href="results/parent-comparison.md">Final parent comparison when available</a></p>
+<script>
+const names=['parent-s42','curated-multi-s42','parent-s43','curated-multi-s43'];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const n=x=>x==null?'—':Number(x).toLocaleString();
+const f=x=>x==null?'—':Number(x).toFixed(4);
+const cell=(m,binary=false)=>m?`${f(binary?m.auroc:m.spearman)} · ${f(binary?m.auprc:m.rmse)}<div class="muted">${n(binary?m.n:m.n_exact)} ${binary?'observations':'exact observations'}</div>`:'—';
+async function refresh(){try{let s=await(await fetch('results/live.json?t='+Date.now())).json(),r=Object.fromEntries(s.runs.map(x=>[x.condition,x]));
+document.getElementById('stamp').textContent='Updated '+new Date(s.refreshed_unix*1000).toLocaleTimeString()+(s.poll_error?' · remote poll failed; last received state retained':'');
+document.getElementById('state').textContent=s.preparation.stage+'. '+n(s.train_rows)+' frozen TRAIN observations; '+n(s.planned_steps)+' planned updates per new fit.';
+let head='<tr><th>Validation output / population</th><th>MHC</th>'+names.map(k=>`<th>${esc(k)}<div class="muted">${esc(r[k]?.status?.status||'not launched')} · ${n(r[k]?.progress?.steps)} / ${n(r[k]?.progress?.max_steps??s.planned_steps)}</div></th>`).join('')+'</tr>', keys=new Set();
+for(let x of s.runs)for(let[e,m]of Object.entries(x.metrics?.validation||{}))if(e!=='elution_observation')for(let c of Object.keys(m.by_class||{}))keys.add(e+'|'+c);
+let body=[...keys].sort().map(k=>{let[e,c]=k.split('|');return`<tr><td>${esc(e)}</td><td>${c}</td>${names.map(name=>`<td class="num">${cell(r[name]?.metrics?.validation?.[e]?.by_class?.[c],e==='qualitative_binding')}</td>`).join('')}</tr>`;}).join('');
+for(let kind of ['same_protein','reference_proteome'])for(let c of ['I','II']){let values=names.map(name=>r[name]?.ligand_validation?.backgrounds?.[kind]?.metrics?.elution_observation?.by_class?.[c]);if(values.some(Boolean))body+=`<tr><td>Ligands / ${esc(kind.replaceAll('_',' '))}</td><td>${c}</td>${values.map(v=>`<td class="num">${cell(v,true)}</td>`).join('')}</tr>`;}
+let studies=new Set();for(let x of s.runs)for(let z of x.ligand_validation?.source_reported_by_study||[])if(z.metrics?.elution_observation?.auroc!=null)studies.add(z.study+'|'+z.mhc_class);
+for(let key of [...studies].sort()){let[study,c]=key.split('|');body+=`<tr><td>Reported MS outcomes / ${esc(study)}</td><td>${c}</td>${names.map(name=>`<td class="num">${cell(r[name]?.ligand_validation?.source_reported_by_study?.find(z=>z.study===study&&z.mhc_class===c)?.metrics?.elution_observation,true)}</td>`).join('')}</tr>`;}
+document.getElementById('metrics').innerHTML=head+body;
+}catch(e){document.getElementById('stamp').textContent='Status unavailable: '+e.message;}}refresh();setInterval(refresh,20000);
+</script></html>

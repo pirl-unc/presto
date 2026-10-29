@@ -875,3 +875,34 @@ Keep applicability reporting separate from model features and the measured label
   cellular stabilization are different observations despite their shared readout.
 
 - Git alternates must point to a durable checkout/object store, never a temporary directory. A sparse checkout can appear usable until commit or historical traversal discovers missing borrowed objects. Recover immutable objects by verified hash and check connectivity; do not reset working files or remove refs to hide the failure.
+
+## 2026-10-29 — Turn source audits into shared curation
+
+- When asked to fix data coverage/label quality, integrate the audit into source
+  admission and recover real qualified records. Filing a broad issue or leaving a
+  candidate list is not completion. Upper-limit review must include lower floors.
+- Preserve source-owned semantics and report upstream errors with reproducible
+  evidence; fix our interpretation locally. A quantity name is not an assay method.
+- Unknown PTM flags caused by dropped source fields require transport repair and
+  original-source review, not a blanket exclusion forever or blanket False fill.
+
+- Censoring thresholds start within a source/assay panel. Repeated allele panels,
+  submissions and mirrored archives are not independent support for a global
+  threshold. Shared thresholds need stricter independent evidence and verified
+  protocol equivalence; always show the source, direction, value and affected-row
+  counts before promoting a rule.
+
+- Explain an admission rejection using its actual cause in the audited cohort.
+  “Unsupported peptide” must not imply bad experimental data when the cause is
+  the model's minimum length. Distinguish excluded observations from distinct
+  sequences, preserve the source records, and state the architecture limitation.
+
+## 2026-10-29 — Recheck backgrounds when recovering positives
+
+- Recovered source positives can be missing from the earlier negative-sampling
+  blacklist even when source admission passes. Compare all verified positives,
+  including sequences excluded by current model geometry, against old generated
+  TRAIN and held-out comparisons before combining cohorts. Remove declared TRAIN
+  conflicts, embargo recovered held-out overlaps, and preserve fixed test labels
+  with a separate source-defined sensitivity analysis. Never silently change the
+  evaluation denominator or assume known presentation proves binding every MHC.

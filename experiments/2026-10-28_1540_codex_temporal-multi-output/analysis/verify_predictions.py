@@ -172,7 +172,10 @@ def main():
                 assert row['split'] == split
                 for key in ('observation_id', 'peptide', 'source', 'endpoint', 'qualifier'):
                     assert row[key] == obs[key]
-                assert row['target'] == encoded(obs)
+                # Linux and macOS libm log10 can differ by a final float64 bit.
+                # Keep this far below float32/training precision while rejecting
+                # changed physical values, units or endpoint encodings.
+                assert math.isclose(row['target'], encoded(obs), rel_tol=1e-14, abs_tol=1e-14)
                 cls = ';'.join(sorted(set(row['mhc_classes'])))
                 count[f'{split}:{row["endpoint"]}:{cls}:{row["qualifier"]}'] += 1
             assert dict(count) == {

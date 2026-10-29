@@ -388,3 +388,19 @@ The12-fit follow-up is closed in [2026-10-28_0250_codex_assay-transfer-mechanism
   candidates before any censor overrides. Original labels and unresolved status
   must remain queryable. Preserve the common observation/model path and temporal
   split policy; candidate counts are not promised independent training growth.
+## 2026-10-29 — Identity pretraining and overridable conditioning
+
+Assessment and issue filing completed; detailed scope:
+[plan](plans/2026-10-29_identity-pretraining-issues.md). Follow-ups extend the
+single canonical encoder/manifest/trainer and existing #130 requirements.
+
+- [ ] Start with [molecular identity #133](https://github.com/pirl-unc/presto/issues/133)
+  and [MHC pair consistency #134](https://github.com/pirl-unc/presto/issues/134),
+  measuring downstream I/II affinity transfer, not just annotation accuracy.
+- [ ] Compare [auxiliary-only versus soft conditioning/overrides #137](https://github.com/pirl-unc/presto/issues/137)
+  on qualified identity data, retaining the richer sequence representations.
+- [ ] Qualify [phenotyped CD4/CD8 receptor pretraining #135](https://github.com/pirl-unc/presto/issues/135)
+  with donor/receptor-group holdouts and independent downstream outcomes.
+- [ ] Revisit [peptide/protein taxonomy #136](https://github.com/pirl-unc/presto/issues/136)
+  only with explicit ambiguity/context contracts and the prior failed reference
+  screen as a comparator. Lower priority than molecular identity/pair consistency.

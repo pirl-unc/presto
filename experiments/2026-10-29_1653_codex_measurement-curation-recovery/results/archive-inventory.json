@@ -1,0 +1,1903 @@
+[
+  {
+    "id": "mhcflurry-data_references",
+    "archive_sha256": "4152f9e6684f437913fffdc4fdbf93a094b0c8680291c8937141f0ffaea4d958",
+    "members": [
+      {
+        "name": "GENERATE.sh",
+        "bytes": 2162
+      },
+      {
+        "name": "Homo_sapiens.GRCh38.98.gtf.gz",
+        "bytes": 46712404
+      },
+      {
+        "name": "LOG.txt.bz2",
+        "bytes": 3292
+      },
+      {
+        "name": "process.py",
+        "bytes": 3204
+      },
+      {
+        "name": "uniprot_proteins.csv.bz2",
+        "bytes": 22298783
+      },
+      {
+        "name": "uniprot_proteins.fm",
+        "bytes": 58336536
+      },
+      {
+        "name": "UP000005640_9606_additional.fasta.gz",
+        "bytes": 14584291
+      },
+      {
+        "name": "UP000005640_9606_DNA.fasta.gz",
+        "bytes": 9624065
+      },
+      {
+        "name": "UP000005640_9606_DNA.miss.gz",
+        "bytes": 3781
+      },
+      {
+        "name": "UP000005640_9606.fasta.gz",
+        "bytes": 7532851
+      },
+      {
+        "name": "UP000005640_9606.gene2acc.gz",
+        "bytes": 531237
+      },
+      {
+        "name": "UP000005640_9606.idmapping.gz",
+        "bytes": 17388499
+      }
+    ]
+  },
+  {
+    "id": "mhcflurry-data_mass_spec_annotated",
+    "archive_sha256": "187e91e5dad6497695a188c7c94db25d8cedcc9c6639a1074a0cdbb9567a3d1c",
+    "members": [
+      {
+        "name": "annotated_ms.csv.bz2",
+        "bytes": 100756636
+      },
+      {
+        "name": "annotate.py",
+        "bytes": 3974
+      },
+      {
+        "name": "GENERATE.sh",
+        "bytes": 1175
+      },
+      {
+        "name": "LOG.txt.bz2",
+        "bytes": 224707
+      }
+    ]
+  },
+  {
+    "id": "mhcflurry-data_systemhcatlas",
+    "archive_sha256": "3db7aaa297f03ff201f46d06e6a2702ce07038aef89593d15604feb315d4164a",
+    "members": [
+      {
+        "name": "data.csv.bz2",
+        "bytes": 15634129
+      },
+      {
+        "name": "GENERATE.sh",
+        "bytes": 1195
+      },
+      {
+        "name": "LOG.txt.bz2",
+        "bytes": 1439
+      }
+    ]
+  },
+  {
+    "id": "mhcflurry-data_iedb",
+    "archive_sha256": "d3d4575053ea06a1288c5f2582bd731c56117f36b4b5780338b19ed177694882",
+    "members": [
+      {
+        "name": "GENERATE.sh",
+        "bytes": 1119
+      },
+      {
+        "name": "LOG.txt.bz2",
+        "bytes": 375
+      },
+      {
+        "name": "mhc_ligand_full.csv.bz2",
+        "bytes": 156149639
+      },
+      {
+        "name": "tcell_full_v3.csv.bz2",
+        "bytes": 29353113
+      }
+    ]
+  },
+  {
+    "id": "mhcflurry-data_curated",
+    "archive_sha256": "784dc4c9769d4c0e836f07f7d358d753af96778dd2b359d42ff7d19f983ee640",
+    "members": [
+      {
+        "name": "curated_training_data.affinity.csv.bz2",
+        "bytes": 1722478,
+        "rows": 249802,
+        "fields": [
+          "allele",
+          "peptide",
+          "measurement_value",
+          "measurement_inequality",
+          "measurement_type",
+          "measurement_kind",
+          "measurement_source",
+          "original_allele"
+        ],
+        "strata": {
+          "measurement_inequality": {
+            "=": 130691,
+            "<": 30673,
+            ">": 88438
+          },
+          "measurement_type": {
+            "quantitative": 177438,
+            "qualitative": 72364
+          },
+          "measurement_kind": {
+            "affinity": 249802
+          },
+          "measurement_source": {
+            "Barlow - purified MHC/competitive/fluorescence": 6,
+            "Barlow - purified MHC/direct/fluorescence": 24,
+            "Steinaa - purified MHC/direct/fluorescence": 24,
+            "Morrison - cellular MHC/T cell inhibition": 45,
+            "Gao - purified MHC": 90,
+            "Ellis - cellular MHC/direct/fluorescence": 27,
+            " - purified MHC/competitive/fluorescence": 700,
+            "Srikumaran - cellular MHC/direct/fluorescence": 15,
+            "Nene - purified MHC": 2,
+            "Hess - cellular MHC/direct/fluorescence": 62,
+            "Planz - cellular MHC/direct/fluorescence": 7,
+            "Sette - purified MHC/competitive/radioactivity": 63881,
+            "Xia - purified MHC": 54,
+            "Xia - purified MHC/direct/radioactivity": 36,
+            "Kaufman - purified MHC": 4,
+            "Liu - purified MHC/direct/fluorescence": 5648,
+            "Kaufman - cellular MHC/direct/fluorescence": 14,
+            "Xia - purified MHC/direct/fluorescence": 17,
+            "Kaufman - purified MHC/direct/fluorescence": 31,
+            "Watkins - purified MHC/competitive/radioactivity": 22,
+            "Watkins - cellular MHC/competitive/radioactivity": 46,
+            "kim2014": 53680,
+            "Nayak - cellular MHC/direct/fluorescence": 2,
+            "Cerottini - cellular MHC/direct/fluorescence": 6,
+            "Gairin - cellular MHC/T cell inhibition": 1,
+            "Gairin - cellular MHC/competitive/fluorescence": 40,
+            "Yewdell - cellular MHC/competitive/fluorescence": 5641,
+            "Kandalaft - purified MHC/direct/fluorescence": 218,
+            "Sevilla - cellular MHC/direct/fluorescence": 12,
+            "Diamond - cellular MHC/direct/fluorescence": 59,
+            "Claesson - purified MHC/competitive/radioactivity": 26,
+            "Claesson - cellular MHC/direct/fluorescence": 26,
+            "Chen - cellular MHC/direct/fluorescence": 293,
+            "Hendricks - purified MHC/competitive/radioactivity": 15,
+            "Tscharke - purified MHC/competitive/radioactivity": 120,
+            "Yewdell - purified MHC/competitive/radioactivity": 6633,
+            "Wylie - cellular MHC/direct/fluorescence": 213,
+            "Dougan - cellular MHC/direct/fluorescence": 10,
+            "Perreault - cellular MHC/direct/fluorescence": 5,
+            "Hall - cellular MHC/competitive/fluorescence": 24,
+            "Cheever - cellular MHC/direct/fluorescence": 38,
+            "Kim - cellular MHC/direct/fluorescence": 187,
+            "Koide - cellular MHC/direct/fluorescence": 20,
+            "Mart\u00edn - cellular MHC/direct/fluorescence": 27,
+            "McElroy - purified MHC/competitive/radioactivity": 86,
+            "Gairin - cellular MHC/direct/fluorescence": 106,
+            "Frelinger - cellular MHC/direct/fluorescence": 9,
+            "Pinto - cellular MHC/direct/fluorescence": 46,
+            "Yewdell - cellular MHC/direct/fluorescence": 40,
+            "Manning - cellular MHC/direct/fluorescence": 21,
+            "Gairin - cellular MHC/competitive/radioactivity": 54,
+            "Frelinger - purified MHC/competitive/fluorescence": 2,
+            "Ljunggren - cellular MHC/direct/fluorescence": 84,
+            "Barber - cellular MHC/direct/fluorescence": 4,
+            "Kast - cellular MHC/direct/fluorescence": 183,
+            "Daemen - cellular MHC/direct/fluorescence": 62,
+            "DiLorenzo - cellular MHC/direct/fluorescence": 44,
+            "Harris - cellular MHC/direct/fluorescence": 34,
+            "Oldstone - purified MHC/competitive/radioactivity": 15,
+            "Gruta - purified MHC/competitive/radioactivity": 42,
+            "Blackman - purified MHC/competitive/radioactivity": 30,
+            "Reinherz - cellular MHC/direct/fluorescence": 164,
+            "Verheul - cellular MHC/direct/fluorescence": 12,
+            "Gissmann - cellular MHC/direct/fluorescence": 15,
+            "Kast - cellular MHC/competitive/fluorescence": 8,
+            "Dillner - cellular MHC/direct/fluorescence": 44,
+            "Tevethia - cellular MHC/direct/fluorescence": 16,
+            "Alsheikhly - cellular MHC/direct/fluorescence": 10,
+            "L\u00f3pez - cellular MHC/direct/fluorescence": 286,
+            "Vordermeier - cellular MHC/direct/fluorescence": 16,
+            "Sevilla - cellular MHC/competitive/fluorescence": 10,
+            "Shastri - T cell recognition": 3,
+            "Shastri - cellular MHC/direct/fluorescence": 10,
+            "Tarleton - cellular MHC/direct/fluorescence": 160,
+            "Chyu - purified MHC/direct/fluorescence": 26,
+            "Sampson - cellular MHC/direct/fluorescence": 4,
+            "Eisenbach - cellular MHC/direct/fluorescence": 5,
+            "Eloit - cellular MHC/direct/fluorescence": 9,
+            "Kioussis - cellular MHC/direct/fluorescence": 2,
+            "Sambhara - cellular MHC/direct/fluorescence": 2,
+            "Williams - cellular MHC/competitive/radioactivity": 1,
+            "Ashton-Rickardt - cellular MHC/direct/fluorescence": 8,
+            "Roopenian - coelution": 1,
+            "Roopenian - cellular MHC/direct/fluorescence": 4,
+            "Oldstone - cellular MHC/competitive/fluorescence": 8,
+            "Frelin - cellular MHC/direct/fluorescence": 34,
+            "Ploegh - cellular MHC/direct/fluorescence": 12,
+            "Ahmed - purified MHC/competitive/radioactivity": 112,
+            "Melief - cellular MHC/direct/fluorescence": 139,
+            "Sinclair - cellular MHC/direct/fluorescence": 39,
+            "Achour - cellular MHC/direct/fluorescence": 26,
+            "Chen - coelution": 1,
+            "Doherty - cellular MHC/direct/fluorescence": 17,
+            "Alves - binding assay": 10,
+            "Gairin - coelution": 3,
+            "Perlman - cellular MHC/direct/fluorescence": 9,
+            "Chisari - purified MHC/competitive/radioactivity": 134,
+            "Tishon - cellular MHC/T cell inhibition": 2,
+            "Nissen - cellular MHC/direct/fluorescence": 23,
+            "Sette - cellular MHC/competitive/radioactivity": 122,
+            "Appella - cellular MHC/direct/fluorescence": 6,
+            "Elliott - cellular MHC/direct/radioactivity": 7,
+            "Elliott - purified MHC/direct/radioactivity": 4,
+            "Wang - cellular MHC/direct/fluorescence": 317,
+            "Pease - cellular MHC/direct/fluorescence": 5,
+            "Wettstein - cellular MHC/direct/fluorescence": 17,
+            "Cerottini - cellular MHC/competitive/fluorescence": 8,
+            "Hendricks - cellular MHC/competitive/radioactivity": 4,
+            "Oldstone - cellular MHC/direct/fluorescence": 45,
+            "Oldstone - cellular MHC/competitive/radioactivity": 22,
+            "Kuckelkorn - cellular MHC/direct/fluorescence": 3,
+            "Shresta - purified MHC/competitive/radioactivity": 34,
+            "Kaplan - purified MHC/direct/fluorescence": 12,
+            "Cooke - cellular MHC/direct/fluorescence": 7,
+            "Kosmatopoulos - cellular MHC/direct/fluorescence": 3,
+            "LeGros - cellular MHC/direct/fluorescence": 9,
+            "Kennedy - cellular MHC/direct/fluorescence": 3,
+            "Townsend - cellular MHC/T cell inhibition": 14,
+            "Evavold - cellular MHC/direct/fluorescence": 8,
+            "Cerottini - cellular MHC/T cell inhibition": 6,
+            "Pisa - cellular MHC/direct/fluorescence": 8,
+            "Fling - cellular MHC/direct/fluorescence": 2,
+            "R\u00e9nia - cellular MHC/direct/fluorescence": 14,
+            "Morrison - cellular MHC/direct/fluorescence": 4,
+            "Townsend - lysate MHC/direct/radioactivity": 124,
+            "Hengartner - cellular MHC/direct/fluorescence": 14,
+            "Kohsaka - cellular MHC/direct/fluorescence": 24,
+            "Oldstone - purified MHC/competitive/fluorescence": 8,
+            "McMichael - cellular MHC/direct/radioactivity": 6,
+            "Bevan - coelution": 3,
+            "Ohlschl\u00e4ger - cellular MHC/direct/fluorescence": 6,
+            "Chen - T cell recognition": 20,
+            "Leipner - cellular MHC/T cell inhibition": 7,
+            "Ohashi - cellular MHC/direct/fluorescence": 4,
+            "Malarkannan - T cell recognition": 2,
+            "Nathenson - purified MHC/competitive/radioactivity": 4,
+            "Elliott - cellular MHC/direct/fluorescence": 6,
+            "Vukmanovi\u0107 - cellular MHC/direct/fluorescence": 1,
+            "Garc\u00eda-Carranc\u00e1 - cellular MHC/direct/fluorescence": 5,
+            "Srivastava - cellular MHC/direct/fluorescence": 16,
+            "Klarquist - cellular MHC/direct/fluorescence": 12,
+            "Vuola - cellular MHC/direct/fluorescence": 11,
+            "Tagliamonte - cellular MHC/direct/fluorescence": 12,
+            "Kast - cellular MHC/T cell inhibition": 6,
+            "Kast - cellular MHC/direct/radioactivity": 1,
+            "Mackova - cellular MHC/direct/fluorescence": 1,
+            "Woodland - cellular MHC/direct/fluorescence": 2,
+            "Ortiz-Navarrete - cellular MHC/direct/fluorescence": 6,
+            "Anderton - cellular MHC/direct/fluorescence": 3,
+            "Kakimi - cellular MHC/direct/fluorescence": 4,
+            "Hansen - cellular MHC/direct/fluorescence": 22,
+            "Gruta - purified MHC/direct/fluorescence": 1,
+            "Bevan - cellular MHC/direct/fluorescence": 1,
+            "Nemeckova - cellular MHC/direct/fluorescence": 2,
+            "Joyce - cellular MHC/competitive/fluorescence": 4,
+            "Nikolich-Zugich - cellular MHC/direct/fluorescence": 3,
+            "Thibault - cellular MHC": 8,
+            "Koopman - cellular MHC/direct/fluorescence": 9,
+            "Williams - binding assay": 1,
+            "Serreze - purified MHC": 2,
+            "Serreze - cellular MHC/direct/fluorescence": 6,
+            "Kappler - cellular MHC/direct/fluorescence": 2,
+            "Mariuzza - purified MHC": 1,
+            "Nabel - cellular MHC": 7,
+            "Splitter - purified MHC/competitive/radioactivity": 29,
+            "Grzimek - T cell recognition": 1,
+            "Jr - purified MHC/competitive/radioactivity": 66,
+            "Gonz\u00e1lez-Aseguinolaza - cellular MHC/direct/fluorescence": 30,
+            "Reddy - cellular MHC/direct/fluorescence": 2,
+            "Margulies - purified MHC/competitive/fluorescence": 16,
+            " - cellular MHC/direct/fluorescence": 1,
+            "Berzofsky - cellular MHC/direct/fluorescence": 69,
+            "Margulies - purified MHC/direct/fluorescence": 22,
+            "High - cellular MHC/T cell inhibition": 7,
+            "Reddehase - T cell recognition": 7,
+            "Grohmann - cellular MHC/direct/fluorescence": 6,
+            "Lukacher - cellular MHC/direct/radioactivity": 6,
+            "Neefjes - purified MHC/competitive/fluorescence": 13,
+            "Purcell - cellular MHC/direct/fluorescence": 18,
+            "Mariuzza - purified MHC/direct/fluorescence": 1,
+            "Connolly - cellular MHC/direct/fluorescence": 99,
+            "K\u00e4rre - cellular MHC/direct/fluorescence": 3,
+            "Nathenson - cellular MHC/T cell inhibition": 14,
+            "Stern - cellular MHC/direct/fluorescence": 15,
+            "Fan - purified MHC": 17,
+            "Sehrawat - purified MHC": 12,
+            "Selin - cellular MHC/direct/fluorescence": 4,
+            "Hall - cellular MHC/direct/fluorescence": 6,
+            "Dalianis - coelution": 2,
+            "Shastri - cellular MHC/competitive/fluorescence": 9,
+            "Eisen - cellular MHC/direct/fluorescence": 11,
+            "Plebanski - purified MHC/competitive/radioactivity": 14,
+            "Sehrawat - cellular MHC/direct/fluorescence": 8,
+            "Hamilton - cellular MHC/direct/fluorescence": 13,
+            "Sijts - cellular MHC/direct/fluorescence": 16,
+            "Tevethi - cellular MHC/direct/fluorescence": 3,
+            "Lipford - cellular MHC/direct/fluorescence": 6,
+            "Rosato - cellular MHC/competitive/fluorescence": 1,
+            "Golding - cellular MHC/direct/fluorescence": 6,
+            "Simas - cellular MHC/direct/fluorescence": 8,
+            "Turner - cellular MHC/direct/fluorescence": 2,
+            "Pease - cellular MHC/competitive/radioactivity": 2,
+            "Wilson - purified MHC/competitive/radioactivity": 4,
+            "Wilson - purified MHC": 2,
+            "Nathenson - Edman degradation": 2,
+            "Neefjes - purified MHC/direct/fluorescence": 6,
+            "Ovaa - purified MHC": 10,
+            "Springer - purified MHC/competitive/radioactivity": 2,
+            "Apostolopoulos - purified MHC/direct/radioactivity": 6,
+            "Jondal - cellular MHC/direct/fluorescence": 1,
+            "Neefjes - lysate MHC": 10,
+            "Moon - cellular MHC/direct/fluorescence": 4,
+            "Chain - cellular MHC/direct/fluorescence": 5,
+            "Weltzien - cellular MHC/T cell inhibition": 3,
+            "Shin - cellular MHC/competitive/fluorescence": 4,
+            "Delcommenne - purified MHC/competitive/fluorescence": 28,
+            "Weltzien - cellular MHC/direct/fluorescence": 7,
+            "Becker - cellular MHC/direct/radioactivity": 2,
+            "Reimann - purified MHC/competitive/radioactivity": 3,
+            "Behar - cellular MHC/direct/fluorescence": 5,
+            "Schmitt-Verhulst - cellular MHC/direct/fluorescence": 2,
+            "Malissen - purified MHC/direct/fluorescence": 1,
+            "Rammensee - Edman degradation": 55,
+            "Malissen - cellular MHC/T cell inhibition": 2,
+            "Grotenbreg - purified MHC": 242,
+            "Margulies - purified MHC": 1,
+            "Schreiber - cellular MHC": 2,
+            "Malarkannan - cellular MHC/competitive/fluorescence": 1,
+            "Engelhardt - coelution": 3,
+            "Ossendorp - cellular MHC/direct/fluorescence": 1,
+            "Salunke - cellular MHC/direct/fluorescence": 3,
+            "Stauss - cellular MHC/direct/fluorescence": 1,
+            "Perlman - cellular MHC": 2,
+            "Weltzien - cellular MHC/competitive/fluorescence": 1,
+            "Merghoub - cellular MHC/direct/fluorescence": 10,
+            "Apostolopoulos - cellular MHC/direct/fluorescence": 4,
+            "Apostolopoulos - binding assay": 1,
+            "Nikoli\u0107-Zugi\u0107 - cellular MHC/direct/fluorescence": 20,
+            "Malarkannan - coelution": 2,
+            "Cohen - cellular MHC/competitive/fluorescence": 2,
+            "Eisenlohr - T cell recognition": 1,
+            "Stern - cellular MHC/T cell inhibition": 1,
+            "Schneck - cellular MHC/direct/fluorescence": 3,
+            "Allison - cellular MHC/direct/fluorescence": 5,
+            "Allison - T cell recognition": 1,
+            "Selin - cellular MHC": 1,
+            "Quinn - cellular MHC/direct/fluorescence": 194,
+            "Corradin - cellular MHC/T cell inhibition": 73,
+            "Unanue - cellular MHC/direct/fluorescence": 67,
+            "Srivastava - purified MHC/competitive/radioactivity": 132,
+            "Santamaria - cellular MHC/direct/fluorescence": 88,
+            "Kourilsky - purified MHC/competitive/fluorescence": 14,
+            "Wei - purified MHC/competitive/radioactivity": 28,
+            "Pamer - cellular MHC/T cell inhibition": 34,
+            "Bennink - cellular MHC/direct/fluorescence": 23,
+            "Yewdell - coelution": 4,
+            "Braciale - cellular MHC/direct/fluorescence": 6,
+            "Maryanski - cellular MHC/competitive/radioactivity": 3,
+            "Wu - cellular MHC/direct/fluorescence": 108,
+            "Veelken - purified MHC/direct/fluorescence": 2,
+            "Singh - cellular MHC/direct/fluorescence": 5,
+            "Wood - cellular MHC/direct/fluorescence": 3,
+            "Harrison - cellular MHC/direct/fluorescence": 6,
+            "Weiss - purified MHC/competitive/fluorescence": 9,
+            "Geginat - coelution": 2,
+            "Pamer - cellular MHC/direct/fluorescence": 1,
+            "Askonas - cellular MHC/T cell inhibition": 10,
+            "Maryanski - cellular MHC/T cell inhibition": 16,
+            "Hoffman - purified MHC/competitive/radioactivity": 20,
+            "Doolan - purified MHC/competitive/radioactivity": 9,
+            "Pamer - coelution": 3,
+            "Jr - cellular MHC/direct/fluorescence": 77,
+            "Yewdell - cellular MHC/competitive/radioactivity": 1,
+            "Frey - cellular MHC/direct/fluorescence": 5,
+            "Srivastava - purified MHC/competitive/fluorescence": 2,
+            "Wong - cellular MHC/direct/fluorescence": 37,
+            "Braciale - cellular MHC/T cell inhibition": 2,
+            "Paterson - cellular MHC/direct/fluorescence": 1,
+            "Levy - cellular MHC/T cell inhibition": 4,
+            "L\u00f3pez - T cell recognition": 1,
+            "Abastado - purified MHC/competitive/radioactivity": 8,
+            "Jr - Edman degradation": 2,
+            "Krempl - cellular MHC/direct/fluorescence": 5,
+            "Jr - cellular MHC/competitive/fluorescence": 2,
+            "Pamer - T cell recognition": 2,
+            "Maryanski - purified MHC/competitive/radioactivity": 1,
+            "Srivastava - purified MHC/direct/fluorescence": 2,
+            "Blanden - T cell recognition": 1,
+            "Kourilsky - cellular MHC/direct/fluorescence": 1,
+            "Taylor - cellular MHC/T cell inhibition": 7,
+            "Tien - purified MHC/direct/fluorescence": 1,
+            "M\u00fcllbacher - cellular MHC/direct/fluorescence": 11,
+            "Herrmann - purified MHC/competitive/fluorescence": 20,
+            "Petersen - purified MHC/competitive/radioactivity": 4,
+            "Engberg - purified MHC/competitive/radioactivity": 145,
+            "Herrmann - Edman degradation": 9,
+            "Lobigs - cellular MHC/direct/fluorescence": 2,
+            "Brownlee - cellular MHC/T cell inhibition": 2,
+            "Buus - purified MHC/competitive/radioactivity": 1,
+            "Hosaka - coelution": 1,
+            "Hausmann - cellular MHC/direct/fluorescence": 1,
+            "Berzofsky - cellular MHC/T cell inhibition": 1,
+            "Lee - cellular MHC/direct/fluorescence": 75,
+            "Dilorenzo - cellular MHC/direct/fluorescence": 4,
+            "Stohlman - cellular MHC/T cell inhibition": 32,
+            "Blanchard - cellular MHC/direct/fluorescence": 5,
+            "Garcia - cellular MHC/direct/fluorescence": 9,
+            "Kranz - cellular MHC/direct/fluorescence": 6,
+            "Margulies - purified MHC/competitive/radioactivity": 6,
+            "Margulies - Edman degradation": 2,
+            "Chisari - cellular MHC/direct/fluorescence": 49,
+            "Hansen - cellular MHC/T cell inhibition": 2,
+            "Val - cellular MHC/direct/fluorescence": 2,
+            "Sykulev - cellular MHC/competitive/radioactivity": 2,
+            "Jaffee - T cell recognition": 1,
+            "Hansen - cellular MHC": 1,
+            "Buus - purified MHC/direct/fluorescence": 46135,
+            "Michel - purified MHC/competitive/radioactivity": 73,
+            "Jr - purified MHC/direct/fluorescence": 674,
+            "Buus - purified MHC/competitive/fluorescence": 18720,
+            "Maeurer - purified MHC/direct/fluorescence": 4431,
+            "Mishto - purified MHC/competitive/radioactivity": 90,
+            "K.Nair - purified MHC/competitive/fluorescence": 2821,
+            "K.Nair - purified MHC/direct/fluorescence": 2829,
+            "Mazor - cellular MHC": 216,
+            "Gaiha - cellular MHC/direct/fluorescence": 302,
+            "Gianfrani - purified MHC/competitive/radioactivity": 46,
+            "Buschow - purified MHC/direct/fluorescence": 128,
+            "Sabeti - purified MHC/competitive/radioactivity": 223,
+            "Engelhard - purified MHC/competitive/radioactivity": 37,
+            "Kubo - purified MHC/competitive/radioactivity": 88,
+            "Noe - purified MHC/competitive/fluorescence": 360,
+            "Meheus - purified MHC/competitive/radioactivity": 107,
+            "Defranoux - purified MHC/competitive/radioactivity": 500,
+            "Serra - purified MHC/competitive/radioactivity": 17,
+            "Ray - purified MHC/competitive/radioactivity": 3,
+            "Cox - purified MHC/competitive/radioactivity": 28,
+            "Wu - purified MHC/competitive/radioactivity": 168,
+            "Bagger - purified MHC": 179,
+            "Kast - purified MHC/competitive/radioactivity": 61,
+            "Hansen - purified MHC": 30,
+            "Gutierrez - purified MHC/competitive/fluorescence": 77,
+            "Fikes - purified MHC/competitive/radioactivity": 30,
+            "Sandt - binding assay": 81,
+            "Roggendorf - purified MHC": 41,
+            "Zheng - cellular MHC/direct/fluorescence": 24,
+            "Livingston - purified MHC/competitive/radioactivity": 97,
+            "Grey - purified MHC/competitive/radioactivity": 13,
+            "Poznansky - purified MHC/competitive/fluorescence": 65,
+            "Jotereau - cellular MHC/direct/fluorescence": 4,
+            "Doebele - purified MHC/competitive/radioactivity": 192,
+            "3) - purified MHC/competitive/radioactivity": 106,
+            "Gfeller - purified MHC/direct/fluorescence": 94,
+            "Dennehy - cellular MHC/direct/fluorescence": 5,
+            "Ph.D. - purified MHC/competitive/fluorescence": 7,
+            "Basner-Tschakarjan - purified MHC/direct/fluorescence": 11,
+            "Claesson - purified MHC/direct/fluorescence": 26,
+            "Eiz-Vesper - cellular MHC/competitive/fluorescence": 13,
+            "Lund - purified MHC/direct/fluorescence": 74,
+            "Sette - purified MHC/competitive/fluorescence": 82,
+            "Stryhn - purified MHC/direct/fluorescence": 14,
+            "Reche - purified MHC/competitive/radioactivity": 12,
+            "Grubeck-Loebenstein - cellular MHC/direct/fluorescence": 2,
+            "Wen - cellular MHC/direct/fluorescence": 40,
+            "Roep - purified MHC/competitive/fluorescence": 219,
+            "McElwee - cellular MHC/direct/fluorescence": 16,
+            "Suciu-Foca - Edman degradation": 9,
+            "Cunha-Neto - purified MHC/competitive/radioactivity": 94,
+            "Kurokohchi - purified MHC/competitive/radioactivity": 11,
+            "Ben-Yedidia - cellular MHC/direct/fluorescence": 2,
+            "Asquith - purified MHC": 191,
+            "Rosenberg - purified MHC/competitive/radioactivity": 27,
+            "Appella - purified MHC/competitive/radioactivity": 18,
+            "Bystryn - purified MHC/competitive/radioactivity": 67,
+            "Veelen - purified MHC/competitive/fluorescence": 44,
+            "Wu - purified MHC/direct/fluorescence": 27,
+            "Langlade-Demoyen - cellular MHC/direct/fluorescence": 23,
+            "Heemskerk - purified MHC/competitive/fluorescence": 29,
+            "Mallone - purified MHC/direct/fluorescence": 119,
+            "Ottenhoff - purified MHC/competitive/radioactivity": 14,
+            "Peters2 - purified MHC/competitive/radioactivity": 142,
+            "Jin - cellular MHC/direct/fluorescence": 16,
+            "Lantz - purified MHC/direct/fluorescence": 43,
+            "Kawakami - purified MHC/competitive/radioactivity": 91,
+            "Klein - cellular MHC/direct/fluorescence": 128,
+            "Gotch - purified MHC": 93,
+            "Soudeyns - cellular MHC/direct/fluorescence": 42,
+            "S\u00f6derholm - cellular MHC/direct/fluorescence": 166,
+            "Scadden - purified MHC/competitive/radioactivity": 38,
+            "Collins - cellular MHC/direct/fluorescence": 21,
+            "Chesnut - cellular MHC/T cell inhibition": 105,
+            "Coelho-Dos-Reis - High throughput multiplexed assay": 342,
+            "Lake - binding assay": 15,
+            "Melief - cellular MHC/competitive/fluorescence": 68,
+            "Langlade-Demoyen - purified MHC/competitive/radioactivity": 12,
+            "Lone - purified MHC/competitive/radioactivity": 9,
+            "Coligan - cellular MHC/T cell inhibition": 23,
+            "Werfel - cellular MHC/direct/fluorescence": 11,
+            "Mirza - cellular MHC/direct/fluorescence": 44,
+            "Dolcetti - cellular MHC/direct/fluorescence": 5,
+            "Liu - purified MHC": 117,
+            "Doeberitz - cellular MHC/direct/fluorescence": 21,
+            " - purified MHC/competitive/radioactivity": 312,
+            "Coligan - purified MHC/direct/radioactivity": 69,
+            "Cheong - cellular MHC/direct/fluorescence": 45,
+            "Nadler - cellular MHC/direct/fluorescence": 5,
+            "Kiessling - cellular MHC/direct/fluorescence": 21,
+            "Matsui - cellular MHC/direct/fluorescence": 92,
+            "Engleman - cellular MHC/direct/fluorescence": 7,
+            "Kiessling - purified MHC/competitive/radioactivity": 44,
+            "Kalams - purified MHC/competitive/radioactivity": 99,
+            "Klingemann - cellular MHC/direct/fluorescence": 9,
+            "Rieber - cellular MHC/competitive/fluorescence": 12,
+            "Meng - cellular MHC/direct/fluorescence": 279,
+            "Cao - cellular MHC/direct/fluorescence": 30,
+            "Corradin - cellular MHC/direct/fluorescence": 23,
+            "Anderson - cellular MHC/direct/fluorescence": 9,
+            "Philip - coelution": 5,
+            "Gao - purified MHC/direct/fluorescence": 22,
+            "Durrant - cellular MHC/direct/fluorescence": 22,
+            "Schell - cellular MHC/direct/fluorescence": 6,
+            "Chow - cellular MHC/direct/fluorescence": 27,
+            "Louzir - cellular MHC/direct/fluorescence": 77,
+            "Jiang - cellular MHC/direct/fluorescence": 12,
+            "BenMohamed - purified MHC/competitive/radioactivity": 469,
+            "Ottenhoff - purified MHC/direct/fluorescence": 18,
+            "Christensen - cellular MHC/direct/fluorescence": 5,
+            "Yamaguchi - cellular MHC/direct/fluorescence": 157,
+            "Molldrem - cellular MHC/direct/fluorescence": 32,
+            "Hildebrand - purified MHC/competitive/radioactivity": 21,
+            "Kiessling - purified MHC/competitive/fluorescence": 9,
+            "Gershwin - cellular MHC/direct/fluorescence": 13,
+            "Barnaba - purified MHC/competitive/radioactivity": 514,
+            "Tykodi - cellular MHC/direct/fluorescence": 6,
+            "Rizkallah - cellular MHC/direct/fluorescence": 41,
+            "Pascolo - cellular MHC/direct/fluorescence": 26,
+            "Celis - purified MHC/competitive/radioactivity": 136,
+            "Radford - cellular MHC/direct/fluorescence": 8,
+            "Wizel - cellular MHC/direct/fluorescence": 10,
+            "Boitard - cellular MHC/direct/fluorescence": 13,
+            "Sarobe - cellular MHC/direct/fluorescence": 32,
+            "Hafler - purified MHC/competitive/radioactivity": 53,
+            "Madrigal - cellular MHC/competitive/fluorescence": 15,
+            "McMichael - cellular MHC/direct/fluorescence": 171,
+            "Gillanders - cellular MHC": 21,
+            "Nayak - cellular MHC/competitive/fluorescence": 4,
+            "Cheung - cellular MHC/direct/fluorescence": 8,
+            "Goulmy - purified MHC/competitive/fluorescence": 15,
+            "BenMohamed - purified MHC/direct/fluorescence": 5,
+            "Calvi\u00f1o - cellular MHC/direct/fluorescence": 5,
+            "Buchmeier - purified MHC/competitive/radioactivity": 84,
+            "Rinaldo - cellular MHC/direct/fluorescence": 14,
+            "Ovaa - purified MHC/competitive/radioactivity": 10,
+            "Groettrup - cellular MHC/direct/fluorescence": 11,
+            "BenMohamed - purified MHC/competitive/fluorescence": 15,
+            "BenMohamed - cellular MHC/direct/fluorescence": 25,
+            "Schmitz - cellular MHC/competitive/fluorescence": 6,
+            "Sun - cellular MHC/direct/fluorescence": 33,
+            "Hildebrand - binding assay": 4,
+            "Bertoletti - purified MHC/direct/fluorescence": 189,
+            "Nepom - cellular MHC/direct/fluorescence": 11,
+            "Nagano - cellular MHC/direct/fluorescence": 24,
+            "Lum - cellular MHC/direct/fluorescence": 6,
+            "Xie - cellular MHC/direct/fluorescence": 5,
+            "Ferrari - purified MHC/competitive/radioactivity": 35,
+            "Groettrup - cellular MHC": 2,
+            "Park - cellular MHC/direct/fluorescence": 27,
+            "Stryhn - purified MHC/competitive/fluorescence": 1,
+            "Admon - cellular MHC/direct/fluorescence": 19,
+            "Gregory - purified MHC/competitive/fluorescence": 21,
+            "Inchausp\u00e9 - purified MHC/competitive/radioactivity": 25,
+            "Pan - cellular MHC/direct/fluorescence": 5,
+            "Bach - purified MHC/competitive/fluorescence": 10,
+            "Davis - purified MHC/competitive/fluorescence": 69,
+            "Panagiotopoulos - cellular MHC/direct/fluorescence": 22,
+            "Sykulev - purified MHC/competitive/radioactivity": 20,
+            "Schumacher - purified MHC/competitive/fluorescence": 4,
+            "Linette - purified MHC/competitive/fluorescence": 21,
+            "Linette - cellular MHC/direct/fluorescence": 20,
+            "Depil - purified MHC/direct/fluorescence": 6,
+            "Scheinberg - cellular MHC/direct/fluorescence": 10,
+            "Dong - cellular MHC/direct/fluorescence": 12,
+            "Stastny - cellular MHC/direct/fluorescence": 10,
+            "McLeod - purified MHC/competitive/radioactivity": 136,
+            "Coico - cellular MHC/direct/fluorescence": 5,
+            "Li - cellular MHC/direct/fluorescence": 194,
+            "Zhao - cellular MHC/competitive/fluorescence": 181,
+            "Zhao - cellular MHC/direct/fluorescence": 9,
+            "Okada - purified MHC/competitive/radioactivity": 22,
+            "Neri - purified MHC/direct/fluorescence": 4,
+            "Gao - cellular MHC/direct/fluorescence": 120,
+            "Willcox - purified MHC/competitive/radioactivity": 18,
+            "Kamura - cellular MHC/direct/fluorescence": 6,
+            "Daha - cellular MHC/direct/fluorescence": 28,
+            "Fournillier - purified MHC/competitive/radioactivity": 3,
+            "Huang - cellular MHC/direct/fluorescence": 13,
+            "Hildebrand - purified MHC/competitive/fluorescence": 82,
+            "Group - purified MHC/competitive/fluorescence": 3,
+            "Skowera - cellular MHC/direct/fluorescence": 2,
+            "Eckels - purified MHC/competitive/fluorescence": 14,
+            "Warren - cellular MHC/direct/fluorescence": 3,
+            "Sanda - cellular MHC/direct/fluorescence": 18,
+            "Gavioli - cellular MHC/direct/fluorescence": 15,
+            "Griffioen - purified MHC/direct/fluorescence": 5,
+            "Yang - cellular MHC/direct/fluorescence": 22,
+            "Ochsenreither - cellular MHC/direct/fluorescence": 14,
+            "Plachter - cellular MHC/direct/fluorescence": 8,
+            "Biddison - cellular MHC/T cell inhibition": 64,
+            "Rehermann - cellular MHC/direct/fluorescence": 29,
+            "Timm - purified MHC/competitive/fluorescence": 7,
+            "DeLeo - cellular MHC/direct/fluorescence": 8,
+            "Jiao - purified MHC/direct/fluorescence": 90,
+            "Takahashi - purified MHC/direct/fluorescence": 4,
+            "Witte - cellular MHC/direct/fluorescence": 21,
+            "Ren - purified MHC": 38,
+            "Morris - cellular MHC/direct/fluorescence": 18,
+            "Kosmatopoulos - cellular MHC/competitive/fluorescence": 3,
+            "Hill - cellular MHC/direct/radioactivity": 4,
+            "Theobald - coelution": 1,
+            "Riemer - cellular MHC/competitive/fluorescence": 17,
+            "Shah - purified MHC/direct/fluorescence": 12,
+            "Bushkin - cellular MHC/direct/fluorescence": 9,
+            "Berzofsky - cellular MHC/competitive/fluorescence": 19,
+            "Collins - purified MHC/direct/fluorescence": 1,
+            "Tarleton - purified MHC/competitive/radioactivity": 44,
+            "Hebeisen - cellular MHC/competitive/fluorescence": 39,
+            "Ovaa - purified MHC/competitive/fluorescence": 14,
+            "Sewell - cellular MHC/direct/fluorescence": 7,
+            "Ottenhoff - purified MHC/competitive/fluorescence": 3,
+            "Schmitt - cellular MHC/direct/fluorescence": 10,
+            "Major - cellular MHC/direct/fluorescence": 6,
+            "Schumacher - purified MHC/direct/fluorescence": 1,
+            "Murphy - purified MHC/competitive/radioactivity": 11,
+            "Ye - cellular MHC/direct/fluorescence": 13,
+            "Ma - cellular MHC/direct/fluorescence": 16,
+            "Seong - cellular MHC/direct/fluorescence": 9,
+            "Peakman - cellular MHC/direct/fluorescence": 2,
+            "Coulie - cellular MHC/direct/fluorescence": 2,
+            "Heemskerk - T cell recognition": 8,
+            "Biedermann - cellular MHC/competitive/fluorescence": 4,
+            "Roosnek - T cell recognition": 1,
+            "Das - cellular MHC/direct/fluorescence": 13,
+            "Merigan - purified MHC/competitive/radioactivity": 11,
+            "Craik - cellular MHC/direct/fluorescence": 3,
+            "Stryhn - purified MHC/competitive/radioactivity": 5,
+            "Carreno - purified MHC/competitive/fluorescence": 21,
+            "Essand - cellular MHC/direct/fluorescence": 4,
+            "Davis - cellular MHC/direct/fluorescence": 9,
+            "Cid-Arregui - cellular MHC/direct/fluorescence": 11,
+            "Michel - cellular MHC/direct/fluorescence": 4,
+            "Spagnoli - cellular MHC/direct/fluorescence": 13,
+            "Liepe - purified MHC/competitive/fluorescence": 6,
+            "Correale - cellular MHC/direct/fluorescence": 2,
+            "Kuiper - cellular MHC/direct/fluorescence": 6,
+            "Rammensee - cellular MHC/direct/fluorescence": 3,
+            "Groot - purified MHC/direct/fluorescence": 66,
+            "Halteren - purified MHC/competitive/fluorescence": 9,
+            "Sette - cellular MHC/direct/radioactivity": 1,
+            "Riddell - purified MHC/competitive/radioactivity": 9,
+            "Bimal - cellular MHC/direct/fluorescence": 5,
+            "Liblau - cellular MHC": 8,
+            "Laucella - purified MHC/competitive/radioactivity": 2,
+            "Celis - purified MHC/competitive/fluorescence": 4,
+            "Corey - purified MHC/competitive/radioactivity": 5,
+            "Schirmbeck - cellular MHC/direct/fluorescence": 6,
+            "Arredouani - cellular MHC/direct/fluorescence": 10,
+            "Vray - purified MHC/direct/fluorescence": 2,
+            "Nakatsura - cellular MHC/direct/fluorescence": 5,
+            "Strominger - purified MHC/direct/fluorescence": 8,
+            "Kern - cellular MHC/direct/fluorescence": 1,
+            "Platten - cellular MHC/direct/fluorescence": 10,
+            "Puerta - purified MHC/direct/fluorescence": 4,
+            "Engelhard - purified MHC/competitive/fluorescence": 4,
+            "Mallone - purified MHC/competitive/fluorescence": 4,
+            "Vergani - cellular MHC/direct/fluorescence": 7,
+            "Buonaguro - cellular MHC/direct/fluorescence": 4,
+            "White - purified MHC/competitive/radioactivity": 3,
+            "Guillet - lysate MHC/direct/fluorescence": 2,
+            "Purcell - cellular MHC/competitive/fluorescence": 3,
+            "Pisa - cellular MHC/direct/radioactivity": 2,
+            "Iavarone - purified MHC/direct/fluorescence": 12,
+            "Chisari - cellular MHC/T cell inhibition": 5,
+            "Herrera - cellular MHC/direct/fluorescence": 7,
+            "Emery - cellular MHC/direct/fluorescence": 13,
+            "Wang - cellular MHC": 4,
+            "Mallone - T cell recognition": 3,
+            "Wooldridge - cellular MHC/direct/fluorescence": 1,
+            "Housseau - purified MHC/direct/radioactivity": 4,
+            "Palmer - cellular MHC/direct/fluorescence": 2,
+            "Kan-Mitchell - purified MHC/competitive/radioactivity": 3,
+            "Einsele - cellular MHC/direct/fluorescence": 9,
+            "Els - cellular MHC/direct/fluorescence": 4,
+            "Gredmark-Russ - cellular MHC/direct/fluorescence": 8,
+            "Sasada - cellular MHC/direct/fluorescence": 10,
+            "Shen - cellular MHC/direct/fluorescence": 6,
+            "Strominger - purified MHC/competitive/fluorescence": 2,
+            "Man - cellular MHC/direct/fluorescence": 7,
+            "Rothbard - cellular MHC/T cell inhibition": 14,
+            "Tan - binding assay": 1,
+            "Schlom - cellular MHC/direct/fluorescence": 13,
+            "Madrigal - cellular MHC/direct/fluorescence": 2,
+            "Firat - cellular MHC/direct/fluorescence": 8,
+            "Mattsson - cellular MHC/direct/fluorescence": 4,
+            "Verchere - cellular MHC/direct/fluorescence": 1,
+            "Thimme - purified MHC/competitive/radioactivity": 16,
+            "Lanzavecchia - cellular MHC/direct/fluorescence": 1,
+            "Jong - cellular MHC/competitive/fluorescence": 5,
+            "Willcox - binding assay": 8,
+            "Iversen - purified MHC/direct/fluorescence": 48,
+            "Greenberg - cellular MHC/direct/fluorescence": 3,
+            "Kosmatopoulos - cellular MHC": 3,
+            "Engelhard - cellular MHC/T cell inhibition": 3,
+            "Witte - purified MHC/direct/fluorescence": 5,
+            "Theobald - T cell recognition": 1,
+            "Anichini - cellular MHC/direct/fluorescence": 2,
+            "Cresswell - Edman degradation": 1,
+            "Robbins - purified MHC/competitive/radioactivity": 6,
+            "B\u00fcschenfelde - cellular MHC/direct/fluorescence": 3,
+            "Rose - cellular MHC/direct/fluorescence": 2,
+            "Gong - cellular MHC/direct/fluorescence": 2,
+            "Xu - purified MHC/direct/fluorescence": 15,
+            "Gillespie - purified MHC/direct/fluorescence": 1,
+            "Lanzavecchia - purified MHC/competitive/radioactivity": 3,
+            "Pudney - purified MHC/direct/fluorescence": 5,
+            "Tan - purified MHC/direct/fluorescence": 4,
+            "Biedermann - cellular MHC/T cell inhibition": 2,
+            "Housset - cellular MHC/direct/fluorescence": 9,
+            "Boyle - cellular MHC/direct/fluorescence": 3,
+            "Shichijo - cellular MHC/direct/fluorescence": 28,
+            "Khanna - cellular MHC/direct/fluorescence": 3,
+            "Hu - cellular MHC/direct/fluorescence": 1,
+            "Zhou - cellular MHC/direct/fluorescence": 1,
+            "Meng - purified MHC": 1,
+            "Ng - cellular MHC": 5,
+            "Riddell - coelution": 1,
+            "Stone - cellular MHC/direct/fluorescence": 2,
+            "McMichael - purified MHC/direct/fluorescence": 22,
+            "Purcell - purified MHC/direct/fluorescence": 4,
+            "Cerundolo - cellular MHC/direct/fluorescence": 1,
+            "Engelhard - cellular MHC/direct/fluorescence": 2,
+            "Katagiri - cellular MHC/direct/fluorescence": 2,
+            "Dolan - binding assay": 1,
+            "Liu - cellular MHC/direct/fluorescence": 3,
+            "Monroy-Garc\u00eda - cellular MHC/direct/fluorescence": 1,
+            "Akatsuka - cellular MHC/direct/fluorescence": 1,
+            "Peakman - purified MHC/direct/fluorescence": 1,
+            "Tosi - purified MHC/direct/radioactivity": 3,
+            "Noguchi - cellular MHC/direct/fluorescence": 2,
+            "Rammensee - lysate MHC/direct/radioactivity": 16,
+            "Engelhard - T cell recognition": 1,
+            "Shabanowitz - purified MHC/competitive/radioactivity": 1,
+            "Itoh - cellular MHC/direct/fluorescence": 29,
+            "Richter - cellular MHC/direct/fluorescence": 1,
+            "Hooijberg - cellular MHC/competitive/fluorescence": 5,
+            "Moss - purified MHC": 1,
+            "MacAry - purified MHC/direct/fluorescence": 8,
+            "Rehermann - purified MHC/competitive/radioactivity": 60,
+            "DiLorenzo - purified MHC/competitive/radioactivity": 63,
+            "Melief - purified MHC/competitive/fluorescence": 7,
+            "Krackhardt - purified MHC/competitive/fluorescence": 49,
+            "Eiz-Vesper - purified MHC": 15,
+            "Griffioen - purified MHC/competitive/fluorescence": 4,
+            "Masucci - purified MHC/competitive/radioactivity": 5,
+            "Eiz-Vesper - cellular MHC/direct/fluorescence": 5,
+            "Gabelli - cellular MHC/direct/fluorescence": 9,
+            "Jonge - purified MHC/competitive/fluorescence": 3,
+            "Kralovics - purified MHC/direct/fluorescence": 36,
+            "Warren - coelution": 1,
+            "Eynde - coelution": 1,
+            "Juneja - purified MHC/competitive/radioactivity": 16,
+            "Craik - purified MHC/direct/fluorescence": 2,
+            "Gabelli - any method": 1,
+            "Masucci - cellular MHC/direct/fluorescence": 34,
+            "Ma - purified MHC": 50,
+            "Gajhede - purified MHC/competitive/radioactivity": 2,
+            "Kazura - cellular MHC/direct/fluorescence": 39,
+            "Wen - cellular MHC/competitive/fluorescence": 12,
+            "Arnold - cellular MHC/direct/fluorescence": 30,
+            "Bouvier - purified MHC": 14,
+            "Wang - cellular MHC/competitive/fluorescence": 37,
+            "Kamb - cellular MHC/direct/fluorescence": 1,
+            "Griffith - cellular MHC/direct/fluorescence": 51,
+            "Onji - cellular MHC/direct/fluorescence": 40,
+            "Restifo - purified MHC/competitive/radioactivity": 5,
+            "Hirano - purified MHC/competitive/fluorescence": 63,
+            "Bade-Doeding - cellular MHC": 24,
+            "Tsurumi - cellular MHC/direct/fluorescence": 129,
+            "Hirano - cellular MHC/direct/fluorescence": 5,
+            "Takiguch - cellular MHC/direct/fluorescence": 36,
+            "Torigoe - cellular MHC/direct/fluorescence": 10,
+            "Tanimura - purified MHC/competitive/radioactivity": 5,
+            "Takiguchi - cellular MHC/direct/fluorescence": 131,
+            "Sato - cellular MHC/direct/fluorescence": 12,
+            "Takahashi - cellular MHC/direct/fluorescence": 3,
+            "Wakasugi - cellular MHC/direct/fluorescence": 5,
+            "Naoe - cellular MHC/direct/fluorescence": 10,
+            "Akiyoshi - purified MHC/competitive/radioactivity": 13,
+            "Yamaguchi - cellular MHC/competitive/fluorescence": 5,
+            "Murai - purified MHC/competitive/radioactivity": 9,
+            "Honda - cellular MHC/direct/fluorescence": 4,
+            "Kato - purified MHC/competitive/radioactivity": 7,
+            "Torigoe - cellular MHC": 1,
+            "Kaneko - cellular MHC/direct/fluorescence": 6,
+            "Iwamoto - cellular MHC/direct/fluorescence": 5,
+            "Ishido - purified MHC/competitive/fluorescence": 1,
+            "Kajino - cellular MHC/direct/fluorescence": 3,
+            "McMichael - Edman degradation": 15,
+            "Stevanovi\u0107 - cellular MHC/direct/fluorescence": 39,
+            "Alvarez - cellular MHC/direct/fluorescence": 3,
+            "Takahashi - purified MHC": 8,
+            "Ahn - purified MHC/competitive/fluorescence": 38,
+            "Tien - cellular MHC/direct/fluorescence": 7,
+            "Boyle - cellular MHC/competitive/fluorescence": 3,
+            "Hadrup - purified MHC/competitive/fluorescence": 30,
+            "Parham - Edman degradation": 76,
+            "Joyce - purified MHC/direct/fluorescence": 74,
+            "Groot - purified MHC/competitive/fluorescence": 4,
+            "Samulski - purified MHC/competitive/radioactivity": 3,
+            "Krogsgaard - purified MHC/direct/fluorescence": 5,
+            "Krogsgaard - purified MHC/direct/radioactivity": 1,
+            "Gerlach - purified MHC/competitive/fluorescence": 1,
+            "McMichael - lysate MHC/direct/radioactivity": 33,
+            "Gfeller - purified MHC": 16,
+            "Stratikos - purified MHC/direct/fluorescence": 3,
+            "Bratland - purified MHC/direct/fluorescence": 18,
+            "Griffith - purified MHC/competitive/fluorescence": 22,
+            "Gfeller - purified MHC/competitive/fluorescence": 1,
+            "Keskin - purified MHC/direct/fluorescence": 15,
+            "Coligan - Edman degradation": 1,
+            "Hildebrand - Edman degradation": 70,
+            "Sgourakis - binding assay": 1,
+            "Pratt - purified MHC/competitive/fluorescence": 5,
+            "Hung - cellular MHC/direct/fluorescence": 2,
+            "Boyton - purified MHC/competitive/fluorescence": 3,
+            "Stevanovi\u0107 - Edman degradation": 22,
+            "Bonneville - cellular MHC/direct/fluorescence": 2,
+            "Castro - cellular MHC/direct/fluorescence": 391,
+            "Castro - Edman degradation": 15,
+            "Tolfvenstam - cellular MHC/direct/fluorescence": 1,
+            "Neumann-Haefelin - cellular MHC/direct/fluorescence": 5,
+            "Tanigaki - purified MHC/direct/radioactivity": 16,
+            "Engelhard - coelution": 11,
+            "Boshoff - cellular MHC/direct/fluorescence": 2,
+            "Toubert - cellular MHC/direct/fluorescence": 22,
+            "Frelinger - purified MHC/direct/radioactivity": 6,
+            "Frelinger - lysate MHC/direct/radioactivity": 2,
+            "Chan - cellular MHC/competitive/fluorescence": 10,
+            "Thimme - purified MHC/direct/fluorescence": 7,
+            "Neumann-Haefelin - cellular MHC/competitive/radioactivity": 5,
+            "Sieper - cellular MHC/direct/fluorescence": 9,
+            "Tokunaga - cellular MHC/direct/fluorescence": 62,
+            "Wiley - Edman degradation": 10,
+            "Elliott - Edman degradation": 5,
+            "Sorrentino - cellular MHC/direct/fluorescence": 41,
+            "Laczk\u00f3 - cellular MHC/direct/fluorescence": 12,
+            "Sieper - purified MHC/direct/fluorescence": 2,
+            "Vieillard - cellular MHC/direct/fluorescence": 60,
+            "Allen - purified MHC/competitive/fluorescence": 8,
+            "Garcia - purified MHC/direct/fluorescence": 9,
+            "M\u00e4rker-Hermann - cellular MHC/direct/fluorescence": 8,
+            "McMichael - cellular MHC/T cell inhibition": 3,
+            "Fiorillo - cellular MHC/direct/fluorescence": 4,
+            "Rognan - purified MHC/competitive/fluorescence": 1,
+            "Els - T cell recognition": 1,
+            "Rowland-Jones - lysate MHC/direct/radioactivity": 9,
+            "Burrows - cellular MHC/direct/fluorescence": 173,
+            "Burrows - coelution": 2,
+            "Burrows - purified MHC/direct/fluorescence": 8,
+            "Ennis - cellular MHC/direct/fluorescence": 17,
+            "McAdam - cellular MHC/competitive/fluorescence": 28,
+            "McCluskey - cellular MHC/direct/fluorescence": 25,
+            "Bruggen - cellular MHC/T cell inhibition": 2,
+            "McAdam - cellular MHC/direct/fluorescence": 1,
+            "Takiguchi - Edman degradation": 2,
+            "Rimmelzwaan - cellular MHC/competitive/fluorescence": 3,
+            "Sugase - purified MHC/direct/fluorescence": 3,
+            "Cooper - cellular MHC/direct/fluorescence": 3,
+            "Sasazuki - cellular MHC/competitive/fluorescence": 2,
+            "Rossjohn - cellular MHC/direct/fluorescence": 48,
+            "Albar - cellular MHC/competitive/fluorescence": 11,
+            "Marcilla - cellular MHC/competitive/fluorescence": 7,
+            "Purcell - purified MHC": 3,
+            "Boon - cellular MHC/T cell inhibition": 2,
+            "Eynde - cellular MHC/T cell inhibition": 2,
+            "Takiguchi - cellular MHC": 2,
+            "Peters - purified MHC/competitive/radioactivity": 173,
+            "Gillespie - purified MHC/competitive/fluorescence": 16,
+            "Peters - purified MHC/direct/radioactivity": 3,
+            "Buchli - purified MHC/competitive/fluorescence": 3,
+            "Gillespie - binding assay": 2,
+            "Peters - lysate MHC/direct/radioactivity": 1,
+            "Peters - purified MHC/direct/fluorescence": 1,
+            "Rossjohn - purified MHC": 6,
+            "Khakoo - cellular MHC/direct/fluorescence": 12,
+            "Yin - purified MHC/direct/fluorescence": 12,
+            "Ph.D. - purified MHC/direct/fluorescence": 1480,
+            "Sun - purified MHC": 7,
+            "Altfeld - cellular MHC/direct/fluorescence": 213,
+            "Barber - Edman degradation": 3,
+            "Boyton - cellular MHC/direct/fluorescence": 96,
+            "Sun - purified MHC/direct/fluorescence": 15,
+            "Frasca - purified MHC/competitive/fluorescence": 5,
+            "Takiguchi - purified MHC/direct/fluorescence": 1,
+            "Johnson - purified MHC/competitive/radioactivity": 334,
+            "Matano - cellular MHC/direct/fluorescence": 6,
+            "Joosten - purified MHC": 16,
+            "Joosten - purified MHC/direct/fluorescence": 143,
+            "Joosten - purified MHC/competitive/fluorescence": 11,
+            "Sette - purified MHC/direct/radioactivity": 12,
+            "Koopman - cellular MHC/competitive/fluorescence": 4,
+            "Walker - purified MHC/competitive/radioactivity": 11,
+            "Purcell - cellular MHC/direct/radioactivity": 2,
+            "Xia - binding assay": 23,
+            "Zhang - purified MHC": 12489,
+            "Zhang - purified MHC/direct/fluorescence": 173,
+            "Larsen - purified MHC/competitive/fluorescence": 92,
+            "Romano - purified MHC/direct/fluorescence": 9,
+            "Larsen - purified MHC/direct/radioactivity": 4,
+            "Jungersen - purified MHC/direct/fluorescence": 5,
+            "Golde - purified MHC": 20,
+            "Qu - binding assay": 5,
+            "Montoya - binding assay": 15,
+            "Wang - purified MHC/direct/fluorescence": 31,
+            "Zhu - purified MHC": 12
+          },
+          "original_allele": {
+            "BoLA-1*021:01": 2,
+            "BoLA-1*023:01": 22,
+            "BoLA-2*008:01": 14,
+            "BoLA-2*012:01": 55,
+            "BoLA-2*018:01": 4,
+            "BoLA-4*024:01": 4,
+            "BoLA-6*013:01": 91,
+            "BoLA-6*013:02": 1,
+            "BoLA-6*041:01": 2,
+            "DLA-88*034:01": 16,
+            "DLA-88*501:01": 4,
+            "DLA-88*508:01": 46,
+            "Eqca-1*001:01": 678,
+            "Eqca-1*002:01": 40,
+            "Eqca-16*001:01": 40,
+            "Eqca-N*00602": 13,
+            "FLA-E*01801": 36,
+            "Gaga-BF1*002:01": 2,
+            "Gaga-BF2*002:01": 2,
+            "Gaga-BF2*004:01": 23,
+            "Gaga-BF2*012:01": 50,
+            "Gaga-BF2*015:01": 10,
+            "Gaga-BF2*021:01": 31,
+            "Gogo-B*01:01": 14,
+            "Gogo-B*0101": 1,
+            "H2-d class I": 5,
+            "H-2-Db": 1697,
+            "H2-Db": 4172,
+            "H-2-Dd": 186,
+            "H2-Dd": 327,
+            "H2-Dk": 7,
+            "H2-k class I": 2,
+            "H-2-Kb": 1724,
+            "H2-Kb": 4377,
+            "H-2-Kbm8": 2,
+            "H2-Kd": 1230,
+            "H-2-Kd": 428,
+            "H2-Kk": 607,
+            "H-2-Kk": 11,
+            "H2-Kwm7": 4,
+            "H2-Ld": 424,
+            "H-2-Ld": 117,
+            "H2-Lq": 14,
+            "HLA-A*01:01": 6128,
+            "HLA-A*02:01": 24412,
+            "HLA-A*02:02": 5791,
+            "HLA-A*02:03": 7901,
+            "HLA-A*02:04": 9,
+            "HLA-A*02:05": 144,
+            "HLA-A*02:06": 7356,
+            "HLA-A*02:07": 146,
+            "HLA-A*02:08": 5,
+            "HLA-A*02:09": 5,
+            "HLA-A*02:10": 18,
+            "HLA-A*02:11": 1088,
+            "HLA-A*02:12": 1183,
+            "HLA-A*02:14": 12,
+            "HLA-A*02:16": 920,
+            "HLA-A*02:17": 348,
+            "HLA-A*02:19": 1245,
+            "HLA-A*02:50": 135,
+            "HLA-A*03:01": 9111,
+            "HLA-A*03:02": 26,
+            "HLA-A*03:19": 30,
+            "HLA-A*11:01": 8046,
+            "HLA-A*11:02": 14,
+            "HLA-A*23:01": 2614,
+            "HLA-A*24:02": 5384,
+            "HLA-A*24:03": 1418,
+            "HLA-A*25:01": 963,
+            "HLA-A*26:01": 5018,
+            "HLA-A*26:02": 644,
+            "HLA-A*26:03": 537,
+            "HLA-A*29:02": 2741,
+            "HLA-A*30:01": 3274,
+            "HLA-A*30:02": 2485,
+            "HLA-A*30:03": 31,
+            "HLA-A*30:04": 5,
+            "HLA-A*31:01": 6294,
+            "HLA-A*32:01": 1138,
+            "HLA-A*32:07": 87,
+            "HLA-A*32:15": 74,
+            "HLA-A*33:01": 3696,
+            "HLA-A*33:03": 137,
+            "HLA-A*66:01": 102,
+            "HLA-A*68:01": 4418,
+            "HLA-A*68:02": 7235,
+            "HLA-A*68:12": 15,
+            "HLA-A*68:23": 82,
+            "HLA-A*69:01": 3031,
+            "HLA-A*74:01": 9,
+            "HLA-A*80:01": 1167,
+            "HLA-B*07:02": 6569,
+            "HLA-B*08:01": 4397,
+            "HLA-B*08:02": 1019,
+            "HLA-B*08:03": 470,
+            "HLA-B*13:02": 3,
+            "HLA-B*14:01": 42,
+            "HLA-B*14:02": 235,
+            "HLA-B*15:01": 5397,
+            "HLA-B*15:02": 193,
+            "HLA-B*15:03": 705,
+            "HLA-B*15:08": 31,
+            "HLA-B*15:09": 842,
+            "HLA-B*15:10": 21,
+            "HLA-B*15:13": 6,
+            "HLA-B*15:16": 35,
+            "HLA-B*15:17": 1452,
+            "HLA-B*15:42": 363,
+            "HLA-B*18:01": 2756,
+            "HLA-B*27:01": 64,
+            "HLA-B*27:02": 84,
+            "HLA-B*27:03": 911,
+            "HLA-B*27:04": 97,
+            "HLA-B*27:05": 4471,
+            "HLA-B*27:06": 94,
+            "HLA-B*27:09": 47,
+            "HLA-B*27:10": 3,
+            "HLA-B*27:20": 91,
+            "HLA-B*35:01": 3679,
+            "HLA-B*35:02": 1,
+            "HLA-B*35:03": 290,
+            "HLA-B*35:08": 158,
+            "HLA-B*37:01": 68,
+            "HLA-B*38:01": 538,
+            "HLA-B*39:01": 1683,
+            "HLA-B*39:06": 33,
+            "HLA-B*39:09": 22,
+            "HLA-B*39:10": 4,
+            "HLA-B*40:01": 4056,
+            "HLA-B*40:02": 1095,
+            "HLA-B*40:13": 58,
+            "HLA-B*42:01": 213,
+            "HLA-B*42:02": 18,
+            "HLA-B*44:02": 2416,
+            "HLA-B*44:03": 1544,
+            "HLA-B*44:05": 14,
+            "HLA-B*45:01": 1088,
+            "HLA-B*45:06": 361,
+            "HLA-B*46:01": 1832,
+            "HLA-B*48:01": 883,
+            "HLA-B*51:01": 2948,
+            "HLA-B*51:02": 7,
+            "HLA-B*52:01": 48,
+            "HLA-B*53:01": 1808,
+            "HLA-B*54:01": 1242,
+            "HLA-B*55:01": 3,
+            "HLA-B*55:02": 28,
+            "HLA-B*56:01": 3,
+            "HLA-B*57:01": 2948,
+            "HLA-B*57:02": 26,
+            "HLA-B*57:03": 34,
+            "HLA-B*58:01": 4411,
+            "HLA-B*58:02": 55,
+            "HLA-B*73:01": 131,
+            "HLA-B*81:01": 43,
+            "HLA-B*83:01": 338,
+            "HLA-C*01:02": 25,
+            "HLA-C*03:03": 176,
+            "HLA-C*03:04": 317,
+            "HLA-C*04:01": 526,
+            "HLA-C*05:01": 225,
+            "HLA-C*06:02": 424,
+            "HLA-C*07:01": 486,
+            "HLA-C*07:02": 194,
+            "HLA-C*08:01": 45,
+            "HLA-C*08:02": 155,
+            "HLA-C*08:03": 3,
+            "HLA-C*12:02": 30,
+            "HLA-C*12:03": 177,
+            "HLA-C*14:02": 313,
+            "HLA-C*15:02": 181,
+            "HLA-C*17:01": 1,
+            "HLA-E*01:01": 1,
+            "HLA-E*01:03": 67,
+            "Mamu-A*07": 681,
+            "Mamu-A1*001:01": 2382,
+            "Mamu-A*01": 427,
+            "Mamu-A*02": 750,
+            "Mamu-A1*002:01": 624,
+            "Mamu-A1*011:01": 960,
+            "Mamu-A*11": 348,
+            "Mamu-A*2201": 689,
+            "Mamu-A*2601": 206,
+            "Mamu-A1*065:01": 6,
+            "Mamu-A2*0102": 146,
+            "Mamu-A7*0103": 102,
+            "Mamu-B*001:01": 649,
+            "Mamu-B*01": 239,
+            "Mamu-B*03": 1115,
+            "Mamu-B*003:01": 32,
+            "Mamu-B*004:01": 9,
+            "Mamu-B*08": 1118,
+            "Mamu-B*1001": 159,
+            "Mamu-B*17": 1650,
+            "Mamu-B*017:04": 1453,
+            "Mamu-B*3901": 459,
+            "Mamu-B*04": 2,
+            "Mamu-B*52": 894,
+            "Mamu-B*065:02": 17,
+            "Mamu-B*6601": 101,
+            "Mamu-B*8301": 432,
+            "Mamu-B*8701": 155,
+            "Mamu-E": 16,
+            "Mamu-E*02:11": 154,
+            "Patr-A*0101": 347,
+            "Patr-A*01:01": 108,
+            "Patr-A*0301": 371,
+            "Patr-A*03:01": 8,
+            "Patr-A*0401": 324,
+            "Patr-A*04:01": 3,
+            "Patr-A*05:01": 4,
+            "Patr-A*06:01": 4,
+            "Patr-A*06:02": 41,
+            "Patr-A*07:01": 99,
+            "Patr-A*0701": 513,
+            "Patr-A*09:01": 138,
+            "Patr-A*0901": 518,
+            "Patr-B*0101": 651,
+            "Patr-B*01:01": 141,
+            "Patr-B*09:01": 47,
+            "Patr-B*13:01": 128,
+            "Patr-B*1301": 127,
+            "Patr-B*17:01": 8,
+            "Patr-B*2401": 248,
+            "Patr-B*24:01": 76,
+            "Ptal-N*01:01": 72,
+            "RT1A": 139,
+            "SLA-1*03:02": 7,
+            "SLA-1*04:01": 5120,
+            "SLA-1*07:02": 46,
+            "SLA-1*08:01": 22,
+            "SLA-1*13:01": 7659,
+            "SLA-1*15:02": 10,
+            "SLA-1*18:01": 5,
+            "SLA-2*01:01": 3,
+            "SLA-2*01:06": 4,
+            "SLA-2*02:02": 6,
+            "SLA-2*04:01": 71,
+            "SLA-2*05:02": 6,
+            "SLA-2*10:01": 2,
+            "SLA-2*11:01": 3,
+            "SLA-2*11:04": 4,
+            "SLA-2*12:01": 2,
+            "SLA-3*01:01": 3,
+            "SLA-3*02:02": 41,
+            "SLA-3*05:02": 11,
+            "SLA-3*07:01": 2,
+            "Trvu-UB*01:01": 5607
+          }
+        }
+      },
+      {
+        "name": "curated_training_data.csv.bz2",
+        "bytes": 6135151
+      },
+      {
+        "name": "curated_training_data.mass_spec.csv.bz2",
+        "bytes": 4215332
+      },
+      {
+        "name": "curated_training_data.no_additional_ms.csv.bz2",
+        "bytes": 5990571
+      },
+      {
+        "name": "curate_ms_by_pmid.py",
+        "bytes": 46984
+      },
+      {
+        "name": "curate.py",
+        "bytes": 11972
+      },
+      {
+        "name": "expression/expression-atlas-22460905/tpms.tsv",
+        "bytes": 145403899
+      },
+      {
+        "name": "expression/GSE113126/GSM3097438_IPIMEL056.T1.rna.live.txt.gz",
+        "bytes": 1348765
+      },
+      {
+        "name": "expression/GSE113126/GSM3097445_IPIMEL212.T1.rna.live.txt.gz",
+        "bytes": 1435820
+      },
+      {
+        "name": "expression/GSE113126/GSM3097440_IPIMEL085.T1.rna.live.txt.gz",
+        "bytes": 1358314
+      },
+      {
+        "name": "expression/GSE113126/GSM3097439_IPIMEL069.T1.rna.live.txt.gz",
+        "bytes": 1371133
+      },
+      {
+        "name": "expression/GSE113126/GSM3097448_IPIMEL221.T1.rna.live.txt.gz",
+        "bytes": 1454748
+      },
+      {
+        "name": "expression/GSE113126/GSM3097444_IPIMEL149.T1.rna.live.txt.gz",
+        "bytes": 1384743
+      },
+      {
+        "name": "expression/GSE113126/GSM3097446_IPIMEL253.T1.rna.live.txt.gz",
+        "bytes": 1429956
+      },
+      {
+        "name": "expression/GSE113126/GSM3097441_IPIMEL108.T1.rna.live.txt.gz",
+        "bytes": 1417818
+      },
+      {
+        "name": "expression/GSE113126/GSM3097447_IPIMEL274.T1.rna.live.txt.gz",
+        "bytes": 1442392
+      },
+      {
+        "name": "expression/GSE113126/GSM3097443_IPIMEL131.T1.rna.live.txt.gz",
+        "bytes": 1347078
+      },
+      {
+        "name": "expression/GSE113126/GSM3097442_IPIMEL113.T1.rna.live.txt.gz",
+        "bytes": 1459659
+      },
+      {
+        "name": "expression/human-protein-atlas/rna_tissue_gtex.tsv",
+        "bytes": 30012940
+      },
+      {
+        "name": "expression/human-protein-atlas/rna_celline.tsv",
+        "bytes": 55162912
+      },
+      {
+        "name": "expression/human-protein-atlas/rna_blood_cell_sample_tpm_m.tsv",
+        "bytes": 13760452
+      },
+      {
+        "name": "GENERATE.sh",
+        "bytes": 2705
+      },
+      {
+        "name": "LOG.txt.bz2",
+        "bytes": 15382
+      },
+      {
+        "name": "ms.by_pmid.csv.bz2",
+        "bytes": 3234984
+      },
+      {
+        "name": "rna_expression.csv.bz2",
+        "bytes": 2793890
+      },
+      {
+        "name": "rna_expression.metadata.csv.bz2",
+        "bytes": 2001
+      }
+    ]
+  },
+  {
+    "id": "mhcflurry-data_published",
+    "archive_sha256": "3668769b87d9b162079d034e963218e6c852d3cc9ef4b29af7ee0255b5cc4357",
+    "members": [
+      {
+        "name": "bdata.2009.mhci.public.1.txt",
+        "bytes": 6223150
+      },
+      {
+        "name": "bdata.20130222.mhci.public.1.txt",
+        "bytes": 8307562
+      },
+      {
+        "name": "bdata.2013.mhci.public.blind.1.txt",
+        "bytes": 1263057
+      },
+      {
+        "name": "epitopes/30377561/koni-07-11-1492508-s001.zip",
+        "bytes": 3143870
+      },
+      {
+        "name": "epitopes/30377561/2018ONCOIMM0037R-file002.xlsx",
+        "bytes": 2674990
+      },
+      {
+        "name": "expression/expression-atlas-22460905/tpms.tsv",
+        "bytes": 145403899
+      },
+      {
+        "name": "expression/GSE113126/GSM3097440_IPIMEL085.T1.rna.live.txt.gz",
+        "bytes": 1358314
+      },
+      {
+        "name": "expression/GSE113126/GSM3097442_IPIMEL113.T1.rna.live.txt.gz",
+        "bytes": 1459659
+      },
+      {
+        "name": "expression/GSE113126/GSM3097439_IPIMEL069.T1.rna.live.txt.gz",
+        "bytes": 1371133
+      },
+      {
+        "name": "expression/GSE113126/GSM3097447_IPIMEL274.T1.rna.live.txt.gz",
+        "bytes": 1442392
+      },
+      {
+        "name": "expression/GSE113126/GSM3097446_IPIMEL253.T1.rna.live.txt.gz",
+        "bytes": 1429956
+      },
+      {
+        "name": "expression/GSE113126/GSM3097438_IPIMEL056.T1.rna.live.txt.gz",
+        "bytes": 1348765
+      },
+      {
+        "name": "expression/GSE113126/GSM3097441_IPIMEL108.T1.rna.live.txt.gz",
+        "bytes": 1417818
+      },
+      {
+        "name": "expression/GSE113126/GSM3097444_IPIMEL149.T1.rna.live.txt.gz",
+        "bytes": 1384743
+      },
+      {
+        "name": "expression/GSE113126/GSM3097445_IPIMEL212.T1.rna.live.txt.gz",
+        "bytes": 1435820
+      },
+      {
+        "name": "expression/GSE113126/GSM3097448_IPIMEL221.T1.rna.live.txt.gz",
+        "bytes": 1454748
+      },
+      {
+        "name": "expression/GSE113126/GSM3097443_IPIMEL131.T1.rna.live.txt.gz",
+        "bytes": 1347078
+      },
+      {
+        "name": "expression/human-protein-atlas/rna_blood_cell_sample_tpm_m.tsv",
+        "bytes": 13760452
+      },
+      {
+        "name": "expression/human-protein-atlas/rna_celline.tsv",
+        "bytes": 55162912
+      },
+      {
+        "name": "expression/human-protein-atlas/rna_tissue_gtex.tsv",
+        "bytes": 30012940
+      },
+      {
+        "name": "GENERATE.sh",
+        "bytes": 6468
+      },
+      {
+        "name": "LOG.txt.bz2",
+        "bytes": 1899
+      },
+      {
+        "name": "ms/28832583/Dataset2.txt",
+        "bytes": 4273443
+      },
+      {
+        "name": "ms/28832583/Dataset1.txt",
+        "bytes": 7710617
+      },
+      {
+        "name": "ms/31495665/1-s2.0-S1074761319303632-mmc2.xlsx",
+        "bytes": 998734
+      },
+      {
+        "name": "ms/23481700/mcp.M112.024810-2.xls",
+        "bytes": 6044160
+      },
+      {
+        "name": "ms/26992070/pmic12297-sup-0002-text.eps",
+        "bytes": 660230
+      },
+      {
+        "name": "ms/26992070/pmic12297-sup-0007-text.xlsx",
+        "bytes": 3653564
+      },
+      {
+        "name": "ms/26992070/pmic12297-sup-0005-text.docx",
+        "bytes": 12973
+      },
+      {
+        "name": "ms/26992070/pmic12297-sup-0012-text.xlsx",
+        "bytes": 705012
+      },
+      {
+        "name": "ms/26992070/pmic12297-sup-0001-text.eps",
+        "bytes": 4455802
+      },
+      {
+        "name": "ms/26992070/pmic12297-sup-0004-text.docx",
+        "bytes": 12729
+      },
+      {
+        "name": "ms/26992070/pmic12297-sup-0011-text.xlsx",
+        "bytes": 1625052
+      },
+      {
+        "name": "ms/26992070/pmic12297-sup-0006-text.xlsx",
+        "bytes": 4600204
+      },
+      {
+        "name": "ms/26992070/pmic12297-sup-0001-supinfo.zip",
+        "bytes": 23332627
+      },
+      {
+        "name": "ms/26992070/pmic12297-sup-0008-text.xlsx",
+        "bytes": 4354295
+      },
+      {
+        "name": "ms/26992070/pmic12297-sup-0003-text.eps",
+        "bytes": 406338
+      },
+      {
+        "name": "ms/26992070/pmic12297-sup-0009-text.xlsx",
+        "bytes": 2708911
+      },
+      {
+        "name": "ms/26992070/pmic12297-sup-0010-text.xlsx",
+        "bytes": 2876665
+      },
+      {
+        "name": "ms/31844290/41587_2019_322_MOESM4_ESM.xlsx",
+        "bytes": 16968916
+      },
+      {
+        "name": "ms/31844290/41587_2019_322_MOESM3_ESM.xlsx",
+        "bytes": 67262054
+      },
+      {
+        "name": "ms/27600516/27600516.peptides.csv",
+        "bytes": 166359
+      },
+      {
+        "name": "ms/27869121/41467_2016_BFncomms13404_MOESM1318_ESM.xlsx",
+        "bytes": 19647654
+      },
+      {
+        "name": "ms/24616531/sd01.xlsx",
+        "bytes": 13178659
+      },
+      {
+        "name": "ms/25576301/mcp.M114.042812-4.xlsx",
+        "bytes": 5726712
+      },
+      {
+        "name": "ms/31154438/zjw006195963st2.txt",
+        "bytes": 19939835
+      },
+      {
+        "name": "ms/31154438/zjw006195963st1.xlsx",
+        "bytes": 25802
+      },
+      {
+        "name": "ms/27412690/mcp.M116.060350-2.xlsx",
+        "bytes": 18963338
+      }
+    ]
+  },
+  {
+    "id": "netmhciipan-4.3-training",
+    "archive_sha256": "b3602edd48fd34a2d4dcd574bea7781bb75c50f9f4dbc3a2d7178301b735c521",
+    "members": [
+      {
+        "name": "NetMHCIIpan_train/c001_ba",
+        "bytes": 1186310,
+        "rows": 22056,
+        "target_bins": {
+          "interior": 19426,
+          "zero": 2467,
+          "one": 163
+        },
+        "interpretation": "BA transformed concentration; EL positive/generated background. Not source-native assay identity."
+      },
+      {
+        "name": "NetMHCIIpan_train/c001_el",
+        "bytes": 77664749,
+        "rows": 1514546,
+        "target_bins": {
+          "one": 130307,
+          "zero": 1384239
+        },
+        "interpretation": "BA transformed concentration; EL positive/generated background. Not source-native assay identity."
+      },
+      {
+        "name": "NetMHCIIpan_train/c000_ba",
+        "bytes": 1611437,
+        "rows": 29994,
+        "target_bins": {
+          "interior": 27065,
+          "zero": 2753,
+          "one": 176
+        },
+        "interpretation": "BA transformed concentration; EL positive/generated background. Not source-native assay identity."
+      },
+      {
+        "name": "NetMHCIIpan_train/c000_el",
+        "bytes": 78296315,
+        "rows": 1525752,
+        "target_bins": {
+          "one": 129280,
+          "zero": 1396472
+        },
+        "interpretation": "BA transformed concentration; EL positive/generated background. Not source-native assay identity."
+      },
+      {
+        "name": "NetMHCIIpan_train/pseudosequence.2023.dat",
+        "bytes": 317582
+      },
+      {
+        "name": "NetMHCIIpan_train/c002_el",
+        "bytes": 77691897,
+        "rows": 1515272,
+        "target_bins": {
+          "one": 139105,
+          "zero": 1376167
+        },
+        "interpretation": "BA transformed concentration; EL positive/generated background. Not source-native assay identity."
+      },
+      {
+        "name": "NetMHCIIpan_train/c002_ba",
+        "bytes": 1295063,
+        "rows": 24037,
+        "target_bins": {
+          "interior": 21055,
+          "one": 162,
+          "zero": 2820
+        },
+        "interpretation": "BA transformed concentration; EL positive/generated background. Not source-native assay identity."
+      },
+      {
+        "name": "NetMHCIIpan_train/c003_el",
+        "bytes": 77576703,
+        "rows": 1513784,
+        "target_bins": {
+          "one": 139264,
+          "zero": 1374520
+        },
+        "interpretation": "BA transformed concentration; EL positive/generated background. Not source-native assay identity."
+      },
+      {
+        "name": "NetMHCIIpan_train/c003_ba",
+        "bytes": 1561007,
+        "rows": 28643,
+        "target_bins": {
+          "zero": 2820,
+          "interior": 25481,
+          "one": 342
+        },
+        "interpretation": "BA transformed concentration; EL positive/generated background. Not source-native assay identity."
+      },
+      {
+        "name": "NetMHCIIpan_train/c004_el",
+        "bytes": 78206822,
+        "rows": 1525562,
+        "target_bins": {
+          "one": 140889,
+          "zero": 1384673
+        },
+        "interpretation": "BA transformed concentration; EL positive/generated background. Not source-native assay identity."
+      },
+      {
+        "name": "NetMHCIIpan_train/c004_ba",
+        "bytes": 1306108,
+        "rows": 24380,
+        "target_bins": {
+          "interior": 21599,
+          "zero": 2526,
+          "one": 255
+        },
+        "interpretation": "BA transformed concentration; EL positive/generated background. Not source-native assay identity."
+      },
+      {
+        "name": "NetMHCIIpan_train/allelelist",
+        "bytes": 24660
+      }
+    ]
+  },
+  {
+    "id": "netmhcstabpan-stability",
+    "archive_sha256": "5f2c6e82d198705a66974b4e42a0ed1412124c4b1e8f7033c7cd43bbdac07f67",
+    "members": [],
+    "rows": 28166,
+    "alleles": 75,
+    "unit": "hours",
+    "zero_rows": 5679,
+    "common_values": [
+      [
+        0.0,
+        5679
+      ],
+      [
+        0.2,
+        1297
+      ],
+      [
+        0.3,
+        1289
+      ],
+      [
+        0.4,
+        1105
+      ],
+      [
+        0.5,
+        952
+      ],
+      [
+        0.6,
+        809
+      ],
+      [
+        0.7,
+        715
+      ],
+      [
+        0.8,
+        572
+      ],
+      [
+        0.9,
+        544
+      ],
+      [
+        1.1,
+        444
+      ],
+      [
+        0.1,
+        443
+      ],
+      [
+        1.0,
+        419
+      ]
+    ]
+  },
+  {
+    "id": "netmhcpan-4.2-training",
+    "archive_sha256": "243a3075887fef3c975da232a87e8d1e17b1aafbf7dba4e52180361d657b5d14",
+    "members": [
+      {
+        "name": "NetMHCpan_train/c004_ba",
+        "bytes": 2190677,
+        "rows": 43648,
+        "target_bins": {
+          "interior": 36737,
+          "zero": 6033,
+          "one": 878
+        },
+        "interpretation": "BA transformed concentration; EL positive/generated background. Not source-native assay identity."
+      },
+      {
+        "name": "NetMHCpan_train/c004_el",
+        "bytes": 131712912,
+        "rows": 3473265,
+        "target_bins": {
+          "one": 156304,
+          "zero": 3316961
+        },
+        "interpretation": "BA transformed concentration; EL positive/generated background. Not source-native assay identity."
+      },
+      {
+        "name": "NetMHCpan_train/c004_iedb",
+        "bytes": 312016
+      },
+      {
+        "name": "NetMHCpan_train/c000_iedb",
+        "bytes": 302577
+      },
+      {
+        "name": "NetMHCpan_train/c004_cedar",
+        "bytes": 38374
+      },
+      {
+        "name": "NetMHCpan_train/c003_ba",
+        "bytes": 2102286,
+        "rows": 41869,
+        "target_bins": {
+          "interior": 35547,
+          "zero": 5481,
+          "one": 841
+        },
+        "interpretation": "BA transformed concentration; EL positive/generated background. Not source-native assay identity."
+      },
+      {
+        "name": "NetMHCpan_train/c003_el",
+        "bytes": 131242379,
+        "rows": 3461139,
+        "target_bins": {
+          "one": 159844,
+          "zero": 3301295
+        },
+        "interpretation": "BA transformed concentration; EL positive/generated background. Not source-native assay identity."
+      },
+      {
+        "name": "NetMHCpan_train/c001_iedb",
+        "bytes": 316556
+      },
+      {
+        "name": "NetMHCpan_train/c002_ba",
+        "bytes": 2185197,
+        "rows": 43533,
+        "target_bins": {
+          "zero": 6174,
+          "interior": 36480,
+          "one": 879
+        },
+        "interpretation": "BA transformed concentration; EL positive/generated background. Not source-native assay identity."
+      },
+      {
+        "name": "NetMHCpan_train/c002_el",
+        "bytes": 131483775,
+        "rows": 3467168,
+        "target_bins": {
+          "one": 158644,
+          "zero": 3308524
+        },
+        "interpretation": "BA transformed concentration; EL positive/generated background. Not source-native assay identity."
+      },
+      {
+        "name": "NetMHCpan_train/c000_el",
+        "bytes": 131713193,
+        "rows": 3473162,
+        "target_bins": {
+          "one": 158954,
+          "zero": 3314208
+        },
+        "interpretation": "BA transformed concentration; EL positive/generated background. Not source-native assay identity."
+      },
+      {
+        "name": "NetMHCpan_train/c000_ba",
+        "bytes": 2092091,
+        "rows": 41707,
+        "target_bins": {
+          "interior": 35104,
+          "one": 823,
+          "zero": 5780
+        },
+        "interpretation": "BA transformed concentration; EL positive/generated background. Not source-native assay identity."
+      },
+      {
+        "name": "NetMHCpan_train/c001_el",
+        "bytes": 131768847,
+        "rows": 3474427,
+        "target_bins": {
+          "one": 159159,
+          "zero": 3315268
+        },
+        "interpretation": "BA transformed concentration; EL positive/generated background. Not source-native assay identity."
+      },
+      {
+        "name": "NetMHCpan_train/c001_ba",
+        "bytes": 2211867,
+        "rows": 44047,
+        "target_bins": {
+          "interior": 37143,
+          "zero": 5991,
+          "one": 913
+        },
+        "interpretation": "BA transformed concentration; EL positive/generated background. Not source-native assay identity."
+      },
+      {
+        "name": "NetMHCpan_train/c003_iedb",
+        "bytes": 298481
+      },
+      {
+        "name": "NetMHCpan_train/c001_cedar",
+        "bytes": 36333
+      },
+      {
+        "name": "NetMHCpan_train/pseudoseqs",
+        "bytes": 15216
+      },
+      {
+        "name": "NetMHCpan_train/c000_cedar",
+        "bytes": 36445
+      },
+      {
+        "name": "NetMHCpan_train/c003_cedar",
+        "bytes": 40759
+      },
+      {
+        "name": "NetMHCpan_train/allelelist",
+        "bytes": 16434
+      },
+      {
+        "name": "NetMHCpan_train/c002_cedar",
+        "bytes": 37267
+      },
+      {
+        "name": "NetMHCpan_train/c002_iedb",
+        "bytes": 302406
+      }
+    ]
+  },
+  {
+    "id": "hla-ligand-atlas-2020.12",
+    "archive_sha256": "e9622ddaab5cb18592e9378b5df917b73afcbe6e08a5151be99b18aa59a232d1",
+    "members": [
+      {
+        "name": "hla_2020.12/AUTHORS.txt",
+        "bytes": 487
+      },
+      {
+        "name": "hla_2020.12/HLA_aggregated.tsv",
+        "bytes": 65823038
+      },
+      {
+        "name": "hla_2020.12/HLA_donors.tsv",
+        "bytes": 7495
+      },
+      {
+        "name": "hla_2020.12/HLA_peptides.tsv",
+        "bytes": 4706149
+      },
+      {
+        "name": "hla_2020.12/HLA_protein_map.tsv",
+        "bytes": 3872077
+      },
+      {
+        "name": "hla_2020.12/HLA_sample_hits.tsv",
+        "bytes": 30817220
+      },
+      {
+        "name": "hla_2020.12/LICENSE.txt",
+        "bytes": 19051
+      },
+      {
+        "name": "hla_2020.12/README.txt",
+        "bytes": 2048
+      }
+    ]
+  }
+]

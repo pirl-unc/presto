@@ -1,0 +1,954 @@
+[
+  {
+    "direction": "ceiling",
+    "value_nM": 5000.0,
+    "assay_family": "purified MHC/competitive/radioactivity",
+    "quantity": "dissociation constant KD (~IC50)",
+    "local_panels": 1,
+    "affected_rows": 11,
+    "independent_source_components": 1,
+    "source_components_with_explicit_bounds": 0,
+    "directional_agreement": 0.0,
+    "gates": {
+      "independent_sources": false,
+      "explicit_bound_sources": false,
+      "affected_rows": false,
+      "directional_agreement": false,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "ceiling",
+    "value_nM": 10000.0,
+    "assay_family": "purified MHC/competitive/fluorescence",
+    "quantity": "half maximal inhibitory concentration (IC50)",
+    "local_panels": 1,
+    "affected_rows": 18,
+    "independent_source_components": 1,
+    "source_components_with_explicit_bounds": 1,
+    "directional_agreement": 0.0,
+    "gates": {
+      "independent_sources": false,
+      "explicit_bound_sources": false,
+      "affected_rows": false,
+      "directional_agreement": false,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "ceiling",
+    "value_nM": 20000.0,
+    "assay_family": "purified MHC/competitive/fluorescence",
+    "quantity": "dissociation constant KD (~IC50)",
+    "local_panels": 1,
+    "affected_rows": 9,
+    "independent_source_components": 1,
+    "source_components_with_explicit_bounds": 0,
+    "directional_agreement": 1.0,
+    "gates": {
+      "independent_sources": false,
+      "explicit_bound_sources": false,
+      "affected_rows": false,
+      "directional_agreement": true,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "ceiling",
+    "value_nM": 20000.0,
+    "assay_family": "purified MHC/direct/fluorescence",
+    "quantity": "dissociation constant KD (~EC50)",
+    "local_panels": 7,
+    "affected_rows": 124,
+    "independent_source_components": 2,
+    "source_components_with_explicit_bounds": 0,
+    "directional_agreement": 1.0,
+    "gates": {
+      "independent_sources": false,
+      "explicit_bound_sources": false,
+      "affected_rows": true,
+      "directional_agreement": true,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "ceiling",
+    "value_nM": 46700.0,
+    "assay_family": "purified MHC/competitive/radioactivity",
+    "quantity": "dissociation constant KD (~IC50)",
+    "local_panels": 2,
+    "affected_rows": 17,
+    "independent_source_components": 1,
+    "source_components_with_explicit_bounds": 0,
+    "directional_agreement": 1.0,
+    "gates": {
+      "independent_sources": false,
+      "explicit_bound_sources": false,
+      "affected_rows": false,
+      "directional_agreement": true,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "ceiling",
+    "value_nM": 69600.0,
+    "assay_family": "purified MHC/competitive/radioactivity",
+    "quantity": "dissociation constant KD (~IC50)",
+    "local_panels": 1,
+    "affected_rows": 10,
+    "independent_source_components": 1,
+    "source_components_with_explicit_bounds": 0,
+    "directional_agreement": 1.0,
+    "gates": {
+      "independent_sources": false,
+      "explicit_bound_sources": false,
+      "affected_rows": false,
+      "directional_agreement": true,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "ceiling",
+    "value_nM": 69800.0,
+    "assay_family": "purified MHC/competitive/radioactivity",
+    "quantity": "dissociation constant KD (~IC50)",
+    "local_panels": 2,
+    "affected_rows": 12,
+    "independent_source_components": 1,
+    "source_components_with_explicit_bounds": 0,
+    "directional_agreement": 1.0,
+    "gates": {
+      "independent_sources": false,
+      "explicit_bound_sources": false,
+      "affected_rows": false,
+      "directional_agreement": true,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "ceiling",
+    "value_nM": 69902.91,
+    "assay_family": "purified MHC/competitive/radioactivity",
+    "quantity": "half maximal inhibitory concentration (IC50)",
+    "local_panels": 2,
+    "affected_rows": 28,
+    "independent_source_components": 2,
+    "source_components_with_explicit_bounds": 0,
+    "directional_agreement": 1.0,
+    "gates": {
+      "independent_sources": false,
+      "explicit_bound_sources": false,
+      "affected_rows": false,
+      "directional_agreement": true,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "ceiling",
+    "value_nM": 70000.0,
+    "assay_family": "purified MHC/competitive/radioactivity",
+    "quantity": "dissociation constant KD (~IC50)",
+    "local_panels": 1,
+    "affected_rows": 5,
+    "independent_source_components": 1,
+    "source_components_with_explicit_bounds": 0,
+    "directional_agreement": 1.0,
+    "gates": {
+      "independent_sources": false,
+      "explicit_bound_sources": false,
+      "affected_rows": false,
+      "directional_agreement": true,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "ceiling",
+    "value_nM": 70422.54,
+    "assay_family": "purified MHC/competitive/radioactivity",
+    "quantity": "half maximal inhibitory concentration (IC50)",
+    "local_panels": 2,
+    "affected_rows": 20,
+    "independent_source_components": 2,
+    "source_components_with_explicit_bounds": 0,
+    "directional_agreement": 1.0,
+    "gates": {
+      "independent_sources": false,
+      "explicit_bound_sources": false,
+      "affected_rows": false,
+      "directional_agreement": true,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "ceiling",
+    "value_nM": 76900.0,
+    "assay_family": "purified MHC/competitive/radioactivity",
+    "quantity": "dissociation constant KD (~IC50)",
+    "local_panels": 2,
+    "affected_rows": 20,
+    "independent_source_components": 2,
+    "source_components_with_explicit_bounds": 0,
+    "directional_agreement": 1.0,
+    "gates": {
+      "independent_sources": false,
+      "explicit_bound_sources": false,
+      "affected_rows": false,
+      "directional_agreement": true,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "ceiling",
+    "value_nM": 77100.0,
+    "assay_family": "purified MHC/competitive/radioactivity",
+    "quantity": "dissociation constant KD (~IC50)",
+    "local_panels": 1,
+    "affected_rows": 12,
+    "independent_source_components": 1,
+    "source_components_with_explicit_bounds": 0,
+    "directional_agreement": 1.0,
+    "gates": {
+      "independent_sources": false,
+      "explicit_bound_sources": false,
+      "affected_rows": false,
+      "directional_agreement": true,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "ceiling",
+    "value_nM": 77400.0,
+    "assay_family": "purified MHC/competitive/radioactivity",
+    "quantity": "dissociation constant KD (~IC50)",
+    "local_panels": 1,
+    "affected_rows": 18,
+    "independent_source_components": 1,
+    "source_components_with_explicit_bounds": 0,
+    "directional_agreement": 1.0,
+    "gates": {
+      "independent_sources": false,
+      "explicit_bound_sources": false,
+      "affected_rows": false,
+      "directional_agreement": true,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "ceiling",
+    "value_nM": 77500.0,
+    "assay_family": "purified MHC/competitive/radioactivity",
+    "quantity": "dissociation constant KD (~IC50)",
+    "local_panels": 2,
+    "affected_rows": 48,
+    "independent_source_components": 1,
+    "source_components_with_explicit_bounds": 0,
+    "directional_agreement": 1.0,
+    "gates": {
+      "independent_sources": false,
+      "explicit_bound_sources": false,
+      "affected_rows": false,
+      "directional_agreement": true,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "ceiling",
+    "value_nM": 77700.0,
+    "assay_family": "purified MHC/competitive/radioactivity",
+    "quantity": "dissociation constant KD (~IC50)",
+    "local_panels": 5,
+    "affected_rows": 212,
+    "independent_source_components": 5,
+    "source_components_with_explicit_bounds": 0,
+    "directional_agreement": 1.0,
+    "gates": {
+      "independent_sources": true,
+      "explicit_bound_sources": false,
+      "affected_rows": true,
+      "directional_agreement": true,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "ceiling",
+    "value_nM": 77800.0,
+    "assay_family": "purified MHC/competitive/radioactivity",
+    "quantity": "dissociation constant KD (~IC50)",
+    "local_panels": 1,
+    "affected_rows": 17,
+    "independent_source_components": 1,
+    "source_components_with_explicit_bounds": 0,
+    "directional_agreement": 1.0,
+    "gates": {
+      "independent_sources": false,
+      "explicit_bound_sources": false,
+      "affected_rows": false,
+      "directional_agreement": true,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "ceiling",
+    "value_nM": 77900.0,
+    "assay_family": "purified MHC/competitive/radioactivity",
+    "quantity": "dissociation constant KD (~IC50)",
+    "local_panels": 2,
+    "affected_rows": 23,
+    "independent_source_components": 2,
+    "source_components_with_explicit_bounds": 0,
+    "directional_agreement": 1.0,
+    "gates": {
+      "independent_sources": false,
+      "explicit_bound_sources": false,
+      "affected_rows": false,
+      "directional_agreement": true,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "ceiling",
+    "value_nM": 78100.0,
+    "assay_family": "purified MHC/competitive/radioactivity",
+    "quantity": "dissociation constant KD (~IC50)",
+    "local_panels": 5,
+    "affected_rows": 66,
+    "independent_source_components": 3,
+    "source_components_with_explicit_bounds": 0,
+    "directional_agreement": 1.0,
+    "gates": {
+      "independent_sources": true,
+      "explicit_bound_sources": false,
+      "affected_rows": false,
+      "directional_agreement": true,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "ceiling",
+    "value_nM": 78125.0,
+    "assay_family": "purified MHC/competitive/radioactivity",
+    "quantity": "half maximal inhibitory concentration (IC50)",
+    "local_panels": 1,
+    "affected_rows": 5,
+    "independent_source_components": 1,
+    "source_components_with_explicit_bounds": 0,
+    "directional_agreement": 1.0,
+    "gates": {
+      "independent_sources": false,
+      "explicit_bound_sources": false,
+      "affected_rows": false,
+      "directional_agreement": true,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "ceiling",
+    "value_nM": 78200.0,
+    "assay_family": "purified MHC/competitive/radioactivity",
+    "quantity": "dissociation constant KD (~IC50)",
+    "local_panels": 1,
+    "affected_rows": 20,
+    "independent_source_components": 1,
+    "source_components_with_explicit_bounds": 0,
+    "directional_agreement": 1.0,
+    "gates": {
+      "independent_sources": false,
+      "explicit_bound_sources": false,
+      "affected_rows": false,
+      "directional_agreement": true,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "ceiling",
+    "value_nM": 87700.0,
+    "assay_family": "purified MHC/competitive/radioactivity",
+    "quantity": "dissociation constant KD (~IC50)",
+    "local_panels": 2,
+    "affected_rows": 14,
+    "independent_source_components": 1,
+    "source_components_with_explicit_bounds": 0,
+    "directional_agreement": 1.0,
+    "gates": {
+      "independent_sources": false,
+      "explicit_bound_sources": false,
+      "affected_rows": false,
+      "directional_agreement": true,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "ceiling",
+    "value_nM": 87800.0,
+    "assay_family": "purified MHC/competitive/radioactivity",
+    "quantity": "dissociation constant KD (~IC50)",
+    "local_panels": 1,
+    "affected_rows": 6,
+    "independent_source_components": 1,
+    "source_components_with_explicit_bounds": 0,
+    "directional_agreement": 1.0,
+    "gates": {
+      "independent_sources": false,
+      "explicit_bound_sources": false,
+      "affected_rows": false,
+      "directional_agreement": true,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "ceiling",
+    "value_nM": 100000.0,
+    "assay_family": "purified MHC/competitive/fluorescence",
+    "quantity": "dissociation constant KD (~IC50)",
+    "local_panels": 8,
+    "affected_rows": 101,
+    "independent_source_components": 1,
+    "source_components_with_explicit_bounds": 1,
+    "directional_agreement": 0.0,
+    "gates": {
+      "independent_sources": false,
+      "explicit_bound_sources": false,
+      "affected_rows": true,
+      "directional_agreement": false,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "floor",
+    "value_nM": 0.1,
+    "assay_family": "purified MHC/competitive/fluorescence",
+    "quantity": "dissociation constant KD",
+    "local_panels": 1,
+    "affected_rows": 19,
+    "independent_source_components": 1,
+    "source_components_with_explicit_bounds": 0,
+    "directional_agreement": 1.0,
+    "gates": {
+      "independent_sources": false,
+      "explicit_bound_sources": false,
+      "affected_rows": false,
+      "directional_agreement": true,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "floor",
+    "value_nM": 1.0,
+    "assay_family": "purified MHC/competitive/radioactivity",
+    "quantity": "dissociation constant KD (~IC50)",
+    "local_panels": 1,
+    "affected_rows": 23,
+    "independent_source_components": 1,
+    "source_components_with_explicit_bounds": 0,
+    "directional_agreement": 1.0,
+    "gates": {
+      "independent_sources": false,
+      "explicit_bound_sources": false,
+      "affected_rows": false,
+      "directional_agreement": true,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "floor",
+    "value_nM": 1.0,
+    "assay_family": "purified MHC/direct/fluorescence",
+    "quantity": "dissociation constant KD (~EC50)",
+    "local_panels": 7,
+    "affected_rows": 156,
+    "independent_source_components": 6,
+    "source_components_with_explicit_bounds": 0,
+    "directional_agreement": 1.0,
+    "gates": {
+      "independent_sources": true,
+      "explicit_bound_sources": false,
+      "affected_rows": true,
+      "directional_agreement": true,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "floor",
+    "value_nM": 4.3,
+    "assay_family": "purified MHC/competitive/radioactivity",
+    "quantity": "dissociation constant KD (~IC50)",
+    "local_panels": 1,
+    "affected_rows": 8,
+    "independent_source_components": 1,
+    "source_components_with_explicit_bounds": 0,
+    "directional_agreement": 1.0,
+    "gates": {
+      "independent_sources": false,
+      "explicit_bound_sources": false,
+      "affected_rows": false,
+      "directional_agreement": true,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "floor",
+    "value_nM": 5.0,
+    "assay_family": "purified MHC/direct/fluorescence",
+    "quantity": "dissociation constant KD (~EC50)",
+    "local_panels": 1,
+    "affected_rows": 39,
+    "independent_source_components": 1,
+    "source_components_with_explicit_bounds": 0,
+    "directional_agreement": 1.0,
+    "gates": {
+      "independent_sources": false,
+      "explicit_bound_sources": false,
+      "affected_rows": false,
+      "directional_agreement": true,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "floor",
+    "value_nM": 10.0,
+    "assay_family": "purified MHC/competitive/fluorescence",
+    "quantity": "dissociation constant KD (~IC50)",
+    "local_panels": 1,
+    "affected_rows": 8,
+    "independent_source_components": 1,
+    "source_components_with_explicit_bounds": 0,
+    "directional_agreement": 1.0,
+    "gates": {
+      "independent_sources": false,
+      "explicit_bound_sources": false,
+      "affected_rows": false,
+      "directional_agreement": true,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "floor",
+    "value_nM": 100.0,
+    "assay_family": "purified MHC/competitive/fluorescence",
+    "quantity": "dissociation constant KD (~IC50)",
+    "local_panels": 2,
+    "affected_rows": 16,
+    "independent_source_components": 1,
+    "source_components_with_explicit_bounds": 0,
+    "directional_agreement": 1.0,
+    "gates": {
+      "independent_sources": false,
+      "explicit_bound_sources": false,
+      "affected_rows": false,
+      "directional_agreement": true,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "floor",
+    "value_nM": 100.0,
+    "assay_family": "purified MHC/competitive/fluorescence",
+    "quantity": "half maximal inhibitory concentration (IC50)",
+    "local_panels": 1,
+    "affected_rows": 6,
+    "independent_source_components": 1,
+    "source_components_with_explicit_bounds": 0,
+    "directional_agreement": 1.0,
+    "gates": {
+      "independent_sources": false,
+      "explicit_bound_sources": false,
+      "affected_rows": false,
+      "directional_agreement": true,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "floor",
+    "value_nM": 1000.0,
+    "assay_family": "purified MHC/competitive/fluorescence",
+    "quantity": "dissociation constant KD (~IC50)",
+    "local_panels": 1,
+    "affected_rows": 6,
+    "independent_source_components": 1,
+    "source_components_with_explicit_bounds": 0,
+    "directional_agreement": 1.0,
+    "gates": {
+      "independent_sources": false,
+      "explicit_bound_sources": false,
+      "affected_rows": false,
+      "directional_agreement": true,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "floor",
+    "value_nM": 1000.0,
+    "assay_family": "purified MHC/competitive/fluorescence",
+    "quantity": "half maximal inhibitory concentration (IC50)",
+    "local_panels": 2,
+    "affected_rows": 13,
+    "independent_source_components": 2,
+    "source_components_with_explicit_bounds": 0,
+    "directional_agreement": 1.0,
+    "gates": {
+      "independent_sources": false,
+      "explicit_bound_sources": false,
+      "affected_rows": false,
+      "directional_agreement": true,
+      "no_opposing_bounds": false,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  },
+  {
+    "direction": "floor",
+    "value_nM": 5000.0,
+    "assay_family": "purified MHC/competitive/fluorescence",
+    "quantity": "half maximal inhibitory concentration (IC50)",
+    "local_panels": 1,
+    "affected_rows": 14,
+    "independent_source_components": 1,
+    "source_components_with_explicit_bounds": 0,
+    "directional_agreement": 1.0,
+    "gates": {
+      "independent_sources": false,
+      "explicit_bound_sources": false,
+      "affected_rows": false,
+      "directional_agreement": true,
+      "no_opposing_bounds": true,
+      "verified_protocol_family": false,
+      "complete_independence_metadata": true
+    },
+    "status": "local_only",
+    "policy": {
+      "min_source_components": 3,
+      "min_explicit_bound_components": 2,
+      "min_affected_rows": 100,
+      "min_directional_agreement": 0.95
+    },
+    "transfers_applied": 0
+  }
+]

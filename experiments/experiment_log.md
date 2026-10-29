@@ -5337,10 +5337,10 @@ The common manifest trainer now supports explicit stratum weights with verified
 unweighted compatibility and exact resume. No task-specific trainer or unqualified
 six-output default was introduced. PR131 remains draft until130/132 qualify.
 
-## 2026-10-28 — Expanded multi-output model with temporal and assay-study holdouts (in progress)
+## 2026-10-28 — Expanded multi-output model with temporal and assay-study holdouts (complete)
 
 - **Agent/model:** Codex / GPT-6; [experiment/reproduction](2026-10-28_1540_codex_temporal-multi-output/README.md).
-- **Status:** cohort independently verified; two H100! calls launched2026-10-29 03:00UTC. No held-out result yet.
+- **Status:** both 51,099-update fits completed; per-example validation/test target, loss and metric verification passed. [Final report](2026-10-28_1540_codex_temporal-multi-output/results/summary.md). All 3,493,132 TRAIN rows exposed; selected checkpoints were earlier at 7,000 / 32,000 updates.
 - **Source:** fresh canonical Hitlist2.0.40 IEDB/CEDAR full exports,19.255GB total,
   exact hashes in the acquisition receipt. Human catalog-resolved MHC, strict
   peptidoform/candidate scope, declared ordinary-DR DRA*01:01 reference; host,
@@ -5362,12 +5362,22 @@ six-output default was introduced. PR131 remains draft until130/132 qualify.
   TRAIN1:1/eval5:1, with replacement; known-positive and cross-split exclusion.
   Same-protein and fallback human-Ensembl112 populations scored separately, including
   length-only control. Source-reported MS nondetections receive separate study AUCs.
-- **Hardware:** requested two concurrent `H100!` workers; both report NVIDIA H10080GB HBM3,85,009,367,040device bytes. Runtime pending.
+- **Hardware:** requested two concurrent `H100!` workers; both report NVIDIA H10080GB HBM3,85,009,367,040 device bytes. Wall times 35,615 / 47,121 s; optimizer 24,587 / 32,180 s. Peak allocated 3.72 / 3.85 GB, reserved 14.63 / 15.77 GB.
   CPU source attempt2 failed at16GiB provenance scratch; attempt4 uses128GiB scratch
   and512GiB requested disk. Downloads and failed attempts are preserved.
-- **Validation/test metrics, winner:** unavailable; fits launched. Planned reporting
-  includes exact Spearman/Pearson/RMSE, censor-aware loss,500nM classification and
-  ligand AUROC/AUPRC by class, assay, study and evaluation population. No promotion.
+- **Validation-selected condition:** seed 42 (equal-endpoint loss .64036 versus .70710).
+  Literal IC50 validation Spearman I .4995 / .5344, II .4248 / .4580 (seeds 42 / 43).
+  Older-study IC50 test Spearman I .2392 / .2629 (100 exact), II .5199 / .6034
+  (267 exact). Test log10(nM) RMSE I 1.0231 / 1.0778, II 1.0122 / .9658.
+  2026 KD-via-IC50 test Spearman I .4648 / .7250 (592 exact).
+  2026 same-protein ligand test AUROC I .9625 / .9687, II .8061 / .8188;
+  AUPRC I .9043 / .9236, II .5412 / .6312. Source-reported older MS outcomes
+  remain a major failure: I AUROC .1012 / .2119. These are different populations.
+  Full Pearson, 500 nM classification, loss, support and uncertainty tables are
+  preserved. Missing assay/class holdouts are not qualified; no broad promotion.
+- **Interpretation:** complete exposure does not remove weak affinity transfer or
+  measured-nondetection failure. Data curation and label-quality retraining is
+  registered separately; these inspected holdouts remain fixed development evidence.
 - **Software:** common source at c8f032a7, complete211-file runtime pinned. Shared
   2805tests/4skips on the current source;79and89focused source checks also pass.
   Thirty-two family fixtures passed before launch, including three exact checkpoint
@@ -5578,3 +5588,57 @@ six-output default was introduced. PR131 remains draft until130/132 qualify.
   No numerical held-out information entered this audit. Takeaway: prioritize
   source-reviewed assay categorization, suspected-limit review and existing-data
   recovery through the shared observation path. Current frozen fits unchanged.
+
+## 2026-10-29_1653_codex_measurement-curation-recovery — source curation and qualified recovery
+
+- Codex/GPT-6, 2026-10-29; [family and reproduction](2026-10-29_1653_codex_measurement-curation-recovery/README.md).
+  Source commit `858f5383` plus frozen dirty source; stage-specific commands and hashes preserved.
+- Common observation admission now preserves reported/effective qualifiers, literal
+  quantity, method tags and source-scoped censor decisions. Within-study/MHC/method/
+  quantity screen inferred 506 bounds (482 ceilings / 24 floors), withheld 618
+  unresolved TRAIN rows: 234,337 to 233,719 physical observations. Numerical values
+  and original source records unchanged. Inferred limits are not verified protocols.
+- Shared thresholds require stricter independent-source and verified-protocol
+  evidence; none approved or transferred. [All 71 panels and counts](2026-10-29_1653_codex_measurement-curation-recovery/results/thresholds.md).
+- Hitlist issue 871 records conflicting competitive-fluorescence/KD method tags.
+  PR 872 preserves peptidoform fields and chemistry-aware deduplication; merged
+  as `ff5247f` (2.1.3), clean-main release gate 40948383762 running. The actual
+  source admission remains pinned to its tested development wheel/hash.
+- Source-backed Stražar recovery: 14,187 unmodified pMHC observations; 289 shorter
+  than the current nine-residue MHC-II minimum (184 sequences), 348 heldout peptide
+  exclusions, 13,550 candidate TRAIN observations. Follow-on background audit adds
+  one embargo, retaining 13,549 for the new fit. No blanket unknown-PTM fill.
+- Twelve reference/training/atlas archives acquired and hashed; downloaded rows
+  are not assumed independent or admissible. Only 11/132 selected PSM files were
+  retrieved before persistent public rate limiting; remaining recovery is open.
+- CPU only, no pretraining/fit/losses/synthetic training labels; predictive
+  validation/test metrics and dumps inapplicable. Curation CPU 4/16 GiB, 141.75 s;
+  recovery admission CPU 4/16 GiB, 49.97 s. 146 source/admission tests pass plus
+  independent row/qualifier/source-evidence verification. Artifacts on Modal
+  `presto-checkpoints` and local family artifact path are linked in the README.
+- Decision: apply the reviewed data changes through the unchanged shared trainer
+  in the separately registered retrain; retain unresolved and unreviewed sources.
+
+## 2026-10-29_1956_codex_curated-data-retrain — frozen cohort, fits running
+
+- Codex/GPT-6, 2026-10-29; [family/reproduction](2026-10-29_1956_codex_curated-data-retrain/README.md),
+  [prospective plan/amendment](agents/codex/plans/2026-10-29_curated-data-retrain.md).
+- TRAIN changes: 506 source-scoped inferred bounds, 618 unresolved rows withheld,
+  13,549 verified source-backed ligands plus matched unobserved comparisons,
+  35 old generated comparisons removed for newly known positive sequences.
+  Blacklist expanded by 292 sequences. Three suspect generated TEST labels stay
+  fixed and receive a separate exclusion sensitivity analysis; one extra recovered
+  observation embargoed. All heldout bytes unchanged and previously inspected.
+- Shared-v5 wide ten-output model, no pretraining or new losses; exact/inequality
+  regression and binary cross-entropy unchanged. Batch 128, AdamW 3e-4/decay 1e-4,
+  constant LR, seeds 42/43, family sampling 60%EL/20%IC50/15%other/5%qualitative.
+  3,519,577 TRAIN observations; 6,588,275 weighted exposures; 51,471 updates/seed.
+  Minimum equal-endpoint validation selection; no test-based selection.
+- Frozen source `858f5383` plus pinned dirty snapshot; model/trainer identical to
+  parent, shared reader speedup and curation changes explicit. 172 focused tests
+  pass, independent preparation 246.44 s on CPU 8/64 GiB; full worker preflight
+  and independent census mandatory. Failed blacklist assumption preserved before fit.
+- Requested two H100! workers maximum, CPU 8/64 GiB and 512 GiB scratch each.
+  Actual hardware/runtime and held-out metrics pending. No new winner or claim of
+  improvement. Collection/verification/reporting continuation and live comparison
+  are running; complete artifact/metric closeout remains required.
