@@ -33,6 +33,39 @@ def table(name, rows):
             )
 
 
+def study_concentration(composition, selection):
+    """Count original measured bags; generated comparisons never inflate study support."""
+    aliases = {component['id']: component['aliases'] for component in selection['components']}
+    groups = defaultdict(list)
+    for row in composition['strata']:
+        if row['field'] == 'study_component':
+            groups[row['split'], row['endpoint'], row['mhc_class']].append(row)
+    expected = {
+        (row['split'], row['endpoint'], row['mhc_class']): row['n']
+        for row in composition['populations']
+        if row['population'] == 'original'
+    }
+    assert set(groups) == set(expected)
+    result = []
+    for key, rows in sorted(groups.items()):
+        n = sum(row['n'] for row in rows)
+        assert n == expected[key]
+        largest = max(rows, key=lambda row: row['n'])
+        result.append(
+            dict(
+                split=key[0],
+                endpoint=key[1],
+                mhc_class=key[2],
+                original_rows=n,
+                study_components=len(rows),
+                largest_study_rows=largest['n'],
+                largest_study_fraction=largest['n'] / n,
+                largest_study_aliases=aliases[largest['value']],
+            )
+        )
+    return result
+
+
 def length_bin(length):
     for limit, label in ((8, '7-8'), (9, '9'), (10, '10'), (14, '11-14'), (20, '15-20')):
         if length <= limit:
@@ -225,6 +258,10 @@ def main():
         [],
         [],
         [],
+    )
+    table(
+        'study-concentration',
+        study_concentration(composition, read(F / 'results/study-selection.json')),
     )
     baselines = []
     started = time.time()

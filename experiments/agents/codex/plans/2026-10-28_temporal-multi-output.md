@@ -445,3 +445,9 @@ full preflight before their first optimizer step. The launcher gate requires the
 specific verified-delta receipt before allowing this declared state. There is no
 cache or bypass of the common trainer. Preserve the entire original result and
 reproduction directories before replacing current metadata with revision2.
+
+The live report should show the reviewed TRAIN population (original and generated
+rows separately), rather than leaving superseded pre-partition counts as its main
+census. Publish only small existing composition summaries, retain two fit columns,
+and label submitted jobs separately from optimizer progress. This is display-only;
+no manifest, training worker or prediction contract changes.

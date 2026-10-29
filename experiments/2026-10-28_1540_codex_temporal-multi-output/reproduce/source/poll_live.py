@@ -74,11 +74,17 @@ while True:
     state['runs'] = [value for value in last_remote[1:] if value]
     state['admission'] = read(F / 'results/admission.json', {})
     prepared = read(F / 'results/prepared.json', {})
+    composition = read(F / 'results/cohort-composition.json', {})
+    state['cohort'] = dict(
+        endpoints=prepared.get('model', {}).get('endpoints', []),
+        populations=composition.get('populations', []),
+        source_review=prepared.get('source_review', {}),
+    )
     if prepared.get('verification', {}).get('status') == 'passed':
         state['preparation'] = {
             'status': 'prepared',
             'stage': (
-                'Exact reviewed cohort verified; common trainer preflight remains pending'
+                'Reviewed cohort verified; each worker executes full common preflight'
                 if prepared.get('source_review')
                 else 'Original cohort passed canonical preflight and independent audit'
             ),

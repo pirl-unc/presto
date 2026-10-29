@@ -5419,3 +5419,11 @@ six-output default was introduced. PR131 remains draft until130/132 qualify.
   327.09 seconds; isolated unpacked-wheel registry lookup passes. Both replacement
   workers report H100 80GB HBM3 and 85,009,367,040 device bytes while admitting the
   frozen manifests. Canonical preflight and predictive results are still pending.
+
+- **Reporting review:** the live table now shows the reviewed TRAIN originals and
+  generated comparators separately; JavaScript syntax and DOM smoke checks pass.
+  Source-concentration tables reconcile all 51 original split/output/class cells.
+  IC50 test support is one class-I study and three class-II studies; intervals and
+  pooled scores must retain that limit. Four reporting fixtures pass. Both hosted
+  CI runs for 7202c09c pass (40816663407 and 40816681382). Predictive fits continue
+  through canonical preflight; no model/trainer or frozen input changes.

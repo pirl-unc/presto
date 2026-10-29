@@ -286,3 +286,19 @@ comparators. A zero means that output/class cell has no observations in the spli
 | koff | 6 / 2 | 0 / 0 | 0 / 0 |
 | qualitative_binding | 22,181 / 18,279 | 689 / 446 | 290 / 151 |
 | td50 | 496 / 7 | 145 / 0 | 140 / 0 |
+
+## Source concentration before fitting
+
+Original TRAIN observations are 87.5% MS and 2.9% direct IC50; the fixed sampler
+assigns 60% and 20% of optimizer labels respectively. Sampling balances endpoints
+and classes, not source studies. IC50 spans 132 class-I and 213 class-II reference
+components, but the largest contributes 47.8% and 47.4% respectively. Class-II MS
+has 67 components; the largest supplies 51.4%. Reference components can include
+unpublished IEDB submissions, so component counts are not all peer-reviewed papers.
+
+The test IC50 set has one class-I study (100 observations) and three class-II
+studies (379 observations, including bounds). Class-II test MS is one 2026 study;
+class-I test MS is two studies, dominated by its 2026 paper. These are deliberately
+small study holdouts, not broad estimates across future studies. Report per-study
+metrics and conditional uncertainty alongside pooled numbers. Exact counts and
+source aliases are in `results/study-concentration.json` / `.csv`.
