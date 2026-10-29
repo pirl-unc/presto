@@ -14601,6 +14601,8 @@ Spec: experiments/agents/codex/plans/2026-10-28_temporal-multi-output.md.
 - [x] Inventory/fetch current canonical IEDB/Hitlist data and verify 2026 study dates.
 - [x] Expand shared admission including declared DRA and ligand candidate scope.
 - [x] Freeze study partitions, negative-background contract and per-output recipe.
+- [x] Inspect suspicious sparse kinetic labels against primary measurement definitions.
+- [x] Apply shared assay-identity quarantine and refreeze the exact reviewed cohort delta.
 - [ ] Verify shared code/source contracts; run two-seed H100 training with live metrics.
 - [ ] Independently verify per-assay and ligand metrics, replay serving and publish common recipe.
 - [ ] Close registry/report and draft PR with evidence and remaining limits.

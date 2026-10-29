@@ -1,6 +1,6 @@
 {
-  "git_commit": "c8f032a7a200a1ea87121b016eb9dbb22c90e3db",
-  "git_dirty": " M experiments/agents/codex/todo.md\n M tasks/lessons.md\n M tasks/todo.md\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/\n?? experiments/agents/codex/plans/2026-10-28_temporal-multi-output.md\n",
+  "git_commit": "aa2b3f7a358010f1d6163cbaad7c28dd1e1fa97e",
+  "git_dirty": " M experiments/2026-10-28_1540_codex_temporal-multi-output/analysis/poll_live.py\n D experiments/2026-10-28_1540_codex_temporal-multi-output/reproduce/launch.json\n D experiments/2026-10-28_1540_codex_temporal-multi-output/reproduce/planned-launch.json\n D experiments/2026-10-28_1540_codex_temporal-multi-output/reproduce/prepare-call.json\n D experiments/2026-10-28_1540_codex_temporal-multi-output/reproduce/training-call-progress.json\n D experiments/2026-10-28_1540_codex_temporal-multi-output/reproduce/training-calls.json\n D experiments/2026-10-28_1540_codex_temporal-multi-output/reproduce/training-contract.json\n D experiments/2026-10-28_1540_codex_temporal-multi-output/results/launch-readiness.json\n M experiments/agents/codex/plans/2026-10-28_temporal-multi-output.md\n M tasks/lessons.md\n M tasks/todo.md\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/attempts/\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/code/review_rates.py\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/code/revise_cohort.py\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/reproduce/rate-review-call.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/kon-training-source-audit.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/preflight-attempt1-source-review-stop.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/rate-training-source-audit.json\n",
   "files": {
     "__init__.py": "e3217291a1ed38cdbbeac7c0c60dc8a5d6c9165d0b5ddc8bf0eaaa52def05b33",
     "__main__.py": "ff3afdd30f5ba68d326878bab7eff846d6b526a02a22e72140b64df27f1b188c",
@@ -33,7 +33,7 @@
     "data/modular_auxiliary.py": "7e2f6e9f560fe62650809ec6be6a781c5d3040270c73b8ec02cfa4bdb4cdb34f",
     "data/modular_background.py": "60ae0036a4399a34725b7fb9becf1321225aab8d1ad028f7be951e0e3900fb23",
     "data/modular_context.py": "fe98a9b7716f1fae2197133e08f1ff4dbc56c9bd156efb41e0586c1272c01935",
-    "data/modular_hitlist.py": "d5aaf3033b3598b7373264eb8a99546252d1350154780d66bd2c16b399c5dbbb",
+    "data/modular_hitlist.py": "7640642c1fe7bb0518c4bc477c9f4da0712be53db9e05724685116d0c6395d7d",
     "data/modular_hitlist_ms.py": "fb3ee8f1ed666e9e961f2285a3410df247c1addc47555839a751398d7141b235",
     "data/modular_lineage.py": "174832268ee01099fcd608dd82d3e60359905936e5de6f18f3c35d000112bdc7",
     "data/modular_ordinal.py": "530667626cca2ba535585e1bd5aa0b1dbf5c77b8be0540b1da911e27be1b9520",
@@ -212,7 +212,9 @@
     "training/target_policy.py": "5111aa9bfd143241dd698fb6a94250f7e5c231a7ed427d93b3eb72c156aa98e5",
     "training/tasks.py": "7dafa4f9435bcf99ce53c4c646453300021781fc5e0cdb167deb9b8fb14764b7",
     "training/trainer.py": "b0aa1f1299b376c3dc8222874d24382ded01c226ab70bf641d80ae8a6f27e331",
-    "data/b2m_sequences.csv": "2d4dd2eecf1aed35a0ad4a058b6623f085a9aa12b1406d9bd3f51a12f8f43fe6"
+    "data/b2m_sequences.csv": "2d4dd2eecf1aed35a0ad4a058b6623f085a9aa12b1406d9bd3f51a12f8f43fe6",
+    "data/assay_reviews.py": "9172bb5223e684bd76fde2e821e2d15355c64f2ad9f6d03fdb5985a9fa469c39",
+    "data/assay_measurement_reviews.json": "d1d1ae11d51314da292e9b37b41f9e8241d34bc50555d33ac6b3a243070cd829"
   },
   "catalog": {
     "path": "/Users/iskander/.cache/mhcseqs/mhc-full-seqs.csv",
@@ -225,5 +227,12 @@
     "url": "https://ftp.ensembl.org/pub/release-112/fasta/homo_sapiens/pep/Homo_sapiens.GRCh38.pep.all.fa.gz"
   },
   "pretraining": false,
-  "shared_test_result": "2797 passed, 4 skipped, 33 warnings in 350.52s; subsequent literal purified-method fix: 79 focused tests passed in 12.38s"
+  "shared_test_result": "2797 passed, 4 skipped, 33 warnings in 350.52s; subsequent literal purified-method fix: 79 focused tests passed in 12.38s",
+  "previous_runtime_commit": "c8f032a7a200a1ea87121b016eb9dbb22c90e3db",
+  "changed_runtime_files": [
+    "data/modular_hitlist.py",
+    "data/assay_reviews.py",
+    "data/assay_measurement_reviews.json"
+  ],
+  "model_and_trainer_unchanged": true
 }

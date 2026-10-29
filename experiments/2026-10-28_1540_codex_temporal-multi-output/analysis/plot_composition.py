@@ -49,6 +49,12 @@ def main():
         'Off-rate',
         'On-rate',
     ]
+    supported = [
+        (endpoint, label)
+        for endpoint, label in zip(endpoints, labels)
+        if endpoint in prepared['model']['endpoints']
+    ]
+    endpoints, labels = zip(*supported)
     original = {
         (r['endpoint'], r['mhc_class']): r['n']
         for r in composition['populations']

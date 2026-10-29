@@ -5386,8 +5386,36 @@ six-output default was introduced. PR131 remains draft until130/132 qualify.
   generated comparators1,617,732/12,050/59,250respectively.127,096original rows
   excluded by exact-peptide embargo. TRAIN direct IC50 I/II18,531/36,205;11outputs.
   koff22 andkon6TRAIN labels have no held-out support and remain unvalidated.
-- **Active calls:** `fc-01M62SMM6TFPHZKNMQJ45MP221` (seed42),
+- **Stopped original calls:** `fc-01M62SMM6TFPHZKNMQJ45MP221` (seed42),
   `fc-01M62SMM9W381JKPPKCKJP0SDK` (seed43), app`ap-Du3wtmTBI9AvARUgRQ9w3v`.
   Preparation survived automatic CPU preemption retry; final source/target/group/
   background/scaler audit passed before both GPU submissions. The complete
   materialization backup and atomic observer/common-checkpoint recovery are recorded.
+
+- **Source review, October 29:** stopped both original H100 calls during preflight
+  before any optimizer update or held-out prediction. Quarantine 20 kinetic labels
+  by exact original assay identity (six on-rates, fourteen off-rates), preserving
+  primary references and raw outcomes. An earlier half-life exclusion was withdrawn:
+  assay 1820987 already carries the correct lower-bound qualifier. The shared adapter
+  and wheel include the review registry; focused checks pass 112 tests, and the
+  preceding full suite passes 2,855 tests/four skips. Runtime aa2b3f7a changes only
+  admission, with unchanged model/trainer files. CPU revision `kinetic-review-v2`
+  is active; original artifacts are archived under `attempts/source-as-exported`.
+  No predictive metrics or promotion yet.
+
+- **Reviewed cohort launched:** CPU call `fc-01M62X7863ZWMTQ4SC3KAQMGAG`
+  completed in 350.6 seconds on CPU8/64GiB (explicit nonpreemptible, 3x CPU/RAM
+  billing; no GPU). Exact 20-row removal, retained bytes/order, unchanged holdouts/
+  backgrounds, independent TRAIN scales and complete composition reconciliation
+  passed. Revised TRAIN 1,875,400 originals plus 1,617,732 comparators; validation
+  and test unchanged. Ten outputs; koff I/II support 6/2, kon unallocated.
+  Weighted epoch 6,540,643 labels, 51,099 updates per seed. Replacement H100! app
+  `ap-vGJZSwosZm8VkhOcNJPonj`, calls `fc-01M62XMCM816XJJJT29A62VV67` and
+  `fc-01M62XMCQ63CRJ69VFR96TX0MW`; full common trainer preflight remains mandatory.
+  Revised durable artifacts live under `revisions/kinetic-review-v2/` on the same
+  volume. No held-out predictive score has been produced yet.
+
+- **Final revision software verification:** 2,854 tests pass, four optional skips,
+  327.09 seconds; isolated unpacked-wheel registry lookup passes. Both replacement
+  workers report H100 80GB HBM3 and 85,009,367,040 device bytes while admitting the
+  frozen manifests. Canonical preflight and predictive results are still pending.

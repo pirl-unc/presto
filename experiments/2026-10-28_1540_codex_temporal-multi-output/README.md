@@ -1,11 +1,33 @@
 # Shared multi-output training and 2026 study holdouts
 
-Status: **Cohort independently verified; two H100! fit calls launched on 2026-10-29 at 03:00 UTC. No validation results yet.**
+Status: **Reviewed cohort verified; replacement two-seed H100 fits launched. No predictive results yet.**
 Agent/model: Codex / GPT-6. Date: 2026-10-28 UTC.
 
 [Prospective specification](../agents/codex/plans/2026-10-28_temporal-multi-output.md)
 · [live report](http://127.0.0.1:54502/dashboard.html)
 · [canonical registry](../experiment_log.md).
+
+## Source-review correction (2026-10-29)
+
+The first two H100 calls were stopped during preflight with zero optimizer updates
+and no held-out predictions. Primary-source review identified 20 unresolved kinetic
+labels: six on-rates and fourteen off-rates. Their exact assay identities and primary
+references are retained in the shared packaged `data/assay_measurement_reviews.json`
+registry. The common purified-assay adapter defers them without inventing corrected
+numbers. **Correction to an earlier review note:** half-life assay 1820987 already
+has a `>` qualifier, consistent with the paper; all twelve half-life labels remain.
+
+The original result and reproduction directories are frozen under
+[attempts/source-as-exported](attempts/source-as-exported/archive.json). The revision
+preserves every holdout, generated background and all other row bytes. It drops the
+unsupported `kon` head; `koff` retains eight TRAIN labels and no held-out qualification.
+CPU preparation passed the exact-delta, scale, quota and composition checks in 350.6 seconds.
+Each replacement GPU still runs the full common trainer preflight before optimization.
+The model, loss and optimizer implementation are unchanged. Source runtime commit:
+`aa2b3f7a358010f1d6163cbaad7c28dd1e1fa97e` (213 pinned files).
+
+The counts below describe the completed reviewed cohort. No scientific winner or
+final primary recipe is claimed.
 
 ## Source and admission contract
 
@@ -31,8 +53,9 @@ Physical measurements remain distinct: IC50, KD, EC50, KD-via-IC50, KD-via-EC50,
 half-life, off-rate, on-rate and td50. Literal qualitative binding and observed
 elution are separate binary outputs. Bounds keep their original inequality;
 training scales use exact TRAIN values only. Allocate only supported TRAIN heads.
-Shared source implementation is pinned at `c8f032a7a200a1ea87121b016eb9dbb22c90e3db`;
-[complete runtime file hashes](reproduce/runtime-pins.json) include 211 files.
+Shared source implementation is pinned at `aa2b3f7a358010f1d6163cbaad7c28dd1e1fa97e`;
+[complete runtime file hashes](reproduce/runtime-pins.json) include 213 files. The
+model and trainer files match the original c8f032a7 runtime exactly.
 
 ## Frozen selection and model recipe
 
@@ -49,7 +72,7 @@ seeds 42/43, no pretrained weights, dropout .1, AdamW 3e-4/decay1e-4, batch128.
 Relative label frequencies: 60% elution,20% IC50,15% other physical outputs,5%
 qualitative binding; within families, endpoint/class frequencies use square-root
 counts. Canonical weighted quotas cover all unique TRAIN rows. The resulting budget is51,099updates per seed: one complete weighted epoch
-of6,540,642examples, batch128 (final batch may be partial). Validate every1,000 updates;
+of6,540,643examples, batch128 (final batch may be partial). Validate every1,000 updates;
 equal-endpoint loss selects the checkpoint. Full validation/test dumps; a fixed
 16,384-row cap applies only to post-fit TRAIN diagnostic predictions.
 
@@ -83,13 +106,14 @@ request was rejected before a worker started. Attempt4 asserts128GiB scratch,
 preserved. Dropped local log/controller connections do not restart the remote build.
 
 Predictive resources: requested `H100!`, maximum two workers, CPU8/64GiB RAM each.
-Both workers report NVIDIA H100 80GB HBM3,85,009,367,040device bytes, Torch2.14.1+cu130,
+The original workers reported NVIDIA H100 80GB HBM3,85,009,367,040device bytes, Torch2.14.1+cu130,
 CUDA13.0; TF32/AMP/compile disabled. Fit runtime and held-out metrics remain pending.
 There is no preferred new checkpoint yet.
 
-Software evidence: the current shared suite passes2,805 tests/four skips;
+Software evidence: the final full shared suite passed **2,854 tests/four skips**
+in 327.09 seconds; 112 focused source checks and 37 family fixtures pass. The earlier
 the literal purified-method and reported-MS-negative admission checks passed79
-and89 focused tests, respectively. Thirty-two preparation/report/controller/recovery fixtures passed before launch,
+and89 focused tests, respectively. Preparation/report/controller/recovery fixtures passed before launch,
 including the real ObservationIndex/common-trainer preflight, independent source/background audit and separation of
 reported-negative versus generated-background AUCs. Artificial tests are not
 biological performance evidence.
@@ -101,8 +125,9 @@ biological performance evidence.
 - `code/launch.py`, `worker.py`: two-seed common-trainer fits and live validation.
 - `reproduce/`: source snapshots, exact invocations, failed-attempt dispositions,
   dependency call IDs and pinned package/reference hashes.
-- Modal volume `presto-checkpoints`, `/runs/2026-10-28_1540_codex_temporal-multi-output/`:
-  source downloads/index, admission SQLite, prepared manifests and eventual raw fits.
+- Modal volume `presto-checkpoints`, `/volume/2026-10-28_1540_codex_temporal-multi-output/`:
+  original sources and preparation; revised manifests and fits are under
+  `revisions/kinetic-review-v2/`. `/runs/` paths are worker-local staged copies.
 - Local large artifacts: repository `artifacts/2026-10-28_1540_codex_temporal-multi-output/`.
 
 Final closure still requires: all fits, complete validation/test prediction dumps,
@@ -190,26 +215,26 @@ was submitted. The verified audit removes127,096original rows by peptide embargo
 
 | Partition | Original observations | Generated comparators | Total rows |
 |---|---:|---:|---:|
-| TRAIN | 1,875,420 | 1,617,732 | 3,493,152 |
+| TRAIN | 1,875,400 | 1,617,732 | 3,493,132 |
 | Validation | 6,534 | 12,050 | 18,584 |
 | Test | 14,906 | 59,250 | 74,156 |
 
 TRAIN includes54,736direct IC50 measurements (18,531I/36,205II),17,832KD,212EC50,
-72,925KD-via-IC50,38,932KD-via-EC50,8,729half-life,22koff,6kon,503td50,
+72,925KD-via-IC50,38,932KD-via-EC50,8,729half-life,8koff,503td50,
 40,460qualitative binding and1,641,063original MS observations. Every allocated
-output has TRAIN support, but koff/kon have no eligible held-out observations;
-they are unvalidated outputs, not evidence of generalization. Some other
+output has TRAIN support, but koff has no eligible held-out observations;
+it is an unvalidated output, not evidence of generalization. Some other
 output/class cells have no validation or test support; retain explicit N/A.
 All molecular MHC is human; experimental hosts and peptide organisms vary.
-`results/cohort-strata.json` preserves method, host, source organism, peptide
+`results/cohort-strata.json` (with its verified 20-row delta receipt) preserves method, host, source organism, peptide
 length, candidate count and reported allele counts on original observations.
 Reported-allele membership counts can overlap for multi-allelic observations.
 
-[Modal app](https://modal.com/apps/iskandr/main/ap-Du3wtmTBI9AvARUgRQ9w3v):
-seed42 call `fc-01M62SMM6TFPHZKNMQJ45MP221`;
-seed43 call `fc-01M62SMM9W381JKPPKCKJP0SDK`.
+[Reviewed Modal app](https://modal.com/apps/iskandr/main/ap-vGJZSwosZm8VkhOcNJPonj):
+seed42 call `fc-01M62XMCM816XJJJT29A62VV67`;
+seed43 call `fc-01M62XMCQ63CRJ69VFR96TX0MW`.
 The exact invocation and dirty state are in `reproduce/launch.json`; scientific
-runtime remains the211-filec8f032a7 snapshot. Experiment observer state is bound
+runtime is the 213-file aa2b3f7a snapshot. Experiment observer state is bound
 atomically to common resumable model/optimizer/RNG/order/evaluation checkpoints.
 Three interruption tests establish exact restored weights, optimizer, coverage and
 evaluation-cache reuse on artificial CPU fixtures. Recovered elapsed/optimizer
@@ -233,9 +258,10 @@ Individual allele memberships may overlap; observation totals never do.
 Original TRAIN MS counts are 1,348,309 class I and 292,754 class II. Direct IC50
 counts are 18,531 and 36,205. Class-I IC50 includes 5,880 HLA-A*02:01 observations.
 Full original support, catalog allele memberships, candidate sets, studies and
-qualifiers are in `results/cohort-composition.json`. The metadata audit ran in
-existing worker `ta-01M62SMMGKXEEGYE67SFBSRR3R` without model evaluation or new GPU
-allocation; its source and invocation are frozen in `reproduce/`.
+qualifiers are in `results/cohort-composition.json`. The initial metadata audit ran in
+existing worker `ta-01M62SMMGKXEEGYE67SFBSRR3R`. The complete audit was rerun on
+the corrected CPU cohort without model evaluation. Both source/invocation records
+are preserved, with the original under `attempts/source-as-exported/`.
 
 ![Original support versus planned optimizer exposures](results/training-composition.png)
 
@@ -257,7 +283,6 @@ comparators. A zero means that output/class cell has no observations in the spli
 | kd | 16,349 / 1,483 | 532 / 0 | 449 / 30 |
 | kd_via_ec50 | 36,342 / 2,590 | 106 / 422 | 66 / 339 |
 | kd_via_ic50 | 51,437 / 21,488 | 96 / 246 | 604 / 55 |
-| koff | 6 / 16 | 0 / 0 | 0 / 0 |
-| kon | 0 / 6 | 0 / 0 | 0 / 0 |
+| koff | 6 / 2 | 0 / 0 | 0 / 0 |
 | qualitative_binding | 22,181 / 18,279 | 689 / 446 | 290 / 151 |
 | td50 | 496 / 7 | 145 / 0 | 140 / 0 |

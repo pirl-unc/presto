@@ -8,6 +8,30 @@ import time
 F = Path(__file__).resolve().parents[1]
 
 
+def validate_preflight(p, audit, pins):
+    preflight = p['review_metadata']['preflight.json']
+    if preflight['status'] == 'passed':
+        return
+    assert preflight['status'] == 'pending_in_trainers'
+    review = p['source_review']
+    assert review['revision'] == audit['review_revision'] == 'kinetic-review-v2'
+    assert review['removed_rows'] == audit['removed_rows'] == 20
+    assert audit['exact_reviewed_row_removal'] is True
+    assert audit['retained_source_bytes_and_order_verified'] is True
+    assert audit['unchanged_holdouts_and_backgrounds'] is True
+    assert audit['inherited_full_verification']['status'] == 'passed'
+    assert audit['canonical_preflight'] == 'pending_in_trainers'
+    assert pins['files']['data/assay_measurement_reviews.json'] == review['policy_sha256']
+    assert pins['git_commit'] == review['runtime_source']
+    assert preflight['expected_scales'] == p['expected_scales']
+    changed = [
+        name
+        for name, value in audit['input_receipts'].items()
+        if value['before_sha256'] != value['after_sha256']
+    ]
+    assert changed == ['hitlist-v4-iedb-train.jsonl']
+
+
 def main():
     def read(name):
         return json.loads((F / name).read_text())
@@ -17,7 +41,8 @@ def main():
     assert p['status'] == 'prepared' and audit['status'] == 'passed'
     assert p['verification'] == audit
     metadata = p['review_metadata']
-    assert metadata['preflight.json']['status'] == 'passed'
+    pins = read('reproduce/runtime-pins.json')
+    validate_preflight(p, audit, pins)
     assert set(metadata['endpoint-support.json']['allocated']) == set(p['model']['endpoints'])
     assert set(p['manifests']) == {'wide-multi-s42', 'wide-multi-s43'}
     for name, spec in p['manifests'].items():
@@ -46,6 +71,11 @@ def main():
         weighted_epoch_examples=p['weighted_epoch_examples'],
         background_contract=p['background_contract'],
         verification=audit,
+        source_review=p.get('source_review'),
+        canonical_preflight=metadata['preflight.json']['status'],
+        runtime_pins_sha256=hashlib.sha256(
+            (F / 'reproduce/runtime-pins.json').read_bytes()
+        ).hexdigest(),
         requested_gpu='H100!',
         max_concurrent_gpus=2,
         seed_selection='minimum equal-endpoint validation loss; seed breaks ties',

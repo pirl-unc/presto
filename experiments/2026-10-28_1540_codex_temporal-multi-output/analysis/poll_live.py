@@ -77,9 +77,25 @@ while True:
     if prepared.get('verification', {}).get('status') == 'passed':
         state['preparation'] = {
             'status': 'prepared',
-            'stage': 'Frozen cohort passed canonical preflight and independent audit',
+            'stage': (
+                'Exact reviewed cohort verified; common trainer preflight remains pending'
+                if prepared.get('source_review')
+                else 'Original cohort passed canonical preflight and independent audit'
+            ),
             'updated_unix': prepared['finished_unix'],
         }
+    stopped = read(F / 'results/preflight-attempt1-source-review-stop.json', {})
+    current_calls = read(F / 'reproduce/training-calls.json', {})
+    if stopped.get('status') == 'stopped_for_source_review' and (
+        not current_calls or stopped.get('saved_calls') == current_calls
+    ):
+        state['preparation'] = {
+            'status': 'source_review',
+            'stage': 'Quarantining incompatible kinetic labels before refreezing the cohort',
+            'updated_unix': stopped['recorded_unix'],
+        }
+        for run in state['runs']:
+            run['status'] = {'status': 'stopped_for_source_review'}
     state['build'] = read(F / 'results/build.json', {})
     if (
         state['build'].get('status') == 'built'

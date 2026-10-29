@@ -55,7 +55,7 @@ def collect(condition, receipt):
     review.mkdir(exist_ok=True)
     # Small summaries are canonical; checkpoints and all per-example dumps stay at
     # their explicitly recorded large-artifact locations.
-    for name in ('report.json', 'hardware.json', 'progress.json', 'status.json'):
+    for name in ('report.json', 'hardware.json', 'progress.json', 'status.json', 'preflight.json'):
         shutil.copyfile(destination / name, review / name)
     for name in ('resolved-config.json', 'history.json', 'admission.json'):
         shutil.copyfile(destination / 'raw' / name, review / name)

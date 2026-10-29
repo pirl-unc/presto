@@ -158,6 +158,7 @@ def run(condition, output, *, resume=False):
     )
     original = runner.train_step
     original_evaluate = runner.evaluate
+    original_preflight = runner.preflight
     process = psutil.Process()
     seen = set()
     seen_at_validation = {}
@@ -218,6 +219,8 @@ def run(condition, output, *, resume=False):
         torch.cuda.synchronize()
         state['optimizer_seconds'] += time.monotonic() - before
         state['steps'] += 1
+        if state['steps'] == 1:
+            write(output / 'status.json', dict(status='training', condition=condition))
         state['examples'] += len(rows)
         seen.update(r.observation_id for r in rows)
         for row in rows:
@@ -261,9 +264,33 @@ def run(condition, output, *, resume=False):
         return metrics, records
 
     runner.evaluate = observed_evaluate
+
+    def checked_preflight(*args, **kwargs):
+        preflight_start = time.monotonic()
+        result = original_preflight(*args, **kwargs)
+        actual = {key: vars(value) for key, value in result[2].items()}
+        assert actual == prepared['expected_scales'], 'common preflight scales changed'
+        write(
+            output / 'preflight.json',
+            dict(
+                status='passed',
+                seconds=time.monotonic() - preflight_start,
+                scales=actual,
+                admission=result[3],
+                manifest_sha256=spec['sha256'],
+                source_review=prepared['source_review'],
+            ),
+        )
+        write(
+            output / 'status.json',
+            dict(status='preflight_passed_preparing_optimizer', condition=condition),
+        )
+        return result
+
+    runner.preflight = checked_preflight
     write(
         output / 'status.json',
-        dict(status='training', condition=condition, started_unix=time.time()),
+        dict(status='canonical_preflight', condition=condition, started_unix=time.time()),
     )
     try:
         summary = runner.fit_index(index, output / 'raw', device='cuda', resume=resume)
@@ -386,6 +413,7 @@ def run(condition, output, *, resume=False):
     finally:
         runner.train_step = original
         runner.evaluate = original_evaluate
+        runner.preflight = original_preflight
         runner.save_resume = original_save
 
 

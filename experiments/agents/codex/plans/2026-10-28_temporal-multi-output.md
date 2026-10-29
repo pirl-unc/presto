@@ -391,3 +391,57 @@ values. Run alongside the existing jobs using their staged read-only files;
 do not modify fitted data, selected studies, model code or checkpoints. Verify
 original/comparator totals against the independent preparation receipt before
 using the new composition tables in the final report.
+
+## Primary-source kinetic mismatch: stop and refreeze before fitting
+
+The six TRAIN `kon` labels have an implausible scale. Four come from PMID21257290;
+the primary article explicitly describes association kinetics in hour^-1, while
+the exported rows label values528.84,704,500,500 as nM^-1s^-1. These are not the
+same physical quantity. Keep the original export and all existing receipts;
+stop the two preflight-only GPU calls (neither has an optimizer update or held-out
+prediction), and preserve their call IDs, source snapshots, status and timing.
+
+Inspect primary-source identity/units for the remaining sparse kinetic rates,
+without reading peptide sequences or making biological design recommendations.
+Record explicit original assay IDs and evidence for quarantine. Do not guess
+corrected units, values or a bimolecular rate from a first-order curve.
+
+Derive a revised materialized cohort from the verified prepared files. Preserve
+every original study split, peptide embargo, background draw and all unaffected
+row bytes. Remove only explicitly reviewed ambiguous measurements; retain their
+complete dispositions and original cohort artifacts. Recompute TRAIN support,
+scales, quotas, model output allocation and exact budgets through the common path;
+drop any now-unsupported output. Independently verify the exact row-removal delta,
+unchanged membership/order/targets outside that list and revised background totals.
+Do CPU validation before submitting replacement H100! fits. Freeze a separate
+revision contract and launch receipt; never overwrite the stopped attempt's record.
+No model-output-based curation or test-guided selection has occurred.
+
+The completed review quarantines20TRAIN records: six association labels (four
+first-order scope conflicts from PMID21257290, two unresolved scale/scope conflicts
+against PMID9831134), fourteen off-rates from PMID21257290 with incompatible
+exported time conversion. The earlier note misread half-life assay1820987: its
+export already has a `>` qualifier, consistent with the primary table. Preserve
+all twelve half-lives from that paper and all unrelated outcomes. There are no
+held-out changes. `kon` loses all support; `koff` retains8TRAIN outcomes.
+
+Store assay-identity decisions, observed values/units/qualifiers and primary
+references in a packaged shared JSON review registry. The common purified-assay
+adapter defers those identities for every future source preparation, with explicit
+reason codes and no numerical repair. Normalize only HTTP/HTTPS for the known
+canonical IEDB assay namespace. Tests must cover each reviewed identity, changed
+future labels requiring re-review, unrelated/neighboring assays, both IEDB/CEDAR
+source routes, and unchanged literal unit arithmetic. Ensure the review registry
+is included in release wheels. The reviewed cohort builder consumes this same
+registry and verifies its exact20-row removal against original source hashes.
+
+To avoid repeating the same long corpus-wide preflight on both CPU and GPU,
+the revision's CPU gate will independently prove the exact removal delta,
+all unchanged source hashes and retained row bytes/order, original split/background
+inheritance, supported heads, and recomputed TRAIN scales/quotas. Mark canonical
+preflight explicitly `pending_in_trainers`; do not copy the old passed status onto
+the revised cohort. Both replacement workers still execute the unmodified common
+full preflight before their first optimizer step. The launcher gate requires the
+specific verified-delta receipt before allowing this declared state. There is no
+cache or bypass of the common trainer. Preserve the entire original result and
+reproduction directories before replacing current metadata with revision2.

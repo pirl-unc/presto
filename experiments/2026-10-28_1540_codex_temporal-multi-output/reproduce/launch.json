@@ -28,18 +28,18 @@
   "contract": {
     "status": "frozen",
     "family": "2026-10-28_1540_codex_temporal-multi-output",
-    "frozen_unix": 1793242815.080427,
-    "prepared_record_sha256": "9ed7d3e212b801f4501db037c7bccaca7f37622df3cfa1a3a71954ec4d8ecbe3",
+    "frozen_unix": 1793247014.999922,
+    "prepared_record_sha256": "87fed4b6390b7036c2847ee639d9d78dab826a1d4d5a5fae3529fb8f1d26a628",
     "manifests": {
       "wide-multi-s42": {
         "path": "/runs/2026-10-28_1540_codex_temporal-multi-output/prepared/wide-multi-s42.json",
-        "sha256": "ae31a0b353313d0a1c6c7d8e4cbd958c72e2952207c448ebf3b16cd503390e16",
+        "sha256": "5541024b53ce7d09ef6779639eb9fb1b7fd2f72c770f84ba311a5b294053b9a1",
         "seed": 42,
         "max_steps": 51099
       },
       "wide-multi-s43": {
         "path": "/runs/2026-10-28_1540_codex_temporal-multi-output/prepared/wide-multi-s43.json",
-        "sha256": "d75b643fcf0062ba011069a37f5db4ae220919dc7501d3f94381508b2409daba",
+        "sha256": "6dfc997ea93a8fa0f0f4cbf446def3b08ac7c36ddc6b0f43338c0e451c4f3c95",
         "seed": 43,
         "max_steps": 51099
       }
@@ -54,7 +54,6 @@
         "kd_via_ec50",
         "kd_via_ic50",
         "koff",
-        "kon",
         "qualitative_binding",
         "td50"
       ],
@@ -122,8 +121,7 @@
       "train:kd_via_ic50:II:>": 2371,
       "train:kd_via_ic50:II:>=": 2,
       "train:koff:I:=": 6,
-      "train:koff:II:=": 16,
-      "train:kon:II:=": 6,
+      "train:koff:II:=": 2,
       "train:qualitative_binding:I:=": 22181,
       "train:qualitative_binding:II:=": 18279,
       "train:td50:I:=": 461,
@@ -164,38 +162,36 @@
       "kd_via_ic50:I": 51437,
       "kd_via_ic50:II": 21488,
       "koff:I": 6,
-      "koff:II": 16,
-      "kon:II": 6,
+      "koff:II": 2,
       "qualitative_binding:I": 22181,
       "qualitative_binding:II": 18279,
       "td50:I": 496,
       "td50:II": 7
     },
     "epoch_quotas": {
-      "ec50:I": 11192,
-      "ec50:II": 10279,
+      "ec50:I": 11253,
+      "ec50:II": 10334,
       "elution_observation:I": 2673288,
       "elution_observation:II": 1251092,
-      "half_life:I": 96738,
-      "half_life:II": 12216,
+      "half_life:I": 97259,
+      "half_life:II": 12282,
       "ic50:I": 545561,
       "ic50:II": 762567,
-      "kd:I": 133443,
-      "kd:II": 40191,
-      "kd_via_ec50:I": 198955,
-      "kd_via_ec50:II": 53113,
-      "kd_via_ic50:I": 236695,
-      "kd_via_ic50:II": 152985,
-      "koff:I": 2557,
-      "koff:II": 4175,
-      "kon:II": 2557,
+      "kd:I": 134162,
+      "kd:II": 40407,
+      "kd_via_ec50:I": 200027,
+      "kd_via_ec50:II": 53399,
+      "kd_via_ic50:I": 237969,
+      "kd_via_ic50:II": 153809,
+      "koff:I": 2571,
+      "koff:II": 1484,
       "qualitative_binding:I": 171420,
       "qualitative_binding:II": 155613,
-      "td50:I": 23243,
-      "td50:II": 2762
+      "td50:I": 23369,
+      "td50:II": 2777
     },
     "max_steps": 51099,
-    "weighted_epoch_examples": 6540642,
+    "weighted_epoch_examples": 6540643,
     "background_contract": {
       "train_ratio": 1,
       "evaluation_ratio": 5,
@@ -212,7 +208,7 @@
     },
     "verification": {
       "status": "passed",
-      "original_measurements": 1896860,
+      "original_measurements": 1896840,
       "generated_comparators": 1689032,
       "independent_exclusions": {
         "peptide_embargo": 127096
@@ -223,31 +219,104 @@
       "background_sequence_lineage_and_positive_blacklist_verified": true,
       "background_ratios_verified": true,
       "training_scales_independently_verified": true,
-      "seconds": 1163.6133335099994
+      "seconds": 1163.6133335099994,
+      "review_revision": "kinetic-review-v2",
+      "exact_reviewed_row_removal": true,
+      "removed_rows": 20,
+      "retained_source_bytes_and_order_verified": true,
+      "unchanged_holdouts_and_backgrounds": true,
+      "input_receipts": {
+        "hitlist-v4-iedb-test.jsonl": {
+          "before_sha256": "0bfcabe1c2b0765fcf912460d76699ef0196f4c66c866950b613897564304d67",
+          "after_sha256": "0bfcabe1c2b0765fcf912460d76699ef0196f4c66c866950b613897564304d67"
+        },
+        "hitlist-v4-iedb-train.jsonl": {
+          "before_sha256": "d87c062bb156af8fb9be730cb28f874ce2cb62e6b457a2a29970552e6827448a",
+          "after_sha256": "c76aeafbb47c66b7fa904c191502de95f8812d45275cdfe680821838a37200b1"
+        },
+        "hitlist-v4-iedb-validation.jsonl": {
+          "before_sha256": "cc93d281fd2138cc7a7af1c262f694dd0a28012da22e91098a76e36bbda27fd5",
+          "after_sha256": "cc93d281fd2138cc7a7af1c262f694dd0a28012da22e91098a76e36bbda27fd5"
+        },
+        "hitlist_ligand_background-test.jsonl": {
+          "before_sha256": "c1c1cf95caf66903721d2226caa9744d062acabed44cae9052f929b0f08911a9",
+          "after_sha256": "c1c1cf95caf66903721d2226caa9744d062acabed44cae9052f929b0f08911a9"
+        },
+        "hitlist_ligand_background-train.jsonl": {
+          "before_sha256": "6c264dcdc771a400fe73a7730fe2149b205984ce24f21638e78faeb4f7e60b1d",
+          "after_sha256": "6c264dcdc771a400fe73a7730fe2149b205984ce24f21638e78faeb4f7e60b1d"
+        },
+        "hitlist_ligand_background-validation.jsonl": {
+          "before_sha256": "0f32d0f097e0a691be50b66689deba2a473c629ae73552d7d48ce3dcc8a1795d",
+          "after_sha256": "0f32d0f097e0a691be50b66689deba2a473c629ae73552d7d48ce3dcc8a1795d"
+        },
+        "hitlist_native_ms-test.jsonl": {
+          "before_sha256": "a1a3507783cc1a258c24f455691837b039d1e03028e364ad57ba3ad2e59e6d05",
+          "after_sha256": "a1a3507783cc1a258c24f455691837b039d1e03028e364ad57ba3ad2e59e6d05"
+        },
+        "hitlist_native_ms-train.jsonl": {
+          "before_sha256": "bc709276b36bd456a09451deba140aeb618c9614a79505981e7567d1a0b0e203",
+          "after_sha256": "bc709276b36bd456a09451deba140aeb618c9614a79505981e7567d1a0b0e203"
+        },
+        "hitlist_native_ms-validation.jsonl": {
+          "before_sha256": "0023355b4b6b695223e12031b7fbe4bee752704be7c0e8184fe10a26800d3923",
+          "after_sha256": "0023355b4b6b695223e12031b7fbe4bee752704be7c0e8184fe10a26800d3923"
+        }
+      },
+      "canonical_preflight": "pending_in_trainers",
+      "inherited_full_verification": {
+        "status": "passed",
+        "original_measurements": 1896860,
+        "generated_comparators": 1689032,
+        "independent_exclusions": {
+          "peptide_embargo": 127096
+        },
+        "source_and_target_conservation": true,
+        "whole_study_aliases_disjoint": true,
+        "exact_peptides_disjoint": true,
+        "background_sequence_lineage_and_positive_blacklist_verified": true,
+        "background_ratios_verified": true,
+        "training_scales_independently_verified": true,
+        "seconds": 1163.6133335099994
+      }
     },
+    "source_review": {
+      "revision": "kinetic-review-v2",
+      "policy_sha256": "d1d1ae11d51314da292e9b37b41f9e8241d34bc50555d33ac6b3a243070cd829",
+      "removed_rows": 20,
+      "reasons": {
+        "published_time_unit_conflicts_with_export": 14,
+        "association_measurement_scope_unresolved": 6
+      },
+      "runtime_source": "aa2b3f7a358010f1d6163cbaad7c28dd1e1fa97e"
+    },
+    "canonical_preflight": "pending_in_trainers",
+    "runtime_pins_sha256": "bd0b301dc5ff864c382d3ecbd51b69e52378f5e9218b00430fd384aecc82fa9a",
     "requested_gpu": "H100!",
     "max_concurrent_gpus": 2,
     "seed_selection": "minimum equal-endpoint validation loss; seed breaks ties",
     "test_used_for_selection": false,
     "interpretation": "Whole 2026 study holdouts and older assay holdouts are reported separately; other 2026 studies can be in TRAIN, so this is not a strict date-cutoff benchmark. Every TRAIN row is used by the completed fit; the validation-selected checkpoint may precede full coverage and its actual unique-row exposure is reported."
   },
-  "git_commit": "6194063f6727ae96f9ad16c4775d62ad1a7e7811",
-  "git_dirty": " M experiments/2026-10-28_1540_codex_temporal-multi-output/code/launch.py\n M experiments/2026-10-28_1540_codex_temporal-multi-output/code/worker.py\n M experiments/2026-10-28_1540_codex_temporal-multi-output/reproduce/source/control.py\n M experiments/2026-10-28_1540_codex_temporal-multi-output/results/pipeline-software-verification.json\n M experiments/agents/codex/plans/2026-10-28_temporal-multi-output.md\n M tasks/todo.md\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/analysis/checkpoint_preparation.py\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/analysis/test_checkpoint_observer.py\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/code/checkpoint_observer.py\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/reproduce/prepare-call.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/reproduce/prepare-launch.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/reproduce/source/preparation-attempt3-control.py\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/reproduce/source/preparation-attempt3-partition.py\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/reproduce/source/preparation-attempt3-prepare.py\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/reproduce/source/preparation-attempt3-prepare_worker.py\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/reproduce/source/preparation-attempt3-verify_cohort.py\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/reproduce/training-contract.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/admission-summary.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/admission.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/endpoint-support.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/launch-readiness.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/materialization-backup-start.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/partition-verification.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/preflight.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/preparation-attempt3-disposition.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/preparation-attempt4-pending-poll.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/prepared.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/study-selection.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/wide-multi-s42.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/wide-multi-s43.json\n",
+  "git_commit": "aa2b3f7a358010f1d6163cbaad7c28dd1e1fa97e",
+  "git_dirty": " M experiments/2026-10-28_1540_codex_temporal-multi-output/README.md\n M experiments/2026-10-28_1540_codex_temporal-multi-output/analysis/collect.py\n M experiments/2026-10-28_1540_codex_temporal-multi-output/analysis/plot_composition.py\n M experiments/2026-10-28_1540_codex_temporal-multi-output/analysis/poll_live.py\n M experiments/2026-10-28_1540_codex_temporal-multi-output/code/freeze_contract.py\n M experiments/2026-10-28_1540_codex_temporal-multi-output/code/launch.py\n M experiments/2026-10-28_1540_codex_temporal-multi-output/code/worker.py\n D experiments/2026-10-28_1540_codex_temporal-multi-output/reproduce/launch.json\n D experiments/2026-10-28_1540_codex_temporal-multi-output/reproduce/planned-launch.json\n M experiments/2026-10-28_1540_codex_temporal-multi-output/reproduce/prepare-call.json\n M experiments/2026-10-28_1540_codex_temporal-multi-output/reproduce/runtime-pins.json\n D experiments/2026-10-28_1540_codex_temporal-multi-output/reproduce/training-call-progress.json\n D experiments/2026-10-28_1540_codex_temporal-multi-output/reproduce/training-calls.json\n M experiments/2026-10-28_1540_codex_temporal-multi-output/reproduce/training-contract.json\n M experiments/2026-10-28_1540_codex_temporal-multi-output/results/cohort-composition-verification.json\n M experiments/2026-10-28_1540_codex_temporal-multi-output/results/cohort-composition.json\n M experiments/2026-10-28_1540_codex_temporal-multi-output/results/endpoint-support.json\n M experiments/2026-10-28_1540_codex_temporal-multi-output/results/launch-readiness.json\n M experiments/2026-10-28_1540_codex_temporal-multi-output/results/partition-verification.json\n M experiments/2026-10-28_1540_codex_temporal-multi-output/results/preflight.json\n M experiments/2026-10-28_1540_codex_temporal-multi-output/results/prepared.json\n M experiments/2026-10-28_1540_codex_temporal-multi-output/results/wide-multi-s42.json\n M experiments/2026-10-28_1540_codex_temporal-multi-output/results/wide-multi-s43.json\n M experiments/agents/codex/plans/2026-10-28_temporal-multi-output.md\n M experiments/experiment_log.md\n M tasks/lessons.md\n M tasks/todo.md\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/analysis/test_revision_contract.py\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/attempts/\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/code/review_rates.py\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/code/revise_cohort.py\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/reproduce/cohort-revision-launch.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/reproduce/rate-review-call.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/reproduce/source/revise_cohort.py\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/kon-training-source-audit.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/preflight-attempt1-source-review-stop.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/rate-training-source-audit.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/review-wheel-verification.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/source-review-dispositions.json\n",
   "sources": {
-    "worker.py": "ae205b5749a546ce5f6cfdc4492f692fcf5636491e825e08a052dc8a109428fb",
+    "worker.py": "dea39b33a1ff5938a9a96a9eb6c6dbc1ac24d27404103db3beca28c725f135ea",
     "build_index.py": "c37660a48c75c00ac2c08a699b050bfd53d02c8e3f43b06ca8858a6b4faa1474",
     "partition.py": "4539b38a5173a6703c55a12e624d0278b624fc6f8c196247a5a6b6ed50badc9a",
+    "revise_cohort.py": "6f74f7ba8d6b1947ddd44c838039d733e4285b70ae43031ab97d1dcda18c00dc",
     "acquire.py": "f45694b021894150383bae25c00e0ebdd93dc43d45636af52e5dad877d3652df",
-    "freeze_contract.py": "eb02da0e507821d297c0479a493f8e72ad7a0d2767849debf14dd8446666e9e4",
+    "freeze_contract.py": "133aa985eec0b4e1b0160aef3d88849611f82d27b8c9a6c4257685d0200d33fc",
     "admit.py": "35ed35bf922d8717fa532b4648e062a9a5820957a3e0aa4bfa7a162719e7bb47",
     "inventory_2026.py": "b096219685864b82bfff12b9b401fecc2974e0fb35edae4ba1410cddd098e136",
-    "control.py": "792d49c20a6f8fbb6473e7ca1df33612d06c1630888da30c70391613cdf17363",
+    "control.py": "cad7749ee2700f677c9c69b8c7461df09043aa21fafccd44a7449db9b1c6de0a",
     "advance.py": "ae1d1b9e528895048002913cd5ea6c1b164af9e17307e8fe62b2155e539cb75a",
-    "launch.py": "75a8cf550b55e37778eb2a8d80af5356fb0cb6892eb3b3ff328a055cdaddb3b5",
+    "launch.py": "b78a04ff1c673322488dc3823723be15e04836863d2fa9ff076ca5d7f2afcdd0",
     "prepare_worker.py": "69a892c5308491d5a7e8e61cd0cee714da786c68b8c148df38896c897a039792",
     "freeze_runtime.py": "8396b8cf848baa77f037e34563edc0369ad0adb08309debfcf43af9e0ec13d30",
     "checkpoint_observer.py": "0a7952de71d2475df455190dde8a171d3da20bf30be85b8f48b9c7bc289a2aea",
-    "prepare.py": "82704af58a6494dd3d7e9095d5eb85d4ffff083ca397a38a30bdae40c6b410ad"
+    "prepare.py": "82704af58a6494dd3d7e9095d5eb85d4ffff083ca397a38a30bdae40c6b410ad",
+    "review_rates.py": "5b224ac1f15b6b82b389edfd8e19d9da9ccd12d6558af2ef9cb3abe38f9ad350"
   },
-  "started_unix": 1793242845.289081
+  "started_unix": 1793247031.785002
 }

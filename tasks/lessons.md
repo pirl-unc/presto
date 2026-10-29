@@ -837,3 +837,7 @@ Keep applicability reporting separate from model features and the measured label
   When the user authorizes additional older study holdouts, freeze those papers
   before fitting and report older-study and recent-study results separately;
   retain unavailable metrics rather than substituting a proxy assay name.
+
+## 2026-10-29 — Verify qualifiers before source quarantine
+
+- Inspect the actual raw and admitted inequality fields before claiming an exact/bound conflict. A paper's unresolved lower bound does not justify excluding a row whose export already preserves `>`. Correct the review decision before changing cohort membership.

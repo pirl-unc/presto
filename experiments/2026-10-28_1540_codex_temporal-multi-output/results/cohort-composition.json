@@ -1,15 +1,15 @@
 {
   "status": "counted",
   "source_sha256": "ff676784881d2c1d8fb63f72372c57581bc5219b26b8b20719f2051eb6f29cd0",
-  "manifest_sha256": "ae31a0b353313d0a1c6c7d8e4cbd958c72e2952207c448ebf3b16cd503390e16",
+  "manifest_sha256": "5541024b53ce7d09ef6779639eb9fb1b7fd2f72c770f84ba311a5b294053b9a1",
   "sources": {
     "hitlist-v4-iedb-test.jsonl": {
       "sha256": "0bfcabe1c2b0765fcf912460d76699ef0196f4c66c866950b613897564304d67",
       "rows": 2990
     },
     "hitlist-v4-iedb-train.jsonl": {
-      "sha256": "d87c062bb156af8fb9be730cb28f874ce2cb62e6b457a2a29970552e6827448a",
-      "rows": 234357
+      "sha256": "c76aeafbb47c66b7fa904c191502de95f8812d45275cdfe680821838a37200b1",
+      "rows": 234337
     },
     "hitlist-v4-iedb-validation.jsonl": {
       "sha256": "cc93d281fd2138cc7a7af1c262f694dd0a28012da22e91098a76e36bbda27fd5",
@@ -410,14 +410,7 @@
       "endpoint": "koff",
       "mhc_class": "II",
       "qualifier": "=",
-      "n": 16
-    },
-    {
-      "split": "train",
-      "endpoint": "kon",
-      "mhc_class": "II",
-      "qualifier": "=",
-      "n": 6
+      "n": 2
     },
     {
       "split": "train",
@@ -839,14 +832,7 @@
       "population": "original",
       "endpoint": "koff",
       "mhc_class": "II",
-      "n": 16
-    },
-    {
-      "split": "train",
-      "population": "original",
-      "endpoint": "kon",
-      "mhc_class": "II",
-      "n": 6
+      "n": 2
     },
     {
       "split": "train",
@@ -33924,147 +33910,27 @@
       "mhc_class": "II",
       "field": "candidate_count",
       "value": "1",
-      "n": 16
-    },
-    {
-      "split": "train",
-      "endpoint": "koff",
-      "mhc_class": "II",
-      "field": "catalog_allele_membership",
-      "value": "HLA-DRA*01:01",
-      "n": 16
-    },
-    {
-      "split": "train",
-      "endpoint": "koff",
-      "mhc_class": "II",
-      "field": "catalog_allele_membership",
-      "value": "HLA-DRB1*04:01",
-      "n": 9
-    },
-    {
-      "split": "train",
-      "endpoint": "koff",
-      "mhc_class": "II",
-      "field": "catalog_allele_membership",
-      "value": "HLA-DRB1*04:03",
-      "n": 6
-    },
-    {
-      "split": "train",
-      "endpoint": "koff",
-      "mhc_class": "II",
-      "field": "catalog_allele_membership",
-      "value": "HLA-DRB1*04:04",
-      "n": 1
-    },
-    {
-      "split": "train",
-      "endpoint": "koff",
-      "mhc_class": "II",
-      "field": "catalog_allele_set",
-      "value": "HLA-DRA*01:01;HLA-DRB1*04:01",
-      "n": 9
-    },
-    {
-      "split": "train",
-      "endpoint": "koff",
-      "mhc_class": "II",
-      "field": "catalog_allele_set",
-      "value": "HLA-DRA*01:01;HLA-DRB1*04:03",
-      "n": 6
-    },
-    {
-      "split": "train",
-      "endpoint": "koff",
-      "mhc_class": "II",
-      "field": "catalog_allele_set",
-      "value": "HLA-DRA*01:01;HLA-DRB1*04:04",
-      "n": 1
-    },
-    {
-      "split": "train",
-      "endpoint": "koff",
-      "mhc_class": "II",
-      "field": "catalog_candidate_set",
-      "value": "[[\"HLA-DRA*01:01\",\"HLA-DRB1*04:01\"]]",
-      "n": 9
-    },
-    {
-      "split": "train",
-      "endpoint": "koff",
-      "mhc_class": "II",
-      "field": "catalog_candidate_set",
-      "value": "[[\"HLA-DRA*01:01\",\"HLA-DRB1*04:03\"]]",
-      "n": 6
-    },
-    {
-      "split": "train",
-      "endpoint": "koff",
-      "mhc_class": "II",
-      "field": "catalog_candidate_set",
-      "value": "[[\"HLA-DRA*01:01\",\"HLA-DRB1*04:04\"]]",
-      "n": 1
-    },
-    {
-      "split": "train",
-      "endpoint": "koff",
-      "mhc_class": "II",
-      "field": "evaluation_era",
-      "value": "older_or_mixed",
-      "n": 16
-    },
-    {
-      "split": "train",
-      "endpoint": "koff",
-      "mhc_class": "II",
-      "field": "label_kind",
-      "value": "physical_or_qualitative",
-      "n": 16
-    },
-    {
-      "split": "train",
-      "endpoint": "koff",
-      "mhc_class": "II",
-      "field": "study_component",
-      "value": "study-component:35f00facc3c85e6cd3426bcc64a7adbccc1dffdf87b2370bcd226a6974b3b373",
-      "n": 14
-    },
-    {
-      "split": "train",
-      "endpoint": "koff",
-      "mhc_class": "II",
-      "field": "study_component",
-      "value": "study-component:6430c982538ab39a1e864faccba49338eb24aaf35a267abd25f47dbbc0f3c113",
       "n": 2
     },
     {
       "split": "train",
-      "endpoint": "kon",
-      "mhc_class": "II",
-      "field": "candidate_count",
-      "value": "1",
-      "n": 6
-    },
-    {
-      "split": "train",
-      "endpoint": "kon",
+      "endpoint": "koff",
       "mhc_class": "II",
       "field": "catalog_allele_membership",
       "value": "HLA-DRA*01:01",
-      "n": 6
+      "n": 2
     },
     {
       "split": "train",
-      "endpoint": "kon",
+      "endpoint": "koff",
       "mhc_class": "II",
       "field": "catalog_allele_membership",
       "value": "HLA-DRB1*04:01",
-      "n": 5
+      "n": 1
     },
     {
       "split": "train",
-      "endpoint": "kon",
+      "endpoint": "koff",
       "mhc_class": "II",
       "field": "catalog_allele_membership",
       "value": "HLA-DRB1*04:04",
@@ -34072,15 +33938,15 @@
     },
     {
       "split": "train",
-      "endpoint": "kon",
+      "endpoint": "koff",
       "mhc_class": "II",
       "field": "catalog_allele_set",
       "value": "HLA-DRA*01:01;HLA-DRB1*04:01",
-      "n": 5
+      "n": 1
     },
     {
       "split": "train",
-      "endpoint": "kon",
+      "endpoint": "koff",
       "mhc_class": "II",
       "field": "catalog_allele_set",
       "value": "HLA-DRA*01:01;HLA-DRB1*04:04",
@@ -34088,15 +33954,15 @@
     },
     {
       "split": "train",
-      "endpoint": "kon",
+      "endpoint": "koff",
       "mhc_class": "II",
       "field": "catalog_candidate_set",
       "value": "[[\"HLA-DRA*01:01\",\"HLA-DRB1*04:01\"]]",
-      "n": 5
+      "n": 1
     },
     {
       "split": "train",
-      "endpoint": "kon",
+      "endpoint": "koff",
       "mhc_class": "II",
       "field": "catalog_candidate_set",
       "value": "[[\"HLA-DRA*01:01\",\"HLA-DRB1*04:04\"]]",
@@ -34104,31 +33970,23 @@
     },
     {
       "split": "train",
-      "endpoint": "kon",
+      "endpoint": "koff",
       "mhc_class": "II",
       "field": "evaluation_era",
       "value": "older_or_mixed",
-      "n": 6
+      "n": 2
     },
     {
       "split": "train",
-      "endpoint": "kon",
+      "endpoint": "koff",
       "mhc_class": "II",
       "field": "label_kind",
       "value": "physical_or_qualitative",
-      "n": 6
+      "n": 2
     },
     {
       "split": "train",
-      "endpoint": "kon",
-      "mhc_class": "II",
-      "field": "study_component",
-      "value": "study-component:35f00facc3c85e6cd3426bcc64a7adbccc1dffdf87b2370bcd226a6974b3b373",
-      "n": 4
-    },
-    {
-      "split": "train",
-      "endpoint": "kon",
+      "endpoint": "koff",
       "mhc_class": "II",
       "field": "study_component",
       "value": "study-component:6430c982538ab39a1e864faccba49338eb24aaf35a267abd25f47dbbc0f3c113",
@@ -47471,7 +47329,7 @@
       "n": 145
     }
   ],
-  "started_unix": 1793243540.320984,
-  "finished_unix": 1793243804.408889,
+  "started_unix": 1793246756.4584289,
+  "finished_unix": 1793246943.549421,
   "interpretation": "Original observations counted once per exact candidate set; individual catalog allele memberships can overlap. No predictions or quantitative target values were read into the summaries."
 }

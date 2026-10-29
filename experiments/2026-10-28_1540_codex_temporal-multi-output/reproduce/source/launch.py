@@ -12,6 +12,7 @@ import time
 import modal
 
 FID = '2026-10-28_1540_codex_temporal-multi-output'
+REVISION = 'kinetic-review-v2'
 GPU = os.environ.get('PRESTO_MODAL_GPU', 'H100!')
 if GPU != 'H100!':
     raise ValueError('Frozen hardware contract requires H100!')
@@ -25,7 +26,7 @@ REQUIREMENTS = [
     'tqdm==4.70.1',
     'psutil==7.2.2',
 ]
-app = modal.App('presto-temporal-multi-output-20261028')
+app = modal.App('presto-temporal-multi-output-reviewed-20261029')
 volume = modal.Volume.from_name('presto-checkpoints')
 live = modal.Dict.from_name('presto-cross-class-live')
 image = (
@@ -122,7 +123,9 @@ def fit(condition):
     assert condition in CONDITIONS
     contract = read('/bundle/training-contract.json')
     assert contract['status'] == 'frozen'
-    durable = Path('/volume') / FID
+    assert contract['source_review']['revision'] == REVISION
+    assert sha('/bundle/runtime-pins.json') == contract['runtime_pins_sha256']
+    durable = Path('/volume') / FID / 'revisions' / REVISION
     root = Path('/runs') / FID
     assert sha(durable / 'prepared/prepared.json') == contract['prepared_record_sha256']
     destination = durable / condition
@@ -244,6 +247,14 @@ def main():
     assert read(F / 'results/launch-readiness.json', {}).get('status') == 'passed', (
         'checkpoint recovery integration has not passed its prelaunch checks'
     )
+    readiness = read(F / 'results/launch-readiness.json')
+    assert readiness['training_contract_sha256'] == sha(F / 'reproduce/training-contract.json')
+    assert readiness['partition_verification_sha256'] == sha(
+        F / 'results/partition-verification.json'
+    )
+    for relative, digest in readiness['source_hashes'].items():
+        assert sha(F / relative) == digest
+    assert sha(U / 'runtime-pins.json') == contract['runtime_pins_sha256']
     assert not (F / 'reproduce/training-calls.json').exists(), 'already launched; use saved calls'
     assert not (F / 'reproduce/training-call-progress.json').exists(), (
         'partial submission exists; recover saved calls without resubmitting'

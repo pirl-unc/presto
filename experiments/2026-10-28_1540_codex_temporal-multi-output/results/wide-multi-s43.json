@@ -10,7 +10,6 @@
       "kd_via_ec50",
       "kd_via_ic50",
       "koff",
-      "kon",
       "qualitative_binding",
       "td50"
     ],
@@ -36,7 +35,7 @@
     },
     {
       "path": "/runs/2026-10-28_1540_codex_temporal-multi-output/prepared/hitlist-v4-iedb-train.jsonl",
-      "sha256": "d87c062bb156af8fb9be730cb28f874ce2cb62e6b457a2a29970552e6827448a",
+      "sha256": "c76aeafbb47c66b7fa904c191502de95f8812d45275cdfe680821838a37200b1",
       "source": "hitlist-v4-iedb",
       "population": "Human catalog-resolved MHC; public IEDB/CEDAR canonical Hitlist admission; host and antigen species retained separately",
       "label_policy": "reported literal assay endpoints and qualifiers; declared reference DRA only; generated unobserved ligands explicitly marked",
@@ -123,14 +122,14 @@
           "ec50",
           "I"
         ],
-        "weight": 0.0017111143066929145
+        "weight": 0.0017203288456584865
       },
       {
         "values": [
           "ec50",
           "II"
         ],
-        "weight": 0.0015715057319687128
+        "weight": 0.001579968463386015
       },
       {
         "values": [
@@ -151,14 +150,14 @@
           "half_life",
           "I"
         ],
-        "weight": 0.014790308627620447
+        "weight": 0.01486995606825546
       },
       {
         "values": [
           "half_life",
           "II"
         ],
-        "weight": 0.0018676280408186133
+        "weight": 0.0018776854234773901
       },
       {
         "values": [
@@ -179,63 +178,56 @@
           "kd",
           "I"
         ],
-        "weight": 0.020402138864139035
+        "weight": 0.020512006628559728
       },
       {
         "values": [
           "kd",
           "II"
         ],
-        "weight": 0.006144699907027748
+        "weight": 0.006177789792667524
       },
       {
         "values": [
           "kd_via_ec50",
           "I"
         ],
-        "weight": 0.030418270268237166
+        "weight": 0.030582076003222627
       },
       {
         "values": [
           "kd_via_ec50",
           "II"
         ],
-        "weight": 0.008120447900355252
+        "weight": 0.00816417740650399
       },
       {
         "values": [
           "kd_via_ic50",
           "I"
         ],
-        "weight": 0.03618827798653887
+        "weight": 0.03638315584846757
       },
       {
         "values": [
           "kd_via_ic50",
           "II"
         ],
-        "weight": 0.02338988572219428
+        "weight": 0.023515842832449518
       },
       {
         "values": [
           "koff",
           "I"
         ],
-        "weight": 0.0003908460502374531
+        "weight": 0.00039295079925706335
       },
       {
         "values": [
           "koff",
           "II"
         ],
-        "weight": 0.0006382489273759735
-      },
-      {
-        "values": [
-          "kon",
-          "II"
-        ],
-        "weight": 0.0003908460502374531
+        "weight": 0.00022687024972934414
       },
       {
         "values": [
@@ -256,14 +248,14 @@
           "td50",
           "I"
         ],
-        "weight": 0.0035536196324584316
+        "weight": 0.003572756265495763
       },
       {
         "values": [
           "td50",
           "II"
         ],
-        "weight": 0.0004221619840976377
+        "weight": 0.00042443537286952467
       }
     ]
   }

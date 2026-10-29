@@ -1,16 +1,15 @@
 {
   "train_counts": {
-    "kd_via_ec50": 38932,
-    "qualitative_binding": 40460,
-    "ic50": 54736,
-    "kd_via_ic50": 72925,
-    "td50": 503,
-    "half_life": 8729,
-    "kd": 17832,
-    "koff": 22,
-    "kon": 6,
     "ec50": 212,
-    "elution_observation": 1641063
+    "elution_observation": 3258795,
+    "half_life": 8729,
+    "ic50": 54736,
+    "kd": 17832,
+    "kd_via_ec50": 38932,
+    "kd_via_ic50": 72925,
+    "koff": 8,
+    "qualitative_binding": 40460,
+    "td50": 503
   },
   "allocated": [
     "ec50",
@@ -21,10 +20,11 @@
     "kd_via_ec50",
     "kd_via_ic50",
     "koff",
-    "kon",
     "qualitative_binding",
     "td50"
   ],
-  "unsupported": [],
-  "rule": "nonbinary outputs require two distinct exact TRAIN values"
+  "unsupported": [
+    "kon"
+  ],
+  "rule": "reviewed TRAIN support; quantitative heads need distinct exact values"
 }
