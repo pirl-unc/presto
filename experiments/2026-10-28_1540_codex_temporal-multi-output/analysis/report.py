@@ -41,7 +41,7 @@ def length_bin(length):
 
 
 def detailed_groups(rows):
-    """Exact candidate sets are one stratum; never replicate a bag per candidate."""
+    """Preserve paired candidates and allele unions; never replicate a measured bag."""
     result = defaultdict(list)
     for key, subset in groups(rows).items():
         era, endpoint, cls, population, study, method = key
@@ -60,6 +60,13 @@ def detailed_groups(rows):
                 'length': length_bin(len(row['peptide'])),
                 'candidate_count': str(len(candidates)),
                 'catalog_allele_set': ';'.join(alleles) or 'unknown',
+                'catalog_candidate_set': json.dumps(
+                    sorted(
+                        sorted(candidate['provenance'].get('catalog_alleles', []))
+                        for candidate in candidates
+                    ),
+                    separators=(',', ':'),
+                ),
             }
             for dimension, value in dimensions.items():
                 result[(era, endpoint, cls, population, study, method, dimension, value)].append(
@@ -182,11 +189,21 @@ def main():
     verified = read(F / 'results/prediction-verification.json')
     decision = read(F / 'results/validation-decision.json')
     prepared = read(F / 'results/prepared.json')
+    composition = read(F / 'results/cohort-composition.json')
+    composition_check = read(F / 'results/cohort-composition-verification.json')
+    assert composition_check['status'] == 'passed'
+    assert sha(F / 'results/cohort-composition.json') == composition_check['result_sha256']
     assert verified['status'] == 'passed' and decision['test_used_for_selection'] is False
     strata = read(F / 'results/stratified-metrics.json')
     bundle = F / 'reproduce' / ('analysis-' + str(time.time_ns()))
     bundle.mkdir()
-    for name in ('report.py', 'uncertainty.py', 'verify_predictions.py', 'verify_cohort.py'):
+    for name in (
+        'report.py',
+        'uncertainty.py',
+        'verify_predictions.py',
+        'verify_cohort.py',
+        'cohort_composition.py',
+    ):
         shutil.copyfile(F / 'analysis' / name, bundle / name)
     invocation = dict(
         argv=sys.argv,
@@ -196,6 +213,7 @@ def main():
             for name in ('numpy', 'scipy', 'scikit-learn', 'matplotlib')
         },
         prediction_verification_sha256=sha(F / 'results/prediction-verification.json'),
+        cohort_composition_sha256=composition_check['result_sha256'],
         source_hashes={p.name: sha(p) for p in bundle.glob('*.py')},
     )
     (bundle / 'launch.json').write_text(json.dumps(invocation, indent=2) + '\n')
@@ -225,6 +243,15 @@ def main():
                         n for k, n in prepared['counts'].items() if k.startswith(prefix)
                     )
                     row[split + '_exact'] = prepared['counts'].get(prefix + '=', 0)
+                    for population in ('original', 'generated'):
+                        row[split + '_' + population + '_n'] = sum(
+                            item['n']
+                            for item in composition['populations']
+                            if item['split'] == split
+                            and item['endpoint'] == endpoint
+                            and item['mhc_class'] == cls
+                            and item['population'] == population
+                        )
                 row['optimizer_exposures'] = report['training_exposures'].get(
                     endpoint + ':' + cls, 0
                 )

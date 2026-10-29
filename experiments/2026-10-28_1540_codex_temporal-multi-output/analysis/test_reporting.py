@@ -49,6 +49,20 @@ def test_candidate_sets_do_not_duplicate_measurements():
     assert register['mean_maximum_weight'] == 0.75
 
 
+def test_pair_assignments_remain_distinct_with_same_allele_union():
+    first, second = row('first', 1), row('second', 1)
+    for record, pairs in (
+        (first, [('a1', 'b1'), ('a2', 'b2')]),
+        (second, [('a1', 'b2'), ('a2', 'b1')]),
+    ):
+        record['observation']['mhc'] = [
+            {'provenance': {'catalog_alleles': list(pair)}} for pair in pairs
+        ]
+    subsets = detailed_groups([first, second])
+    assert all(len(v) == 2 for k, v in subsets.items() if k[-2] == 'catalog_allele_set')
+    assert all(len(v) == 1 for k, v in subsets.items() if k[-2] == 'catalog_candidate_set')
+
+
 def test_generated_comparator_resamples_with_positive_parent(monkeypatch):
     observed = []
 

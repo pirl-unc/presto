@@ -219,3 +219,26 @@ The local dashboard poller now has a30-second remote-read deadline and retains
 last-known evidence with an explicit poll error. It does not resubmit jobs.
 Validation appears every1,000updates; test reporting remains behind the saved
 validation-only selection and independent-prediction-verification gates.
+
+## Canonical allele composition audit
+
+The initial raw-metadata table has reported-candidate allele counts for MS but
+lacks the analogous physical-assay provenance field. A supplemental read-only
+audit now counts canonical catalog alleles for every original observation,
+preserving class-II paired candidates separately from their allele union.
+`results/cohort-composition-verification.json` reconciles every original
+split/endpoint and every total split/endpoint/class count with frozen preparation.
+Individual allele memberships may overlap; observation totals never do.
+
+Original TRAIN MS counts are 1,348,309 class I and 292,754 class II. Direct IC50
+counts are 18,531 and 36,205. Class-I IC50 includes 5,880 HLA-A*02:01 observations.
+Full original support, catalog allele memberships, candidate sets, studies and
+qualifiers are in `results/cohort-composition.json`. The metadata audit ran in
+existing worker `ta-01M62SMMGKXEEGYE67SFBSRR3R` without model evaluation or new GPU
+allocation; its source and invocation are frozen in `reproduce/`.
+
+![Original support versus planned optimizer exposures](results/training-composition.png)
+
+The figure describes the frozen sampling design, not predictive performance.
+PNG/PDF and the exact plotting invocation are preserved; actual optimizer
+exposures and selected-checkpoint coverage will be reported after fitting.

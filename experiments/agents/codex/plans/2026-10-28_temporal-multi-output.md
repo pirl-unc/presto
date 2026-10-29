@@ -376,3 +376,18 @@ Test interruption equivalence and phase recovery before launching actual fits.
 Official behavior checked in Modal docs on2026-10-28:
 https://modal.com/docs/guide/preemption and
 https://modal.com/docs/examples/long-training .
+
+## Post-preparation composition audit
+
+The original metadata table counts `reported_candidates`, which exists for MS
+bags but not physical-affinity restrictions. Add a separate metadata-only audit
+of the exact manifest sources using canonical `catalog_alleles` for every endpoint.
+Hash-check each input, skip generated comparators for original-observation tables,
+and preserve split, endpoint, class, qualifier, study, exact candidate set, and
+individual allele membership separately. Individual membership can overlap;
+candidate-set and endpoint/class tables count each observation once. Save counts,
+manifest/source hashes and analysis-code hash without peptide sequences or target
+values. Run alongside the existing jobs using their staged read-only files;
+do not modify fitted data, selected studies, model code or checkpoints. Verify
+original/comparator totals against the independent preparation receipt before
+using the new composition tables in the final report.
