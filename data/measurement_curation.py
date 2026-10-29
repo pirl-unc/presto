@@ -310,9 +310,7 @@ class SharedLimitPolicy:
             raise ValueError("shared-limit evidence must be stricter than local screening")
 
 
-def summarize_shared_limits(
-    panels, source_components, verified_protocols=None, policy=None
-):
+def summarize_shared_limits(panels, source_components, verified_protocols=None, policy=None):
     """Summarize independent support; never issue or transfer a censor decision.
 
     Maps use the complete local panel tuple as key. A verified protocol mapping
