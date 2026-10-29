@@ -10,6 +10,7 @@ import math
 import re
 
 from .modular import AA, MHCInput, Observation
+from .assay_reviews import assay_review_reason
 
 
 class AdmissionError(ValueError):
@@ -245,6 +246,9 @@ def purified_assay_observation(
     assay = PURIFIED_ASSAYS.get(raw.get("response_measured"))
     if raw.get("source") not in ("iedb", "cedar") or assay is None:
         raise AdmissionError("outside_supported_purified_quantitative_assay")
+    review_reason = assay_review_reason(raw.get("assay_iri"))
+    if review_reason is not None:
+        raise AdmissionError("source_review:" + review_reason, deferred=True)
     endpoint, domain = assay
     method = raw.get("assay_method")
     if not isinstance(method, str) or not (

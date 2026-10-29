@@ -79,7 +79,7 @@ package-dir = { "presto" = "." }
 version = {attr = "presto.__version__"}
 
 [tool.setuptools.package-data]
-"presto.data" = ["b2m_sequences.csv"]
+"presto.data" = ["b2m_sequences.csv", "assay_measurement_reviews.json"]
 
 # Ruff configuration lives in `ruff.toml`, not here.
 #
