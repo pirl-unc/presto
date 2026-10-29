@@ -11,6 +11,12 @@ import re
 
 from .modular import AA, MHCInput, Observation
 from .assay_reviews import assay_review_reason
+from .measurement_curation import (
+    MeasurementCurationError,
+    assay_method_context,
+    curated_measurement,
+    screen_censoring,
+)
 
 
 class AdmissionError(ValueError):
@@ -213,9 +219,6 @@ class HumanMHCCatalog:
         }
 
 
-_NUMBER = re.compile(r"\s*(<=|>=|=|<|>)?\s*([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?)\s*")
-
-
 PURIFIED_ASSAYS = {
     "half maximal inhibitory concentration (IC50)": ("ic50", "concentration"),
     "dissociation constant KD": ("kd", "concentration"),
@@ -240,7 +243,13 @@ def purified_ic50_observation(raw, catalog: HumanMHCCatalog, *, source_sha256, o
 
 
 def purified_assay_observation(
-    raw, catalog: HumanMHCCatalog, *, source_sha256, ordinal, dra_reference=None
+    raw,
+    catalog: HumanMHCCatalog,
+    *,
+    source_sha256,
+    ordinal,
+    dra_reference=None,
+    censor_decision=None,
 ):
     """Preserve literal assay identity; no relabeling between measured endpoints."""
     assay = PURIFIED_ASSAYS.get(raw.get("response_measured"))
@@ -298,19 +307,16 @@ def purified_assay_observation(
         or (domain == "C" and value <= -273.15)
     ):
         raise AdmissionError("nonpositive_or_nonfinite_measurement")
-    qualifier = raw.get("measurement_inequality")
-    if qualifier in (None, ""):
-        qualifier = "="
     if domain == "binary":
-        qualifier = "="
-    if qualifier not in ("=", "<", "<=", ">", ">="):
-        raise AdmissionError("unsupported_measurement_qualifier")
-    text = raw.get("quantitative_measurement")
-    match = _NUMBER.fullmatch(text) if isinstance(text, str) else None
-    if domain != "binary" and (
-        match is None or float(match[2]) != value or (match[1] and match[1] != qualifier)
-    ):
-        raise AdmissionError("raw_numeric_or_qualifier_disagreement", deferred=True)
+        if censor_decision is not None:
+            raise AdmissionError("censor_review_on_binary_outcome", deferred=True)
+        measurement = {"effective_qualifier": "=", "status": "reported_qualitative_binary"}
+    else:
+        try:
+            measurement = curated_measurement(raw, censor_decision)
+        except MeasurementCurationError as error:
+            raise AdmissionError(str(error), deferred=True) from error
+    qualifier = measurement["effective_qualifier"]
     assay = raw.get("assay_iri")
     if not isinstance(assay, str) or not assay.strip():
         raise AdmissionError("missing_original_assay_iri", deferred=True)
@@ -339,9 +345,61 @@ def purified_assay_observation(
             "target_policy": "reported_qualitative_binary_v1"
             if domain == "binary"
             else "physical_unclipped_v1",
-            "missing_qualifier_convention": "source export exact; raw missingness retained",
+            "measurement_curation": measurement,
+            "assay_method_context": assay_method_context(raw),
+            "missing_qualifier_convention": (
+                "unspecified treated as exact only without a censor review; "
+                "raw missingness retained"
+            ),
             "raw_record": dict(raw),
         },
     )
     result.validate()
     return result
+
+
+def curated_purified_assays(records, catalog, *, source_sha256, dra_reference=None):
+    """Run common source admission with a reproducible floor/ceiling screen.
+
+    ``records`` is a repeatable zero-argument iterator factory over one frozen,
+    caller-declared curation scope. Validation/test/model predictions are never
+    consulted. Only source rows passing ordinary admission enter the screen.
+    Returns an observation iterator, a live disposition counter and frozen panel
+    decisions. Exhaust the iterator before saving disposition totals. Observations
+    are streamed so a large source does not retain full provenance rows in memory.
+    """
+    dispositions = Counter()
+
+    def eligible():
+        for ordinal, raw in enumerate(records()):
+            try:
+                purified_assay_observation(
+                    raw,
+                    catalog,
+                    source_sha256=source_sha256,
+                    ordinal=ordinal,
+                    dra_reference=dra_reference,
+                )
+            except AdmissionError:
+                continue
+            yield raw
+
+    decisions, panels = screen_censoring(eligible())
+
+    def admitted():
+        for ordinal, raw in enumerate(records()):
+            try:
+                row = purified_assay_observation(
+                    raw,
+                    catalog,
+                    source_sha256=source_sha256,
+                    ordinal=ordinal,
+                    dra_reference=dra_reference,
+                    censor_decision=decisions.get(raw.get("assay_iri")),
+                )
+                dispositions["admitted:" + row.provenance["measurement_curation"]["status"]] += 1
+                yield row
+            except AdmissionError as error:
+                dispositions[error.disposition + ":" + error.reason] += 1
+
+    return admitted(), dispositions, decisions, panels

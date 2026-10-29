@@ -147,7 +147,7 @@ def test_concentration_units_are_preserved_before_canonical_transform(unit, valu
         ({"quantitative_value": float("inf")}, "nonpositive_or_nonfinite_measurement"),
         ({"measurement_inequality": 0}, "unsupported_measurement_qualifier"),
         ({"measurement_inequality": "~"}, "unsupported_measurement_qualifier"),
-        ({"quantitative_measurement": "<10"}, "raw_numeric_or_qualifier_disagreement"),
+        ({"quantitative_measurement": "<10"}, "conflicting_reported_qualifiers"),
         ({"quantitative_measurement": "10-20"}, "raw_numeric_or_qualifier_disagreement"),
         ({"quantitative_measurement": "11"}, "raw_numeric_or_qualifier_disagreement"),
         ({"has_ptm": None}, "modified_or_unspecified_peptidoform"),
@@ -331,3 +331,30 @@ def test_canonical_preparation_retains_independent_disagreement_and_deduplicates
     admitted = [json.loads(line) for source in report["sources"] for line in open(source["path"])]
     assert {row["value"] for row in admitted} == {10, 1000}
     assert len(admitted[0]["provenance"]["export_aliases"]) == 2
+
+
+def test_common_panel_admission_transmits_both_bounds_and_preserves_source():
+    from presto.data.modular_hitlist import curated_purified_assays
+
+    values = [1.0] * 8 + [float(i * 10) for i in range(1, 15)] + [50000.0] * 8
+    sources = [
+        raw(
+            assay_iri=f"fixture:{i}",
+            reference_iri="fixture:study",
+            quantitative_value=v,
+            quantitative_measurement=str(v),
+            measurement_inequality=None,
+            qualitative_measurement="Negative" if v == 50000 else "Positive",
+        )
+        for i, v in enumerate(values)
+    ]
+    rows, dispositions, decisions, panels = curated_purified_assays(
+        lambda: iter(sources), HumanMHCCatalog([reference()]), source_sha256="a" * 64
+    )
+    rows = list(rows)
+    assert len(rows) == 30 and len(decisions) == 16 and len(panels) == 2
+    assert [r.qualifier for r in rows] == ["<="] * 8 + ["="] * 14 + [">="] * 8
+    assert dispositions["admitted:inferred_panel_limit"] == 16
+    for row, original in zip(rows, sources):
+        assert row.provenance["raw_record"] == original
+        assert row.value == original["quantitative_value"]
