@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "argv": [
+    "./deploy.sh",
+    "--artifacts",
+    "/Users/iskander/code/presto/artifacts/2026-10-29_1653_codex_measurement-curation-recovery/hitlist-release-2.1.3"
+  ],
+  "cwd": "/Users/iskander/code/presto/.worktrees/hitlist-source-release",
+  "environment": {
+    "PATH_prefix": "/private/tmp/hitlist-curation-release-env/bin"
+  },
+  "reason": "Immediate post-upload inventory check failed; subsequent inventory matched both expected files. Reverification skipped existing matching uploads and verified both public downloads.",
+  "receipt": "results/hitlist-pypi-2.1.3-verified.json",
+  "recorded_unix": 1793307619.443455
+}

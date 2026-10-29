@@ -13,11 +13,12 @@ const names=['parent-s42','curated-multi-s42','parent-s43','curated-multi-s43'];
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const n=x=>x==null?'—':Number(x).toLocaleString();
 const f=x=>x==null?'—':Number(x).toFixed(4);
-const cell=(m,binary=false)=>m?`${f(binary?m.auroc:m.spearman)} · ${f(binary?m.auprc:m.rmse)}<div class="muted">${n(binary?m.n:m.n_exact)} ${binary?'observations':'exact observations'}</div>`:'—';
+const phase=x=>{let label=({canonical_preflight:'Checking full cohort',admitting_frozen_manifest:'Admitting verified data',staging_verified_inputs:'Staging verified data',preflight_passed_preparing_optimizer:'Initializing training'})[x?.status?.status]||x?.status?.status||'not launched';let start=x?.status?.started_unix;return label+(start?' · '+Math.floor((Date.now()/1000-start)/60)+' min in this phase':'');};
+const cell=(m,binary=false)=>m?`${f(binary?m.auroc:m.spearman)} · ${f(binary?m.auprc:m.rmse)}<div class="muted">${n(binary?m.n:(m.n_exact??m.n))} ${binary?'observations':'exact observations'}</div>`:'—';
 async function refresh(){try{let s=await(await fetch('results/live.json?t='+Date.now())).json(),r=Object.fromEntries(s.runs.map(x=>[x.condition,x]));
 document.getElementById('stamp').textContent='Updated '+new Date(s.refreshed_unix*1000).toLocaleTimeString()+(s.poll_error?' · remote poll failed; last received state retained':'');
 document.getElementById('state').textContent=s.preparation.stage+'. '+n(s.train_rows)+' frozen TRAIN observations; '+n(s.planned_steps)+' planned updates per new fit.';
-let head='<tr><th>Validation output / population</th><th>MHC</th>'+names.map(k=>`<th>${esc(k)}<div class="muted">${esc(r[k]?.status?.status||'not launched')} · ${n(r[k]?.progress?.steps)} / ${n(r[k]?.progress?.max_steps??s.planned_steps)}</div></th>`).join('')+'</tr>', keys=new Set();
+let head='<tr><th>Validation output / population</th><th>MHC</th>'+names.map(k=>`<th>${esc(k)}<div class="muted">${esc(phase(r[k]))} · ${n(r[k]?.progress?.steps)} / ${n(r[k]?.progress?.max_steps??s.planned_steps)}</div></th>`).join('')+'</tr>', keys=new Set();
 for(let x of s.runs)for(let[e,m]of Object.entries(x.metrics?.validation||{}))if(e!=='elution_observation')for(let c of Object.keys(m.by_class||{}))keys.add(e+'|'+c);
 let body=[...keys].sort().map(k=>{let[e,c]=k.split('|');return`<tr><td>${esc(e)}</td><td>${c}</td>${names.map(name=>`<td class="num">${cell(r[name]?.metrics?.validation?.[e]?.by_class?.[c],e==='qualitative_binding')}</td>`).join('')}</tr>`;}).join('');
 for(let kind of ['same_protein','reference_proteome'])for(let c of ['I','II']){let values=names.map(name=>r[name]?.ligand_validation?.backgrounds?.[kind]?.metrics?.elution_observation?.by_class?.[c]);if(values.some(Boolean))body+=`<tr><td>Ligands / ${esc(kind.replaceAll('_',' '))}</td><td>${c}</td>${values.map(v=>`<td class="num">${cell(v,true)}</td>`).join('')}</tr>`;}

@@ -5,6 +5,7 @@ import csv
 import gzip
 import hashlib
 import json
+import time
 
 from verify_predictions import groups, metrics
 
@@ -43,6 +44,147 @@ def paired_rows(before, after):
             row["delta_" + metric] = y - x if x is not None and y is not None else None
         result.append(row)
     return result
+
+
+def closeout():
+    """Publish completed evidence only after every independent reporting gate passes."""
+    for name, status in (
+        ("reporting-receipt", "completed"),
+        ("prediction-verification", "passed"),
+        ("cohort-composition-verification", "passed"),
+        ("parent-comparison", "passed"),
+    ):
+        assert read(F / "results" / (name + ".json"))["status"] == status
+    selection = read(F / "results/validation-decision.json")
+    assert selection["status"] == "frozen" and selection["test_used_for_selection"] is False
+    rows = read(F / "results/stratified-metrics.json")
+    lines = [
+        "## Verified retrain results",
+        "",
+        "Both complete weighted-epoch fits, independent target/loss verification, "
+        "cohort census, serving replay and paired held-out observation checks passed.",
+        "Validation-selected condition: `"
+        + selection["winner"]
+        + "` ("
+        + selection["criterion"]
+        + ").",
+        "Selection scores: "
+        + "; ".join(f"{k} = {v:.6f}" for k, v in selection["scores"].items())
+        + ".",
+        "All results remain repeated fixed-holdout development evidence; no model is "
+        "automatically promoted and no mechanistic qualification follows.",
+        "",
+        "| Condition | Split / era | Output / class / population | n (exact for IC50) "
+        "| Spearman | RMSE log10(nM) | AUROC | AUPRC |",
+        "|---|---|---|---:|---:|---:|---:|---:|",
+    ]
+
+    def number(value):
+        return "—" if value is None else f"{value:.4f}"
+
+    for row in sorted(rows, key=lambda r: (r["condition"], *(r[k] for k in KEYS))):
+        if not (
+            (row["endpoint"] == "ic50" and row["study"] == "all")
+            or (
+                row["endpoint"] == "elution_observation"
+                and row["population"] in {"synthetic_same_protein", "source_reported_outcomes"}
+            )
+        ):
+            continue
+        population = row["population"]
+        if row["study"] != "all":
+            population += " / " + row["study"]
+        label = " / ".join((row["endpoint"], row["mhc_class"], population))
+        count = row.get("n_exact", row["n"])
+        values = " | ".join(number(row.get(k)) for k in ("spearman", "rmse", "auroc", "auprc"))
+        lines.append(
+            f"| {row['condition']} | {row['split']} / {row['era']} | {label} | {count} | {values} |"
+        )
+    lines.extend(["", "Missing metrics indicate unsupported or single-label evaluation cells.", ""])
+    for condition in sorted(selection["scores"]):
+        report = read(F / "results" / condition / "report.json")
+        assert report["all_training_rows_exposed"] is True
+        assert report["serving_replay"]["status"] == "passed"
+        resources, hardware = report["resources"], report["hardware"]
+        lines.append(
+            f"- `{condition}`: selected step {report['selected_steps']:,}; completed "
+            f"{report['summary']['steps']:,} updates and exposed "
+            f"{report['unique_training_rows_seen']:,} unique TRAIN rows. "
+            f"Requested H100!, observed {hardware['actual_gpu']} "
+            f"({hardware['total_gpu_bytes']:,} device bytes); wall "
+            f"{resources['wall_seconds']:.1f} s, optimizer {resources['optimizer_seconds']:.1f} s, "
+            f"peak allocated/reserved {resources['peak_gpu_allocated'] / 1e9:.2f} / "
+            f"{resources['peak_gpu_reserved'] / 1e9:.2f} GB."
+        )
+    lines.extend(
+        [
+            "",
+            "The full report preserves every output/class/era/study, exact and bounded "
+            "loss, Pearson, 500 nM classification, uncertainty, source-reported outcomes, "
+            "parameter/feature coverage and register diagnostics. The paired comparison "
+            "checks identical held-out observations and separately excludes the three "
+            "source-identified suspect generated test labels for both model generations.",
+            "",
+        ]
+    )
+    text = "\n".join(lines)
+    readme = F / "README.md"
+    original = readme.read_text().split("\n## Verified retrain results", 1)[0]
+    original = original.replace(
+        "Status: two H100! fits submitted; source preparation passed. "
+        "No new predictive result yet.",
+        "Status: both fits completed; held-out metrics and paired comparisons "
+        "independently verified.",
+    )
+    original = original.replace("The running continuation", "The completed continuation")
+    original = original.replace(
+        "No improvement is\nclaimed until measured; "
+        "final scientific writeup and promotion remain pending.",
+        "The results below record measured differences; model promotion and scientific "
+        "qualification require separate review.",
+    )
+    readme.write_text(
+        original.rstrip()
+        + "\n\n"
+        + text
+        + "[Full report](results/summary.md) · [Paired comparison](results/parent-comparison.md)\n"
+    )
+    registry = F.parent / "experiment_log.md"
+    document = registry.read_text()
+    start = document.index("## " + F.name)
+    next_entry = document.find("\n## ", start + 3)
+    end = len(document) if next_entry < 0 else next_entry
+    entry = document[start:end]
+    entry = entry.split("\n### Verified retrain results", 1)[0]
+    entry = entry.replace("— frozen cohort, fits running", "— completed, independently verified")
+    entry = entry.replace(
+        "Actual hardware/runtime and held-out metrics pending. No new winner or claim of\n"
+        "  improvement. Collection/verification/reporting continuation and live comparison\n"
+        "  are running; complete artifact/metric closeout remains required.",
+        "Actual hardware, runtime, validation selection and held-out metrics are recorded\n"
+        "  below after all verification/reporting gates passed. No automatic model promotion.",
+    )
+    entry += "\n" + text.replace("## Verified retrain results", "### Verified retrain results", 1)
+    entry += f"\n[Complete report]({F.name}/results/summary.md) · "
+    entry += f"[Paired parent comparison]({F.name}/results/parent-comparison.md).\n"
+    registry.write_text(document[:start] + entry + document[end:])
+    receipt = dict(
+        status="completed",
+        completed_unix=time.time(),
+        selected_condition=selection["winner"],
+        automatic_promotion=False,
+        analyzer_sha256=sha(Path(__file__)),
+        artifacts={
+            name: sha(F / "results" / name)
+            for name in (
+                "parent-comparison.json",
+                "prediction-verification.json",
+                "reporting-receipt.json",
+                "stratified-metrics.json",
+            )
+        },
+    )
+    (F / "results/closeout.json").write_text(json.dumps(receipt, indent=2) + "\n")
 
 
 def main():
@@ -172,6 +314,7 @@ def main():
         ]
     )
     (F / "results/parent-comparison.md").write_text("\n".join(lines))
+    closeout()
     print("Paired parent comparison and source-identified label sensitivity verified", flush=True)
 
 

@@ -102,6 +102,38 @@
         "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/review_stability.py"
       ],
       "source_snapshots": "reproduce/source/review_stability.py"
+    },
+    {
+      "receipt": "reproduce/acquisition-strazar-late-launch.json",
+      "sha256": "938018fb44400bcc43fa2b1cbf83d9f28f1009d6f765796d26f37b3ad157f7a0",
+      "argv": [
+        "python",
+        "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/acquire_serial.py",
+        "--receipt-tag",
+        "acquisition-strazar-late",
+        "--rate-limit-attempts",
+        "1"
+      ],
+      "source_snapshots": "reproduce/source/"
+    },
+    {
+      "receipt": "reproduce/recovery-late-launch.json",
+      "sha256": "14aa84741e34972060c6e69e3f00d476c76c299d13004596a7b9d00805c745dd",
+      "argv": [
+        "/Users/iskander/code/shared-virtual-env/bin/python",
+        "-m",
+        "modal",
+        "run",
+        "--detach",
+        "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/recover_late.py"
+      ],
+      "source_snapshots": "reproduce/source/"
+    },
+    {
+      "receipt": "reproduce/hitlist-publication.json",
+      "sha256": "37e6185fd46ad718cfc3d4b114dddda92f19be72c54cece869b7c986d893382f",
+      "argv": null,
+      "source_snapshots": "reproduce/source/"
     }
   ]
 }

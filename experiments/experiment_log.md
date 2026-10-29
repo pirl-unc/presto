@@ -5602,15 +5602,28 @@ six-output default was introduced. PR131 remains draft until130/132 qualify.
   evidence; none approved or transferred. [All 71 panels and counts](2026-10-29_1653_codex_measurement-curation-recovery/results/thresholds.md).
 - Hitlist issue 871 records conflicting competitive-fluorescence/KD method tags.
   PR 872 preserves peptidoform fields and chemistry-aware deduplication; merged
-  as `ff5247f` (2.1.3), clean-main release gate 40948383762 running. The actual
+  as `ff5247f` (2.1.3), clean-main release gate 40948383762 passed and both
+  public PyPI artifacts independently matched tested bytes. The actual
   source admission remains pinned to its tested development wheel/hash.
 - Source-backed Stražar recovery: 14,187 unmodified pMHC observations; 289 shorter
   than the current nine-residue MHC-II minimum (184 sequences), 348 heldout peptide
   exclusions, 13,550 candidate TRAIN observations. Follow-on background audit adds
   one embargo, retaining 13,549 for the new fit. No blanket unknown-PTM fill.
 - Twelve reference/training/atlas archives acquired and hashed; downloaded rows
-  are not assumed independent or admissible. Only 11/132 selected PSM files were
-  retrieved before persistent public rate limiting; remaining recovery is open.
+  are not assumed independent or admissible. Initially 11/132 PSM files were
+  retrieved; a later bounded retry obtained nine more then stopped at HTTP 429.
+  The separate later batch has 33,683 verified unmodified pMHCs (+19,496).
+  Original CSV/count replay and independent collected-evidence checks pass;
+  CPU 4/16 GiB, 10.94 s. Hitlist 2.1.3/common admission retains 32,628 candidate
+  rows after 448 short-peptide exclusions and 607 held-out embargoes; CPU 4/16 GiB,
+  61.60 s. Independent candidate/background audit passed (CPU 4/8 GiB, 206.52 s):
+  all 13,549 current recovered positives retained, 19,079 additional candidates,
+  zero heldout-peptide leakage. It identifies 33 current generated TRAIN rows to
+  remove in a subsequent cohort and four suspect TEST rows (three previously
+  identified plus one additional); original sensitivity/comparison stays fixed.
+  Future combination still needs a newly frozen, corrected background cohort.
+  Current fits retain the earlier frozen cohort; failed metadata-only admission
+  and successful immutable retry are preserved.
 - CPU only, no pretraining/fit/losses/synthetic training labels; predictive
   validation/test metrics and dumps inapplicable. Curation CPU 4/16 GiB, 141.75 s;
   recovery admission CPU 4/16 GiB, 49.97 s. 146 source/admission tests pass plus
@@ -5636,9 +5649,12 @@ six-output default was introduced. PR131 remains draft until130/132 qualify.
   Minimum equal-endpoint validation selection; no test-based selection.
 - Frozen source `858f5383` plus pinned dirty snapshot; model/trainer identical to
   parent, shared reader speedup and curation changes explicit. 172 focused tests
-  pass, independent preparation 246.44 s on CPU 8/64 GiB; full worker preflight
-  and independent census mandatory. Failed blacklist assumption preserved before fit.
+  pass; corrected hosted source has 2,879 passes / three skips. Independent
+  preparation 246.44 s on CPU 8/64 GiB; independent census and both worker
+  preflights passed (1,679.08 / 1,723.61 s), with verified scaler/manifest identity.
+  Failed blacklist assumption preserved before fit.
 - Requested two H100! workers maximum, CPU 8/64 GiB and 512 GiB scratch each.
+  Both report H100 80GB HBM3 and 85,009,367,040 device bytes.
   Actual hardware/runtime and held-out metrics pending. No new winner or claim of
   improvement. Collection/verification/reporting continuation and live comparison
   are running; complete artifact/metric closeout remains required.

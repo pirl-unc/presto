@@ -1,0 +1,33 @@
+{
+  "argv": [
+    "python",
+    "-m",
+    "modal",
+    "run",
+    "--detach",
+    "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/admit_recovery.py"
+  ],
+  "environment": {
+    "PRESTO_RECOVERY_BATCH": "late"
+  },
+  "git_commit": "865eac08c75b205322526197c3ab17f8106f7304",
+  "git_dirty": " M experiments/2026-10-29_1653_codex_measurement-curation-recovery/README.md\n M experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/acquire_serial.py\n M experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/admit_recovery.py\n M experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/recover_strazar.py\n M experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/launch.json\n M experiments/2026-10-29_1956_codex_curated-data-retrain/analysis/compare_parent.py\n M experiments/2026-10-29_1956_codex_curated-data-retrain/dashboard.html\n M experiments/agents/codex/ideas.md\n M experiments/agents/codex/plans/2026-10-29_curated-data-retrain.md\n M experiments/agents/codex/plans/2026-10-29_measurement-curation-recovery.md\n M experiments/experiment_log.md\n M tasks/todo.md\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/attempts/late-admission-environment/\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/recover_late.py\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/verify_late_recovery.py\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/acquisition-strazar-late-launch.json\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/hitlist-publication-verification-retry.json\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/recovery-admission-late-call.json\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/recovery-admission-late-launch.json\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/recovery-late-call.json\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/recovery-late-launch.json\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/recovery-late-manifest.json\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/source/acquire_serial-acquisition-strazar-late.py\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/source/late-recover_late.py\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/source/late-recover_strazar.py\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/source/recovery-admission-late-v2/\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/source/recovery-admission-late/\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/source/verify_late_recovery.py\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/results/acquisition-strazar-late.json\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/results/hitlist-pypi-2.1.3-verified.json\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/results/hitlist-release-2.1.3.json\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/results/recovery-late-verification-initial.json\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/results/recovery-late-verification.json\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/results/recovery-late.json\n?? experiments/2026-10-29_1956_codex_curated-data-retrain/.pipeline.lock\n?? experiments/2026-10-29_1956_codex_curated-data-retrain/reproduce/analysis-before-predictions/\n?? experiments/2026-10-29_1956_codex_curated-data-retrain/results/closeout-readiness.json\n?? experiments/2026-10-29_1956_codex_curated-data-retrain/results/curated-multi-s42/\n?? experiments/2026-10-29_1956_codex_curated-data-retrain/results/curated-multi-s43/\n?? experiments/2026-10-29_1956_codex_curated-data-retrain/results/hosted-source-tests.json\n?? experiments/2026-10-29_1956_codex_curated-data-retrain/results/live.json\n?? experiments/2026-10-29_1956_codex_curated-data-retrain/results/worker-preflight-verification.json\n",
+  "started_unix": 1793308024.129858,
+  "source_hashes": {
+    "recover_strazar.py": "3276b205d1538d47b3897a5ebd270340b6ad04b85fa3532e18221f93f205935a",
+    "assay_measurement_reviews.json": "d1d1ae11d51314da292e9b37b41f9e8241d34bc50555d33ac6b3a243070cd829",
+    "modular_ordinal.py": "530667626cca2ba535585e1bd5aa0b1dbf5c77b8be0540b1da911e27be1b9520",
+    "assay_reviews.py": "9172bb5223e684bd76fde2e821e2d15355c64f2ad9f6d03fdb5985a9fa469c39",
+    "modular_quantitative.py": "751a66c8aa68fd697d395ec3fc63951e262278a0fb6c3f26c185e8963f7d148d",
+    "measurement_curation.py": "0b518f14102b5d9f53f7fa055b2b03c3b5ad29758a391045c3e79587c7895f47",
+    "modular_hitlist.py": "2fa78f04811e5dd273f23c47330b9ca1f65c2df43d88285fd94c8374bb96528d",
+    "admit_recovery.py": "d0fc5e8df3ac4211d026d3f281d57c6e4c6f6745bc5336a754df74261e319285",
+    "modular.py": "eac93c31b8a536becf7ee13dca4eeef71dfb4b92043a28a07f64ec072ca7d942",
+    "modular_hitlist_ms.py": "fb3ee8f1ed666e9e961f2285a3410df247c1addc47555839a751398d7141b235"
+  },
+  "wheel_sha256": "0c35fc4bf578dfe97e2d624ec140f204636fc729c66590ecf93cfe608c518734",
+  "source_csv_sha256": "711636451ee1ff8c16e25b487164dcedaafa7a2766a7bbcb3540b0d4888e4560",
+  "requested_gpu": null,
+  "cpu": 4,
+  "memory_mib": 16384
+}

@@ -103,3 +103,13 @@ additional heldout embargo. Preserve the failed preparation and its source under
 
 No model training took place under the failed preparation. This amendment uses
 source evidence and membership only, with no new model predictions available.
+
+## Durable post-run closure
+
+Before any new predictions are available, extend the paired-comparison analyzer
+to update this family's README and canonical registry only after collection,
+prediction verification, cohort census and full reporting all pass. It must retain
+the frozen recipe, append actual validation/test metrics and hardware/exposure,
+link the matched-parent and suspect-label sensitivity analyses, and state that
+validation selection does not automatically promote a model. This allows the
+existing continuation to close the experiment even across client interruptions.

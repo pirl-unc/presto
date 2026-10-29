@@ -59,8 +59,12 @@ stay fixed. Source-reported MS nondetections are evaluated separately.
 Independent source replay verifies original CSV and PSM chemistry/row evidence;
 preparation verifies exact changed/removed row IDs, raw fields, source hashes,
 held-out exclusion, numerical values, scalers and complete quotas. A second full
-cohort census independently passed; each GPU worker must pass the canonical preflight
-before creating its optimizer. CPU preparation: eight CPUs / 64 GiB requested,
+cohort census independently passed. Both GPU workers passed canonical preflight
+and independently reproduced the frozen scalers and manifest hashes: 1,679.08 s
+(seed 42) / 1,723.61 s (seed 43). They are preparing training before the first
+observed update; `results/worker-preflight-verification.json` records the checks.
+Hosted CI at `865eac08` passed 2,879 tests / three skips, full lint and docs.
+CPU preparation: eight CPUs / 64 GiB requested,
 246.44 seconds. Requested fit hardware: at most two H100!, eight CPUs / 64 GiB
 host RAM and 512 GiB scratch each. Both workers report NVIDIA H100 80GB HBM3, 85,009,367,040 device bytes;
 see `results/initial-hardware.json`. Runtime/peak memory remain pending.
@@ -86,3 +90,18 @@ report, and verifies matched observations before paired parent comparisons.
 labels. The live report shows parent selected checkpoints against latest new
 validation checkpoints, explicitly different training stages. No improvement is
 claimed until measured; final scientific writeup and promotion remain pending.
+
+The prospective post-run closeout now also writes the measured summary and paired
+deltas to this README and the canonical registry, only after independent prediction,
+cohort and comparison checks pass. Its frozen pre-prediction source and fail-closed
+verification are in `reproduce/analysis-before-predictions/` and
+`results/closeout-readiness.json`. Completion does not automatically promote the
+model or qualify TCR, DO:DM or processing components.
+
+Later source curation, completed after launch but before new validation results,
+identifies 33 additional generated TRAIN comparisons whose sequences now have
+source-positive evidence, and one more suspect TEST comparison. These appear in
+the separate curation family's `results/late-candidate-audit.json`. Active inputs,
+main test denominators and the original three-row sensitivity are preserved.
+This is an explicit limitation of the current frozen cohort; the next preparation
+must incorporate the later positive exclusion pool before training.

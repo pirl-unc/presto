@@ -1,0 +1,175 @@
+{
+  "status": "passed",
+  "seconds": 1723.6144385609998,
+  "scales": {
+    "ec50": {
+      "mean": 2.205902327397387,
+      "scale": 1.2217749646362066,
+      "exact_count": 199,
+      "floor": 0.001
+    },
+    "half_life": {
+      "mean": 1.469606931206776,
+      "scale": 1.2402569463054927,
+      "exact_count": 8720,
+      "floor": 0.001
+    },
+    "ic50": {
+      "mean": 2.837897529625159,
+      "scale": 1.244262118665861,
+      "exact_count": 49628,
+      "floor": 0.001
+    },
+    "kd": {
+      "mean": 2.113291065433024,
+      "scale": 1.2962644447656841,
+      "exact_count": 5527,
+      "floor": 0.001
+    },
+    "kd_via_ec50": {
+      "mean": 2.2786133431909312,
+      "scale": 1.127394915556031,
+      "exact_count": 12470,
+      "floor": 0.001
+    },
+    "kd_via_ic50": {
+      "mean": 2.6850107782051236,
+      "scale": 1.3666888915235331,
+      "exact_count": 67285,
+      "floor": 0.001
+    },
+    "koff": {
+      "mean": -4.362379195457084,
+      "scale": 1.1852063683573564,
+      "exact_count": 8,
+      "floor": 0.001
+    },
+    "td50": {
+      "mean": 56.43594017094015,
+      "scale": 10.572835686700087,
+      "exact_count": 468,
+      "floor": 0.001
+    }
+  },
+  "admission": {
+    "census": {
+      "test:ic50:=": 367,
+      "test:kd_via_ic50:=": 659,
+      "test:kd:=": 407,
+      "test:kd:>": 72,
+      "test:half_life:=": 210,
+      "test:ec50:=": 177,
+      "test:ic50:>": 111,
+      "test:kd_via_ec50:=": 215,
+      "test:kd_via_ec50:>": 190,
+      "test:td50:=": 140,
+      "test:qualitative_binding:=": 441,
+      "test:ic50:>=": 1,
+      "train:kd_via_ec50:=": 12470,
+      "train:kd_via_ic50:=": 67285,
+      "train:kd_via_ec50:>": 26143,
+      "train:kd_via_ic50:>": 4954,
+      "train:ic50:=": 49628,
+      "train:ic50:>": 4819,
+      "train:qualitative_binding:=": 40460,
+      "train:half_life:=": 8720,
+      "train:kd_via_ic50:>=": 364,
+      "train:td50:=": 468,
+      "train:ic50:>=": 251,
+      "train:kd:=": 5527,
+      "train:kd:>": 12286,
+      "train:half_life:>": 9,
+      "train:koff:=": 8,
+      "train:kd_via_ec50:>=": 56,
+      "train:ec50:>": 13,
+      "train:ec50:=": 199,
+      "train:ic50:<=": 14,
+      "train:kd_via_ic50:<=": 10,
+      "train:td50:>": 31,
+      "train:td50:>=": 4,
+      "validation:kd:=": 151,
+      "validation:kd:>": 381,
+      "validation:ec50:=": 69,
+      "validation:half_life:=": 71,
+      "validation:qualitative_binding:=": 1135,
+      "validation:kd_via_ec50:=": 458,
+      "validation:ic50:=": 1270,
+      "validation:kd_via_ic50:=": 329,
+      "validation:kd_via_ec50:>": 70,
+      "validation:kd_via_ic50:>": 13,
+      "validation:td50:=": 145,
+      "test:elution_observation:=": 71166,
+      "train:elution_observation:=": 3285858,
+      "validation:elution_observation:=": 14492
+    },
+    "training_labels": {
+      "kd_via_ec50": 38669,
+      "kd_via_ic50": 72613,
+      "ic50": 54712,
+      "qualitative_binding": 40460,
+      "half_life": 8729,
+      "td50": 503,
+      "kd": 17813,
+      "koff": 8,
+      "ec50": 212,
+      "elution_observation": 3285858
+    },
+    "component_states": {},
+    "manifest_sha256": "9fc817405b99cd0bd0277c2b059141d6a64b1085e8a174d58407899afa2a1788",
+    "module_pruning": [],
+    "source_label_values": {},
+    "cell_types": [],
+    "ordinal_levels": {},
+    "cytokine_states": {},
+    "cytokine_numeric": {},
+    "context_assertion_states": {
+      "pathway": {},
+      "intervention": {}
+    },
+    "observed_numeric_features": {
+      "acquisition": [],
+      "observation": [],
+      "preparation": []
+    },
+    "frozen_targets": [],
+    "frozen_parameters": [],
+    "inherited_scalers": []
+  },
+  "manifest_sha256": "9fc817405b99cd0bd0277c2b059141d6a64b1085e8a174d58407899afa2a1788",
+  "source_review": {
+    "revision": "source-review-v2",
+    "curation_family": "2026-10-29_1653_codex_measurement-curation-recovery",
+    "removed_rows": 618,
+    "inferred_bounds": {
+      ">=": 482,
+      "<=": 24
+    },
+    "recovered_positive_rows": 13549,
+    "added_background_rows": 13549,
+    "removed_generated_training_rows": 35,
+    "additional_recovered_holdout_embargo": 1,
+    "new_blacklist_sequences": 292,
+    "suspect_generated_test_rows": 3,
+    "blacklist_audit_sha256": "6d4a542901a1809874a20d145bd01de20526988579d96b0b8844a0857e45f861",
+    "recovered_positive_blacklist_verified": true,
+    "recovered_holdout_embargo_verified": true,
+    "recovery_verification": {
+      "status": "passed",
+      "reviewed_source_observations": 14187,
+      "train_observations": 13550,
+      "short_observations": 289,
+      "short_length_counts": {
+        "8": 157,
+        "7": 132
+      },
+      "source_sha256": "bfb0b3b75a70aeceb7870c2ec7c78a2c072c12a6324f6dec4f7ad9ba0277c4c6",
+      "evidence_sha256": "a69833dbd4b163ceeb49aed6ea82da1e8fcbbd84693c90fe956a6c2b7f98b202"
+    },
+    "parent_family": "2026-10-28_1540_codex_temporal-multi-output",
+    "previous_test_inspection": true,
+    "new_background_populations": {
+      "synthetic_same_protein": 13546,
+      "synthetic_reference_proteome": 3
+    }
+  }
+}

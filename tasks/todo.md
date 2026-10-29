@@ -14686,13 +14686,26 @@ changes no model or dataset.
 ## 2026-10-29 — Continue data improvements and retrain
 
 Spec: experiments/agents/codex/plans/2026-10-29_curated-data-retrain.md.
-- [ ] Finish upstream transport release and verify recovered source forms.
+- [x] Finish upstream transport release and verify recovered source forms.
 - [x] Prepare and independently verify a frozen combined cohort with fixed holdouts.
 - [x] Launch two common H100! fits and publish live side-by-side validation.
 - [ ] Verify final metrics, compare parent results and close experiment artifacts.
 
 Retrain review: 3,519,577 frozen TRAIN rows, 51,471 updates per seed. Both saved
-H100 calls submitted; full preflight/optimization and final results pending. The
+H100 calls submitted; both full preflights/scalers verified, optimization and
+final results pending. The
 source-positive blacklist amendment removes exactly 35 generated TRAIN rows and
 flags three fixed TEST labels. 172 focused checks and independent CPU preparation
-pass. Hitlist PR 872 merged at ff5247f; clean-main release gate 40948383762 running.
+pass. Hitlist PR 872 merged at ff5247f; clean-main release gate 40948383762 passed.
+
+Release review: Hitlist 2.1.3 is merged/published with both public artifacts
+verified against clean-main run 40948383762. Presto 865eac08 passes the hosted
+full suite (2,879 tests / three skips). A bounded later source retrieval recovered
+nine additional files; independent chemistry/identity verification now covers
+33,683 source-positive pMHCs (+19,496). Common admission of the later batch retains
+32,628 candidates after 448 short-peptide exclusions and 607 held-out peptide
+embargoes. Independent candidate/background audit passes: 19,079 new candidates
+and all 13,549 active-fit positives retained, with no heldout-peptide leakage.
+It identifies 33 further generated TRAIN comparisons and one additional suspect
+TEST comparison. Active fits and the original comparison remain frozen; a later
+combined cohort must apply the newly verified source exclusion pool.

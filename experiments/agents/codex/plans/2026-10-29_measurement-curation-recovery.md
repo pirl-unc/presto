@@ -79,3 +79,43 @@ Stability inventory encountered a reported mutant MHC identifier that the canoni
 parser does not resolve. Preserve the failed inventory. Count unresolved constructs
 separately by their exact source identifier; do not strip the mutation or match them
 to wild-type data. This source-only census must tolerate and report rejection causes.
+
+More than two hours have elapsed since the serial public PSM retrieval received
+persistent HTTP 429s (recorded Retry-After was respected). Make one new serial
+retrieval pass using the same authorized public endpoint/client, five seconds
+between files, skipping all previously verified successes. Preserve a new receipt
+and stop on the first new 429 rather than repeatedly retrying. Any recovered files
+belong to a future source-qualified cohort; current training inputs remain frozen.
+
+The bounded retry obtained nine files, then stopped at HTTP 429: 20/132 selected
+files now available, 112 remain. Freeze the union of successful source receipts
+as batch `late`; recover forms on Modal CPU using the same published-ligand and
+explicit-chemistry contract. Write to a new output directory and preserve the
+original recovery. Verify all original recovered pMHC identities remain present,
+then report the source-qualified delta separately from model admission and training.
+
+After publication of the verified Hitlist 2.1.3 artifacts, admit the late batch
+through the same Hitlist export and common Presto MS adapter, with a new immutable
+output/call/receipt namespace. Preserve the initial batch and development-wheel
+pin. Expand the candidate embargo to all original heldout files, including
+generated comparisons, and retain explicit study/year provenance. Report actual
+length/restriction/overlap dispositions and installed dependency versions. These
+remain candidates for a subsequent frozen background/cohort audit; active training
+and its original inputs are unchanged.
+
+The late admission's first attempt wrote its candidate outputs but failed while
+recording a version for `mhcseqs`, which is not installed in this reader image:
+the reader consumes the already pinned mhcseqs catalogue artifact. Preserve that
+attempt and partial volume directory; rerun as `late-v2`, recording actual runtime
+dependencies and catalogue-provider provenance separately. No partial candidate
+output is promoted and no active model input changes.
+
+After successful late-v2 admission, independently hash the collected archive and
+every member; check positive-only observations against the reviewed source forms,
+MHC class/length, provenance and study fields. Audit all reviewed positive sequences
+(including the short excluded peptides) against the frozen current generated
+TRAIN/validation/test comparisons and the original blacklist. Verify no candidate
+overlaps any fixed holdout peptide and calculate the exact retained/new identities
+relative to the recovered positives already in the active fits. This read-only CPU
+audit records conflicts for the next cohort; it cannot alter the active manifests,
+labels or prespecified comparison/sensitivity denominators.
