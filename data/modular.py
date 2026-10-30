@@ -515,38 +515,60 @@ class TargetScale:
         return value * self.scale + self.mean
 
 
-def fit_target_scales(rows: Iterable[Observation], floor: float = 1e-3) -> dict[str, TargetScale]:
-    """Only exact TRAIN outcomes fit preprocessing; bounds never set the scale."""
-    moments: dict[str, list] = {}
-    quantity_contracts = {}
-    active = set()
-    for row in rows:
+class TargetScaleFitter:
+    """Streaming exact-TRAIN moments, reusable during an existing row scan."""
+
+    def __init__(self):
+        self.moments: dict[str, list] = {}
+        self.quantity_contracts = {}
+        self.active = set()
+
+    def add(self, row: Observation):
         if row.endpoint == "identity" or endpoint_spec(row.endpoint).binary or row.split != "train":
-            continue
+            return
         if row.value is None:
-            continue
+            return
         if endpoint_spec(row.endpoint).quantitative:
             if (
-                row.endpoint in quantity_contracts
-                and quantity_contracts[row.endpoint] != row.quantity_contract
+                row.endpoint in self.quantity_contracts
+                and self.quantity_contracts[row.endpoint] != row.quantity_contract
             ):
                 raise ValueError("cannot fit a target scale across incompatible quantity contracts")
-            quantity_contracts[row.endpoint] = row.quantity_contract
-        active.add(row.endpoint)
+            self.quantity_contracts[row.endpoint] = row.quantity_contract
+        self.active.add(row.endpoint)
         if row.qualifier == "=":
             value = observation_target(row)
-            count, mean, m2, first, varied = moments.get(row.endpoint, [0, 0.0, 0.0, value, False])
+            count, mean, m2, first, varied = self.moments.get(
+                row.endpoint, [0, 0.0, 0.0, value, False]
+            )
             count += 1
             delta = value - mean
             mean += delta / count
             m2 += delta * (value - mean)
-            moments[row.endpoint] = [count, mean, m2, first, varied or value != first]
-    result = {}
-    for endpoint in sorted(active):
-        count, mean, m2, _, varied = moments.get(endpoint, [0, 0.0, 0.0, None, False])
-        if count < 2 or not varied:
-            raise ValueError(f"{endpoint}: need two distinct exact training values")
-        result[endpoint] = TargetScale(
-            mean, max(floor, math.sqrt(max(0.0, m2) / count)), count, floor
-        )
-    return result
+            self.moments[row.endpoint] = [count, mean, m2, first, varied or value != first]
+
+    def finish(self, floor: float = 1e-3) -> dict[str, TargetScale]:
+        result = {}
+        for endpoint in sorted(self.active):
+            count, mean, m2, _, varied = self.moments.get(endpoint, [0, 0.0, 0.0, None, False])
+            if count < 2 or not varied:
+                raise ValueError(f"{endpoint}: need two distinct exact training values")
+            result[endpoint] = TargetScale(
+                mean, max(floor, math.sqrt(max(0.0, m2) / count)), count, floor
+            )
+        return result
+
+
+def fit_target_scales(rows: Iterable[Observation], floor: float = 1e-3) -> dict[str, TargetScale]:
+    """Only exact TRAIN outcomes fit preprocessing; bounds never set the scale."""
+    fitter = TargetScaleFitter()
+    for row in rows:
+        fitter.add(row)
+    return fitter.finish(floor)
+
+
+def supervised_targets(row: Observation) -> frozenset[str]:
+    """Task names with observed labels, without interpreting label values."""
+    if row.endpoint == "identity":
+        return frozenset(identity_head(name) for name in row.identity_labels)
+    return frozenset((row.endpoint,)) if row.value is not None else frozenset()

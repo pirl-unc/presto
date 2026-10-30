@@ -5712,3 +5712,57 @@ lint/docs pass, real v6 checkpoint predictions reproduce exactly. Startup hardwa
 confirms H100 80GB (85,009,367,040 bytes); actual source staging is 30.25GB. The
 remaining old comparison queue was stopped and recorded, preserving both verified
 pooled controls. Real-data held-out results/runtime/winner remain pending.
+
+
+## 2026-10-30_1725_codex_preparation-throughput — reuse admitted metadata
+
+- **Date / agent / model:** 2026-10-30, Codex / GPT-6.
+- **Directory:** [runtime record](2026-10-30_1725_codex_preparation-throughput/README.md).
+- **Reproducibility:** `reproduce/launch.json`, `launch.sh`, frozen before/after
+  source snapshots and software-parity script; baseline ed9b1b9b, candidate dirty
+  five-file change with exact hashes. Raw artifacts on Modal volume
+  `presto-checkpoints:/2026-10-30_1725_codex_preparation-throughput/` and local
+  artifact paths in the README. OMP/OpenBLAS/MKL threads=4 for runtime comparison.
+- **Dataset / curation:** first 5,000 TRAIN rows each from the active physical-assay,
+  native-MS and generated-background sources: 15,000 rows, 116,307,079 bytes.
+  Byte-identical values/provenance/qualifiers and source-scoped inferred bounds;
+  no additional data admission. Registry restricted to endpoints/classes/methods
+  present in the slice. Parent sampling weights retained for observed strata.
+- **Training / assays / outputs / synthetic contract:** CPU preparation only,
+  no pretraining, optimizer steps or predictive evaluation on these source rows.
+  IC50, KD-derived proxies, half-life, qualitative binding and ligand observations
+  use the existing shared-v7 mapping; 5,000 previously generated background rows
+  are included solely for runtime measurement. No new generated biological data.
+  Exact TRAIN values alone fit target scales; inequalities do not fit moments.
+  A separate fourteen-row artificial software fixture runs eight AdamW updates
+  with IC50/KD and identity replay, weighted sampling and dropout solely to check
+  old/new trajectory equality. Its checkpoints/evaluations remain linked.
+- **Hardware:** Modal eight CPU cores / 65,536 MiB requested, **no GPU**. gVisor
+  masks CPU model; Python 3.12.1, torch 2.14.1+cu130. Visible host counts are not
+  allocation measurements. Existing two H100! fits continue unchanged.
+- **Validation/test metrics:** not applicable to this runtime study; no held-out
+  biological predictions are produced. Exact software-fixture validation/test
+  metrics and cached predictions are preserved in raw artifacts, not interpreted
+  as accuracy evidence.
+
+| Condition / phase | Baseline median seconds | Candidate median seconds | Speedup |
+|---|---:|---:|---:|
+| Hash + full admission | 3.402 | 3.481 | 0.98× |
+| Preflight | 11.803 | 4.261 | 2.77× |
+| Trainable-row selection | 10.043 | 0.135 | 74.62× |
+| Weighted epoch order | 4.326 | 0.186 | 23.19× |
+| Combined measured preparation | 29.813 | 7.986 | **3.73×** |
+
+**Preferred condition:** candidate common metadata/streaming implementation.
+Three alternating paired repeats; 90,000→30,000 decoded observations, 60 KB
+metadata-code array. All scalers, admission reports, partitions, trainable rows,
+full orders and RNG states match exactly. Independent eight-update old/new
+software fits have identical model/optimizer/coverage tensors and evaluation
+metrics. All integrity checks remain active. This does not measure cold startup,
+staging, first GPU update or a full-cohort speedup; current frozen fits are not
+restarted. Detailed timings, RSS and independent verification are in `results/`.
+
+Software verification: clean full suite **2,929 passed, four skipped**; lint and
+strict docs pass. Initial six Hitlist fixture errors were a transient scratch
+capacity shortage, resolved without changing code or lowering storage reserves.
+Exact software-fixture per-example predictions also match across all splits.

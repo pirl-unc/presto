@@ -58,6 +58,8 @@ def test_changed_sources_are_rejected_even_with_buffered_rows(tmp_path, change):
         list(iterator)
     with pytest.raises(ValueError, match="pinned input changed"):
         index[5 if change == "next_source" else 0]
+    with pytest.raises(ValueError, match="pinned input changed"):
+        index.metadata(5 if change == "next_source" else 0)
 
 
 def test_closing_partial_iterator_releases_its_input(tmp_path, monkeypatch):

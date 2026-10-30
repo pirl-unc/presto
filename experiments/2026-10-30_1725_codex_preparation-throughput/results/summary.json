@@ -1,0 +1,45 @@
+{
+  "timings": {
+    "admission": {
+      "baseline": 3.4022490680000015,
+      "candidate": 3.4810109939999947,
+      "speedup": 0.9773738358954481
+    },
+    "preflight": {
+      "baseline": 11.803026190000011,
+      "candidate": 4.261242653999993,
+      "speedup": 2.76985545024539
+    },
+    "trainable_rows": {
+      "baseline": 10.043000428,
+      "candidate": 0.13458505199997717,
+      "speedup": 74.62196045368918
+    },
+    "epoch_order": {
+      "baseline": 4.325649689999999,
+      "candidate": 0.18649540100000195,
+      "speedup": 23.19440408077384
+    },
+    "total": {
+      "baseline": 29.812734551999995,
+      "candidate": 7.986296238999991,
+      "speedup": 3.73298631303126
+    }
+  },
+  "parity": true,
+  "rows": 15000,
+  "bytes": 116307079,
+  "requested_cpu": 8,
+  "requested_memory_mib": 65536,
+  "requested_gpu": null,
+  "hardware": {
+    "platform": "Linux-4.19.0-gvisor-x86_64-with-glibc2.31",
+    "python": "3.12.1 (main, Jan 11 2024, 10:22:40) [GCC 10.2.1 20210110]",
+    "processor": "",
+    "cpu_count": 24,
+    "torch": "2.14.1+cu130",
+    "cpuinfo": "\t: unknown",
+    "memory_total": 425706930176
+  },
+  "finished_unix": 1793381469.7361078
+}

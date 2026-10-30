@@ -1,3 +1,22 @@
+# Cohort preparation throughput — 2026-10-30
+
+Spec: experiments/agents/codex/plans/2026-10-30_preparation-throughput.md.
+- [x] Identify repeated full-cohort scans and write the preservation contract.
+- [x] Reuse compact verified metadata and consolidate common preflight scans.
+- [x] Prove sampling/scaler/training/source-integrity parity and run regressions.
+- [x] Benchmark actual source rows and close the canonical runtime record.
+
+Review: common preparation takes 29.813→7.986 seconds (3.73×) on the registered
+15,000-row / 116.3 MB current-cohort prefix, three paired CPU-only Modal repeats.
+Full decoding falls from six passes to two. Scalers, admission, sampling order
+and RNG match exactly; eight-update old/new software fits have identical model,
+optimizer, coverage and per-example predictions. Full suite: 2,929 passed, four
+skips; lint and strict docs pass. Initial scratch-capacity setup errors were
+resolved by cleaning this run's disposable test directory, without lowering
+Hitlist's storage reserve. Full-30-GB startup speedup is not yet measured. Existing
+frozen H100 fits continue unchanged; subsequent common-trainer launches use the
+optimization. Experiment: 2026-10-30_1725_codex_preparation-throughput.
+
 # Direct factorized affinity decoder — 2026-10-30
 
 Spec: experiments/agents/codex/plans/2026-10-30_direct-factorized-affinity.md.

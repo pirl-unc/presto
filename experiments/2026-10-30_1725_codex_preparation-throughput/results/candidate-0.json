@@ -1,0 +1,114 @@
+{
+  "condition": "candidate",
+  "hardware": {
+    "platform": "Linux-4.19.0-gvisor-x86_64-with-glibc2.31",
+    "python": "3.12.1 (main, Jan 11 2024, 10:22:40) [GCC 10.2.1 20210110]",
+    "processor": "",
+    "cpu_count": 24,
+    "torch": "2.14.1+cu130",
+    "cpuinfo": "\t: unknown",
+    "memory_total": 425706930176
+  },
+  "phases": {
+    "admission": {
+      "seconds": 3.4810109939999947,
+      "normalized_rows": 15000,
+      "rss_bytes": 3226755072
+    },
+    "preflight": {
+      "seconds": 4.185634553,
+      "normalized_rows": 15000,
+      "rss_bytes": 3232186368
+    },
+    "trainable_rows": {
+      "seconds": 0.13399673899999698,
+      "normalized_rows": 0,
+      "rss_bytes": 3236696064
+    },
+    "epoch_order": {
+      "seconds": 0.1856539529999992,
+      "normalized_rows": 0,
+      "rss_bytes": 3237892096
+    }
+  },
+  "total_seconds": 7.986296238999991,
+  "peak_rss_bytes": 3317559296,
+  "rows": 15000,
+  "order_length": 49972,
+  "metadata_code_bytes": 60000,
+  "metadata_categories": 10,
+  "invariants": {
+    "scales": {
+      "half_life": {
+        "mean": 2.2681976503969183,
+        "scale": 0.653095824615869,
+        "exact_count": 8,
+        "floor": 0.001
+      },
+      "ic50": {
+        "mean": 3.0855921871413736,
+        "scale": 1.2489625637106934,
+        "exact_count": 591,
+        "floor": 0.001
+      },
+      "kd_via_ec50": {
+        "mean": 1.7230799891497675,
+        "scale": 1.261903192543209,
+        "exact_count": 86,
+        "floor": 0.001
+      },
+      "kd_via_ic50": {
+        "mean": 2.9481657032551536,
+        "scale": 1.196349169743328,
+        "exact_count": 3047,
+        "floor": 0.001
+      }
+    },
+    "admission": {
+      "census": {
+        "train:kd_via_ec50:=": 86,
+        "train:kd_via_ic50:=": 3047,
+        "train:kd_via_ec50:>": 385,
+        "train:kd_via_ic50:>": 473,
+        "train:ic50:=": 591,
+        "train:ic50:>": 71,
+        "train:qualitative_binding:=": 337,
+        "train:half_life:=": 8,
+        "train:kd_via_ic50:>=": 2,
+        "train:elution_observation:=": 10000
+      },
+      "training_labels": {
+        "kd_via_ec50": 471,
+        "kd_via_ic50": 3522,
+        "ic50": 662,
+        "qualitative_binding": 337,
+        "half_life": 8,
+        "elution_observation": 10000
+      },
+      "component_states": {},
+      "manifest_sha256": "e108caa701eec17f01763f5add841ec4991ed2e4b2ef5d445b28b0f2297bc90c",
+      "module_pruning": [],
+      "source_label_values": {},
+      "cell_types": [],
+      "ordinal_levels": {},
+      "cytokine_states": {},
+      "cytokine_numeric": {},
+      "context_assertion_states": {
+        "pathway": {},
+        "intervention": {}
+      },
+      "observed_numeric_features": {
+        "acquisition": [],
+        "observation": [],
+        "preparation": []
+      },
+      "frozen_targets": [],
+      "frozen_parameters": [],
+      "inherited_scalers": []
+    },
+    "partitions": "46ba81bc66796a06aa132b4cc1cde6abb27680400181b75f6b12cc17ecaef0d5",
+    "trainable_indices": "25bf7ec742f57b50b8f3d65457eb2eddd4d55daf0b50652d4979cf391f812983",
+    "order": "5ec8525fe30c3f69b2e3a98211b9cf7a231fdb68360c4357f3a18b8e0a4f3a82",
+    "rng": "2c986cedbae151b4208f0f1fd11f2c1c281d34b2f97d3fe883df90ac0fe683aa"
+  }
+}

@@ -7,7 +7,8 @@ They do not guess the TCRvdb authors' file schema or qualify source evidence.
 from __future__ import annotations
 
 from collections import Counter
-from dataclasses import asdict, replace
+from array import array
+from dataclasses import asdict, dataclass, replace
 from itertools import groupby
 import hashlib
 import json
@@ -17,7 +18,7 @@ from typing import Iterable
 from .bulk_ms import BulkMSRecord
 from .groove import prepare_mhc_input
 from .loaders import BindingRecord, KineticsRecord, StabilityRecord
-from .modular import Context, MHCInput, Observation, sequence, endpoint_spec
+from .modular import Context, MHCInput, Observation, sequence, endpoint_spec, supervised_targets
 from .modular_lineage import measurement_key
 
 MANIFEST_VERSION = "presto.modular.manifest.v1"
@@ -226,6 +227,25 @@ def write_observations(path: str | Path, observations: Iterable[Observation]) ->
     return {"path": str(path.resolve()), "sha256": file_sha256(path), "counts": dict(counts)}
 
 
+@dataclass(frozen=True, slots=True)
+class ObservationMetadata:
+    """Interned admission projection; no sequences, labels or raw provenance."""
+
+    endpoint: str
+    split: str
+    mhc_classes: frozenset[str | None]
+    targets: frozenset[str]
+
+    @classmethod
+    def from_observation(cls, row: Observation):
+        return cls(
+            row.endpoint,
+            row.split,
+            frozenset(mhc.class_override or mhc.mhc_class for mhc in row.mhc),
+            supervised_targets(row),
+        )
+
+
 class ObservationIndex:
     """Byte offsets keep sequences/registers out of corpus-sized in-memory arrays."""
 
@@ -244,6 +264,9 @@ class ObservationIndex:
         self.source_paths = []
         self.file_states = {}
         self.label_policies = {}
+        self._metadata_codes = array("I")
+        self._metadata_values = []
+        metadata_codes = {}
         for source in self.manifest["sources"]:
             required = ("path", "sha256", "source", "population", "label_policy", "split_policy")
             if any(not source.get(key) for key in required):
@@ -327,6 +350,13 @@ class ObservationIndex:
                     measurements[measurement] = observation.observation_id
                     index = len(self.offsets)
                     self.offsets.append((path, offset))
+                    metadata = ObservationMetadata.from_observation(observation)
+                    code = metadata_codes.get(metadata)
+                    if code is None:
+                        code = len(self._metadata_values)
+                        metadata_codes[metadata] = code
+                        self._metadata_values.append(metadata)
+                    self._metadata_codes.append(code)
                     family = "identity" if observation.endpoint == "identity" else "assay"
                     key = f"{observation.split}:{family}"
                     self.partitions.setdefault(key, []).append(index)
@@ -348,6 +378,13 @@ class ObservationIndex:
 
     def __len__(self):
         return len(self.offsets)
+
+    def metadata(self, index: int) -> ObservationMetadata:
+        """Read admitted metadata with the same source-integrity check as a row."""
+        path, _ = self.offsets[index]
+        if self._file_state(path) != self.file_states[path]:
+            raise ValueError("pinned input changed after admission")
+        return self._metadata_values[self._metadata_codes[index]]
 
     def __getitem__(self, index: int) -> Observation:
         path, offset = self.offsets[index]

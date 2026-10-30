@@ -15,13 +15,19 @@ import time
 
 import torch
 
-from ..data.modular import endpoint_spec, is_endpoint, fit_target_scales, identity_head
+from ..data.modular import (
+    endpoint_spec,
+    is_endpoint,
+    TargetScaleFitter,
+    identity_head,
+    supervised_targets,
+)
 from ..data.modular_quantitative import quantity_domain
 from ..data.modular_context import resolve_cell_context
 from ..data.modular_sources import ObservationIndex, file_sha256
 from ..models.modular import ModularConfig, ModularPresto
 from ..models.modular_support import feature_report, parameter_report
-from ..models.modular_dependencies import freeze_dependencies, frozen_output, row_has_trainable_loss
+from ..models.modular_dependencies import freeze_dependencies, frozen_output
 from .modular import (
     identity_targets,
     initialize_from_checkpoint,
@@ -48,7 +54,7 @@ from .modular_resume import (
 
 from .modular_sampling import (
     epoch_order,
-    stratum,
+    index_stratum,
     validate_balance_by,
     validate_stratum_weights,
     weighted_quotas,
@@ -125,7 +131,7 @@ def preflight(index: ObservationIndex):
         for i in index.partitions.get("train:assay", []) or index.partitions.get(
             "train:identity", []
         ):
-            sizes[stratum(index[i], training["balance_by"])] += 1
+            sizes[index_stratum(index, i, training["balance_by"])] += 1
         if weights is not None:
             validate_stratum_weights(training["balance_by"], training["stratum_weights"], sizes)
             weighted_quotas(sizes, weights)
@@ -196,13 +202,14 @@ def preflight(index: ObservationIndex):
             raise ValueError("selection_endpoint must name an active assay endpoint or be null")
         if frozen_output(validator, primary):
             raise ValueError("selection_endpoint cannot name a frozen outcome")
-        if not any(row.split == "validation" and row.endpoint == primary for row in index):
-            raise ValueError("selection_endpoint has no validation outcomes")
     inherited_scales = inherited["scales"] if inherited else {}
-    scales = {
-        **inherited_scales,
-        **fit_target_scales(row for row in index if row.endpoint not in inherited_scales),
+    scale_fitter = TargetScaleFitter()
+    trainable_targets = {
+        target
+        for target in (*config.endpoints, *config.identity_tasks)
+        if not frozen_output(validator, target)
     }
+    validation_primary = validation_trainable = False
     counts, label_values, feature_states = Counter(), defaultdict(set), defaultdict(set)
     source_label_values = defaultdict(set)
     observed_features = {"acquisition": set(), "observation": set(), "preparation": set()}
@@ -214,6 +221,11 @@ def preflight(index: ObservationIndex):
     # Label and capability inspection is sequence-only; no training or random model scores.
     assay_track_counts = Counter()
     for row in index:
+        if row.endpoint not in inherited_scales:
+            scale_fitter.add(row)
+        if row.split == "validation":
+            validation_primary |= row.endpoint == primary
+            validation_trainable |= bool(supervised_targets(row) & trainable_targets)
         if row.endpoint == "identity":
             targets = identity_targets(row, validator)
             for name in targets:
@@ -312,6 +324,9 @@ def preflight(index: ObservationIndex):
                             name
                         ) or row.context.components.get(name)
                         feature_states[name].add(component.state if component else "unknown")
+    if primary is not None and not validation_primary:
+        raise ValueError("selection_endpoint has no validation outcomes")
+    scales = {**inherited_scales, **scale_fitter.finish()}
     for track in config.assay_tracks:
         if not assay_track_counts[track.key] and not frozen_output(validator, track.endpoint):
             raise ValueError(f"declared assay track has no training observations: {track.key}")
@@ -405,9 +420,7 @@ def preflight(index: ObservationIndex):
     if validator.has_pmhc and "pmhc_fusion.0.weight" not in validator.frozen_parameters:
         if set(config.mhc_classes) - assay_classes:
             raise ValueError("declared MHC branch has no admitted assay training support")
-    if training["test_policy"] == "evaluate_selected_once" and not any(
-        row.split == "validation" and row_has_trainable_loss(validator, row) for row in index
-    ):
+    if training["test_policy"] == "evaluate_selected_once" and not validation_trainable:
         raise ValueError("validation has no outcomes for a trainable task")
     return (
         config,
@@ -503,6 +516,23 @@ def fit_index(index, output_dir, *, device="cpu", resume=False):
         return _fit_index(index, output_dir, device=device, resume=resume)
 
 
+def trainable_indices(index, model):
+    """Resolve fixed model dependencies once, then filter admitted task metadata."""
+    targets = {
+        target
+        for target in (*model.config.endpoints, *model.config.identity_tasks)
+        if not frozen_output(model, target)
+    }
+    return tuple(
+        [
+            i
+            for i in index.partitions.get(f"train:{family}", [])
+            if index.metadata(i).targets & targets
+        ]
+        for family in ("assay", "identity")
+    )
+
+
 def _fit_index(index, output_dir, *, device, resume):
     config, training, scales, admission = preflight(index)
     output_dir = Path(output_dir)
@@ -564,16 +594,7 @@ def _fit_index(index, output_dir, *, device, resume):
         if saved["optimizer_names"] != optimizer_names(model, optimizer):
             raise ValueError("resume optimizer parameter order or membership changed")
         optimizer.load_state_dict(saved_payload["optimizer"])
-    trainable_assays = [
-        i
-        for i in index.partitions.get("train:assay", [])
-        if row_has_trainable_loss(model, index[i])
-    ]
-    trainable_identity = [
-        i
-        for i in index.partitions.get("train:identity", [])
-        if row_has_trainable_loss(model, index[i])
-    ]
+    trainable_assays, trainable_identity = trainable_indices(index, model)
     base_indices = trainable_assays or trainable_identity
     replay_indices = trainable_identity if trainable_assays else []
     if not base_indices:

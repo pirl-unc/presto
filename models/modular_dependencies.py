@@ -1,6 +1,6 @@
 """Declared function dependencies for transfer, freezing and training admission."""
 
-from ..data.modular import endpoint_spec
+from ..data.modular import endpoint_spec, supervised_targets
 from ..data.modular_quantitative import quantity_domain
 
 
@@ -108,10 +108,4 @@ def validate_freezing(model):
 
 
 def row_has_trainable_loss(model, row):
-    if row.endpoint == "identity":
-        from ..data.modular import identity_head
-
-        targets = {identity_head(name) for name in row.identity_labels}
-    else:
-        targets = {row.endpoint} if row.value is not None else set()
-    return any(not frozen_output(model, target) for target in targets)
+    return any(not frozen_output(model, target) for target in supervised_targets(row))

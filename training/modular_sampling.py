@@ -4,6 +4,8 @@ from collections import defaultdict
 import math
 import sys
 
+from ..data.modular_sources import ObservationMetadata
+
 
 def validate_balance_by(fields):
     if (
@@ -20,11 +22,21 @@ def stratum(row, fields):
         if field == "endpoint":
             values.append(row.endpoint)
         else:
-            classes = {mhc.class_override or mhc.mhc_class for mhc in row.mhc}
+            classes = (
+                row.mhc_classes
+                if isinstance(row, ObservationMetadata)
+                else {mhc.class_override or mhc.mhc_class for mhc in row.mhc}
+            )
             if len(classes) != 1 or not classes <= {"I", "II"}:
                 raise ValueError("balanced mhc_class sampling requires one explicit class per row")
             values.append(next(iter(classes)))
     return tuple(values)
+
+
+def index_stratum(index, i, fields):
+    """Reuse verified metadata when available; retain ordinary row-list support."""
+    row = index.metadata(i) if hasattr(index, "metadata") else index[i]
+    return stratum(row, fields)
 
 
 def validate_stratum_weights(fields, weights, known=None):
@@ -92,7 +104,7 @@ def epoch_order(index, indices, fields, rng, weights=()):
         return order
     groups = defaultdict(list)
     for i in indices:
-        groups[stratum(index[i], fields)].append(i)
+        groups[index_stratum(index, i, fields)].append(i)
     if not groups:
         if parsed:
             raise ValueError("stratum_weights supplied without training strata")
