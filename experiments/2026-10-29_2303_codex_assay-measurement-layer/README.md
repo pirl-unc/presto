@@ -63,3 +63,5 @@ Large raw artifacts live under the named Modal `presto-checkpoints` volume in
 this experiment's directory; exact paths/hashes accompany collection receipts.
 The local dashboard and final closeout collector retain summaries here. Source
 snapshot location and launch command are in `reproduce/launch.json`.
+
+Launch admission correction: Modal rejected the initial 131,072 MiB ephemeral-disk request before starting functions. The rejected bundle is preserved under attempts/disk-request-rejected. The corrected hardware request is 524,288 MiB ephemeral disk; model, data, GPU count and runtime are unchanged.

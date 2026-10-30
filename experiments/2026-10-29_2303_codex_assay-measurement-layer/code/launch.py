@@ -45,6 +45,8 @@ image = (
 if modal.is_local():
     F = Path(__file__).resolve().parents[1]
     frozen = json.loads((F / 'reproduce/launch.json').read_text())
+    for relative, expected in frozen['experiment_files'].items():
+        assert hashlib.sha256((F / relative).read_bytes()).hexdigest() == expected, relative
     image = image.add_local_dir(frozen['runtime_snapshot'], remote_path='/runtime/presto')
     image = image.add_local_dir(F / 'reproduce', remote_path='/bundle')
     image = image.add_local_file(F / 'code/prepare.py', remote_path='/bundle/prepare.py')
@@ -89,7 +91,7 @@ def publish(condition, **values):
     cpu=4,
     memory=16384,
     timeout=14400,
-    ephemeral_disk=131072,
+    ephemeral_disk=524288,
     volumes={'/volume': volume},
 )
 def prepare():
@@ -123,7 +125,7 @@ def prepare():
     cpu=8,
     memory=65536,
     timeout=86400,
-    ephemeral_disk=131072,
+    ephemeral_disk=524288,
     max_containers=2,
     single_use_containers=True,
     volumes={'/volume': volume},
