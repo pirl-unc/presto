@@ -4911,7 +4911,7 @@ Takeaway: modest positive transfer in a separate CPU reference, no biological pr
 
 October27,2026; Codex / GPT-6. [Full report, exact launch, source bundle, figures and all predictions](2026-10-27_1930_codex_modal-cross-class/README.md).
 User explicitly approved requiredsource/data upload and10runs with at most2H100s.
-RequestedPRESTO_MODAL_GPU=H100!; actualNVIDIAH10080GBHBM3,81559MiB nvidia-smi,
+RequestedPRESTO_MODAL_GPU=H100!; actualNVIDIAH100 80GBHBM3,81559MiB nvidia-smi,
 85009367040CUDA-visible bytes. Python3.12.1,torch2.14.1+cu130,numpy2.5.4;
 4CPU/16GiBhost,threads4/interop1,noAMP/compile/TF32,retries0. Shared0659b43 with
 recorded task/experiment dirt; fullf24f7df and three-aa9dd7134 clean, immutable hashes.
@@ -4983,7 +4983,7 @@ October27,2026; Codex / GPT-6. [Complete report, frozen launch/source, metrics a
 Clean launch653bbfb96965551b49e53a6a854bd438952b00cc, base4615573.
 Reproducibility bundle: experiment reproduce/launch.sh/.json/source; raw artifacts
 artifacts/2026-10-27_2100_codex_transfer-improvements, Modalvolume presto-checkpoints.
-RequestedH100!, actualNVIDIAH10080GBHBM3/85009367040bytes; max2workers,4CPU,16GiBhost,
+RequestedH100!, actualNVIDIAH100 80GBHBM3/85009367040bytes; max2workers,4CPU,16GiBhost,
 threads4/interop1. Python3.12.1,Torch2.14.1+cu130,NumPy2.5.4; noAMP/compile/TF32.
 Analysis thread/env overrides and every dependency pin are frozen in reproduce.
 
@@ -5052,7 +5052,7 @@ Local CPU analysis, Python3.12.6/Torch2.14.1/NumPy2.5.4, threads1; no GPU reques
 new predictive fitting or new heldout inference. Six existing v5 checkpoints:
 joint2000updates and source-only1000updates, seeds42/43, natural sampling,
 AdamW3e-4/decay1e-4/batch64/dropout.1, no pretraining/synthetic labels/identity loss.
-Original fits requestedH100! and observedH10080GBHBM3; see their pinned runtime.
+Original fits requestedH100! and observedH100 80GBHBM3; see their pinned runtime.
 Reproduction: experiment reproduce/launch.sh,launch.json,source; raw checkpoints
 artifacts/2026-10-27_2100_codex_transfer-improvements/runs. Original per-example
 validation/test dumps remain in that completed family; exact paths/hashes are
@@ -5132,7 +5132,7 @@ Predictive runtime0c4c984b2628fecf54ef29e756fdfc0a74963dc4; launchGitdirty from 
 experiment bundle. All launcher/runtime bytes and hashes are frozen in
 `reproduce/source/`, `source-pins.json`, `launch.json` and `launch.sh`. Exact command:
 `PRESTO_MODAL_GPU='H100!' /Users/iskander/code/shared-virtual-env/bin/modal run --detach experiments/2026-10-27_2255_codex_shared-multi-assay-scale/code/launch.py`.
-RequestedH100!, max2workers,4CPU,32GiBhost; actualNVIDIAH10080GBHBM3,81,559MiB by
+RequestedH100!, max2workers,4CPU,32GiBhost; actualNVIDIAH100 80GBHBM3,81,559MiB by
 nvidia-smi/85,009,367,040bytes byTorch, driver610.57.04. Python3.12.1,
 Torch2.14.1+cu130,NumPy2.5.4; threads4/interop1, noAMP/TF32/compile. Local analysis
 Python3.12.6, singleBLAS/Torchthread, MPLCONFIGDIR in `/private/tmp`; all overrides
@@ -5362,7 +5362,7 @@ six-output default was introduced. PR131 remains draft until130/132 qualify.
   TRAIN1:1/eval5:1, with replacement; known-positive and cross-split exclusion.
   Same-protein and fallback human-Ensembl112 populations scored separately, including
   length-only control. Source-reported MS nondetections receive separate study AUCs.
-- **Hardware:** requested two concurrent `H100!` workers; both report NVIDIA H10080GB HBM3,85,009,367,040 device bytes. Wall times 35,615 / 47,121 s; optimizer 24,587 / 32,180 s. Peak allocated 3.72 / 3.85 GB, reserved 14.63 / 15.77 GB.
+- **Hardware:** requested two concurrent `H100!` workers; both report NVIDIA H100 80GB HBM3,85,009,367,040 device bytes. Wall times 35,615 / 47,121 s; optimizer 24,587 / 32,180 s. Peak allocated 3.72 / 3.85 GB, reserved 14.63 / 15.77 GB.
   CPU source attempt2 failed at16GiB provenance scratch; attempt4 uses128GiB scratch
   and512GiB requested disk. Downloads and failed attempts are preserved.
 - **Validation-selected condition:** seed 42 (equal-endpoint loss .64036 versus .70710).
@@ -5632,7 +5632,7 @@ six-output default was introduced. PR131 remains draft until130/132 qualify.
 - Decision: apply the reviewed data changes through the unchanged shared trainer
   in the separately registered retrain; retain unresolved and unreviewed sources.
 
-## 2026-10-29_1956_codex_curated-data-retrain — frozen cohort, fits running
+## 2026-10-29_1956_codex_curated-data-retrain — completed, independently verified
 
 - Codex/GPT-6, 2026-10-29; [family/reproduction](2026-10-29_1956_codex_curated-data-retrain/README.md),
   [prospective plan/amendment](agents/codex/plans/2026-10-29_curated-data-retrain.md).
@@ -5655,9 +5655,59 @@ six-output default was introduced. PR131 remains draft until130/132 qualify.
   Failed blacklist assumption preserved before fit.
 - Requested two H100! workers maximum, CPU 8/64 GiB and 512 GiB scratch each.
   Both report H100 80GB HBM3 and 85,009,367,040 device bytes.
-  Actual hardware/runtime and held-out metrics pending. No new winner or claim of
-  improvement. Collection/verification/reporting continuation and live comparison
-  are running; complete artifact/metric closeout remains required.
+  Actual hardware, runtime, validation selection and held-out metrics are recorded
+  below after all verification/reporting gates passed. No automatic model promotion.
+
+### Verified retrain results
+
+Both complete weighted-epoch fits, independent target/loss verification, cohort census, serving replay and paired held-out observation checks passed.
+Validation-selected condition: `curated-multi-s43` (minimum equal-endpoint validation loss).
+Selection scores: curated-multi-s42 = 0.680632; curated-multi-s43 = 0.654264.
+All results remain repeated fixed-holdout development evidence; no model is automatically promoted and no mechanistic qualification follows.
+
+| Condition | Split / era | Output / class / population | n (exact for IC50) | Spearman | RMSE log10(nM) | AUROC | AUPRC |
+|---|---|---|---:|---:|---:|---:|---:|
+| curated-multi-s42 | test / 2026 | elution_observation / I / source_reported_outcomes / pmid:42069060 | 5169 | — | — | — | 1.0000 |
+| curated-multi-s42 | test / 2026 | elution_observation / I / synthetic_same_protein | 31002 | — | — | 0.9726 | 0.9319 |
+| curated-multi-s42 | test / 2026 | elution_observation / II / source_reported_outcomes / pmid:41534530 | 6611 | — | — | — | 1.0000 |
+| curated-multi-s42 | test / 2026 | elution_observation / II / synthetic_same_protein | 39108 | — | — | 0.8282 | 0.6677 |
+| curated-multi-s42 | test / older_or_mixed | elution_observation / I / source_reported_outcomes / pmid:29308320 | 136 | — | — | 0.2428 | 0.4741 |
+| curated-multi-s42 | test / older_or_mixed | elution_observation / I / synthetic_same_protein | 432 | — | — | 0.9959 | 0.9740 |
+| curated-multi-s42 | test / older_or_mixed | ic50 / I / reported_measurements | 100 | 0.3758 | 1.0880 | — | — |
+| curated-multi-s42 | test / older_or_mixed | ic50 / II / reported_measurements | 267 | 0.5837 | 0.9823 | — | — |
+| curated-multi-s42 | validation / older_or_mixed | elution_observation / I / source_reported_outcomes / pmid:35474673 | 53 | — | — | 0.7639 | 0.8525 |
+| curated-multi-s42 | validation / older_or_mixed | elution_observation / I / source_reported_outcomes / pmid:35561310 | 1643 | — | — | — | 1.0000 |
+| curated-multi-s42 | validation / older_or_mixed | elution_observation / I / source_reported_outcomes / pmid:40138458 | 52 | — | — | 0.4381 | 0.7894 |
+| curated-multi-s42 | validation / older_or_mixed | elution_observation / I / synthetic_same_protein | 10116 | — | — | 0.9945 | 0.9716 |
+| curated-multi-s42 | validation / older_or_mixed | elution_observation / II / source_reported_outcomes / pmid:35561310 | 694 | — | — | — | 1.0000 |
+| curated-multi-s42 | validation / older_or_mixed | elution_observation / II / synthetic_same_protein | 4152 | — | — | 0.8675 | 0.6543 |
+| curated-multi-s42 | validation / older_or_mixed | ic50 / I / reported_measurements | 141 | 0.5707 | 1.1341 | — | — |
+| curated-multi-s42 | validation / older_or_mixed | ic50 / II / reported_measurements | 1129 | 0.5306 | 0.8551 | — | — |
+| curated-multi-s43 | test / 2026 | elution_observation / I / source_reported_outcomes / pmid:42069060 | 5169 | — | — | — | 1.0000 |
+| curated-multi-s43 | test / 2026 | elution_observation / I / synthetic_same_protein | 31002 | — | — | 0.9712 | 0.9293 |
+| curated-multi-s43 | test / 2026 | elution_observation / II / source_reported_outcomes / pmid:41534530 | 6611 | — | — | — | 1.0000 |
+| curated-multi-s43 | test / 2026 | elution_observation / II / synthetic_same_protein | 39108 | — | — | 0.8337 | 0.6738 |
+| curated-multi-s43 | test / older_or_mixed | elution_observation / I / source_reported_outcomes / pmid:29308320 | 136 | — | — | 0.1012 | 0.4159 |
+| curated-multi-s43 | test / older_or_mixed | elution_observation / I / synthetic_same_protein | 432 | — | — | 0.9966 | 0.9805 |
+| curated-multi-s43 | test / older_or_mixed | ic50 / I / reported_measurements | 100 | 0.3023 | 1.0443 | — | — |
+| curated-multi-s43 | test / older_or_mixed | ic50 / II / reported_measurements | 267 | 0.5662 | 1.0001 | — | — |
+| curated-multi-s43 | validation / older_or_mixed | elution_observation / I / source_reported_outcomes / pmid:35474673 | 53 | — | — | 0.7610 | 0.8564 |
+| curated-multi-s43 | validation / older_or_mixed | elution_observation / I / source_reported_outcomes / pmid:35561310 | 1643 | — | — | — | 1.0000 |
+| curated-multi-s43 | validation / older_or_mixed | elution_observation / I / source_reported_outcomes / pmid:40138458 | 52 | — | — | 0.4381 | 0.7894 |
+| curated-multi-s43 | validation / older_or_mixed | elution_observation / I / synthetic_same_protein | 10116 | — | — | 0.9929 | 0.9658 |
+| curated-multi-s43 | validation / older_or_mixed | elution_observation / II / source_reported_outcomes / pmid:35561310 | 694 | — | — | — | 1.0000 |
+| curated-multi-s43 | validation / older_or_mixed | elution_observation / II / synthetic_same_protein | 4152 | — | — | 0.8638 | 0.6575 |
+| curated-multi-s43 | validation / older_or_mixed | ic50 / I / reported_measurements | 141 | 0.5491 | 1.2805 | — | — |
+| curated-multi-s43 | validation / older_or_mixed | ic50 / II / reported_measurements | 1129 | 0.4928 | 0.8342 | — | — |
+
+Missing metrics indicate unsupported or single-label evaluation cells.
+
+- `curated-multi-s42`: selected step 51,471; completed 51,471 updates and exposed 3,519,577 unique TRAIN rows. Requested H100!, observed NVIDIA H100 80GB HBM3 (85,009,367,040 device bytes); wall 41898.4 s, optimizer 29539.3 s, peak allocated/reserved 3.77 / 12.01 GB.
+- `curated-multi-s43`: selected step 51,471; completed 51,471 updates and exposed 3,519,577 unique TRAIN rows. Requested H100!, observed NVIDIA H100 80GB HBM3 (85,009,367,040 device bytes); wall 55496.4 s, optimizer 32625.5 s, peak allocated/reserved 3.81 / 13.30 GB.
+
+The full report preserves every output/class/era/study, exact and bounded loss, Pearson, 500 nM classification, uncertainty, source-reported outcomes, parameter/feature coverage and register diagnostics. The paired comparison checks identical held-out observations and separately excludes the three source-identified suspect generated test labels for both model generations.
+
+[Complete report](2026-10-29_1956_codex_curated-data-retrain/results/summary.md) · [Paired parent comparison](2026-10-29_1956_codex_curated-data-retrain/results/parent-comparison.md).
 
 ## 2026-10-29 — Shared assay measurement layer: registered matched comparison
 
@@ -5766,3 +5816,43 @@ Software verification: clean full suite **2,929 passed, four skipped**; lint and
 strict docs pass. Initial six Hitlist fixture errors were a transient scratch
 capacity shortage, resolved without changing code or lowering storage reserves.
 Exact software-fixture per-example predictions also match across all splits.
+
+<!-- closed-2026-10-30_1154_codex_direct-factorized-affinity -->
+## 2026-10-30 — Direct factorized affinity: verified results
+
+Codex / GPT-6. [Full contract and results](2026-10-30_1154_codex_direct-factorized-affinity/README.md).
+
+<!-- verified-assay-closeout -->
+
+## Verified matched results
+
+| Condition | Split | Class | Detector | Exact n | Spearman | RMSE log10(nM) |
+|---|---|---|---|---:|---:|---:|
+| direct-s43 | validation | I | radioactivity | 141 | 0.5001 | 1.2860 |
+| direct-s43 | validation | I | fluorescence | 28 | 0.5835 | 1.2440 |
+| direct-s43 | validation | II | radioactivity | 1129 | 0.4040 | 0.8757 |
+| direct-s43 | validation | II | fluorescence | 41 | 0.8170 | 0.5175 |
+| direct-s43 | test | I | radioactivity | 100 | 0.2990 | 1.0062 |
+| direct-s43 | test | I | fluorescence | 157 | 0.3146 | 1.1589 |
+| direct-s43 | test | II | radioactivity | 123 | 0.2285 | 0.7609 |
+| direct-s43 | test | II | fluorescence | 634 | 0.0997 | 1.6655 |
+| direct-s42 | validation | I | radioactivity | 141 | 0.4551 | 1.4393 |
+| direct-s42 | validation | I | fluorescence | 28 | 0.5315 | 0.8277 |
+| direct-s42 | validation | II | radioactivity | 1129 | 0.3534 | 0.9118 |
+| direct-s42 | validation | II | fluorescence | 41 | 0.8450 | 0.5654 |
+| direct-s42 | test | I | radioactivity | 100 | 0.2067 | 1.0212 |
+| direct-s42 | test | I | fluorescence | 157 | 0.2344 | 1.0796 |
+| direct-s42 | test | II | radioactivity | 123 | 0.1888 | 0.8897 |
+| direct-s42 | test | II | fluorescence | 634 | 0.1256 | 1.5856 |
+
+Both validation/test populations and serialized observations match.
+Scipy independently reproduces IC50 correlations; scikit-learn independently
+reproduces available ligand-background AUROC/AUPRC. Full endpoint/study and
+ligand metrics, parameter coverage and actual hardware are in each results/
+condition report; collection.json records every prediction dump and hash.
+Winner/promotion remains pending scientific review and study-aware uncertainty.
+
+
+## 2026-10-30 — Stability and data-count audit of direct factorized fits
+
+Codex / GPT-6. Existing experiment [2026-10-30_1154_codex_direct-factorized-affinity](2026-10-30_1154_codex_direct-factorized-affinity/README.md#stability-and-training-population-audit-2026-10-30); no new training or relabeling. Independently recomputed stability metrics from hash-verified per-example validation/test dumps. Test half-life Spearman: I .0648/.3160 (n=62), II -.0726/-.1806 (n=148); validation I .4139/.4451 (n=71), no II validation. Test I td50 .3163/.3824 (n=140); validation .1960/.4390 (n=145). Endpoint heads share biology but do not yet use the categorical concentration decoder. MHC-II TRAIN contains 306,303 observed ligands, 306,302 generated backgrounds and 61,143 concentration labels; published NetMHCIIpan-4.3 counts use a different full-development-corpus contract. Stability is not qualified; all original experiment contracts and promotion limitations remain. Counts, Pearson, RMSE, exact target-space definitions and input hashes: `results/stability-and-data-audit.json`.

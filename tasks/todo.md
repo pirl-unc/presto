@@ -1,3 +1,28 @@
+# Publish complete results and follow-ups to PR #131 — 2026-10-30
+
+Spec: `tasks/pr131_results_handoff_spec.md`.
+- [x] Review pending durable files and final result consistency.
+- [x] File/reuse focused issues and preserve the scientific handoff.
+- [x] Validate reports, snapshots, lint and documentation.
+- [ ] Commit, push to the existing PR head and verify draft status.
+
+# Stability and training-population audit — 2026-10-30
+
+Scope: inspect the completed direct-factorized fits, independently recompute
+stability metrics from their frozen prediction dumps, and distinguish measured
+MHC-II observations from generated backgrounds. Compare counts with the primary
+NetMHCIIpan-4.3 publication using explicit population definitions. Preserve all
+training data, models and measured censoring labels; this is a reporting audit.
+
+- [x] Inspect endpoint definitions, current training counts and published counts.
+- [x] Recompute per-class stability results and verify prediction-file hashes.
+- [x] Record the audit, decoder limitation and synthetic-label interpretation.
+
+Review: both seeds reproduce reported per-class stability Spearman, Pearson and
+RMSE to 1e-9 after verifying prediction hashes and raw target transformations.
+The registry and direct-fit README now record the weak stability results and
+measured-versus-generated data counts. No model or training labels changed.
+
 # Cohort preparation throughput — 2026-10-30
 
 Spec: experiments/agents/codex/plans/2026-10-30_preparation-throughput.md.
@@ -24,14 +49,15 @@ Spec: experiments/agents/codex/plans/2026-10-30_direct-factorized-affinity.md.
 - [x] Implement one canonical nonlinear affinity head and categorical embeddings.
 - [x] Verify gradients, learning, checkpoint/history, censoring and common training.
 - [x] Freeze/register and launch two real-data factorized fits within two H100 GPUs.
-- [ ] Collect per-assay validation/test evidence and close the experiment record.
+- [x] Collect per-assay validation/test evidence and close the experiment record.
 
 Review: shared-v7 is implemented; 2,896 tests, lint and strict docs pass. Real v6
 checkpoint predictions are preserved exactly. Two 4,000-update direct decoder
-fits are launched in experiment 2026-10-30_1154_codex_direct-factorized-affinity
-(Modal app ap-3BRMaO8FDAZyvk1gaz3JYs); real-data metrics and closure remain pending.
-The former v6 comparison is superseded after preserving its completed pooled
-controls. No predictive improvement is claimed.
+fits completed in experiment 2026-10-30_1154_codex_direct-factorized-affinity
+(Modal app ap-3BRMaO8FDAZyvk1gaz3JYs). Both fits and independent collection are
+finished; validation/test reports, stability/censoring audits and scientific
+limitations are recorded in the experiment README. The former v6 comparison is
+superseded after preserving its completed pooled controls. No model is promoted.
 
 # Native presenting-cell processing context — #115
 
@@ -41,14 +67,15 @@ Spec: experiments/agents/codex/plans/2026-10-29_shared-assay-measurement-layer.m
 - [x] Trace historical plan/panels versus canonical model and source admission.
 - [x] Correct documentation and specify fixed factorized assay outputs.
 - [x] Implement common descriptor registry/readout and compatibility/support checks.
-- [ ] Run matched pooled/calibration/factorized comparisons with assay-stratified metrics.
+- [x] Preserve completed pooled controls and supersede the remaining v6 queue with v7.
 
 Review: v6 now implements fixed joint assay outputs, shared factorized decoding,
 source-conflict fallback, checkpoint/support checks and method-stratified metrics.
 The full suite passed (2,891 tests, four skips); all 14 new focused checks pass,
 including an additional end-to-end common-manifest fit. Lint passes. Experiment
-2026-10-29_2303_codex_assay-measurement-layer is registered for the six matched
-fits; predictive validation remains open. Active frozen v5 fits are unchanged.
+2026-10-29_2303_codex_assay-measurement-layer preserves the original six-condition
+plan, completed pooled controls and superseded partial runs. It is not a completed
+six-arm comparison; the requested direct decoder was evaluated in the v7 family.
 
 ## Native context implementation checklist
 

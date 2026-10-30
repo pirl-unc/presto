@@ -89,3 +89,127 @@ One fit's startup inspection confirms NVIDIA H100 80GB HBM3, 85,009,367,040 devi
 bytes (81,559 MiB reported by nvidia-smi), Torch 2.14.1+cu130 and CUDA 13.0. The
 11 source files total 30,252,937,352 bytes; staging/indexing occurs before the first
 optimizer update. Final per-run hardware receipts will be collected automatically.
+
+
+## Metric-interpretation audit (2026-10-30)
+
+The combined MHC-I IC50 correlation is strongly affected by assay/study separation.
+The 141 exact radioactivity values have a median of 9 nM; the 28 exact fluorescence
+values have a median of 8,327.85 nM. As a post hoc distribution diagnostic, assigning
+score 0 to radioactivity and 1 to fluorescence yields Spearman 0.63616 over these
+169 outcomes without using sequence. This is not a trained or prospectively tested
+baseline: the group direction was inspected after evaluation. The combined model
+correlation must not replace within-assay evidence or be described as demonstrating
+better peptide ranking by itself. Each class/method cell represents one study.
+
+The reported ~24% censor satisfaction is 61/258 and 62/258 at the interim validation
+readout. All 258 are fluorescence IC50 observations: 175 MHC-I values >=100,000 nM
+and 83 MHC-II values > or >=10,000 nM. Unsatisfied predictions are too low in IC50
+(too strong in inferred binding). The canonical loss has the correct one-sided
+squared log-residual sign; bounded rows are not omitted from training loss. For
+collected seed 43, failed >=100,000 nM predictions have median 30,660.99 nM. This is
+not merely a rounding issue. The pass fraction alone omits violation magnitude.
+
+MHC-II validation ligands comprise 694 positives and 3,470 generated negatives,
+all from study pmid:35561310: 3,460 same-protein and 10 reference-proteome negatives.
+475 positives and 2,375 negatives have two candidate MHCs, with the rest having one.
+These unobserved comparator peptides are not experimentally verified nonbinders.
+The ~0.79 AUROC is a genuine model limitation on this population. No matched
+NetMHCIIpan score exists here, so a numeric cross-tool gap remains unmeasured.
+The NetMHCIIpan-4.3 paper (https://pmc.ncbi.nlm.nih.gov/articles/PMC10672173/,
+Fig. 2 and Methods) uses different cross-validation and negative constructions;
+its development-model per-molecule median AUROCs are visually approximately
+0.93-0.95. That is context, not a head-to-head comparison. Short optimization and
+omitted source-protein flanks are possible contributors in our fits, not established
+causes. Audit details: `results/metric-interpretation-audit.json`.
+
+<!-- verified-assay-closeout -->
+
+## Verified matched results
+
+| Condition | Split | Class | Detector | Exact n | Spearman | RMSE log10(nM) |
+|---|---|---|---|---:|---:|---:|
+| direct-s43 | validation | I | radioactivity | 141 | 0.5001 | 1.2860 |
+| direct-s43 | validation | I | fluorescence | 28 | 0.5835 | 1.2440 |
+| direct-s43 | validation | II | radioactivity | 1129 | 0.4040 | 0.8757 |
+| direct-s43 | validation | II | fluorescence | 41 | 0.8170 | 0.5175 |
+| direct-s43 | test | I | radioactivity | 100 | 0.2990 | 1.0062 |
+| direct-s43 | test | I | fluorescence | 157 | 0.3146 | 1.1589 |
+| direct-s43 | test | II | radioactivity | 123 | 0.2285 | 0.7609 |
+| direct-s43 | test | II | fluorescence | 634 | 0.0997 | 1.6655 |
+| direct-s42 | validation | I | radioactivity | 141 | 0.4551 | 1.4393 |
+| direct-s42 | validation | I | fluorescence | 28 | 0.5315 | 0.8277 |
+| direct-s42 | validation | II | radioactivity | 1129 | 0.3534 | 0.9118 |
+| direct-s42 | validation | II | fluorescence | 41 | 0.8450 | 0.5654 |
+| direct-s42 | test | I | radioactivity | 100 | 0.2067 | 1.0212 |
+| direct-s42 | test | I | fluorescence | 157 | 0.2344 | 1.0796 |
+| direct-s42 | test | II | radioactivity | 123 | 0.1888 | 0.8897 |
+| direct-s42 | test | II | fluorescence | 634 | 0.1256 | 1.5856 |
+
+Both validation/test populations and serialized observations match.
+Scipy independently reproduces IC50 correlations; scikit-learn independently
+reproduces available ligand-background AUROC/AUPRC. Full endpoint/study and
+ligand metrics, parameter coverage and actual hardware are in each results/
+condition report; collection.json records every prediction dump and hash.
+Winner/promotion remains pending scientific review and study-aware uncertainty.
+
+
+## Stability and training-population audit (2026-10-30)
+
+Both 4,000-update direct fits are finished. Stability shares the biological
+encoder, but half-life, koff, td50 and tm are excluded from the new categorical
+concentration decoder and use separate endpoint heads. Half-life is in minutes,
+koff in 1/s, and td50 is a 50% dissociation temperature in degrees Celsius, not a
+time or a Tm measurement. Tm is supported but has no admitted training rows.
+
+The following exact-value metrics were independently recomputed from hash-verified
+prediction dumps, including checking target transforms against raw values. These
+are previously inspected development holdouts, not a fresh blind test.
+
+| Seed | Split | Output | Class | Train n | Exact eval n | Spearman | RMSE (target space) |
+|---|---|---|---|---:|---:|---:|---:|
+| 42 | validation | half_life | I | 8,588 | 71 | 0.4139 | 1.4207 (log10(minutes)) |
+| 42 | validation | td50 | I | 489 | 145 | 0.1960 | 6.2685 (degrees_Celsius) |
+| 42 | test | half_life | I | 8,588 | 62 | 0.0648 | 1.3481 (log10(minutes)) |
+| 42 | test | half_life | II | 135 | 148 | -0.0726 | 0.6664 (log10(minutes)) |
+| 42 | test | td50 | I | 489 | 140 | 0.3163 | 5.5768 (degrees_Celsius) |
+| 43 | validation | half_life | I | 8,588 | 71 | 0.4451 | 1.2158 (log10(minutes)) |
+| 43 | validation | td50 | I | 489 | 145 | 0.4390 | 5.5851 (degrees_Celsius) |
+| 43 | test | half_life | I | 8,588 | 62 | 0.3160 | 1.2088 (log10(minutes)) |
+| 43 | test | half_life | II | 135 | 148 | -0.1806 | 0.8581 (log10(minutes)) |
+| 43 | test | td50 | I | 489 | 140 | 0.3824 | 5.3164 (degrees_Celsius) |
+
+MHC-II half-life has only 135 TRAIN observations, 148 TEST observations and no
+validation examples. Its negative test correlations do not demonstrate useful
+transfer. Koff has five class-I and two class-II TRAIN rows and no held-out
+measurement; td50 has only seven class-II TRAIN rows and no class-II holdout.
+These outputs are not scientifically qualified by this run.
+
+Current class-II TRAIN comprises 306,303 observed ligands and 306,302 generated
+unobserved comparisons, with the original/generated split established by the
+independent full-cohort census and matching the unchanged class-II ligand count
+in this family's preparation. It also has 61,143 concentration observations, of
+which 35,512 are literal IC50. These are observations, not necessarily independent
+peptide-MHC pairs. Original TRAIN background generation is approximately 1:1;
+evaluation uses 5:1.
+
+The NetMHCIIpan-4.3 publication reports 675,364 positive ligands, 6,886,973
+generated negatives and 129,110 binding-affinity data points in its full development
+corpus ([Methods](https://pmc.ncbi.nlm.nih.gov/articles/PMC10672173/)). Our TRAIN-only
+human/curation contract and its published full development corpus are not identical
+populations. Both measured coverage and the negative sampling ratio contribute to
+the apparent size gap; the negatives do not add quantitative affinity measurements.
+
+Generated backgrounds retain binary elution labels. Random IC50 thresholds would
+be synthetic modeling assumptions, not measured bounds. No affinity relabeling or
+additional fit was performed in this audit. Full counts, metrics, formula and input
+hashes are in `results/stability-and-data-audit.json`.
+
+
+## Future-work handoff
+
+The [post-fit handoff](../agents/codex/plans/2026-10-30_post-fit-handoff.md) records
+limitations, priorities and issues #138–#142. Source stability qualification already
+has an overlap/zero/construct audit and is tracked in Hitlist #875; the published
+28,166 rows must not be described as wholly new measurements. No synthetic
+affinity bounds or follow-up fits were introduced by publication.

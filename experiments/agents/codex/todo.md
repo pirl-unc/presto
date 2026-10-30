@@ -409,3 +409,12 @@ single canonical encoder/manifest/trainer and existing #130 requirements.
 - [ ] Revisit [peptide/protein taxonomy #136](https://github.com/pirl-unc/presto/issues/136)
   only with explicit ambiguity/context contracts and the prior failed reference
   screen as a comparator. Lower priority than molecular identity/pair consistency.
+
+
+## 2026-10-30 — Post-fit follow-ups
+
+[Scientific handoff](plans/2026-10-30_post-fit-handoff.md). Newly filed #138–#142
+cover shared stability decoding, MHC-II coverage, assay-level qualification and
+external benchmarks, exposure/schedule/ranking experiments, and explicitly
+synthetic affinity priors. Existing source qualification stays in Hitlist
+#875/#871/#721/#785. No new fit has been launched for these follow-ups.

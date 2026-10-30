@@ -213,3 +213,58 @@ These follow-ups remain untested:
   This is a mathematical observation, not an accuracy result or physical occupancy
   claim. Test it with frozen source-only checkpoints and then matched new fits
   before changing the common training or checkpoint contract.
+
+## 2026-10-29 — Improving affinity within the expanded multi-output model
+
+Proposed follow-ups, not launched. Preserve the running temporal comparison and
+its frozen selection rule. Same shared encoder, interaction, register evaluation
+and observation-manifest trainer for every future condition; no affinity-only
+serving model or class-specific expert.
+
+Evidence motivating the order:
+- Temporal workers are around38k/28k updates. Recent validation IC50 correlations
+  fluctuate around.51–.56 I/.46–.50 II; continued constant3e-4 optimization has not
+  produced monotonic gains. This does not diagnose interference versus overfit.
+- IC50 has54,736 unique TRAIN observations; the sampler supplies20% IC50 versus
+  60% ligand labels. Seed42 has already consumed roughly980k IC50 labels. More
+  repeated labels alone need not solve the problem; gradient allocation matters.
+- The earlier controlled six-output comparison recovered II validation Spearman
+  from.5135 to.6286 after matching IC50 exposure. Pure class balancing lost I.
+- Each current IC50 validation class is a single study; the largest TRAIN
+  reference component contributes47.8% of I and47.4% of II IC50 rows. Broader
+  study-level validation and protocol variation need explicit attention.
+
+Priority hypotheses:
+1. Paired2x2 pilot: current versus increased direct-IC50 sampling (initial proposed
+   20%/40%, retaining all other endpoints), crossed with constant versus decayed
+   learning rate. Keep model, initialization, measured data and update budget fixed;
+   report actual class/endpoint exposures and compute. Diagnose shared-gradient
+   norms/cosines before introducing gradient projection. Prespecify affinity
+   selection with protection for both classes and ligand ranking; do not silently
+   change the active run's equal-endpoint selection. Any warm-start arms share
+   the identical pinned checkpoint; a continued-current-recipe arm is mandatory.
+2. Add a small within-panel/within-MHC ranking term alongside absolute regression
+   and censor-aware loss, through the same trainer. Require source-attested assay
+   comparability; a shared paper is insufficient. Bounds contribute ordering only
+   when their intervals imply it. Do not replace absolute calibration with rank.
+3. Temper dominant study/allele contributions and prioritize independent measured
+   IC50/KD panels spanning the affinity range. Keep IC50, KD, EC50 and proxies
+   distinct. Audit repeat disagreement and assay conditions; do not invent per-
+   study conversions or expect monotone recalibration to improve Spearman.
+4. After the current register audit, test shared groove-position/terminal-distance
+   features and a prospectively fixed pooling temperature in assay units. Earlier
+   II register weights were diffuse, but current weights have not yet been audited.
+   Do not force sharper weights or claim physical core localization without truth.
+
+Evaluation: freeze a detailed experiment spec and registry before any launch.
+Current heldouts are development data once inspected. A study-disjoint fold must
+be excluded from all supervised pretraining as well as fine-tuning. Never warm
+start such a fold from a checkpoint already trained on its labels. Preserve the
+current study/peptide embargo, record any reused development evaluation, and
+require a fresh untouched confirmation for a broad accuracy claim. At most two
+H100! workers concurrently; no follow-up fit has been submitted.
+
+Primary precedents (not evidence of a Presto gain):
+- Joint BA/EL training with distinct readouts: https://pmc.ncbi.nlm.nih.gov/articles/PMC5679736/
+- Pairwise peptide-MHC ranking losses: https://pmc.ncbi.nlm.nih.gov/articles/PMC8165219/
+- Gradient conflict measurement/projection: https://arxiv.org/abs/2001.06782

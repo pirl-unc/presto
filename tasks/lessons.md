@@ -1,5 +1,17 @@
 # Lessons
 
+## 2026-10-30 — Separate aggregate ranking from within-assay prediction
+
+- A correlation over combined assays is not a weighted average of within-assay
+  correlations. Assay-group offsets can improve global ranks substantially while
+  within-assay ranking changes little; present both and inspect target ranges.
+- State the denominator and direction for censoring metrics. A low satisfaction
+  fraction refers only to bounded observations, and an assay ceiling produces a
+  lower bound on numeric IC50. Include violation magnitude before diagnosing why.
+- Compare ligand AUROC against external tools only on matched populations,
+  negatives, allele assignments and splits. A weak score remains a weakness;
+  benchmark differences do not establish either parity or an explanation.
+
 ## 2026-10-30 — Follow the requested shared decoder through to training
 
 - When the user asks for one head over latent plus categorical assay vectors,
@@ -932,3 +944,11 @@ Keep applicability reporting separate from model features and the measured label
   conflicts, embargo recovered held-out overlaps, and preserve fixed test labels
   with a separate source-defined sensitivity analysis. Never silently change the
   evaluation denominator or assume known presentation proves binding every MHC.
+
+## 2026-10-30 — Distinguish reviewer coverage from completed verification
+
+- A reviewer interrupting its own test run does not imply that the model fit was
+  interrupted or that all full-suite evidence is missing. Check the exact source
+  revision and existing completed local/hosted runs before repeating that caveat.
+- Report software correctness, optimizer execution and held-out predictive quality
+  separately. A queued or indexing GPU job is not yet an optimizing trained model.
