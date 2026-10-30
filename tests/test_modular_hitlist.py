@@ -7,6 +7,7 @@ import pytest
 import torch
 
 from presto.data.modular import Observation, fit_target_scales, observation_target
+from presto.data.assay_measurement import observation_track
 from presto.data.modular_hitlist import (
     AdmissionError,
     HumanMHCCatalog,
@@ -224,7 +225,9 @@ def test_explicit_reference_retains_unknown_typing_through_checkpoint_inference(
     row = replace(convert(raw()), mhc=(pair,))
     row = Observation.from_dict(json.loads(json.dumps(row.to_dict())))
     torch.manual_seed(101)
-    model = ModularPresto(ModularConfig(mhc_classes=(mhc_class,), dropout=0))
+    model = ModularPresto(
+        ModularConfig(mhc_classes=(mhc_class,), dropout=0, assay_tracks=(observation_track(row),))
+    )
     scales = fit_target_scales([row, replace(row, value=100)])
     train_step(model, torch.optim.AdamW(model.parameters(), lr=0.001), [row], scales)
     expected = model.eval().predict([row])[0]

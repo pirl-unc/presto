@@ -88,7 +88,7 @@ def test_invalid_capacity_rejected(override):
 
 def test_tensor_support_requires_same_coordinate_gradient_and_update():
     model = Presto(PrestoConfig(dropout=0))
-    weight = model.heads['ic50'].weight
+    weight = model.assay_layer.decoder[2].weight
 
     def first_only(gradient):
         masked = torch.zeros_like(gradient)
@@ -112,11 +112,11 @@ def test_tensor_support_requires_same_coordinate_gradient_and_update():
         [fixture()],
         {'ic50': TargetScale(2.0, 1.0, 2)},
     )
-    evidence = result['coverage']['heads.ic50.weight']
+    evidence = result['coverage']['assay_layer.decoder.2.weight']
     assert evidence['gradient_norm'] > 0 and evidence['update_norm'] > 0
     assert not evidence['gradient_and_update']
-    assert 'heads.ic50.weight' not in model.trained_parameters
-    assert not model.trained_elements['heads.ic50.weight'].any()
+    assert 'assay_layer.decoder.2.weight' not in model.trained_parameters
+    assert not model.trained_elements['assay_layer.decoder.2.weight'].any()
 
 
 def test_element_masks_roundtrip_and_historical_unknown(tmp_path):
@@ -132,9 +132,10 @@ def test_element_masks_roundtrip_and_historical_unknown(tmp_path):
     expanded = Presto(replace(model.config, endpoints=('ic50', 'kd')))
     initialize_from_checkpoint(expanded, path)
     torch.testing.assert_close(
-        expanded.trained_elements['heads.ic50.weight'], model.trained_elements['heads.ic50.weight']
+        expanded.trained_elements['assay_layer.decoder.2.weight'],
+        model.trained_elements['assay_layer.decoder.2.weight'],
     )
-    assert not expanded.trained_elements['heads.kd.weight'].any()
+    assert not expanded.trained_elements['assay_layer.factors.endpoint.kd'].any()
     payload.pop('element_coverage')
     torch.save(payload, path)
     historical, _, _ = load_checkpoint(path)

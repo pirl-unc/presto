@@ -6,21 +6,29 @@ This policy separates biological inputs from measurement descriptors. The
 
 ## Implementation status
 
-Shared-v6 adds a versioned registry of joint assay tracks to the common model.
-Each declared quantity produces a fixed panel using preparation, mechanism and
-detector embeddings plus a shared latent projection of the candidate features.
-Metadata selects supervision after panel computation. Pooled and scalar controls
-use this same training path. Missing/conflicted descriptors use the learned
-quantity reference; unsupported requested tracks fail. Track-specific supervision
-and parameter-update evidence are saved and audited.
-Legacy factorized heads/panels do not run in the canonical trainer. The purified
-adapter excludes cellular methods; this does not establish cellular assay
-qualification elsewhere in the model.
+Shared-v7 uses one nonlinear affinity decoder for IC50, KD, EC50 and the
+separately labeled KD-via-IC50/KD-via-EC50 proxies. For each candidate it
+concatenates the shared biological latent with separate 16-dimensional vectors
+for quantity, preparation, mechanism and detector, then applies
+`Linear -> GELU -> Linear -> scalar`. There are no independent affinity heads
+or small residual corrections. Existing train-only quantity scales and register
+pooling remain in force. Assay metadata selects supervision after fixed-panel
+computation; it never enters the biological encoder.
 
-The [restoration specification](https://github.com/pirl-unc/presto/blob/29fb857e/experiments/agents/codex/plans/2026-10-29_shared-assay-measurement-layer.md)
-documents the fixed joint assay outputs and matched comparison. The software is
-implemented and tested; predictive improvement is not yet measured. Frozen v5
-fits retain pooled method outputs, with historical inference preserved.
+Factorized decoding is the sole new-training path. Registered categorical values
+have named learned vectors; unknown/conflicted method slots are fixed zeros and
+use the same decoder. This unknown-method reference is not thermodynamic KD.
+Unsupported requested tracks fail. Actual gradient/update evidence and exposure
+counts distinguish directly supervised combinations, indirectly trained
+combinations whose factors learned elsewhere, and random/untrained factors.
+Known complete methods must be declared in the manifest registry. Source tags
+remain unreviewed unless independently verified; detector categories do not
+identify the full laboratory protocol.
+
+Frozen v5 and v6 inference preserve earlier checkpoints, including v6 pooled,
+scalar-calibration and low-rank residual models. They do not run in new training.
+The new decoder is an architectural decision, not a claim of measured superiority.
+
 Cellular binding,
 stabilization and functional response require their own process definitions;
 shared detectors or IC50 units do not make them purified binding measurements.

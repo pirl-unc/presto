@@ -214,6 +214,8 @@ def train_step(
         prefix = (
             f"identity_heads.{name}."
             if name in model.config.identity_tasks
+            else f"assay_layer.factors.endpoint.{name}"
+            if name in model.affinity_endpoints
             else f"heads.{name}."
             if name in model.heads
             else f"offsets.{name}."
@@ -221,7 +223,11 @@ def train_step(
         if any(
             evidence["gradient_and_update"]
             for parameter, evidence in coverage.items()
-            if parameter.startswith(prefix)
+            if (
+                parameter == prefix
+                if name in model.affinity_endpoints
+                else parameter.startswith(prefix)
+            )
         ):
             model.support[name]["status"] = "directly_supervised"
         if model.support[name]["status"] != "pretrained_frozen":
@@ -332,6 +338,11 @@ def load_checkpoint(
         from ..legacy.shared_v5 import Presto as HistoricalPresto
 
         model = HistoricalPresto(HistoricalConfig.from_dict(payload["config"])).to(device)
+    elif payload.get("format") == "presto.shared.v6":
+        from ..legacy.shared_v6 import PrestoConfig as HistoricalConfig
+        from ..legacy.shared_v6 import Presto as HistoricalPresto
+
+        model = HistoricalPresto(HistoricalConfig.from_dict(payload["config"])).to(device)
     elif payload.get("format") == MODEL_VERSION:
         model = ModularPresto(ModularConfig.from_dict(payload["config"])).to(device)
     else:
@@ -348,7 +359,7 @@ def load_checkpoint(
     if trained - dict(model.named_parameters()).keys():
         raise ValueError("checkpoint training coverage refers to absent parameters")
     model.trained_parameters = trained
-    if type(model) is ModularPresto:
+    if hasattr(model, "assay_support"):
         support = payload.get("assay_support")
         if (
             not isinstance(support, dict)

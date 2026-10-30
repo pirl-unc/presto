@@ -8,6 +8,7 @@ def parameter_dependencies(model, target):
     """Conservative full input-domain dependency set, not only a scalar head."""
     parameters = dict(model.named_parameters())
     prefixes = {"encoder."}
+    exact = set()
 
     def pmhc(contextual=False, receptor=False):
         prefixes.update(("pmhc_fusion.", "residue_interaction.", "interaction_norm."))
@@ -49,7 +50,9 @@ def parameter_dependencies(model, target):
         for part in spec.parts:
             component(part, quantity_domain(target))
         prefixes.add(f"offsets.{target}." if spec.parts else f"heads.{target}.")
-        if any(track.endpoint == target for track in getattr(model.config, "assay_tracks", ())):
+        if target in getattr(model, "affinity_endpoints", ()):
+            exact.update(model.assay_layer.dependencies(target))
+        elif any(track.endpoint == target for track in getattr(model.config, "assay_tracks", ())):
             prefixes.add("assay_layer.")
     elif target.startswith("component:"):
         parts = target.split(":")
@@ -58,7 +61,9 @@ def parameter_dependencies(model, target):
         component(parts[1], parts[2] if len(parts) == 3 else None)
     else:
         raise ValueError(f"unknown dependency target: {target}")
-    return {name for name in parameters if any(name.startswith(prefix) for prefix in prefixes)}
+    return exact | {
+        name for name in parameters if any(name.startswith(prefix) for prefix in prefixes)
+    }
 
 
 def frozen_output(model, target):

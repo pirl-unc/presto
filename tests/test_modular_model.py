@@ -168,7 +168,7 @@ def test_assay_loss_does_not_train_identity_classifiers():
     loss.backward()
     assert all(p.grad is None for p in network.identity_heads.parameters())
     assert network.encoder.embedding.weight.grad.norm() > 0
-    assert network.heads["ic50"].weight.grad.norm() > 0
+    assert network.assay_layer.decoder[2].weight.grad.norm() > 0
 
 
 def test_defaults_overrides_conflicting_species_and_multiple_losses():
@@ -296,7 +296,7 @@ def test_untrained_serving_and_wrong_optimizer_are_rejected():
     network = model()
     with pytest.raises(ValueError, match="no trained"):
         network.predict([row()])
-    optimizer = torch.optim.AdamW(network.heads.parameters())
+    optimizer = torch.optim.AdamW(network.assay_layer.parameters())
     with pytest.raises(ValueError, match="each trainable"):
         train_step(network, optimizer, [row()], scale())
     with pytest.raises(ValueError, match="held-out"):

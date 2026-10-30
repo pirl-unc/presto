@@ -316,7 +316,10 @@ def test_training_closure_fails_with_an_untouched_allocated_head(tmp_path, monke
         fit_index(ObservationIndex(path), output)
     summary = json.loads((output / "summary.json").read_text())
     assert summary["coverage_gate"]["status"] == "failed"
-    assert any(name.startswith("heads.") for name in summary["untrained_selected_parameters"])
+    assert any(
+        name.startswith("assay_layer.factors.endpoint.")
+        for name in summary["untrained_selected_parameters"]
+    )
     from presto.training import modular_run
 
     monkeypatch.setattr(

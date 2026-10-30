@@ -1,64 +1,72 @@
-"""Fixed factorized output tracks on the common biological representation."""
-
-import math
+"""One nonlinear measurement head over biology and separate categorical vectors."""
 
 import torch
 from torch import nn
 
 
+AFFINITY_ENDPOINTS = frozenset(("ic50", "kd", "ec50", "kd_via_ic50", "kd_via_ec50"))
+AXES = ("endpoint", "preparation", "mechanism", "detector")
+
+
 class AssayMeasurementLayer(nn.Module):
-    def __init__(self, width, tracks, mode, rank=8):
+    def __init__(self, width, endpoints, tracks, embedding_dim=16):
         super().__init__()
         self.tracks = tracks
-        self.mode = mode
+        self.embedding_dim = embedding_dim
         self.vocabulary = {
-            axis: tuple(sorted({getattr(track, axis) for track in tracks}))
-            for axis in ("endpoint", "preparation", "mechanism", "detector")
-        }
-        if mode == "calibration":
-            self.offset = nn.Parameter(torch.zeros(len(tracks)))
-        elif mode == "factorized":
-            self.factors = nn.ModuleDict(
-                {axis: nn.Embedding(len(values), rank) for axis, values in self.vocabulary.items()}
+            axis: tuple(
+                sorted(
+                    set(endpoints)
+                    if axis == "endpoint"
+                    else {getattr(track, axis) for track in tracks}
+                )
             )
-            self.projection = nn.Linear(width, rank, bias=True)
-            nn.init.zeros_(self.projection.weight)
-            nn.init.zeros_(self.projection.bias)
-        elif mode != "pooled":
-            raise ValueError("unsupported assay measurement mode")
+            for axis in AXES
+        }
+        # Individually named rows preserve transfer/freeze semantics when quantities
+        # are added. Unknown slots are zeros, not untrained embedding parameters.
+        self.factors = nn.ModuleDict(
+            {
+                axis: nn.ParameterDict(
+                    {value: nn.Parameter(torch.randn(embedding_dim) * 0.02) for value in values}
+                )
+                for axis, values in self.vocabulary.items()
+            }
+        )
+        self.decoder = nn.Sequential(
+            nn.Linear(width + len(AXES) * embedding_dim, width),
+            nn.GELU(),
+            nn.Linear(width, 1),
+        )
+
+    def score(self, hidden, endpoint, track=None):
+        vectors = [hidden]
+        for axis in AXES:
+            value = endpoint if axis == "endpoint" else getattr(track, axis, None)
+            vector = (
+                self.factors[axis][value]
+                if value is not None
+                else hidden.new_zeros(self.embedding_dim)
+            )
+            vectors.append(vector.expand(*hidden.shape[:-1], self.embedding_dim))
+        return self.decoder(torch.cat(vectors, dim=-1)).squeeze(-1)
 
     def forward(self, hidden, endpoint):
-        projected = self.projection(hidden) if self.mode == "factorized" else None
-        values = {}
-        for i, track in enumerate(self.tracks):
-            if track.endpoint != endpoint:
-                continue
-            if self.mode == "pooled":
-                residual = hidden.new_zeros(hidden.shape[:-1])
-            elif self.mode == "calibration":
-                residual = self.offset[i].expand(hidden.shape[:-1])
-            else:
-                embedding = sum(
-                    self.factors[axis].weight[self.vocabulary[axis].index(getattr(track, axis))]
-                    for axis in self.vocabulary
-                )
-                residual = 0.1 * (projected * embedding).sum(-1) / math.sqrt(projected.shape[-1])
-            values[track.key] = residual
-        return values
+        return {
+            track.key: self.score(hidden, endpoint, track)
+            for track in self.tracks
+            if track.endpoint == endpoint
+        }
+
+    def dependencies(self, endpoint):
+        names = {f"assay_layer.decoder.{name}" for name, _ in self.decoder.named_parameters()}
+        names.add(f"assay_layer.factors.endpoint.{endpoint}")
+        for track in self.tracks:
+            if track.endpoint == endpoint:
+                names.update(f"assay_layer.factors.{axis}.{getattr(track, axis)}" for axis in AXES)
+        return names
 
     def trained(self, track, evidence):
-        """Require actual gradient-and-update evidence for every requested factor."""
-        if self.mode == "pooled":
-            return True
-        if self.mode == "calibration":
-            mask = evidence.get("assay_layer.offset")
-            return mask is not None and bool(mask[self.tracks.index(track)])
-        for axis in self.vocabulary:
-            mask = evidence.get(f"assay_layer.factors.{axis}.weight")
-            index = self.vocabulary[axis].index(getattr(track, axis))
-            if mask is None or not bool(mask[index].any()):
-                return False
-        return all(
-            key in evidence and bool(evidence[key].any())
-            for key in ("assay_layer.projection.weight", "assay_layer.projection.bias")
-        )
+        names = {f"assay_layer.decoder.{name}" for name, _ in self.decoder.named_parameters()}
+        names.update(f"assay_layer.factors.{axis}.{getattr(track, axis)}" for axis in AXES)
+        return all(name in evidence and bool(evidence[name].any()) for name in names)

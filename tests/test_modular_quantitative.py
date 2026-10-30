@@ -238,7 +238,7 @@ def test_binary_and_quantity_outputs_share_features_but_keep_distinct_scales():
     outputs[0].value.backward()
     assert model.ms_fusion[0].weight.grad.norm() > 0
     assert model.quantity_scores["fixture"]["ms_response"].weight.grad.norm() > 0
-    assert model.ms_score.weight.grad is None and model.heads["ic50"].weight.grad is None
+    assert model.ms_score.weight.grad is None and model.assay_layer.decoder[2].weight.grad is None
     scopes = fit_target_scales(
         [quantity, replace(quantity, value=32), affinity, replace(affinity, value=1000)]
     )
@@ -279,7 +279,7 @@ def test_both_mhc_classes_update_the_same_quantity_core():
             parameter = model.get_parameter(name)
             assert step["coverage"][name]["gradient_and_update"]
             assert optimizer.state[parameter]["step"] == (1 if mhc_class == "I" else 2)
-        assert model.heads["ic50"].weight.grad is None
+        assert model.assay_layer.decoder[2].weight.grad is None
         assert model.digest_fusion[0].weight.grad is None
         assert not hasattr(model, "register_score")
         labels = model.feature_layout["pmhc_fusion.0.weight"][1]

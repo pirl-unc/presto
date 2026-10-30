@@ -11,11 +11,13 @@ results do not qualify the new full-flank checkpoint contract.
 
 ## Current development architecture
 
-Shared-v6 is the sole architecture for new training. It preserves the v5 biological
-core and adds a declared assay measurement panel, described in the
-[measurement policy](assay_modeling_contract.md). Registry-free manifests retain
-quantity outputs; registered tracks default to factorized decoding. Historical
-v5 checkpoints use their frozen inference implementation.
+Shared-v7 is the sole architecture for new training. It keeps the shared biological
+core and uses one direct nonlinear affinity decoder across IC50, KD, EC50 and
+labeled concentration proxies. The decoder concatenates the biological latent
+with one vector per categorical assay aspect, as described in the
+[measurement policy](assay_modeling_contract.md). Missing/conflicted methods use
+zero method slots in that same decoder. Frozen v5/v6 readers preserve historical
+checkpoint inference; pooled/calibration controls are no longer new-training modes.
 
 The earlier v5 two-seed, matched2000-update
 comparison selected its shared residue interaction on validation. Test mean
@@ -66,11 +68,13 @@ complete processing, MS and receptor system requested in issue #130.
 The assay path retains residue states. For affinity, each peptide/core attends
 to both groove sequences through the same shared interaction, then contributes a
 configurable-width vector alongside the two pooled grooves to the learned fusion.
-An output-quantity-specific scalar readout scores each candidate before register
-aggregation. Declared method tracks add scalar calibration or a factorized
-latent-dependent residual before that same pooling operation. All fixed columns
-are computed independently of the observed assay selector, which chooses only
-the supervised column. Undeclared quantities retain the quantity reference.
+The affinity decoder receives each candidate vector plus separate quantity,
+preparation, mechanism and detector embeddings and emits one scalar before the
+common register aggregation. All declared assay columns are computed independently
+of the observed selector, which chooses only the supervised column. The five
+concentration quantities share this head while retaining distinct train-only
+scales and target semantics; kinetics, stability and cellular endpoints keep their
+own process definitions. Unknown method predictions use the same decoder.
 Species values supply additional inputs; MHC class determines candidate enumeration;
 the annotation predictions do not replace the sequence vectors. IC50 targets
 are standardized log10(nM), with one-sided losses for censored bounds.

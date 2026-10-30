@@ -1,5 +1,15 @@
 # Lessons
 
+## 2026-10-30 — Follow the requested shared decoder through to training
+
+- When the user asks for one head over latent plus categorical assay vectors,
+  implement that direct shared head. Separate quantity heads plus a small residual
+  are a different architecture and must not be described as equivalent.
+- Make the requested path canonical and verify categorical gradients and actual
+  fitting, rather than leaving it behind a queue of optional comparisons.
+- Report exact and censored sample counts with stratified correlations; a detector
+  label is not a verified full protocol and one study is not broad assay coverage.
+
 ## 2026-10-29 — Preserve assay semantics during consolidation
 
 - Quantity-specific outputs are not protocol-specific outputs. Check the actual

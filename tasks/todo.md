@@ -1,3 +1,14 @@
+# Direct factorized affinity decoder — 2026-10-30
+
+Spec: experiments/agents/codex/plans/2026-10-30_direct-factorized-affinity.md.
+- [x] Inspect current decoder, scientific labels and active queue; record design.
+- [ ] Implement one canonical nonlinear affinity head and categorical embeddings.
+- [ ] Verify gradients, learning, checkpoint/history, censoring and common training.
+- [ ] Freeze/register and run the real-data factorized fits within two H100 GPUs.
+- [ ] Collect per-assay validation/test evidence and close the experiment record.
+
+Review: pending implementation and validation; no predictive improvement claimed.
+
 # Native presenting-cell processing context — #115
 
 ## 2026-10-29 — Restore assay measurement semantics in the shared path

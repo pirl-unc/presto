@@ -72,16 +72,16 @@ def test_freezing_preserves_function_and_dropout_while_new_head_trains(tmp_path)
     frozen = freeze_dependencies(extended, ["ic50"])
     assert "encoder.embedding.weight" in frozen["parameters"]
     assert "pmhc_fusion.0.weight" in frozen["parameters"]
-    assert "heads.kd.weight" not in frozen["parameters"]
+    assert "assay_layer.factors.endpoint.kd" not in frozen["parameters"]
     assert extended.support["ic50"]["status"] == "pretrained_frozen"
     extended.train()
     assert not extended.encoder.training
     original = extended([row()])[0].value.detach().clone()
     assert torch.equal(original, extended([row()])[0].value)
-    before = extended.heads["kd"].weight.detach().clone()
+    before = extended.assay_layer.factors["endpoint"]["kd"].detach().clone()
     optimizer = torch.optim.AdamW([p for p in extended.parameters() if p.requires_grad], lr=0.01)
     train_step(extended, optimizer, [row("kd", value=1000)], {"ic50": SCALE, "kd": SCALE})
-    assert not torch.equal(before, extended.heads["kd"].weight)
+    assert not torch.equal(before, extended.assay_layer.factors["endpoint"]["kd"])
     assert torch.equal(original, extended([row()])[0].value)
     with pytest.raises(ValueError, match="no trainable loss"):
         train_step(extended, optimizer, [row()], {"ic50": SCALE})

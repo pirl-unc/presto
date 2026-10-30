@@ -62,8 +62,6 @@ def row(track=RADIO, mhc_class="I", **kwargs):
 @pytest.mark.parametrize("mhc_class", ["I", "II"])
 def test_fixed_panel_ignores_observed_selector_and_shares_candidates(mhc_class):
     model = Presto(config()).eval()
-    with torch.no_grad():
-        model.assay_layer.projection.weight.normal_(0, 0.1)
     a, b = model([row(RADIO, mhc_class), row(FLUOR, mhc_class)])
     assert set(a.assay_values) == {RADIO.key, FLUOR.key}
     for key in a.assay_values:
@@ -75,35 +73,32 @@ def test_fixed_panel_ignores_observed_selector_and_shares_candidates(mhc_class):
     assert len(starts) == (1 if mhc_class == "I" else 5)
 
 
-def test_all_conditions_start_identically_and_preserve_rng():
-    predictions, rngs = [], []
-    for mode in ("pooled", "calibration", "factorized"):
-        torch.manual_seed(123)
-        model = Presto(config(mode)).eval()
-        rngs.append(torch.get_rng_state())
-        predictions.append(model([row()])[0].value)
-    for prediction in predictions[1:]:
-        torch.testing.assert_close(prediction, predictions[0], rtol=0, atol=0)
-    assert all(torch.equal(rngs[0], state) for state in rngs)
+def test_new_training_requires_one_factorized_path():
+    for mode in ("pooled", "calibration"):
+        with pytest.raises(ValueError, match="factorized assay_mode"):
+            config(mode)
 
 
-def test_only_observed_track_has_direct_calibration_loss():
-    model = Presto(config("calibration"))
+def test_only_observed_factors_receive_direct_loss():
+    model = Presto(config())
     observed = row()
     output = model([observed])[0]
     output.assay_values[FLUOR.key].retain_grad()
     observation_loss(output, observed, SCALES).backward()
-    assert model.assay_layer.offset.grad[0] != 0
-    assert model.assay_layer.offset.grad[1] == 0
+    for axis in ("endpoint", "preparation", "mechanism", "detector"):
+        factor = model.assay_layer.factors[axis][getattr(RADIO, axis)]
+        assert factor.grad.abs().sum() > 0
+    assert model.assay_layer.factors["detector"]["fluorescence"].grad is None
     assert output.assay_values[FLUOR.key].grad is None
     assert model.encoder.embedding.weight.grad.abs().sum() > 0
+    assert model.assay_layer.decoder[0].weight.grad.abs().sum() > 0
 
 
 @pytest.mark.parametrize(
     "qualifier,delta,expected", [("<", -1, 0), ("<=", 1, 1), (">", 1, 0), (">=", -1, 1)]
 )
 def test_selected_track_keeps_both_inequality_directions(qualifier, delta, expected):
-    model = Presto(config("calibration"))
+    model = Presto(config())
     observed = replace(row(), qualifier=qualifier)
     output = model([observed])[0]
     output.value = torch.tensor(1.0 + delta, requires_grad=True)
@@ -123,7 +118,10 @@ def test_source_normalization_conflict_and_roundtrip():
     assert observation_track(observed) is None
     torch.testing.assert_close(output.value, output.reference_value)
     observation_loss(output, observed, SCALES).backward()
-    assert model.assay_layer.projection.weight.grad is None
+    assert model.assay_layer.decoder[0].weight.grad.abs().sum() > 0
+    assert model.assay_layer.factors["endpoint"]["ic50"].grad.abs().sum() > 0
+    for axis in ("preparation", "mechanism", "detector"):
+        assert all(parameter.grad is None for parameter in model.assay_layer.factors[axis].values())
     assert Observation.from_dict(row().to_dict()) == row()
     raw.pop("assay_comments")
     assert observation_track(observed) == FLUOR
@@ -133,7 +131,8 @@ def test_route_validation_and_unknown_registry():
     with pytest.raises(ValueError, match="biological endpoint route"):
         PrestoConfig(assay_tracks=(replace(RADIO, preparation="cellular"),))
     cellular = AssayTrack("tcell_response", "cellular", "functional", "fluorescence")
-    PrestoConfig(endpoints=("tcell_response",), assay_tracks=(cellular,))
+    with pytest.raises(ValueError, match="concentration affinity"):
+        PrestoConfig(endpoints=("tcell_response",), assay_tracks=(cellular,))
     model = Presto(replace(config(), assay_tracks=(RADIO,)))
     with pytest.raises(ValueError, match="outside checkpoint registry"):
         model([row(FLUOR)])
@@ -164,26 +163,52 @@ def test_factor_support_checkpoint_and_unseen_track_guard(tmp_path):
     assert scales == SCALES
 
 
-def test_v5_checkpoint_keeps_exact_inference(tmp_path):
-    model = Presto(replace(config(), assay_tracks=()))
-    train_step(model, torch.optim.AdamW(model.parameters(), lr=0.01), [row()], SCALES)
-    path = tmp_path / "v5.pt"
-    save_checkpoint(path, model, SCALES)
-    payload = torch.load(path, weights_only=True)
-    payload["format"] = "presto.shared.v5"
-    for key in ("assay_tracks", "assay_mode"):
-        payload["config"].pop(key)
-    payload.pop("assay_support")
+@pytest.mark.parametrize("version", [5, 6])
+def test_historical_checkpoint_keeps_exact_inference(tmp_path, version):
+    import importlib
+
+    legacy = importlib.import_module(f"presto.legacy.shared_v{version}")
+    args = dict(d_model=16, n_layers=1, n_heads=2, d_ff=32, dropout=0)
+    if version == 6:
+        args["assay_tracks"] = (RADIO, FLUOR)
+    model = legacy.Presto(legacy.PrestoConfig(**args)).eval()
+    if version == 6:
+        with torch.no_grad():
+            model.assay_layer.projection.weight.fill_(0.2)
+        model.assay_support[RADIO.key] = 7
+    path = tmp_path / "historical.pt"
+    payload = {
+        "format": legacy.MODEL_VERSION,
+        "config": asdict(model.config),
+        "state_dict": model.state_dict(),
+        "scales": {key: asdict(value) for key, value in SCALES.items()},
+        "support": model.support,
+        "trained_parameters": [],
+        "trained_features": {key: sorted(value) for key, value in model.trained_features.items()},
+        "exposed_features": {key: sorted(value) for key, value in model.exposed_features.items()},
+        "source_label_support": {
+            key: sorted(value) for key, value in model.source_label_support.items()
+        },
+        "element_coverage": {
+            "masks": model.trained_elements,
+            "complete_history": sorted(model.element_history_complete),
+        },
+    }
+    if version == 6:
+        payload["assay_support"] = model.assay_support
     torch.save(payload, path)
     historical, _, _ = load_checkpoint(path)
-    model.eval()
     historical.eval()
     torch.testing.assert_close(
         model([row()])[0].value, historical([row()])[0].value, rtol=0, atol=0
     )
+    if version == 6:
+        assert historical.assay_support == model.assay_support
+        for key, value in model([row()])[0].assay_values.items():
+            torch.testing.assert_close(
+                value, historical([row()])[0].assay_values[key], rtol=0, atol=0
+            )
     assert historical.element_history_complete == model.element_history_complete
-    for name, mask in model.trained_elements.items():
-        assert torch.equal(mask, historical.trained_elements[name])
     payload.pop("element_coverage")
     torch.save(payload, path)
     older, _, _ = load_checkpoint(path)
@@ -193,12 +218,11 @@ def test_v5_checkpoint_keeps_exact_inference(tmp_path):
 
 
 def test_assay_metrics_use_selected_output_in_physical_target_space():
-    model = Presto(config("calibration"))
-    with torch.no_grad():
-        model.assay_layer.offset[:] = torch.tensor([0.0, 2.0])
+    model = Presto(config())
     rows = [row(), row(FLUOR)]
     metrics, records = evaluate(model, rows, [0, 1], SCALES)
-    assert records[1]["prediction"] - records[0]["prediction"] == pytest.approx(2.0)
+    expected = [SCALES["ic50"].decode(float(x.value.detach())) for x in model(rows)]
+    assert [x["prediction"] for x in records] == pytest.approx(expected)
     assert len(metrics["ic50"]["by_assay_method"]) == 2
     assert records[0]["assay_panel"][RADIO.key] == records[0]["prediction"]
     assert records[0]["assay_method"] == asdict(rows[0].assay_method)
@@ -243,3 +267,76 @@ def test_common_manifest_trainer_fits_assay_panel(tmp_path):
     assert summary["coverage_gate"]["status"] == "passed"
     assert len(summary["metrics"]["test"]["ic50"]["by_assay_method"]) == 2
     assert all(track["observations"] == 4 for track in summary["assay_tracks"].values())
+
+
+def test_all_affinity_quantities_and_classes_train_one_decoder():
+    from presto.models.assay_measurement import AFFINITY_ENDPOINTS
+
+    endpoints = tuple(sorted(AFFINITY_ENDPOINTS))
+    tracks = tuple(replace(RADIO, endpoint=endpoint) for endpoint in endpoints)
+    model = Presto(replace(config(endpoints=endpoints), assay_tracks=tracks))
+    rows = [replace(row(), endpoint=endpoint, observation_id=endpoint) for endpoint in endpoints]
+    rows += [replace(rows[0], mhc=(replace(rows[0].mhc[0], mhc_class="II"),))]
+    assert not set(endpoints) & set(model.heads)
+    called = []
+    handle = model.assay_layer.decoder.register_forward_hook(
+        lambda module, args, out: called.append(id(module))
+    )
+    result = train_step(
+        model,
+        torch.optim.AdamW(model.parameters(), lr=0.01),
+        rows,
+        {e: SCALES["ic50"] for e in endpoints},
+    )
+    handle.remove()
+    assert called and set(called) == {id(model.assay_layer.decoder)}
+    for endpoint in endpoints:
+        assert result["coverage"][f"assay_layer.factors.endpoint.{endpoint}"]["gradient_and_update"]
+        assert model.support[endpoint]["status"] == "directly_supervised"
+    assert all(x["status"] == "directly_supervised" for x in model.assay_capabilities().values())
+    assert result["coverage"]["assay_layer.decoder.0.weight"]["gradient_and_update"]
+    assert result["coverage"]["encoder.embedding.weight"]["gradient_and_update"]
+
+
+def test_direct_decoder_learns_assay_dependent_ordering():
+    """Artificial numbers verify expressivity, never biological prediction accuracy."""
+    from itertools import product
+    from presto.models.assay_measurement import AssayMeasurementLayer
+
+    torch.manual_seed(551)
+    tracks = tuple(
+        AssayTrack(*values)
+        for values in product(
+            ("ic50", "kd"),
+            ("purified", "cellular"),
+            ("competitive", "direct"),
+            ("radioactivity", "fluorescence"),
+        )
+    )
+    layer = AssayMeasurementLayer(16, ("ic50", "kd"), tracks)
+    x = torch.linspace(-1, 1, 8)
+    hidden = torch.zeros(8, 16)
+    hidden[:, 0] = x
+
+    def targets(track):
+        sign = 1 if track.detector == "radioactivity" else -1
+        return (
+            sign * x
+            + 0.4 * (track.endpoint == "kd")
+            + 0.3 * (track.preparation == "cellular")
+            + 0.2 * (track.mechanism == "direct")
+        )
+
+    optimizer = torch.optim.Adam(layer.parameters(), lr=0.01)
+    for _ in range(350):
+        optimizer.zero_grad()
+        loss = torch.stack(
+            [(layer.score(hidden, t.endpoint, t) - targets(t)).square().mean() for t in tracks]
+        ).mean()
+        loss.backward()
+        optimizer.step()
+    assert float(loss.detach()) < 0.002
+    radio = layer.score(hidden, RADIO.endpoint, RADIO).detach()
+    fluor = layer.score(hidden, FLUOR.endpoint, FLUOR).detach()
+    assert (radio[1:] > radio[:-1]).all()
+    assert (fluor[1:] < fluor[:-1]).all()

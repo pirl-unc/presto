@@ -41,9 +41,9 @@ from .encoders import SequenceEncoder
 from .modular_support import feature_inputs, feature_layout
 from .modular_dependencies import frozen_output
 from ..data.assay_measurement import AssayTrack, observation_track, observation_method
-from .assay_measurement import AssayMeasurementLayer
+from .assay_measurement import AFFINITY_ENDPOINTS, AssayMeasurementLayer
 
-MODEL_VERSION = "presto.shared.v6"
+MODEL_VERSION = "presto.shared.v7"
 
 
 @dataclass(frozen=True)
@@ -89,13 +89,17 @@ class PrestoConfig:
     peptide_context: str = "shared_core_context_v2"
 
     def __post_init__(self):
-        if self.assay_mode not in ("pooled", "calibration", "factorized"):
-            raise ValueError("unsupported assay measurement mode")
+        if self.assay_mode != "factorized":
+            raise ValueError(
+                "new training requires factorized assay_mode; v6 controls are historical"
+            )
         if any(not isinstance(track, AssayTrack) for track in self.assay_tracks):
             raise ValueError("normalized assay tracks required")
         if len({track.key for track in self.assay_tracks}) != len(self.assay_tracks):
             raise ValueError("duplicate assay tracks")
         for track in self.assay_tracks:
+            if track.endpoint not in AFFINITY_ENDPOINTS:
+                raise ValueError("assay tracks require a concentration affinity endpoint")
             spec = endpoint_spec(track.endpoint)
             if (
                 track.endpoint not in self.endpoints
@@ -446,18 +450,19 @@ class Presto(nn.Module):
             )
         self.heads = nn.ModuleDict()
         self.offsets = nn.ModuleDict()
+        self.affinity_endpoints = tuple(sorted(set(config.endpoints) & AFFINITY_ENDPOINTS))
         for name in config.endpoints:
             spec = endpoint_spec(name)
             if spec.parts:
                 self.offsets[name] = ObservationOffset(
                     2 * len(config.observation_features) if spec.observation_covariates else 0
                 )
-            else:
+            elif name not in self.affinity_endpoints:
                 self.heads[name] = nn.Linear(config.d_model, 1)
-        if config.assay_tracks:
+        if self.affinity_endpoints:
             with torch.random.fork_rng(devices=[]):
                 self.assay_layer = AssayMeasurementLayer(
-                    config.d_model, config.assay_tracks, config.assay_mode
+                    config.d_model, self.affinity_endpoints, config.assay_tracks
                 )
         self.assay_support = {track.key: 0 for track in config.assay_tracks}
         self.trained_elements = {
@@ -480,7 +485,7 @@ class Presto(nn.Module):
         return nn.Sequential(nn.Linear(width, self.config.d_model), nn.GELU())
 
     def assay_selection(self, row):
-        if not any(track.endpoint == row.endpoint for track in self.config.assay_tracks):
+        if row.endpoint not in self.affinity_endpoints:
             return None
         track = observation_track(row)
         if track is not None and track not in self.config.assay_tracks:
@@ -491,12 +496,13 @@ class Presto(nn.Module):
         return {
             track.key: {
                 "observations": self.assay_support[track.key],
-                "status": "pooled_quantity_reference"
-                if self.config.assay_mode == "pooled"
-                else "directly_supervised"
+                "status": "directly_supervised"
                 if self.assay_support[track.key]
                 and self.assay_layer.trained(track, self.trained_elements)
+                else "indirectly_trained"
+                if self.assay_layer.trained(track, self.trained_elements)
                 else "random/untrained",
+                "combination_exposed": bool(self.assay_support[track.key]),
                 "validation": "not_evaluated",
                 "descriptor": asdict(track),
             }
@@ -884,15 +890,15 @@ class Presto(nn.Module):
             scores = (
                 self._component_score(row.endpoint, "cellular", hidden)
                 if "cellular" in spec.parts
+                else self.assay_layer.score(hidden, row.endpoint)
+                if row.endpoint in self.affinity_endpoints
                 else self.heads[row.endpoint](hidden).squeeze(-1)
             )
             value, attention = self._pool_registers(scores, spec.register_direction)
             pooled.append(weight * value)
             if panel:
-                for key, residual in self.assay_layer(hidden, row.endpoint).items():
-                    track_value, _ = self._pool_registers(
-                        scores + residual, spec.register_direction
-                    )
+                for key, assay_scores in self.assay_layer(hidden, row.endpoint).items():
+                    track_value, _ = self._pool_registers(assay_scores, spec.register_direction)
                     panel[key].append(weight * track_value)
             register_info.append(
                 {
@@ -1049,13 +1055,14 @@ class Presto(nn.Module):
             selected = self.assay_selection(row)
             if selected is not None:
                 output.value = output.assay_values[selected.key]
-            if output.assay_values:
+            if row.endpoint in self.affinity_endpoints:
                 output.diagnostics["measurement"] = {
                     "selected_track": selected.key if selected else None,
                     "method": asdict(observation_method(row)),
                     "mode": self.config.assay_mode,
                     "reference_interpretation": (
-                        "learned quantity reference, not thermodynamic affinity"
+                        "unknown-method prediction from the shared decoder, "
+                        "not thermodynamic affinity"
                     ),
                 }
             results.append(output)
