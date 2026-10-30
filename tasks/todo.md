@@ -1,5 +1,22 @@
 # Native presenting-cell processing context — #115
 
+## 2026-10-29 — Restore assay measurement semantics in the shared path
+
+Spec: experiments/agents/codex/plans/2026-10-29_shared-assay-measurement-layer.md.
+- [x] Trace historical plan/panels versus canonical model and source admission.
+- [x] Correct documentation and specify fixed factorized assay outputs.
+- [x] Implement common descriptor registry/readout and compatibility/support checks.
+- [ ] Run matched pooled/calibration/factorized comparisons with assay-stratified metrics.
+
+Review: v6 now implements fixed joint assay outputs, shared factorized decoding,
+source-conflict fallback, checkpoint/support checks and method-stratified metrics.
+The full suite passed (2,891 tests, four skips); all 14 new focused checks pass,
+including an additional end-to-end common-manifest fit. Lint passes. Experiment
+2026-10-29_2303_codex_assay-measurement-layer is registered for the six matched
+fits; predictive validation remains open. Active frozen v5 fits are unchanged.
+
+## Native context implementation checklist
+
 - [x] Review role evidence, current row/MIL routing and specify the bounded change.
 - [x] Implement one role-aware processing resolver and generated-parent provenance.
 - [x] Bind prospective policy/fingerprints and verify row/MIL/export regressions.

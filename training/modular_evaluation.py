@@ -11,6 +11,7 @@ import numpy as np
 import torch
 
 from ..data.modular import endpoint_spec, observation_target
+from ..data.assay_measurement import observation_method
 from .modular import identity_targets, observation_loss
 
 
@@ -149,12 +150,20 @@ def evaluate(model, index, indices, scales, *, batch_size=64):
                         loss = observation_loss(output, row, scales)
                         value = float(output.value)
                         spec = endpoint_spec(row.endpoint)
+                        panel = {
+                            key: float(item)
+                            if spec.binary or spec.quantitative
+                            else scales[row.endpoint].decode(float(item))
+                            for key, item in getattr(output, "assay_values", {}).items()
+                        }
                         if not spec.binary and not spec.quantitative:
                             value = scales[row.endpoint].decode(value)
                         records.append(
                             {
                                 **base,
                                 "prediction": value,
+                                "assay_panel": panel,
+                                "assay_method": asdict(observation_method(row)),
                                 "target": observation_target(row),
                                 "raw_value": row.value,
                                 "raw_unit": row.unit,
@@ -175,7 +184,7 @@ def evaluate(model, index, indices, scales, *, batch_size=64):
     return summarize(records), records
 
 
-def summarize(records: list[dict[str, Any]]) -> dict[str, Any]:
+def summarize(records: list[dict[str, Any]], *, assay_strata=True) -> dict[str, Any]:
     grouped = defaultdict(list)
     for record in records:
         grouped[record.get("identity_task", record["endpoint"])].append(record)
@@ -235,6 +244,21 @@ def summarize(records: list[dict[str, Any]]) -> dict[str, Any]:
                     / len(bounds),
                 }
         result[endpoint] = metrics
+        if assay_strata and "identity_task" not in rows[0]:
+            methods = defaultdict(list)
+            for row in rows:
+                method = row.get("assay_method")
+                if method:
+                    key = "/".join(
+                        method[axis]
+                        for axis in ("preparation", "mechanism", "detector", "review_status")
+                    )
+                    methods[key].append(row)
+            if methods:
+                metrics["by_assay_method"] = {
+                    key: summarize(subset, assay_strata=False)[endpoint]
+                    for key, subset in sorted(methods.items())
+                }
     return result
 
 

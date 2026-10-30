@@ -328,6 +328,8 @@ def purified_assay_observation(
             restriction, reference=dra_reference if cls == "II" else None
         ),
     )
+    from .assay_measurement import normalize_assay_method
+
     result = Observation(
         f"hitlist-v4-row:{ordinal}",
         f"hitlist-v4-{raw['source']}",
@@ -337,6 +339,7 @@ def purified_assay_observation(
         value=float(value),
         unit=unit,
         qualifier=qualifier,
+        assay_method=normalize_assay_method(raw),
         provenance={
             "measurement_namespace": "assay_iri",
             "original_measurement_id": assay,

@@ -62,6 +62,20 @@ class ModularPredictor:
             }
             if output.value is not None:
                 spec = endpoint_spec(row.endpoint)
+                panel_support = self.model.capabilities().get("assay_tracks", {})
+                result["assay_panel"] = {}
+                for key, item in getattr(output, "assay_values", {}).items():
+                    status = panel_support[key]
+                    value = None if status["status"] == "random/untrained" else float(item)
+                    if value is not None and not spec.binary and not spec.quantitative:
+                        value = self.scales[row.endpoint].decode(value)
+                    result["assay_panel"][key] = {
+                        **status,
+                        "transformed_value": value,
+                        "target_space": "logit"
+                        if spec.binary
+                        else (f"log10({spec.unit})" if spec.log10 else spec.unit),
+                    }
                 if spec.binary:
                     result.update(
                         logit=float(output.value),

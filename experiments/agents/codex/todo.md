@@ -4,6 +4,11 @@ Use this file for coarse-grained, agent-specific experimental backlog items.
 
 ## Active
 
+- [ ] Restore the [shared assay measurement layer](plans/2026-10-29_shared-assay-measurement-layer.md):
+  fixed joint quantity/preparation/mechanism/detector outputs, factorized embeddings,
+  one biological core, cellular process separation and assay-stratified matched
+  comparisons. Current shared-v5 has no method layer; legacy panels are inactive.
+
 - [ ] H100! batch-size sweep on broad 7-allele class-I contract
   - Fixed model/data contract, vary only batch size on `H100!`
   - Candidate designs:

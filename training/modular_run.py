@@ -212,6 +212,7 @@ def preflight(index: ObservationIndex):
     ordinal_levels = defaultdict(set)
     assay_classes = set()
     # Label and capability inspection is sequence-only; no training or random model scores.
+    assay_track_counts = Counter()
     for row in index:
         if row.endpoint == "identity":
             targets = identity_targets(row, validator)
@@ -224,6 +225,9 @@ def preflight(index: ObservationIndex):
         else:
             if row.endpoint not in config.endpoints:
                 raise ValueError(f"admitted row targets an unallocated endpoint: {row.endpoint}")
+            selected_track = validator.assay_selection(row)
+            if selected_track is not None and row.split == "train" and row.value is not None:
+                assay_track_counts[selected_track.key] += 1
             spec = endpoint_spec(row.endpoint)
             route = spec.route
             if (
@@ -308,6 +312,9 @@ def preflight(index: ObservationIndex):
                             name
                         ) or row.context.components.get(name)
                         feature_states[name].add(component.state if component else "unknown")
+    for track in config.assay_tracks:
+        if not assay_track_counts[track.key] and not frozen_output(validator, track.endpoint):
+            raise ValueError(f"declared assay track has no training observations: {track.key}")
     for endpoint in config.endpoints:
         if not counts[endpoint] and not frozen_output(validator, endpoint):
             raise ValueError(f"allocated endpoint has no training labels: {endpoint}")
@@ -823,8 +830,15 @@ def _fit_index(index, output_dir, *, device, resume):
         for category, values in selected.source_label_support.items()
         if "peptide_source" in config.identity_tasks and not values
     ]
+    assay_support = selected.assay_capabilities()
+    missing_assays = [
+        key for key, value in assay_support.items() if value["status"] == "random/untrained"
+    ]
     coverage_gate = {
-        "status": "failed" if unsupported or missing_features or missing_auxiliaries else "passed",
+        "status": "failed"
+        if unsupported or missing_features or missing_auxiliaries or missing_assays
+        else "passed",
+        "untrained_assay_tracks": missing_assays,
         "untrained_parameters": unsupported,
         "exposed_features_without_updates": missing_features,
         "policy": training["coverage_policy"],
@@ -842,6 +856,7 @@ def _fit_index(index, output_dir, *, device, resume):
         "training_exposures": dict(exposures),
         "unique_training_labels": admission["training_labels"],
         "support": selected.support,
+        "assay_tracks": assay_support,
         "untrained_selected_parameters": unsupported,
         "coverage_gate": coverage_gate,
         "qualification": "not_qualified",

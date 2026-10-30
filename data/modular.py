@@ -12,6 +12,7 @@ from typing import Any, Iterable, Mapping
 
 from .modular_quantitative import QuantitativeDomain, QUANTITY_PARTS, quantity_domain
 from .modular_ordinal import OrdinalValue
+from .assay_measurement import AssayMethod
 
 SCHEMA = "presto.modular.observation.v1"
 AA = "ACDEFGHIKLMNPQRSTVWY"
@@ -350,8 +351,11 @@ class Observation:
     schema: str = SCHEMA
     quantity_contract: QuantitativeDomain | None = None
     value_encoding: str = "linear"
+    assay_method: AssayMethod | None = None
 
     def validate(self, max_length: int = 512) -> None:
+        if self.assay_method is not None and not isinstance(self.assay_method, AssayMethod):
+            raise ValueError("assay method requires a normalized descriptor")
         if self.schema != SCHEMA or not self.observation_id or not self.source:
             raise ValueError("observation requires versioned schema, source and stable ID")
         if self.split not in ("train", "validation", "test", "predict"):
@@ -412,6 +416,8 @@ class Observation:
         if row.get("schema") != SCHEMA:
             raise ValueError("explicit supported observation schema required")
         data = dict(row)
+        if data.get("assay_method") is not None:
+            data["assay_method"] = AssayMethod(**data["assay_method"])
         data["mhc"] = tuple(MHCInput(**candidate) for candidate in data.get("mhc", ()))
         context = dict(data.get("context", {}))
         for key in ("components", "component_overrides"):

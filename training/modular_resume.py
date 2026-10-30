@@ -22,6 +22,8 @@ from .modular import save_checkpoint
 RESUME_VERSION = "presto.modular.resume.v1"
 SOURCE_FILES = (
     "data/modular.py",
+    "data/assay_measurement.py",
+    "data/measurement_curation.py",
     "data/modular_context.py",
     "data/modular_ordinal.py",
     "data/modular_quantitative.py",
@@ -33,6 +35,7 @@ SOURCE_FILES = (
     "models/modular_dependencies.py",
     "models/modular.py",
     "models/presto.py",
+    "models/assay_measurement.py",
     "cli/train.py",
     "training/trainer.py",
     "models/modular_support.py",

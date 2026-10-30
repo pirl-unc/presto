@@ -1,7 +1,29 @@
 # Assay modeling policy
 
-The authoritative specification is [the model I/O contract](model_io_contract.md).
-This page is a short policy guide, not a second normative inventory.
+This policy separates biological inputs from measurement descriptors. The
+[model I/O contract](model_io_contract.md) inventories the historical model;
+[the shared model](modular_model.md) documents the current training path.
+
+## Implementation status
+
+Shared-v6 adds a versioned registry of joint assay tracks to the common model.
+Each declared quantity produces a fixed panel using preparation, mechanism and
+detector embeddings plus a shared latent projection of the candidate features.
+Metadata selects supervision after panel computation. Pooled and scalar controls
+use this same training path. Missing/conflicted descriptors use the learned
+quantity reference; unsupported requested tracks fail. Track-specific supervision
+and parameter-update evidence are saved and audited.
+Legacy factorized heads/panels do not run in the canonical trainer. The purified
+adapter excludes cellular methods; this does not establish cellular assay
+qualification elsewhere in the model.
+
+The [restoration specification](../experiments/agents/codex/plans/2026-10-29_shared-assay-measurement-layer.md)
+documents the fixed joint assay outputs and matched comparison. The software is
+implemented and tested; predictive improvement is not yet measured. Frozen v5
+fits retain pooled method outputs, with historical inference preserved.
+Cellular binding,
+stabilization and functional response require their own process definitions;
+shared detectors or IC50 units do not make them purified binding measurements.
 
 ## The distinction
 

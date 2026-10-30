@@ -11,7 +11,13 @@ results do not qualify the new full-flank checkpoint contract.
 
 ## Current development architecture
 
-Shared-v5 is the sole architecture for new training. The two-seed, matched2000-update
+Shared-v6 is the sole architecture for new training. It preserves the v5 biological
+core and adds a declared assay measurement panel, described in the
+[measurement policy](assay_modeling_contract.md). Registry-free manifests retain
+quantity outputs; registered tracks default to factorized decoding. Historical
+v5 checkpoints use their frozen inference implementation.
+
+The earlier v5 two-seed, matched2000-update
 comparison selected its shared residue interaction on validation. Test mean
 Spearman was0.5248 for MHC-I and0.5039 for MHC-II, versus0.5070/0.4893 for the
 pooled shared-v4 control. These are previously inspected development holdouts,
@@ -60,7 +66,11 @@ complete processing, MS and receptor system requested in issue #130.
 The assay path retains residue states. For affinity, each peptide/core attends
 to both groove sequences through the same shared interaction, then contributes a
 configurable-width vector alongside the two pooled grooves to the learned fusion.
-An assay-specific scalar readout scores each candidate before register aggregation.
+An output-quantity-specific scalar readout scores each candidate before register
+aggregation. Declared method tracks add scalar calibration or a factorized
+latent-dependent residual before that same pooling operation. All fixed columns
+are computed independently of the observed assay selector, which chooses only
+the supervised column. Undeclared quantities retain the quantity reference.
 Species values supply additional inputs; MHC class determines candidate enumeration;
 the annotation predictions do not replace the sequence vectors. IC50 targets
 are standardized log10(nM), with one-sided losses for censored bounds.

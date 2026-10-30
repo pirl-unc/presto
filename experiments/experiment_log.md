@@ -5658,3 +5658,35 @@ six-output default was introduced. PR131 remains draft until130/132 qualify.
   Actual hardware/runtime and held-out metrics pending. No new winner or claim of
   improvement. Collection/verification/reporting continuation and live comparison
   are running; complete artifact/metric closeout remains required.
+
+## 2026-10-29 — Shared assay measurement layer: registered matched comparison
+
+- **Agent/model:** Codex / GPT-6. [Experiment and contract](2026-10-29_2303_codex_assay-measurement-layer/README.md).
+- **Implementation:** shared-v6 biological core retains v5 residue/register logic;
+  fixed joint assay tracks add pooled, scalar-calibration or factorized residual
+  decoding. Quantity units, explicit/reviewed inferred bounds and source conflicts
+  retain their common contracts. Historical v5 inference is frozen. Full regression
+  suite: 2,891 passed / four skipped; 14 focused checks pass, including a later
+  common-manifest end-to-end fit. No predictive gain follows from these checks.
+- **Dataset:** parent curated source-review-v2, starting from 3,519,577 TRAIN rows;
+  all ten endpoints retained. Four metadata-selected fluorescence study components
+  become retrospective validation/test holdouts with cross-output peptide embargo.
+  Original inspected holdouts are retained. Exact final counts are preparation-gated.
+  Cellular binding/stabilization/functional measurements remain outside purified IC50.
+- **Training:** fresh seeds42/43 × pooled/calibration/factorized IC50 tracks;
+  width192/layers3/heads6/FF768,dropout.1,batch128,4,000 updates,AdamW3e-4 constant,
+  decay1e-4,validation1,000. Same parent endpoint/class exposure weights:60%EL,
+  20%literalIC50,15%other physical,5%qualitative. No pretraining or added synthetics;
+  parent generated ligand comparisons retain their source contract. Native target
+  transformations, squared/one-sided regression and binary BCE are unchanged.
+  Quantity labels map separately to IC50,KD,EC50,KDviaIC50,KDviaEC50,half-life,koff,
+  td50,qualitative,elution. Rank8 residual scale.1; no ranking/consistency loss.
+- **Hardware:** requested H100!, at most two concurrent GPUs; durable coordinator
+  waits for saved parent GPU calls. Actual hardware and runtime pending launch.
+- **Reproduction:** experiment-local reproduce/launch.sh and launch.json freeze
+  invocation, git state, source hashes and pinned runtime before upload. Per-example
+  validation/test predictions and matched assay/class/study metrics are mandatory;
+  receipt-verified local collection independently checks core metrics.
+- **Validation/test:** pending for all six conditions. No winner or promotion yet.
+  The focal registry varies detector within purified competition; preparation and
+  mechanism effects are not independently identified by this contrast.

@@ -49,6 +49,8 @@ def parameter_dependencies(model, target):
         for part in spec.parts:
             component(part, quantity_domain(target))
         prefixes.add(f"offsets.{target}." if spec.parts else f"heads.{target}.")
+        if any(track.endpoint == target for track in getattr(model.config, "assay_tracks", ())):
+            prefixes.add("assay_layer.")
     elif target.startswith("component:"):
         parts = target.split(":")
         if len(parts) not in (2, 3):

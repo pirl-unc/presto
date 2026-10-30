@@ -183,6 +183,11 @@ def train_step(
     model.trained_parameters.update(
         name for name, evidence in coverage.items() if evidence["gradient_and_update"]
     )
+    for row in rows:
+        if row.value is not None and row.endpoint != "identity":
+            track = model.assay_selection(row)
+            if track is not None:
+                model.assay_support[track.key] += 1
     updated = {name for name, evidence in coverage.items() if evidence["gradient_and_update"]}
     for target, support in model.support.items():
         if parameter_dependencies(model, target) & updated:
@@ -278,6 +283,7 @@ def save_checkpoint(
         "state_dict": model.state_dict(),
         "scales": {key: asdict(value) for key, value in scales.items()},
         "support": model.support,
+        "assay_support": model.assay_support,
         "trained_parameters": sorted(model.trained_parameters),
         "element_coverage": {
             "masks": {name: value.cpu() for name, value in model.trained_elements.items()},
@@ -321,6 +327,11 @@ def load_checkpoint(
         from ..legacy.shared_v4 import Presto as HistoricalPresto
 
         model = HistoricalPresto(HistoricalConfig.from_dict(payload["config"])).to(device)
+    elif payload.get("format") == "presto.shared.v5":
+        from ..legacy.shared_v5 import PrestoConfig as HistoricalConfig
+        from ..legacy.shared_v5 import Presto as HistoricalPresto
+
+        model = HistoricalPresto(HistoricalConfig.from_dict(payload["config"])).to(device)
     elif payload.get("format") == MODEL_VERSION:
         model = ModularPresto(ModularConfig.from_dict(payload["config"])).to(device)
     else:
@@ -338,6 +349,14 @@ def load_checkpoint(
         raise ValueError("checkpoint training coverage refers to absent parameters")
     model.trained_parameters = trained
     if type(model) is ModularPresto:
+        support = payload.get("assay_support")
+        if (
+            not isinstance(support, dict)
+            or set(support) != set(model.assay_support)
+            or any(type(value) is not int or value < 0 for value in support.values())
+        ):
+            raise ValueError("invalid checkpoint assay support")
+        model.assay_support = support
         evidence = payload.get("element_coverage")
         if evidence is None:
             model.element_history_complete = set()
@@ -409,6 +428,8 @@ def initialize_from_checkpoint(
     old, new = asdict(previous.config), asdict(model.config)
     # Endpoint/identity unions may grow; feature slots may not silently change meaning.
     shared_contract = {
+        "assay_tracks",
+        "assay_mode",
         "max_length",
         "d_model",
         "n_layers",
@@ -538,6 +559,7 @@ def initialize_from_checkpoint(
             current[name] = value
         inherited.append(name)
     model.load_state_dict(current, strict=True)
+    model.assay_support = dict(previous.assay_support)
     model.trained_parameters.update(previous.trained_parameters & set(inherited))
     for name in inherited:
         if name not in model.trained_elements:

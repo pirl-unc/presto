@@ -43,7 +43,7 @@ def test_public_names_are_the_same_model_and_config():
     assert Presto is ModularPresto
     assert PrestoConfig is ModularConfig
     assert Presto.__module__ == "presto.models.presto"
-    assert MODEL_VERSION == "presto.shared.v5"
+    assert MODEL_VERSION == "presto.shared.v6"
     with pytest.raises(ValueError, match="full ordered"):
         PrestoConfig(peptide_context="three_residue_composition")
 

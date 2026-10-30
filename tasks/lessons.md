@@ -1,5 +1,18 @@
 # Lessons
 
+## 2026-10-29 — Preserve assay semantics during consolidation
+
+- Quantity-specific outputs are not protocol-specific outputs. Check the actual
+  canonical forward path before claiming assay embeddings or calibrated panels;
+  legacy heads and provenance-only descriptors do not implement that behavior.
+- Keep shared biological encoding and fixed output-side assay descriptors. The
+  observed assay selects supervision; it must not redefine other output columns.
+- Distinguish purified competition, cellular binding, stabilization and function.
+  Detector or concentration units alone do not establish an equivalent endpoint.
+- Scalar assay offsets can improve calibration but cannot change within-assay
+  ranking for a fixed model. Test latent-dependent decoding separately, and
+  require assay-stratified held-out evidence before claiming predictive gains.
+
 ## 2026-10-16
 
 - Copy optimizer and scheduler names from the pinned trainer when writing a

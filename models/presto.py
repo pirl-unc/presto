@@ -40,13 +40,17 @@ from ..data.modular_context import (
 from .encoders import SequenceEncoder
 from .modular_support import feature_inputs, feature_layout
 from .modular_dependencies import frozen_output
+from ..data.assay_measurement import AssayTrack, observation_track, observation_method
+from .assay_measurement import AssayMeasurementLayer
 
-MODEL_VERSION = "presto.shared.v5"
+MODEL_VERSION = "presto.shared.v6"
 
 
 @dataclass(frozen=True)
 class PrestoConfig:
     endpoints: tuple[str, ...] = ("ic50",)
+    assay_tracks: tuple[AssayTrack, ...] = ()
+    assay_mode: str = "factorized"
     identity_tasks: tuple[str, ...] = ()
     mhc_classes: tuple[str, ...] = ("I", "II")
     register_pooling: bool = True
@@ -85,6 +89,23 @@ class PrestoConfig:
     peptide_context: str = "shared_core_context_v2"
 
     def __post_init__(self):
+        if self.assay_mode not in ("pooled", "calibration", "factorized"):
+            raise ValueError("unsupported assay measurement mode")
+        if any(not isinstance(track, AssayTrack) for track in self.assay_tracks):
+            raise ValueError("normalized assay tracks required")
+        if len({track.key for track in self.assay_tracks}) != len(self.assay_tracks):
+            raise ValueError("duplicate assay tracks")
+        for track in self.assay_tracks:
+            spec = endpoint_spec(track.endpoint)
+            if (
+                track.endpoint not in self.endpoints
+                or spec.parts
+                or spec.route not in ("pmhc", "cellular", "tcr", "tcr_cellular")
+            ):
+                raise ValueError("assay track needs an allocated direct measurement output")
+            preparation = "purified" if spec.route in ("pmhc", "tcr") else "cellular"
+            if track.preparation != preparation:
+                raise ValueError("assay preparation conflicts with the biological endpoint route")
         for name in ("d_model", "n_layers", "n_heads", "d_ff"):
             if type(getattr(self, name)) is not int or getattr(self, name) <= 0:
                 raise ValueError(f"{name} must be a positive integer")
@@ -243,6 +264,8 @@ class PrestoConfig:
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> PrestoConfig:
         data = dict(data)
+        if "assay_tracks" in data:
+            data["assay_tracks"] = tuple(AssayTrack(**track) for track in data["assay_tracks"])
         for name in (
             "endpoints",
             "identity_tasks",
@@ -293,6 +316,8 @@ class Prediction:
     identity: dict[str, torch.Tensor] = field(default_factory=dict)
     diagnostics: dict[str, Any] = field(default_factory=dict)
     components: dict[str, torch.Tensor] = field(default_factory=dict)
+    assay_values: dict[str, torch.Tensor] = field(default_factory=dict)
+    reference_value: torch.Tensor | None = None
 
 
 def candidates(peptide: str, mhc_class: str) -> list[tuple[int, str, list[float]]]:
@@ -429,6 +454,12 @@ class Presto(nn.Module):
                 )
             else:
                 self.heads[name] = nn.Linear(config.d_model, 1)
+        if config.assay_tracks:
+            with torch.random.fork_rng(devices=[]):
+                self.assay_layer = AssayMeasurementLayer(
+                    config.d_model, config.assay_tracks, config.assay_mode
+                )
+        self.assay_support = {track.key: 0 for track in config.assay_tracks}
         self.trained_elements = {
             name: torch.zeros_like(p, dtype=torch.bool) for name, p in self.named_parameters()
         }
@@ -447,6 +478,30 @@ class Presto(nn.Module):
 
     def _fusion(self, width: int) -> nn.Sequential:
         return nn.Sequential(nn.Linear(width, self.config.d_model), nn.GELU())
+
+    def assay_selection(self, row):
+        if not any(track.endpoint == row.endpoint for track in self.config.assay_tracks):
+            return None
+        track = observation_track(row)
+        if track is not None and track not in self.config.assay_tracks:
+            raise ValueError(f"assay track outside checkpoint registry: {track.key}")
+        return track
+
+    def assay_capabilities(self):
+        return {
+            track.key: {
+                "observations": self.assay_support[track.key],
+                "status": "pooled_quantity_reference"
+                if self.config.assay_mode == "pooled"
+                else "directly_supervised"
+                if self.assay_support[track.key]
+                and self.assay_layer.trained(track, self.trained_elements)
+                else "random/untrained",
+                "validation": "not_evaluated",
+                "descriptor": asdict(track),
+            }
+            for track in self.config.assay_tracks
+        }
 
     def train(self, mode=True):
         super().train(mode)
@@ -785,6 +840,9 @@ class Presto(nn.Module):
                 "MHC class must be supplied or predicted by an allocated identity task"
             )
         pooled, register_info = [], []
+        panel = {
+            track.key: [] for track in self.config.assay_tracks if track.endpoint == row.endpoint
+        }
         contextual = endpoint_spec(row.endpoint).route != "pmhc"
         context = (
             self._context(row, encoded, species, components, auxiliary, cell)
@@ -830,6 +888,12 @@ class Presto(nn.Module):
             )
             value, attention = self._pool_registers(scores, spec.register_direction)
             pooled.append(weight * value)
+            if panel:
+                for key, residual in self.assay_layer(hidden, row.endpoint).items():
+                    track_value, _ = self._pool_registers(
+                        scores + residual, spec.register_direction
+                    )
+                    panel[key].append(weight * track_value)
             register_info.append(
                 {
                     "class": mhc_class,
@@ -856,7 +920,12 @@ class Presto(nn.Module):
             "registers": register_info,
             "auxiliary": {name: asdict(value) for name, value in auxiliary.items()},
         }
-        return torch.stack(pooled).sum(0), identity, diagnostics
+        return (
+            torch.stack(pooled).sum(0),
+            identity,
+            diagnostics,
+            {key: torch.stack(values).sum(0) for key, values in panel.items()},
+        )
 
     def forward(self, rows: Sequence[Observation]) -> list[Prediction]:
         if not rows:
@@ -949,11 +1018,14 @@ class Presto(nn.Module):
                     unique.setdefault(key, mhc)
                 vectors, diagnostics = [], []
                 for mhc in unique.values():
-                    vector, identity, diagnostic = self._pmhc(row, mhc, encoded, token_states)
+                    vector, identity, diagnostic, panel = self._pmhc(
+                        row, mhc, encoded, token_states
+                    )
                     vectors.append(vector)
                     diagnostics.append(diagnostic)
                     if len(unique) == 1:
                         output.identity = identity
+                        output.assay_values = panel
                 output.diagnostics["candidates"] = diagnostics
                 if "cellular" in spec.parts:
                     scores = torch.stack(vectors)
@@ -973,6 +1045,19 @@ class Presto(nn.Module):
                 output.value = sum(output.components.values()) + self.offsets[row.endpoint](
                     covariates
                 ).squeeze(-1)
+            output.reference_value = output.value
+            selected = self.assay_selection(row)
+            if selected is not None:
+                output.value = output.assay_values[selected.key]
+            if output.assay_values:
+                output.diagnostics["measurement"] = {
+                    "selected_track": selected.key if selected else None,
+                    "method": asdict(observation_method(row)),
+                    "mode": self.config.assay_mode,
+                    "reference_interpretation": (
+                        "learned quantity reference, not thermodynamic affinity"
+                    ),
+                }
             results.append(output)
         return results
 
@@ -1063,6 +1148,7 @@ class Presto(nn.Module):
                 }
         return {
             "outputs": outputs,
+            "assay_tracks": self.assay_capabilities(),
             "components": components,
             "source_membership": source_membership,
             "quantity_components": quantity_components,
@@ -1076,6 +1162,12 @@ class Presto(nn.Module):
         """Inference refuses random requested outputs; qualification stays visible."""
         for row in rows:
             row.validate(self.config.max_length)
+            selected = self.assay_selection(row)
+            if (
+                selected is not None
+                and self.assay_capabilities()[selected.key]["status"] == "random/untrained"
+            ):
+                raise ValueError(f"assay track: no trained support for {selected.key}")
             relevant_identity = tuple(
                 name for name in self.config.identity_tasks if has_identity_input(row, name)
             )
