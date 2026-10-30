@@ -55,14 +55,14 @@ Biological counterfactual tracks can coexist with conditioning on observed
 state. Predicting across APM states does not prohibit taking a known APM
 intervention as input to the relevant downstream biological component.
 
-## Current limits
+## Historical model details
 
-Current coarse cellular categories and generic host inputs do not implement the
-full role-specific design. T-cell panels are per-axis response outputs, not a
-joint configuration registry. Their scalar unknown-reference baseline is not a
+The former model's coarse cellular categories and generic host inputs do not
+implement the full role-specific design. Its T-cell panels are per-axis response
+outputs, not a joint configuration registry. Their unknown-reference baseline is not a
 mathematical marginal.
 
-The complete implemented input signature, assay vocabularies, transformed units,
+That model's input signature, assay vocabularies, transformed units,
 aliases, proxy labels and pending capabilities are listed once in
 [model_io_contract.md](model_io_contract.md).
 [Issue #46](https://github.com/pirl-unc/presto/issues/46) tracks the gaps.

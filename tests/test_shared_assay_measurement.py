@@ -166,6 +166,7 @@ def test_factor_support_checkpoint_and_unseen_track_guard(tmp_path):
 
 def test_v5_checkpoint_keeps_exact_inference(tmp_path):
     model = Presto(replace(config(), assay_tracks=()))
+    train_step(model, torch.optim.AdamW(model.parameters(), lr=0.01), [row()], SCALES)
     path = tmp_path / "v5.pt"
     save_checkpoint(path, model, SCALES)
     payload = torch.load(path, weights_only=True)
@@ -180,6 +181,13 @@ def test_v5_checkpoint_keeps_exact_inference(tmp_path):
     torch.testing.assert_close(
         model([row()])[0].value, historical([row()])[0].value, rtol=0, atol=0
     )
+    assert historical.element_history_complete == model.element_history_complete
+    for name, mask in model.trained_elements.items():
+        assert torch.equal(mask, historical.trained_elements[name])
+    payload.pop("element_coverage")
+    torch.save(payload, path)
+    older, _, _ = load_checkpoint(path)
+    assert not older.element_history_complete
     with pytest.raises(ValueError, match="historical"):
         initialize_from_checkpoint(Presto(config()), path)
 

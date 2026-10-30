@@ -357,6 +357,9 @@ def load_checkpoint(
         ):
             raise ValueError("invalid checkpoint assay support")
         model.assay_support = support
+    # v5 already saved coordinate evidence. Changing its reader to historical
+    # inference must not erase that evidence or fabricate complete zero masks.
+    if hasattr(model, "trained_elements"):
         evidence = payload.get("element_coverage")
         if evidence is None:
             model.element_history_complete = set()

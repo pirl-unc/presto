@@ -64,4 +64,10 @@ this experiment's directory; exact paths/hashes accompany collection receipts.
 The local dashboard and final closeout collector retain summaries here. Source
 snapshot location and launch command are in `reproduce/launch.json`.
 
+Post-launch reader audit: the main-tree historical v5 loader now retains saved
+coordinate-update masks (or marks their absence unknown). The frozen comparison
+starts fresh and loads only v6 checkpoints, so this v5-only reader correction
+does not change its execution. A separate local queue monitor exposes terminal
+coordinator errors on the dashboard; it does not alter source data or fitting.
+
 Launch admission correction: Modal rejected the initial 131,072 MiB ephemeral-disk request before starting functions. The rejected bundle is preserved under attempts/disk-request-rejected. The corrected hardware request is 524,288 MiB ephemeral disk; model, data, GPU count and runtime are unchanged.

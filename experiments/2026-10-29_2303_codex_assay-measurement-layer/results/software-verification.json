@@ -18,5 +18,10 @@
   "runtime_contract": "../reproduce/launch.json",
   "no_predictive_accuracy_claim": true,
   "strict_docs_build": "passed after replacing out-of-docs relative link with pinned repository URL",
-  "docs_command": "python -m mkdocs build --strict --site-dir /private/tmp/presto-assay-docs"
+  "docs_command": "python -m mkdocs build --strict --site-dir /private/tmp/presto-assay-docs",
+  "post_launch_historical_reader_checks": {
+    "passed": 77,
+    "scope": "shared measurement layer, coordinate coverage, historical inference, transfer and resume; includes v5 coordinate mask retention and unknown-history handling",
+    "frozen_v6_fit_unchanged": true
+  }
 }
