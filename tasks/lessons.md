@@ -12,6 +12,9 @@
 - Scalar assay offsets can improve calibration but cannot change within-assay
   ranking for a fixed model. Test latent-dependent decoding separately, and
   require assay-stratified held-out evidence before claiming predictive gains.
+- Validate documentation with the actual strict site builder, not only filesystem
+  link checks. Links from published docs to experiment files outside the docs
+  tree need repository URLs rather than relative filesystem paths.
 
 ## 2026-10-16
 

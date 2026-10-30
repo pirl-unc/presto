@@ -17,7 +17,7 @@ Legacy factorized heads/panels do not run in the canonical trainer. The purified
 adapter excludes cellular methods; this does not establish cellular assay
 qualification elsewhere in the model.
 
-The [restoration specification](../experiments/agents/codex/plans/2026-10-29_shared-assay-measurement-layer.md)
+The [restoration specification](https://github.com/pirl-unc/presto/blob/29fb857e/experiments/agents/codex/plans/2026-10-29_shared-assay-measurement-layer.md)
 documents the fixed joint assay outputs and matched comparison. The software is
 implemented and tested; predictive improvement is not yet measured. Frozen v5
 fits retain pooled method outputs, with historical inference preserved.

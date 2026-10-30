@@ -16,5 +16,7 @@
   },
   "lint": "root lint.sh and experiment scripts passed",
   "runtime_contract": "../reproduce/launch.json",
-  "no_predictive_accuracy_claim": true
+  "no_predictive_accuracy_claim": true,
+  "strict_docs_build": "passed after replacing out-of-docs relative link with pinned repository URL",
+  "docs_command": "python -m mkdocs build --strict --site-dir /private/tmp/presto-assay-docs"
 }
