@@ -5690,3 +5690,25 @@ six-output default was introduced. PR131 remains draft until130/132 qualify.
 - **Validation/test:** pending for all six conditions. No winner or promotion yet.
   The focal registry varies detector within purified competition; preparation and
   mechanism effects are not independently identified by this contrast.
+
+## 2026-10-30 — Direct factorized affinity decoder (running)
+
+Codex / GPT-6. [2026-10-30_1154_codex_direct-factorized-affinity](2026-10-30_1154_codex_direct-factorized-affinity/README.md).
+User-selected shared-v7 uses one nonlinear head over biology plus separate quantity,
+preparation, mechanism and detector vectors, shared across five concentration
+quantities and both MHC classes. Same 3,518,242 TRAIN rows and inspected study
+holdouts as the shared-v6 assay comparison; source bytes/censors/ligand-generated
+comparisons remain unchanged. Fresh seeds42/43, 4,000 updates, width192/3layers,
+batch128, AdamW3e-4, unchanged endpoint/class exposures and losses. Nine usable
+TRAIN assay combinations are expected; complete registry audit is in preparation.
+H100! requested, max two concurrent; actual hardware, runtime and held-out
+validation/test metrics pending. No measured winner or scientific qualification.
+Exact source, invocation, mappings, synthetic-label inheritance and artifact
+contracts are recorded in the linked README and reproduce bundle.
+
+Direct decoder launch update: frozen revision 7083bd89, Modal app
+`ap-3BRMaO8FDAZyvk1gaz3JYs`, two 4,000-update fits. All 2,896 tests pass (four skips),
+lint/docs pass, real v6 checkpoint predictions reproduce exactly. Startup hardware
+confirms H100 80GB (85,009,367,040 bytes); actual source staging is 30.25GB. The
+remaining old comparison queue was stopped and recorded, preserving both verified
+pooled controls. Real-data held-out results/runtime/winner remain pending.

@@ -2,12 +2,17 @@
 
 Spec: experiments/agents/codex/plans/2026-10-30_direct-factorized-affinity.md.
 - [x] Inspect current decoder, scientific labels and active queue; record design.
-- [ ] Implement one canonical nonlinear affinity head and categorical embeddings.
-- [ ] Verify gradients, learning, checkpoint/history, censoring and common training.
-- [ ] Freeze/register and run the real-data factorized fits within two H100 GPUs.
+- [x] Implement one canonical nonlinear affinity head and categorical embeddings.
+- [x] Verify gradients, learning, checkpoint/history, censoring and common training.
+- [x] Freeze/register and launch two real-data factorized fits within two H100 GPUs.
 - [ ] Collect per-assay validation/test evidence and close the experiment record.
 
-Review: pending implementation and validation; no predictive improvement claimed.
+Review: shared-v7 is implemented; 2,896 tests, lint and strict docs pass. Real v6
+checkpoint predictions are preserved exactly. Two 4,000-update direct decoder
+fits are launched in experiment 2026-10-30_1154_codex_direct-factorized-affinity
+(Modal app ap-3BRMaO8FDAZyvk1gaz3JYs); real-data metrics and closure remain pending.
+The former v6 comparison is superseded after preserving its completed pooled
+controls. No predictive improvement is claimed.
 
 # Native presenting-cell processing context — #115
 

@@ -71,3 +71,15 @@ does not change its execution. A separate local queue monitor exposes terminal
 coordinator errors on the dashboard; it does not alter source data or fitting.
 
 Launch admission correction: Modal rejected the initial 131,072 MiB ephemeral-disk request before starting functions. The rejected bundle is preserved under attempts/disk-request-rejected. The corrected hardware request is 524,288 MiB ephemeral disk; model, data, GPU count and runtime are unchanged.
+
+## 2026-10-30 — Remaining queue superseded by direct factorized decoder
+
+The user selected a direct nonlinear decoder over the shared latent and separate
+categorical assay vectors. This replaces the remaining residual/control queue;
+see `../2026-10-30_1154_codex_direct-factorized-affinity`. Both completed pooled
+fits have been independently collected and verified, including checkpoints and
+per-example validation/test predictions. `results/queue-replacement.json` records
+the live state immediately before stopping the old Modal app. Calibration fits
+are partial and the residual factorized fits were not started. This is not a
+completed six-condition comparison, and no winner is selected. Original source,
+contracts, finished results and durable partial checkpoints remain intact.

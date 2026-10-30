@@ -1,6 +1,6 @@
 # Direct factorized affinity decoder
 
-Date: 2026-10-30. Agent/model: Codex / GPT-6. Status: prepared, not yet launched.
+Date: 2026-10-30. Agent/model: Codex / GPT-6. Status: launched on Modal; predictive results pending.
 
 User-selected shared-v7 architecture: one 16-dimensional learned vector per
 categorical value of quantity, preparation, mechanism and detector. Concatenate
@@ -49,7 +49,7 @@ Requested hardware: H100!, at most two concurrent GPUs. Actual hardware and memo
 will be recorded in each report. Raw outputs: volume directory named after this
 experiment; local verified downloads under repository `artifacts/<experiment>/`.
 `analysis/watch.py` collects receipts, prediction dumps and metrics automatically.
-Dashboard: http://127.0.0.1:54505/dashboard.html .
+Dashboard: http://127.0.0.1:54505/report.html .
 
 ## Verification and decision
 
@@ -62,3 +62,30 @@ Held-out validation/test results, runtime, actual hardware, exact counts, bound
 satisfaction, per-quantity/method/class regression and binding-threshold metrics,
 ligand AUROC/AUPRC and full per-example dumps remain pending. No predictive gain
 or winner is claimed. Architectural default follows the user's explicit decision.
+
+## Launch receipt
+
+Source revision: `7083bd899a29e8b251924079ca2941238e396784`. Frozen snapshot
+contains 219 files (3,571,688 bytes). Modal app:
+https://modal.com/apps/iskandr/main/ap-3BRMaO8FDAZyvk1gaz3JYs .
+Coordinator: `fc-01M66S2W6JXF5JTYW580TJAG2D`. Two H100! fits; the old app was
+stopped first and no Presto GPU containers remained. The CLI message “App
+completed” means the detached local submission exited; remote fit status comes
+from the coordinator/collector. `report.html` is an additive presentation update
+showing frozen pooled controls beside new results; frozen training sources and
+the original dashboard bytes are unchanged.
+
+## Completed software verification
+
+Full suite: **2,896 passed, four skipped**, 402.26 seconds. All 82 focused
+source/decoder/support regressions pass; repository and experiment-source lint
+and strict docs pass. A real completed v6 checkpoint produces identical CPU
+predictions and fixed panel values under the frozen runtime and the new historical
+reader for all four IC50 class/method cells. See `results/software-verification.json`.
+The initial broad pass had two fixtures missing the now-required known assay
+registry; those fixtures now explicitly declare their source-reported method.
+
+One fit's startup inspection confirms NVIDIA H100 80GB HBM3, 85,009,367,040 device
+bytes (81,559 MiB reported by nvidia-smi), Torch 2.14.1+cu130 and CUDA 13.0. The
+11 source files total 30,252,937,352 bytes; staging/indexing occurs before the first
+optimizer update. Final per-run hardware receipts will be collected automatically.
