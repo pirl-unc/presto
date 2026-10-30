@@ -4,7 +4,14 @@ Spec: `tasks/pr131_results_handoff_spec.md`.
 - [x] Review pending durable files and final result consistency.
 - [x] File/reuse focused issues and preserve the scientific handoff.
 - [x] Validate reports, snapshots, lint and documentation.
-- [ ] Commit, push to the existing PR head and verify draft status.
+- [x] Commit, push to the existing PR head and verify draft status.
+
+Review: results commit `4fa75320f42af9c886f56ab4e0594bf56997a7e9` is pushed
+to PR #131; the remote head and draft status were verified. Issues #138–#142
+are filed and linked in the updated PR description and scientific handoff.
+Artifact checks, staged whitespace with CSV CRLF preserved, lint and strict docs
+pass. Hosted CI was running when publication was verified; no merge or model
+promotion was performed. Large raw artifacts remain hash-referenced outside Git.
 
 # Stability and training-population audit — 2026-10-30
 
