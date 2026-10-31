@@ -14795,3 +14795,13 @@ and all 13,549 active-fit positives retained, with no heldout-peptide leakage.
 It identifies 33 further generated TRAIN comparisons and one additional suspect
 TEST comparison. Active fits and the original comparison remain frozen; a later
 combined cohort must apply the newly verified source exclusion pool.
+
+
+# Joint MHC-I/II model vs NetMHCpan/NetMHCIIpan — 2026-10-30
+
+Plan: `experiments/agents/claude/plans/2026-10-30_joint-model-vs-netmhc.md`.
+- [x] Review #131 (code-review high); fixes in #145; follow-ups in #146.
+- [x] Merge ruff pin bump #143 into #131 branch; archive stale worktree evidence #144.
+- [ ] PR 1: matched external benchmark harness (#140), CPU only.
+- [ ] PR 2: score existing checkpoints.
+- [ ] PR 3-5: coverage (#139), training experiments (#141), full-epoch fit (needs approval).
