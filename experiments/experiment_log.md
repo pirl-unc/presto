@@ -1,3 +1,16 @@
+## 2026-10-31 — Tool-clean re-scoring of the external NetMHC benchmark
+
+- **Agent/model:** claude (Claude Sonnet 5.5); [experiment and reproduction](2026-10-31_1100_claude_netmhc-clean-rescore/README.md);
+  pre-registration `agents/claude/plans/2026-10-31_netmhc-clean-rescore.md` (plan commit 4f2bf4ad, before any clean metric). CPU only, no Modal.
+- **Contract:** same dumps, rows, harness, pooling and bootstrap as the PR #149 benchmark (full subset reproduces it exactly);
+  rows split by whether the tool's own training files (NetMHCpan-4.1/NetMHCIIpan-4.3 DTU BA+EL; MHCflurry pan train_data + curated affinity)
+  contain the exact (peptide, allele) pair; peptide-seen and nested-seen sensitivities. Tool data not redistributed; hash-keyed overlap mask released.
+- **Seen fractions (test exact BA, pair):** class I NetMHCpan 0.43, MHCflurry 0.55; class II NetMHCIIpan 0.64. Seen-ness is near all-or-nothing per study.
+- **Result:** every clean cell is a single study (none headline-grade). Tool-minus-Presto Spearman gap (direct-s43): class I fluorescence +0.19 -> +0.07,
+  class I radioactivity +0.34 -> +0.52 (NetMHCpan), +0.28 -> +0.49 (MHCflurry), class II fluorescence +0.33 -> +0.15; curated-s43 class I radioactivity +0.14 -> +0.12.
+  Presto beats no tool on clean rows (RMSE is lower in two single-study cells while ranking/AUROC stay worse). Within-study seen-vs-unseen not estimable.
+- **Artifacts:** `experiments/2026-10-31_1100_claude_netmhc-clean-rescore/results/`; raw dumps in gitignored `artifacts/2026-10-31_clean-rescore/`.
+
 ## 2026-10-31 — External NetMHC benchmark: Presto BA vs NetMHCpan-4.1 / NetMHCIIpan-4.3 / MHCflurry 2.3.16
 
 - **Agent/model:** claude (Claude Sonnet 5.5); [experiment and reproduction](2026-10-31_0830_claude_netmhc-benchmark/README.md);
