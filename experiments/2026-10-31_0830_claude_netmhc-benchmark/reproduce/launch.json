@@ -1,0 +1,72 @@
+{
+ "agent": "claude",
+ "bootstrap_seed": 20261031,
+ "row_draws": 1000,
+ "draws": 2000,
+ "dumps": [
+  {
+   "label": "direct-s42_test",
+   "family": "direct-factorized-affinity",
+   "seed": 42,
+   "split": "test",
+   "dump": "/Users/iskander/code/presto/artifacts/2026-10-30_1154_codex_direct-factorized-affinity/collected/direct-s42/test-predictions.jsonl.gz",
+   "config": "/Users/iskander/code/presto/artifacts/2026-10-30_1154_codex_direct-factorized-affinity/collected/direct-s42/raw/resolved-config.json"
+  },
+  {
+   "label": "direct-s42_validation",
+   "family": "direct-factorized-affinity",
+   "seed": 42,
+   "split": "validation",
+   "dump": "/Users/iskander/code/presto/artifacts/2026-10-30_1154_codex_direct-factorized-affinity/collected/direct-s42/validation-predictions.jsonl.gz",
+   "config": "/Users/iskander/code/presto/artifacts/2026-10-30_1154_codex_direct-factorized-affinity/collected/direct-s42/raw/resolved-config.json"
+  },
+  {
+   "label": "direct-s43_test",
+   "family": "direct-factorized-affinity",
+   "seed": 43,
+   "split": "test",
+   "dump": "/Users/iskander/code/presto/artifacts/2026-10-30_1154_codex_direct-factorized-affinity/collected/direct-s43/test-predictions.jsonl.gz",
+   "config": "/Users/iskander/code/presto/artifacts/2026-10-30_1154_codex_direct-factorized-affinity/collected/direct-s43/raw/resolved-config.json"
+  },
+  {
+   "label": "direct-s43_validation",
+   "family": "direct-factorized-affinity",
+   "seed": 43,
+   "split": "validation",
+   "dump": "/Users/iskander/code/presto/artifacts/2026-10-30_1154_codex_direct-factorized-affinity/collected/direct-s43/validation-predictions.jsonl.gz",
+   "config": "/Users/iskander/code/presto/artifacts/2026-10-30_1154_codex_direct-factorized-affinity/collected/direct-s43/raw/resolved-config.json"
+  },
+  {
+   "label": "curated-multi-s43_test",
+   "family": "curated-data-retrain",
+   "seed": 43,
+   "split": "test",
+   "dump": "/Users/iskander/code/presto/artifacts/2026-10-29_1956_codex_curated-data-retrain/collected/curated-multi-s43/test-predictions.jsonl.gz",
+   "config": "/Users/iskander/code/presto/artifacts/2026-10-29_1956_codex_curated-data-retrain/collected/curated-multi-s43/raw/resolved-config.json"
+  },
+  {
+   "label": "curated-multi-s43_validation",
+   "family": "curated-data-retrain",
+   "seed": 43,
+   "split": "validation",
+   "dump": "/Users/iskander/code/presto/artifacts/2026-10-29_1956_codex_curated-data-retrain/collected/curated-multi-s43/validation-predictions.jsonl.gz",
+   "config": "/Users/iskander/code/presto/artifacts/2026-10-29_1956_codex_curated-data-retrain/collected/curated-multi-s43/raw/resolved-config.json"
+  },
+  {
+   "label": "curated-multi-s42_test",
+   "family": "curated-data-retrain",
+   "seed": 42,
+   "split": "test",
+   "dump": "/Users/iskander/code/presto/artifacts/2026-10-29_1956_codex_curated-data-retrain/collected/curated-multi-s42/test-predictions.jsonl.gz",
+   "config": "/Users/iskander/code/presto/artifacts/2026-10-29_1956_codex_curated-data-retrain/collected/curated-multi-s42/raw/resolved-config.json"
+  },
+  {
+   "label": "curated-multi-s42_validation",
+   "family": "curated-data-retrain",
+   "seed": 42,
+   "split": "validation",
+   "dump": "/Users/iskander/code/presto/artifacts/2026-10-29_1956_codex_curated-data-retrain/collected/curated-multi-s42/validation-predictions.jsonl.gz",
+   "config": "/Users/iskander/code/presto/artifacts/2026-10-29_1956_codex_curated-data-retrain/collected/curated-multi-s42/raw/resolved-config.json"
+  }
+ ]
+}

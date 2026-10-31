@@ -1,0 +1,378 @@
+{
+ "direct-s42_test": {
+  "family": "direct-factorized-affinity",
+  "seed": 42,
+  "split": "test",
+  "developmental": false,
+  "dump_sha256": "16224fa8c7451c152474b1a241485e77207260a0064babe3a08e4c96801a9429",
+  "rows_in_scope": 3207,
+  "census": [
+   {
+    "mhc_class": "I",
+    "kind": "censored_ba",
+    "exclusion": "eligible",
+    "n": 118
+   },
+   {
+    "mhc_class": "I",
+    "kind": "exact_ba",
+    "exclusion": "eligible",
+    "n": 1313
+   },
+   {
+    "mhc_class": "I",
+    "kind": "qualitative",
+    "exclusion": "eligible",
+    "n": 290
+   },
+   {
+    "mhc_class": "II",
+    "kind": "censored_ba",
+    "exclusion": "eligible",
+    "n": 353
+   },
+   {
+    "mhc_class": "II",
+    "kind": "exact_ba",
+    "exclusion": "eligible",
+    "n": 982
+   },
+   {
+    "mhc_class": "II",
+    "kind": "qualitative",
+    "exclusion": "eligible",
+    "n": 151
+   }
+  ],
+  "subsampled": []
+ },
+ "direct-s42_validation": {
+  "family": "direct-factorized-affinity",
+  "seed": 42,
+  "split": "validation",
+  "developmental": true,
+  "dump_sha256": "02ec00c4a7fc01f671f53442a1f96466cda205c67894acdb6d4758f1123f7286",
+  "rows_in_scope": 4134,
+  "census": [
+   {
+    "mhc_class": "I",
+    "kind": "censored_ba",
+    "exclusion": "eligible",
+    "n": 569
+   },
+   {
+    "mhc_class": "I",
+    "kind": "exact_ba",
+    "exclusion": "eligible",
+    "n": 509
+   },
+   {
+    "mhc_class": "I",
+    "kind": "qualitative",
+    "exclusion": "eligible",
+    "n": 689
+   },
+   {
+    "mhc_class": "II",
+    "kind": "censored_ba",
+    "exclusion": "eligible",
+    "n": 153
+   },
+   {
+    "mhc_class": "II",
+    "kind": "exact_ba",
+    "exclusion": "eligible",
+    "n": 1768
+   },
+   {
+    "mhc_class": "II",
+    "kind": "qualitative",
+    "exclusion": "eligible",
+    "n": 446
+   }
+  ],
+  "subsampled": []
+ },
+ "direct-s43_test": {
+  "family": "direct-factorized-affinity",
+  "seed": 43,
+  "split": "test",
+  "developmental": false,
+  "dump_sha256": "cd80117345f85cf474bccab279d1757933dbd5bedcf4befc03364368a4484b8d",
+  "rows_in_scope": 3207,
+  "census": [
+   {
+    "mhc_class": "I",
+    "kind": "censored_ba",
+    "exclusion": "eligible",
+    "n": 118
+   },
+   {
+    "mhc_class": "I",
+    "kind": "exact_ba",
+    "exclusion": "eligible",
+    "n": 1313
+   },
+   {
+    "mhc_class": "I",
+    "kind": "qualitative",
+    "exclusion": "eligible",
+    "n": 290
+   },
+   {
+    "mhc_class": "II",
+    "kind": "censored_ba",
+    "exclusion": "eligible",
+    "n": 353
+   },
+   {
+    "mhc_class": "II",
+    "kind": "exact_ba",
+    "exclusion": "eligible",
+    "n": 982
+   },
+   {
+    "mhc_class": "II",
+    "kind": "qualitative",
+    "exclusion": "eligible",
+    "n": 151
+   }
+  ],
+  "subsampled": []
+ },
+ "direct-s43_validation": {
+  "family": "direct-factorized-affinity",
+  "seed": 43,
+  "split": "validation",
+  "developmental": true,
+  "dump_sha256": "f080719bbf617aec4377f072df8a3d4c630267addbb034ba10138f9e32515df0",
+  "rows_in_scope": 4134,
+  "census": [
+   {
+    "mhc_class": "I",
+    "kind": "censored_ba",
+    "exclusion": "eligible",
+    "n": 569
+   },
+   {
+    "mhc_class": "I",
+    "kind": "exact_ba",
+    "exclusion": "eligible",
+    "n": 509
+   },
+   {
+    "mhc_class": "I",
+    "kind": "qualitative",
+    "exclusion": "eligible",
+    "n": 689
+   },
+   {
+    "mhc_class": "II",
+    "kind": "censored_ba",
+    "exclusion": "eligible",
+    "n": 153
+   },
+   {
+    "mhc_class": "II",
+    "kind": "exact_ba",
+    "exclusion": "eligible",
+    "n": 1768
+   },
+   {
+    "mhc_class": "II",
+    "kind": "qualitative",
+    "exclusion": "eligible",
+    "n": 446
+   }
+  ],
+  "subsampled": []
+ },
+ "curated-multi-s43_test": {
+  "family": "curated-data-retrain",
+  "seed": 43,
+  "split": "test",
+  "developmental": false,
+  "dump_sha256": "3424a37ec9437b76fc7bfa7dc3977a790cbfaf31808bbe494809c56303613c16",
+  "rows_in_scope": 2463,
+  "census": [
+   {
+    "mhc_class": "I",
+    "kind": "censored_ba",
+    "exclusion": "eligible",
+    "n": 63
+   },
+   {
+    "mhc_class": "I",
+    "kind": "exact_ba",
+    "exclusion": "eligible",
+    "n": 1156
+   },
+   {
+    "mhc_class": "I",
+    "kind": "qualitative",
+    "exclusion": "eligible",
+    "n": 290
+   },
+   {
+    "mhc_class": "II",
+    "kind": "censored_ba",
+    "exclusion": "eligible",
+    "n": 311
+   },
+   {
+    "mhc_class": "II",
+    "kind": "exact_ba",
+    "exclusion": "eligible",
+    "n": 492
+   },
+   {
+    "mhc_class": "II",
+    "kind": "qualitative",
+    "exclusion": "eligible",
+    "n": 151
+   }
+  ],
+  "subsampled": []
+ },
+ "curated-multi-s43_validation": {
+  "family": "curated-data-retrain",
+  "seed": 43,
+  "split": "validation",
+  "developmental": true,
+  "dump_sha256": "00293e07fdf7cfc994c282b17f334fa253594d634dec904e8a6569620b328ff5",
+  "rows_in_scope": 3807,
+  "census": [
+   {
+    "mhc_class": "I",
+    "kind": "censored_ba",
+    "exclusion": "eligible",
+    "n": 394
+   },
+   {
+    "mhc_class": "I",
+    "kind": "exact_ba",
+    "exclusion": "eligible",
+    "n": 481
+   },
+   {
+    "mhc_class": "I",
+    "kind": "qualitative",
+    "exclusion": "eligible",
+    "n": 689
+   },
+   {
+    "mhc_class": "II",
+    "kind": "censored_ba",
+    "exclusion": "eligible",
+    "n": 70
+   },
+   {
+    "mhc_class": "II",
+    "kind": "exact_ba",
+    "exclusion": "eligible",
+    "n": 1727
+   },
+   {
+    "mhc_class": "II",
+    "kind": "qualitative",
+    "exclusion": "eligible",
+    "n": 446
+   }
+  ],
+  "subsampled": []
+ },
+ "curated-multi-s42_test": {
+  "family": "curated-data-retrain",
+  "seed": 42,
+  "split": "test",
+  "developmental": false,
+  "dump_sha256": "e76fa040d74c3759a883eb4648cc28af9abba0a7d88b146cea8633d84eaf66da",
+  "rows_in_scope": 2463,
+  "census": [
+   {
+    "mhc_class": "I",
+    "kind": "censored_ba",
+    "exclusion": "eligible",
+    "n": 63
+   },
+   {
+    "mhc_class": "I",
+    "kind": "exact_ba",
+    "exclusion": "eligible",
+    "n": 1156
+   },
+   {
+    "mhc_class": "I",
+    "kind": "qualitative",
+    "exclusion": "eligible",
+    "n": 290
+   },
+   {
+    "mhc_class": "II",
+    "kind": "censored_ba",
+    "exclusion": "eligible",
+    "n": 311
+   },
+   {
+    "mhc_class": "II",
+    "kind": "exact_ba",
+    "exclusion": "eligible",
+    "n": 492
+   },
+   {
+    "mhc_class": "II",
+    "kind": "qualitative",
+    "exclusion": "eligible",
+    "n": 151
+   }
+  ],
+  "subsampled": []
+ },
+ "curated-multi-s42_validation": {
+  "family": "curated-data-retrain",
+  "seed": 42,
+  "split": "validation",
+  "developmental": true,
+  "dump_sha256": "b7735f9236c2dd6bbc4b5f1d51dce00e37b3f1ab07a391ec6aa824de05ee3072",
+  "rows_in_scope": 3807,
+  "census": [
+   {
+    "mhc_class": "I",
+    "kind": "censored_ba",
+    "exclusion": "eligible",
+    "n": 394
+   },
+   {
+    "mhc_class": "I",
+    "kind": "exact_ba",
+    "exclusion": "eligible",
+    "n": 481
+   },
+   {
+    "mhc_class": "I",
+    "kind": "qualitative",
+    "exclusion": "eligible",
+    "n": 689
+   },
+   {
+    "mhc_class": "II",
+    "kind": "censored_ba",
+    "exclusion": "eligible",
+    "n": 70
+   },
+   {
+    "mhc_class": "II",
+    "kind": "exact_ba",
+    "exclusion": "eligible",
+    "n": 1727
+   },
+   {
+    "mhc_class": "II",
+    "kind": "qualitative",
+    "exclusion": "eligible",
+    "n": 446
+   }
+  ],
+  "subsampled": []
+ }
+}
