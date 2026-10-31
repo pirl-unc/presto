@@ -1,0 +1,173 @@
+{
+  "catalog_schema_version": 29,
+  "coverage": {
+    "coverage": [
+      {
+        "block_id": "dc_dia_database",
+        "n_components": 36,
+        "n_groups": 70,
+        "n_measurements": 409,
+        "n_parents": 40,
+        "n_peptides": 289,
+        "split": "train"
+      },
+      {
+        "block_id": "dc_dia_database",
+        "n_components": 1,
+        "n_groups": 1,
+        "n_measurements": 3,
+        "n_parents": 1,
+        "n_peptides": 3,
+        "split": "val"
+      },
+      {
+        "block_id": "dc_dia_database",
+        "n_components": 6,
+        "n_groups": 6,
+        "n_measurements": 27,
+        "n_parents": 6,
+        "n_peptides": 27,
+        "split": "test"
+      },
+      {
+        "block_id": "dc_dia_library",
+        "n_components": 32,
+        "n_groups": 161,
+        "n_measurements": 1046,
+        "n_parents": 35,
+        "n_peptides": 255,
+        "split": "train"
+      },
+      {
+        "block_id": "dc_dia_library",
+        "n_components": 3,
+        "n_groups": 15,
+        "n_measurements": 71,
+        "n_parents": 3,
+        "n_peptides": 16,
+        "split": "val"
+      },
+      {
+        "block_id": "dc_dia_library",
+        "n_components": 11,
+        "n_groups": 54,
+        "n_measurements": 248,
+        "n_parents": 12,
+        "n_peptides": 64,
+        "split": "test"
+      },
+      {
+        "block_id": "human_native",
+        "n_components": 34,
+        "n_groups": 36,
+        "n_measurements": 459,
+        "n_parents": 36,
+        "n_peptides": 459,
+        "split": "train"
+      },
+      {
+        "block_id": "human_native",
+        "n_components": 14,
+        "n_groups": 14,
+        "n_measurements": 135,
+        "n_parents": 14,
+        "n_peptides": 135,
+        "split": "val"
+      },
+      {
+        "block_id": "human_native",
+        "n_components": 12,
+        "n_groups": 14,
+        "n_measurements": 74,
+        "n_parents": 14,
+        "n_peptides": 74,
+        "split": "test"
+      }
+    ],
+    "n_admitted_measurements": 2472,
+    "n_quantity_cells": 32995,
+    "n_source_observations": 4384,
+    "reason_counts": {
+      "fewer_than_three_positive_selected_peptides": 1030,
+      "missing_or_ambiguous_original_parent": 18550,
+      "noncanonical_or_unparsed_peptide": 102,
+      "not_area": 15606,
+      "not_positive_finite_area": 16876,
+      "not_selected_representative_feature": 689,
+      "observer_chemistry_out_of_scope": 8924
+    }
+  },
+  "files": {
+    "contract.json": {
+      "sha256": "a3302f7270dcf716c484e5dcc826e885855ed856d44139acfe97ad0f10fc2e27",
+      "size_bytes": 1632
+    },
+    "dependence_groups.json": {
+      "sha256": "d3b43b38cd4e5652f64b7511356ca521f8e6f337a7a26b3224f63ec4f3f99c92",
+      "size_bytes": 789475
+    },
+    "dispositions.json": {
+      "sha256": "7ba6a1d450c3d502020a9e3d690153d6d095098d7837f49b9ec9f44b2dc523ef",
+      "size_bytes": 26674936
+    },
+    "examples.json": {
+      "sha256": "301e4abbc23b6ac3a333eebe2c05273b2f2fcfea64331244dcadc0fb890e52a4",
+      "size_bytes": 4838006
+    },
+    "origins.json": {
+      "sha256": "231334f1c65d8ccb26b4fd575f3af03756ce4ab2e92550b008994f228bcc4d3d",
+      "size_bytes": 6705169
+    },
+    "parents.json": {
+      "sha256": "5d58debd5a929004cd72a5ff6efcc14aaf5ba9d9c804dd5f2a3c49bf4ec558cf",
+      "size_bytes": 305534
+    },
+    "source_manifest.json": {
+      "sha256": "6e82a782b0511ba56425855f0764c4c40127e715fdb10b10e6c12118ab539c4c",
+      "size_bytes": 6954
+    },
+    "source_tables/contexts.parquet": {
+      "sha256": "f873bdcdd8243175583859982a15c7ed2075d3f727a5b05c341060f1dd9e34d3",
+      "size_bytes": 9144
+    },
+    "source_tables/identifications.parquet": {
+      "sha256": "1358429c4c50bb142f603b37634fe979bcc69460cfa88fdb9314a424bc043016",
+      "size_bytes": 1979805
+    },
+    "source_tables/observations.parquet": {
+      "sha256": "0734c686afa7d29d8bb5337b3767140044c9d3d5458b3d046dba8eb74afe4cae",
+      "size_bytes": 426751
+    },
+    "source_tables/quantities.parquet": {
+      "sha256": "f5e3c30737e7ee842bd22b26b6141aacec40945d89dcf07ef781fc0777b3e5b5",
+      "size_bytes": 1709694
+    },
+    "source_tables/references.parquet": {
+      "sha256": "2180ba74a27366588ba632fb47490766f543613011bab26e3f324e68a50e3cb1",
+      "size_bytes": 687011
+    },
+    "source_tables/samples.parquet": {
+      "sha256": "b0b537bb230f7565cf6776426ede65ce958c14c69b09ac736d2080bcb3601607",
+      "size_bytes": 3321
+    },
+    "source_tables/source_records.parquet": {
+      "sha256": "bf8f57f0c1aa235a28aac86f39d893b3381f01513438105fb0ee02def94174ee",
+      "size_bytes": 460239
+    },
+    "summary.json": {
+      "sha256": "4bb38ff27e7dcb16b9a893cd4ad2b8d89937ef1deee7f3fe0bb2527a2c8f78b0",
+      "size_bytes": 2197
+    }
+  },
+  "hitlist_version": "2.0.28",
+  "output_kind": "registered_lymph_composition",
+  "recipe": {
+    "name": "lymph_dc_observed_composition",
+    "registered_recipe": "nanaware2024_observed_composition_v1",
+    "schema_version": 1
+  },
+  "recipe_sha256": "6dc543913a7f249f0aa5bcc9abb1a2be7b76ac16bc9f31be9e9170929f7ca707",
+  "schema_version": 1,
+  "source_package_manifest_sha256": "6e82a782b0511ba56425855f0764c4c40127e715fdb10b10e6c12118ab539c4c",
+  "source_package_schema_version": 24
+}

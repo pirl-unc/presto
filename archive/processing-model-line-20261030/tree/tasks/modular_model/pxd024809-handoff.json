@@ -1,0 +1,89 @@
+{
+  "recorded_utc": "2026-10-25T08:38:51.259064+00:00",
+  "goal_turn": "progress: published negative objective comparison and independently audited new nominal-dose source",
+  "previous_goal_turn": "no scientific progress: cleanup/status follow-up; revalidated before next scientific action",
+  "presto_commit": "e232719fa0d0cf7e574bb2d558ebcac74edec0e1",
+  "presto_ci": 40177226189,
+  "presto_ci_confirmed_live": true,
+  "prior_presto_commit": "869b2acfffb6a15ac914b9a335dfef66f8ad507e",
+  "prior_presto_ci": 40175717772,
+  "prior_presto_ci_status": "success",
+  "family0747_complete": true,
+  "family0813_source_audit_complete": true,
+  "reference_invariant_decision": {
+    "gains": {
+      "all_pairs:zero": -0.0009517130142906449,
+      "all_pairs:length": -0.0015127329634221365,
+      "all_pairs:sequence": -4.769120203707011e-05,
+      "reference:boundary": -0.000804130535501546
+    },
+    "prediction_target_sd_ratio": 0.013666287619014549,
+    "improved_folds_vs_reference_objective": 1,
+    "intervals": {
+      "all_pairs:zero": [
+        -0.002925799080604968,
+        0.0018445730220035203
+      ],
+      "all_pairs:length": [
+        -0.010423084281910305,
+        0.008240895967152797
+      ],
+      "all_pairs:sequence": [
+        -0.0018933997366509525,
+        0.002007467912998078
+      ],
+      "reference:boundary": [
+        -0.0019802316818598453,
+        0.0005610700236197828
+      ]
+    },
+    "gates": {
+      "gain_over_all_matched_controls": false,
+      "spread": false,
+      "four_of_five_folds": false,
+      "positive_matched_bootstrap_lower_bound": false
+    },
+    "prioritize_independent_confirmation": false,
+    "stop_response_only_feature_optimizer_expansion": true,
+    "complete_APC_concentration_model": false,
+    "evidence_scope": "Training-component development; pairs are dependent, outer cohorts remain closed."
+  },
+  "source_admission_decision": {
+    "source_cell_and_inventory_audit_passed": true,
+    "shared_source_materialization_supported": true,
+    "shared_source_implemented": false,
+    "calibration_training_admitted": false,
+    "reasons": [
+      "Aligned-quantity versus directly scored semantics and original parameters need reconciliation",
+      "Tenth standard query eligibility is unresolved",
+      "Nominal concentration is not certified on-column amount",
+      "Nine observed standards do not establish broad sequence or protocol transfer"
+    ],
+    "no_biological_model_fitted": true,
+    "complete_APC_concentration_model": false
+  },
+  "full_goal_complete": false,
+  "all_local_sessions_terminal": true,
+  "published_artifacts_verified_against_git": {
+    "0747": 81,
+    "0813": 73
+  },
+  "primary_checkout_diffs_unchanged": true,
+  "unrelated_todo_diff_preserved": {
+    "additions": 346,
+    "deletions": 4
+  },
+  "upstream_issue": "https://github.com/pirl-unc/hitlist/issues/845",
+  "pr_body_verified_sha256": "062d7da5a21670c64ca57c1361c8b4eda08c5ae992e30225b57e17bf91375010",
+  "next_plan": "experiments/agents/codex/plans/native-baseline-observation-admission.md",
+  "source_contract": "experiments/2026-10-25_0813_codex_dilution-observer-admission/reproduce/hitlist-admission-contract.md",
+  "next": [
+    "Poll the same current-head CI40177226189; do not restart it on an observation timeout.",
+    "Revalidate current Hitlist main and existing typed source/observation/calibration APIs before an isolated implementation under issue845. No source module or training recipe exists for this new dataset yet.",
+    "Use the complete retained 68-file inventory and 64,070-row aligned export. Preserve all 10 nominal standards, nine observed forms, zero/NA/absent states and the 1:2 versus 1:10 conflict.",
+    "Prospectively bound retrieval of existing per-run scored TSVs and the master library; reconcile exact run/feature/form IDs, score/alignment provenance and the absent standard query. Do not download raw MS or invent missing values.",
+    "Implement source conservation through shared Hitlist APIs, then register nominal-dose calibration only when its target/likelihood/selection contract is supported. Nine standards are a narrow calibration diagnostic, not broad native observer or APC concentration validation.",
+    "Continue toward a registered direct native baseline and matched exact/discrete model with calibrated observation and independent biological confirmation. Do not expand native response-only features/optimizers or reopen original0630outer groups."
+  ],
+  "publication_note": "Git whitespace preflight initially objected to standard CSV CRLF. A per-command cr-at-eol setting recognized CSV line endings while retaining all other checks and every artifact byte. No persistent Git config or source data changed."
+}

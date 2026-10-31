@@ -1,0 +1,53 @@
+{
+  "goal_turn": "progress",
+  "presto_commit": "c728d6179075569a82cac70649460cbf34b1bd2d",
+  "presto_ci": 40171332208,
+  "prior_presto_ci": 40169089024,
+  "prior_presto_ci_status": "success",
+  "family": "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0630_codex_native-contrast-screen",
+  "biological_fit_complete": true,
+  "independent_replay_passed": true,
+  "signal_gate_passed": false,
+  "full_goal_complete": false,
+  "source_release_version": "2.0.37",
+  "source_release_receipt": "/Users/iskander/code/presto/.worktrees/presto-modular-model/tasks/modular_model/native-source-2037-release.json",
+  "recipe_pr": 841,
+  "recipe_merge": "d02ca1aefc0e2753843bff842cfb773273226f03",
+  "recipe_release": 40169827556,
+  "recipe_release_job": 121099259695,
+  "recipe_release_confirmed_live": true,
+  "recipe_release_step": "Format, test and build the release artifacts",
+  "clean_release_worktree": "/Users/iskander/code/presto/.worktrees/hitlist-native-release",
+  "clean_release_branch": "main",
+  "clean_release_head": "d02ca1aefc0e2753843bff842cfb773273226f03",
+  "execution_amendment": "Before numerical fitting, release-before-fit engineering order was replaced by identical merged/full-CI code plus pinned data hashes. All scientific rules and limits stayed fixed. Publication remains required; do not reintroduce a packaging wait for subsequent authorized local diagnostics.",
+  "model_outcome": {
+    "val_sequence_rmse": 0.3173283518319055,
+    "val_zero_rmse": 0.31721567052152416,
+    "test_sequence_rmse": 0.4233082280796897,
+    "test_zero_rmse": 0.42440660751258985,
+    "test_gain_fraction": 0.0025880356560367135,
+    "test_gain_ci": [
+      -0.0024685866729446393,
+      0.004489063702571713
+    ],
+    "sequence_alpha": 100,
+    "active_coefficients": 59,
+    "design_rank": 56,
+    "heldout_prediction_spread_below_one_percent": true
+  },
+  "next_plan": "experiments/agents/codex/plans/native-contrast-training-reliability.md",
+  "next": [
+    "Poll same recipe release40169827556 and PrestoCI40171332208; do not restart.",
+    "On successful recipe release, download exact d02ca1a artifact, verify via release_artifacts.py from clean main, publish exact bytes if absent and independently hash PyPI bytes, save native-contrast-2038-release.json.",
+    "Register the training-only acquisition-sensitivity diagnostic using158trainingcontrasts/55components; no val/test reads, extra fits or outer retuning.",
+    "Preserve full original source and scientific outcomes; decide observation-stability vs source-boundary representation hypothesis only from registered training diagnostic."
+  ],
+  "all_local_sessions_terminal": true,
+  "verified_committed_and_live_artifacts": 71,
+  "unrelated_todo_diff_preserved": {
+    "additions": 346,
+    "deletions": 4
+  },
+  "issue_update": "https://github.com/pirl-unc/hitlist/issues/837#issuecomment-6394681550"
+}

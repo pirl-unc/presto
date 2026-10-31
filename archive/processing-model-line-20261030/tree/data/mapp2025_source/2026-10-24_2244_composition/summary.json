@@ -1,0 +1,79 @@
+{
+  "baseline": {
+    "n_source_peptide_cells": 394732,
+    "n_baseline_cells": 182184,
+    "n_candidate_cells": 94034,
+    "n_excluded_baseline_cells": 88150,
+    "n_outside_scope_cells": 212548,
+    "reason_counts": {
+      "not_positive_finite_source_intensity": 149337,
+      "outside_baseline_acquisition_scope": 212548,
+      "source_flagged_or_flag_unresolved": 32045,
+      "source_human_only_annotation_not_established": 47827
+    },
+    "candidate_axes": [
+      {
+        "publisher_selection_status": "omitted_or_unresolved_publisher_identity",
+        "identification_type": "By MS/MS",
+        "confidence_status": "reported_probability",
+        "n_cells": 12281
+      },
+      {
+        "publisher_selection_status": "omitted_or_unresolved_publisher_identity",
+        "identification_type": "By matching",
+        "confidence_status": "reported_probability",
+        "n_cells": 6777
+      },
+      {
+        "publisher_selection_status": "published_exact_identity",
+        "identification_type": "By MS/MS",
+        "confidence_status": "reported_probability",
+        "n_cells": 46395
+      },
+      {
+        "publisher_selection_status": "published_exact_identity",
+        "identification_type": "By matching",
+        "confidence_status": "reported_probability",
+        "n_cells": 28581
+      }
+    ]
+  },
+  "n_eligible_before_group": 44120,
+  "n_small_groups": 2636,
+  "cohort_support": {
+    "train": {
+      "n_components": 274,
+      "n_groups": 1330,
+      "n_observations": 19593,
+      "n_peptides": 5182
+    },
+    "val": {
+      "n_components": 74,
+      "n_groups": 372,
+      "n_observations": 8649,
+      "n_peptides": 2206
+    },
+    "test": {
+      "n_components": 110,
+      "n_groups": 649,
+      "n_observations": 12459,
+      "n_peptides": 3302
+    }
+  },
+  "support_passed": true,
+  "reason_counts": {
+    "baseline_excluded": 88150,
+    "baseline_outside_scope": 212548,
+    "fewer_than_three_distinct_sequences_in_group": 3419,
+    "not_direct_run_MS_MS_support": 261578,
+    "not_one_distinct_supplied_parent": 69251,
+    "peptide_PEP_not_in_[0,.01)": 122551
+  },
+  "output_counts": {
+    "n_decisions_rows": 394732,
+    "n_examples_rows": 40701,
+    "n_covariates_rows": 40701,
+    "n_components_rows": 33179,
+    "n_groups_rows": 2351
+  }
+}

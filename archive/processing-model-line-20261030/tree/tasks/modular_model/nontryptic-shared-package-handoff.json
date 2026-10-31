@@ -1,0 +1,104 @@
+{
+  "status": "source_qualification_closed_shared_code_published_ci_in_progress",
+  "previous_goal_turn": "progress",
+  "this_goal_turn": "progress",
+  "full_goal_complete": false,
+  "presto_commit": "964ffd3ade535208c9ff94b7d31eaa3d89ea7928",
+  "hitlist_commit": "ac3e04841e5a8b0655b1bbd91df2ffd3e23d8cc0",
+  "experiment": "experiments/2026-10-26_0236_codex_nontryptic-source-package",
+  "scientific_outcome": "Original-source shared package and independent replay pass; no model fits.",
+  "correction": "S1 E19 reports9 for a10-residue sequence. Reported/calculated lengths and conflict status retained.",
+  "original_failed_attempt_preserved": true,
+  "required_artifacts_verified_against_committed_git": 79,
+  "local_tests": {
+    "default_passed": 3649,
+    "focused_passed": 63,
+    "format": "passed",
+    "lint": "passed"
+  },
+  "issue_comment": "https://github.com/pirl-unc/hitlist/issues/849#issuecomment-6407296599",
+  "issue_and_pr_bodies_verified": true,
+  "hitlist_tests": {
+    "run_id": 40262015632,
+    "status": "in_progress",
+    "jobs": [
+      {
+        "id": 121376218756,
+        "name": "lint",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 121376219065,
+        "name": "unit (3.14)",
+        "status": "in_progress",
+        "conclusion": null
+      },
+      {
+        "id": 121376219071,
+        "name": "integration",
+        "status": "in_progress",
+        "conclusion": null
+      },
+      {
+        "id": 121376219107,
+        "name": "unit (3.12)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 121376219172,
+        "name": "unit (3.11)",
+        "status": "in_progress",
+        "conclusion": null
+      },
+      {
+        "id": 121376219190,
+        "name": "unit (3.13)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 121376219193,
+        "name": "unit (3.10)",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "hitlist_docs": {
+    "run_id": 40262015747,
+    "status": "completed",
+    "conclusion": "success"
+  },
+  "presto_ci": [
+    {
+      "run_id": 40262180785,
+      "status": "in_progress"
+    },
+    {
+      "run_id": 40262169965,
+      "status": "in_progress"
+    }
+  ],
+  "next_plan": "experiments/agents/codex/plans/nontryptic-sequence-response.md",
+  "next_actions": [
+    "Poll exact live CI handles; resolve actual failures, never restart solely for observation timeout.",
+    "Register a new timestamped response-model family from the prospective plan before any admission/fitting.",
+    "Use schema1 EvidenceStore.materialize for all348 candidate dispositions; accept213free-spike slots, retain135embedded exclusions.",
+    "Implement/test/freeze unit-dose,shared-dose-slope and train-only-scaled sequence-ridge arms with precursor-gene outer and inner folds.",
+    "Run under unchanged registered guards, independently replay all fits/predictions, and close with honest development-only metrics.",
+    "Return to a matched biological exact/discrete availability comparison only with compatible observation/context evidence; no old held-outs reopened."
+  ],
+  "preservation": {
+    "unrelated_presto_tasks_unstaged": {
+      "additions": 346,
+      "deletions": 4
+    },
+    "hitlist_unrelated_untracked": "tasks/nontryptic-reader-pr.md",
+    "no_shared_environment_install": true,
+    "no_modal": true,
+    "public_pypi_upload": "Still requires explicit approval after prior automatic-review rejection; not retried.",
+    "resource_contract": "3GiB startup free+speculative/RSS,20min/stage,1GiB reserve+32MiB margin,one numerical thread,50ms RSS plus OS peak. Lower-memory amendment inactive."
+  }
+}

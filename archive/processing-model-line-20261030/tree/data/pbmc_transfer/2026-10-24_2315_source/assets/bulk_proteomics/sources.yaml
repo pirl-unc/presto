@@ -1,0 +1,157 @@
+# Metadata for each bulk (non-MHC) proteomics source in hitlist.
+#
+# Purpose: callers building MS-detectability models need to know the digest
+# (determines which peptide bonds are cleavable), instrument (sensitivity /
+# fragmentation ceiling), fractionation (affects dynamic range), and
+# quantification method (label-free vs TMT; peptide-level vs protein-level)
+# for each source. These parameters change which peptides *could* have been
+# observed in principle — so they belong in the curated metadata, not
+# inferred from filenames at query time.
+#
+# Acquisition columns (instrument, instrument_type, fragmentation,
+# acquisition_mode, labeling, search_engine, fdr) are harmonized with the
+# per-sample metadata schema used by observations.parquet so the same column
+# names can be extracted from either index for joint MS-bias modeling.
+#
+# Canonical tryptic rule: cleave C-terminal to K or R, except when followed
+# by P. Sources below annotate any deviations.
+
+sources:
+  - source_id: CCLE_Nusinow_2020
+    pmid: 31978347
+    reference: "PMID:31978347"
+    study_label: "Nusinow 2020 CCLE"
+    title: "Quantitative Proteomics of the Cancer Cell Line Encyclopedia"
+    species: "Homo sapiens (human)"
+    granularity: protein
+    digestion: tryptic
+    digestion_enzyme: "Trypsin/P (cleaves K/R except before P)"
+    instrument: "Orbitrap Fusion Lumos"
+    fragmentation: "HCD"
+    acquisition_mode: "DDA"
+    labeling: "TMT 10-plex"
+    fractionation: "basic reverse-phase chromatography (12 fractions)"
+    n_fractions: 12
+    # High-pH reverse-phase fractionation at pH 10 (CCLE's published
+    # protocol: 25 mM ammonium formate, pH 10). "Basic" in the
+    # ``fractionation`` string above = alkaline = high pH. Stamped onto
+    # every CCLE row via the source-level default at build time.
+    fractionation_ph: 10.0
+    quantification: "TMT 10-plex (log2-normalized, relative to CCLE panel median)"
+    search_engine: "COMET + Mascot"
+    fdr: "1%"
+    cell_lines_covered:
+      - A549
+      - HCT116
+      - Jurkat
+      - K562
+      - MCF7
+      - MDA-MB-231
+      - THP-1
+    note: >
+      Protein-level abundance only. Individual peptide identifications NOT
+      published; the consortium released per-protein quant from 375 CCLE
+      cell lines. Good for "is this gene expressed in this sample?" but
+      not usable for intra-protein peptide-detectability modeling.
+
+  - source_id: Bekker-Jensen_2017
+    pmid: 28601559
+    reference: "PMID:28601559"
+    study_label: "Bekker-Jensen 2017"
+    title: "An Optimized Shotgun Strategy for the Rapid Generation of Comprehensive Human Proteomes"
+    species: "Homo sapiens (human)"
+    granularity: peptide_and_protein
+    digestion: tryptic
+    digestion_enzyme: "Trypsin/P (cleaves K/R except before P)"
+    instrument: "Q Exactive HF (Orbitrap)"
+    fragmentation: "HCD"
+    acquisition_mode: "DDA"
+    labeling: "label-free"
+    fractionation: "offline high-pH reversed-phase HPLC (39 / 46 / 70 fractions); separately reused 14-fraction protocol"
+    n_fractions: 46
+    # Reviewed values and evidence live in detectability.yaml. The paper's
+    # ordinary 39/46/70-fraction method reports buffer C pH 8; reused and
+    # separately named phosphopeptide protocols require distinct attribution.
+    fractionation_ph: null
+    fractionation_ph_curation: detectability.yaml::fractionation_ph_evidence
+    quantification: "label-free MaxQuant LFQ; peptide-level intensity + derived protein-level sum"
+    search_engine: "MaxQuant 1.5.3.19 (deposited parameters; paper reports 1.5.3.6)"
+    search_enzyme: "Trypsin/P"
+    max_missed_cleavages: 3
+    detectability_curation: "detectability.yaml"
+    fdr: "1% peptide and protein"
+    cell_lines_covered:
+      - A549
+      - HCT116
+      - HEK293
+      - HeLa
+      - MCF7
+    # As of v1.13.0 (issue pirl-unc/hitlist#67) the peptide- AND protein-
+    # level indexes are comprehensive over the full Figure 1b design
+    # matrix: HeLa was run across four fractionation depths (14, 39, 46,
+    # 70), four enzymes (Trypsin/P + Chymotrypsin / GluC / LysC), and
+    # ± TiO2 phosphopeptide enrichment. The per-row columns listed
+    # under ``per_row_dimensions`` are authoritative for filtering; the
+    # top-level ``n_fractions`` / ``digestion`` fields describe the
+    # dominant arm.
+    per_row_dimensions:
+      - digestion_enzyme  # canonical enzyme string (same as above)
+      - n_fractions_in_run  # integer; 12 / 14 / 39 / 46 / 50 / 70 in this deposit
+      - enrichment  # "none" or "TiO2"; TiO2 = phosphopeptide enrichment
+      - fractionation_ph  # nullable reviewed pH; inspect fractionation_ph_basis/reference (#688)
+      - modifications  # peptide-level mod set: Phospho (STY) / Oxidation (M) / Deamidation (NQ) or "Unmodified"
+    n_fractions_observed: [12, 14, 39, 46, 50, 70]  # authoritative set from peptides.txt header
+    fractionation_ph_observed: [8.0, 10.0]  # reported buffer versus named-arm evidence remain distinct
+    fractionation_ph_unknown_scopes: [Tryp-14Frac-A, Tryp-14Frac-B, Tryp-14Frac-C, Phospho-50fracs]
+    enrichments_observed: ["none", "TiO2"]
+    ancillary_digests:
+      # The paper also ran HeLa with non-tryptic enzymes for comparison.
+      - enzyme: "Chymotrypsin"
+        digestion_enzyme: "Chymotrypsin"
+        cleavage_rule: "MaxQuant Chymotrypsin+: C-term of F, W, Y, L, M including before P"
+        maxquant_spec: "Chymotrypsin+"
+        cell_line: HeLa
+        included_in_index: true
+      - enzyme: "GluC"
+        digestion_enzyme: "GluC"
+        # Exact MaxQuant search rule, not an inferred buffer-dependent biological rule.
+        cleavage_rule: "GluC cuts after E; D.P additionally cuts the D-P pair"
+        maxquant_spec: "GluC;D.P"
+        cell_line: HeLa
+        included_in_index: true
+      - enzyme: "LysC"
+        digestion_enzyme: "LysC"
+        cleavage_rule: "MaxQuant LysC/P: C-term of K including before P"
+        maxquant_spec: "LysC/P"
+        cell_line: HeLa
+        included_in_index: true
+    # Out-of-scope experiments in PXD004452 that we do NOT index (they
+    # are in the same peptides.txt but serve a different experimental
+    # purpose — tracked here so reviewers know we considered them):
+    excluded_experiments:
+      - name: "Colon-Pandey / Liver-Pandey-E1/E2 / Prostate-Pandey"
+        reason: "reanalysis of Kim 2014 draft proteome (PMID 24870542); not Bekker-Jensen's new data"
+      - name: "Colon-human-46fracs / Liver-human-46fracs / Prostate-Pt2/3-human-46fracs"
+        reason: "human tissue specimens (Fig 5/6 coverage comparisons); not cell lines"
+      - name: "SY5Y-46fracs-E1/E2"
+        reason: "SH-SY5Y neuroblastoma; not in Fig 1b's 5-cell-line panel"
+    note: >
+      Legacy digestion_enzyme strings are retained as source labels for API compatibility;
+      the long Trypsin/P label incorrectly says except before P. Use search_enzyme /
+      maxquant_spec for theoretical digestion. Nonzero peptide intensity may include
+      match-between-runs, and modifications are annotated across the whole deposit.
+      HeLa 46-fraction rows pool three distinct experiments and their stored replicate
+      counts are unresolved (#654). Do not infer a comparable depth ladder from these rows.
+      Comprehensive over the Figure 1b design matrix: HeLa across four
+      enzymes (Trypsin/P, Chymotrypsin, GluC, LysC), four fractionation
+      depths (14/39/46/70), and ± TiO2 phospho enrichment; plus the 46-
+      fraction tryptic panel on A549 / HCT116 / HEK293 / MCF7. Every
+      peptide- and protein-level row carries per-row ``digestion_enzyme``,
+      ``n_fractions_in_run``, and ``enrichment`` columns so MS-bias
+      models can isolate trypsin bias from fractionation depth and from
+      phospho-enrichment. A549, HCT116, HEK293, and MCF7 remain tryptic
+      + non-enriched + 46-frac only (the paper only ran the other axes
+      on HeLa). Downstream loaders default-filter to ``enrichment == "none"``
+      so baseline detectability queries do not mix in phospho-biased
+      TiO2 rows; pass ``enrichment="TiO2"`` (or ``enrichment=None`` for
+      both populations) to opt in.

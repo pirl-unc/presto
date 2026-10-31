@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "output_kind": "registered_goldberg_candidates",
+  "catalog_schema_version": 31,
+  "hitlist_version": "2.0.30",
+  "recipe": {
+    "schema_version": 1,
+    "name": "baseline_candidate_review",
+    "registered_recipe": "goldberg2025_baseline_candidates_v1"
+  },
+  "recipe_sha256": "88c8e9f1e992a820fd22ad96ba385dc790265bcc7e94a04c13a8c9de5a25e89b",
+  "source_package_manifest_sha256": "cb1bbc22d03140aedff4b3d3a31df545712f36ce7709ec01e34abf7c76b7fc8f",
+  "source_package_schema_version": 25,
+  "coverage": {
+    "n_source_peptide_cells": 394732,
+    "n_baseline_cells": 182184,
+    "n_candidate_cells": 94034,
+    "n_excluded_baseline_cells": 88150,
+    "n_outside_scope_cells": 212548,
+    "reason_counts": {
+      "not_positive_finite_source_intensity": 149337,
+      "outside_baseline_acquisition_scope": 212548,
+      "source_flagged_or_flag_unresolved": 32045,
+      "source_human_only_annotation_not_established": 47827
+    },
+    "candidate_axes": [
+      {
+        "publisher_selection_status": "omitted_or_unresolved_publisher_identity",
+        "identification_type": "By MS/MS",
+        "confidence_status": "reported_probability",
+        "n_cells": 12281
+      },
+      {
+        "publisher_selection_status": "omitted_or_unresolved_publisher_identity",
+        "identification_type": "By matching",
+        "confidence_status": "reported_probability",
+        "n_cells": 6777
+      },
+      {
+        "publisher_selection_status": "published_exact_identity",
+        "identification_type": "By MS/MS",
+        "confidence_status": "reported_probability",
+        "n_cells": 46395
+      },
+      {
+        "publisher_selection_status": "published_exact_identity",
+        "identification_type": "By matching",
+        "confidence_status": "reported_probability",
+        "n_cells": 28581
+      }
+    ]
+  },
+  "files": {
+    "contract.json": {
+      "sha256": "f83855e736a644f83ca805421edeec8896acca089e411ec573972a41be00925e",
+      "size_bytes": 1265
+    },
+    "source_manifest.json": {
+      "sha256": "cb1bbc22d03140aedff4b3d3a31df545712f36ce7709ec01e34abf7c76b7fc8f",
+      "size_bytes": 5444
+    },
+    "source_tables/acquisitions.parquet": {
+      "sha256": "161adfef9269664dcfbfcde93c52c03a05b1fe383bd3a20fa6f6a49fdfea2e64",
+      "size_bytes": 9753
+    },
+    "source_tables/assertions.parquet": {
+      "sha256": "d0a11ed66ed549a7820da83fd0501ce2f0d6698b57e04f15f7c12899ec805ff1",
+      "size_bytes": 81265
+    },
+    "source_tables/forms.parquet": {
+      "sha256": "949d1a83798c22dcf638484639024bdfe6b7a29090650dca21cb3f04479dce22",
+      "size_bytes": 4766892
+    },
+    "source_tables/groups.parquet": {
+      "sha256": "7de4b46b9bf4be09ca95b884594cf31c4f5434ab2100ded2bf786e8b5c124b8c",
+      "size_bytes": 1405322
+    },
+    "source_tables/identifications.parquet": {
+      "sha256": "f51e0879358471949cc1cc9b2e3904e54f6435adab5a73c88fde67cf17d4ed7c",
+      "size_bytes": 27813764
+    },
+    "source_tables/material_contexts.parquet": {
+      "sha256": "e973e45f3fa21422ffff67720ec774bb0d09c1a4f0ea98fbd13a23873e44df57",
+      "size_bytes": 8595
+    },
+    "source_tables/material_links.parquet": {
+      "sha256": "49ba30c7946676cabe894a2da0b57d850db0fe1f8f62edf116c94fc960cea9a0",
+      "size_bytes": 10586
+    },
+    "source_tables/peptides.parquet": {
+      "sha256": "706080da69f19d70be9e6527e4a9104b85674efbdfdcc00aa78fa5bebcaee108",
+      "size_bytes": 4016913
+    },
+    "source_tables/publisher_links.parquet": {
+      "sha256": "d6de803e49f398b8f0587cf4f43b90dc087488213026cb8fc552819b28b5f8d8",
+      "size_bytes": 30640500
+    },
+    "source_tables/quantities.parquet": {
+      "sha256": "1a1eecb2b90e99e021435e2f8c07a416294b6868d14b37a3e67da065b30d703d",
+      "size_bytes": 77869632
+    },
+    "source_tables/references.parquet": {
+      "sha256": "f9d62b3544a0dd30e07a5169c53595b903f63b1ff7d7f4d42ca655d5f419a286",
+      "size_bytes": 356622
+    },
+    "source_tables/source_records.parquet": {
+      "sha256": "b5e590d49e4c1a56cbbcb15c4deae8722888dfd7a745336b6dda09954997ebb0",
+      "size_bytes": 115477302
+    },
+    "summary.json": {
+      "sha256": "98e3f5dded0328617329f7b1da48fa377fc1f757cff8c5cb3eb4a313c5776e23",
+      "size_bytes": 1237
+    },
+    "typed/candidates.parquet": {
+      "sha256": "fa7fc7f90cac39a05c35141f49d7670cc43727608a7a340f65f58cd14ca14550",
+      "size_bytes": 11728256
+    },
+    "typed/decisions.parquet": {
+      "sha256": "bb943d625fb7eda625fb3af79fa2edfb6734084435046c58ba10fdc20bb76a05",
+      "size_bytes": 37393376
+    }
+  }
+}

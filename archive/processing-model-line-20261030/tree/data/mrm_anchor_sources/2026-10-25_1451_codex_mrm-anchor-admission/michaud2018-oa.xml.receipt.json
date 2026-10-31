@@ -1,0 +1,21 @@
+{
+  "bytes": 1584,
+  "content_length": null,
+  "content_type": "text/html; charset=ISO-8859-1",
+  "elapsed_seconds": 0.3482893329928629,
+  "error": "HTTPError: 404 Client Error: Not Found for url: https://www.ncbi.nlm.nih.gov/pmc/utils/oa/oa.fcgi?id=PMC6123701",
+  "final_url": "https://www.ncbi.nlm.nih.gov/pmc/utils/oa/oa.fcgi?id=PMC6123701",
+  "http_status": 404,
+  "phase": "metadata",
+  "redirects": [],
+  "request": {
+    "discovery_provenance": "Official NCBI OA Web Service per-article package lookup, documented at https://pmc.ncbi.nlm.nih.gov/tools/oa-service/; primary study PMCID6123701 already verified.",
+    "expected_kind": "xml",
+    "name": "michaud2018-oa.xml",
+    "url": "https://www.ncbi.nlm.nih.gov/pmc/utils/oa/oa.fcgi?id=PMC6123701"
+  },
+  "request_set": "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1451_codex_mrm-anchor-admission/reproduce/requests/metadata-6.json",
+  "sha256": "b0893bd36daa348c8fea8517b7dff3b7623ce3b36a6867af870b1be5d0bf3362",
+  "started_utc": "2026-10-25T15:07:35.804348+00:00",
+  "status": "failed"
+}

@@ -1,0 +1,31 @@
+{
+  "exclusion_reasons": {
+    "ambiguous_source_group": 1100,
+    "fewer_than_three_eligible_peptides_per_parent": 177,
+    "insufficient_positive_runs:TNF+IFN": 4249,
+    "insufficient_positive_runs:UT": 4422,
+    "missing_direct_msms:TNF+IFN": 4473,
+    "missing_direct_msms:UT": 5549,
+    "missing_nonimputed_quantity:TNF+IFN": 5362,
+    "missing_nonimputed_quantity:UT": 5690,
+    "multiple_parent_sequences": 5354,
+    "peptide_pep_above_threshold": 3826,
+    "reference_unmapped": 1883,
+    "source_contaminant": 1562,
+    "source_leading_coordinate_or_flank_unconfirmed": 4355,
+    "source_reverse": 396
+  },
+  "largest_source_component_n_peptides": 1410,
+  "n_admitted_peptides": 544,
+  "n_all_source_components": 1938,
+  "n_contributor_rows": 1088,
+  "n_examples": 130,
+  "n_parent_sequences": 65,
+  "n_parents_by_split": {
+    "test": 7,
+    "train": 51,
+    "validation": 7
+  },
+  "n_source_peptides": 10673,
+  "n_structurally_supported_peptides": 2272
+}

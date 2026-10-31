@@ -1,0 +1,81 @@
+{
+  "previous_goal_turn": "progress: completed negative0308 response comparison; intervening checkpoint-retention fix was separate",
+  "this_goal_turn": "progress: excluded one source and left another unqualified using a frozen bounded primary-source screen; published evidence and next source direction",
+  "full_goal_complete": false,
+  "status": "source_screen_closed_published",
+  "presto_commit": "ae44479388660d80c17abd9da96f2fd2d1422887",
+  "family": "experiments/2026-10-26_0344_codex_diverse-quantity-anchors",
+  "scientific_discovery_budget": {
+    "limit": 12,
+    "used": 12,
+    "remaining": 0,
+    "candidates": 2,
+    "queries": 5,
+    "opens": 7
+  },
+  "decisions": {
+    "bohrer2010": "excluded: tryptic-like terminal support",
+    "PXD017992": "unqualified: broad nontryptic coverage and independent amount/response join not verified"
+  },
+  "verification": {
+    "published_files_verified_against_git": 8,
+    "local_raw_receipts_verified": 5,
+    "raw_receipt_bytes": 116567,
+    "issue_body_exact_readback": true,
+    "pr_body_exact_readback": true,
+    "lint": "passed",
+    "whitespace": "passed"
+  },
+  "issue_comment": "https://github.com/pirl-unc/hitlist/issues/849#issuecomment-6407813694",
+  "pr_update_attempts": [
+    "PATCH EOF terminal failure; readback verified old body",
+    "same idempotent PATCH succeeded; exact body readback passed"
+  ],
+  "current_ci": [
+    {
+      "id": 40266099071,
+      "head": "ae44479",
+      "status": "in_progress"
+    },
+    {
+      "id": 40266090512,
+      "head": "ae44479",
+      "status": "in_progress"
+    }
+  ],
+  "previous_ci": [
+    {
+      "id": 40264392396,
+      "head": "19a45c8",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 40264380135,
+      "head": "19a45c8",
+      "status": "in_progress_at_last_poll"
+    }
+  ],
+  "next_actions": [
+    "Poll exact live CI IDs; do not relaunch on timeout.",
+    "Next scientific direction is original APC-derived endolysosomal source lead already recorded in experiments/agents/codex/ideas.md and Hitlist812. Use a fresh, prospective original-source admission contract, not another generic response-anchor search.",
+    "Before any new source network access register source-specific scope/budget. Current0344budget exhausted. Preserve failures and original receipts.",
+    "Qualify actual biological original quantitative assets, preparation/acquisition/precursor identities, normalization/gain and missingness. PeptideStudio synthetic sample_data is excluded.",
+    "Same-peptide response cancellation requires comparable run scale/protocol/recovery; it does not identify baseline concentration, total yield, clearance or general APC transfer.",
+    "Use existing shared Hitlist evidence/package/recipe interfaces, no Presto-only biological parser. No new fit before a qualified endpoint/frozen plan.",
+    "Keep previous0308/native/F2/F3/MAPP/observer held-outs closed. Full APC availability goal remains active/unachieved."
+  ],
+  "constraints": {
+    "no_subagents": true,
+    "no_modal": true,
+    "no_shared_environment_changes": true,
+    "no_author_outreach": true,
+    "numerical_resource_limits": "unchanged3GiB startup free+speculative/RSS,20min/stage,1GiB reserve+32MiB margin,one thread,50ms polling+OS peak",
+    "lower_memory_amendment": "inactive",
+    "pypi_upload": "prior automatic rejection; explicit approval still absent; do not retry",
+    "unrelated_task_diff": {
+      "additions": 346,
+      "deletions": 4
+    }
+  }
+}

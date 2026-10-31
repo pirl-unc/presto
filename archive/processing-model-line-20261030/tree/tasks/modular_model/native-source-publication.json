@@ -1,0 +1,292 @@
+{
+  "utc": "2026-10-25T04:55:12Z",
+  "previous_goal_turn": "progress: durable workspace recovery verified",
+  "current_goal_turn": "progress: original source/reference/quantity qualification and publication",
+  "commit": "5e3a8c033df364d8b67aab352c4e8b2f92dc8ef7",
+  "pr_url": "https://github.com/pirl-unc/presto/pull/131",
+  "pr_draft": true,
+  "pr_body_sha256": "598a82e3125d47b0b7340dc4b26caf2638bed54661af984b8b4695a69368fdd7",
+  "pr_exact_readback": true,
+  "issue_comment_url": "https://github.com/pirl-unc/hitlist/issues/837#issuecomment-6393645568",
+  "issue_comment_sha256": "661e1b2c9eccc8f13879db46234f255458be71abd77b6fd68acfd1aa20f6098a",
+  "issue_comment_exact_readback": true,
+  "connector_write_limit": "403 Resource not accessible by integration; authenticated CLI completed authorized updates",
+  "committed_artifact_manifest_entries_verified": 111,
+  "large_source_and_derived_indices_not_duplicated_into_git": true,
+  "local_tracked_python_lint_format_files": 290,
+  "primary_checkout_fingerprints_unchanged": true,
+  "unrelated_active_todo_diff": {
+    "additions": 346,
+    "deletions": 4
+  },
+  "ci": [
+    {
+      "run_id": 40163408650,
+      "jobs": [
+        {
+          "id": 121079478426,
+          "name": "lint-test",
+          "status": "in_progress",
+          "conclusion": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Install dependencies",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "Lint",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "Test",
+              "status": "in_progress",
+              "conclusion": null,
+              "number": 6
+            },
+            {
+              "name": "Build and validate installable distributions",
+              "status": "pending",
+              "conclusion": null,
+              "number": 7
+            },
+            {
+              "name": "Run actions/upload-artifact@v7",
+              "status": "pending",
+              "conclusion": null,
+              "number": 8
+            },
+            {
+              "name": "Post Run actions/setup-python@v5",
+              "status": "pending",
+              "conclusion": null,
+              "number": 15
+            },
+            {
+              "name": "Post Run actions/checkout@v4",
+              "status": "pending",
+              "conclusion": null,
+              "number": 16
+            }
+          ]
+        },
+        {
+          "id": 121079478601,
+          "name": "docs",
+          "status": "completed",
+          "conclusion": "success",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Install mkdocs",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "Build docs",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "Post Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9
+            },
+            {
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 10
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 11
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "run_id": 40163401830,
+      "jobs": [
+        {
+          "id": 121079457660,
+          "name": "lint-test",
+          "status": "in_progress",
+          "conclusion": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Install dependencies",
+              "status": "in_progress",
+              "conclusion": null,
+              "number": 4
+            },
+            {
+              "name": "Lint",
+              "status": "pending",
+              "conclusion": null,
+              "number": 5
+            },
+            {
+              "name": "Test",
+              "status": "pending",
+              "conclusion": null,
+              "number": 6
+            },
+            {
+              "name": "Build and validate installable distributions",
+              "status": "pending",
+              "conclusion": null,
+              "number": 7
+            },
+            {
+              "name": "Run actions/upload-artifact@v7",
+              "status": "pending",
+              "conclusion": null,
+              "number": 8
+            },
+            {
+              "name": "Post Run actions/setup-python@v5",
+              "status": "pending",
+              "conclusion": null,
+              "number": 15
+            },
+            {
+              "name": "Post Run actions/checkout@v4",
+              "status": "pending",
+              "conclusion": null,
+              "number": 16
+            }
+          ]
+        },
+        {
+          "id": 121079457743,
+          "name": "docs",
+          "status": "completed",
+          "conclusion": "success",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Install mkdocs",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "Build docs",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "Post Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9
+            },
+            {
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 10
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 11
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "hitlist_next": {
+    "worktree": "/Users/iskander/code/presto/.worktrees/hitlist-native-psmd2",
+    "base": "436a72f5707a5871f59497a3352296cd96a0661f",
+    "branch": "codex/native-psmd2-source-20261025",
+    "spec": "tasks/native_psmd2_source_spec.md",
+    "status": "detailed spec prepared; production adapter and release pending"
+  },
+  "new_biological_fit": false,
+  "full_goal_achieved": false,
+  "next_action": "Implement canonical native-peptidomics source, meaningful tests, real source replay and tested release; preregister and run the biological contrast, then a matched exact/discrete comparison if representation qualifies."
+}

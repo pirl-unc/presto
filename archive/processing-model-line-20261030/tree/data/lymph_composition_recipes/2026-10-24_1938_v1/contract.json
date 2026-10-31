@@ -1,0 +1,26 @@
+{
+  "chemistry": "canonical_no_modifications_except_explicit_CAM_57.02_plus_minus_0.02_on_every_C",
+  "confidence_policy": "published_identifications_no_new_FDR_claim_or_threshold",
+  "dependence": "all_source_parsed_peptides_accessions_candidate_parent_sequences_before_filtering",
+  "endpoint": "conditional_within_parent_sample_representative_feature_area_composition",
+  "feature_choice": "highest_finite_minus_10lgP_then_numeric_charge_then_observation_id_before_area",
+  "limitations": [
+    "representative_charge_feature_not_total_peptide_molar_quantity",
+    "positive_observed_set_conditioning_not_detection_probability",
+    "human_extracellular_lymph_not_intracellular_APC",
+    "mouse_DC_MHC_II_selected_not_free_peptide_pool",
+    "database_and_library_searches_reuse_acquisitions",
+    "unknown_precursor_abundance_kinetic_units_and_observation_response",
+    "reported_length_start_conflicts_preserved_positions_derived_from_sequence",
+    "same_study_components_not_independent_specimens_or_external_studies"
+  ],
+  "minimum_distinct_peptides_per_group": 3,
+  "normalization": "within_block_sample_parent_over_admitted_positive_selected_features",
+  "origin_policy": "one_distinct_full_original_parent_sequence_all_exact_occurrences",
+  "quantity": "positive_finite_original_PEAKS_area",
+  "recipe_id": "nanaware2024_observed_composition_v1",
+  "reference_candidates": "supplied_accession_and_same_study_deposited_nondecoy_peptide_evidence",
+  "schema_version": 1,
+  "split": "sha256(nanaware2024_composition_v1:component_id)_mod10_train0to5_val6to7_test8to9",
+  "target": "centered_log10_area_and_area_fraction"
+}

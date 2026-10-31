@@ -1,0 +1,39 @@
+{
+  "n_source_peptide_cells": 394732,
+  "n_baseline_cells": 182184,
+  "n_candidate_cells": 94034,
+  "n_excluded_baseline_cells": 88150,
+  "n_outside_scope_cells": 212548,
+  "reason_counts": {
+    "not_positive_finite_source_intensity": 149337,
+    "outside_baseline_acquisition_scope": 212548,
+    "source_flagged_or_flag_unresolved": 32045,
+    "source_human_only_annotation_not_established": 47827
+  },
+  "candidate_axes": [
+    {
+      "publisher_selection_status": "omitted_or_unresolved_publisher_identity",
+      "identification_type": "By MS/MS",
+      "confidence_status": "reported_probability",
+      "n_cells": 12281
+    },
+    {
+      "publisher_selection_status": "omitted_or_unresolved_publisher_identity",
+      "identification_type": "By matching",
+      "confidence_status": "reported_probability",
+      "n_cells": 6777
+    },
+    {
+      "publisher_selection_status": "published_exact_identity",
+      "identification_type": "By MS/MS",
+      "confidence_status": "reported_probability",
+      "n_cells": 46395
+    },
+    {
+      "publisher_selection_status": "published_exact_identity",
+      "identification_type": "By matching",
+      "confidence_status": "reported_probability",
+      "n_cells": 28581
+    }
+  ]
+}

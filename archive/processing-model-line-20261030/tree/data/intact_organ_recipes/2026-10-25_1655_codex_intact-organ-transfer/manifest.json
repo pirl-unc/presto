@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "output_kind": "registered_intact_organ_transfer",
+  "catalog_schema_version": 37,
+  "hitlist_version": "2.0.41",
+  "recipe": {
+    "schema_version": 1,
+    "name": "frozen_organ_transfer",
+    "registered_recipe": "pxd058121_organ_baseline_change_v1"
+  },
+  "recipe_sha256": "794e3a04de223a86185d7399341bcff0c8b12426ed47b99e90a4474da5c8e41b",
+  "source_package_manifest_sha256": "fd91bb6ff3178a2246b760f6b0f99bc3824d83815a65719c34587816f3459974",
+  "source_package_schema_version": 26,
+  "coverage": {
+    "cohort_support": {
+      "test": {
+        "Brain": {
+          "n_sequences": 0,
+          "n_observations": 0,
+          "n_acquisitions": 0
+        },
+        "Liver": {
+          "n_sequences": 0,
+          "n_observations": 0,
+          "n_acquisitions": 0
+        },
+        "Spleen": {
+          "n_sequences": 0,
+          "n_observations": 0,
+          "n_acquisitions": 0
+        }
+      },
+      "extrapolation": {
+        "Brain": {
+          "n_sequences": 0,
+          "n_observations": 0,
+          "n_acquisitions": 0
+        },
+        "Liver": {
+          "n_sequences": 0,
+          "n_observations": 0,
+          "n_acquisitions": 0
+        },
+        "Spleen": {
+          "n_sequences": 0,
+          "n_observations": 0,
+          "n_acquisitions": 0
+        }
+      }
+    },
+    "support_passed": false,
+    "reason_counts": {
+      "ambiguous_mass_assignment": 2060,
+      "input_link_or_quantity_conflict": 38,
+      "not_explicit_unmodified": 4198,
+      "outside_organs_view": 3940
+    },
+    "output_counts": {
+      "n_decisions_rows": 8138,
+      "n_examples_rows": 0,
+      "n_covariates_rows": 0,
+      "n_baselines_rows": 0,
+      "n_trajectories_rows": 0
+    }
+  },
+  "files": {
+    "contract.json": {
+      "sha256": "c42a273ab0e38e6fc97a55361fc39d877f30fdb4f76874bf5e8b61b5d8422643",
+      "size_bytes": 1455
+    },
+    "source_manifest.json": {
+      "sha256": "fd91bb6ff3178a2246b760f6b0f99bc3824d83815a65719c34587816f3459974",
+      "size_bytes": 6336
+    },
+    "source_tables/acquisitions.parquet": {
+      "sha256": "49a3895b18b70b64d84b947277e754ae3619824b42e4bbaba8f3e884f643d8d2",
+      "size_bytes": 19608
+    },
+    "source_tables/assertions.parquet": {
+      "sha256": "7b2e3490d89e5b6b0316993d7b4142f543ee26f5cb62294b69f30bea1803140c",
+      "size_bytes": 5701
+    },
+    "source_tables/assignments.parquet": {
+      "sha256": "bf72e96a94fe266e7e3c351d24ad8dca89d656f9bf2a04a239768714a5c267e1",
+      "size_bytes": 1279164
+    },
+    "source_tables/material_contexts.parquet": {
+      "sha256": "253725e5e2f83625b393bd8a089421c8552c69cb5cde0f6d3656b7b5f5eda4d5",
+      "size_bytes": 10353
+    },
+    "source_tables/material_links.parquet": {
+      "sha256": "76a4a31491dcf7a41376d08a5d5d138d9ef97f7993b4d308b9d66b80bbf15847",
+      "size_bytes": 11589
+    },
+    "source_tables/quantities.parquet": {
+      "sha256": "eed95613683e61e1b885adb6d04bdbbaed2726cd390b872ee21fffb58df07010",
+      "size_bytes": 4520233
+    },
+    "source_tables/reconciliations.parquet": {
+      "sha256": "354109a7fc6521597529197ba34bf5a8c314d64029575dcc495868c1444cfed2",
+      "size_bytes": 847301
+    },
+    "source_tables/source_views.parquet": {
+      "sha256": "1676b32c0751b73deafba3839cb30d91d241765832142eaffa193ce64be2b3fc",
+      "size_bytes": 20135
+    },
+    "summary.json": {
+      "sha256": "1d3522a4ae082d6217c814ab0e8cc1360c987f2915d96bf449bddb458d4e9bbf",
+      "size_bytes": 1104
+    },
+    "typed/baselines.parquet": {
+      "sha256": "c31c46e1b23b21c6f686ace98a9c8e388e5aa5d19a15923369587106067a2d35",
+      "size_bytes": 4439
+    },
+    "typed/covariates.parquet": {
+      "sha256": "b0f2e8942d9079cae8c492172c8a0154278e715f7b15cf84fac790fd658fa538",
+      "size_bytes": 4014
+    },
+    "typed/decisions.parquet": {
+      "sha256": "b451c7cfd71c64a34b0d9d587d26ecefb2b878eee3715fcb16432999d8d17679",
+      "size_bytes": 915844
+    },
+    "typed/examples.parquet": {
+      "sha256": "c31c46e1b23b21c6f686ace98a9c8e388e5aa5d19a15923369587106067a2d35",
+      "size_bytes": 4439
+    },
+    "typed/trajectories.parquet": {
+      "sha256": "9d62a006db15a4f6d33e61a9860669bd1f2f9a958130b95161849727fd07bc63",
+      "size_bytes": 1394
+    }
+  }
+}

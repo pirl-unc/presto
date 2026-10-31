@@ -1,0 +1,30 @@
+{
+  "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8548400/supplementaryFiles",
+  "utc": "2026-10-25T03:46:02.282210+00:00",
+  "argv": [
+    "/private/tmp/presto-modular-model/experiments/2026-10-25_0344_codex_proteasome-quantity-source/code/fetch.py",
+    "--url",
+    "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8548400/supplementaryFiles",
+    "--name",
+    "sahu-supplementary.zip"
+  ],
+  "source_sha256": "becab32c2ac179a01d53c75c21030dc6ec7505bb444a665c99f0b630fd089053",
+  "git_commit": "8454ef9c40913c89d56bca5cd02f923701af91f6",
+  "status": 200,
+  "final_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8548400/supplementaryFiles",
+  "headers": {
+    "Vary": "Access-Control-Request-Headers",
+    "Content-Type": "application/zip",
+    "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+    "Date": "Sun, 25 Oct 2026 03:46:04 GMT",
+    "Transfer-Encoding": "chunked",
+    "Content-Disposition": "attachment; filename=\"PMC8548400_SupplementaryFiles.zip\"",
+    "Connection": "close"
+  },
+  "error": "RuntimeError('Per-asset cap; partial bytes retained')",
+  "access_status": "failed_not_absent",
+  "path": "/private/tmp/presto-modular-model/data/proteasome_quantity_sources/2026-10-25_0344_codex_proteasome-quantity-source/sahu-supplementary.zip",
+  "size_bytes": 20971520,
+  "sha256": "882e781a9d99274953b8b0b3ed1368df23b8ab92f28579a14523e88793744872",
+  "seconds": 13.268546957988292
+}

@@ -1,0 +1,22 @@
+{
+  "bytes": 5697,
+  "content_length": null,
+  "content_type": "application/xml",
+  "elapsed_seconds": 0.1411497090011835,
+  "final_url": "https://pmc-oa-opendata.s3.amazonaws.com/?list-type=2&prefix=PMC6123701.&max-keys=100",
+  "http_status": 200,
+  "phase": "metadata",
+  "redirects": [],
+  "request": {
+    "discovery_provenance": "Article-specific ListObjectsV2 route documented in official bucket README; fixed primary PMCID, all versions, max100 entries.",
+    "expected_kind": "xml",
+    "name": "michaud2018-s3-inventory.xml",
+    "url": "https://pmc-oa-opendata.s3.amazonaws.com/?list-type=2&prefix=PMC6123701.&max-keys=100"
+  },
+  "request_set": "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1451_codex_mrm-anchor-admission/reproduce/requests/metadata-7.json",
+  "sha256": "8621287834e4d2fad0247c279db0fb5d43ec7fb8990f717fb4e967f725cbbcf4",
+  "started_utc": "2026-10-25T15:08:45.370093+00:00",
+  "status": "retrieved_validated_payload",
+  "text_decoding": "utf-8",
+  "xml_root": "{http://s3.amazonaws.com/doc/2006-03-01/}ListBucketResult"
+}

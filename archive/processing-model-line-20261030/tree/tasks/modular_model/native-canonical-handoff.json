@@ -1,0 +1,99 @@
+{
+  "current_goal_turn": "progress: canonical source adapter implemented and published; independent real-source replay passed; local full default tests passed",
+  "previous_goal_turn": "no modeling progress: completed cleanup status reverified",
+  "goal_achieved": false,
+  "hitlist": {
+    "worktree": "/Users/iskander/code/presto/.worktrees/hitlist-native-psmd2",
+    "branch": "codex/native-psmd2-source-20261025",
+    "head": "bfbaa67fa87300f5ec4fbadad0ea728257cd1738",
+    "pr": "https://github.com/pirl-unc/hitlist/pull/839",
+    "version": "2.0.37",
+    "local_tests": 3533,
+    "ci_run": 40165898063,
+    "ci_jobs": [
+      {
+        "id": 121086749083,
+        "name": "integration",
+        "status": "in_progress",
+        "conclusion": null
+      },
+      {
+        "id": 121086749177,
+        "name": "lint",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 121086749209,
+        "name": "unit (3.12)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 121086749231,
+        "name": "unit (3.13)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 121086749236,
+        "name": "unit (3.14)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 121086749281,
+        "name": "unit (3.10)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 121086749442,
+        "name": "unit (3.11)",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ],
+    "docs_run": 40165898029,
+    "docs": "success",
+    "merged": false,
+    "released": false
+  },
+  "presto": {
+    "worktree": "/Users/iskander/code/presto/.worktrees/presto-modular-model",
+    "head": "a23bc160a8c31408b82cab663ea968093a624f36",
+    "ci_run": 40166118470,
+    "ci_jobs": [
+      {
+        "id": 121087405907,
+        "name": "lint-test",
+        "status": "in_progress",
+        "conclusion": null
+      },
+      {
+        "id": 121087406120,
+        "name": "docs",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ],
+    "unrelated_todo_diff": "346 additions / 4 deletions preserved",
+    "owned_plan": "experiments/agents/codex/plans/native-psmd2-contrast-recipe-v1.md",
+    "plan_status": "precise future recipe and fitting policy; no response targets, partitions or predictors computed",
+    "local_lint": "290 tracked Python files and current experiment E9/F checks pass; full workspace lint also sees two pre-existing long lines in untracked data/erap1_source_qualification/.../executed-launch.py, preserved unchanged"
+  },
+  "experiment": "experiments/2026-10-25_0519_codex_native-source-canonical",
+  "artifact_manifest_entries_committed_and_verified": 38,
+  "publication": {
+    "presto_pr_body_sha256": "bf9de8608dc60be247ba587e8d4271e233edc33aa540c06481ec05acd8eaeee1",
+    "hitlist_issue_comment": "https://github.com/pirl-unc/hitlist/issues/837#issuecomment-6394027443",
+    "hitlist_comment_body_sha256": "961510ce05733a42a9d9183f325dfbf6a2e925ef2c67c4670714018c7cfd8f67",
+    "exact_server_response_readback": true
+  },
+  "next_actions": [
+    "Poll the existing live Hitlist integration job 121086749083 / run40165898063 and Presto run40166118470; do not restart them on observation timeout.",
+    "After all required Hitlist checks pass, revalidate PR head and main, merge PR839 and complete a clean tested source release using the existing release-build/deploy workflow; verify published distributions. No shared-env install.",
+    "Implement the canonical contrast recipe using the new detailed plan; tests, source replay and release precede a separately registered biological fit.",
+    "No new dataset acquisition or archive copying is needed for the next fit. Keep native source package and original assets once at their recorded paths."
+  ]
+}

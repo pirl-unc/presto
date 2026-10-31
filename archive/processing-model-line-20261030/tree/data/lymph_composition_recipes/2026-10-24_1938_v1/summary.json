@@ -1,0 +1,97 @@
+{
+  "coverage": [
+    {
+      "block_id": "dc_dia_database",
+      "n_components": 36,
+      "n_groups": 70,
+      "n_measurements": 409,
+      "n_parents": 40,
+      "n_peptides": 289,
+      "split": "train"
+    },
+    {
+      "block_id": "dc_dia_database",
+      "n_components": 1,
+      "n_groups": 1,
+      "n_measurements": 3,
+      "n_parents": 1,
+      "n_peptides": 3,
+      "split": "val"
+    },
+    {
+      "block_id": "dc_dia_database",
+      "n_components": 6,
+      "n_groups": 6,
+      "n_measurements": 27,
+      "n_parents": 6,
+      "n_peptides": 27,
+      "split": "test"
+    },
+    {
+      "block_id": "dc_dia_library",
+      "n_components": 32,
+      "n_groups": 161,
+      "n_measurements": 1046,
+      "n_parents": 35,
+      "n_peptides": 255,
+      "split": "train"
+    },
+    {
+      "block_id": "dc_dia_library",
+      "n_components": 3,
+      "n_groups": 15,
+      "n_measurements": 71,
+      "n_parents": 3,
+      "n_peptides": 16,
+      "split": "val"
+    },
+    {
+      "block_id": "dc_dia_library",
+      "n_components": 11,
+      "n_groups": 54,
+      "n_measurements": 248,
+      "n_parents": 12,
+      "n_peptides": 64,
+      "split": "test"
+    },
+    {
+      "block_id": "human_native",
+      "n_components": 34,
+      "n_groups": 36,
+      "n_measurements": 459,
+      "n_parents": 36,
+      "n_peptides": 459,
+      "split": "train"
+    },
+    {
+      "block_id": "human_native",
+      "n_components": 14,
+      "n_groups": 14,
+      "n_measurements": 135,
+      "n_parents": 14,
+      "n_peptides": 135,
+      "split": "val"
+    },
+    {
+      "block_id": "human_native",
+      "n_components": 12,
+      "n_groups": 14,
+      "n_measurements": 74,
+      "n_parents": 14,
+      "n_peptides": 74,
+      "split": "test"
+    }
+  ],
+  "n_admitted_measurements": 2472,
+  "n_quantity_cells": 32995,
+  "n_source_observations": 4384,
+  "reason_counts": {
+    "fewer_than_three_positive_selected_peptides": 1030,
+    "missing_or_ambiguous_original_parent": 18550,
+    "noncanonical_or_unparsed_peptide": 102,
+    "not_area": 15606,
+    "not_positive_finite_area": 16876,
+    "not_selected_representative_feature": 689,
+    "observer_chemistry_out_of_scope": 8924
+  }
+}
