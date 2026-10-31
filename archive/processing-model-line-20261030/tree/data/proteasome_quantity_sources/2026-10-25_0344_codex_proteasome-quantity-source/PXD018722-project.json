@@ -1,0 +1,146 @@
+{
+  "accession" : "PXD018722",
+  "title" : "Signature activities of 20S proteasome reveal degradation of intact ubiquitin-conjugates in hypoxia",
+  "additionalAttributes" : [ ],
+  "projectDescription" : "Careful removal of unwanted proteins is necessary for cell survival. The primary constitutive intracellular protease is the 26S proteasome complex, very often found in equilibrium with its catalytic core particle – the 20S subcomplex. Protein degradation by the former is tightly regulated due to prior selection of substrates by ubiquitination, whereas the latter is most likely confined to substrates with an inherent unstructured stretch. Understanding the interplay between 26S and 20S proteasomes is challenging due to their common catalytic sites. By using MS analyses, we define the 20S and 26S substrate preferences, and ascribe a unique property to 20S in degrading ubiquitin. High-end mass-spectroscopy of intracellular peptidome defines signature activities of 20S and finds their contribution to proteostasis under severe hypoxia and in human failing heart.",
+  "sampleProcessingProtocol" : "Intracellular peptide isolation from cultured cells was prefromed following cells collection from plate by trypsinization, adding 80°C hot water and incubating the mixture at 80°C for 20min. Then the lysate was centrifuged at high speed (13,000 rpm) for 30min and the supernatant was kept at –80°C over night. The lysate was then acidified with HCl to a final concentration of 0.01N HCl and was incubated on ice for 30min. Following  10 min centrifugation at 13000 rpm the pellet was discarded and the supernatant is passed through 30KDa cut-off Amicon® Ultra - 0.5mL Centrifugal Filter unit (Merck-Millipore). The flow-through was collected and desalted by C18 StageTip column. Human Heart Tissue Procurement Ventricular myocardial tissue from patients with advanced heart failure (Failing heart) at the University of Michigan was collected at the time of cardiac transplantation as described in (Reference: Day SM. et. al.,Circ Heart Fail. 2013 May;6(3):544-9). Non-failing ventricular myocardial tissue was collected from unmatched donors from the University of Michigan and other regional hospitals through a protocol with the Gift of Life Michigan Organ and Tissue Donation Program. This project was approved by the University of Michigan Institutional Review Board (IRB) and subjects gave informed consent. Each heart was perfused with ice-cold cardioplegia, samples were snap frozen in liquid N2 and stored at −80°C. Patient demographics were recorded at the time of tissue collection. Heart-muscle tissue lysate preparation for proteasomes and for intracellular peptides: The frozen heart muscle tissue (~0.5g) was resuspended with 300µL of chilled PBS and quick homogenized into suspension. The tissue suspension was devided into two parts; (a) for proteasome preparation and (b) for intracellular peptide isolation. For proteasome lysate preparation 1mL of chilled ATP buffer was added and lysed with glass beads and vortexed at 4⁰C. Then after high speed centrifugation the clear supernatant were collected, flash frozen in liquid nitrogen and stored at – 80⁰C. For intracellular peptide isolation 1mL of 80°C hot water was added to the tissue suspension and processed as described above. Desalted peptides were analyzed by liquid chromatography coupled mass spectrometry using Q-Exacitive-Plus or Q-Exactive HF mass spectrometer (Thermo-Fisher) coupled to nano HPLC. The peptides were resolved by reverse-phase chromatography on 0.075 × 180 mm fused silica capillaries (J&W) packed with Reprosil reversed-phase material (Dr. Maisch; GmbH, Germany). The peptides were eluted with a linear 60 min gradient of 5–28%, followed by a 15 min gradient of 28–95%, and a10 min wash at 95% acetonitrile with 0.1% formic acid in water (at flow rates of 0.15 μl/min). Mass spectrometry analysis by Q Exactive HF-X mass spectrometer (Thermo Fisher Scientific) was in positive mode using a range of m/z 300–1800, resolution 60,000 for MS1 and 15,000 for MS2, using repetitively full MS scan followed by high energy collisional dissociation (HCD) of the 18 most dominant ions selected from the first MS scan.",
+  "dataProcessingProtocol" : "MS data analysis was done with MaxQuant versions 1.6.3.4 or 1.6.7.0 (ref: PMID:19029910). The searches were done using unspecific Digestion mode with minimal peptide length of 7 amino acids. Search criteria include oxidation of methionine and protein N-terminal acetylation as variable modifications. All other parameters were set as the default. The raw files were searched against the Homo sapiens UniProt fasta database (November 2017; 20,239 sequences) supplemented with the sequences of the fusion protein of Cyclin B1 N-terminus (1-88 aa residue) with NS3-protease. Candidates were filtered to obtain FDR of 1% at the peptide and the protein levels. No filter was applied to the number of peptides per protein. For quantification, the match between runs modules of MaxQuant were used, and the LFQ (label free quantification) normalization method was enabled.",
+  "projectTags" : [ ],
+  "keywords" : [ "26s", "20s", "Peptides", "Proteasome", "Hypoxia" ],
+  "doi" : "",
+  "submissionType" : "PARTIAL",
+  "license" : "Creative Commons Public Domain (CC0)",
+  "submissionDate" : "2020-04-21",
+  "publicationDate" : "2021-11-02",
+  "submitters" : [ {
+    "title" : "Dr",
+    "firstName" : "Oded",
+    "lastName" : "Kleifeld",
+    "identifier" : "40120107",
+    "affiliation" : "Technion",
+    "email" : "okleifeld@technion.ac.il",
+    "country" : "Israel",
+    "orcid" : "0000-0003-3091-7154",
+    "name" : "Oded Kleifeld",
+    "id" : "40120107"
+  } ],
+  "labPIs" : [ {
+    "title" : "Dr",
+    "firstName" : "Oded",
+    "lastName" : "Kleifeld",
+    "identifier" : "191220100",
+    "affiliation" : "Faculty of Biology Technion-Israel Institute of Technology Rooms 433-4, Biology Building Technion City, Haifa 3200003, Israel",
+    "email" : "okleifeld@technion.ac.il",
+    "country" : "",
+    "orcid" : "",
+    "name" : "Oded Kleifeld",
+    "id" : "191220100"
+  } ],
+  "instruments" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "MS",
+    "accession" : "MS:1002523",
+    "name" : "Q Exactive HF"
+  }, {
+    "@type" : "CvParam",
+    "cvLabel" : "MS",
+    "accession" : "MS:1001911",
+    "name" : "Q Exactive"
+  } ],
+  "softwares" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "MS",
+    "accession" : "MS:1001583",
+    "name" : "MaxQuant"
+  } ],
+  "experimentTypes" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "PRIDE",
+    "accession" : "PRIDE:0000429",
+    "name" : "Shotgun proteomics"
+  } ],
+  "quantificationMethods" : [ ],
+  "countries" : [ "Israel" ],
+  "sampleAttributes" : [ {
+    "@type" : "Tuple",
+    "key" : {
+      "cvLabel" : "EFO",
+      "accession" : "EFO:0000635",
+      "name" : "organism part"
+    },
+    "value" : [ {
+      "cvLabel" : "BTO",
+      "accession" : "BTO:0000214",
+      "name" : "cell culture"
+    }, {
+      "cvLabel" : "BTO",
+      "accession" : "BTO:0000562",
+      "name" : "heart"
+    } ]
+  }, {
+    "@type" : "Tuple",
+    "key" : {
+      "cvLabel" : "EFO",
+      "accession" : "OBI:0100026",
+      "name" : "organism"
+    },
+    "value" : [ {
+      "cvLabel" : "NEWT",
+      "accession" : "NEWT:9606",
+      "name" : "Homo sapiens (Human)"
+    } ]
+  }, {
+    "@type" : "Tuple",
+    "key" : {
+      "cvLabel" : "EFO",
+      "accession" : "EFO:0000408",
+      "name" : "disease"
+    },
+    "value" : [ {
+      "cvLabel" : "DOID",
+      "accession" : "SYMP:0000292",
+      "name" : "heart failure"
+    } ]
+  } ],
+  "organisms" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "NEWT",
+    "accession" : "NEWT:9606",
+    "name" : "Homo sapiens (human)"
+  } ],
+  "organismParts" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "BTO",
+    "accession" : "BTO:0000214",
+    "name" : "Cell culture"
+  }, {
+    "@type" : "CvParam",
+    "cvLabel" : "BTO",
+    "accession" : "BTO:0000562",
+    "name" : "Heart"
+  } ],
+  "diseases" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "DOID",
+    "accession" : "SYMP:0000292",
+    "name" : "Heart failure"
+  } ],
+  "references" : [ {
+    "referenceLine" : "Sahu I, Mali SM, Sulkshane P, Xu C, Rozenberg A, Morag R, Sahoo MP, Singh SK, Ding Z, Wang Y, Day S, Cong Y, Kleifeld O, Brik A, Glickman MH. The 20S as a stand-alone proteasome in cells can degrade the ubiquitin tag. Nat Commun. 2021 12(1):6173",
+    "pubmedID" : 34702852,
+    "doi" : "10.1038/s41467-021-26427-0"
+  } ],
+  "identifiedPTMStrings" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "MOD",
+    "accession" : "MOD:00425",
+    "name" : "monohydroxylated residue"
+  }, {
+    "@type" : "CvParam",
+    "cvLabel" : "MOD",
+    "accession" : "MOD:00394",
+    "name" : "acetylated residue"
+  } ],
+  "totalFileDownloads" : 3329,
+  "otherOmicsLinks" : [ "pride.project:PXD018711", "pride.project:PXD028912" ]
+}

@@ -1,0 +1,16 @@
+{
+  "bytes": 0,
+  "elapsed_seconds": 0.6943778339773417,
+  "error": "SSLError(MaxRetryError('HTTPSConnectionPool(host=\\'www.peptideatlas.org\\', port=443): Max retries exceeded with url: /PASS/PASS01163 (Caused by SSLError(SSLCertVerificationError(1, \"[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for \\'www.peptideatlas.org\\'. (_ssl.c:1000)\")))'))",
+  "phase": "metadata",
+  "request": {
+    "discovery_provenance": "PASS01163 is the experiment 1-2 accession in archived Michaud2018 full-text XML, using the official PeptideAtlas PASS accession landing route.",
+    "expected_kind": "html",
+    "name": "pass01163.html",
+    "url": "https://www.peptideatlas.org/PASS/PASS01163"
+  },
+  "request_set": "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1451_codex_mrm-anchor-admission/reproduce/requests/metadata-3.json",
+  "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "started_utc": "2026-10-25T15:02:31.295919+00:00",
+  "status": "failed"
+}

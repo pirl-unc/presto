@@ -1,0 +1,43 @@
+{
+  "goal_turn": "progress",
+  "presto_commit": "84b1e593bf8ffd8effc642ea32b93422e13b9a99",
+  "presto_ci": 40169089024,
+  "recipe_commit": "90a7a62a5f1e052d87e797d86bac6d59cf3b0700",
+  "recipe_pr": 841,
+  "recipe_tests": 40168839728,
+  "recipe_integration_job": 121095409867,
+  "recipe_docs": 40168839820,
+  "source_current_main": "d2e0cb61005c33c8ad484b234670174346a529ee",
+  "source_release": 40168710669,
+  "source_release_job": 121094996752,
+  "source_release_confirmed_live": true,
+  "old_source_release": 40167325306,
+  "old_source_artifacts": "data/tested_releases/hitlist-2.0.37-e755be4",
+  "old_artifacts_status": "successful verified retained unuploaded",
+  "family": "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0612_codex_native-contrast-admission",
+  "package": "data/native_contrast_recipes/2026-10-25_0612_codex_native-contrast-admission",
+  "counts": {
+    "contrasts": 228,
+    "parent_sequences": 82,
+    "components": 81,
+    "train_components": 55,
+    "val_components": 8,
+    "test_components": 18
+  },
+  "local_tests": 3547,
+  "local_sessions_all_terminal": true,
+  "source_and_recipe_releases_pending": true,
+  "biological_fit_started": false,
+  "next": [
+    "Poll same live source/recipe/Presto workflow handles; do not restart.",
+    "On current-main source release success, download artifact, run release_artifacts.py verify from clean main d2e0cb, publish exact tested bytes and verify PyPI.",
+    "When final recipe checks all pass, merge matching90a7a62, run tested release and verify publication.",
+    "Register separate first fit from fixed native plan; implement qualify/fit/eval/replay with frozen zero,length,61feature models and no holdout tuning."
+  ],
+  "unrelated_todo_diff_preserved": {
+    "additions": 346,
+    "deletions": 4
+  },
+  "verified_committed_closure_files": 47,
+  "issue_comment": "https://github.com/pirl-unc/hitlist/issues/837#issuecomment-6394382992"
+}

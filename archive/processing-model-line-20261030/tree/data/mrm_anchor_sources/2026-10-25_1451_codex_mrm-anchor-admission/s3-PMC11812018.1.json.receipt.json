@@ -1,0 +1,41 @@
+{
+  "bytes": 2206,
+  "content_length": "2206",
+  "content_type": "binary/octet-stream",
+  "elapsed_seconds": 0.22513525001704693,
+  "final_url": "https://pmc-oa-opendata.s3.amazonaws.com/PMC11812018.1/PMC11812018.1.json",
+  "http_status": 200,
+  "json_top_keys": [
+    "pmcid",
+    "version",
+    "pmid",
+    "doi",
+    "mid",
+    "title",
+    "citation",
+    "is_pmc_openaccess",
+    "is_manuscript",
+    "is_historical_ocr",
+    "is_retracted",
+    "license_code",
+    "pdf_url",
+    "text_url",
+    "xml_url",
+    "media_urls"
+  ],
+  "phase": "metadata",
+  "redirects": [],
+  "request": {
+    "discovery_provenance": "Exact object key/size/ETag in archived sobsey2025-s3-inventory.xml; XLSX names match archived paper supplements.",
+    "expected_bytes": 2206,
+    "expected_inventory_etag": "d27d17fee18f8f2a5c75a89777d08cd8",
+    "expected_kind": "json",
+    "name": "s3-PMC11812018.1.json",
+    "url": "https://pmc-oa-opendata.s3.amazonaws.com/PMC11812018.1/PMC11812018.1.json"
+  },
+  "request_set": "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1451_codex_mrm-anchor-admission/reproduce/requests/metadata-10.json",
+  "sha256": "e790dcf34190b895eea1030775ef749f5fd5fd8f7aacf0dbc9a1ecd3ca799fcf",
+  "started_utc": "2026-10-25T15:14:25.815215+00:00",
+  "status": "retrieved_validated_payload",
+  "text_decoding": "utf-8"
+}

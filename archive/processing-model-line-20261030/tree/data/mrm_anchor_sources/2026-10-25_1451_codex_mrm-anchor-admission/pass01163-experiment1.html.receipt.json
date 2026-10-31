@@ -1,0 +1,17 @@
+{
+  "bytes": 0,
+  "elapsed_seconds": 11.307386375032365,
+  "error": "ReadTimeout: HTTPSConnectionPool(host='db.systemsbiology.net', port=443): Read timed out. (read timeout=10)",
+  "phase": "metadata",
+  "request": {
+    "discovery_provenance": "Exact public directory href in archived pass01163-sbeams.html, recovered with byte-reversible Latin-1 decoding; see metadata-decoding-amendment.md.",
+    "encoding": "latin-1",
+    "expected_kind": "html",
+    "name": "pass01163-experiment1.html",
+    "url": "https://db.systemsbiology.net/sbeams/cgi/PeptideAtlas/PASS_View?identifier=PASS01163&browseArea=&path=/Mouse_500_Assays_CPTAC_Experiment1"
+  },
+  "request_set": "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1451_codex_mrm-anchor-admission/reproduce/requests/metadata-5.json",
+  "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "started_utc": "2026-10-25T15:06:16.880426+00:00",
+  "status": "failed"
+}

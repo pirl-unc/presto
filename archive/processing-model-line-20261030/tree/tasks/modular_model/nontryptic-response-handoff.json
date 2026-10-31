@@ -1,0 +1,106 @@
+{
+  "previous_goal_turn": "progress",
+  "this_goal_turn": "progress",
+  "status": "negative_response_experiment_closed_published",
+  "full_goal_complete": false,
+  "presto_commit": "19a45c82aa0e42e974cd2690f0bd199f5d32abb0",
+  "hitlist_commit": "ac3e04841e5a8b0655b1bbd91df2ffd3e23d8cc0",
+  "family": "experiments/2026-10-26_0308_codex_nontryptic-sequence-response",
+  "data": {
+    "accepted_slots": 213,
+    "excluded_slots": 135,
+    "peptides": 18,
+    "precursor_genes": 13,
+    "source": "PXD024917 S3A free1H targeted-MS2 nominal response after purification"
+  },
+  "results": {
+    "unit_rmse": 0.7467493340582053,
+    "slope_rmse": 0.6776640914738118,
+    "sequence_rmse": 0.6821834063625722,
+    "relative_sequence_gain": -0.006668960249807121,
+    "fixed_1fmol_target_sd": 0.4784090404846604,
+    "fixed_1fmol_sequence_prediction_sd": 0.043783504955632074,
+    "independent_biological_test": false,
+    "primary_gate": "failed",
+    "model_promoted": false
+  },
+  "verification": {
+    "fits": 663,
+    "predictions": 10863,
+    "source_decisions": 348,
+    "max_coefficient_error": 3.552713678800501e-14,
+    "max_prediction_error": 1.127986593019159e-13,
+    "all_stages_passed": true,
+    "synthetic_checks": "passed including full-runner outer-target mutation invariance",
+    "required_artifacts_verified_against_committed_git": 90,
+    "lossless_archives_verified": 6
+  },
+  "artifacts": {
+    "raw_local_outputs": "Unchanged under family/results; six large JSON files are excluded from Git and supplied as .json.gz with restore_archives.py and archive manifest",
+    "tracked_archives_bytes": 1710535,
+    "raw_archived_bytes": 19408910,
+    "plot": "results/report-1/sequence-response-comparison.png",
+    "code_and_plan_frozen": true
+  },
+  "decision": "Stop retuning this inspected panel. Strong overall correlation is dose-driven; fixed-dose predictions remain near constant. Do not promote a general observer or relabel sequence residuals as intracellular amounts.",
+  "important_diagnostic": "Original dose-adjusted SD gate passes partly because b!=1 leaves (b-1)*logdose. Original gate outcome preserved; fixed-dose diagnostic is posthoc/no-refit, not new model selection.",
+  "issue_comment": "https://github.com/pirl-unc/hitlist/issues/849#issuecomment-6407602522",
+  "issue_and_pr_bodies_verified": true,
+  "ci": {
+    "hitlist_tests": {
+      "id": 40262015632,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "hitlist_docs": {
+      "id": 40262015747,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "prior_presto_pr": {
+      "id": 40262180785,
+      "status": "completed",
+      "conclusion": "success",
+      "head": "964ffd3"
+    },
+    "prior_presto_push": {
+      "id": 40262169965,
+      "status": "completed",
+      "conclusion": "success",
+      "head": "964ffd3"
+    },
+    "current_presto": [
+      {
+        "id": 40264392396,
+        "status": "in_progress",
+        "head": "19a45c8"
+      },
+      {
+        "id": 40264380135,
+        "status": "in_progress",
+        "head": "19a45c8"
+      }
+    ]
+  },
+  "next_actions": [
+    "Poll current exact-head CI handles; preserve terminal prior successes.",
+    "Read native-baseline-observation-admission.md and completed source/response evidence; the full biological end state remains unverified.",
+    "Register a fresh bounded hypothesis-driven source/identifiability investigation for independent diverse known-amount nontryptic response anchors and protocol matching. Prior source discovery budgets are exhausted; do not silently reset them.",
+    "Prefer existing shared Hitlist evidence and concrete source needs recorded on849; no parser duplication, no source-prediction substitution.",
+    "Do not refit this panel or reopen0630/F2/F3/native/earlier observer outer partitions. Any new exact/discrete comparison needs prospective groups, same observation likelihood, precursor/machinery context and short/unobserved mass.",
+    "Do not mark availability achieved without verified precursor-relative biological amounts and transfer."
+  ],
+  "constraints": {
+    "no_subagents": true,
+    "no_modal": true,
+    "no_shared_environment_changes": true,
+    "no_new_data_retrieval_this_family": true,
+    "resource_limits": "unchanged3GiB startup free+speculative/RSS,20min/stage,1GiB reserve+32MiB margin,one numerical thread,50ms polling+OS peak",
+    "lower_memory_amendment": "inactive",
+    "pypi_upload": "Previously rejected by automatic approval; explicit approval still pending, do not retry",
+    "unrelated_tasks_unstaged": {
+      "additions": 346,
+      "deletions": 4
+    }
+  }
+}

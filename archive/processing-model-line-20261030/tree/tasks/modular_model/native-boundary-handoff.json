@@ -1,0 +1,65 @@
+{
+  "recorded_utc": "2026-10-25T07:45:26.162547+00:00",
+  "goal_turn": "progress",
+  "previous_goal_turn": "progress: native acquisition diagnostic0711 and exact2.0.38publication",
+  "presto_commit": "68218543c1dd54082b66f8097ab52882354e560e",
+  "presto_ci": 40173877564,
+  "presto_ci_confirmed_live": true,
+  "prior_presto_ci": 40172565872,
+  "prior_presto_ci_status": "success",
+  "family": "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0726_codex_native-boundary-context",
+  "experiment_complete": true,
+  "independent_replay_passed": true,
+  "full_goal_complete": false,
+  "decision": {
+    "gains": {
+      "zero": 0.0004121252447517598,
+      "length": -0.003476084361402787,
+      "sequence": 0.00320092089222479
+    },
+    "prediction_target_sd_ratio": 0.013855715222008682,
+    "improved_folds_vs_sequence": 3,
+    "paired_gain_intervals": {
+      "zero": [
+        -0.0021027489932386677,
+        0.0028489760063293425
+      ],
+      "length": [
+        -0.018646296028111714,
+        0.010554613407459019
+      ],
+      "sequence": [
+        -0.0003727746975623558,
+        0.00733609842094893
+      ]
+    },
+    "gates": {
+      "gain_over_all_controls": false,
+      "spread": false,
+      "four_of_five_folds": false,
+      "bootstrap_lower_bound": false
+    },
+    "prioritize_independent_confirmation": false,
+    "complete_APC_concentration_model": false,
+    "evidence_scope": "Training-only development OOF; overlapping fit sets, no blind biological test."
+  },
+  "next_plan": "experiments/agents/codex/plans/native-reference-invariant-development.md",
+  "next": [
+    "Poll same PrestoCI40173877564, not a new run. No Hitlist release is outstanding.",
+    "Register next fixed training-only all-pairs objective family. Audit counts and algebra first. Reuse0726original-objective fitted models by hash; do not repeat completed control training.",
+    "Use same214endpoints/56parents/55components and four feature maps; pair records are dependent, not new biological samples. Verify raw-source target differences and reference-invariant objective identities.",
+    "Nested-fit only all-pair models; score both objective families on both pair/reference spaces without opening original val/test. Independently replay newfits, transformations, metrics and bootstrap.",
+    "Follow fixed gate/stopping rule. If failed, stop expanding this response-only cohort and address native baseline amounts/observation contract before further generative fits. Preserve full APC precursor-relative availability goal."
+  ],
+  "verified_live_and_committed_artifacts": 68,
+  "all_local_sessions_terminal": true,
+  "source_and_recipe_published_byte_verified": true,
+  "primary_checkout_unchanged": true,
+  "unrelated_todo_diff_preserved": {
+    "additions": 346,
+    "deletions": 4
+  },
+  "pr_body_verified_sha256": "143dbb0de5482a1984a15b8f31b902b01b32d45758e77d5d64f175b649f6ca21",
+  "new_upstream_data_gap": false,
+  "existing_metadata_issue": 837
+}

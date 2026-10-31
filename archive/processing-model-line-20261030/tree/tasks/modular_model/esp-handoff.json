@@ -1,0 +1,46 @@
+{
+  "goal_turn_classification": "progress",
+  "head": "712cce2523665981496c9d8d66d9472c34dddb53",
+  "published_source_report": "experiments/2026-10-25_1628_codex_esp-response-source/README.md",
+  "published_assessment": "tasks/intact-precursor-scale-assessment.md",
+  "scientific_outcome": "No independent response or precursor-decay calibration target admitted; no new fit or outer outcome access. ESP article contract independently verified. Precise per-acquisition normalization/reference ask filed on existing Hitlist831.",
+  "active_ci_runs": [
+    40213063853,
+    40213073401
+  ],
+  "checks": [
+    {
+      "name": "lint-test",
+      "status": "IN_PROGRESS",
+      "conclusion": "",
+      "detailsUrl": "https://github.com/pirl-unc/presto/actions/runs/40213073401/job/121228286863"
+    },
+    {
+      "name": "lint-test",
+      "status": "IN_PROGRESS",
+      "conclusion": "",
+      "detailsUrl": "https://github.com/pirl-unc/presto/actions/runs/40213063853/job/121228258240"
+    },
+    {
+      "name": "docs",
+      "status": "IN_PROGRESS",
+      "conclusion": "",
+      "detailsUrl": "https://github.com/pirl-unc/presto/actions/runs/40213073401/job/121228286702"
+    },
+    {
+      "name": "docs",
+      "status": "IN_PROGRESS",
+      "conclusion": "",
+      "detailsUrl": "https://github.com/pirl-unc/presto/actions/runs/40213063853/job/121228258538"
+    }
+  ],
+  "all_local_stage_handles_terminal": true,
+  "next_action": "Poll these exact CI handles, check optional user Panorama/local-file response and existing data dependencies; do not repeat unchanged failed routes or fit uncalibrated precursor-decay labels. Shared Hitlist data admission precedes any new fit.",
+  "data_dependencies": [
+    "Supported download or authorized local PASS05890 standalone Skyline raw-area file (Hitlist762)",
+    "PXD058121 actual acquisition-scale/reference metadata before independent precursor loss (Hitlist831 comment6400322499)"
+  ],
+  "full_goal_unachieved": true,
+  "blocked_goal_turn_streak": 0,
+  "reason_not_blocked": "This turn yielded new source-eligibility evidence and filed an actionable specific metadata requirement; no repeated no-progress impasse audit yet."
+}
