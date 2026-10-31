@@ -31,6 +31,7 @@ class ModularPredictor:
     def predict(self, rows: Sequence[Observation]) -> list[dict]:
         outputs = self.model.predict(rows)
         results = []
+        panel_support = self.model.capabilities().get("assay_tracks", {})
         for row, output in zip(rows, outputs, strict=True):
             result = {
                 "observation_id": row.observation_id,
@@ -62,7 +63,6 @@ class ModularPredictor:
             }
             if output.value is not None:
                 spec = endpoint_spec(row.endpoint)
-                panel_support = self.model.capabilities().get("assay_tracks", {})
                 result["assay_panel"] = {}
                 for key, item in getattr(output, "assay_values", {}).items():
                     status = panel_support[key]

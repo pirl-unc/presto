@@ -1167,13 +1167,13 @@ class Presto(nn.Module):
 
     def predict(self, rows: Sequence[Observation]) -> list[Prediction]:
         """Inference refuses random requested outputs; qualification stays visible."""
+        track_support = None
         for row in rows:
             row.validate(self.config.max_length)
             selected = self.assay_selection(row)
-            if (
-                selected is not None
-                and self.assay_capabilities()[selected.key]["status"] == "random/untrained"
-            ):
+            if selected is not None and track_support is None:
+                track_support = self.assay_capabilities()
+            if selected is not None and track_support[selected.key]["status"] == "random/untrained":
                 raise ValueError(f"assay track: no trained support for {selected.key}")
             relevant_identity = tuple(
                 name for name in self.config.identity_tasks if has_identity_input(row, name)
