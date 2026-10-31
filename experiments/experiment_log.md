@@ -1,3 +1,28 @@
+## 2026-10-31 — External NetMHC benchmark: Presto BA vs NetMHCpan-4.1 / NetMHCIIpan-4.3 / MHCflurry 2.3.16
+
+- **Agent/model:** claude (Claude Sonnet 5.5); [experiment and reproduction](2026-10-31_0830_claude_netmhc-benchmark/README.md);
+  pre-registration `agents/claude/plans/2026-10-31_external-netmhc-benchmark.md`; PR #149; issue #140. CPU only, no Modal.
+- **Scored populations:** per-example validation (developmental) and test dumps of direct-factorized-affinity
+  (s42, s43) and curated-data-retrain (s42, s43). Literal exact-value `ic50/kd/kd_via_ic50/kd_via_ec50` rows,
+  one single-allelic four-digit HLA allele, identical rows for every method. Zero rows excluded by the
+  multi-allelic/residue/length/unsupported-allele/tool-failure rules. Test exact rows: direct I 1313 / II 982,
+  curated I 1156 / II 492 (censored and qualitative counted separately in the README).
+- **Training/loss/assay-output mapping:** not trained here; Presto predictions are the dumps' `prediction`
+  (log10 nM, track chosen by assay method). Baseline: per-endpoint TRAIN mean from each run's frozen scales.
+- **Tools:** NetMHCpan 4.1b `-BA`, NetMHCIIpan 4.3e `-BA`, mhcflurry 2.3.16 `--affinity-only` (default models).
+  Overlap audit impossible (training sets not shipped): all external results UNAUDITED.
+- **Held-out test, within-study mean-of-study Spearman (class x detector pools of 1-5 studies):**
+  class I fluorescence Presto .37-.41 (direct), .40 (curated) vs NetMHCpan .60/.70, MHCflurry .55/.58;
+  class I radioactivity Presto .30-.32 (direct), .50 (curated) vs NetMHCpan .64, MHCflurry .58;
+  class II fluorescence Presto .37-.39 (direct), .54-.55 (curated) vs NetMHCIIpan .70/.77;
+  class II radioactivity (1 study) Presto .05-.28 vs .43. Validation gaps smaller for the curated family.
+  Full CIs, RMSE, thresholded metrics, censored satisfaction and qualitative AUROC in the experiment dir.
+- **Winner/takeaway:** external tools lead everywhere on pooled within-study ranking; the curated-data family
+  narrows but does not close the gap. Direct-factorized class I fluorescence RMSE is worse than the TRAIN-mean
+  constant. Gap is an upper bound because tool training overlap is unaudited. Not a fresh confirmation set.
+- **Artifacts:** `artifacts/2026-10-31_0830_claude_netmhc-benchmark/` (per-example dumps; hashes in
+  `results/prediction_dump_hashes.json`).
+
 ## 2026-10-16 — Molecular MHC species and independent source-role audit
 
 - **Agent/model:** Codex / GPT-6; [experiment and reproduction](2026-10-16_1440_codex_molecular-species-lineage/README.md).
