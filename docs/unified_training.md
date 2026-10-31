@@ -222,6 +222,29 @@ Omit weights to retain natural sampling or the existing equal-group interleaving
 The general default remains natural sampling; specific mixtures need evaluation
 on their own class/output/data contract.
 
+### Affinity-first training controls (all opt-in)
+
+The defaults below reproduce the historical trainer exactly: natural or `balance_by`
+sampling, a per-observation mean loss, constant `learning_rate`, no clipping or EMA,
+and checkpoint selection by validation loss. Unset options are not written into the
+resolved `training` block, so existing resolved configs and resume contracts are
+unchanged. Set options are validated in preflight and are part of the resume contract;
+resume is bit-exact on the same host (specification: `tasks/affinity-first-training-spec.md`).
+Under natural sampling elution rows dominate by count, so these controls let affinity
+steer training without relabeling data.
+
+| Option | Default | Meaning |
+| --- | --- | --- |
+| `loss_normalization` | `"observation_mean"` | `"per_endpoint"` averages loss within each endpoint present in the batch, then takes a weighted mean over endpoints. Identity replay is unaffected. |
+| `endpoint_loss_weights` | `{}` | With `per_endpoint`, `{endpoint: positive weight}` (default 1 each; weights renormalize over the endpoints in the batch). |
+| `schedule` | `[]` | `[{"until_step": N, "stratum_weights": [...]}]` with strictly increasing `N`; a segment is active while `steps < N`, after the last the top-level `stratum_weights` apply. Requires `balance_by`; every segment must name every observed stratum. Crossing a boundary discards the unconsumed epoch order and rebuilds it (from the sampler RNG) with the new weights; `state["segment"]` and the order persist in the resume snapshot. The partial epoch is not a validation event. |
+| `lr_schedule` | `null` | `{warmup_steps, decay: "none"\|"cosine", min_lr_fraction, decay_steps}`. Linear warmup to `learning_rate`, then cosine to `min_lr_fraction * learning_rate` over `decay_steps` (default `max_steps`, required if absent). A pure function of the completed update count. |
+| `grad_clip_norm` | `null` | Global gradient-norm clip applied after the finite check and before the optimizer step. Per-parameter coverage norms stay pre-clip. |
+| `ema_decay` | `null` | EMA (bias-corrected warmup `min(decay, (1+n)/(10+n))`) of trainable parameters. Validation, selection, `selected.pt` and `last.pt` use EMA weights (`metadata.weights == "ema"`); `resume.pt` keeps raw weights plus the EMA state. |
+| `within_group_ranking_loss` | `null` | `{weight, endpoints}`. Adds `weight * mean softplus(pred_i - pred_j)` over pairs with `target_i < target_j` among exact (`=`) rows of one batch in the same cell (endpoint, source, assay method preparation/mechanism/detector, study). Censored rows and rows without a `study_id`/`pmid`/`reference_iri` never pair. Training labels only. |
+| `cell_batching` | `null` | `{rows_per_cell: k}`. Re-blocks each epoch order into shuffled blocks of up to `k` same-cell rows so pairs exist; the multiset of rows (and stratum frequencies) is unchanged, equal-group interleaving is not. Use `batch_size` divisible by `k`. |
+| `selection_metric` | `"validation_loss"` | `"within_study_spearman"` selects on `-mean Spearman` over validation (endpoint, study) cells of `selection_spearman_endpoints` using exact rows only. Cells with fewer than `selection_min_cell_rows` (default 20) exact rows are skipped; constant predictions count 0. No eligible cell is a preflight error rather than a silent fallback to loss. `admission.json` lists eligible/skipped cells; `history.json` records the cells used each validation. Cannot combine with `selection_endpoint`/`selection_reduction`. |
+
 ## Expanded measured outputs and study evaluation
 
 The shared observation path supports `qualitative_binding` (the source's reported
