@@ -454,7 +454,7 @@ anchors, held-out predictive evaluation and transfer evidence remain required.
 
 An eluted ligand is observed when it is presented, and presentation is
 binding x processing/supply x detection. The default (`legacy_joint`) elution
-readout reads the fused pMHC trunk through `cellular_score`, so the ligand
+readout reads the fused pMHC trunk through the cellular score head, so the ligand
 gradient shares the trunk with the affinity endpoints and never reads the
 affinity or stability scalar. The opt-in staged mode (a generalized
 mhcflurry-style presentation model) makes elution strictly downstream:
@@ -476,7 +476,7 @@ elution_logit = a * (-pooled_affinity_score)          # elution_affinity_endpoin
   the very score the affinity endpoints use. `elution_detach_affinity=True`
   detaches it, so elution trains `a` but no affinity parameter. The stability
   term is not detached and still trains the shared trunk through `half_life`.
-* `cellular_score` and `context_fusion` are not used (and not allocated unless
+* The cellular score head and `context_fusion` are not used (and not allocated unless
   another cellular/TCR endpoint needs `context_fusion`). Cell/APC context
   reaches elution only through `elution_processing`.
 * The processing term is named `processing` when `source_context` supplies
@@ -490,7 +490,7 @@ elution_logit = a * (-pooled_affinity_score)          # elution_affinity_endpoin
   resolved-config, resume contract) only when staging is on, so frozen v5-v7
   digests are unchanged. `parameter_dependencies` for `elution_observation` and
   `component:cellular` include the affinity decoder, half-life head, `a`, `b`,
-  `elution_processing` and `ms_score`, and never `cellular_score`.
+  `elution_processing` and the MS score head, and never the cellular score head.
 
 ## Observation and target contract
 
