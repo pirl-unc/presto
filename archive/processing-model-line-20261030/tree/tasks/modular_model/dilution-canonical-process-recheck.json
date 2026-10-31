@@ -1,0 +1,84 @@
+{
+  "observed_at_utc": "2026-10-25T10:43:28.391194+00:00",
+  "project_cwd_processes": [
+    {
+      "pid": 11483,
+      "ppid": 8588,
+      "name": "node",
+      "rss_bytes": 2441216,
+      "cwd": "/Users/iskander/code/presto"
+    },
+    {
+      "pid": 11485,
+      "ppid": 8588,
+      "name": "node_repl",
+      "rss_bytes": 9650176,
+      "cwd": "/Users/iskander/code/presto"
+    },
+    {
+      "pid": 11653,
+      "ppid": 11483,
+      "name": "node_repl",
+      "rss_bytes": 11665408,
+      "cwd": "/Users/iskander/code/presto"
+    },
+    {
+      "pid": 20058,
+      "ppid": 8588,
+      "name": "python3.12",
+      "rss_bytes": 24526848,
+      "cwd": "/Users/iskander/code/presto/.worktrees/presto-modular-model"
+    },
+    {
+      "pid": 23650,
+      "ppid": 11653,
+      "name": "codex",
+      "rss_bytes": 7208960,
+      "cwd": "/Users/iskander/code/presto"
+    },
+    {
+      "pid": 23651,
+      "ppid": 11653,
+      "name": "codex",
+      "rss_bytes": 7208960,
+      "cwd": "/Users/iskander/code/presto"
+    },
+    {
+      "pid": 23652,
+      "ppid": 23651,
+      "name": "node",
+      "rss_bytes": 31260672,
+      "cwd": "/Users/iskander/code/presto"
+    },
+    {
+      "pid": 23653,
+      "ppid": 23650,
+      "name": "node",
+      "rss_bytes": 5931008,
+      "cwd": "/Users/iskander/code/presto"
+    },
+    {
+      "pid": 23654,
+      "ppid": 11653,
+      "name": "codex",
+      "rss_bytes": 36274176,
+      "cwd": "/Users/iskander/code/presto"
+    },
+    {
+      "pid": 86932,
+      "ppid": 86931,
+      "name": "zsh",
+      "rss_bytes": 573440,
+      "cwd": "/Users/iskander/code/presto"
+    },
+    {
+      "pid": 87006,
+      "ppid": 86932,
+      "name": "codex",
+      "rss_bytes": 234749952,
+      "cwd": "/Users/iskander/code/presto"
+    }
+  ],
+  "unavailable_cwd_probes": 244,
+  "actions": "read-only; no processes terminated"
+}

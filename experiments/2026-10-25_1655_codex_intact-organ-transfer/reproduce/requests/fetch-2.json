@@ -1,0 +1,18 @@
+{
+  "action": "source_modification_header_audit",
+  "task_source": "analysis/modification_headers.py",
+  "source_views": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/intact_organ_recipes/2026-10-25_1655_codex_intact-organ-transfer/source_tables/source_views.parquet",
+  "source_sha256": {
+    "code/fetch.py": "ae0782737c2e07627f7a473dad95c4e7c579429f59aa962a7706641846d4caa7",
+    "analysis/modification_headers.py": "7d6b3caa82bd80d3801078de36b797e88261c7248c092cd6f6face0fa5cacf13",
+    "reproduce/source/modification_headers.py": "7d6b3caa82bd80d3801078de36b797e88261c7248c092cd6f6face0fa5cacf13",
+    "reproduce/source/fetch.py": "ae0782737c2e07627f7a473dad95c4e7c579429f59aa962a7706641846d4caa7",
+    "reproduce/launch-safe.sh": "a22afcd1eb1c7eebf8749f63b01f57af7fab2908d6ae9a5c6c29cb25abf33178"
+  },
+  "input_sha256": {
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/intact_organ_recipes/2026-10-25_1655_codex_intact-organ-transfer/source_tables/source_views.parquet": "1676b32c0751b73deafba3839cb30d91d241765832142eaffa193ce64be2b3fc"
+  },
+  "bootstrap_environment": {
+    "PYTHONSAFEPATH": "1"
+  }
+}

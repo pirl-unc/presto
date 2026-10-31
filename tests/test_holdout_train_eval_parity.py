@@ -17,7 +17,7 @@ torch = pytest.importorskip("torch")
 
 from presto.data.collate import PrestoCollator  # noqa: E402
 from presto.data.loaders import ElutionRecord, PrestoDataset  # noqa: E402
-from presto.models.presto import Presto  # noqa: E402
+from presto.legacy.presto import Presto  # noqa: E402
 
 CLASS1_SEQ = "GSHSMRYFYTAMSRPGRGEPRFIAVGYVDDTQFVRFDSDAASPR"
 
@@ -78,7 +78,7 @@ class TestHoldoutForwardPassesProvenance:
         would pass while the real one stayed broken -- which is precisely how
         the earlier gap-2 test managed to be green and wrong.
         """
-        import presto.scripts.train_iedb as train_iedb
+        import presto.legacy.scripts.train_iedb as train_iedb
 
         from source_probe import region_between
 
@@ -99,7 +99,7 @@ class TestHoldoutForwardPassesProvenance:
 
     def test_holdout_failure_is_recorded_not_swallowed(self):
         """A skipped pass must leave evidence, not just a printed line."""
-        import presto.scripts.train_iedb as train_iedb
+        import presto.legacy.scripts.train_iedb as train_iedb
 
         source = inspect.getsource(train_iedb)
         assert "holdout_error.json" in source
@@ -126,7 +126,7 @@ class TestHoldoutScoresTheSelectedModel:
     def _eval_region():
         import inspect as _inspect
 
-        import presto.scripts.train_iedb as train_iedb
+        import presto.legacy.scripts.train_iedb as train_iedb
 
         from source_probe import region_between
 
@@ -163,7 +163,7 @@ class TestHoldoutScoresTheSelectedModel:
         """Per-task prediction metrics do not replace the requested overall loss."""
         import inspect
 
-        import presto.scripts.train_iedb as train_iedb
+        import presto.legacy.scripts.train_iedb as train_iedb
 
         source = inspect.getsource(train_iedb)
         assert "heldout_loss, heldout_loss_terms = _call_evaluate_compat" in source

@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/private/tmp/presto-modular-model/experiments/2026-10-22_1745_codex_local-ic50-feasibility/analysis/verify.py", line 173, in <module>
+    main()
+  File "/private/tmp/presto-modular-model/experiments/2026-10-22_1745_codex_local-ic50-feasibility/analysis/verify.py", line 127, in main
+    compare(class_metrics, saved["by_class"][mhc_class])
+  File "/private/tmp/presto-modular-model/experiments/2026-10-22_1745_codex_local-ic50-feasibility/analysis/verify.py", line 69, in compare
+    assert expected[key] is None, (key, value, expected[key])
+           ^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('pearson', None, -7.626234442079562e-17)

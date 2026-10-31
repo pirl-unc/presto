@@ -1,0 +1,287 @@
+{
+  "coverage_gate": {
+    "exception_reason": null,
+    "exposed_features_without_updates": {},
+    "frozen_dependencies_with_inherited_support": [],
+    "policy": "required",
+    "status": "passed",
+    "untrained_auxiliary_outputs": [],
+    "untrained_parameters": []
+  },
+  "device": "cuda",
+  "elapsed_seconds": 172.80045925,
+  "gpu": "NVIDIA H100 80GB HBM3",
+  "metrics": {
+    "test": {
+      "ic50": {
+        "by_class": {
+          "II": {
+            "binding_at_500_nM": {
+              "accuracy": 0.7767220902612827,
+              "auprc": 0.6184639857916775,
+              "auroc": 0.817574835576864,
+              "balanced_accuracy": 0.682601880877743,
+              "f1": 0.5204081632653061,
+              "fn": 102,
+              "fp": 86,
+              "n": 842,
+              "precision": 0.5425531914893617,
+              "recall": 0.5,
+              "tn": 552,
+              "tp": 102
+            },
+            "n": 842,
+            "pearson": 0.6357605541284614,
+            "prediction_quantiles": [
+              -0.0605888144289195,
+              2.7927913428267144,
+              3.394740381551909,
+              3.90765375592874,
+              5.069055541361361
+            ],
+            "prediction_range": [
+              -0.0605888144289195,
+              5.069055541361361
+            ],
+            "prediction_sd": 0.7845892120438721,
+            "rmse": 0.7485358442002601,
+            "sd_ratio": 0.8362672256135911,
+            "spearman": 0.6089380791529624,
+            "target_sd": 0.9382039472708004
+          }
+        },
+        "censored": {
+          "n": 116,
+          "satisfaction": 0.16379310344827586
+        },
+        "exact": {
+          "binding_at_500_nM": {
+            "accuracy": 0.7767220902612827,
+            "auprc": 0.6184639857916775,
+            "auroc": 0.817574835576864,
+            "balanced_accuracy": 0.682601880877743,
+            "f1": 0.5204081632653061,
+            "fn": 102,
+            "fp": 86,
+            "n": 842,
+            "precision": 0.5425531914893617,
+            "recall": 0.5,
+            "tn": 552,
+            "tp": 102
+          },
+          "n": 842,
+          "pearson": 0.6357605541284614,
+          "prediction_quantiles": [
+            -0.0605888144289195,
+            2.7927913428267144,
+            3.394740381551909,
+            3.90765375592874,
+            5.069055541361361
+          ],
+          "prediction_range": [
+            -0.0605888144289195,
+            5.069055541361361
+          ],
+          "prediction_sd": 0.7845892120438721,
+          "rmse": 0.7485358442002601,
+          "sd_ratio": 0.8362672256135911,
+          "spearman": 0.6089380791529624,
+          "target_sd": 0.9382039472708004
+        },
+        "loss": 0.6242280472677308,
+        "n": 958
+      }
+    },
+    "train": {
+      "ic50": {
+        "by_class": {
+          "II": {
+            "binding_at_500_nM": {
+              "accuracy": 0.8169673598677868,
+              "auprc": 0.6789143288597382,
+              "auroc": 0.8594678043861284,
+              "balanced_accuracy": 0.7357869852804173,
+              "f1": 0.6078489229861316,
+              "fn": 759,
+              "fp": 570,
+              "n": 7261,
+              "precision": 0.64375,
+              "recall": 0.5757406372275014,
+              "tn": 4902,
+              "tp": 1030
+            },
+            "n": 7261,
+            "pearson": 0.6979399413767251,
+            "prediction_quantiles": [
+              0.09551569257490256,
+              2.786240819709041,
+              3.3190937734592394,
+              3.8035912231787536,
+              5.122823254245927
+            ],
+            "prediction_range": [
+              0.09551569257490256,
+              5.122823254245927
+            ],
+            "prediction_sd": 0.7737416810853979,
+            "rmse": 0.7038512539330342,
+            "sd_ratio": 0.7946374315132816,
+            "spearman": 0.6775107555756891,
+            "target_sd": 0.9737040446382063
+          }
+        },
+        "exact": {
+          "binding_at_500_nM": {
+            "accuracy": 0.8169673598677868,
+            "auprc": 0.6789143288597382,
+            "auroc": 0.8594678043861284,
+            "balanced_accuracy": 0.7357869852804173,
+            "f1": 0.6078489229861316,
+            "fn": 759,
+            "fp": 570,
+            "n": 7261,
+            "precision": 0.64375,
+            "recall": 0.5757406372275014,
+            "tn": 4902,
+            "tp": 1030
+          },
+          "n": 7261,
+          "pearson": 0.6979399413767251,
+          "prediction_quantiles": [
+            0.09551569257490256,
+            2.786240819709041,
+            3.3190937734592394,
+            3.8035912231787536,
+            5.122823254245927
+          ],
+          "prediction_range": [
+            0.09551569257490256,
+            5.122823254245927
+          ],
+          "prediction_sd": 0.7737416810853979,
+          "rmse": 0.7038512539330342,
+          "sd_ratio": 0.7946374315132816,
+          "spearman": 0.6775107555756891,
+          "target_sd": 0.9737040446382063
+        },
+        "loss": 0.5225259093405542,
+        "n": 7261
+      }
+    },
+    "validation": {
+      "ic50": {
+        "by_class": {
+          "II": {
+            "binding_at_500_nM": {
+              "accuracy": 0.7770448548812665,
+              "auprc": 0.5957671352227293,
+              "auroc": 0.8086123781878499,
+              "balanced_accuracy": 0.6995213905591264,
+              "f1": 0.5677749360613811,
+              "fn": 101,
+              "fp": 68,
+              "n": 758,
+              "precision": 0.6201117318435754,
+              "recall": 0.5235849056603774,
+              "tn": 478,
+              "tp": 111
+            },
+            "n": 758,
+            "pearson": 0.6291893985941346,
+            "prediction_quantiles": [
+              0.6339433595733346,
+              2.7531419827047783,
+              3.3211286767002246,
+              3.822559432534884,
+              4.945570077137479
+            ],
+            "prediction_range": [
+              0.6339433595733346,
+              4.945570077137479
+            ],
+            "prediction_sd": 0.7572071614211952,
+            "rmse": 0.7928728688402081,
+            "sd_ratio": 0.7526884706032069,
+            "spearman": 0.6374157145911067,
+            "target_sd": 1.0060034011340269
+          }
+        },
+        "censored": {
+          "n": 116,
+          "satisfaction": 0.12931034482758622
+        },
+        "exact": {
+          "binding_at_500_nM": {
+            "accuracy": 0.7770448548812665,
+            "auprc": 0.5957671352227293,
+            "auroc": 0.8086123781878499,
+            "balanced_accuracy": 0.6995213905591264,
+            "f1": 0.5677749360613811,
+            "fn": 101,
+            "fp": 68,
+            "n": 758,
+            "precision": 0.6201117318435754,
+            "recall": 0.5235849056603774,
+            "tn": 478,
+            "tp": 111
+          },
+          "n": 758,
+          "pearson": 0.6291893985941346,
+          "prediction_quantiles": [
+            0.6339433595733346,
+            2.7531419827047783,
+            3.3211286767002246,
+            3.822559432534884,
+            4.945570077137479
+          ],
+          "prediction_range": [
+            0.6339433595733346,
+            4.945570077137479
+          ],
+          "prediction_sd": 0.7572071614211952,
+          "rmse": 0.7928728688402081,
+          "sd_ratio": 0.7526884706032069,
+          "spearman": 0.6374157145911067,
+          "target_sd": 1.0060034011340269
+        },
+        "loss": 0.646642283732108,
+        "n": 874
+      }
+    }
+  },
+  "overall_losses": {
+    "test": {
+      "assay_observation_mean": 0.6242280472677308,
+      "combined": 0.6242280472677308,
+      "identity_label_mean": null
+    },
+    "train": {
+      "assay_observation_mean": 0.5225259093405541,
+      "combined": 0.5225259093405541,
+      "identity_label_mean": null
+    },
+    "validation": {
+      "assay_observation_mean": 0.646642283732108,
+      "combined": 0.646642283732108,
+      "identity_label_mean": null
+    }
+  },
+  "qualification": "not_qualified",
+  "selected_epoch": 8,
+  "steps": 1000,
+  "support": {
+    "ic50": {
+      "observations": 58088,
+      "status": "directly_supervised",
+      "validation": "not_evaluated"
+    }
+  },
+  "test_policy": "evaluate_selected_once",
+  "training_exposures": {
+    "ic50": 63720
+  },
+  "unique_training_labels": {
+    "ic50": 7261
+  },
+  "untrained_selected_parameters": []
+}

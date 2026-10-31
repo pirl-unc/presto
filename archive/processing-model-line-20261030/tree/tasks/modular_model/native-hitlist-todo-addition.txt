@@ -1,0 +1,12 @@
+# Native PSMD2 source admission (#837)
+
+- [x] Create isolated durable feature checkout from authoritative main.
+- [x] Read source qualification and freeze the source/query implementation spec.
+- [ ] Implement the shared source adapter, typed relations and metadata contract.
+- [ ] Add meaningful fixtures and independently replay the real source package.
+- [ ] Run format, lint and the full suite with unchanged resource guards.
+- [ ] Complete a versioned PR, verified merge and tested PyPI release.
+
+Spec: tasks/native_psmd2_source_spec.md. No production code has changed yet;
+Presto family 0424 independently qualifies the original reference and quantities.
+

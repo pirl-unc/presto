@@ -1,0 +1,43 @@
+{
+  "requested_url": "https://doi.org/10.1074/mcp.M900566-MCP200",
+  "started_at": "2026-10-24T10:08:14.367248+00:00",
+  "command": [
+    "experiments/2026-10-24_0602_codex_dc-machinery-admission/code/launch.py",
+    "publisher-doi",
+    "https://doi.org/10.1074/mcp.M900566-MCP200"
+  ],
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "presto_head": "c7d538cfc64f2295e70c2bf693e333f08d1f34b6",
+  "launcher_sha256": "86c54f88a4c9edc743467e5a9acc2fd49d9fcdf57786562ac2f3b24a28eb1e4d",
+  "body_path": "/private/tmp/presto-modular-model/data/dc_machinery_source_admission/2026-10-24_0602_codex_dc-machinery-admission/retrieval/publisher-doi/body",
+  "purpose": "source-discovery-only; not a curated training observation",
+  "status_code": 200,
+  "final_url": "https://linkinghub.elsevier.com/retrieve/pii/S1535947620309142",
+  "content_type": "text/html;charset=UTF-8",
+  "response_headers": {
+    "Date": "Sat, 24 Oct 2026 10:08:15 GMT",
+    "Content-Type": "text/html;charset=UTF-8",
+    "Content-Length": "2718",
+    "Connection": "keep-alive",
+    "Set-Cookie": "JSESSIONID=56D9BDC3D09565E0CC71B6F6C2C3EA02; Path=/retrieve; Secure; HttpOnly, visitorId=NM5G8OUN4eKaxLOYwpHN; Max-Age=2147483647; Expires=Thu, 11 Nov 2094 13:22:22 GMT; Path=/",
+    "P3P": "CP=\"NON DSP COR CUR ADM DEV TAI PSA PSD OUR IND UNI NAV STA PRE COM INT CNT\",policyref=\"https://linkinghub.elsevier.com/retrieve/static/P3P/IHUB-p3p.xml\"",
+    "tdm-reservation": "1",
+    "tdm-policy": "https://www.elsevier.com/tdm/tdmrep-policy.json",
+    "Content-Language": "en"
+  },
+  "redirects": [
+    {
+      "url": "https://doi.org/10.1074/mcp.M900566-MCP200",
+      "status": 302
+    }
+  ],
+  "n_bytes": 2718,
+  "sha256": "cec810910971b48a2c043d4cdd34d119fcd3df0e394b6b51b2348346e2e64855",
+  "elapsed_seconds": 0.6488891250337474
+}

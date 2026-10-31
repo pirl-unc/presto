@@ -1,0 +1,42 @@
+{
+  "model": {
+    "dropout": 0.1,
+    "endpoints": [],
+    "identity_tasks": [
+      "mhc_species"
+    ],
+    "max_length": 512,
+    "species": [
+      "human",
+      "mouse",
+      "rat",
+      "rhesus_macaque"
+    ]
+  },
+  "schema": "presto.modular.manifest.v1",
+  "sources": [
+    {
+      "label_policy": "one reference species annotation per unique slot/sequence with source aliases; conflicts deferred",
+      "path": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/modular_cohorts/2026-10-21-mhc-reference/observations.jsonl",
+      "population": "all domains passing the prospectively frozen four-taxon reference contract",
+      "sha256": "5ba2ef6f40b047ddc256c61fb06e802c82bc2a400830a178d44a0a82455ef510",
+      "source": "mhc_reference_domains",
+      "split_policy": "exact-domain and original-reference-chain connected components; fixed SHA25670/15/15; homology independence unverified"
+    }
+  ],
+  "training": {
+    "batch_size": 64,
+    "checkpoint_every_steps": 50,
+    "coverage_policy": "required",
+    "identity_batch_size": 64,
+    "identity_weight": 1,
+    "learning_rate": 0.0003,
+    "max_epochs": 50,
+    "max_steps": null,
+    "min_epochs": 10,
+    "patience": 10,
+    "seed": 42,
+    "test_policy": "evaluate_selected_once",
+    "weight_decay": 0.0001
+  }
+}

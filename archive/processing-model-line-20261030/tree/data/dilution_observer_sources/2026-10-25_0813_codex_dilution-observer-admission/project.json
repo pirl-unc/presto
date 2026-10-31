@@ -1,0 +1,109 @@
+{
+  "accession" : "PXD024809",
+  "title" : "Immunopeptidomics DIA and DDA Dynamic Range Experiment",
+  "additionalAttributes" : [ ],
+  "projectDescription" : "The peptide identification sensitivity of the affinity purified immunopeptidome of a JY cell line (Epstein–Barr virus-immortalized B cell lymphoblastoid line, ECACC 94022533, IHW9287) for DDA and DIA experiments was assessed by a linear concentration series. JY cells are homozygous for all HLA-I loci (HLA-A*02:01, HLA-B*07:02, and HLA-C*07:02). The JY HLA-I ligandome was isolated through immunoaffinity purification, as described in Marcu, Bichmann and Kuchenbecker et al 2021.",
+  "sampleProcessingProtocol" : "The dilution series of JY HLA-I peptide eluates spiked was characterized by LC-MS/MS employing an Ultimate 3000 RSLC Nano UHPLC System (Thermo Fisher Scientific) coupled on-line to an Orbitrap Fusion Lumos mass spectrometer (Thermo Fisher Scientific, San Jose, CA) equipped with a Nanospray FlexTM Ion Source (Thermo Fisher Scientific). Peptides were trapped on a 75 µm x 2 cm Acclaim™ PepMap™ 100 C18 Nanotrap column (Thermo Fisher Scientific) with 1% ACN/ 0.05% TFA at a flow rate of 4 µl/min for 10 minutes. Peptides were separated on a 50 µm x 25 cm PepMap RSLC C18 (Thermo Fisher Scientific) column, with a particle size of 2 µm. Peptides were eluted with a linear gradient from 3% to 40% solvent B (80% ACN, 0.15% FA in water) at a flow rate of 0.3 µl/min over 90 minutes. In addition, the purified JY HLA-I peptide solution was spiked with a cocktail of 10 heavy labeled synthetic peptides diluted to a stock solution of 10 fmol/µl. Ten different tryptic peptides covering the retention time range of HLA ligands were selected and synthesized with an L+7 heavy isotopic modification to allow easy distinction between native and spike-in peptides (IS[L(13C6; 15N)]GEHEGGGK, VGASTGYSG[L(13C6; 15N)]K, T[L(13C6; 15N)]IAYDDSSTK, F[L(13C6; 15N)]ASSEGGFTK, GF[L(13C6; 15N)]DYESTGAK, A[L(13C6; 15N)]FSSITDSEK, HFA[L(13C6; 15N)]FSTDVTK, VYAET[L(13C6; 15N)]SGFIK, GASDF[L(13C6; 15N)]SFAVK, FF[L(13C6; 15N)]TGTSIFVK). The synthetic peptide mix, having a stock concentration of 10 fmol/µl, was diluted with the JY HLA-I peptide eluate to 0.2 fmol/µl for each synthetic peptide, resulting in sample No.1. The sample No.1 was diluted 1:2 with 1% ACN/ 0.05% TFA resulting in sample No.2, which in turn was diluted 1:2 with 1% ACN/ 0.05% TFA to obtain sample No.3, etc. This process results in five serial dilutions that were aliquoted and stored at -80°C until LC-MS/MS analysis. Mass spectrometric data acquisition was optimized for HLA-I ligands. DDA methods and associated data were thoroughly described and published in our previous study (doi: https://doi.org/10.1101/778944). DIA methods consisted of full scans acquired as tSIM spectra in profile mode at a resolution of 120,000 at m/z 200 with a target value of 1.5e5. DIA isolation windows were adjusted to precursor density resulting in two different non-overlapping isolation window widths that varied for HLA-I, resulting in DIA1 and DIA2 experiments. Spectra were acquired in Top20 mode for both tSIM scans, DIA1 and DIA2 experiments with 100 ms maximum injection time. Similar to the DDA acquisition method, we limited the precursor mass range to accommodate HLA-I ligand length distribution. HLA-I ligands were fragmented with CID at a collision energy of 35% and an activation Q of 0.25. The Orbitrap resolution was set to 30,000. The tSIM scan isolation was performed in the quadrupole with an isolation width of m/z 252 centered at m/z 525. Thereby, we obtained isolation windows ranging from m/z 399 – 651. Mass windows were applied as follows. The mass window for the DIA1 experiment was set to 15 m/z, resulting in 10 DIA windows in covering an interval from 400 m/z - 550 m/z. The DIA2 experiment consisted of 34 m/z mass windows, resulting in 3 DIA windows covering 550 m/z - 650 m/z.",
+  "dataProcessingProtocol" : "DDA Analysis: DDA MS runs were processed using the nfcore/mhcquant workflow V.1.6.0 applying the default settings and a variable modification of +7. The swiss prot reference proteome (state: 21.04.2020) was used for the database search. DIA Analysis: A master library of all DDA peptide identification results was generated using the nfcore/DIAproteomics workflow V.1.2.2 with default settings. Subsequently, all DIA MS runs were coprocessed using the generated master library.",
+  "projectTags" : [ ],
+  "keywords" : [ "Dynamic range", "Dia", "Immunopeptidomics", "Hla" ],
+  "doi" : "",
+  "submissionType" : "PARTIAL",
+  "license" : "Creative Commons Public Domain (CC0)",
+  "submissionDate" : "2021-05-07",
+  "publicationDate" : "2025-09-04",
+  "submitters" : [ {
+    "title" : "Dr",
+    "firstName" : "Ana",
+    "lastName" : "Marcu",
+    "identifier" : "1859500",
+    "affiliation" : "University of Tübingen, Interfaculty Institute for Cell Biology, Department of Immunology",
+    "email" : "anamarcu.pe@gmail.com",
+    "country" : "Germany",
+    "orcid" : "0000-0003-0808-8097",
+    "name" : "Ana Marcu",
+    "id" : "1859500"
+  } ],
+  "labPIs" : [ {
+    "title" : "Dr",
+    "firstName" : "Hans-Georg",
+    "lastName" : "Rammensee",
+    "identifier" : "2247926",
+    "affiliation" : "Institute for Cell Biology Dept. Immunology Auf der Morgenstelle 15, 72076 Tübingen Germany Partner Site of the German Cancer Consortium",
+    "email" : "rammensee@uni-tuebingen.de",
+    "country" : "",
+    "orcid" : "",
+    "name" : "Hans-Georg Rammensee",
+    "id" : "2247926"
+  } ],
+  "instruments" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "MS",
+    "accession" : "MS:1002732",
+    "name" : "Orbitrap Fusion Lumos"
+  } ],
+  "softwares" : [ ],
+  "experimentTypes" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "PRIDE",
+    "accession" : "PRIDE:0000433",
+    "name" : "Affinity purification coupled with mass spectrometry proteomics"
+  } ],
+  "quantificationMethods" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "PRIDE",
+    "accession" : "PRIDE:0000312",
+    "name" : "Label free"
+  } ],
+  "countries" : [ "Germany" ],
+  "sampleAttributes" : [ {
+    "@type" : "Tuple",
+    "key" : {
+      "cvLabel" : "EFO",
+      "accession" : "EFO:0000635",
+      "name" : "organism part"
+    },
+    "value" : [ {
+      "cvLabel" : "BTO",
+      "accession" : "BTO:0000214",
+      "name" : "cell culture"
+    } ]
+  }, {
+    "@type" : "Tuple",
+    "key" : {
+      "cvLabel" : "EFO",
+      "accession" : "OBI:0100026",
+      "name" : "organism"
+    },
+    "value" : [ {
+      "cvLabel" : "NEWT",
+      "accession" : "NEWT:9606",
+      "name" : "Homo sapiens (Human)"
+    } ]
+  } ],
+  "organisms" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "NEWT",
+    "accession" : "NEWT:9606",
+    "name" : "Homo sapiens (human)"
+  } ],
+  "organismParts" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "BTO",
+    "accession" : "BTO:0000214",
+    "name" : "Cell culture"
+  } ],
+  "diseases" : [ ],
+  "references" : [ {
+    "pubmedID" : 0,
+    "doi" : "10.1136/JITC-2025-012083"
+  } ],
+  "identifiedPTMStrings" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "MOD",
+    "accession" : "MOD:00425",
+    "name" : "monohydroxylated residue"
+  } ],
+  "totalFileDownloads" : 919,
+  "otherOmicsLinks" : [ "px:PXD019643", "pride.project:PXD024837", "px:PXD024837" ]
+}

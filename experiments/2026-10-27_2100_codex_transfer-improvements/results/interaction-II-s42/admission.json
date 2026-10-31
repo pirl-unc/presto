@@ -1,0 +1,32 @@
+{
+  "cell_types": [],
+  "census": {
+    "test:ic50:=": 842,
+    "test:ic50:>": 116,
+    "train:ic50:=": 7261,
+    "validation:ic50:=": 758,
+    "validation:ic50:>": 116
+  },
+  "component_states": {},
+  "context_assertion_states": {
+    "intervention": {},
+    "pathway": {}
+  },
+  "cytokine_numeric": {},
+  "cytokine_states": {},
+  "frozen_parameters": [],
+  "frozen_targets": [],
+  "inherited_scalers": [],
+  "manifest_sha256": "aabd436e18ea2216cd4f53b2d903cb6fe47d0d496f62d3b726e1976aa698a89a",
+  "module_pruning": [],
+  "observed_numeric_features": {
+    "acquisition": [],
+    "observation": [],
+    "preparation": []
+  },
+  "ordinal_levels": {},
+  "source_label_values": {},
+  "training_labels": {
+    "ic50": 7261
+  }
+}

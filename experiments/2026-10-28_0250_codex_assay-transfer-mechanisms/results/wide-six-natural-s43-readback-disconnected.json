@@ -1,0 +1,19 @@
+{
+  "condition": "wide-six-natural-s43",
+  "expected": {
+    "condition": "wide-six-natural-s43",
+    "archive": "2026-10-28_0250_codex_assay-transfer-mechanisms/wide-six-natural-s43.tar.gz",
+    "sha256": "c9ad22b317eb64a9eacf8211d7425e0cdbd716ebf9be8de395c29f6ab20d6aa3",
+    "bytes": 225585993
+  },
+  "method": "CPU-only mounted filesystem and 256KiB function-result stream",
+  "requested_gpu": null,
+  "cpu": 1,
+  "memory_mib": 1024,
+  "source_sha256": "66d2b8698abb06e8d974fb98fef7a3179deb3cbc12af64309df4561840972d8f",
+  "status": "failed",
+  "error": "ConflictError('function fu-SNzO5JrcmjgxuvRjfJ2KgJ is stopped')",
+  "path": "/Users/iskander/code/presto/.worktrees/shared-training/presto/artifacts/2026-10-28_0250_codex_assay-transfer-mechanisms/readback-downloads/wide-six-natural-s43.tar.partial",
+  "bytes_received": 0,
+  "seconds": 0.28208945799269713
+}

@@ -1,0 +1,71 @@
+{
+  "status": "verified_source_aggregation",
+  "source_records": 21083,
+  "verified_pair_aggregates": 40252,
+  "concentration_rows": 184637,
+  "exact_rows": 136233,
+  "bound_rows": 48404,
+  "sensitivity": [
+    {
+      "mhc_class": "I",
+      "n": 8310,
+      "dominant_ic50_study": "study-component:2afb4c6763fa6e577677dadaa0818e3f4a71270758c51bad1a01636118a52123",
+      "dominant_study_metadata": [
+        {
+          "group_id": "study-component:2afb4c6763fa6e577677dadaa0818e3f4a71270758c51bad1a01636118a52123",
+          "metadata": {
+            "assay_comments": "",
+            "assay_method": "purified MHC/competitive/radioactivity",
+            "endpoint": "ic50",
+            "group_aliases": [
+              "pmid:19734234"
+            ],
+            "pmid": 19734234,
+            "reference_iri": "http://www.iedb.org/reference/1022551",
+            "reference_title": "Quantitating T cell cross-reactivity for unrelated peptide antigens.",
+            "response_measured": "half maximal inhibitory concentration (IC50)",
+            "study_id": "pmid:19734234",
+            "submission_id": ""
+          },
+          "n": 8858
+        }
+      ],
+      "dominant_n": 7523,
+      "remaining_n": 787,
+      "remaining_spearman": 0.7772078398786711,
+      "fraction_within_10_percent": 0.942719614921781,
+      "interpretation": "Exploratory dominance sensitivity; remaining rows may also reuse data."
+    },
+    {
+      "mhc_class": "II",
+      "n": 1101,
+      "dominant_ic50_study": "study-component:9958f3bef845b2c211ae4d362d832d1053e5046d1a00dea3c1fdf40e0eeefb43",
+      "dominant_study_metadata": [
+        {
+          "group_id": "study-component:9958f3bef845b2c211ae4d362d832d1053e5046d1a00dea3c1fdf40e0eeefb43",
+          "metadata": {
+            "assay_comments": "",
+            "assay_method": "purified MHC/competitive/radioactivity",
+            "endpoint": "ic50",
+            "group_aliases": [
+              "pmid:26195744"
+            ],
+            "pmid": 26195744,
+            "reference_iri": "http://www.iedb.org/reference/1030032",
+            "reference_title": "Dengue virus infection elicits highly polarized CX3CR1+ cytotoxic CD4+ T cells associated with protective immunity.",
+            "response_measured": "half maximal inhibitory concentration (IC50)",
+            "study_id": "pmid:26195744",
+            "submission_id": "1000699"
+          },
+          "n": 1029
+        }
+      ],
+      "dominant_n": 1024,
+      "remaining_n": 77,
+      "remaining_spearman": 0.8614713208948532,
+      "fraction_within_10_percent": 0.971843778383288,
+      "interpretation": "Exploratory dominance sensitivity; remaining rows may also reuse data."
+    }
+  ],
+  "caution": "Study components and assay IDs do not establish independent experiments."
+}

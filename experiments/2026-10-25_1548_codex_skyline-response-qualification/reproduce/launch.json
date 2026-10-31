@@ -1,0 +1,55 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "created_utc": "2026-10-25T15:48:48.097709+00:00",
+  "experiment_id": "2026-10-25_1548_codex_skyline-response-qualification",
+  "presto_commit": "d40f51d00d68d928e342d2ce9c937b61f3c63b77",
+  "dirty_tracked": true,
+  "dirty_scope": "Preserved unrelated tasks plus newly registered source qualification",
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "data_directory": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/skyline_response_sources/2026-10-25_1548_codex_skyline-response-qualification",
+  "public_hosts": [
+    "db.systemsbiology.net",
+    "peptideatlas.org",
+    "www.peptideatlas.org",
+    "panoramaweb.org",
+    "assays.cancer.gov"
+  ],
+  "limits": {
+    "stage_seconds": 1200,
+    "rss_bytes": 3221225472,
+    "startup_memory_bytes": 3221225472,
+    "disk_floor_bytes": 1073741824,
+    "start_margin_bytes": 33554432
+  },
+  "environment_overrides": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONUNBUFFERED": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1"
+  },
+  "frozen_code_sha256": {
+    "code/fetch.py": "1ad75f1b548058c9ec8f5fe79ed6ef70500dac5a48e6757edac79c0709735d04",
+    "code/launch.py": "337b0957f12bced683299134c33465d6b26145fbaa4d9bc1e233832b437a9e27",
+    "reproduce/source/fetch.py": "1ad75f1b548058c9ec8f5fe79ed6ef70500dac5a48e6757edac79c0709735d04",
+    "reproduce/source/launch.py": "337b0957f12bced683299134c33465d6b26145fbaa4d9bc1e233832b437a9e27",
+    "reproduce/launch.sh": "b9b19847586d9380fd6c1aa458fde0d2136bcf0870c1f7578bd24f97dce115c9"
+  },
+  "plan_sha256": "bad6855897698777f5f4b8d6058f421054774ad5d49a06df60385b8f8c084d2c",
+  "input_sha256": {},
+  "network_limits": {
+    "metadata_requests": 6,
+    "metadata_bytes_each": 5242880,
+    "processed_bytes_each": 268435456,
+    "total_bytes": 536870912,
+    "connect_seconds": 10,
+    "read_seconds": 30,
+    "request_wall_seconds": 120
+  },
+  "training_contract": null,
+  "test_split": null,
+  "reason_no_predictions": "Public source access/schema/semantic admission only; no model fitting or outer-data access.",
+  "extension_policy": "Every discovered request set is an immutable JSON file under reproduce/requests, citing observed source links/API documentation and its stage/scope before execution."
+}

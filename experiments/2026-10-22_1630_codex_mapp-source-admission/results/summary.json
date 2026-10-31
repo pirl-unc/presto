@@ -1,0 +1,83 @@
+{
+  "evidence_types": {
+    "MSMS": 1291,
+    "MULTI-MATCH": 74573,
+    "MULTI-MSMS": 72496,
+    "MULTI-SECPEP": 1599
+  },
+  "link_issues": {
+    "group_to_missing_peptide": 0
+  },
+  "modifications": {
+    "2 Oxidation (M)": 406,
+    "3 Oxidation (M)": 52,
+    "4 Oxidation (M)": 15,
+    "5 Oxidation (M)": 4,
+    "Acetyl (Protein N-term)": 6753,
+    "Acetyl (Protein N-term),2 Oxidation (M)": 25,
+    "Acetyl (Protein N-term),Oxidation (M)": 472,
+    "Oxidation (M)": 7010,
+    "Unmodified": 135222
+  },
+  "n_acquisitions": 18,
+  "n_evidence_rows": 149959,
+  "n_indexable_protein_groups": 2003,
+  "n_peptide_rows": 10673,
+  "n_quantity_comparisons": 160095,
+  "n_quarantined_group_records": 36,
+  "n_training_admitted": 0,
+  "n_unique_sequences": 10673,
+  "peptide_counts": {
+    "canonical_sequence": 10673,
+    "contaminant": 1562,
+    "reverse": 396,
+    "single_group": 9573,
+    "single_protein": 4413,
+    "structural_contrast_support": 2272
+  },
+  "peptide_lengths": {
+    "6": 12,
+    "7": 11,
+    "8": 206,
+    "9": 399,
+    "10": 665,
+    "11": 977,
+    "12": 1035,
+    "13": 1029,
+    "14": 929,
+    "15": 822,
+    "16": 761,
+    "17": 639,
+    "18": 537,
+    "19": 445,
+    "20": 405,
+    "21": 347,
+    "22": 250,
+    "23": 244,
+    "24": 168,
+    "25": 159,
+    "26": 128,
+    "27": 107,
+    "28": 74,
+    "29": 64,
+    "30": 53,
+    "31": 37,
+    "32": 32,
+    "33": 40,
+    "34": 27,
+    "35": 19,
+    "36": 13,
+    "37": 15,
+    "38": 8,
+    "39": 11,
+    "40": 5
+  },
+  "quantity_states": {
+    "both_positive_agree_within_rounding_tolerance": 95336,
+    "both_zero": 55483,
+    "reported_zero_evidence_positive": 9276
+  },
+  "structural_contrast_groups": 572,
+  "structural_contrast_multipeptide_groups": 271,
+  "structural_contrast_multipeptide_rows": 1971
+}

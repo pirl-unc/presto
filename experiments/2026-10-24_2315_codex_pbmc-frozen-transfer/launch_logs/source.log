@@ -1,0 +1,69 @@
+Original asset, archive and predecessor fingerprints pass
+{
+  "source_manifest_sha256": "63752e0221b53b8e67ccdfa21c87b8babeb58296a458c9bfa2c6159275318b67",
+  "reconciliation": {
+    "maximum_relative_replay_error": 6.500425353919898e-05,
+    "n_evidence": 8851,
+    "n_groups": 283,
+    "n_missing_evidence_intensities": 185,
+    "n_peptides": 985,
+    "n_positive_run_quantities": 7653,
+    "n_runs": 14,
+    "n_zero_run_quantities": 6137,
+    "relation_rows": {
+      "channels": 14,
+      "derivation_inputs": 22641,
+      "evidence": 8851,
+      "groups": 283,
+      "label_aliases": 14,
+      "material_contexts": 31,
+      "material_links": 30,
+      "peptide_rows": 985,
+      "quantity_measurements": 27580,
+      "quantity_results": 13790,
+      "source_assertions": 65,
+      "source_records": 10207
+    }
+  },
+  "source_registry": {
+    "dataset_accession": "PXD009438",
+    "limitations": [
+      "captured_pool_not_free_concentration",
+      "source_sample_labels_not_physical_specimen_identity",
+      "unresolved_specimens_and_aliquots",
+      "no_cross_modal_or_cross_patient_pairing",
+      "project_metadata_blood_serum_conflicts_with_publication_PBMC_description"
+    ],
+    "material_context_artifact": "typed/material_contexts.parquet",
+    "material_link_artifact": "typed/material_links.parquet",
+    "measured_pools": [
+      "proteasome_associated_fragment"
+    ],
+    "measurement_grain": "deposited_peptide_row_by_source_acquisition_run",
+    "n_primary_peptide_rows": 985,
+    "organism_scope": "human_project_scope",
+    "quantity_artifact": "typed/quantity_results.parquet",
+    "rights": {
+      "PRIDE_deposit": "EBI terms of use"
+    },
+    "source_id": "pxd009438",
+    "training_admission": "deferred_no_endpoint_specific_recipe"
+  },
+  "query_relations": [
+    "pbmc_mapp_source_record",
+    "pbmc_mapp_peptide",
+    "pbmc_mapp_group",
+    "pbmc_mapp_channel",
+    "pbmc_mapp_material_context",
+    "pbmc_mapp_material_link",
+    "pbmc_mapp_identification",
+    "pbmc_mapp_quantity_measurement",
+    "pbmc_mapp_derivation_input",
+    "pbmc_mapp_source_assertion",
+    "external_pbmc_proteasome_fragment_quantity",
+    "pbmc_mapp_label_alias"
+  ],
+  "predecessor_snapshot": "existing3.8GiBreference generation; independently snapshotted with CoW, not used as PBMCtraining data",
+  "source_schema_version": 9,
+  "source_catalog_schema_version": 14
+}

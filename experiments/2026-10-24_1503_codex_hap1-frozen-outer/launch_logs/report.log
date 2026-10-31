@@ -1,0 +1,197 @@
+Matplotlib is building the font cache; this may take a moment.
+{
+  "cohort_counts": {
+    "validation": {
+      "observations": 19744,
+      "peptides": 1438,
+      "components": 405
+    },
+    "test": {
+      "observations": 22724,
+      "peptides": 1606,
+      "components": 423
+    }
+  },
+  "condition_results": [
+    {
+      "split": "validation",
+      "condition": "hap1_calr_ko",
+      "baseline_rmse": 0.47063105426210056,
+      "sequence_rmse": 0.45101651448848434,
+      "rmse_gain_percent": 4.167710480637476,
+      "sequence_spearman": 0.3479773113415563,
+      "prediction_sd": 0.15289619478254016
+    },
+    {
+      "split": "validation",
+      "condition": "hap1_canx_ko",
+      "baseline_rmse": 0.3938506330874474,
+      "sequence_rmse": 0.3696523134499037,
+      "rmse_gain_percent": 6.1440347189110405,
+      "sequence_spearman": 0.4063679221538736,
+      "prediction_sd": 0.15027719721831723
+    },
+    {
+      "split": "validation",
+      "condition": "hap1_erap1_ko",
+      "baseline_rmse": 0.7019715151930891,
+      "sequence_rmse": 0.6032195385537734,
+      "rmse_gain_percent": 14.067803963833525,
+      "sequence_spearman": 0.5258610919301124,
+      "prediction_sd": 0.3124201681103192
+    },
+    {
+      "split": "validation",
+      "condition": "hap1_ganab_ko",
+      "baseline_rmse": 0.5341767966651794,
+      "sequence_rmse": 0.5054048690528936,
+      "rmse_gain_percent": 5.386218156967216,
+      "sequence_spearman": 0.38698519629336336,
+      "prediction_sd": 0.19498562503889835
+    },
+    {
+      "split": "validation",
+      "condition": "hap1_irf2_ko",
+      "baseline_rmse": 0.5874408877770668,
+      "sequence_rmse": 0.5498603707586991,
+      "rmse_gain_percent": 6.3973274248198875,
+      "sequence_spearman": 0.3867696474486948,
+      "prediction_sd": 0.26635245303563543
+    },
+    {
+      "split": "validation",
+      "condition": "hap1_pdia3_ko",
+      "baseline_rmse": 0.6436235569301898,
+      "sequence_rmse": 0.5814956118288075,
+      "rmse_gain_percent": 9.652838904422046,
+      "sequence_spearman": 0.4226255476582626,
+      "prediction_sd": 0.24768429798167024
+    },
+    {
+      "split": "validation",
+      "condition": "hap1_sppl3_ko",
+      "baseline_rmse": 0.41996691379871376,
+      "sequence_rmse": 0.4111036345575417,
+      "rmse_gain_percent": 2.110470837095557,
+      "sequence_spearman": 0.25185393680059537,
+      "prediction_sd": 0.12226484976136597
+    },
+    {
+      "split": "validation",
+      "condition": "hap1_tap1_ko",
+      "baseline_rmse": 0.7206049841817853,
+      "sequence_rmse": 0.6632387197456352,
+      "rmse_gain_percent": 7.960847578828078,
+      "sequence_spearman": 0.44790685193070684,
+      "prediction_sd": 0.3250701140260648
+    },
+    {
+      "split": "validation",
+      "condition": "hap1_tap2_ko",
+      "baseline_rmse": 1.0326637061936648,
+      "sequence_rmse": 0.8325156447631016,
+      "rmse_gain_percent": 19.381727103424275,
+      "sequence_spearman": 0.5699680278089914,
+      "prediction_sd": 0.5997641791234913
+    },
+    {
+      "split": "validation",
+      "condition": "hap1_tapbp_ko",
+      "baseline_rmse": 0.7254493930330012,
+      "sequence_rmse": 0.6592370091987263,
+      "rmse_gain_percent": 9.127085151653414,
+      "sequence_spearman": 0.4542890985303123,
+      "prediction_sd": 0.2896791305602346
+    },
+    {
+      "split": "test",
+      "condition": "hap1_calr_ko",
+      "baseline_rmse": 0.43552314413518156,
+      "sequence_rmse": 0.416469998670305,
+      "rmse_gain_percent": 4.374772207045485,
+      "sequence_spearman": 0.33304677929700427,
+      "prediction_sd": 0.15637377419444165
+    },
+    {
+      "split": "test",
+      "condition": "hap1_canx_ko",
+      "baseline_rmse": 0.38821487824417295,
+      "sequence_rmse": 0.35613351971985513,
+      "rmse_gain_percent": 8.26381478974122,
+      "sequence_spearman": 0.41266160074598646,
+      "prediction_sd": 0.14830836619903223
+    },
+    {
+      "split": "test",
+      "condition": "hap1_erap1_ko",
+      "baseline_rmse": 0.7019526785121856,
+      "sequence_rmse": 0.5853268387117967,
+      "rmse_gain_percent": 16.614487467671125,
+      "sequence_spearman": 0.5753773355817603,
+      "prediction_sd": 0.3341538839021729
+    },
+    {
+      "split": "test",
+      "condition": "hap1_ganab_ko",
+      "baseline_rmse": 0.5416808746550974,
+      "sequence_rmse": 0.4978744057999644,
+      "rmse_gain_percent": 8.087135969684322,
+      "sequence_spearman": 0.40296155844343473,
+      "prediction_sd": 0.20064374143514954
+    },
+    {
+      "split": "test",
+      "condition": "hap1_irf2_ko",
+      "baseline_rmse": 0.5520516027068628,
+      "sequence_rmse": 0.49075259882276734,
+      "rmse_gain_percent": 11.103853984578505,
+      "sequence_spearman": 0.44998464283267786,
+      "prediction_sd": 0.2672869163788321
+    },
+    {
+      "split": "test",
+      "condition": "hap1_pdia3_ko",
+      "baseline_rmse": 0.650283642107769,
+      "sequence_rmse": 0.592165393144368,
+      "rmse_gain_percent": 8.937369049453858,
+      "sequence_spearman": 0.40712338937775394,
+      "prediction_sd": 0.25549849381928774
+    },
+    {
+      "split": "test",
+      "condition": "hap1_sppl3_ko",
+      "baseline_rmse": 0.40162142249279176,
+      "sequence_rmse": 0.3827191745621748,
+      "rmse_gain_percent": 4.706483985165455,
+      "sequence_spearman": 0.3068536054073911,
+      "prediction_sd": 0.12590080594412004
+    },
+    {
+      "split": "test",
+      "condition": "hap1_tap1_ko",
+      "baseline_rmse": 0.670862709472791,
+      "sequence_rmse": 0.6423287202079134,
+      "rmse_gain_percent": 4.253327672259733,
+      "sequence_spearman": 0.3944543846227206,
+      "prediction_sd": 0.3010202802830591
+    },
+    {
+      "split": "test",
+      "condition": "hap1_tap2_ko",
+      "baseline_rmse": 0.9948757295236355,
+      "sequence_rmse": 0.9090459460496388,
+      "rmse_gain_percent": 8.62718638388068,
+      "sequence_spearman": 0.4509046238213936,
+      "prediction_sd": 0.47402054706945546
+    },
+    {
+      "split": "test",
+      "condition": "hap1_tapbp_ko",
+      "baseline_rmse": 0.7276236367273542,
+      "sequence_rmse": 0.6480393475049573,
+      "rmse_gain_percent": 10.937562388756994,
+      "sequence_spearman": 0.4793185295771085,
+      "prediction_sd": 0.33625988206707047
+    }
+  ]
+}

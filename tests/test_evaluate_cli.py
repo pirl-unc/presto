@@ -8,7 +8,7 @@ import torch
 
 def test_evaluate_synthetic_outputs_retrieval_metrics(tmp_path, capsys):
     from presto.cli.evaluate import cmd_evaluate_synthetic
-    from presto.models.presto import Presto
+    from presto.legacy.presto import Presto
 
     checkpoint = tmp_path / "model.pt"
     model = Presto(d_model=64, n_layers=2, n_heads=4)

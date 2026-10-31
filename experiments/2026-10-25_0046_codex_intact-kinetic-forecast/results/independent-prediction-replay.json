@@ -1,0 +1,81 @@
+{
+  "passed": true,
+  "n_verified_physical_predictions": 13902,
+  "n_control_models": 7,
+  "max_prediction_error": 1.376676550535194e-13,
+  "n_metric_records": 126,
+  "max_metric_error": 1.3322676295501878e-15,
+  "optimizer_recurrence": [
+    {
+      "model": "fit-uniform-exact-0-42",
+      "max_parameter_update_error": 2.220446049250313e-16
+    },
+    {
+      "model": "fit-residue-exact-0-42",
+      "max_parameter_update_error": 1.7763568394002505e-15
+    },
+    {
+      "model": "fit-uniform-score-16-42",
+      "max_parameter_update_error": 1.7763568394002505e-15
+    },
+    {
+      "model": "fit-uniform-score-16-43",
+      "max_parameter_update_error": 2.220446049250313e-16
+    },
+    {
+      "model": "fit-uniform-score-16-44",
+      "max_parameter_update_error": 8.881784197001252e-16
+    },
+    {
+      "model": "fit-uniform-score-64-42",
+      "max_parameter_update_error": 5.551115123125783e-17
+    },
+    {
+      "model": "fit-uniform-score-64-43",
+      "max_parameter_update_error": 5.551115123125783e-17
+    },
+    {
+      "model": "fit-uniform-score-64-44",
+      "max_parameter_update_error": 5.551115123125783e-17
+    },
+    {
+      "model": "fit-residue-score-16-42",
+      "max_parameter_update_error": 8.881784197001252e-16
+    },
+    {
+      "model": "fit-residue-score-16-43",
+      "max_parameter_update_error": 2.220446049250313e-16
+    },
+    {
+      "model": "fit-residue-score-16-44",
+      "max_parameter_update_error": 1.7763568394002505e-15
+    },
+    {
+      "model": "fit-residue-score-64-42",
+      "max_parameter_update_error": 8.881784197001252e-16
+    },
+    {
+      "model": "fit-residue-score-64-43",
+      "max_parameter_update_error": 8.881784197001252e-16
+    },
+    {
+      "model": "fit-residue-score-64-44",
+      "max_parameter_update_error": 1.7763568394002505e-15
+    }
+  ],
+  "exact_gradient_replay": [
+    {
+      "model": "fit-uniform-exact-0-42",
+      "n_steps": 800,
+      "max_gradient_error": 3.3306690738754696e-15
+    },
+    {
+      "model": "fit-residue-exact-0-42",
+      "n_steps": 800,
+      "max_gradient_error": 4.163336342344337e-16
+    }
+  ],
+  "stochastic_gradient_samples_independently_replayed": false,
+  "stochastic_checks": "pre-fit_unbiased_score_qualification_plus_all_optimizer_recurrences_and_fresh_generator_states",
+  "seconds": 3.2872486670385115
+}

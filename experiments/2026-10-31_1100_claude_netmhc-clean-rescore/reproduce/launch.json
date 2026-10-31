@@ -1,0 +1,15 @@
+{
+  "agent": "claude",
+  "model": "Claude Sonnet 5.5",
+  "preregistration": "experiments/agents/claude/plans/2026-10-31_netmhc-clean-rescore.md",
+  "labels": ["direct-s42_test","direct-s43_test","curated-multi-s42_test","curated-multi-s43_test","direct-s42_validation","direct-s43_validation","curated-multi-s42_validation","curated-multi-s43_validation"],
+  "inputs": {
+    "prediction_dumps": "artifacts/2026-10-31_clean-rescore/predictions_<label>.csv.gz (copied from PR #149 artifacts; sha256 in results/dump_sha256.json)",
+    "netmhcpan41_train": "DTU NetMHCpan_train.tar.gz sha256 06f2c9f20bb959238bf5d601fca0489a0ed3f17648b952f30640205afca8f9b4",
+    "netmhciipan43_train": "DTU NetMHCIIpan_train.tar.gz sha256 b3602edd48fd34a2d4dcd574bea7781bb75c50f9f4dbc3a2d7178301b735c521",
+    "mhcflurry_train": "mhcflurry 2.2.0 models_class1_pan/train_data.csv.bz2 UNION data_curated/curated_training_data.affinity.csv.bz2"
+  },
+  "bootstrap_seed": 20261031,
+  "draws": 2000,
+  "compute": "CPU only, no Modal"
+}

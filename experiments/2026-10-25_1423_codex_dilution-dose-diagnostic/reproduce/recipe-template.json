@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "name": "pxd024809_conditional_nominal_dose_v1",
+  "mapping_policy": "no_expansion",
+  "sources": [
+    {
+      "evidence_type": "dilution_feature_links",
+      "row_id": "claim_id",
+      "select": [
+        "claim_id",
+        "source_record_id",
+        "measurement_id",
+        "identification_id",
+        "feature_link_status",
+        "n_candidates",
+        "form_agrees",
+        "charge_agrees",
+        "precursor_agrees",
+        "target_agrees",
+        "source_dataset",
+        "source_dataset_precision",
+        "source_panel",
+        "aligned.measurement_id",
+        "aligned.source_record_id",
+        "aligned.acquisition_id",
+        "aligned.peptide_sequence",
+        "aligned.modified_sequence_raw",
+        "aligned.charge_raw",
+        "aligned.decoy_raw",
+        "aligned.native_precursor_id",
+        "aligned.native_feature_id",
+        "aligned.library_precursor_id",
+        "aligned.library_link_status",
+        "aligned.library_label_status",
+        "aligned.value_status",
+        "aligned.measurement_unit",
+        "aligned.observation_kind",
+        "aligned.quantitative_raw",
+        "aligned.dilution_rt_raw",
+        "aligned.dilution_left_width_raw",
+        "aligned.dilution_right_width_raw",
+        "aligned.dilution_peak_rank_raw",
+        "aligned.dilution_m_score_raw",
+        "aligned.native_peptide_id",
+        "aligned.group_label_raw",
+        "aligned.dilution_alignment_rank_raw",
+        "aligned.n_library_candidates",
+        "aligned.quantitative_value",
+        "aligned.dilution_rt",
+        "aligned.dilution_left_width",
+        "aligned.dilution_right_width",
+        "aligned.dilution_peak_rank",
+        "aligned.dilution_m_score",
+        "aligned.dilution_alignment_rank",
+        "aligned.source_dataset",
+        "aligned.source_dataset_precision",
+        "aligned.source_panel",
+        "scored.identification_id",
+        "scored.source_record_id",
+        "scored.acquisition_id",
+        "scored.peptide_sequence",
+        "scored.modified_sequence_raw",
+        "scored.charge_raw",
+        "scored.decoy_raw",
+        "scored.native_precursor_id",
+        "scored.native_feature_id",
+        "scored.library_precursor_id",
+        "scored.library_link_status",
+        "scored.library_label_status",
+        "scored.value_status",
+        "scored.measurement_unit",
+        "scored.observation_kind",
+        "scored.quantitative_raw",
+        "scored.dilution_rt_raw",
+        "scored.dilution_left_width_raw",
+        "scored.dilution_right_width_raw",
+        "scored.dilution_peak_rank_raw",
+        "scored.dilution_m_score_raw",
+        "scored.source_run_id",
+        "scored.dilution_d_score_raw",
+        "scored.n_library_candidates",
+        "scored.quantitative_value",
+        "scored.dilution_rt",
+        "scored.dilution_left_width",
+        "scored.dilution_right_width",
+        "scored.dilution_peak_rank",
+        "scored.dilution_m_score",
+        "scored.dilution_d_score",
+        "scored.source_dataset",
+        "scored.source_dataset_precision",
+        "scored.source_panel"
+      ],
+      "joins": [
+        "aligned",
+        "scored"
+      ],
+      "where": {},
+      "target": {
+        "field": "aligned.quantitative_value",
+        "mode": "numeric",
+        "unit_field": "aligned.measurement_unit",
+        "allowed_units": [
+          "source_signal_arbitrary_units"
+        ],
+        "status_field": "aligned.value_status",
+        "allowed_statuses": [
+          "positive"
+        ]
+      },
+      "required_fields": [
+        "aligned.library_precursor_id",
+        "aligned.acquisition_id",
+        "aligned.source_record_id",
+        "aligned.modified_sequence_raw",
+        "aligned.charge_raw",
+        "aligned.quantitative_raw"
+      ],
+      "context_precision": {
+        "field": "feature_link_status",
+        "allowed": [
+          "matched_identity"
+        ],
+        "on_mismatch": "exclude"
+      },
+      "grouping": {
+        "fields": [
+          "aligned.acquisition_id"
+        ],
+        "on_missing": "exclude"
+      },
+      "limit": null
+    }
+  ]
+}

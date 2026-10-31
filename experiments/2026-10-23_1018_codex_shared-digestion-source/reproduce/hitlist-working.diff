@@ -1,0 +1,482 @@
+diff --git a/hitlist/evidence_bindings.py b/hitlist/evidence_bindings.py
+index 3e8d656..5520486 100644
+--- a/hitlist/evidence_bindings.py
++++ b/hitlist/evidence_bindings.py
+@@ -9,7 +9,7 @@ from __future__ import annotations
+ 
+ from dataclasses import dataclass, replace
+ 
+-from .evidence_catalog import CONTROLLED_RELATION_NAMES, EVIDENCE
++from .evidence_catalog import CONTROLLED_RELATION_NAMES, DIGESTION_RELATIONS, EVIDENCE
+ 
+ 
+ @dataclass(frozen=True)
+@@ -891,6 +891,65 @@ LINKS += tuple(
+ )
+ 
+ 
++ALIASES.update(
++    {"digestion_" + name: dict(aliases) for name, (_, aliases) in DIGESTION_RELATIONS.items()}
++)
++for _table in ("raw_quantities", "ms1", "identifications", "conflicts"):
++    LINKS += (
++        Link(
++            "acquisition",
++            "digestion_" + _table,
++            "digestion_runs",
++            "run_id",
++            "run_id",
++            "one",
++            "exact_original_acquisition",
++        ),
++    )
++for _table in ("raw_quantities", "filtered_vectors", "final_vectors", "final_values", "contexts"):
++    LINKS += (
++        Link(
++            "substrate",
++            "digestion_" + _table,
++            "digestion_constructs",
++            "construct_id",
++            "construct_id",
++            "one",
++            "exact_original_construct",
++        ),
++    )
++for _table in (
++    "raw_quantities",
++    "filtered_vectors",
++    "final_vectors",
++    "final_values",
++    "ms1",
++    "identifications",
++):
++    LINKS += (
++        Link(
++            "condition",
++            "digestion_" + _table,
++            "digestion_contexts",
++            "condition_id",
++            "condition_id",
++            "one",
++            "source_condition_not_APC_specimen",
++        ),
++    )
++LINKS += (
++    Link(
++        "source_vector",
++        "digestion_final_values",
++        "digestion_final_vectors",
++        "vector_id",
++        "source_record_id",
++        "one",
++        "original_vector_slot",
++    ),
++)
++
++
+ def materialized_bindings(
+     package_schema_version=None, *, appended_source_ids=(), include_adjudications=False
+ ):
+diff --git a/hitlist/evidence_catalog.py b/hitlist/evidence_catalog.py
+index 0214b1b..406da7c 100644
+--- a/hitlist/evidence_catalog.py
++++ b/hitlist/evidence_catalog.py
+@@ -8,7 +8,7 @@ from __future__ import annotations
+ 
+ from dataclasses import asdict, dataclass, replace
+ 
+-SCHEMA_VERSION = 13
++SCHEMA_VERSION = 14
+ FIELD_ROLES = frozenset(
+     {
+         "identity",
+@@ -577,6 +577,115 @@ FIELDS += (
+     _field("n_matched_evidence", "relation", "number", "Contributors labeled MULTI-MATCH"),
+ )
+ 
++
++# Same-grain roles for purified processing time courses. Source-specific raw
++# columns remain available as native.*; training readiness is a separate gate.
++FIELDS += (
++    _field(
++        "digestion_construct_id", "identity", "identifier", "Exact deposited substrate construct"
++    ),
++    _field(
++        "digestion_run_id",
++        "identity",
++        "identifier",
++        "Original MS acquisition; not a biological digest",
++    ),
++    _field("digestion_raw_fields", "provenance", "text", "Original source row fields as JSON"),
++    _field(
++        "digestion_biological_replicate",
++        "lineage",
++        "identifier",
++        "Literal biological digest label within condition",
++    ),
++    _field(
++        "digestion_control_role",
++        "biological_context",
++        "category",
++        "Explicit substrate-only control or digestion",
++    ),
++    _field(
++        "digestion_quantity_time", "protocol", "number", "Hours supplied in original quantity layer"
++    ),
++    _field(
++        "digestion_metadata_time",
++        "protocol",
++        "number",
++        "Hours supplied in original acquisition metadata",
++    ),
++    _field(
++        "digestion_time_status",
++        "provenance",
++        "category",
++        "Agreement/conflict or repeated original time slots",
++    ),
++    _field(
++        "digestion_training_status",
++        "annotation",
++        "category",
++        "Source readiness; no implicit training admission",
++    ),
++    _field(
++        "digestion_enzyme_species",
++        "biological_context",
++        "text",
++        "Species of purified enzyme, separate from substrate/APC",
++    ),
++    _field(
++        "digestion_substrate_species",
++        "biological_context",
++        "text",
++        "Species explicit in construct header; unknown otherwise",
++    ),
++    _field(
++        "digestion_enzyme_origin",
++        "biological_context",
++        "text",
++        "Enzyme preparation cell origin; not an APC specimen",
++    ),
++    _field(
++        "digestion_input_um",
++        "protocol",
++        "number",
++        "Protocol-scoped starting substrate micromolar concentration",
++    ),
++    _field(
++        "digestion_enzyme_ratio_denominator",
++        "protocol",
++        "number",
++        "Substrate molar units per one enzyme unit",
++    ),
++    _field(
++        "digestion_temperature_c",
++        "protocol",
++        "number",
++        "Protocol-scoped digestion temperature in Celsius",
++    ),
++    _field(
++        "digestion_buffer",
++        "protocol",
++        "text",
++        "Protocol-scoped buffer composition with explicit units",
++    ),
++    _field(
++        "digestion_context_scope",
++        "provenance",
++        "category",
++        "Scope of protocol claims; not measured per-run inputs",
++    ),
++    _field(
++        "digestion_vector_id",
++        "relation",
++        "identifier",
++        "Original peptide/biological-replicate vector row",
++    ),
++    _field(
++        "digestion_slot",
++        "relation",
++        "number",
++        "Original zero-based slot; repeated times remain distinct",
++    ),
++)
++
+ _FIELD_BY_NAME = {field.name: field for field in FIELDS}
+ 
+ _SOURCE = ("observation_id", "source_record_id", "source_dataset", "source_reference_id")
+@@ -2442,6 +2551,174 @@ def _controlled_catalog():
+ 
+ EVIDENCE += _controlled_catalog()
+ 
++
++DIGESTION_RELATIONS = {
++    "metadata": (
++        "one_original_workbook_row",
++        {
++            "source_record_id": "source_record_id",
++            "source_locator": "source_locator",
++            "digestion_raw_fields": "fields_json",
++        },
++    ),
++    "constructs": (
++        "one_deposited_substrate_construct",
++        {
++            "source_record_id": "source_record_id",
++            "source_locator": "source_locator",
++            "digestion_raw_fields": "fields_json",
++            "digestion_construct_id": "construct_id",
++            "reference_sequence": "sequence",
++            "digestion_substrate_species": "substrate_species",
++        },
++    ),
++    "runs": (
++        "one_original_MS_acquisition",
++        {
++            "source_record_id": "source_record_id",
++            "source_locator": "source_locator",
++            "digestion_raw_fields": "fields_json",
++            "digestion_run_id": "run_id",
++            "time_hours": "time_hours",
++            "digestion_biological_replicate": "biological_replicate_raw",
++            "digestion_control_role": "control_role",
++        },
++    ),
++    "contexts": (
++        "one_purified_digestion_condition",
++        {
++            "source_record_id": "source_record_id",
++            "source_locator": "source_locator",
++            "digestion_raw_fields": "fields_json",
++            "condition_id": "condition_id",
++            "digestion_construct_id": "construct_id",
++            "digestion_enzyme_species": "enzyme_species",
++            "digestion_substrate_species": "substrate_species",
++            "digestion_enzyme_origin": "enzyme_preparation_cell_line",
++            "digestion_input_um": "substrate_concentration_um",
++            "digestion_enzyme_ratio_denominator": "enzyme_substrate_denominator",
++            "digestion_temperature_c": "temperature_c",
++            "digestion_buffer": "buffer_json",
++            "digestion_context_scope": "context_scope",
++            "digestion_training_status": "training_status",
++        },
++    ),
++    "identifications": (
++        "one_original_assignment_row",
++        {
++            "source_record_id": "source_record_id",
++            "source_locator": "source_locator",
++            "digestion_raw_fields": "fields_json",
++            "condition_id": "condition_id",
++            "digestion_run_id": "run_id",
++            "peptide_sequence": "peptide_sequence",
++        },
++    ),
++    "ms1": (
++        "one_original_Skyline_row_not_independent_peptide_measurement",
++        {
++            "source_record_id": "source_record_id",
++            "source_locator": "source_locator",
++            "digestion_raw_fields": "fields_json",
++            "condition_id": "condition_id",
++            "digestion_run_id": "run_id",
++            "peptide_sequence": "peptide_sequence",
++            "quantitative_value": "ms1_area",
++            "value_status": "value_status",
++        },
++    ),
++    "raw_quantities": (
++        "one_original_peptide_run_quantity",
++        {
++            "source_record_id": "source_record_id",
++            "source_locator": "source_locator",
++            "digestion_raw_fields": "fields_json",
++            "condition_id": "condition_id",
++            "digestion_construct_id": "construct_id",
++            "digestion_run_id": "run_id",
++            "peptide_sequence": "peptide_sequence",
++            "digestion_biological_replicate": "biological_replicate_raw",
++            "digestion_control_role": "control_role",
++            "digestion_quantity_time": "quantity_time_hours",
++            "digestion_metadata_time": "metadata_time_hours",
++            "digestion_time_status": "time_status",
++            "quantitative_value": "intensity",
++            "value_status": "value_status",
++        },
++    ),
++    "filtered_vectors": (
++        "one_original_peptide_technical_vector",
++        {
++            "source_record_id": "source_record_id",
++            "source_locator": "source_locator",
++            "digestion_raw_fields": "fields_json",
++            "condition_id": "condition_id",
++            "digestion_construct_id": "construct_id",
++            "peptide_sequence": "peptide_sequence",
++            "digestion_biological_replicate": "biological_replicate_raw",
++        },
++    ),
++    "final_vectors": (
++        "one_original_peptide_biological_vector_or_annotation",
++        {
++            "source_record_id": "source_record_id",
++            "source_locator": "source_locator",
++            "digestion_raw_fields": "fields_json",
++            "condition_id": "condition_id",
++            "digestion_construct_id": "construct_id",
++            "peptide_sequence": "peptide_sequence",
++            "digestion_biological_replicate": "biological_replicate_raw",
++        },
++    ),
++    "final_values": (
++        "one_original_final_vector_slot",
++        {
++            "source_record_id": "source_record_id",
++            "source_locator": "source_locator",
++            "digestion_raw_fields": "fields_json",
++            "condition_id": "condition_id",
++            "digestion_construct_id": "construct_id",
++            "peptide_sequence": "peptide_sequence",
++            "digestion_biological_replicate": "biological_replicate_raw",
++            "digestion_vector_id": "vector_id",
++            "digestion_slot": "slot_0based",
++            "time_hours": "time_hours",
++            "quantitative_value": "intensity",
++            "value_status": "value_status",
++            "digestion_time_status": "time_status",
++        },
++    ),
++    "conflicts": (
++        "one_original_source_claim_conflict",
++        {
++            "source_record_id": "source_record_id",
++            "source_locator": "source_locator",
++            "digestion_raw_fields": "fields_json",
++            "condition_id": "condition_id",
++            "digestion_run_id": "run_id",
++        },
++    ),
++}
++
++EVIDENCE += tuple(
++    Evidence(
++        "digestion_" + table,
++        "context" if table in ("runs", "contexts") else "relation",
++        "processing",
++        grain,
++        f"external/soh2024_digestion/typed/{table}.parquet",
++        "soh2024_digestion",
++        (),
++        tuple(aliases),
++        ("source_record_id",),
++        status="v2_materialized",
++        materialized_artifact=f"external/soh2024_digestion/typed/{table}.parquet",
++        min_package_schema_version=9,
++        required_appended_source="soh2024_digestion",
++    )
++    for table, (grain, aliases) in DIGESTION_RELATIONS.items()
++)
++
+ _EVIDENCE_BY_NAME = {item.name: item for item in EVIDENCE}
+ 
+ TASKS = (
+diff --git a/hitlist/external_evidence.py b/hitlist/external_evidence.py
+index 15d0d2e..f137898 100644
+--- a/hitlist/external_evidence.py
++++ b/hitlist/external_evidence.py
+@@ -20,6 +20,7 @@ CATALOG_SCHEMA_VERSION = 5
+ 
+ 
+ def _adapters():
++    from .digestion_evidence import DigestionAdapter
+     from .mapp_controlled_evidence import ControlledMAPPAdapter
+     from .mapp_evidence import MAPPAdapter
+     from .ms_calibration_evidence import MSCalibrationAdapter
+@@ -30,6 +31,7 @@ def _adapters():
+         MAPPAdapter.source_id: MAPPAdapter(),
+         MSCalibrationAdapter.source_id: MSCalibrationAdapter(),
+         ControlledMAPPAdapter.source_id: ControlledMAPPAdapter(),
++        DigestionAdapter.source_id: DigestionAdapter(),
+     }
+ 
+ 
+diff --git a/hitlist/external_successor.py b/hitlist/external_successor.py
+index 7b274db..bf6b4f9 100644
+--- a/hitlist/external_successor.py
++++ b/hitlist/external_successor.py
+@@ -15,8 +15,15 @@ from .provenance import file_digest
+ from .reference_evidence import verify_reference_evidence_package
+ 
+ PACKAGE_SCHEMA_VERSION = 9
+-CATALOG_SCHEMA_VERSION = 13
+-READABLE_SCHEMA_VERSIONS = ((8, 10), (8, 11), (9, 11), (9, 12), (9, CATALOG_SCHEMA_VERSION))
++CATALOG_SCHEMA_VERSION = 14
++READABLE_SCHEMA_VERSIONS = (
++    (8, 10),
++    (8, 11),
++    (9, 11),
++    (9, 12),
++    (9, 13),
++    (9, CATALOG_SCHEMA_VERSION),
++)
+ PARENT_MANIFESTS = {
+     "reference": "manifests/reference.json",
+     "adjudication": "manifests/adjudication.json",
+diff --git a/hitlist/version.py b/hitlist/version.py
+index 962c851..8cb37b5 100644
+--- a/hitlist/version.py
++++ b/hitlist/version.py
+@@ -1 +1 @@
+-__version__ = "2.0.7"
++__version__ = "2.0.8"
+diff --git a/tasks/todo.md b/tasks/todo.md
+index 090f3d2..7063fbf 100644
+--- a/tasks/todo.md
++++ b/tasks/todo.md
+@@ -7830,3 +7830,14 @@ claims, and its source and both new recipes pass independent replay. All four
+ previous recipe semantic payloads remain byte-identical. Distribution gates
+ and 3,330 local tests pass; hosted release gates remain; see
+ [mapp-controlled-207-results/README.md](mapp-controlled-207-results/README.md).
++
++
++## Shared quantitative digestion source770
++
++Plan: tasks/digestion-source-spec.md.
++- [ ] Source-faithful typed adapter and canonical catalog bindings.
++- [ ] Fixtures, real source reconciliation and prior-source conservation.
++- [ ] Independent arithmetic/source checks and registered training admission.
++- [ ] Normal verification, PR, review and deployment.
++
++Review: pending; full concentration goal remains active.
+diff --git a/tests/test_external_successor.py b/tests/test_external_successor.py
+index 3ab294f..d27b21b 100644
+--- a/tests/test_external_successor.py
++++ b/tests/test_external_successor.py
+@@ -93,7 +93,7 @@ def test_successor_preserves_and_isolates_predecessor(tmp_path, monkeypatch, adj
+     successor.write_external_successor(parent, output, source_roots={"fixture": source})
+     manifest = successor.verify_external_successor(output)
+     assert manifest["schema_version"] == 9
+-    assert manifest["catalog_schema_version"] == 13
++    assert manifest["catalog_schema_version"] == 14
+     assert (output / "newer-modality.txt").read_bytes() == (
+         parent / "newer-modality.txt"
+     ).read_bytes()
+@@ -186,7 +186,7 @@ def test_legacy_external_eight_remains_readable(tmp_path, monkeypatch, catalog):
+     assert successor.verify_external_successor(output) == manifest
+ 
+ 
+-@pytest.mark.parametrize("catalog", [11, 12])
++@pytest.mark.parametrize("catalog", [11, 12, 13])
+ def test_released_schema_nine_packages_remain_readable(tmp_path, monkeypatch, catalog):
+     parent, source, _ = _fixture(tmp_path, monkeypatch, adjudication=True)
+     output = tmp_path / "output"
+@@ -205,7 +205,7 @@ def test_released_schema_nine_packages_remain_readable(tmp_path, monkeypatch, ca
+         {"parent_manifest_path": "manifests/adjudication.json"},
+         {"parent_manifest_path": "../escape"},
+         {"review_revision": "ambiguous"},
+-        {"catalog_schema_version": 14},
++        {"catalog_schema_version": 15},
+     ],
+ )
+ def test_successor_rejects_false_family_or_predecessor(tmp_path, monkeypatch, changes):

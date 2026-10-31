@@ -1,0 +1,47 @@
+with a maximum IT of 50 ms. For every full scan, the 20 most intense ions were isolated (isolation width 
+of 0.4 m/z) and fragmented (collision energy (CE): 31%) by higher energy collisional dissociation (HCD) 
+with a maximum injection time of 350 ms, AGC target 1e5, and 30,000 resolution. Charge states < 2 
+and > 4 were excluded, and dynamic exclusion was set to 60 seconds. 
+ 
+Mass spectrometry data analysis 
+SureQuant-IsoMHC: Peak area ratios of the endogenous light peptides and corresponding 1-3H 
+isotopologue internal standards for the 6 selected product ions were exported from Skyline (version 
+20.2.1.28).2 Transition areas were summed for all ions that that were quantifiable across L and 1-3H 
+peptides. 1-3H peptides were used to generate a standard curve with a linear fit, from which 
+endogenous pMHC concentrations were calculated. Concentrations outside of the standard curve were 
+extrapolated.  
+To verify that changes in sample input amount and/or background matrix density in tumor 
+analyses would not alter quantitation, we performed a targeted analysis on SKMEL5 cells using 5 or 10 
+mg of lysate with 1, 10, and 100 fmol of 12 Iso18 standards. While the summed product ion 
+abundances of the 1-3H standards were often collectively higher in the 10 mg analysis, likely due to 
+higher background, calculated concentrations showed an expected approximate 2:1 ratio (SI Appendix, 
+Fig. S4). 
+ 
+Discovery analyses: All mass spectra were analyzed with Proteome Discoverer (PD, version 
+2.5) and searched using Mascot (version 2.4) against the human SwissProt database (2020_06). 
+MS/MS spectra were matched with an initial mass tolerance of 10 ppm on precursor masses and 20 
+mmu for fragment ions. Data analyses were performed using Matlab version R2019b and Microsoft 
+Excel version 16.34.  
+ 
+Discovery multiplexed SKMEL5 analyses:  No enzyme was used, static modifications included 
+N-terminal and lysine TMT, and variable modifications included oxidized methionine, phosphorylated 
+serine, threonine, and tyrosine. Analyses were also searched against a previously published catalog of 
+over 40,000 predicted antigenic mutations in cancer cell lines.3 Heavy leucine-containing peptides were 
+searched separately with heavy leucine (+7), c-terminal amidation, and methionine oxidation as 
+dynamic modifications against a custom database of the synthetic peptide standards. Data were filtered 
+with the following criteria: search engine rank =1, isolation interference ≤ 30%, and length between 8 
+and 15 amino acids, ion score ≥ 15, percolator q-value ≤ 0.05. Area under the curve (AUC) quantitation 
+was performed using the minora feature detector in PD and filtered for ion score ≥ 15, search rank = 1.  
+Reporter ion quantitation was corrected with hipMHCs as previously described.1 To evaluate 
+differences between conditions, the log2 transformed ratio of arithmetic mean intensity for drug- and 
+DMSO-treated samples (n=3) was calculated. To determine if peptides were significantly increasing, an 
+unpaired, 2-sided t-test was performed, and peptides with p < 0.05 were considered significantly 
+increasing/decreasing. To evaluate which peptides were significantly enriched above the mean, treated 
+samples were mean centered by dividing the ion intensity of each peptide by the mean fold-change 
+across all peptides, after which a student’s 2-tailed t-test was performed on adjusted values.  
+ 
+Discovery tumor analyses: No enzyme was used, variable modifications included oxidized 
+methionine. Data were filtered with the following criteria: search engine rank =1, isolation interference ≤ 
+30%, and length between 8 and 15 amino acids, ion score ≥ 15, percolator q-value ≤ 0.05. Area under 
+the curve (AUC) quantitation was performed using the minora feature detector in PD filtered for ion 
+score ≥ 15, search rank = 1, percolator q-value ≤ 0.05.  

@@ -1,0 +1,81 @@
+{
+  "agent": "codex",
+  "model": "GPT-6",
+  "registered_utc": "2026-10-25T06:37:34.175576+00:00",
+  "git_commit": "84b1e593bf8ffd8effc642ea32b93422e13b9a99",
+  "git_dirty": true,
+  "package": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/native_contrast_recipes/2026-10-25_0612_codex_native-contrast-admission",
+  "expected_n_contrasts": {
+    "train": 158,
+    "val": 38,
+    "test": 32
+  },
+  "expected_n_components": {
+    "train": 55,
+    "val": 8,
+    "test": 18
+  },
+  "feature_source": "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0143_codex_intact-temporal-representation/code/core.py",
+  "feature_source_sha256": "d2a957a772a9e8ad3ce2ae0f92cf91a9f95b9aa98cc79bd8ebaf6e974c1677a4",
+  "inner_namespace": "pxd018722-native-inner-v1",
+  "alpha_grid": [
+    0.01,
+    0.1,
+    1,
+    10,
+    100
+  ],
+  "bootstrap_seed": 20261025,
+  "bootstrap_draws": 2000,
+  "stages": [
+    "qualify",
+    "prepare",
+    "fit",
+    "evaluate",
+    "replay"
+  ],
+  "required_versions": {
+    "source": "2.0.37",
+    "recipe": "2.0.38"
+  },
+  "required_source_commit": "d2e0cb61005c33c8ad484b234670174346a529ee",
+  "required_release_receipts": {
+    "source": "/Users/iskander/code/presto/.worktrees/presto-modular-model/tasks/modular_model/native-source-2037-release.json",
+    "recipe": "/Users/iskander/code/presto/.worktrees/presto-modular-model/tasks/modular_model/native-contrast-2038-release.json"
+  },
+  "hitlist_repo": "/Users/iskander/code/presto/.worktrees/hitlist-native-contrast",
+  "recipe_code_sha256": {
+    "hitlist/native_contrast.py": "22d0fdd1685cc5d3a59b660726314ab0f458b19e317df7a2ec00e1e830024d1e",
+    "hitlist/native_contrast_compiler.py": "3342feeef87761686c2e2456ee906ea00f148fb5f8244e361bcfd6fb162e6d0a",
+    "hitlist/native_contrast_schema.py": "c9d05d99229183efadca545d6d9a803aba5bcb7b1a149f91f4b38adb7d47df99",
+    "hitlist/distribution_recipe.py": "134bd012446978c91def8d3446c511d12edb3962b316ff14ca4fec3f1c2cb79e",
+    "hitlist/evidence_recipe.py": "8f60a84067422d11973ba6ca6dfee7a4a77bc8d987be0d4a97d1f618326ce9e9",
+    "hitlist/version.py": "cfe9e289255644045467723b9a0518caeeef40bf2a8ce742694dc883a85b0452"
+  },
+  "input_sha256": {
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/native_contrast_recipes/2026-10-25_0612_codex_native-contrast-admission/manifest.json": "5f1f388876e2b5b3f65d254ff4939d2559077c2e6af1dffe603b05a1283b836a",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0612_codex_native-contrast-admission/results/independent-verification.json": "a439e63971222be68c45cada5b2b0387acd58b113d24ca2ad351470758e5d98e",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0612_codex_native-contrast-admission/results/rebased-public-verification.json": "358fc04f8e247ca51386304ed95053e98bfcfaa104b15698e2bdafd916f939d6",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0143_codex_intact-temporal-representation/code/core.py": "d2a957a772a9e8ad3ce2ae0f92cf91a9f95b9aa98cc79bd8ebaf6e974c1677a4"
+  },
+  "limits": {
+    "stage_seconds": 1200,
+    "rss_bytes": 3221225472,
+    "disk_floor_bytes": 1073741824,
+    "start_margin_bytes": 33554432
+  },
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "non_default_environment_overrides": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1",
+    "PYTHONPATH": ""
+  },
+  "training": "two direct ridge models, training-only 3-fold component CV; zero fixed reference",
+  "pretraining": "none",
+  "synthetic_training": "none; software-only qualification fixtures",
+  "primary_endpoint": "same_parent_observed_native_signal_log10_ratio_change",
+  "loss": "component/parent/contrast-weighted MSE plus alpha times coefficient L2 squared; weights sum1"
+}

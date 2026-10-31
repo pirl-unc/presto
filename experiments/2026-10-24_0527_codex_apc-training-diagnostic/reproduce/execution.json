@@ -1,0 +1,52 @@
+{
+  "frozen_at": "2026-10-24T05:32:13.356636-04:00",
+  "sha256": {
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0527_codex_apc-training-diagnostic/code/core.py": "bda0e1f944b3b8ae95a29d5e8c15d39cf5acf3fe790b884e902affd91808af20",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0527_codex_apc-training-diagnostic/code/launch.py": "2334c8c32c10d2128a9cebc6fe0c69fbef2900669bfb40eeb00150b2592ea4cf",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0527_codex_apc-training-diagnostic/reproduce/launch.json": "26cd4a0d677f08b23c6e0ee641753daa7c51798a08cc465046aad48e357039b5",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0527_codex_apc-training-diagnostic/reproduce/launch.sh": "49a19c792ab9a4ca2d9eec321c1bf6b9ff2eeb15eee120803721f86ebccd4fd8",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0527_codex_apc-training-diagnostic/reproduce/plan.md": "8ab804a86b16899c8aa19ce5caaef8ec67bce82d0e6c45cf18041cf777e8f0c2",
+    "/private/tmp/presto-modular-model/models/steady_processing.py": "1c6dc0038eea7cd685a0a058f871193993ce3258c580a0b3083d69b836e56bc2",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0314_codex_native-response-baselines/analysis/verify.py": "d16e1c5df0d0136dc5861a8085b26dc9451e4f3fb2b3853fd0bc998af849504e",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0449_codex_apc-precursor-response/results/cohort.json": "23e0ec3b541a6d719cf0b228ce747aaef1fe8cbcec9ebbb84621992493dd0e31",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0449_codex_apc-precursor-response/results/cohort-verification.json": "164d2661ed011f6cae751851e97e2612deb2bfbd1d23778fb7ce4dfe4a298f71",
+    "/private/tmp/presto-modular-model/data/apc_response_recipes/2026-10-24_0449_codex_apc-precursor-response/model-inputs/parents.json.gz": "8e2134101a2a8676532e376a7a3d6623f3fe96cfceeee49ad377e88534d17707",
+    "/private/tmp/presto-modular-model/data/apc_response_recipes/2026-10-24_0449_codex_apc-precursor-response/model-inputs/dispositions.json.gz": "c2fcf8a7d7a739a80daa50534334f3427860343ca7f001469b78d1518e638a95",
+    "/private/tmp/presto-modular-model/data/apc_response_recipes/2026-10-24_0449_codex_apc-precursor-response/model-inputs/groups.json.gz": "5f2f98ce09fd6d1b80ca4cef985b3a224ff66088291019e34e2350919894e94c",
+    "/private/tmp/presto-modular-model/data/apc_response_recipes/2026-10-24_0449_codex_apc-precursor-response/model-inputs/precursor-estimates.json.gz": "ed5d0a531200cbe21297da1ae30e56c384425a09f82deece7f945828e1f17318"
+  },
+  "python": "3.12.6",
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "numpy": "2.5.4",
+  "scipy": "1.18.1",
+  "torch": "2.14.1",
+  "commands": [
+    [
+      "sh",
+      "/private/tmp/presto-modular-model/experiments/2026-10-24_0527_codex_apc-training-diagnostic/reproduce/launch.sh",
+      "qualify"
+    ],
+    [
+      "sh",
+      "/private/tmp/presto-modular-model/experiments/2026-10-24_0527_codex_apc-training-diagnostic/reproduce/launch.sh",
+      "exact"
+    ],
+    [
+      "sh",
+      "/private/tmp/presto-modular-model/experiments/2026-10-24_0527_codex_apc-training-diagnostic/reproduce/launch.sh",
+      "collect_exact"
+    ],
+    [
+      "sh",
+      "/private/tmp/presto-modular-model/experiments/2026-10-24_0527_codex_apc-training-diagnostic/reproduce/launch.sh",
+      "sampled"
+    ],
+    [
+      "sh",
+      "/private/tmp/presto-modular-model/experiments/2026-10-24_0527_codex_apc-training-diagnostic/reproduce/launch.sh",
+      "collect_final"
+    ]
+  ],
+  "source_selection": "only groups with original split=train before feature fitting; no original held-out outcomes or predictions used",
+  "data_snapshot_policy": "canonical source stays in shared data; all input hashes frozen"
+}

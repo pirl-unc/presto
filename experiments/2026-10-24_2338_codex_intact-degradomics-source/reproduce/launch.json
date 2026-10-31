@@ -1,0 +1,37 @@
+{
+  "registered_utc": "2026-10-24T23:38:48.910597+00:00",
+  "agent": "Codex",
+  "model": "GPT-6",
+  "presto_commit": "1de0a1208369ec3699dff457c24b93f174329a98",
+  "dirty_status": " M tasks/todo.md\n",
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "raw_directory": "/private/tmp/presto-modular-model/data/intact_degradomics_source/2026-10-24_2338_codex_intact-degradomics-source",
+  "article": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11874349/",
+  "doi": "10.1073/pnas.2419607122",
+  "pride": "PXD058121",
+  "limits": {
+    "asset_bytes": 67108864,
+    "total_raw_bytes": 268435456,
+    "disk_floor_bytes": 1073741824,
+    "rss_bytes": 3221225472,
+    "stage_seconds": 1200,
+    "acquisition_seconds": 900
+  },
+  "training": "none; source qualification only",
+  "environment_overrides": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "analysis_commands": "reproduce/analysis-commands.json",
+  "all_fetch_commands": "reproduce/all-fetch-commands.json",
+  "runtime": {
+    "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "openpyxl": "3.1.5"
+  },
+  "publication_changes": [
+    "Canonical fetch catches explicit I/O/runtime/value failures after all acquisitions; executed fetch snapshots unchanged."
+  ]
+}

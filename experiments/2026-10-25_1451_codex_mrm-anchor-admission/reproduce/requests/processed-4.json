@@ -1,0 +1,22 @@
+{
+  "phase": "processed",
+  "scope": "Fixed fallback article metadata and both XLSX supplements; audit all fields without training. No MS raw files.",
+  "requests": [
+    {
+      "name": "s3-pr4c00576_si_001.xlsx",
+      "url": "https://pmc-oa-opendata.s3.amazonaws.com/PMC11812018.1/pr4c00576_si_001.xlsx",
+      "expected_kind": "xlsx",
+      "expected_bytes": 69469,
+      "expected_inventory_etag": "2b052df2652922e560873fbf328040e1",
+      "discovery_provenance": "Exact object key/size/ETag in archived sobsey2025-s3-inventory.xml; XLSX names match archived paper supplements."
+    },
+    {
+      "name": "s3-pr4c00576_si_003.xlsx",
+      "url": "https://pmc-oa-opendata.s3.amazonaws.com/PMC11812018.1/pr4c00576_si_003.xlsx",
+      "expected_kind": "xlsx",
+      "expected_bytes": 65070,
+      "expected_inventory_etag": "070cace3c109b7358483925761ab1e70",
+      "discovery_provenance": "Exact object key/size/ETag in archived sobsey2025-s3-inventory.xml; XLSX names match archived paper supplements."
+    }
+  ]
+}

@@ -1,0 +1,170 @@
+{
+  "status": "passed",
+  "verified_asset_hashes": 9,
+  "workbooks": 7,
+  "sheets": 72,
+  "original_cells_independently_verified": 14567,
+  "candidate_quantity_blocks": [
+    {
+      "block": "dc_dia_database",
+      "filename": "NIHMS2005243-supplement-7.xlsx",
+      "sheet": "Suppl Table S4(e)",
+      "n_peptide_rows": 1581,
+      "n_distinct_literal_peptide_forms": 1315,
+      "quantity_states": {
+        "missing": 6950,
+        "positive": 2536
+      },
+      "training_admission_or_normalization_applied": false
+    },
+    {
+      "block": "dc_dia_library",
+      "filename": "NIHMS2005243-supplement-7.xlsx",
+      "sheet": "Suppl Table S4(e)",
+      "n_peptide_rows": 1020,
+      "n_distinct_literal_peptide_forms": 632,
+      "quantity_states": {
+        "positive": 4632,
+        "missing": 1488
+      },
+      "training_admission_or_normalization_applied": false
+    },
+    {
+      "block": "human_native",
+      "filename": "NIHMS2005243-supplement-9.xlsx",
+      "sheet": "Suppl Table S6 (a)",
+      "n_peptide_rows": 1783,
+      "n_distinct_literal_peptide_forms": 1138,
+      "quantity_states": {
+        "positive": 1783
+      },
+      "training_admission_or_normalization_applied": false
+    }
+  ],
+  "duration_style_raw_values_preserved": [
+    {
+      "sheet_path": "xl/worksheets/sheet4.xml",
+      "coordinate": "D3",
+      "raw_numeric_value": 3.170833333333333,
+      "number_format": "[h]:mm:ss"
+    },
+    {
+      "sheet_path": "xl/worksheets/sheet4.xml",
+      "coordinate": "E3",
+      "raw_numeric_value": 3.170833333333333,
+      "number_format": "[h]:mm:ss"
+    },
+    {
+      "sheet_path": "xl/worksheets/sheet4.xml",
+      "coordinate": "D5",
+      "raw_numeric_value": 0.6666666666666666,
+      "number_format": "h:mm"
+    },
+    {
+      "sheet_path": "xl/worksheets/sheet4.xml",
+      "coordinate": "E5",
+      "raw_numeric_value": 0.6666666666666666,
+      "number_format": "h:mm"
+    },
+    {
+      "sheet_path": "xl/worksheets/sheet4.xml",
+      "coordinate": "D6",
+      "raw_numeric_value": 0.6666666666666666,
+      "number_format": "h:mm"
+    },
+    {
+      "sheet_path": "xl/worksheets/sheet4.xml",
+      "coordinate": "E6",
+      "raw_numeric_value": 0.6666666666666666,
+      "number_format": "h:mm"
+    },
+    {
+      "sheet_path": "xl/worksheets/sheet4.xml",
+      "coordinate": "D7",
+      "raw_numeric_value": 0.75,
+      "number_format": "h:mm"
+    },
+    {
+      "sheet_path": "xl/worksheets/sheet4.xml",
+      "coordinate": "E7",
+      "raw_numeric_value": 0.75,
+      "number_format": "h:mm"
+    },
+    {
+      "sheet_path": "xl/worksheets/sheet4.xml",
+      "coordinate": "D8",
+      "raw_numeric_value": 0.75,
+      "number_format": "h:mm"
+    },
+    {
+      "sheet_path": "xl/worksheets/sheet4.xml",
+      "coordinate": "E8",
+      "raw_numeric_value": 0.75,
+      "number_format": "h:mm"
+    },
+    {
+      "sheet_path": "xl/worksheets/sheet4.xml",
+      "coordinate": "D9",
+      "raw_numeric_value": 0.7506944444444444,
+      "number_format": "h:mm"
+    },
+    {
+      "sheet_path": "xl/worksheets/sheet4.xml",
+      "coordinate": "E9",
+      "raw_numeric_value": 0.7506944444444444,
+      "number_format": "h:mm"
+    },
+    {
+      "sheet_path": "xl/worksheets/sheet4.xml",
+      "coordinate": "D10",
+      "raw_numeric_value": 0.751388888888889,
+      "number_format": "h:mm"
+    },
+    {
+      "sheet_path": "xl/worksheets/sheet4.xml",
+      "coordinate": "E10",
+      "raw_numeric_value": 0.751388888888889,
+      "number_format": "h:mm"
+    },
+    {
+      "sheet_path": "xl/worksheets/sheet4.xml",
+      "coordinate": "D11",
+      "raw_numeric_value": 0.751388888888889,
+      "number_format": "h:mm"
+    },
+    {
+      "sheet_path": "xl/worksheets/sheet4.xml",
+      "coordinate": "E11",
+      "raw_numeric_value": 0.751388888888889,
+      "number_format": "h:mm"
+    },
+    {
+      "sheet_path": "xl/worksheets/sheet4.xml",
+      "coordinate": "D12",
+      "raw_numeric_value": 0.8354166666666667,
+      "number_format": "h:mm"
+    },
+    {
+      "sheet_path": "xl/worksheets/sheet4.xml",
+      "coordinate": "E12",
+      "raw_numeric_value": 0.8354166666666667,
+      "number_format": "h:mm"
+    },
+    {
+      "sheet_path": "xl/worksheets/sheet4.xml",
+      "coordinate": "D13",
+      "raw_numeric_value": 0.8361111111111111,
+      "number_format": "h:mm"
+    },
+    {
+      "sheet_path": "xl/worksheets/sheet4.xml",
+      "coordinate": "E13",
+      "raw_numeric_value": 0.8361111111111111,
+      "number_format": "h:mm"
+    }
+  ],
+  "quantity_count_scope": "Original peptide-bearing rows and raw cells, not independent specimens or admitted targets.",
+  "model_training_or_predictions": false,
+  "seconds": 1.128809415968135,
+  "peak_rss_gib": 0.1572418212890625
+}

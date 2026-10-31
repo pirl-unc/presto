@@ -1,0 +1,143 @@
+{
+  "catalog_schema_version": 22,
+  "coverage": {
+    "external_quantity_measurement": {
+      "grain": "result_representation",
+      "n_accepted": 200718,
+      "n_ambiguous": 0,
+      "n_candidates": 200724,
+      "n_contributor_links": 200724,
+      "n_excluded": 6,
+      "n_filtered_by_query": 309126,
+      "n_limit_omitted": 0,
+      "n_query_matches": 200724,
+      "n_source_rows": 509850,
+      "n_unresolved_contributor_links": 200724,
+      "reason_counts": {
+        "missing_required:reference_context.component": 6,
+        "split_group_unresolved": 6
+      },
+      "row_id": "measurement_id",
+      "source_population": "pxd057588"
+    }
+  },
+  "files": {
+    "coverage.json": {
+      "sha256": "3d421c2c90f1f8fe238ddfd99827a02e06e216f11879122e10efa4fb15d4c884",
+      "size_bytes": 572
+    },
+    "sources/external_quantity_measurement/accepted.parquet": {
+      "sha256": "d00b021620fc2874e579c48653fe850be255c51de8e2c202f21e96ac8ba92ea5",
+      "size_bytes": 13617904
+    },
+    "sources/external_quantity_measurement/ambiguous.parquet": {
+      "sha256": "10adc0c97774e4c67c5ddc9b6f498aa6c7b689597f4e61fb69b909a24698d147",
+      "size_bytes": 6279
+    },
+    "sources/external_quantity_measurement/contributors.parquet": {
+      "sha256": "66d94c8f76c4b1201d0fd97661c715e04554f2a3e4f7be45d030620b863a42af",
+      "size_bytes": 640256
+    },
+    "sources/external_quantity_measurement/excluded.parquet": {
+      "sha256": "08c2c39814c7d202279d2316202a9695a520eaad5c4f497b689a03a9a70dc70f",
+      "size_bytes": 18729
+    },
+    "sources/external_quantity_measurement/lineage.parquet": {
+      "sha256": "f28f7e7ea8c31b9c36ecd8fd6720ec0111c7e3f42926700c2222e54c56053ea8",
+      "size_bytes": 2011974
+    }
+  },
+  "hitlist_version": "2.0.17",
+  "recipe": {
+    "mapping_policy": "no_expansion",
+    "name": "pxd057588-reported-responses-with-reference-context",
+    "schema_version": 1,
+    "sources": [
+      {
+        "context_precision": {
+          "allowed": [
+            "assay_channel_unresolved_specimen"
+          ],
+          "field": "reference_context.material_link_precision",
+          "on_mismatch": "ambiguous"
+        },
+        "evidence_type": "external_quantity_measurement",
+        "grouping": {
+          "fields": [
+            "reference_context.component"
+          ],
+          "on_missing": "ambiguous"
+        },
+        "joins": [
+          "reference_context"
+        ],
+        "limit": null,
+        "required_fields": [
+          "reference_context.component"
+        ],
+        "row_id": "measurement_id",
+        "select": [
+          "source_dataset",
+          "native.measurement_id",
+          "native.result_id",
+          "native.contrast_id",
+          "native.representation",
+          "native.reported_value",
+          "native.recomputed_value",
+          "native.absolute_replay_error",
+          "native.unit",
+          "native.quantity_scale",
+          "native.value_status",
+          "native.source_cell",
+          "native.normalization_policy",
+          "reference_context.native.result_id",
+          "reference_context.native.peptide_row_id",
+          "reference_context.native.source_dataset",
+          "reference_context.native.sequence_id",
+          "reference_context.native.component",
+          "reference_context.native.source_parent_status",
+          "reference_context.native.reference_identity_count",
+          "reference_context.native.reference_full_sequence_count",
+          "reference_context.native.reference_occurrence_count",
+          "reference_context.native.table_number",
+          "reference_context.native.measured_pool",
+          "reference_context.native.measured_population",
+          "reference_context.native.partner_population",
+          "reference_context.native.material_link_precision",
+          "reference_context.native.specimen_status",
+          "reference_context.native.organism_taxon_id",
+          "reference_context.native.organism_source_scope"
+        ],
+        "target": {
+          "allowed_scales": [
+            "relative_to_contrast_controls"
+          ],
+          "allowed_statuses": [
+            "source_reported_verified_derivation"
+          ],
+          "allowed_units": [
+            "log2_ratio"
+          ],
+          "field": "reported_value",
+          "mode": "numeric",
+          "scale_field": "quantity_scale",
+          "status_field": "value_status",
+          "unit_conversion": {
+            "factor_by_unit": {
+              "log2_ratio": 0.3010299956639812
+            },
+            "output_unit": "log10_ratio"
+          },
+          "unit_field": "measurement_unit"
+        },
+        "where": {
+          "representation": "reported_log2_fold_change"
+        }
+      }
+    ]
+  },
+  "recipe_sha256": "fbda1dacb9599cd9883d243d0a372552fd292e1e02ea139e8ed19fe8477eefc0",
+  "schema_version": 1,
+  "source_package_manifest_sha256": "d99f67e625c6c33a2054a56dea4f98fb8248ca5f717cc98af3662f228655fa6a",
+  "source_package_schema_version": 7
+}

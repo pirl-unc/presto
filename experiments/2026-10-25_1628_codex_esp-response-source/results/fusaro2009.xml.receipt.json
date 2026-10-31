@@ -1,0 +1,21 @@
+{
+  "bytes": 150,
+  "content_length": null,
+  "content_type": "application/json",
+  "elapsed_seconds": 0.9049498329986818,
+  "error": "HTTPError: 500 Server Error:  for url: https://www.ebi.ac.uk/europepmc/webservices/rest/PMC2753399/fullTextXML",
+  "final_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC2753399/fullTextXML",
+  "http_status": 500,
+  "phase": "metadata",
+  "redirects": [],
+  "request": {
+    "discovery_provenance": "Primary PMC identifier2753399 from exact-title primary bibliography; official EuropePMC fullTextXML route already used successfully in prior source audits.",
+    "expected_kind": "xml",
+    "name": "fusaro2009.xml",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC2753399/fullTextXML"
+  },
+  "request_set": "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1628_codex_esp-response-source/reproduce/requests/metadata-4.json",
+  "sha256": "9c66ee319baa77dcb6b6c98df29a1df3c87d4a0e6738edc4b30ba2d3798e59b4",
+  "started_utc": "2026-10-25T16:28:15.775246+00:00",
+  "status": "failed"
+}

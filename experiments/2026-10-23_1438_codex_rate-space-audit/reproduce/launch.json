@@ -1,0 +1,29 @@
+{
+  "recipe_directory": "/private/tmp/hitlist-digestion-209-review-candidate",
+  "recipe_manifest_sha256": "5f616170b5514cb4d8f0c7b7843d232959e9514eebbca6483f976e17b0846615",
+  "reference_family": "/private/tmp/presto-modular-model/experiments/2026-10-23_1202_codex_biological-cut-rates",
+  "reference_fits_sha256": "2400f214141b6ab421cc0b5168ec08b3209507b62b7cf0a590fd719937bd267f",
+  "reference_metrics_sha256": "521d30036046b665651f2be0f0c533436a837b9eb612d8d4ac13b9ece18ce3e9",
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "PYTHONPATH": "/private/tmp/presto-modular-imports"
+  },
+  "registered_at": "2026-10-23T14:39:08.430092-04:00",
+  "agent_model": "Codex / GPT-6",
+  "presto_commit": "e1f74030de77f083c4b65fbe7aed22677ce9a13f",
+  "presto_dirty": " M tasks/todo.md\n?? data/availability_recipes/\n?? experiments/agents/codex/plans/full-ic50-fitting.md\n?? tasks/modular_model/trajectory-sampling-issue.md\n",
+  "previous_family": "/private/tmp/presto-modular-model/experiments/2026-10-23_1401_codex_kinetic-capacity",
+  "previous_files": {
+    "results/capacity-fits.json": "a86871ef86539f17dbf70a0805cab6dfd04b5e4a0754c55e244b48de3b801234",
+    "results/rate-allocation.json": "016557d6a115f9f15326336c8dd25594b38fdcfc1e82f6c6268f21b125c3d24d"
+  },
+  "allowed_splits": [
+    "train"
+  ],
+  "test_policy": "Training-only optimizer and identifiability diagnostic. Both previous held-out strata excluded before target construction; no validation/test predictions.",
+  "runtime_context": "Local CPU, one BLAS thread; no Modal or environment changes. No isolated hardware benchmark claim.",
+  "stage_b": "Pending Stage A and mathematical/runtime qualification; solver budget must be frozen before fitting."
+}

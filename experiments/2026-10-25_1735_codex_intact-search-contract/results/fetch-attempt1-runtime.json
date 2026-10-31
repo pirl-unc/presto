@@ -1,0 +1,85 @@
+{
+  "stage": "fetch",
+  "attempt": 1,
+  "started_utc": "2026-10-25T17:35:30.994109+00:00",
+  "status": "passed",
+  "child_launched": true,
+  "exit_code": 0,
+  "resource_violation": null,
+  "memory_admission": {
+    "metric": "macos_free_plus_speculative",
+    "bytes": 12117393408
+  },
+  "disk_free_before_bytes": 15342235648,
+  "request_set_sha256": "a051ed151dbf0f2d922902a4fe9c81f2c716700dce325123a599dc0a0d6e0351",
+  "request_set": {
+    "phase": "processed",
+    "requests": [
+      {
+        "name": "ClipsMS_v2.0.1.py",
+        "url": "https://raw.githubusercontent.com/loolab2020/ClipsMS/8ad829bdb5d2b644a290551442a8728b3b8ac5b5/ClipsMS_v2.0.1.py",
+        "expected_kind": "text",
+        "discovery_provenance": "Official repository root file inventory and pinned source commit 8ad829bdb5d2b644a290551442a8728b3b8ac5b5",
+        "encoding": "utf-8"
+      },
+      {
+        "name": "No_Unlocalized_Modifications.csv",
+        "url": "https://raw.githubusercontent.com/loolab2020/ClipsMS/8ad829bdb5d2b644a290551442a8728b3b8ac5b5/No_Unlocalized_Modifications.csv",
+        "expected_kind": "text",
+        "discovery_provenance": "Official repository root file inventory and pinned source commit 8ad829bdb5d2b644a290551442a8728b3b8ac5b5",
+        "encoding": "utf-8"
+      },
+      {
+        "name": "README.md",
+        "url": "https://raw.githubusercontent.com/loolab2020/ClipsMS/8ad829bdb5d2b644a290551442a8728b3b8ac5b5/README.md",
+        "expected_kind": "text",
+        "discovery_provenance": "Official repository root file inventory and pinned source commit 8ad829bdb5d2b644a290551442a8728b3b8ac5b5",
+        "encoding": "utf-8"
+      },
+      {
+        "name": "LICENSE",
+        "url": "https://raw.githubusercontent.com/loolab2020/ClipsMS/8ad829bdb5d2b644a290551442a8728b3b8ac5b5/LICENSE",
+        "expected_kind": "text",
+        "discovery_provenance": "Official repository root file inventory and pinned source commit 8ad829bdb5d2b644a290551442a8728b3b8ac5b5",
+        "encoding": "utf-8"
+      }
+    ],
+    "source_sha256": {
+      "code/fetch.py": "1bda902de950a889bab3a23487ca45cb430713afb42f7dc5b4a577dd37578dbb"
+    },
+    "input_sha256": {
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1735_codex_intact-search-contract/results/clipsms-source-commit.json": "8a9b5b7271ea88cbe84e2cce753fe612f2133219b2a70878be38752ee9bb7cc6"
+    }
+  },
+  "environment": {
+    "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "versions": {
+      "requests": "2.34.2",
+      "psutil": "7.2.2"
+    },
+    "overrides": {
+      "PYTHONSAFEPATH": "1",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUNBUFFERED": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    }
+  },
+  "child_pid": 50377,
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "-B",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1735_codex_intact-search-contract/code/fetch.py",
+    "--requests",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1735_codex_intact-search-contract/reproduce/requests/fetch-1.json"
+  ],
+  "elapsed_seconds": 1.0758059170329943,
+  "peak_observed_process_tree_rss_bytes": 48365568,
+  "peak_child_process_rss_bytes": 48431104,
+  "rss_poll_interval_seconds": 0.05,
+  "disk_free_after_bytes": 15339864064
+}

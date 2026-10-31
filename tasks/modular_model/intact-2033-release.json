@@ -1,0 +1,24 @@
+{
+  "verified_utc": "2026-10-25T02:05:44.131274+00:00",
+  "version": "2.0.33",
+  "source_commit": "18bbf81d34084e6118b49a1cc4727ea4aec8a422",
+  "successful_release_run": 40149903223,
+  "verified_artifacts": "/private/tmp/hitlist-tested-release-2033-retry-20261025",
+  "files": [
+    {
+      "filename": "hitlist-2.0.33-py3-none-any.whl",
+      "size": 3160950,
+      "sha256": "63d2a0fcf9a2de3753e95da559efe81a6106f75194662e324f65de9fe7b4d9b4",
+      "byte_equal": true
+    },
+    {
+      "filename": "hitlist-2.0.33.tar.gz",
+      "size": 3589730,
+      "sha256": "dec23d070e275def13d3c4283127dd4c0fc1511f1c6550cb32042d19ea2c51eb",
+      "byte_equal": true
+    }
+  ],
+  "shared_environment_changed": false,
+  "preserved_first_failure": "intact-2033-release-download-failure.json",
+  "first_post_upload_query": "HTTP404 before index propagation; no repeated upload"
+}

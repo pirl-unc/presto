@@ -1,0 +1,271 @@
+{
+  "schema": "presto.assay-review.v1",
+  "reviewed_date": "2026-10-29",
+  "policy": "Defer these original assay identities until primary-source reconciliation. Preserve raw records; do not infer corrected units, values, qualifiers or kinetic order. Updated source labels require explicit re-review.",
+  "evidence": {
+    "pmid:21257290": "Section 3.2 describes first-order rates in hour^-1; Table 4 rates disagree with exported 1/s values. Half-life assay 1820987 correctly retains a lower-bound qualifier and is not deferred.",
+    "pmid:9831134": "The primary abstract reports bimolecular association constants of order10^4 M^-1s^-1; the exported numeric/unit pairs imply order10^6. Exact scale and pseudo-first-order versus bimolecular mapping remain unresolved."
+  },
+  "entries": [
+    {
+      "assay_iri": "http://www.iedb.org/assay/1350805",
+      "status": "deferred",
+      "reason": "association_measurement_scope_unresolved",
+      "study_id": "pmid:9831134",
+      "observed_export": {
+        "response_measured": "on rate",
+        "value": 0.00219,
+        "unit": "nM^-1s^-1",
+        "qualifier": "="
+      },
+      "reference": "https://pubmed.ncbi.nlm.nih.gov/9831134/"
+    },
+    {
+      "assay_iri": "http://www.iedb.org/assay/1350806",
+      "status": "deferred",
+      "reason": "association_measurement_scope_unresolved",
+      "study_id": "pmid:9831134",
+      "observed_export": {
+        "response_measured": "on rate",
+        "value": 0.00136,
+        "unit": "nM^-1s^-1",
+        "qualifier": "="
+      },
+      "reference": "https://pubmed.ncbi.nlm.nih.gov/9831134/"
+    },
+    {
+      "assay_iri": "http://www.iedb.org/assay/1820994",
+      "status": "deferred",
+      "reason": "published_time_unit_conflicts_with_export",
+      "study_id": "pmid:21257290",
+      "observed_export": {
+        "response_measured": "off rate",
+        "value": 10.8,
+        "unit": "1/s",
+        "qualifier": "="
+      },
+      "reference": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3046295/"
+    },
+    {
+      "assay_iri": "http://www.iedb.org/assay/1820995",
+      "status": "deferred",
+      "reason": "published_time_unit_conflicts_with_export",
+      "study_id": "pmid:21257290",
+      "observed_export": {
+        "response_measured": "off rate",
+        "value": 27.36,
+        "unit": "1/s",
+        "qualifier": "="
+      },
+      "reference": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3046295/"
+    },
+    {
+      "assay_iri": "http://www.iedb.org/assay/1820996",
+      "status": "deferred",
+      "reason": "published_time_unit_conflicts_with_export",
+      "study_id": "pmid:21257290",
+      "observed_export": {
+        "response_measured": "off rate",
+        "value": 59.4,
+        "unit": "1/s",
+        "qualifier": "="
+      },
+      "reference": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3046295/"
+    },
+    {
+      "assay_iri": "http://www.iedb.org/assay/1820997",
+      "status": "deferred",
+      "reason": "published_time_unit_conflicts_with_export",
+      "study_id": "pmid:21257290",
+      "observed_export": {
+        "response_measured": "off rate",
+        "value": 8.28,
+        "unit": "1/s",
+        "qualifier": "="
+      },
+      "reference": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3046295/"
+    },
+    {
+      "assay_iri": "http://www.iedb.org/assay/1820998",
+      "status": "deferred",
+      "reason": "published_time_unit_conflicts_with_export",
+      "study_id": "pmid:21257290",
+      "observed_export": {
+        "response_measured": "off rate",
+        "value": 755.28,
+        "unit": "1/s",
+        "qualifier": "="
+      },
+      "reference": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3046295/"
+    },
+    {
+      "assay_iri": "http://www.iedb.org/assay/1820999",
+      "status": "deferred",
+      "reason": "published_time_unit_conflicts_with_export",
+      "study_id": "pmid:21257290",
+      "observed_export": {
+        "response_measured": "off rate",
+        "value": 74.88,
+        "unit": "1/s",
+        "qualifier": "="
+      },
+      "reference": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3046295/"
+    },
+    {
+      "assay_iri": "http://www.iedb.org/assay/1821000",
+      "status": "deferred",
+      "reason": "published_time_unit_conflicts_with_export",
+      "study_id": "pmid:21257290",
+      "observed_export": {
+        "response_measured": "off rate",
+        "value": 190.08,
+        "unit": "1/s",
+        "qualifier": "="
+      },
+      "reference": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3046295/"
+    },
+    {
+      "assay_iri": "http://www.iedb.org/assay/1821001",
+      "status": "deferred",
+      "reason": "published_time_unit_conflicts_with_export",
+      "study_id": "pmid:21257290",
+      "observed_export": {
+        "response_measured": "off rate",
+        "value": 109.8,
+        "unit": "1/s",
+        "qualifier": "="
+      },
+      "reference": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3046295/"
+    },
+    {
+      "assay_iri": "http://www.iedb.org/assay/1821002",
+      "status": "deferred",
+      "reason": "published_time_unit_conflicts_with_export",
+      "study_id": "pmid:21257290",
+      "observed_export": {
+        "response_measured": "off rate",
+        "value": 702.72,
+        "unit": "1/s",
+        "qualifier": "="
+      },
+      "reference": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3046295/"
+    },
+    {
+      "assay_iri": "http://www.iedb.org/assay/1821003",
+      "status": "deferred",
+      "reason": "published_time_unit_conflicts_with_export",
+      "study_id": "pmid:21257290",
+      "observed_export": {
+        "response_measured": "off rate",
+        "value": 261.72,
+        "unit": "1/s",
+        "qualifier": "="
+      },
+      "reference": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3046295/"
+    },
+    {
+      "assay_iri": "http://www.iedb.org/assay/1821004",
+      "status": "deferred",
+      "reason": "published_time_unit_conflicts_with_export",
+      "study_id": "pmid:21257290",
+      "observed_export": {
+        "response_measured": "off rate",
+        "value": 1935.72,
+        "unit": "1/s",
+        "qualifier": "="
+      },
+      "reference": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3046295/"
+    },
+    {
+      "assay_iri": "http://www.iedb.org/assay/1821005",
+      "status": "deferred",
+      "reason": "published_time_unit_conflicts_with_export",
+      "study_id": "pmid:21257290",
+      "observed_export": {
+        "response_measured": "off rate",
+        "value": 994.32,
+        "unit": "1/s",
+        "qualifier": "="
+      },
+      "reference": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3046295/"
+    },
+    {
+      "assay_iri": "http://www.iedb.org/assay/1821009",
+      "status": "deferred",
+      "reason": "association_measurement_scope_unresolved",
+      "study_id": "pmid:21257290",
+      "observed_export": {
+        "response_measured": "on rate",
+        "value": 528.84,
+        "unit": "nM^-1s^-1",
+        "qualifier": "="
+      },
+      "reference": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3046295/"
+    },
+    {
+      "assay_iri": "http://www.iedb.org/assay/1821010",
+      "status": "deferred",
+      "reason": "published_time_unit_conflicts_with_export",
+      "study_id": "pmid:21257290",
+      "observed_export": {
+        "response_measured": "off rate",
+        "value": 655.64,
+        "unit": "1/s",
+        "qualifier": "="
+      },
+      "reference": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3046295/"
+    },
+    {
+      "assay_iri": "http://www.iedb.org/assay/1821011",
+      "status": "deferred",
+      "reason": "association_measurement_scope_unresolved",
+      "study_id": "pmid:21257290",
+      "observed_export": {
+        "response_measured": "on rate",
+        "value": 704.0,
+        "unit": "nM^-1s^-1",
+        "qualifier": "="
+      },
+      "reference": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3046295/"
+    },
+    {
+      "assay_iri": "http://www.iedb.org/assay/1821012",
+      "status": "deferred",
+      "reason": "published_time_unit_conflicts_with_export",
+      "study_id": "pmid:21257290",
+      "observed_export": {
+        "response_measured": "off rate",
+        "value": 143.2,
+        "unit": "1/s",
+        "qualifier": "="
+      },
+      "reference": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3046295/"
+    },
+    {
+      "assay_iri": "http://www.iedb.org/assay/1821013",
+      "status": "deferred",
+      "reason": "association_measurement_scope_unresolved",
+      "study_id": "pmid:21257290",
+      "observed_export": {
+        "response_measured": "on rate",
+        "value": 500.0,
+        "unit": "nM^-1s^-1",
+        "qualifier": "="
+      },
+      "reference": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3046295/"
+    },
+    {
+      "assay_iri": "http://www.iedb.org/assay/1821015",
+      "status": "deferred",
+      "reason": "association_measurement_scope_unresolved",
+      "study_id": "pmid:21257290",
+      "observed_export": {
+        "response_measured": "on rate",
+        "value": 500.0,
+        "unit": "nM^-1s^-1",
+        "qualifier": "="
+      },
+      "reference": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3046295/"
+    }
+  ]
+}

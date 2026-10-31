@@ -1,0 +1,50 @@
+{
+  "agent_model": "Codex/GPT-6",
+  "created_utc": "2026-10-25T17:35:30.636039+00:00",
+  "experiment_id": "2026-10-25_1735_codex_intact-search-contract",
+  "presto_commit": "b8150780ede2272908cde3fac828e35bab240973",
+  "dirty_tracked": true,
+  "dirty_scope": "pre-existing task notes plus current plan checklist; no model edits",
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "data_directory": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/intact_search_contract_sources/2026-10-25_1735_codex_intact-search-contract",
+  "frozen_code_sha256": {
+    "code/launch.py": "337b0957f12bced683299134c33465d6b26145fbaa4d9bc1e233832b437a9e27",
+    "code/fetch.py": "1bda902de950a889bab3a23487ca45cb430713afb42f7dc5b4a577dd37578dbb",
+    "reproduce/source/launch.py": "337b0957f12bced683299134c33465d6b26145fbaa4d9bc1e233832b437a9e27",
+    "reproduce/source/fetch.py": "1bda902de950a889bab3a23487ca45cb430713afb42f7dc5b4a577dd37578dbb",
+    "reproduce/launch.sh": "f8281d1fdc0666fd57140839a818993482b04b4f22e3d6d718a61f4de5ffc70c"
+  },
+  "plan_sha256": "9054363983e0d87eea00ffa7c7f19a5a0cda06b3603e350566d6e1945880d9b1",
+  "limits": {
+    "stage_seconds": 1200,
+    "rss_bytes": 3221225472,
+    "startup_memory_bytes": 3221225472,
+    "disk_floor_bytes": 1073741824,
+    "start_margin_bytes": 33554432
+  },
+  "environment_overrides": {
+    "PYTHONSAFEPATH": "1",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONUNBUFFERED": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1"
+  },
+  "network_limits": {
+    "metadata_requests": 8,
+    "metadata_bytes_each": 16777216,
+    "processed_bytes_each": 16777216,
+    "total_bytes": 33554432,
+    "connect_seconds": 10,
+    "read_seconds": 30,
+    "request_wall_seconds": 120
+  },
+  "public_hosts": [
+    "raw.githubusercontent.com"
+  ],
+  "discovery_operations_limit_including_asset_requests": 8,
+  "candidate": "PXD058121 no-additional-modification method declaration and official ClipsMS export semantics",
+  "external_code_execution_authorized": false
+}

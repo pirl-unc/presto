@@ -1,0 +1,63 @@
+{
+  "stage": "fetch",
+  "attempt": 1,
+  "started_utc": "2026-10-25T18:59:03.991692+00:00",
+  "status": "passed",
+  "child_launched": true,
+  "exit_code": 0,
+  "resource_violation": null,
+  "memory_admission": {
+    "metric": "macos_free_plus_speculative",
+    "bytes": 3233841152
+  },
+  "disk_free_before_bytes": 15985442816,
+  "request_set_sha256": "4396bdc5ef39e7bd64835f1b1c76f6876fc2f3db2374e25d31b258d512577f3b",
+  "request_set": {
+    "phase": "metadata",
+    "requests": [
+      {
+        "name": "project.json",
+        "url": "https://www.ebi.ac.uk/pride/ws/archive/v2/projects/PXD024917",
+        "expected_kind": "json",
+        "discovery_provenance": "Fixed article accession and exact retrieval plan; official PRIDE v2 route used by existing Hitlist ingestion"
+      },
+      {
+        "name": "files-page0.json",
+        "url": "https://www.ebi.ac.uk/pride/ws/archive/v2/projects/PXD024917/files?pageSize=100&page=0",
+        "expected_kind": "json",
+        "discovery_provenance": "Locate two exact deposited filenames already named in original Dataset S7; no raw files requested"
+      }
+    ]
+  },
+  "environment": {
+    "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "versions": {
+      "requests": "2.34.2",
+      "psutil": "7.2.2"
+    },
+    "overrides": {
+      "PYTHONSAFEPATH": "1",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUNBUFFERED": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    }
+  },
+  "child_pid": 79610,
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "-B",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1857_codex_nontryptic-transition-lineage/code/fetch.py",
+    "--requests",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1857_codex_nontryptic-transition-lineage/reproduce/requests/fetch-1.json"
+  ],
+  "elapsed_seconds": 3.4078873340040445,
+  "peak_observed_process_tree_rss_bytes": 45989888,
+  "peak_child_process_rss_bytes": 46219264,
+  "rss_poll_interval_seconds": 0.05,
+  "disk_free_after_bytes": 15982415872
+}

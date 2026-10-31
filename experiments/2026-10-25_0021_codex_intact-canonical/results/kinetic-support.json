@@ -1,0 +1,3457 @@
+{
+  "status": "descriptive_support_not_training_admission",
+  "n_source_assignment_rows": 2617,
+  "n_candidate_rows": 1278,
+  "n_candidate_sequences": 237,
+  "exclusion_reasons_nonexclusive": {
+    "ambiguous_mass_assignment": 1328,
+    "multiple_masses_for_sequence_acquisition": 10,
+    "input_link_or_quantity_conflict": 3
+  },
+  "n_sequences_by_n_times": {
+    "3": 25,
+    "2": 49,
+    "1": 83,
+    "5": 29,
+    "4": 21,
+    "6": 19,
+    "7": 11
+  },
+  "n_sequences_with_at_least_two_early_times_and_a_late_time": 80,
+  "acquisition_support": [
+    {
+      "acquisition_id": "pxd058121:acquisition:2cb7a1a433a0230801ad79f1e107f69be9cd338357a6d1c2004dc8364e173da5",
+      "time_minutes": 0.0,
+      "replicate_label_raw": "1",
+      "n_candidate_peptides": 19,
+      "n_intact_substrate_rows": 1
+    },
+    {
+      "acquisition_id": "pxd058121:acquisition:4468512413e00635d29a256feaf3c63809f8f9d959b5e42a16aa6b12f6f958d8",
+      "time_minutes": 0.0,
+      "replicate_label_raw": "2",
+      "n_candidate_peptides": 18,
+      "n_intact_substrate_rows": 1
+    },
+    {
+      "acquisition_id": "pxd058121:acquisition:c6b740fb43c6c33a565b797c316b095c93f14701da967d8c99e3e72bd0436ca9",
+      "time_minutes": 0.0,
+      "replicate_label_raw": "3",
+      "n_candidate_peptides": 29,
+      "n_intact_substrate_rows": 1
+    },
+    {
+      "acquisition_id": "pxd058121:acquisition:d0fcd9e1cd6986d2581689a727fea0180846b2e3210f4585bc070ac1a28234d9",
+      "time_minutes": 20.0,
+      "replicate_label_raw": "1",
+      "n_candidate_peptides": 19,
+      "n_intact_substrate_rows": 1
+    },
+    {
+      "acquisition_id": "pxd058121:acquisition:92c10ba2a3386fca6f0655106ba70995f83673231ffc426b80d77890154a2efc",
+      "time_minutes": 20.0,
+      "replicate_label_raw": "2",
+      "n_candidate_peptides": 29,
+      "n_intact_substrate_rows": 1
+    },
+    {
+      "acquisition_id": "pxd058121:acquisition:4aa28350885111a5119ccfd32ff31d19293f516b762cfc352f57b17ab2ff52d9",
+      "time_minutes": 20.0,
+      "replicate_label_raw": "3",
+      "n_candidate_peptides": 36,
+      "n_intact_substrate_rows": 1
+    },
+    {
+      "acquisition_id": "pxd058121:acquisition:6c0251c8813de8a9ec72d62177cc13db7351cf3d8118cedd20cfa6c1118743cd",
+      "time_minutes": 40.0,
+      "replicate_label_raw": "1",
+      "n_candidate_peptides": 43,
+      "n_intact_substrate_rows": 1
+    },
+    {
+      "acquisition_id": "pxd058121:acquisition:7ccc40b386209bd67eecf887e7b9bb412bcfbb409c4d690a38da2c0792f39999",
+      "time_minutes": 40.0,
+      "replicate_label_raw": "2",
+      "n_candidate_peptides": 54,
+      "n_intact_substrate_rows": 1
+    },
+    {
+      "acquisition_id": "pxd058121:acquisition:371f5db766ea8efee581c7444eee79f72ab4c4fbb29de44b18dcfda76fe048e5",
+      "time_minutes": 40.0,
+      "replicate_label_raw": "3",
+      "n_candidate_peptides": 57,
+      "n_intact_substrate_rows": 1
+    },
+    {
+      "acquisition_id": "pxd058121:acquisition:1029cb80a944cfa5aceef8f4d3ecdc2685691f74d8840970fd8db03d6eb8ba5f",
+      "time_minutes": 60.0,
+      "replicate_label_raw": "1",
+      "n_candidate_peptides": 67,
+      "n_intact_substrate_rows": 1
+    },
+    {
+      "acquisition_id": "pxd058121:acquisition:10f8197e3018d55ca51125d66d801253b990f42b4f2577beac7716c6e7690fd6",
+      "time_minutes": 60.0,
+      "replicate_label_raw": "2",
+      "n_candidate_peptides": 62,
+      "n_intact_substrate_rows": 1
+    },
+    {
+      "acquisition_id": "pxd058121:acquisition:93791a5d2a3de5301fad864c4b6ed586c5f5846350441c5611322100535b51fa",
+      "time_minutes": 60.0,
+      "replicate_label_raw": "3",
+      "n_candidate_peptides": 85,
+      "n_intact_substrate_rows": 1
+    },
+    {
+      "acquisition_id": "pxd058121:acquisition:78eb81ab4c735c1eebc478fea179cc1675aa6891a573cb6a106a8f64cb236ec8",
+      "time_minutes": 80.0,
+      "replicate_label_raw": "1",
+      "n_candidate_peptides": 73,
+      "n_intact_substrate_rows": 1
+    },
+    {
+      "acquisition_id": "pxd058121:acquisition:20e0d3b804104f839b978b225948cce8e694cb732498dd83328f5351934e32c9",
+      "time_minutes": 80.0,
+      "replicate_label_raw": "2",
+      "n_candidate_peptides": 80,
+      "n_intact_substrate_rows": 1
+    },
+    {
+      "acquisition_id": "pxd058121:acquisition:1222bbc6c1ab8bd4753de92db66066fb58b412810a8a531cde8c8c37d69e4ab7",
+      "time_minutes": 80.0,
+      "replicate_label_raw": "3",
+      "n_candidate_peptides": 57,
+      "n_intact_substrate_rows": 1
+    },
+    {
+      "acquisition_id": "pxd058121:acquisition:c22ad0aaafe37232b7ff814fa7d858a9a1c5082d0eacc83226cdf4e3b3326bc4",
+      "time_minutes": 100.0,
+      "replicate_label_raw": "1",
+      "n_candidate_peptides": 114,
+      "n_intact_substrate_rows": 1
+    },
+    {
+      "acquisition_id": "pxd058121:acquisition:fa25a846248b57db02b2403f6c2f0f41ecd0f991cfcfc966b21a8b877c8f1363",
+      "time_minutes": 100.0,
+      "replicate_label_raw": "2",
+      "n_candidate_peptides": 80,
+      "n_intact_substrate_rows": 1
+    },
+    {
+      "acquisition_id": "pxd058121:acquisition:3e9c762dec064a1caa57a5e878ee6bdf8c37452b16907ace9378eb31b6a44487",
+      "time_minutes": 100.0,
+      "replicate_label_raw": "3",
+      "n_candidate_peptides": 71,
+      "n_intact_substrate_rows": 1
+    },
+    {
+      "acquisition_id": "pxd058121:acquisition:d1681434da3065cec147eb25f252e13a0870b4667a590145f71d23eccf0f50b9",
+      "time_minutes": 120.0,
+      "replicate_label_raw": "1",
+      "n_candidate_peptides": 80,
+      "n_intact_substrate_rows": 1
+    },
+    {
+      "acquisition_id": "pxd058121:acquisition:700d8916e8772567a97aca2632c056ee63039efeb87f19258d867830901f9365",
+      "time_minutes": 120.0,
+      "replicate_label_raw": "2",
+      "n_candidate_peptides": 116,
+      "n_intact_substrate_rows": 1
+    },
+    {
+      "acquisition_id": "pxd058121:acquisition:0d2e7fae36d99200ab29d64093a51fb264a88778330af31dcaa90c3d2e06ffec",
+      "time_minutes": 120.0,
+      "replicate_label_raw": "3",
+      "n_candidate_peptides": 89,
+      "n_intact_substrate_rows": 1
+    }
+  ],
+  "sequence_support": [
+    {
+      "peptide_sequence": "AAATGFVKKDQLGKNEEGAPQE",
+      "length": 22,
+      "n_observations": 5,
+      "times_minutes": [
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 2,
+      "n_early_observations": 1,
+      "n_late_observations": 4
+    },
+    {
+      "peptide_sequence": "AAEKTKQGVAEAAGKTKEGVLYV",
+      "length": 23,
+      "n_observations": 6,
+      "times_minutes": [
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 2,
+      "n_early_observations": 2,
+      "n_late_observations": 4
+    },
+    {
+      "peptide_sequence": "AAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVH",
+      "length": 33,
+      "n_observations": 2,
+      "times_minutes": [
+        60.0,
+        80.0
+      ],
+      "n_early_times": 2,
+      "n_late_times": 0,
+      "n_early_observations": 2,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "AAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTA",
+      "length": 48,
+      "n_observations": 1,
+      "times_minutes": [
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "AAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGS",
+      "length": 59,
+      "n_observations": 1,
+      "times_minutes": [
+        20.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "AAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQ",
+      "length": 71,
+      "n_observations": 1,
+      "times_minutes": [
+        40.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "AATGFVKKDQLGKNEEGAPQE",
+      "length": 21,
+      "n_observations": 1,
+      "times_minutes": [
+        100.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "AEKTKEQVTNVGGAVVTGVTAVAQKTVE",
+      "length": 28,
+      "n_observations": 7,
+      "times_minutes": [
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 3,
+      "n_late_times": 2,
+      "n_early_observations": 3,
+      "n_late_observations": 4
+    },
+    {
+      "peptide_sequence": "AEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKD",
+      "length": 43,
+      "n_observations": 4,
+      "times_minutes": [
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 2,
+      "n_early_observations": 1,
+      "n_late_observations": 3
+    },
+    {
+      "peptide_sequence": "AEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQL",
+      "length": 45,
+      "n_observations": 5,
+      "times_minutes": [
+        60.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 2,
+      "n_early_observations": 2,
+      "n_late_observations": 3
+    },
+    {
+      "peptide_sequence": "AEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGK",
+      "length": 47,
+      "n_observations": 2,
+      "times_minutes": [
+        60.0,
+        100.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 1,
+      "n_early_observations": 1,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "AEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQE",
+      "length": 55,
+      "n_observations": 15,
+      "times_minutes": [
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 3,
+      "n_late_times": 2,
+      "n_early_observations": 9,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "AEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVD",
+      "length": 64,
+      "n_observations": 3,
+      "times_minutes": [
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 3
+    },
+    {
+      "peptide_sequence": "AEKTKQGVAEAAGKTKEGVLYV",
+      "length": 22,
+      "n_observations": 3,
+      "times_minutes": [
+        60.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 2,
+      "n_early_observations": 1,
+      "n_late_observations": 2
+    },
+    {
+      "peptide_sequence": "AEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQE",
+      "length": 92,
+      "n_observations": 2,
+      "times_minutes": [
+        60.0,
+        120.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 1,
+      "n_early_observations": 1,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "AGKTKEGVLYV",
+      "length": 11,
+      "n_observations": 5,
+      "times_minutes": [
+        60.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 2,
+      "n_early_observations": 1,
+      "n_late_observations": 4
+    },
+    {
+      "peptide_sequence": "AGKTKEGVLYVGSKTKEGVVH",
+      "length": 21,
+      "n_observations": 6,
+      "times_minutes": [
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 2,
+      "n_late_times": 2,
+      "n_early_observations": 2,
+      "n_late_observations": 4
+    },
+    {
+      "peptide_sequence": "AGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVT",
+      "length": 43,
+      "n_observations": 1,
+      "times_minutes": [
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "AGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLG",
+      "length": 72,
+      "n_observations": 2,
+      "times_minutes": [
+        20.0,
+        60.0
+      ],
+      "n_early_times": 2,
+      "n_late_times": 0,
+      "n_early_observations": 2,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "AGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQE",
+      "length": 81,
+      "n_observations": 2,
+      "times_minutes": [
+        100.0,
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 2,
+      "n_early_observations": 0,
+      "n_late_observations": 2
+    },
+    {
+      "peptide_sequence": "AGSIAAATGFVKKDQL",
+      "length": 16,
+      "n_observations": 11,
+      "times_minutes": [
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 3,
+      "n_late_times": 2,
+      "n_early_observations": 6,
+      "n_late_observations": 5
+    },
+    {
+      "peptide_sequence": "AGSIAAATGFVKKDQLGKNEEGAPQE",
+      "length": 26,
+      "n_observations": 17,
+      "times_minutes": [
+        20.0,
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 4,
+      "n_late_times": 2,
+      "n_early_observations": 11,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "AGSIAAATGFVKKDQLGKNEEGAPQEGI",
+      "length": 28,
+      "n_observations": 1,
+      "times_minutes": [
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "AGSIAAATGFVKKDQLGKNEEGAPQEGIL",
+      "length": 29,
+      "n_observations": 1,
+      "times_minutes": [
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "AGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVD",
+      "length": 35,
+      "n_observations": 4,
+      "times_minutes": [
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 2,
+      "n_early_observations": 1,
+      "n_late_observations": 3
+    },
+    {
+      "peptide_sequence": "AGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVDPDNEAYEMPSEEGYQDYEPEA",
+      "length": 56,
+      "n_observations": 1,
+      "times_minutes": [
+        80.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "AQKTVEGAGSIAAATGFVKKD",
+      "length": 21,
+      "n_observations": 9,
+      "times_minutes": [
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 3,
+      "n_late_times": 2,
+      "n_early_observations": 3,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "AQKTVEGAGSIAAATGFVKKDQL",
+      "length": 23,
+      "n_observations": 14,
+      "times_minutes": [
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 3,
+      "n_late_times": 2,
+      "n_early_observations": 8,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "AQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQE",
+      "length": 33,
+      "n_observations": 17,
+      "times_minutes": [
+        20.0,
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 4,
+      "n_late_times": 2,
+      "n_early_observations": 11,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "AQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGIL",
+      "length": 36,
+      "n_observations": 6,
+      "times_minutes": [
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 2,
+      "n_late_times": 2,
+      "n_early_observations": 4,
+      "n_late_observations": 2
+    },
+    {
+      "peptide_sequence": "AQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVD",
+      "length": 42,
+      "n_observations": 15,
+      "times_minutes": [
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 3,
+      "n_late_times": 2,
+      "n_early_observations": 9,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "AQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVDPDNEAYEMPSEEGYQDYEPEA",
+      "length": 63,
+      "n_observations": 17,
+      "times_minutes": [
+        20.0,
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 4,
+      "n_late_times": 2,
+      "n_early_observations": 11,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "ATGFVKKD",
+      "length": 8,
+      "n_observations": 1,
+      "times_minutes": [
+        20.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "ATGFVKKDQL",
+      "length": 10,
+      "n_observations": 6,
+      "times_minutes": [
+        60.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 2,
+      "n_early_observations": 1,
+      "n_late_observations": 5
+    },
+    {
+      "peptide_sequence": "ATGFVKKDQLGKNEEGAPQE",
+      "length": 20,
+      "n_observations": 15,
+      "times_minutes": [
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 3,
+      "n_late_times": 2,
+      "n_early_observations": 9,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "ATGFVKKDQLGKNEEGAPQEGI",
+      "length": 22,
+      "n_observations": 5,
+      "times_minutes": [
+        60.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 2,
+      "n_early_observations": 1,
+      "n_late_observations": 4
+    },
+    {
+      "peptide_sequence": "ATGFVKKDQLGKNEEGAPQEGIL",
+      "length": 23,
+      "n_observations": 1,
+      "times_minutes": [
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "ATGFVKKDQLGKNEEGAPQEGILEDMPVD",
+      "length": 29,
+      "n_observations": 3,
+      "times_minutes": [
+        100.0,
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 2,
+      "n_early_observations": 0,
+      "n_late_observations": 3
+    },
+    {
+      "peptide_sequence": "ATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVDPDNEA",
+      "length": 72,
+      "n_observations": 1,
+      "times_minutes": [
+        20.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "DPDNEAYEMP",
+      "length": 10,
+      "n_observations": 1,
+      "times_minutes": [
+        0.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "DPDNEAYEMPSEEGYQDYEPE",
+      "length": 21,
+      "n_observations": 2,
+      "times_minutes": [
+        20.0,
+        80.0
+      ],
+      "n_early_times": 2,
+      "n_late_times": 0,
+      "n_early_observations": 2,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "DPDNEAYEMPSEEGYQDYEPEA",
+      "length": 22,
+      "n_observations": 13,
+      "times_minutes": [
+        0.0,
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 4,
+      "n_late_times": 2,
+      "n_early_observations": 7,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "DVFMKGLS",
+      "length": 8,
+      "n_observations": 1,
+      "times_minutes": [
+        40.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "DVFMKGLSKAKEGVVAAAEK",
+      "length": 20,
+      "n_observations": 1,
+      "times_minutes": [
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "DVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGI",
+      "length": 111,
+      "n_observations": 13,
+      "times_minutes": [
+        0.0,
+        20.0,
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 5,
+      "n_late_times": 2,
+      "n_early_observations": 11,
+      "n_late_observations": 2
+    },
+    {
+      "peptide_sequence": "DVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGIL",
+      "length": 112,
+      "n_observations": 21,
+      "times_minutes": [
+        0.0,
+        20.0,
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 5,
+      "n_late_times": 2,
+      "n_early_observations": 15,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "DVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVDPDNEAYEMPSEEGYQDYEP",
+      "length": 137,
+      "n_observations": 3,
+      "times_minutes": [
+        20.0,
+        60.0
+      ],
+      "n_early_times": 2,
+      "n_late_times": 0,
+      "n_early_observations": 3,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "DVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVDPDNEAYEMPSEEGYQDYEPEA",
+      "length": 139,
+      "n_observations": 4,
+      "times_minutes": [
+        0.0,
+        20.0,
+        60.0,
+        80.0
+      ],
+      "n_early_times": 4,
+      "n_late_times": 0,
+      "n_early_observations": 4,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "DYEPEA",
+      "length": 6,
+      "n_observations": 15,
+      "times_minutes": [
+        0.0,
+        20.0,
+        40.0,
+        60.0,
+        80.0,
+        100.0
+      ],
+      "n_early_times": 5,
+      "n_late_times": 1,
+      "n_early_observations": 14,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "EAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKD",
+      "length": 71,
+      "n_observations": 9,
+      "times_minutes": [
+        0.0,
+        20.0,
+        40.0,
+        60.0,
+        80.0
+      ],
+      "n_early_times": 5,
+      "n_late_times": 0,
+      "n_early_observations": 9,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "EAYEM",
+      "length": 5,
+      "n_observations": 1,
+      "times_minutes": [
+        20.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "EDMPVD",
+      "length": 6,
+      "n_observations": 2,
+      "times_minutes": [
+        40.0,
+        100.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 1,
+      "n_early_observations": 1,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "EEGYQDYE",
+      "length": 8,
+      "n_observations": 1,
+      "times_minutes": [
+        20.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "EEGYQDYEPEA",
+      "length": 11,
+      "n_observations": 12,
+      "times_minutes": [
+        0.0,
+        20.0,
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 5,
+      "n_late_times": 2,
+      "n_early_observations": 10,
+      "n_late_observations": 2
+    },
+    {
+      "peptide_sequence": "EGAGSIAAATGFVKKD",
+      "length": 16,
+      "n_observations": 3,
+      "times_minutes": [
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 2,
+      "n_early_observations": 1,
+      "n_late_observations": 2
+    },
+    {
+      "peptide_sequence": "EGAGSIAAATGFVKKDQL",
+      "length": 18,
+      "n_observations": 3,
+      "times_minutes": [
+        100.0,
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 2,
+      "n_early_observations": 0,
+      "n_late_observations": 3
+    },
+    {
+      "peptide_sequence": "EGAGSIAAATGFVKKDQLGKNEEGAPQE",
+      "length": 28,
+      "n_observations": 14,
+      "times_minutes": [
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 3,
+      "n_late_times": 2,
+      "n_early_observations": 8,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "EGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVD",
+      "length": 37,
+      "n_observations": 1,
+      "times_minutes": [
+        100.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "EGAPQEGILEDMPVDPD",
+      "length": 17,
+      "n_observations": 1,
+      "times_minutes": [
+        80.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "EGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAP",
+      "length": 74,
+      "n_observations": 6,
+      "times_minutes": [
+        0.0,
+        20.0,
+        40.0,
+        60.0,
+        100.0
+      ],
+      "n_early_times": 4,
+      "n_late_times": 1,
+      "n_early_observations": 5,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "EGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEG",
+      "length": 77,
+      "n_observations": 1,
+      "times_minutes": [
+        60.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "EGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGS",
+      "length": 75,
+      "n_observations": 3,
+      "times_minutes": [
+        0.0,
+        20.0,
+        60.0
+      ],
+      "n_early_times": 3,
+      "n_late_times": 0,
+      "n_early_observations": 3,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "EGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKD",
+      "length": 86,
+      "n_observations": 1,
+      "times_minutes": [
+        0.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "EGYQDYEPEA",
+      "length": 10,
+      "n_observations": 10,
+      "times_minutes": [
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 3,
+      "n_late_times": 2,
+      "n_early_observations": 5,
+      "n_late_observations": 5
+    },
+    {
+      "peptide_sequence": "EKTKEQVTNVGGAVVTGV",
+      "length": 18,
+      "n_observations": 1,
+      "times_minutes": [
+        80.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "EKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGF",
+      "length": 38,
+      "n_observations": 3,
+      "times_minutes": [
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 2,
+      "n_early_observations": 1,
+      "n_late_observations": 2
+    },
+    {
+      "peptide_sequence": "EKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQE",
+      "length": 54,
+      "n_observations": 3,
+      "times_minutes": [
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 2,
+      "n_early_observations": 1,
+      "n_late_observations": 2
+    },
+    {
+      "peptide_sequence": "EKTKQGVAEAAGKTKEG",
+      "length": 17,
+      "n_observations": 1,
+      "times_minutes": [
+        40.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "EMPSEEGYQDYEPEA",
+      "length": 15,
+      "n_observations": 19,
+      "times_minutes": [
+        0.0,
+        20.0,
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 5,
+      "n_late_times": 2,
+      "n_early_observations": 14,
+      "n_late_observations": 5
+    },
+    {
+      "peptide_sequence": "FMKGL",
+      "length": 5,
+      "n_observations": 1,
+      "times_minutes": [
+        60.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "FMKGLSK",
+      "length": 7,
+      "n_observations": 2,
+      "times_minutes": [
+        100.0,
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 2,
+      "n_early_observations": 0,
+      "n_late_observations": 2
+    },
+    {
+      "peptide_sequence": "FMKGLSKAKEGVVAAAE",
+      "length": 17,
+      "n_observations": 2,
+      "times_minutes": [
+        0.0,
+        120.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 1,
+      "n_early_observations": 1,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "FMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVDPD",
+      "length": 118,
+      "n_observations": 19,
+      "times_minutes": [
+        0.0,
+        20.0,
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 5,
+      "n_late_times": 2,
+      "n_early_observations": 13,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "FMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVDPDN",
+      "length": 119,
+      "n_observations": 1,
+      "times_minutes": [
+        0.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "GAGSIAAATGFVKKDQLGKNEEGAPQEGI",
+      "length": 29,
+      "n_observations": 5,
+      "times_minutes": [
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 2,
+      "n_early_observations": 2,
+      "n_late_observations": 3
+    },
+    {
+      "peptide_sequence": "GAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVD",
+      "length": 36,
+      "n_observations": 7,
+      "times_minutes": [
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 2,
+      "n_late_times": 2,
+      "n_early_observations": 2,
+      "n_late_observations": 5
+    },
+    {
+      "peptide_sequence": "GFVKKDQLGKNEEGAPQEGILEDMPVDPDNEAYEMPSEEGYQDYEPEA",
+      "length": 48,
+      "n_observations": 11,
+      "times_minutes": [
+        0.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 3,
+      "n_late_times": 2,
+      "n_early_observations": 5,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "GGAVVTGVTAVAQKTVEGAG",
+      "length": 20,
+      "n_observations": 1,
+      "times_minutes": [
+        20.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "GILEDMPVD",
+      "length": 9,
+      "n_observations": 18,
+      "times_minutes": [
+        20.0,
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 4,
+      "n_late_times": 2,
+      "n_early_observations": 12,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "GILEDMPVDPDNEAYEMPSEEGYQD",
+      "length": 25,
+      "n_observations": 1,
+      "times_minutes": [
+        100.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "GILEDMPVDPDNEAYEMPSEEGYQDYEPEA",
+      "length": 30,
+      "n_observations": 11,
+      "times_minutes": [
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 3,
+      "n_late_times": 2,
+      "n_early_observations": 6,
+      "n_late_observations": 5
+    },
+    {
+      "peptide_sequence": "GKNEEGAPQEGILEDMPVD",
+      "length": 19,
+      "n_observations": 8,
+      "times_minutes": [
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 2,
+      "n_late_times": 2,
+      "n_early_observations": 4,
+      "n_late_observations": 4
+    },
+    {
+      "peptide_sequence": "GKNEEGAPQEGILEDMPVDPDNEAYEMPSEEGYQDYEPEA",
+      "length": 40,
+      "n_observations": 14,
+      "times_minutes": [
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 3,
+      "n_late_times": 2,
+      "n_early_observations": 8,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "GKTKEGVLYVGSKTKEGVVHGVATV",
+      "length": 25,
+      "n_observations": 1,
+      "times_minutes": [
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "GKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAV",
+      "length": 47,
+      "n_observations": 13,
+      "times_minutes": [
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 3,
+      "n_late_times": 2,
+      "n_early_observations": 7,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "GSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLG",
+      "length": 61,
+      "n_observations": 1,
+      "times_minutes": [
+        80.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "GVAEAAGKTKEGVLYVG",
+      "length": 17,
+      "n_observations": 1,
+      "times_minutes": [
+        40.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "GVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKT",
+      "length": 35,
+      "n_observations": 1,
+      "times_minutes": [
+        20.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "GVATVAEKTKEQVTNVGGAVVTGVTAV",
+      "length": 27,
+      "n_observations": 7,
+      "times_minutes": [
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 3,
+      "n_late_times": 2,
+      "n_early_observations": 3,
+      "n_late_observations": 4
+    },
+    {
+      "peptide_sequence": "GVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKD",
+      "length": 48,
+      "n_observations": 3,
+      "times_minutes": [
+        80.0,
+        120.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 1,
+      "n_early_observations": 1,
+      "n_late_observations": 2
+    },
+    {
+      "peptide_sequence": "GVLYVGSKTKEGVVHGV",
+      "length": 17,
+      "n_observations": 1,
+      "times_minutes": [
+        100.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "GVLYVGSKTKEGVVHGVATV",
+      "length": 20,
+      "n_observations": 1,
+      "times_minutes": [
+        100.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "GVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGI",
+      "length": 40,
+      "n_observations": 1,
+      "times_minutes": [
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "GVVAAAEKTKQGVAEAAG",
+      "length": 18,
+      "n_observations": 1,
+      "times_minutes": [
+        100.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "GYQDYEPEA",
+      "length": 9,
+      "n_observations": 9,
+      "times_minutes": [
+        0.0,
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 4,
+      "n_late_times": 2,
+      "n_early_observations": 6,
+      "n_late_observations": 3
+    },
+    {
+      "peptide_sequence": "HGVATVAEKTKEQVTNVGGAVVT",
+      "length": 23,
+      "n_observations": 1,
+      "times_minutes": [
+        60.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "HGVATVAEKTKEQVTNVGGAVVTGVTA",
+      "length": 27,
+      "n_observations": 1,
+      "times_minutes": [
+        20.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "KDQLGKNEEGAPQEGILEDMPVDPDNEA",
+      "length": 28,
+      "n_observations": 3,
+      "times_minutes": [
+        80.0,
+        120.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 1,
+      "n_early_observations": 1,
+      "n_late_observations": 2
+    },
+    {
+      "peptide_sequence": "KEGVLYVGSKTKEGVVHGVATV",
+      "length": 22,
+      "n_observations": 3,
+      "times_minutes": [
+        60.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 2,
+      "n_early_observations": 1,
+      "n_late_observations": 2
+    },
+    {
+      "peptide_sequence": "KEGVLYVGSKTKEGVVHGVATVAEK",
+      "length": 25,
+      "n_observations": 4,
+      "times_minutes": [
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 2,
+      "n_late_times": 2,
+      "n_early_observations": 2,
+      "n_late_observations": 2
+    },
+    {
+      "peptide_sequence": "KEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKN",
+      "length": 70,
+      "n_observations": 2,
+      "times_minutes": [
+        0.0,
+        40.0
+      ],
+      "n_early_times": 2,
+      "n_late_times": 0,
+      "n_early_observations": 2,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "KEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVH",
+      "length": 39,
+      "n_observations": 2,
+      "times_minutes": [
+        80.0,
+        100.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 1,
+      "n_early_observations": 1,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "KEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAV",
+      "length": 66,
+      "n_observations": 2,
+      "times_minutes": [
+        100.0,
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 2,
+      "n_early_observations": 0,
+      "n_late_observations": 2
+    },
+    {
+      "peptide_sequence": "KEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVDPDNEAYEM",
+      "length": 116,
+      "n_observations": 1,
+      "times_minutes": [
+        0.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "KEQVTNVGGAVVTGVTAVAQKTVEGAGSI",
+      "length": 29,
+      "n_observations": 1,
+      "times_minutes": [
+        40.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "KGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVDPDN",
+      "length": 117,
+      "n_observations": 2,
+      "times_minutes": [
+        0.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 2,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "KQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATV",
+      "length": 33,
+      "n_observations": 1,
+      "times_minutes": [
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "KTKEQVTNVGGAVVTGVTAV",
+      "length": 20,
+      "n_observations": 2,
+      "times_minutes": [
+        80.0,
+        120.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 1,
+      "n_early_observations": 1,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "KTVEGAGSIAAATGFVKKDQLGKNEEGAPQE",
+      "length": 31,
+      "n_observations": 9,
+      "times_minutes": [
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 2,
+      "n_late_times": 2,
+      "n_early_observations": 5,
+      "n_late_observations": 4
+    },
+    {
+      "peptide_sequence": "LEDMPVD",
+      "length": 7,
+      "n_observations": 3,
+      "times_minutes": [
+        40.0,
+        80.0,
+        100.0
+      ],
+      "n_early_times": 2,
+      "n_late_times": 1,
+      "n_early_observations": 2,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "LSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVDPDNEA",
+      "length": 117,
+      "n_observations": 4,
+      "times_minutes": [
+        0.0,
+        20.0,
+        80.0
+      ],
+      "n_early_times": 3,
+      "n_late_times": 0,
+      "n_early_observations": 4,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "LSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVDPDNEAYEMPSEEGYQ",
+      "length": 127,
+      "n_observations": 18,
+      "times_minutes": [
+        0.0,
+        20.0,
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 5,
+      "n_late_times": 2,
+      "n_early_observations": 12,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "MDVFM",
+      "length": 5,
+      "n_observations": 1,
+      "times_minutes": [
+        100.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKA",
+      "length": 11,
+      "n_observations": 15,
+      "times_minutes": [
+        20.0,
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 4,
+      "n_late_times": 2,
+      "n_early_observations": 9,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKE",
+      "length": 13,
+      "n_observations": 2,
+      "times_minutes": [
+        100.0,
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 2,
+      "n_early_observations": 0,
+      "n_late_observations": 2
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVA",
+      "length": 17,
+      "n_observations": 16,
+      "times_minutes": [
+        20.0,
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 4,
+      "n_late_times": 2,
+      "n_early_observations": 10,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKT",
+      "length": 22,
+      "n_observations": 14,
+      "times_minutes": [
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 3,
+      "n_late_times": 2,
+      "n_early_observations": 8,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAE",
+      "length": 28,
+      "n_observations": 15,
+      "times_minutes": [
+        20.0,
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 4,
+      "n_late_times": 2,
+      "n_early_observations": 9,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEA",
+      "length": 29,
+      "n_observations": 17,
+      "times_minutes": [
+        20.0,
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 4,
+      "n_late_times": 2,
+      "n_early_observations": 11,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAA",
+      "length": 30,
+      "n_observations": 16,
+      "times_minutes": [
+        20.0,
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 4,
+      "n_late_times": 2,
+      "n_early_observations": 10,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKE",
+      "length": 35,
+      "n_observations": 7,
+      "times_minutes": [
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 2,
+      "n_late_times": 2,
+      "n_early_observations": 3,
+      "n_late_observations": 4
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEG",
+      "length": 36,
+      "n_observations": 17,
+      "times_minutes": [
+        20.0,
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 4,
+      "n_late_times": 2,
+      "n_early_observations": 11,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVL",
+      "length": 38,
+      "n_observations": 1,
+      "times_minutes": [
+        100.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYV",
+      "length": 40,
+      "n_observations": 7,
+      "times_minutes": [
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 2,
+      "n_late_times": 2,
+      "n_early_observations": 3,
+      "n_late_observations": 4
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVG",
+      "length": 41,
+      "n_observations": 10,
+      "times_minutes": [
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 2,
+      "n_late_times": 2,
+      "n_early_observations": 5,
+      "n_late_observations": 5
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGS",
+      "length": 42,
+      "n_observations": 13,
+      "times_minutes": [
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 3,
+      "n_late_times": 2,
+      "n_early_observations": 7,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKT",
+      "length": 44,
+      "n_observations": 3,
+      "times_minutes": [
+        100.0,
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 2,
+      "n_early_observations": 0,
+      "n_late_observations": 3
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEG",
+      "length": 47,
+      "n_observations": 1,
+      "times_minutes": [
+        100.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVH",
+      "length": 50,
+      "n_observations": 17,
+      "times_minutes": [
+        20.0,
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 4,
+      "n_late_times": 2,
+      "n_early_observations": 11,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHG",
+      "length": 51,
+      "n_observations": 14,
+      "times_minutes": [
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 3,
+      "n_late_times": 2,
+      "n_early_observations": 8,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGV",
+      "length": 52,
+      "n_observations": 5,
+      "times_minutes": [
+        40.0,
+        60.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 2,
+      "n_late_times": 2,
+      "n_early_observations": 3,
+      "n_late_observations": 2
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATV",
+      "length": 55,
+      "n_observations": 18,
+      "times_minutes": [
+        20.0,
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 4,
+      "n_late_times": 2,
+      "n_early_observations": 12,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVA",
+      "length": 56,
+      "n_observations": 15,
+      "times_minutes": [
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 3,
+      "n_late_times": 2,
+      "n_early_observations": 9,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAE",
+      "length": 57,
+      "n_observations": 8,
+      "times_minutes": [
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 2,
+      "n_late_times": 2,
+      "n_early_observations": 3,
+      "n_late_observations": 5
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQ",
+      "length": 62,
+      "n_observations": 13,
+      "times_minutes": [
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 3,
+      "n_late_times": 2,
+      "n_early_observations": 7,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQV",
+      "length": 63,
+      "n_observations": 8,
+      "times_minutes": [
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 2,
+      "n_late_times": 2,
+      "n_early_observations": 4,
+      "n_late_observations": 4
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNV",
+      "length": 66,
+      "n_observations": 5,
+      "times_minutes": [
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 2,
+      "n_late_times": 2,
+      "n_early_observations": 2,
+      "n_late_observations": 3
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTG",
+      "length": 73,
+      "n_observations": 1,
+      "times_minutes": [
+        100.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGV",
+      "length": 74,
+      "n_observations": 2,
+      "times_minutes": [
+        60.0,
+        120.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 1,
+      "n_early_observations": 1,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTA",
+      "length": 76,
+      "n_observations": 9,
+      "times_minutes": [
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 2,
+      "n_late_times": 2,
+      "n_early_observations": 3,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAV",
+      "length": 77,
+      "n_observations": 15,
+      "times_minutes": [
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 3,
+      "n_late_times": 2,
+      "n_early_observations": 9,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVA",
+      "length": 78,
+      "n_observations": 5,
+      "times_minutes": [
+        60.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 2,
+      "n_early_observations": 1,
+      "n_late_observations": 4
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQ",
+      "length": 79,
+      "n_observations": 10,
+      "times_minutes": [
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 3,
+      "n_late_times": 2,
+      "n_early_observations": 7,
+      "n_late_observations": 3
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVE",
+      "length": 83,
+      "n_observations": 10,
+      "times_minutes": [
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 2,
+      "n_late_times": 2,
+      "n_early_observations": 6,
+      "n_late_observations": 4
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAA",
+      "length": 91,
+      "n_observations": 1,
+      "times_minutes": [
+        100.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKD",
+      "length": 98,
+      "n_observations": 2,
+      "times_minutes": [
+        80.0,
+        100.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 1,
+      "n_early_observations": 1,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQE",
+      "length": 110,
+      "n_observations": 16,
+      "times_minutes": [
+        20.0,
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 4,
+      "n_late_times": 2,
+      "n_early_observations": 10,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGI",
+      "length": 112,
+      "n_observations": 1,
+      "times_minutes": [
+        40.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVD",
+      "length": 119,
+      "n_observations": 9,
+      "times_minutes": [
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 3,
+      "n_late_times": 2,
+      "n_early_observations": 6,
+      "n_late_observations": 3
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVDPDNEAYEMPSEEGYQDYEPE",
+      "length": 139,
+      "n_observations": 1,
+      "times_minutes": [
+        20.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVDPDNEAYEMPSEEGYQDYEPEA",
+      "length": 140,
+      "n_observations": 21,
+      "times_minutes": [
+        0.0,
+        20.0,
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 5,
+      "n_late_times": 2,
+      "n_early_observations": 15,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "MKGLSKAKEGVVAA",
+      "length": 14,
+      "n_observations": 3,
+      "times_minutes": [
+        80.0,
+        120.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 1,
+      "n_early_observations": 1,
+      "n_late_observations": 2
+    },
+    {
+      "peptide_sequence": "MKGLSKAKEGVVAAAEKTKQGVAEA",
+      "length": 25,
+      "n_observations": 3,
+      "times_minutes": [
+        100.0,
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 2,
+      "n_early_observations": 0,
+      "n_late_observations": 3
+    },
+    {
+      "peptide_sequence": "MKGLSKAKEGVVAAAEKTKQGVAEAA",
+      "length": 26,
+      "n_observations": 1,
+      "times_minutes": [
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "MKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVH",
+      "length": 46,
+      "n_observations": 1,
+      "times_minutes": [
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "MKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATV",
+      "length": 51,
+      "n_observations": 3,
+      "times_minutes": [
+        100.0,
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 2,
+      "n_early_observations": 0,
+      "n_late_observations": 3
+    },
+    {
+      "peptide_sequence": "MKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVDPDNEAYEMPSEEGYQDYEPEA",
+      "length": 136,
+      "n_observations": 2,
+      "times_minutes": [
+        60.0,
+        100.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 1,
+      "n_early_observations": 1,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "MPSEEGYQDY",
+      "length": 10,
+      "n_observations": 2,
+      "times_minutes": [
+        0.0,
+        20.0
+      ],
+      "n_early_times": 2,
+      "n_late_times": 0,
+      "n_early_observations": 2,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "MPSEEGYQDYEPEA",
+      "length": 14,
+      "n_observations": 20,
+      "times_minutes": [
+        0.0,
+        20.0,
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 5,
+      "n_late_times": 2,
+      "n_early_observations": 14,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "MPVDPDNEAYEMPSEEGYQDY",
+      "length": 21,
+      "n_observations": 1,
+      "times_minutes": [
+        80.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "NEAYEM",
+      "length": 6,
+      "n_observations": 3,
+      "times_minutes": [
+        20.0,
+        40.0
+      ],
+      "n_early_times": 2,
+      "n_late_times": 0,
+      "n_early_observations": 3,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "NEAYEMPSEE",
+      "length": 10,
+      "n_observations": 8,
+      "times_minutes": [
+        0.0,
+        20.0,
+        60.0,
+        80.0,
+        120.0
+      ],
+      "n_early_times": 4,
+      "n_late_times": 1,
+      "n_early_observations": 7,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "NVGGAVVTGVTAVAQKTVEGAGSIAAATGFV",
+      "length": 31,
+      "n_observations": 1,
+      "times_minutes": [
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "NVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLG",
+      "length": 37,
+      "n_observations": 2,
+      "times_minutes": [
+        40.0,
+        60.0
+      ],
+      "n_early_times": 2,
+      "n_late_times": 0,
+      "n_early_observations": 2,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "PDNEAY",
+      "length": 6,
+      "n_observations": 2,
+      "times_minutes": [
+        20.0,
+        40.0
+      ],
+      "n_early_times": 2,
+      "n_late_times": 0,
+      "n_early_observations": 2,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "PDNEAYE",
+      "length": 7,
+      "n_observations": 1,
+      "times_minutes": [
+        100.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "PDNEAYEMPSE",
+      "length": 11,
+      "n_observations": 2,
+      "times_minutes": [
+        80.0,
+        120.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 1,
+      "n_early_observations": 1,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "PDNEAYEMPSEEGYQDYEPEA",
+      "length": 21,
+      "n_observations": 17,
+      "times_minutes": [
+        20.0,
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 4,
+      "n_late_times": 2,
+      "n_early_observations": 11,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "PSEEGY",
+      "length": 6,
+      "n_observations": 1,
+      "times_minutes": [
+        80.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "PSEEGYQDYEPEA",
+      "length": 13,
+      "n_observations": 20,
+      "times_minutes": [
+        0.0,
+        20.0,
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 5,
+      "n_late_times": 2,
+      "n_early_observations": 14,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "PVDPDN",
+      "length": 6,
+      "n_observations": 1,
+      "times_minutes": [
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "PVDPDNE",
+      "length": 7,
+      "n_observations": 4,
+      "times_minutes": [
+        40.0,
+        80.0,
+        100.0
+      ],
+      "n_early_times": 2,
+      "n_late_times": 1,
+      "n_early_observations": 2,
+      "n_late_observations": 2
+    },
+    {
+      "peptide_sequence": "PVDPDNEAY",
+      "length": 9,
+      "n_observations": 2,
+      "times_minutes": [
+        60.0,
+        100.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 1,
+      "n_early_observations": 1,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "PVDPDNEAYE",
+      "length": 10,
+      "n_observations": 5,
+      "times_minutes": [
+        100.0,
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 2,
+      "n_early_observations": 0,
+      "n_late_observations": 5
+    },
+    {
+      "peptide_sequence": "PVDPDNEAYEMPSEEGYQDYEPEA",
+      "length": 24,
+      "n_observations": 20,
+      "times_minutes": [
+        0.0,
+        20.0,
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 5,
+      "n_late_times": 2,
+      "n_early_observations": 14,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "QDYEPEA",
+      "length": 7,
+      "n_observations": 7,
+      "times_minutes": [
+        0.0,
+        20.0,
+        40.0,
+        60.0,
+        80.0,
+        100.0
+      ],
+      "n_early_times": 5,
+      "n_late_times": 1,
+      "n_early_observations": 5,
+      "n_late_observations": 2
+    },
+    {
+      "peptide_sequence": "QKTVEGAGSIAAATGFVKKDQLGKNEEGAPQE",
+      "length": 32,
+      "n_observations": 13,
+      "times_minutes": [
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 3,
+      "n_late_times": 2,
+      "n_early_observations": 7,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "QKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVD",
+      "length": 41,
+      "n_observations": 1,
+      "times_minutes": [
+        60.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "QLGKNEEGAPQE",
+      "length": 12,
+      "n_observations": 13,
+      "times_minutes": [
+        20.0,
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 4,
+      "n_late_times": 2,
+      "n_early_observations": 7,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "QLGKNEEGAPQEGI",
+      "length": 14,
+      "n_observations": 2,
+      "times_minutes": [
+        80.0,
+        120.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 1,
+      "n_early_observations": 1,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "SEEGYQDYE",
+      "length": 9,
+      "n_observations": 3,
+      "times_minutes": [
+        0.0,
+        40.0
+      ],
+      "n_early_times": 2,
+      "n_late_times": 0,
+      "n_early_observations": 3,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "SKAKEGVVAAAEKTKQGVAEAAGKT",
+      "length": 25,
+      "n_observations": 1,
+      "times_minutes": [
+        100.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "SKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKT",
+      "length": 51,
+      "n_observations": 1,
+      "times_minutes": [
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "SKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATG",
+      "length": 85,
+      "n_observations": 5,
+      "times_minutes": [
+        0.0,
+        40.0,
+        60.0,
+        80.0
+      ],
+      "n_early_times": 4,
+      "n_late_times": 0,
+      "n_early_observations": 5,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "SKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVDPDNEAY",
+      "length": 117,
+      "n_observations": 1,
+      "times_minutes": [
+        0.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "SKTKEGVVHGVATVAE",
+      "length": 16,
+      "n_observations": 3,
+      "times_minutes": [
+        80.0,
+        100.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 1,
+      "n_early_observations": 1,
+      "n_late_observations": 2
+    },
+    {
+      "peptide_sequence": "SKTKEGVVHGVATVAEKTKEQVTNVGGAV",
+      "length": 29,
+      "n_observations": 2,
+      "times_minutes": [
+        100.0,
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 2,
+      "n_early_observations": 0,
+      "n_late_observations": 2
+    },
+    {
+      "peptide_sequence": "SKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAV",
+      "length": 36,
+      "n_observations": 2,
+      "times_minutes": [
+        100.0,
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 2,
+      "n_early_observations": 0,
+      "n_late_observations": 2
+    },
+    {
+      "peptide_sequence": "TAVAQKTVEGAGSIAAATGFVKKDQL",
+      "length": 26,
+      "n_observations": 4,
+      "times_minutes": [
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 2,
+      "n_early_observations": 1,
+      "n_late_observations": 3
+    },
+    {
+      "peptide_sequence": "TAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQE",
+      "length": 36,
+      "n_observations": 6,
+      "times_minutes": [
+        60.0,
+        80.0,
+        120.0
+      ],
+      "n_early_times": 2,
+      "n_late_times": 1,
+      "n_early_observations": 3,
+      "n_late_observations": 3
+    },
+    {
+      "peptide_sequence": "TAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVD",
+      "length": 45,
+      "n_observations": 1,
+      "times_minutes": [
+        40.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "TAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVDPD",
+      "length": 47,
+      "n_observations": 1,
+      "times_minutes": [
+        40.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "TGFVKKDQL",
+      "length": 9,
+      "n_observations": 2,
+      "times_minutes": [
+        100.0,
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 2,
+      "n_early_observations": 0,
+      "n_late_observations": 2
+    },
+    {
+      "peptide_sequence": "TGFVKKDQLGKNEEGAPQE",
+      "length": 19,
+      "n_observations": 7,
+      "times_minutes": [
+        40.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 2,
+      "n_late_times": 2,
+      "n_early_observations": 3,
+      "n_late_observations": 4
+    },
+    {
+      "peptide_sequence": "TGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAP",
+      "length": 37,
+      "n_observations": 1,
+      "times_minutes": [
+        60.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "TKEGVLYVGSKTKEGVVHG",
+      "length": 19,
+      "n_observations": 1,
+      "times_minutes": [
+        100.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "TKEGVLYVGSKTKEGVVHGV",
+      "length": 20,
+      "n_observations": 1,
+      "times_minutes": [
+        100.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "TKEGVVH",
+      "length": 7,
+      "n_observations": 1,
+      "times_minutes": [
+        80.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "TKEGVVHGVATVAEKTKE",
+      "length": 18,
+      "n_observations": 2,
+      "times_minutes": [
+        20.0,
+        40.0
+      ],
+      "n_early_times": 2,
+      "n_late_times": 0,
+      "n_early_observations": 2,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "TNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQE",
+      "length": 47,
+      "n_observations": 3,
+      "times_minutes": [
+        100.0,
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 2,
+      "n_early_observations": 0,
+      "n_late_observations": 3
+    },
+    {
+      "peptide_sequence": "TVAEKTKE",
+      "length": 8,
+      "n_observations": 1,
+      "times_minutes": [
+        60.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "VAEAAGKTKEGVLYVGS",
+      "length": 17,
+      "n_observations": 4,
+      "times_minutes": [
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 2,
+      "n_late_times": 2,
+      "n_early_observations": 2,
+      "n_late_observations": 2
+    },
+    {
+      "peptide_sequence": "VAEAAGKTKEGVLYVGSKTKEGVVH",
+      "length": 25,
+      "n_observations": 2,
+      "times_minutes": [
+        100.0,
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 2,
+      "n_early_observations": 0,
+      "n_late_observations": 2
+    },
+    {
+      "peptide_sequence": "VAEAAGKTKEGVLYVGSKTKEGVVHGVA",
+      "length": 28,
+      "n_observations": 2,
+      "times_minutes": [
+        100.0,
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 2,
+      "n_early_observations": 0,
+      "n_late_observations": 2
+    },
+    {
+      "peptide_sequence": "VAEAAGKTKEGVLYVGSKTKEGVVHGVATV",
+      "length": 30,
+      "n_observations": 3,
+      "times_minutes": [
+        100.0,
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 2,
+      "n_early_observations": 0,
+      "n_late_observations": 3
+    },
+    {
+      "peptide_sequence": "VAQKTVEGAGSIAAATGFVKKDQL",
+      "length": 24,
+      "n_observations": 9,
+      "times_minutes": [
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 3,
+      "n_late_times": 2,
+      "n_early_observations": 4,
+      "n_late_observations": 5
+    },
+    {
+      "peptide_sequence": "VAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVD",
+      "length": 43,
+      "n_observations": 2,
+      "times_minutes": [
+        100.0,
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 2,
+      "n_early_observations": 0,
+      "n_late_observations": 2
+    },
+    {
+      "peptide_sequence": "VATVAEKTKEQVTNVGGAVVTGVTAV",
+      "length": 26,
+      "n_observations": 5,
+      "times_minutes": [
+        100.0,
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 2,
+      "n_early_observations": 0,
+      "n_late_observations": 5
+    },
+    {
+      "peptide_sequence": "VATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFV",
+      "length": 44,
+      "n_observations": 1,
+      "times_minutes": [
+        80.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "VATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVDPDNEA",
+      "length": 73,
+      "n_observations": 1,
+      "times_minutes": [
+        20.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "VDPDNEAYEMPSE",
+      "length": 13,
+      "n_observations": 1,
+      "times_minutes": [
+        40.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "VFMKGLSKAKEGVVAAAEKTKQGVAEA",
+      "length": 27,
+      "n_observations": 1,
+      "times_minutes": [
+        20.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "VFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILE",
+      "length": 112,
+      "n_observations": 3,
+      "times_minutes": [
+        40.0,
+        100.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 1,
+      "n_early_observations": 2,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "VFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPV",
+      "length": 116,
+      "n_observations": 3,
+      "times_minutes": [
+        0.0,
+        20.0,
+        40.0
+      ],
+      "n_early_times": 3,
+      "n_late_times": 0,
+      "n_early_observations": 3,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "VFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVDP",
+      "length": 118,
+      "n_observations": 1,
+      "times_minutes": [
+        0.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "VFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVDPDNEAYEMP",
+      "length": 126,
+      "n_observations": 21,
+      "times_minutes": [
+        0.0,
+        20.0,
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 5,
+      "n_late_times": 2,
+      "n_early_observations": 15,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "VGGAVVTGV",
+      "length": 9,
+      "n_observations": 2,
+      "times_minutes": [
+        100.0,
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 2,
+      "n_early_observations": 0,
+      "n_late_observations": 2
+    },
+    {
+      "peptide_sequence": "VGGAVVTGVTAVAQKTVEGAGSIA",
+      "length": 24,
+      "n_observations": 1,
+      "times_minutes": [
+        100.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "VGSKTKEGVVHGVATVAEKTKEQV",
+      "length": 24,
+      "n_observations": 1,
+      "times_minutes": [
+        60.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "VGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAV",
+      "length": 38,
+      "n_observations": 1,
+      "times_minutes": [
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "VHGVATVAEKTKEQVTNVGGAVVT",
+      "length": 24,
+      "n_observations": 1,
+      "times_minutes": [
+        80.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "VLYVGSKTKEGVVH",
+      "length": 14,
+      "n_observations": 4,
+      "times_minutes": [
+        60.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 2,
+      "n_early_observations": 1,
+      "n_late_observations": 3
+    },
+    {
+      "peptide_sequence": "VLYVGSKTKEGVVHGVATV",
+      "length": 19,
+      "n_observations": 8,
+      "times_minutes": [
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 3,
+      "n_late_times": 2,
+      "n_early_observations": 4,
+      "n_late_observations": 4
+    },
+    {
+      "peptide_sequence": "VLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAV",
+      "length": 41,
+      "n_observations": 13,
+      "times_minutes": [
+        40.0,
+        60.0,
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 3,
+      "n_late_times": 2,
+      "n_early_observations": 7,
+      "n_late_observations": 6
+    },
+    {
+      "peptide_sequence": "VLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQL",
+      "length": 64,
+      "n_observations": 1,
+      "times_minutes": [
+        100.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "VLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQE",
+      "length": 74,
+      "n_observations": 4,
+      "times_minutes": [
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 2,
+      "n_early_observations": 1,
+      "n_late_observations": 3
+    },
+    {
+      "peptide_sequence": "VTAVAQKTVE",
+      "length": 10,
+      "n_observations": 1,
+      "times_minutes": [
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "VTAVAQKTVEGAGSIAAATGFVKKDQLGKN",
+      "length": 30,
+      "n_observations": 1,
+      "times_minutes": [
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "VTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQE",
+      "length": 37,
+      "n_observations": 2,
+      "times_minutes": [
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 2
+    },
+    {
+      "peptide_sequence": "VTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAP",
+      "length": 38,
+      "n_observations": 1,
+      "times_minutes": [
+        100.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "VTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQ",
+      "length": 39,
+      "n_observations": 1,
+      "times_minutes": [
+        0.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "VTNVGGAVVT",
+      "length": 10,
+      "n_observations": 1,
+      "times_minutes": [
+        60.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 0,
+      "n_early_observations": 1,
+      "n_late_observations": 0
+    },
+    {
+      "peptide_sequence": "YEPEA",
+      "length": 5,
+      "n_observations": 6,
+      "times_minutes": [
+        80.0,
+        100.0,
+        120.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 2,
+      "n_early_observations": 1,
+      "n_late_observations": 5
+    },
+    {
+      "peptide_sequence": "YQDYEPEA",
+      "length": 8,
+      "n_observations": 4,
+      "times_minutes": [
+        0.0,
+        20.0,
+        40.0,
+        120.0
+      ],
+      "n_early_times": 3,
+      "n_late_times": 1,
+      "n_early_observations": 3,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "YVGSKTKEGVVHGVATV",
+      "length": 17,
+      "n_observations": 2,
+      "times_minutes": [
+        60.0,
+        120.0
+      ],
+      "n_early_times": 1,
+      "n_late_times": 1,
+      "n_early_observations": 1,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "YVGSKTKEGVVHGVATVAEKTKEQVTNVGGAV",
+      "length": 32,
+      "n_observations": 1,
+      "times_minutes": [
+        120.0
+      ],
+      "n_early_times": 0,
+      "n_late_times": 1,
+      "n_early_observations": 0,
+      "n_late_observations": 1
+    },
+    {
+      "peptide_sequence": "YVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILE",
+      "length": 76,
+      "n_observations": 4,
+      "times_minutes": [
+        0.0,
+        20.0,
+        60.0,
+        120.0
+      ],
+      "n_early_times": 3,
+      "n_late_times": 1,
+      "n_early_observations": 3,
+      "n_late_observations": 1
+    }
+  ],
+  "models_trained": null,
+  "predictive_metrics": null
+}

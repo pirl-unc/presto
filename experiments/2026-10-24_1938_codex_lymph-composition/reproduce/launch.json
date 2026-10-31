@@ -1,0 +1,63 @@
+{
+  "registered_utc": "2026-10-24T19:39:15.590632+00:00",
+  "agent_model": "Codex / GPT-6",
+  "presto_commit": "992cc9349a729cfb1ef78f1c13f2f6e1112c9264",
+  "presto_tracked_dirty": "M tasks/todo.md",
+  "hitlist_commit": "8657c9acd637e63d7ec175e1353aebca94a76c99",
+  "hitlist_path": "/private/tmp/hitlist-lymph-recipe-20261024",
+  "hitlist_runtime_version": "2.0.28",
+  "source_directory": "/private/tmp/presto-modular-model/data/lymph_source_qualification/2026-10-24_1903_canonical",
+  "source_manifest_sha256": "6e82a782b0511ba56425855f0764c4c40127e715fdb10b10e6c12118ab539c4c",
+  "recipe_directory": "/private/tmp/presto-modular-model/data/lymph_composition_recipes/2026-10-24_1938_v1",
+  "recipe_id": "nanaware2024_observed_composition_v1",
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "environment": {
+    "PYTHONPATH": "/private/tmp/hitlist-lymph-recipe-20261024",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "hitlist_source_hashes": {
+    "hitlist/lymph_composition.py": "36a4c15fed4bd749e1e2b84c01eb3e26c1410d09cc14a7e48b7ad620d2cb98dc",
+    "hitlist/distribution_recipe.py": "289472c805d9d5e1c7e2421a42d5c05965f99817dcc92a181ea84e07e73ec267",
+    "hitlist/evidence_recipe.py": "4317cf38396bea7f2627b6ef3747f55e98b045ceb791425bb418329f0307e45a",
+    "hitlist/version.py": "56ab7fc65881d1813da8fc2be8cd7c3508df2909b508e68e965886d6ed0a7390",
+    "tests/test_lymph_composition.py": "a7e2ea581e340443ed3af99aa5d502971f42e4d1bcfabba11ffa0a771787d611",
+    "tasks/lymph-composition-recipe-spec.md": "8d5256a720aab7edffd0b516405ff40a3a04bdec82f7fcaa9d7700fd2a9bab67"
+  },
+  "pilot_min_components": {
+    "train": 20,
+    "val": 5,
+    "test": 5
+  },
+  "fit": {
+    "steps": 500,
+    "lr": 0.02,
+    "betas": [
+      0.9,
+      0.999
+    ],
+    "epsilon": 1e-08,
+    "residue_penalty": 0.01,
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "reinforce_samples": 64,
+    "ridge_alphas": [
+      0.001,
+      0.01,
+      0.1,
+      1.0
+    ]
+  },
+  "observer_directory": "/private/tmp/presto-modular-model/experiments/2026-10-24_1702_codex_ms1-grouped-observer",
+  "limits": {
+    "stage_seconds": 600,
+    "fit_total_seconds": 3600,
+    "rss_gib": 3,
+    "output_gib": 1,
+    "minimum_free_disk_gib": 2
+  }
+}

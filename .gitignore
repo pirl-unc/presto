@@ -161,6 +161,9 @@ venv.bak/
 # Repo-local generated experiment and artifact roots
 .DS_Store
 artifacts/
+
+# Local orchestration locks are not experiment evidence.
+experiments/**/.pipeline.lock
 modal_runs/
 # Same reason as modal_runs: runplz writes run dirs here (checkpoints, metrics,
 # prediction dumps). Experiment records belong in experiments/, summarized.

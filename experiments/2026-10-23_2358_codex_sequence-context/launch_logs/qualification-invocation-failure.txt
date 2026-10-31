@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/private/tmp/presto-modular-model/experiments/2026-10-23_2358_codex_sequence-context/code/qualify.py", line 76, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/private/tmp/presto-modular-model/experiments/2026-10-23_2358_codex_sequence-context/code/qualify.py", line 15, in main
+    for path, h in json.loads((FAMILY/'reproduce/execution-code.json').read_text()).items(): assert sha(FAMILY/path)==h
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/presto-modular-model/experiments/2026-10-23_2358_codex_sequence-context/reproduce/execution-code.json'

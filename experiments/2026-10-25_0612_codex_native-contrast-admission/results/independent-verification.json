@@ -1,0 +1,39 @@
+{
+  "passed": true,
+  "n_source_peptides": 10647,
+  "n_reference_records": 73113,
+  "n_parents": 82,
+  "n_contrasts": 228,
+  "n_measurement_contributions": 2736,
+  "all_decisions_original_values_verified": true,
+  "all_source_components_preserved": true,
+  "exact_reference_and_split_hashes_verified": true,
+  "targets_lineage_weights_verified": true,
+  "source_parent_claims_and_graph_reused_from_independently_verified_0519": true,
+  "qualified_for_screen": true,
+  "split_support": {
+    "test": {
+      "gate_passed": true,
+      "n_components": 18,
+      "n_contrasts": 32,
+      "n_parent_sequences": 18,
+      "weight_sum": 1.0
+    },
+    "train": {
+      "gate_passed": true,
+      "n_components": 55,
+      "n_contrasts": 158,
+      "n_parent_sequences": 56,
+      "weight_sum": 1.0
+    },
+    "val": {
+      "gate_passed": true,
+      "n_components": 8,
+      "n_contrasts": 38,
+      "n_parent_sequences": 8,
+      "weight_sum": 1.0
+    }
+  },
+  "numeric_heldout_target_summaries_disclosed": false,
+  "predictor_fitted": false
+}

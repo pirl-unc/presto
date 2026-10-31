@@ -9,8 +9,8 @@ import torch
 
 from presto.data.collate import PrestoCollator, PrestoSample
 from presto.data.vocab import TCELL_ASSAY_METHOD_TO_IDX
-from presto.models.presto import Presto
-from presto.scripts.train_synthetic import (
+from presto.legacy.presto import Presto
+from presto.legacy.scripts.train_synthetic import (
     LOSS_TASK_SPECS,
     _get_batch_mask,
     _get_batch_qual,
@@ -314,7 +314,7 @@ def test_canonical_selected_checkpoint_evaluation_has_no_training_cap():
     import ast
     import inspect
 
-    from presto.scripts import train_iedb
+    from presto.legacy.scripts import train_iedb
 
     tree = ast.parse(inspect.getsource(train_iedb))
     final_loss = next(

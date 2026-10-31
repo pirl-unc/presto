@@ -1,0 +1,375 @@
+[
+  {
+    "archive": "HLA1-first-DDA.zip",
+    "members": [
+      {
+        "name": "Oxidation (M)Sites.txt",
+        "bytes": 64986,
+        "crc32": 2985162153
+      },
+      {
+        "name": "proteinGroups.txt",
+        "bytes": 86496,
+        "crc32": 2015316479
+      },
+      {
+        "name": "summary.txt",
+        "bytes": 1723,
+        "crc32": 1544895876
+      },
+      {
+        "name": "parameters.txt",
+        "bytes": 1771,
+        "crc32": 2229692545
+      },
+      {
+        "name": "peptides.txt",
+        "bytes": 462285,
+        "crc32": 85141829
+      },
+      {
+        "name": "modificationSpecificPeptides.txt",
+        "bytes": 418845,
+        "crc32": 2724186316
+      },
+      {
+        "name": "evidence.txt",
+        "bytes": 1278668,
+        "crc32": 2029616802
+      },
+      {
+        "name": "msms.txt",
+        "bytes": 9761863,
+        "crc32": 921932661
+      },
+      {
+        "name": "matchedFeatures.txt",
+        "bytes": 0,
+        "crc32": 0
+      },
+      {
+        "name": "aifMsms.txt",
+        "bytes": 0,
+        "crc32": 0
+      },
+      {
+        "name": "tables.pdf",
+        "bytes": 42814,
+        "crc32": 697349511
+      },
+      {
+        "name": "libraryMatch.txt",
+        "bytes": 0,
+        "crc32": 0
+      },
+      {
+        "name": "ms3Scans.txt",
+        "bytes": 0,
+        "crc32": 0
+      },
+      {
+        "name": "mzRange.txt",
+        "bytes": 174778,
+        "crc32": 3577966760
+      },
+      {
+        "name": "scanHeaderOnly.csv",
+        "bytes": 5458105,
+        "crc32": 682944097
+      },
+      {
+        "name": "allPeptides.txt",
+        "bytes": 13652500,
+        "crc32": 4294453107
+      },
+      {
+        "name": "msmsScans_db.csv",
+        "bytes": 14124063,
+        "crc32": 1568551221
+      },
+      {
+        "name": "msms_db.csv",
+        "bytes": 8857079,
+        "crc32": 1996415440
+      },
+      {
+        "name": "msScans.txt",
+        "bytes": 893056,
+        "crc32": 584528611
+      },
+      {
+        "name": "msmsScans.txt",
+        "bytes": 25014002,
+        "crc32": 1753080789
+      }
+    ],
+    "tables": [
+      {
+        "name": "peptides.txt",
+        "rows": 1961,
+        "columns": 56,
+        "literal_cells_verified": 109872,
+        "sha256": "cd33b86e7ee8f1fc65bab44d3d94c1615c1f660ac4c0fc94f77b723215ff9c96"
+      },
+      {
+        "name": "modificationSpecificPeptides.txt",
+        "rows": 1963,
+        "columns": 31,
+        "literal_cells_verified": 60884,
+        "sha256": "5deb011bc0862a923137e804b415276a3f46609e7ec4ed2cfa2ee76987fafe56"
+      },
+      {
+        "name": "summary.txt",
+        "rows": 3,
+        "columns": 51,
+        "literal_cells_verified": 204,
+        "sha256": "b68e4a79ffb7503070c68a419a4041476f747e7be323b4926b878b1c6cb77bb7"
+      },
+      {
+        "name": "parameters.txt",
+        "rows": 59,
+        "columns": 2,
+        "literal_cells_verified": 120,
+        "sha256": "0f0d19862843170f52322a0fcdfea86b47600e8ef600763ff8210b6a73808636"
+      },
+      {
+        "name": "proteinGroups.txt",
+        "rows": 9,
+        "columns": 37,
+        "literal_cells_verified": 370,
+        "sha256": "fd8f21ce4436f4f1490d3f16caadb678dfc0b8f186452093e8601628c7b3f441"
+      }
+    ],
+    "raw_file": "02445a_BA1-TUM_HLA_1_01_01-DDA-1h-R1.raw",
+    "sdrf_source_row_matches": [
+      446
+    ],
+    "peptide_rows": 1961,
+    "form_rows": 1963,
+    "positive_intensity": 1931,
+    "zero_intensity": 30,
+    "reverse_rows": 1,
+    "contaminant_rows": 11,
+    "positive_quality_rows_before_intended_product_check": 1351,
+    "full_length_intended_product_eligibility": "unresolved; no planned-pool table admitted",
+    "length_range_all_rows": [
+      7,
+      24
+    ],
+    "intensity_sum_decimal_all_rows": "157731695700",
+    "modification_counts": {
+      "Unmodified": 1767,
+      "Oxidation (M)": 174,
+      "2 Oxidation (M)": 19,
+      "3 Oxidation (M)": 2,
+      "4 Oxidation (M)": 1
+    },
+    "parameters": {
+      "Version": "1.5.3.30",
+      "Fixed modifications": "Carbamidomethyl (C)",
+      "PSM FDR": "0.01",
+      "Protein FDR": "0.01",
+      "Site FDR": "0.01",
+      "Min. peptide Length": "7",
+      "Modifications included in protein quantification": "Oxidation (M);Acetyl (Protein N-term)",
+      "Dependent peptide FDR": "0.01",
+      "Fasta file": "T:\\ProteomeTools\\Analysis\\TUM_HLA_1_01_01\\proteomeTools.fasta;T:\\ProteomeTools\\Data\\Progenesis2Queue\\Maxquant\\RT_QC.fasta",
+      "AIF threshold FDR": "0"
+    },
+    "search_context": {
+      "Raw file": "02445a_BA1-TUM_HLA_1_01_01-DDA-1h-R1",
+      "Experiment": "TUM_HLA_1_01_01-DDA-1h-R1-unspecific",
+      "Enzyme": "",
+      "Enzyme mode": "Unspecific",
+      "Variable modifications": "Oxidation (M)",
+      "Multiplicity": "1"
+    },
+    "planned_peptide_molar_amount": "not supplied by these tables",
+    "admitted_training_rows": 0
+  },
+  {
+    "archive": "HLA2-first-DDA.zip",
+    "members": [
+      {
+        "name": "proteinGroups.txt",
+        "bytes": 123467,
+        "crc32": 2438919933
+      },
+      {
+        "name": "Oxidation (M)Sites.txt",
+        "bytes": 46843,
+        "crc32": 496534541
+      },
+      {
+        "name": "summary.txt",
+        "bytes": 1732,
+        "crc32": 897023692
+      },
+      {
+        "name": "parameters.txt",
+        "bytes": 1723,
+        "crc32": 1529926392
+      },
+      {
+        "name": "peptides.txt",
+        "bytes": 457208,
+        "crc32": 3967902977
+      },
+      {
+        "name": "modificationSpecificPeptides.txt",
+        "bytes": 435327,
+        "crc32": 1598183435
+      },
+      {
+        "name": "evidence.txt",
+        "bytes": 1778211,
+        "crc32": 3570108627
+      },
+      {
+        "name": "msms.txt",
+        "bytes": 23525872,
+        "crc32": 2845863330
+      },
+      {
+        "name": "matchedFeatures.txt",
+        "bytes": 0,
+        "crc32": 0
+      },
+      {
+        "name": "aifMsms.txt",
+        "bytes": 0,
+        "crc32": 0
+      },
+      {
+        "name": "tables.pdf",
+        "bytes": 41693,
+        "crc32": 4067343073
+      },
+      {
+        "name": "libraryMatch.txt",
+        "bytes": 0,
+        "crc32": 0
+      },
+      {
+        "name": "ms3Scans.txt",
+        "bytes": 0,
+        "crc32": 0
+      },
+      {
+        "name": "msScans.txt",
+        "bytes": 811296,
+        "crc32": 2648534390
+      },
+      {
+        "name": "mzRange.txt",
+        "bytes": 176683,
+        "crc32": 1875759462
+      },
+      {
+        "name": "scanHeaderOnly.csv",
+        "bytes": 5012249,
+        "crc32": 3668875125
+      },
+      {
+        "name": "allPeptides.txt",
+        "bytes": 13062058,
+        "crc32": 3859181135
+      },
+      {
+        "name": "msmsScans_db.csv",
+        "bytes": 13178209,
+        "crc32": 449964700
+      },
+      {
+        "name": "msms_db.csv",
+        "bytes": 21504320,
+        "crc32": 3274905054
+      },
+      {
+        "name": "msmsScans.txt",
+        "bytes": 21589799,
+        "crc32": 122996905
+      }
+    ],
+    "tables": [
+      {
+        "name": "peptides.txt",
+        "rows": 1688,
+        "columns": 56,
+        "literal_cells_verified": 94584,
+        "sha256": "9baac221a863232748d1036fe609c7a09d45a90df875d8dc3196502d6541df1c"
+      },
+      {
+        "name": "modificationSpecificPeptides.txt",
+        "rows": 1775,
+        "columns": 31,
+        "literal_cells_verified": 55056,
+        "sha256": "96feca281b42056f94d710794032442656e51518ce7ad7b85d372bf803a0a593"
+      },
+      {
+        "name": "summary.txt",
+        "rows": 3,
+        "columns": 51,
+        "literal_cells_verified": 204,
+        "sha256": "99e183da9aeb10d43cd3f43c9b0a265741fc08153b189e4ee901ef4cabd2471b"
+      },
+      {
+        "name": "parameters.txt",
+        "rows": 57,
+        "columns": 2,
+        "literal_cells_verified": 116,
+        "sha256": "591f36345f42aca988a286bd382be93f3e51a5075e1f3d3126e061385f5dcc0a"
+      },
+      {
+        "name": "proteinGroups.txt",
+        "rows": 5,
+        "columns": 37,
+        "literal_cells_verified": 222,
+        "sha256": "0a3690be6675333d2b7e8bd8abf6244a67d2720c2ee0c0c586a0321f78f81c1c"
+      }
+    ],
+    "raw_file": "03035a_GA1-TUM_HLA2_1_01_01-DDA-1h-R1.raw",
+    "sdrf_source_row_matches": [
+      132
+    ],
+    "peptide_rows": 1688,
+    "form_rows": 1775,
+    "positive_intensity": 1659,
+    "zero_intensity": 29,
+    "reverse_rows": 0,
+    "contaminant_rows": 3,
+    "positive_quality_rows_before_intended_product_check": 1263,
+    "full_length_intended_product_eligibility": "unresolved; no planned-pool table admitted",
+    "length_range_all_rows": [
+      7,
+      15
+    ],
+    "intensity_sum_decimal_all_rows": "612077407460",
+    "modification_counts": {
+      "Unmodified": 1592,
+      "Oxidation (M)": 163,
+      "2 Oxidation (M)": 20
+    },
+    "parameters": {
+      "Version": "1.5.3.30",
+      "Fixed modifications": "Carbamidomethyl (C)",
+      "PSM FDR": "0.01",
+      "Protein FDR": "0.01",
+      "Site FDR": "0.01",
+      "Min. peptide Length": "7",
+      "Modifications included in protein quantification": "Oxidation (M);Acetyl (Protein N-term)",
+      "Fasta file": "W:\\ProteomeTools\\Analysis\\TUM_HLA2_1_01_01\\proteomeTools.fasta;W:\\ProteomeTools\\Data\\Progenesis2Queue\\Maxquant\\RT_QC.fasta",
+      "AIF threshold FDR": "0"
+    },
+    "search_context": {
+      "Raw file": "03035a_GA1-TUM_HLA2_1_01_01-DDA-1h-R1",
+      "Experiment": "TUM_HLA2_1_01_01-DDA-1h-R1-unspecific",
+      "Enzyme": "",
+      "Enzyme mode": "Unspecific",
+      "Variable modifications": "Oxidation (M)",
+      "Multiplicity": "1"
+    },
+    "planned_peptide_molar_amount": "not supplied by these tables",
+    "admitted_training_rows": 0
+  }
+]

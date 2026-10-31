@@ -1,0 +1,8 @@
+/private/tmp/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/code/qualify.py:67: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:821.)
+  expected=np.array([independent(rates.detach().numpy(),float(t+tau),np.array([int(a)]),np.array([int(b)]))[0]
+qualified uniform 16 0.8060009892512044
+qualified uniform 64 0.3134942030108048
+qualified residue 16 2.1711520352994422
+qualified residue 64 1.6520281233510927
+qualification passed 5.087537457991857

@@ -1,0 +1,8 @@
+{
+  "status": "failed before verification completion",
+  "failure": "ArrowNotImplementedError: array_take has no kernel for (large_string, null)",
+  "cause": "An empty Python index list becomes an Arrow null array in a batch containing no class-II MS rows.",
+  "source_sha256": "aaf63427f83c487d8bac3a397ba2f5eb8196b2c5544c9ef3a0f8498cff43b7c7",
+  "admitted_outputs_changed": false,
+  "remedy": "Explicit int64 index array; replay unchanged source and acceptance checks."
+}

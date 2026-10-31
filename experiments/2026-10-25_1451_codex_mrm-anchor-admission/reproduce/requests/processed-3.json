@@ -1,0 +1,78 @@
+{
+  "phase": "processed",
+  "scope": "Article-version metadata and all eight named XLSX datasets plus DOCX descriptions. Verify sizes/checksums before parsing, retain formulas and cached values, no model or native outcome access.",
+  "requests": [
+    {
+      "name": "s3-42003_2018_87_MOESM10_ESM.xlsx",
+      "url": "https://pmc-oa-opendata.s3.amazonaws.com/PMC6123701.1/42003_2018_87_MOESM10_ESM.xlsx",
+      "expected_kind": "xlsx",
+      "expected_bytes": 27327,
+      "expected_inventory_etag": "7385fd3a7f5fd528d45f2ee5c6b7851d",
+      "discovery_provenance": "Exact key/size/ETag in archived untruncated michaud2018-s3-inventory.xml; matches source publication supplement names."
+    },
+    {
+      "name": "s3-42003_2018_87_MOESM2_ESM.docx",
+      "url": "https://pmc-oa-opendata.s3.amazonaws.com/PMC6123701.1/42003_2018_87_MOESM2_ESM.docx",
+      "expected_kind": "zip",
+      "expected_bytes": 16589,
+      "expected_inventory_etag": "c789afcdd5a367f513ee36ef2c245472",
+      "discovery_provenance": "Exact key/size/ETag in archived untruncated michaud2018-s3-inventory.xml; matches source publication supplement names."
+    },
+    {
+      "name": "s3-42003_2018_87_MOESM3_ESM.xlsx",
+      "url": "https://pmc-oa-opendata.s3.amazonaws.com/PMC6123701.1/42003_2018_87_MOESM3_ESM.xlsx",
+      "expected_kind": "xlsx",
+      "expected_bytes": 67911,
+      "expected_inventory_etag": "9b119c3220e062622d076aeddc3ddaf8",
+      "discovery_provenance": "Exact key/size/ETag in archived untruncated michaud2018-s3-inventory.xml; matches source publication supplement names."
+    },
+    {
+      "name": "s3-42003_2018_87_MOESM4_ESM.xlsx",
+      "url": "https://pmc-oa-opendata.s3.amazonaws.com/PMC6123701.1/42003_2018_87_MOESM4_ESM.xlsx",
+      "expected_kind": "xlsx",
+      "expected_bytes": 60311,
+      "expected_inventory_etag": "fcf63d996a59775ca02f0e5a5f948c87",
+      "discovery_provenance": "Exact key/size/ETag in archived untruncated michaud2018-s3-inventory.xml; matches source publication supplement names."
+    },
+    {
+      "name": "s3-42003_2018_87_MOESM5_ESM.xlsx",
+      "url": "https://pmc-oa-opendata.s3.amazonaws.com/PMC6123701.1/42003_2018_87_MOESM5_ESM.xlsx",
+      "expected_kind": "xlsx",
+      "expected_bytes": 151284,
+      "expected_inventory_etag": "e6c0e77ab1a8c907f272723ac2badd6c",
+      "discovery_provenance": "Exact key/size/ETag in archived untruncated michaud2018-s3-inventory.xml; matches source publication supplement names."
+    },
+    {
+      "name": "s3-42003_2018_87_MOESM6_ESM.xlsx",
+      "url": "https://pmc-oa-opendata.s3.amazonaws.com/PMC6123701.1/42003_2018_87_MOESM6_ESM.xlsx",
+      "expected_kind": "xlsx",
+      "expected_bytes": 47960,
+      "expected_inventory_etag": "4894b4ea97f43d65a517efc107b48cd8",
+      "discovery_provenance": "Exact key/size/ETag in archived untruncated michaud2018-s3-inventory.xml; matches source publication supplement names."
+    },
+    {
+      "name": "s3-42003_2018_87_MOESM7_ESM.xlsx",
+      "url": "https://pmc-oa-opendata.s3.amazonaws.com/PMC6123701.1/42003_2018_87_MOESM7_ESM.xlsx",
+      "expected_kind": "xlsx",
+      "expected_bytes": 87993,
+      "expected_inventory_etag": "73c9861415277aaa250d8675791dd4bc",
+      "discovery_provenance": "Exact key/size/ETag in archived untruncated michaud2018-s3-inventory.xml; matches source publication supplement names."
+    },
+    {
+      "name": "s3-42003_2018_87_MOESM8_ESM.xlsx",
+      "url": "https://pmc-oa-opendata.s3.amazonaws.com/PMC6123701.1/42003_2018_87_MOESM8_ESM.xlsx",
+      "expected_kind": "xlsx",
+      "expected_bytes": 93545,
+      "expected_inventory_etag": "08db3e890dadee94dfc12d32a695b619",
+      "discovery_provenance": "Exact key/size/ETag in archived untruncated michaud2018-s3-inventory.xml; matches source publication supplement names."
+    },
+    {
+      "name": "s3-42003_2018_87_MOESM9_ESM.xlsx",
+      "url": "https://pmc-oa-opendata.s3.amazonaws.com/PMC6123701.1/42003_2018_87_MOESM9_ESM.xlsx",
+      "expected_kind": "xlsx",
+      "expected_bytes": 211003,
+      "expected_inventory_etag": "6366a9b4c10a92ec86c3c3fe9baa896a",
+      "discovery_provenance": "Exact key/size/ETag in archived untruncated michaud2018-s3-inventory.xml; matches source publication supplement names."
+    }
+  ]
+}

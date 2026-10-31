@@ -1,0 +1,278 @@
+{
+  "schema": "presto.modular.manifest.v1",
+  "model": {
+    "endpoints": [
+      "ec50",
+      "elution_observation",
+      "half_life",
+      "ic50",
+      "kd",
+      "kd_via_ec50",
+      "kd_via_ic50",
+      "koff",
+      "qualitative_binding",
+      "td50"
+    ],
+    "mhc_classes": [
+      "I",
+      "II"
+    ],
+    "d_model": 192,
+    "n_layers": 3,
+    "n_heads": 6,
+    "d_ff": 768,
+    "dropout": 0.1,
+    "source_context": false
+  },
+  "sources": [
+    {
+      "path": "/runs/2026-10-29_1956_codex_curated-data-retrain/prepared/hitlist-v4-iedb-test.jsonl",
+      "sha256": "0bfcabe1c2b0765fcf912460d76699ef0196f4c66c866950b613897564304d67",
+      "source": "hitlist-v4-iedb",
+      "population": "Human catalog-resolved MHC; public IEDB/CEDAR canonical Hitlist admission; host and antigen species retained separately",
+      "label_policy": "reported literal assay endpoints and qualifiers; declared reference DRA only; generated unobserved ligands explicitly marked",
+      "split_policy": "whole study components; metadata-only greedy coverage; exact peptide embargo test > validation > train; no pretrained weights"
+    },
+    {
+      "path": "/runs/2026-10-29_1956_codex_curated-data-retrain/prepared/hitlist-v4-iedb-train.jsonl",
+      "sha256": "17a6c65cfbe566efca0c85ffccd3a9d5e4f2392fb74d7b393a3f3104afe83fd0",
+      "source": "hitlist-v4-iedb",
+      "population": "Human catalog-resolved MHC; public IEDB/CEDAR canonical Hitlist admission; host and antigen species retained separately",
+      "label_policy": "reported literal assay endpoints and qualifiers; declared reference DRA only; generated unobserved ligands explicitly marked; source-scoped inferred bounds with raw provenance; unresolved heaps withheld",
+      "split_policy": "whole study components; metadata-only greedy coverage; exact peptide embargo test > validation > train; no pretrained weights"
+    },
+    {
+      "path": "/runs/2026-10-29_1956_codex_curated-data-retrain/prepared/hitlist-v4-iedb-validation.jsonl",
+      "sha256": "cc93d281fd2138cc7a7af1c262f694dd0a28012da22e91098a76e36bbda27fd5",
+      "source": "hitlist-v4-iedb",
+      "population": "Human catalog-resolved MHC; public IEDB/CEDAR canonical Hitlist admission; host and antigen species retained separately",
+      "label_policy": "reported literal assay endpoints and qualifiers; declared reference DRA only; generated unobserved ligands explicitly marked",
+      "split_policy": "whole study components; metadata-only greedy coverage; exact peptide embargo test > validation > train; no pretrained weights"
+    },
+    {
+      "path": "/runs/2026-10-29_1956_codex_curated-data-retrain/prepared/hitlist_ligand_background-test.jsonl",
+      "sha256": "c1c1cf95caf66903721d2226caa9744d062acabed44cae9052f929b0f08911a9",
+      "source": "hitlist_ligand_background",
+      "population": "Human catalog-resolved MHC; public IEDB/CEDAR canonical Hitlist admission; host and antigen species retained separately",
+      "label_policy": "reported literal assay endpoints and qualifiers; declared reference DRA only; generated unobserved ligands explicitly marked",
+      "split_policy": "whole study components; metadata-only greedy coverage; exact peptide embargo test > validation > train; no pretrained weights"
+    },
+    {
+      "path": "/runs/2026-10-29_1956_codex_curated-data-retrain/prepared/hitlist_ligand_background-train.jsonl",
+      "sha256": "1455517c5034c06446ef2f27799618ae26afc931ddfb8b4a2bb8c29077a2fca3",
+      "source": "hitlist_ligand_background",
+      "population": "Human catalog-resolved MHC; public IEDB/CEDAR canonical Hitlist admission; host and antigen species retained separately",
+      "label_policy": "reported literal assay endpoints and qualifiers; declared reference DRA only; generated unobserved ligands explicitly marked; 35 newly source-verified positive sequences excluded",
+      "split_policy": "whole study components; metadata-only greedy coverage; exact peptide embargo test > validation > train; no pretrained weights"
+    },
+    {
+      "path": "/runs/2026-10-29_1956_codex_curated-data-retrain/prepared/hitlist_ligand_background-validation.jsonl",
+      "sha256": "0f32d0f097e0a691be50b66689deba2a473c629ae73552d7d48ce3dcc8a1795d",
+      "source": "hitlist_ligand_background",
+      "population": "Human catalog-resolved MHC; public IEDB/CEDAR canonical Hitlist admission; host and antigen species retained separately",
+      "label_policy": "reported literal assay endpoints and qualifiers; declared reference DRA only; generated unobserved ligands explicitly marked",
+      "split_policy": "whole study components; metadata-only greedy coverage; exact peptide embargo test > validation > train; no pretrained weights"
+    },
+    {
+      "path": "/runs/2026-10-29_1956_codex_curated-data-retrain/prepared/hitlist_native_ms-test.jsonl",
+      "sha256": "a1a3507783cc1a258c24f455691837b039d1e03028e364ad57ba3ad2e59e6d05",
+      "source": "hitlist_native_ms",
+      "population": "Human catalog-resolved MHC; public IEDB/CEDAR canonical Hitlist admission; host and antigen species retained separately",
+      "label_policy": "reported literal assay endpoints and qualifiers; declared reference DRA only; generated unobserved ligands explicitly marked",
+      "split_policy": "whole study components; metadata-only greedy coverage; exact peptide embargo test > validation > train; no pretrained weights"
+    },
+    {
+      "path": "/runs/2026-10-29_1956_codex_curated-data-retrain/prepared/hitlist_native_ms-train.jsonl",
+      "sha256": "bc709276b36bd456a09451deba140aeb618c9614a79505981e7567d1a0b0e203",
+      "source": "hitlist_native_ms",
+      "population": "Human catalog-resolved MHC; public IEDB/CEDAR canonical Hitlist admission; host and antigen species retained separately",
+      "label_policy": "reported literal assay endpoints and qualifiers; declared reference DRA only; generated unobserved ligands explicitly marked",
+      "split_policy": "whole study components; metadata-only greedy coverage; exact peptide embargo test > validation > train; no pretrained weights"
+    },
+    {
+      "path": "/runs/2026-10-29_1956_codex_curated-data-retrain/prepared/hitlist_native_ms-validation.jsonl",
+      "sha256": "0023355b4b6b695223e12031b7fbe4bee752704be7c0e8184fe10a26800d3923",
+      "source": "hitlist_native_ms",
+      "population": "Human catalog-resolved MHC; public IEDB/CEDAR canonical Hitlist admission; host and antigen species retained separately",
+      "label_policy": "reported literal assay endpoints and qualifiers; declared reference DRA only; generated unobserved ligands explicitly marked",
+      "split_policy": "whole study components; metadata-only greedy coverage; exact peptide embargo test > validation > train; no pretrained weights"
+    },
+    {
+      "path": "/runs/2026-10-29_1956_codex_curated-data-retrain/prepared/recovered-ms-train.jsonl",
+      "sha256": "ba64053ed5db7ab1fc019e20f2836e75e5c8a4559035b3053c7cd91d23aacc34",
+      "source": "hitlist_native_ms",
+      "population": "Source-reviewed unmodified human monoallelic MHC-II ligands from PMID37301199 and declared matched unobserved comparisons",
+      "label_policy": "Source-backed positive MS forms; one generated unobserved background per TRAIN positive; no measured nonbinder claim",
+      "split_policy": "New older TRAIN study; parent heldout peptide embargo; source-extended frozen known-positive blacklist"
+    },
+    {
+      "path": "/runs/2026-10-29_1956_codex_curated-data-retrain/prepared/recovered-background-train.jsonl",
+      "sha256": "6159ae13a1f2b25018617804ad547e2955cb75a1f8b88766e69c89412dac643e",
+      "source": "hitlist_ligand_background",
+      "population": "Source-reviewed unmodified human monoallelic MHC-II ligands from PMID37301199 and declared matched unobserved comparisons",
+      "label_policy": "Source-backed positive MS forms; one generated unobserved background per TRAIN positive; no measured nonbinder claim",
+      "split_policy": "New older TRAIN study; parent heldout peptide embargo; source-extended frozen known-positive blacklist"
+    }
+  ],
+  "training": {
+    "seed": 43,
+    "batch_size": 128,
+    "max_epochs": 1,
+    "max_steps": 51471,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "identity_weight": 0.0,
+    "patience": 100000,
+    "min_epochs": 100000,
+    "checkpoint_every_steps": 500,
+    "validation_every_steps": 1000,
+    "selection_reduction": "endpoint_mean",
+    "train_evaluation_max_rows": 16384,
+    "balance_by": [
+      "endpoint",
+      "mhc_class"
+    ],
+    "stratum_weights": [
+      {
+        "values": [
+          "ec50",
+          "I"
+        ],
+        "weight": 0.0017230684727462735
+      },
+      {
+        "values": [
+          "ec50",
+          "II"
+        ],
+        "weight": 0.001582484566287542
+      },
+      {
+        "values": [
+          "elution_observation",
+          "I"
+        ],
+        "weight": 0.405759758149557
+      },
+      {
+        "values": [
+          "elution_observation",
+          "II"
+        ],
+        "weight": 0.1942402418504429
+      },
+      {
+        "values": [
+          "half_life",
+          "I"
+        ],
+        "weight": 0.014893636502691937
+      },
+      {
+        "values": [
+          "half_life",
+          "II"
+        ],
+        "weight": 0.0018806756412264463
+      },
+      {
+        "values": [
+          "ic50",
+          "I"
+        ],
+        "weight": 0.08341713438658015
+      },
+      {
+        "values": [
+          "ic50",
+          "II"
+        ],
+        "weight": 0.11658286561341988
+      },
+      {
+        "values": [
+          "kd",
+          "I"
+        ],
+        "weight": 0.020532730567843358
+      },
+      {
+        "values": [
+          "kd",
+          "II"
+        ],
+        "weight": 0.006187627935125787
+      },
+      {
+        "values": [
+          "kd_via_ec50",
+          "I"
+        ],
+        "weight": 0.03051974227137438
+      },
+      {
+        "values": [
+          "kd_via_ec50",
+          "II"
+        ],
+        "weight": 0.008177178875164358
+      },
+      {
+        "values": [
+          "kd_via_ic50",
+          "I"
+        ],
+        "weight": 0.03634000020633274
+      },
+      {
+        "values": [
+          "kd_via_ic50",
+          "II"
+        ],
+        "weight": 0.02353848967202306
+      },
+      {
+        "values": [
+          "koff",
+          "I"
+        ],
+        "weight": 0.0003935765741817407
+      },
+      {
+        "values": [
+          "koff",
+          "II"
+        ],
+        "weight": 0.00022723154105055873
+      },
+      {
+        "values": [
+          "qualitative_binding",
+          "I"
+        ],
+        "weight": 0.02620832779969901
+      },
+      {
+        "values": [
+          "qualitative_binding",
+          "II"
+        ],
+        "weight": 0.02379167220030099
+      },
+      {
+        "values": [
+          "td50",
+          "I"
+        ],
+        "weight": 0.0035784458869118746
+      },
+      {
+        "values": [
+          "td50",
+          "II"
+        ],
+        "weight": 0.0004251112870399246
+      }
+    ]
+  }
+}

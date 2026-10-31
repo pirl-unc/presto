@@ -1,0 +1,30 @@
+{
+  "status": "passed",
+  "shared_source_commit": "c8f032a7a200a1ea87121b016eb9dbb22c90e3db",
+  "shared_tests": "2805 passed, 4 skipped",
+  "preparation_fixtures": "8 passed",
+  "independent_prediction_check_fixtures": "4 passed",
+  "remote_import_checks": [
+    "admit",
+    "prepare",
+    "launch"
+  ],
+  "dashboard_js_syntax": "passed including verified-test table",
+  "requested_gpu": "H100!",
+  "max_concurrent_gpus": 2,
+  "predictive_metrics_available": false,
+  "recorded_unix": 1793243193.309196,
+  "controller_fixtures": "8 passed, including observed StreamTerminatedError transport recovery",
+  "family_combined": "32 passed, 2 upstream/cache warnings",
+  "family_test_log": "results/full-family-tests.log",
+  "family_test_log_sha256": "09f9e87e8630a6c1edb6ea774c5cd5185182304d8804dc34a43594e1e4829807",
+  "recovery_pipeline_lint": "passed on changed pipeline modules and tests",
+  "historical_inventory_scripts_lint": "not clean; current family-wide scan found formatting errors in prior acquisition/inventory/poll scripts, outside changed pipeline modules",
+  "uncertainty_fixtures": "7 passed",
+  "reporting_fixtures": "3 passed",
+  "browser_visual_inspection": "unavailable: no enabled native/browser surfaces",
+  "checkpoint_equivalence_fixtures": "3 passed",
+  "launch_readiness": "results/launch-readiness.json",
+  "postlaunch_monitor_lint": "passed",
+  "family_unique_fixtures": 33
+}

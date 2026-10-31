@@ -1,0 +1,40 @@
+{
+  "status": "passed",
+  "archive": "/Users/iskander/code/presto/.worktrees/shared-training/presto/artifacts/2026-10-28_0250_codex_assay-transfer-mechanisms/downloads/wide-six-class-balanced-s43.tar.gz",
+  "archive_sha256": "d1eed47b54dc3b99d3ffa340f8713eb4b32e0df42007c7569e6a3633231275ff",
+  "entries": [
+    {
+      "member": "wide-six-class-balanced-s43/raw/evaluations/train.json",
+      "bytes": 1499882151,
+      "sha256": "3267b71b58cc0d1acbfcfedf7444d9356ade71ba9750cb8d5551c5415e5e5f31"
+    },
+    {
+      "member": "wide-six-class-balanced-s43/raw/train-predictions.jsonl",
+      "bytes": 922262204,
+      "sha256": "f66c21d6c9a4614a81a42ac6f4cf89af2a61a8e9f479fe2d0b6e4308bd7a473f"
+    },
+    {
+      "member": "wide-six-class-balanced-s43/raw/evaluations/validation.json",
+      "bytes": 188040392,
+      "sha256": "d1b3d03d8e39fa4d8189a1e0ca34ce30e23e4317b63f8a013df39e1e7e2e4d9a"
+    },
+    {
+      "member": "wide-six-class-balanced-s43/raw/validation-predictions.jsonl",
+      "bytes": 115701759,
+      "sha256": "59ab88615c5e0d7f96ad0a149bf056930b9e6f17c49f5cf9657d4fe3f2388a4a"
+    },
+    {
+      "member": "wide-six-class-balanced-s43/raw/evaluations/test.json",
+      "bytes": 196176484,
+      "sha256": "d0402f2d7c3f4148a7c49ed8f8cccf46b6c1544c510c7e3e70d57189586b9281"
+    },
+    {
+      "member": "wide-six-class-balanced-s43/raw/test-predictions.jsonl",
+      "bytes": 120666629,
+      "sha256": "214cb08aa0ab5e09c6b8bb7035421963b1866bc1853eef53f90ff2ba60afd743"
+    }
+  ],
+  "removed_bytes": 3042729619,
+  "policy": "Remove only byte-identical expanded exports; retain original archive, all checkpoints and gzip predictions. No metric parsing.",
+  "free_after": 12467433472
+}

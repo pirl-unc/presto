@@ -1,0 +1,145 @@
+{
+  "catalog_schema_version": 35,
+  "coverage": {
+    "dispositions": {
+      "contrast": 228,
+      "excluded": 10337,
+      "reference": 82
+    },
+    "exclusion_reasons": {
+      "engineered_origin_alternative": 53,
+      "invalid_or_above_threshold_PEP": 3230,
+      "multiple_complete_parent_sequences": 6809,
+      "no_deposited_reference_origin": 159,
+      "nonliteral_origin_alternative": 65,
+      "nonpositive_or_missing_source_signal": 9210,
+      "parent_has_fewer_than_two_eligible_peptides": 2677,
+      "source_contaminant_flag": 153,
+      "source_reverse_flag": 22,
+      "unresolved_declared_parent": 189
+    },
+    "n_contrasts": 228,
+    "n_contributors": 2736,
+    "n_parents": 82,
+    "n_source_components": 1689,
+    "n_source_peptides": 10647,
+    "numeric_target_summaries_disclosed": false,
+    "qualified_for_screen": true,
+    "split_support": {
+      "test": {
+        "gate_passed": true,
+        "n_components": 18,
+        "n_contrasts": 32,
+        "n_parent_sequences": 18,
+        "weight_sum": 1.0
+      },
+      "train": {
+        "gate_passed": true,
+        "n_components": 55,
+        "n_contrasts": 158,
+        "n_parent_sequences": 56,
+        "weight_sum": 1.0
+      },
+      "val": {
+        "gate_passed": true,
+        "n_components": 8,
+        "n_contrasts": 38,
+        "n_parent_sequences": 8,
+        "weight_sum": 1.0
+      }
+    }
+  },
+  "files": {
+    "contract.json": {
+      "sha256": "9007f43fe28da21063a62582b37dad34bd35a39fee78b3413d3eee9e078da0e9",
+      "size_bytes": 1875
+    },
+    "source_manifest.json": {
+      "sha256": "8a8ff3f5c9149ccd885605002cc2b3c84c3dc8a567fa35b20213a2b21451a93f",
+      "size_bytes": 7102
+    },
+    "source_tables/acquisitions.parquet": {
+      "sha256": "396cfa3886dd7e079bd2eba6690ab5fa31b823298337130453ef8b0e33a5343b",
+      "size_bytes": 8573
+    },
+    "source_tables/assertions.parquet": {
+      "sha256": "d909e99e162ef7c7337a6ccc0f89bf681e23a5ecbc92e78b843d1c8334f0c5d4",
+      "size_bytes": 8303
+    },
+    "source_tables/declared_parents.parquet": {
+      "sha256": "815e62f4969a61b0a1f4849acb43bb5d7dbdade6bde3e6df27af040d9f48c9d9",
+      "size_bytes": 17297904
+    },
+    "source_tables/dependency_groups.parquet": {
+      "sha256": "df079ba26b5e5b46cd0509d287b8414853a589d0e54c6830f0ffd87dcdb036e2",
+      "size_bytes": 469241
+    },
+    "source_tables/forms.parquet": {
+      "sha256": "69f874bb728d8959f9aa29550f41ce6b3471aea7cc0aea52e8ece7909a2af30e",
+      "size_bytes": 1517559
+    },
+    "source_tables/identifications.parquet": {
+      "sha256": "a7a90436b970436324131fe7336aeaaa4691c498dd1b237178a72f7da74958a7",
+      "size_bytes": 4648991
+    },
+    "source_tables/material_contexts.parquet": {
+      "sha256": "72a8432c1a715fdac695cf6a17353d7e0de76b0e088966440ecf21b233611306",
+      "size_bytes": 6758
+    },
+    "source_tables/material_links.parquet": {
+      "sha256": "d0232035d4914704d748745d7f63ccb7ef1e3f264b0ea7ef7779e62710a157f3",
+      "size_bytes": 5800
+    },
+    "source_tables/origins.parquet": {
+      "sha256": "56d4f5864ac5d235cdd843e8d97cbe2b4d9ec13e7d158d9a363875a53f2e8a38",
+      "size_bytes": 3534216
+    },
+    "source_tables/peptides.parquet": {
+      "sha256": "5e5f3d14cba6f5930f968c85bae53ea4545c20a25e0ef4074ee5b2a2a0b263f3",
+      "size_bytes": 1371312
+    },
+    "source_tables/quantities.parquet": {
+      "sha256": "6ed9c3f5203c11641191b74b0a8abc04c54dd43b758feb8dadaf2e51e17088aa",
+      "size_bytes": 18999182
+    },
+    "source_tables/references.parquet": {
+      "sha256": "297815e1bfa9154e9af654c70996e27cb16047a8de831f5c18f671895751b1e7",
+      "size_bytes": 24007859
+    },
+    "typed/components.parquet": {
+      "sha256": "3c22633fabb8d89924a31e8ba751d626bd66264caf3ad685697934e740a64bfd",
+      "size_bytes": 469833
+    },
+    "typed/contributors.parquet": {
+      "sha256": "512eefa1379743ffc4fba6ce66dcf883ecf3a0befb1903687714bd880d4897d4",
+      "size_bytes": 223709
+    },
+    "typed/covariates.parquet": {
+      "sha256": "4cae52064a0911c336d2e4f14f9706bc7a472033aaae6339bfa65b818ab3f6bb",
+      "size_bytes": 101674
+    },
+    "typed/decisions.parquet": {
+      "sha256": "80d6f9fba9fc6ac1468c79e4e7ec1108e68e72cd3ec5092b5645673dedb35640",
+      "size_bytes": 23401069
+    },
+    "typed/examples.parquet": {
+      "sha256": "7cc4f2dd77f92b1ae19b6788404cee6061335b5dfc951b5d60fd0cd1e8e17bc0",
+      "size_bytes": 117408
+    },
+    "typed/parents.parquet": {
+      "sha256": "01ac324a078039d78b4f4445d1d917f0743902d6eab16faaf524121c69fee275",
+      "size_bytes": 31908
+    }
+  },
+  "hitlist_version": "2.0.38",
+  "output_kind": "registered_native_contrast",
+  "recipe": {
+    "name": "2026-10-25_0612_codex_native-contrast-admission",
+    "registered_recipe": "pxd018722_native_contrast_v1",
+    "schema_version": 1
+  },
+  "recipe_sha256": "f6a7bb90d098daa9bbfd5f729bdc4d6ca698a50d8dc4a977718976621bdeb690",
+  "schema_version": 1,
+  "source_package_manifest_sha256": "8a8ff3f5c9149ccd885605002cc2b3c84c3dc8a567fa35b20213a2b21451a93f",
+  "source_package_schema_version": 27
+}

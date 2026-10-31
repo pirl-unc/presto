@@ -1,0 +1,14 @@
+{
+  "purpose": "Qualify shared source reader and reported transition grain; test declared aggregation candidates without fitting",
+  "registered_after_schema_inventory_before_aggregation": true,
+  "headers_A_to_L": ["Peptide", "Modified Sequence", "Replicate", "Precursor Mz", "Precursor Charge", "Product Mz", "Product Charge", "Fragment Ion", "Retention Time", "Area", "Peak Rank", "Concat"],
+  "direct_dose_legend": ["0.1 = 100 amol", "1 = 1 fmol", "10 = 10 fmol", "100 = 100 fmol"],
+  "dose_policy": "DirectSpike numeric replicate prefix uses the separate N-column legend; hipMHC prefix must supply amol/fmol. Preserve the literal label and ordinal suffix; no physical specimen or file identity is inferred.",
+  "aggregation_candidates": ["sum all non-precursor transition areas for exact reported form and replicate", "sum all transitions including precursor as a diagnostic control"],
+  "missingness_policy": "Count missing/zero/positive/invalid areas separately; a complete sum is unavailable if any included area is missing or invalid. Never replace missing with zero.",
+  "duplicate_policy": "Report duplicate (peptide, modified form, replicate, precursor m/z+charge, product m/z+charge, fragment ion) keys; do not deduplicate or silently accept their sums as qualified.",
+  "S3_comparison": "Compare all explicit replicate candidates at exactly matching modified form and dose against each previously verified source cell. Keep C/D/E ordinal-equals-replicate comparisons as diagnostics only; numerical agreement does not prove acquisition linkage.",
+  "numeric_diagnostics": "Retain signed/absolute differences, exact equality, relative tolerance1e-6 and a conditional nearest-integer rounding bound0.5 per included integer-area row. The rounding rule is an assumption for diagnostics, not a source claim or admission gate.",
+  "forbidden_inferences": ["no fitted scale", "no best-matching transition subset", "no assumed C/D/E acquisition assignment", "no canonical isotope atom repair", "no biological concentration claims"],
+  "no_training_or_heldout_access": true
+}

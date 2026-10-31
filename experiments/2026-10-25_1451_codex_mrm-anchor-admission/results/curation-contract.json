@@ -1,0 +1,65 @@
+{
+  "owner": "pirl-unc/hitlist#762",
+  "system": "Existing typed evidence/catalog/query/material-context/calibration-applicability APIs",
+  "source_grain": "Selected peptide assay and standard-stock metadata; run-level calibration signals pending",
+  "fields": [
+    {
+      "field": "study_accession_asset_cell",
+      "status": "available",
+      "source": "DOI/PMCID/PASS, official S3 metadata, source bytes and workbook coordinates"
+    },
+    {
+      "field": "sequence_and_exact_molecular_form",
+      "status": "partial",
+      "source": "Primary Data1 peptide and isotope precursor/product m/z; fallback transition table. Preserve label/modification/charge ambiguity; sequence alone does not establish exact form."
+    },
+    {
+      "field": "standard_stock_concentration_purity_assignment",
+      "status": "available_primary",
+      "source": "Data1 H=AAA pmol/uL, I=CZE %, J=reported adjusted pmol/uL; two rounding-level differences retained. Lot and uncertainty remain source-qualified/missing."
+    },
+    {
+      "field": "injected_peptide_amount_run_dose_join",
+      "status": "pending",
+      "source": "Do not treat stock concentration or LLOQ as observed per-run injected load. Need Skyline/run design/preparation links."
+    },
+    {
+      "field": "separate_heavy_light_area",
+      "status": "unverified",
+      "source": "Not in audited supplements; PASS05890 standalone Skyline document identified but transfer blocked."
+    },
+    {
+      "field": "assay_characterization",
+      "status": "available_scoped",
+      "source": "Preserve LLOQ/ULOQ, CV, stability and selectivity as their own endpoints. They are not absolute-area observations."
+    },
+    {
+      "field": "biological_material_species_roles",
+      "status": "source_context_required",
+      "source": "Primary mouse plasma; fallback human cancer cell-line screens/lysates and BSA calibration matrix. Standard/precursor/matrix/APC species roles remain distinct."
+    },
+    {
+      "field": "digest_and_spiking_stage",
+      "status": "source_context_required",
+      "source": "Preserve enzyme, pre/post-digestion spike stage, desalting/recovery and selected targeted assay design. Do not label synthetic post-digestion standards as proteolysis products."
+    },
+    {
+      "field": "instrument_lc_acquisition_transitions",
+      "status": "partial",
+      "source": "Article methods, CPTAC folders, primary quantifier m/z and fallback transition settings; preserve platform labels and source discrepancies."
+    },
+    {
+      "field": "planned_query_universe_and_dispositions",
+      "status": "pending_for_run_level",
+      "source": "500 stock sequences; fallback48 linked assay IDs versus title53 unresolved. Retain omitted/below-limit/rejected/saturated/unintegrated/zero distinctions."
+    },
+    {
+      "field": "calibration_applicability_and_split_groups",
+      "status": "must_be_explicit",
+      "source": "Selected targeted MRM protocols only; peptide/form/preparation/run grouping and detector/protocol transfer remain unvalidated."
+    }
+  ],
+  "admission": "metadata_only_no_raw_response_training",
+  "next_asset": "PASS05890/CPTAC_Exp1_Curves_CS.sky",
+  "no_model_fit": true
+}

@@ -1,0 +1,32 @@
+{
+  "family": "2026-10-26_0344_codex_diverse-quantity-anchors",
+  "agent": "codex",
+  "model": "GPT-6",
+  "git_commit": "19a45c82aa0e42e974cd2690f0bd199f5d32abb0",
+  "tracked_dirty_before_registration": [
+    "tasks/todo.md"
+  ],
+  "prior_unrelated_task_diff": {
+    "additions": 346,
+    "deletions": 4
+  },
+  "workflow": "web tool primary-source discovery; offline receipt verification",
+  "scientific_network_operation_limit": 12,
+  "candidate_study_limit": 2,
+  "initial_queries": [
+    "synthetic non-tryptic peptides known concentrations mass spectrometry response library",
+    "equimolar synthetic peptide library mass spectrometry ionization efficiency quantified peptides"
+  ],
+  "training": null,
+  "new_biological_outcome_inspection": false,
+  "environment_overrides": {},
+  "local_numerical_stages": [],
+  "browser_resource_measurement": "unavailable; numerical-stage limits are not claimed for web tool",
+  "offline_command": "PYTHON=/Users/iskander/code/shared-virtual-env/bin/python sh reproduce/launch.sh",
+  "offline_python": {
+    "executable": "/Users/iskander/code/shared-virtual-env/bin/python",
+    "version": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]"
+  },
+  "source_snapshot": "reproduce/source/verify.py",
+  "source_investigation_closed": true
+}

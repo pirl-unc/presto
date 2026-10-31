@@ -1,0 +1,43 @@
+{
+  "stage": "verify",
+  "attempt": 1,
+  "started_utc": "2026-10-25T13:08:45.339533+00:00",
+  "status": "passed",
+  "child_launched": true,
+  "exit_code": 0,
+  "resource_violation": null,
+  "memory_admission": {
+    "metric": "macos_free_plus_speculative",
+    "bytes": 11041193984
+  },
+  "disk_free_before_bytes": 21924474880,
+  "environment": {
+    "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "versions": {
+      "pandas": "3.1.0",
+      "pyarrow": "26.0.0",
+      "psutil": "7.2.2"
+    },
+    "overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUNBUFFERED": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    }
+  },
+  "child_pid": 68156,
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "-B",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0959_codex_dilution-canonical/code/verify.py"
+  ],
+  "elapsed_seconds": 83.24069175001932,
+  "peak_observed_process_tree_rss_bytes": 2394259456,
+  "peak_child_process_rss_bytes": 2394259456,
+  "rss_poll_interval_seconds": 0.05,
+  "disk_free_after_bytes": 21948747776
+}

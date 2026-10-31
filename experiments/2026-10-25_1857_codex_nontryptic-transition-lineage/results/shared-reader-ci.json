@@ -1,0 +1,88 @@
+{
+  "run_id": 40226053061,
+  "run_url": "https://github.com/pirl-unc/hitlist/actions/runs/40226053061",
+  "head_sha": "0263dc639fdebe0a1532260f09cf575f99c4bf32",
+  "base_sha": "85ff2c81cc7160444a701917fc4c09c419a876a1",
+  "pr_url": "https://github.com/pirl-unc/hitlist/pull/850",
+  "scope": "Hosted software verification only; synthetic source-format fixtures. Original source replay and all biological fits remain pending.",
+  "observed_jobs": [
+    {
+      "id": 121267537740,
+      "name": "unit (3.14)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 121267537864,
+      "name": "unit (3.12)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 121267537885,
+      "name": "unit (3.13)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 121267537908,
+      "name": "lint",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 121267537911,
+      "name": "integration",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 121267537920,
+      "name": "unit (3.11)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 121267537941,
+      "name": "unit (3.10)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 121270573661,
+      "name": "coverage",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "unit_log_job_id": 121267537920,
+  "unit_log_source": "https://api.github.com/repos/pirl-unc/hitlist/actions/jobs/121267537920/logs",
+  "unit_log_selected_lines": [
+    "2026-10-25T19:26:42.4338818Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +3fefeb1f7b47b892a0949f984cb7090172963701:refs/remotes/pull/850/merge",
+    "2026-10-25T19:26:43.3711350Z  * [new ref]         3fefeb1f7b47b892a0949f984cb7090172963701 -> pull/850/merge",
+    "2026-10-25T19:26:43.5627629Z HEAD is now at 3fefeb1 Merge 0263dc639fdebe0a1532260f09cf575f99c4bf32 into 85ff2c81cc7160444a701917fc4c09c419a876a1",
+    "2026-10-25T19:26:43.5711038Z [command]/usr/bin/git log -1 --format=%H",
+    "2026-10-25T19:26:43.5746815Z 3fefeb1f7b47b892a0949f984cb7090172963701",
+    "2026-10-25T19:26:50.5316574Z Successfully installed pip-26.2.2",
+    "2026-10-25T19:27:13.8104019Z Successfully installed PyYAML-6.0.3 adjustText-1.4.0 certifi-2026.10.23 charset_normalizer-3.5.2 contourpy-1.3.3 coverage-7.17.0 cycler-0.12.1 datacache-1.29.3 et-xmlfile-2.0.0 execnet-2.1.2 filelock-4.2.4 fonttools-4.67.0 gtfparse-3.0.5 hitlist-2.0.42 idna-3.20 iniconfig-2.3.1 kiwisolver-1.5.1 matplotlib-3.11.2 matplotlib_venn-1.1.2 memoized-property-1.0.3 mhcgnomes-3.64.6 numpy-2.4.6 oncoref-1.19.2 openpyxl-3.1.5 orfdata-0.36.0 packaging-26.3 pandas-3.1.0 pillow-13.0.0 platformdirs-4.13.5 pluggy-1.7.0 pyarrow-26.0.0 pyensembl-2.32.3 pyfaidx-0.9.1 pygments-2.21.0 pyparsing-3.3.3 pytest-9.1.1 pytest-cov-7.1.0 pytest-xdist-3.8.0 python-dateutil-3.0.0 requests-2.34.2 ruff-0.16.10 scipy-1.17.1 serializable-1.3.2 six-1.17.0 tinytimer-0.0.0 tqdm-4.70.1 typechecks-0.1.2 tzdata-2026.5 urllib3-2.8.0",
+    "2026-10-25T19:32:04.1389495Z hitlist/nontryptic_workbooks.py              124      1    99%",
+    "2026-10-25T19:32:04.1413900Z SKIPPED [1] tests/test_builder.py:1054: pyensembl Ensembl release data not installed",
+    "2026-10-25T19:32:04.1414485Z SKIPPED [1] tests/test_predict.py:19: could not import 'mhcflurry': No module named 'mhcflurry'",
+    "2026-10-25T19:32:04.1415024Z ========== 3621 passed, 2 skipped, 395 warnings in 281.95s (0:04:41) ===========",
+    "2026-10-25T19:32:04.7288430Z \tElapsed (wall clock) time (h:mm:ss or m:ss): 4:47.87",
+    "2026-10-25T19:32:04.7290590Z \tMaximum resident set size (kbytes): 517300"
+  ],
+  "unit_log_note": "Selected verbatim lines from the connector-decoded complete job log; not a full raw-log archive.",
+  "local_guard_unchanged": true,
+  "complete": true,
+  "checked_utc": "2026-10-25 19:41:58 UTC",
+  "integration_log_job_id": 121267537911,
+  "integration_log_selected_lines": [
+    "2026-10-25T19:26:44.5073229Z HEAD is now at 3fefeb1 Merge 0263dc639fdebe0a1532260f09cf575f99c4bf32 into 85ff2c81cc7160444a701917fc4c09c419a876a1",
+    "2026-10-25T19:39:24.6812770Z ========= 96 passed, 3623 deselected, 7 warnings in 672.42s (0:11:12) ==========",
+    "2026-10-25T19:39:26.6684104Z \tElapsed (wall clock) time (h:mm:ss or m:ss): 11:17.57",
+    "2026-10-25T19:39:26.6691674Z \tMaximum resident set size (kbytes): 15373532",
+    "2026-10-25T19:39:26.6716039Z \tExit status: 0"
+  ],
+  "pr_description_updated_and_readback_verified": true
+}

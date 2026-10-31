@@ -1,0 +1,40 @@
+✓ Initialized. View run at 
+https://modal.com/apps/iskandr/main/ap-tGRs3rOq5ua5vkbdzsc1vF
+✓ Created objects.
+├── ✓ Uploaded 
+│   /Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/20
+│   26-10-27_2255_codex_shared-multi-assay-scale/analysis/replay_modal.py
+├── ✓ Uploaded 
+│   /Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/20
+│   26-10-27_2255_codex_shared-multi-assay-scale/reproduce/serving-runtime.json
+├── ✓ Uploaded 
+│   /Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/20
+│   26-10-27_2255_codex_shared-multi-assay-scale/analysis/replay_remote.py
+├── ✓ Uploaded 
+│   /Users/iskander/code/presto/.worktrees/shared-training/presto/artifacts/2026
+│   -10-27_2255_codex_shared-multi-assay-scale/upload/source-pins.json
+├── ✓ Uploaded 
+│   /Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/20
+│   26-10-27_2255_codex_shared-multi-assay-scale/code/worker.py
+├── ✓ Uploaded 
+│   /Users/iskander/code/presto/.worktrees/shared-training/presto/artifacts/2026
+│   -10-27_2255_codex_shared-multi-assay-scale/upload/inputs
+├── ✓ Uploaded 
+│   /Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/20
+│   26-10-27_2255_codex_shared-multi-assay-scale/reproduce/source/serving-runtim
+│   e
+├── ✓ Uploaded 
+│   /Users/iskander/code/presto/.worktrees/shared-training/presto/artifacts/2026
+│   -10-27_2255_codex_shared-multi-assay-scale/upload/runtimes
+└── ✓ Created Function verify.
+{"condition": "ic50-exact-s42", "mode": "original_cuda", "n": 64, "split": "train", "status": "passed", "maximum_absolute_error": 0.0, "serving_maximum_absolute_error": 0.0, "serving_with_untrained_parameter_and_feature_guards": true, "checkpoint_sha256": "22d2df27271511a0f03e0079ab65f9c0fda188c3d4bbd154d7300bc336028931", "serving_runtime_commit": "0c4c984b2628fecf54ef29e756fdfc0a74963dc4", "actual_gpu": "NVIDIA H100 80GB HBM3", "gpu_total_bytes": 85009367040, "torch": "2.14.1+cu130", "elapsed_seconds": 5.170013935}
+{"condition": "ic50-bounds-s42", "mode": "original_cuda", "n": 64, "split": "train", "status": "passed", "maximum_absolute_error": 0.0, "serving_maximum_absolute_error": 0.0, "serving_with_untrained_parameter_and_feature_guards": true, "checkpoint_sha256": "1adbb61618155bdd929a67a018b84a9c239d813be6e85543ddc1dcf3233b1df1", "serving_runtime_commit": "0c4c984b2628fecf54ef29e756fdfc0a74963dc4", "actual_gpu": "NVIDIA H100 80GB HBM3", "gpu_total_bytes": 85009367040, "torch": "2.14.1+cu130", "elapsed_seconds": 4.880606092}
+{"condition": "multi-assay-s42", "mode": "original_cuda", "n": 64, "split": "train", "status": "passed", "maximum_absolute_error": 0.0, "serving_maximum_absolute_error": 0.0, "serving_with_untrained_parameter_and_feature_guards": true, "checkpoint_sha256": "391965a867f23aebc4a34c27f8ddaa09cf77671454dda37f6bc4a134aacdd34f", "serving_runtime_commit": "0c4c984b2628fecf54ef29e756fdfc0a74963dc4", "actual_gpu": "NVIDIA H100 80GB HBM3", "gpu_total_bytes": 85009367040, "torch": "2.14.1+cu130", "elapsed_seconds": 4.781664984999999}
+{"condition": "multi-assay-wide-s42", "mode": "original_cuda", "n": 64, "split": "train", "status": "passed", "maximum_absolute_error": 0.0, "serving_maximum_absolute_error": 0.0, "serving_with_untrained_parameter_and_feature_guards": true, "checkpoint_sha256": "d44049aaa883f1f6caf661e967c286aed93e0c6f392523d2fbb62862b047156b", "serving_runtime_commit": "0c4c984b2628fecf54ef29e756fdfc0a74963dc4", "actual_gpu": "NVIDIA H100 80GB HBM3", "gpu_total_bytes": 85009367040, "torch": "2.14.1+cu130", "elapsed_seconds": 4.420981072}
+{"condition": "ic50-exact-s43", "mode": "original_cuda", "n": 64, "split": "train", "status": "passed", "maximum_absolute_error": 0.0, "serving_maximum_absolute_error": 0.0, "serving_with_untrained_parameter_and_feature_guards": true, "checkpoint_sha256": "cff4af370b6e21317e3c88dd85a56944c0b32a4783d40a89585efe6609d00a4b", "serving_runtime_commit": "0c4c984b2628fecf54ef29e756fdfc0a74963dc4", "actual_gpu": "NVIDIA H100 80GB HBM3", "gpu_total_bytes": 85009367040, "torch": "2.14.1+cu130", "elapsed_seconds": 4.041125383999997}
+{"condition": "ic50-bounds-s43", "mode": "original_cuda", "n": 64, "split": "train", "status": "passed", "maximum_absolute_error": 0.0, "serving_maximum_absolute_error": 0.0, "serving_with_untrained_parameter_and_feature_guards": true, "checkpoint_sha256": "f469314e44cd22ef8c155f85042747f999f4361ab31a9dc42a405a33b140c61f", "serving_runtime_commit": "0c4c984b2628fecf54ef29e756fdfc0a74963dc4", "actual_gpu": "NVIDIA H100 80GB HBM3", "gpu_total_bytes": 85009367040, "torch": "2.14.1+cu130", "elapsed_seconds": 4.1320620959999985}
+{"condition": "multi-assay-s43", "mode": "original_cuda", "n": 64, "split": "train", "status": "passed", "maximum_absolute_error": 0.0, "serving_maximum_absolute_error": 0.0, "serving_with_untrained_parameter_and_feature_guards": true, "checkpoint_sha256": "b0d2f43a2db99d75c373bfc91cdfca25978e775340f240344879369fefa0e403", "serving_runtime_commit": "0c4c984b2628fecf54ef29e756fdfc0a74963dc4", "actual_gpu": "NVIDIA H100 80GB HBM3", "gpu_total_bytes": 85009367040, "torch": "2.14.1+cu130", "elapsed_seconds": 4.368820047}
+{"condition": "multi-assay-wide-s43", "mode": "original_cuda", "n": 64, "split": "train", "status": "passed", "maximum_absolute_error": 0.0, "serving_maximum_absolute_error": 0.0, "serving_with_untrained_parameter_and_feature_guards": true, "checkpoint_sha256": "e48c0630865d13eff8633d5d4d933bf606927a8963575881dc9f3ab4226777dc", "serving_runtime_commit": "0c4c984b2628fecf54ef29e756fdfc0a74963dc4", "actual_gpu": "NVIDIA H100 80GB HBM3", "gpu_total_bytes": 85009367040, "torch": "2.14.1+cu130", "elapsed_seconds": 4.735955034999996}
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/iskandr/main/ap-tGRs3rOq5ua5vkbdzsc1vF

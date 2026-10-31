@@ -1,0 +1,6 @@
+{
+  "command": "env PYTHONPATH=/private/tmp/presto-modular-imports OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 /Users/iskander/code/shared-virtual-env/bin/python -m pytest -q tests/test_substrate_entry.py tests/test_independent_cut.py",
+  "result": "7 passed in 1.01s",
+  "module_sha256": "28765cb0f8812417c767d23550935d064a2ee794e13d95109e9e6372e1bd56d5",
+  "test_sha256": "94f85289abeacc432e683f522ff90aebd18be9bd18c234c2d0134a9022a89f48"
+}

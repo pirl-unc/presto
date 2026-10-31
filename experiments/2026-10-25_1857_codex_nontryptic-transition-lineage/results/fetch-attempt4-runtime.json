@@ -1,0 +1,69 @@
+{
+  "stage": "fetch",
+  "attempt": 4,
+  "started_utc": "2026-10-26T01:35:23.542329+00:00",
+  "status": "passed",
+  "child_launched": true,
+  "exit_code": 0,
+  "resource_violation": null,
+  "memory_admission": {
+    "metric": "macos_free_plus_speculative",
+    "bytes": 9523855360
+  },
+  "disk_free_before_bytes": 7368327168,
+  "request_set_sha256": "1d4737f5e1d737631ce65d007b49ae2dbcef8a4d64fa5c7fd0031118ad751fab",
+  "request_set": {
+    "phase": "processed",
+    "requests": [
+      {
+        "name": "Iso18_DirectSpike_TransitionResults.xlsx",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2021/09/PXD024917/Iso18_DirectSpike_TransitionResults.xlsx",
+        "expected_kind": "xlsx",
+        "discovery_provenance": "Exact PXD024917 official file inventory; same PRIDE host/path over HTTPS; source S7 double-i hipMHCspiikein spelling retained as an unresolved filename discrepancy",
+        "expected_bytes": 151291,
+        "source_checksum_raw": "181646b46636be4abaab2eb498df7226dd7f753f",
+        "source_checksum_algorithm": "not declared in API; 40-character checksum retained without guessing algorithm"
+      },
+      {
+        "name": "Iso18_hipMHCspikein_TransitionResults.xlsx",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2021/09/PXD024917/Iso18_hipMHCspikein_TransitionResults.xlsx",
+        "expected_kind": "xlsx",
+        "discovery_provenance": "Exact PXD024917 official file inventory; same PRIDE host/path over HTTPS; source S7 double-i hipMHCspiikein spelling retained as an unresolved filename discrepancy",
+        "expected_bytes": 69651,
+        "source_checksum_raw": "25ca44773268c0d4229de2f25da4b64d6d5269cb",
+        "source_checksum_algorithm": "not declared in API; 40-character checksum retained without guessing algorithm"
+      }
+    ]
+  },
+  "environment": {
+    "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "versions": {
+      "requests": "2.34.2",
+      "psutil": "7.2.2"
+    },
+    "overrides": {
+      "PYTHONSAFEPATH": "1",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUNBUFFERED": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    }
+  },
+  "child_pid": 21098,
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "-B",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1857_codex_nontryptic-transition-lineage/code/fetch.py",
+    "--requests",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1857_codex_nontryptic-transition-lineage/reproduce/requests/fetch-2.json"
+  ],
+  "elapsed_seconds": 1.9388606660068035,
+  "peak_observed_process_tree_rss_bytes": 46350336,
+  "peak_child_process_rss_bytes": 46383104,
+  "rss_poll_interval_seconds": 0.05,
+  "disk_free_after_bytes": 7361687552
+}

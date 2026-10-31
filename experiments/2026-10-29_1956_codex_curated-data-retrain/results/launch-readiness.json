@@ -1,0 +1,34 @@
+{
+  "status": "passed",
+  "training_contract_sha256": "9d846998ebbd7c3ffa3f77544c1002ee0d93b0c78b2829e8c97edfc3183dc09a",
+  "partition_verification_sha256": "c1c19755681b52c702fedc2579a475024671d7e9f9516a09597316c6b70dd84a",
+  "source_hashes": {
+    "code/worker.py": "dfd4d14cbce0c7a75a3ee53faf56d9fa922f5dad954dee748d886d7a14715029",
+    "code/cohort_audit.py": "653060c270a709993b61a56fa3c5b5e381a088eb36100fa04b40779fbb3967d8",
+    "code/freeze_contract.py": "d5462cb65d4a553cb64a649c1db0ca6462c16c30f83a17f3c3e83b2fe29eff04",
+    "code/control.py": "cad7749ee2700f677c9c69b8c7461df09043aa21fafccd44a7449db9b1c6de0a",
+    "code/audit_recovered_blacklist.py": "4c770dba6482efc86c4dbb79edfc97947be5c628360d9ce08bd3f945442012e3",
+    "code/advance.py": "385a816462caa4bbcacd82ba2a220aaf6dd55c1815a44a78a65269911f321838",
+    "code/launch.py": "9d24315a4ebc715f48142b67d13914a07c7a65c91d33d03eeeb9b7f1a6636623",
+    "code/checkpoint_observer.py": "0a7952de71d2475df455190dde8a171d3da20bf30be85b8f48b9c7bc289a2aea",
+    "code/prepare.py": "281f418445cfb6f97f23c384f6ca4c10bab5dec65bdc0bcc97af946bac11dd36",
+    "code/verify_recovery.py": "182257d6193dff1e25b376cdd11bd25f166d18b39e0d5df117ee3b10e1f164d1"
+  },
+  "tests": {
+    "status": "passed",
+    "suites": [
+      {
+        "path": "results/tests/source-admission.log",
+        "passed": 146,
+        "sha256": "01f6642c8fbadf64764436d0c6fd93fa58cd9c455ef9d79c1ea6b19ba03c13cd"
+      },
+      {
+        "path": "results/tests/training-integration.log",
+        "passed": 26,
+        "sha256": "7beeee096ccc4bdd002e5864c97fe3c315b9aa9e03b84ad8a9408fc475a97eed"
+      }
+    ],
+    "scope": "Source curation/admission and inherited checkpoint, reporting and prediction verification; full cohort preflight remains mandatory inside both workers"
+  },
+  "full_preflight": "mandatory in each worker before optimizer construction"
+}

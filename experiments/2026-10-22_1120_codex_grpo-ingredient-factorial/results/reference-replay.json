@@ -1,0 +1,162 @@
+{
+  "status": "passed",
+  "reference_checks": [
+    {
+      "seed": 42,
+      "split": "train",
+      "status": "exact_match"
+    },
+    {
+      "seed": 42,
+      "split": "validation",
+      "status": "exact_match"
+    },
+    {
+      "seed": 42,
+      "split": "test",
+      "status": "exact_match"
+    },
+    {
+      "seed": 43,
+      "split": "train",
+      "status": "exact_match"
+    },
+    {
+      "seed": 43,
+      "split": "validation",
+      "status": "exact_match"
+    },
+    {
+      "seed": 43,
+      "split": "test",
+      "status": "exact_match"
+    },
+    {
+      "seed": 44,
+      "split": "train",
+      "status": "exact_match"
+    },
+    {
+      "seed": 44,
+      "split": "validation",
+      "status": "exact_match"
+    },
+    {
+      "seed": 44,
+      "split": "test",
+      "status": "exact_match"
+    }
+  ],
+  "prior_saved_prediction_comparisons": [
+    {
+      "condition": "exact-b0",
+      "seed": 42,
+      "split": "train",
+      "maximum_difference": 0.0
+    },
+    {
+      "condition": "original-reinforce8",
+      "seed": 42,
+      "split": "train",
+      "maximum_difference": 0.0
+    },
+    {
+      "condition": "exact-b0",
+      "seed": 42,
+      "split": "validation",
+      "maximum_difference": 0.0
+    },
+    {
+      "condition": "original-reinforce8",
+      "seed": 42,
+      "split": "validation",
+      "maximum_difference": 0.0
+    },
+    {
+      "condition": "exact-b0",
+      "seed": 42,
+      "split": "test",
+      "maximum_difference": 0.0
+    },
+    {
+      "condition": "original-reinforce8",
+      "seed": 42,
+      "split": "test",
+      "maximum_difference": 0.0
+    },
+    {
+      "condition": "exact-b0",
+      "seed": 43,
+      "split": "train",
+      "maximum_difference": 0.0
+    },
+    {
+      "condition": "original-reinforce8",
+      "seed": 43,
+      "split": "train",
+      "maximum_difference": 0.0
+    },
+    {
+      "condition": "exact-b0",
+      "seed": 43,
+      "split": "validation",
+      "maximum_difference": 0.0
+    },
+    {
+      "condition": "original-reinforce8",
+      "seed": 43,
+      "split": "validation",
+      "maximum_difference": 0.0
+    },
+    {
+      "condition": "exact-b0",
+      "seed": 43,
+      "split": "test",
+      "maximum_difference": 0.0
+    },
+    {
+      "condition": "original-reinforce8",
+      "seed": 43,
+      "split": "test",
+      "maximum_difference": 0.0
+    },
+    {
+      "condition": "exact-b0",
+      "seed": 44,
+      "split": "train",
+      "maximum_difference": 0.0
+    },
+    {
+      "condition": "original-reinforce8",
+      "seed": 44,
+      "split": "train",
+      "maximum_difference": 0.0
+    },
+    {
+      "condition": "exact-b0",
+      "seed": 44,
+      "split": "validation",
+      "maximum_difference": 0.0
+    },
+    {
+      "condition": "original-reinforce8",
+      "seed": 44,
+      "split": "validation",
+      "maximum_difference": 0.0
+    },
+    {
+      "condition": "exact-b0",
+      "seed": 44,
+      "split": "test",
+      "maximum_difference": 0.0
+    },
+    {
+      "condition": "original-reinforce8",
+      "seed": 44,
+      "split": "test",
+      "maximum_difference": 0.0
+    }
+  ],
+  "note": "Reconstructs initial reference probabilities on each split. Selected-model comparisons use saved arrays; no checkpoint reselection or rescoring.",
+  "source_sha256": "1d5a8aebf15298caf60e547d9292af8044c7e758ecda2365029293a0b8010c6d"
+}

@@ -1,0 +1,22 @@
+{
+  "utc": "2026-10-26T20:23:14.507055+00:00",
+  "agent_model": "Codex / GPT-6",
+  "git_commit": "aa5eb5ed41e2916b8f94c9e4a30e9d069bf3a5fc",
+  "dirty_status": " M experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/continuation-state.json\n M experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/fit-exact_continuation-1793044126975529000.json\n M tasks/mhc2_active_runs.json\n M tasks/todo.md\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/code/recover.py\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/code/recover_attempt03.py\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/code/resume_censor.py\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/code/resume_censor_attempt03.py\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/fit-censor_refinement-1793045035192116000.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/interruption01.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/recover.sh\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/recovery-attempt02-contract-diff.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/recovery-launch-attempt02.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/recovery-plan-attempt03.md\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/recovery-plan.md\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/recovery-state-attempt02.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/resume-censor-refinement-attempt02-1793046019686482000.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/score-exact_continuation-1793045003405002000.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/source/recover.py\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/source/recover_attempt03.py\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/source/resume_censor.py\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/source/resume_censor_attempt03.py\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/results/exact_continuation-fit.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/results/exact_continuation/\n?? experiments/2026-10-26_1954_codex_mhc2-ms-transfer-cohort/\n?? experiments/agents/codex/plans/2026-10-26_mhc2-ms-transfer-cohort.md\n",
+  "code_sha256": {
+    "recover_attempt03.py": "216dcf84a3d043581b7b80ea9e51ef16acb3824882f296a8c49f55bd770e1389",
+    "resume_censor_attempt03.py": "b786956582a470fc637280e482c1e7888e39a48ec8299cc572751b04a40a84c4"
+  },
+  "invocation": "env PYTHONPATH=/private/tmp/presto-mhc2-20261026:/private/tmp/presto-pr-completion-20261026/dependencies OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 PYTORCH_ENABLE_MPS_FALLBACK=0 /Users/iskander/code/shared-virtual-env/bin/python /private/tmp/presto-mhc2-20261026/presto/experiments/2026-10-26_1929_codex_mhc2-censor-refinement/code/recover_attempt03.py",
+  "full_resume_contract_equality": true,
+  "snapshot_sha256": "28a5298786b91bfcaa12450b71aa7075b6a12f5afd77ce84fa196fa5b7d18e0a",
+  "snapshot_steps": 100,
+  "available_ram_bytes": 14613053440,
+  "environment": {
+    "PYTHONPATH": "/private/tmp/presto-mhc2-20261026:/private/tmp/presto-pr-completion-20261026/dependencies",
+    "OMP_NUM_THREADS": "2",
+    "OPENBLAS_NUM_THREADS": "2",
+    "MKL_NUM_THREADS": "2",
+    "PYTORCH_ENABLE_MPS_FALLBACK": "0"
+  }
+}

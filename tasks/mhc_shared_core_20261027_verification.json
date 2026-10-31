@@ -1,0 +1,43 @@
+{
+  "base_commit": "c0358852f85f42d7d91d41a0af02327d9a6f2981",
+  "git_diff_check": "passed",
+  "mhc_i_predictive_transfer": "not_measured",
+  "packages_installed_or_changed": false,
+  "remote_publication": false,
+  "repository_ruff_check": "passed",
+  "repository_ruff_format_check": {
+    "files": 424,
+    "status": "passed"
+  },
+  "scope": "shared-core software integration; no biological qualification",
+  "source_and_evidence_sha256": {
+    "data/modular_hitlist.py": "481b3215ac04f6e26397c6be69f2c4977ac3d46c6e653d9ef6c612b4e4c653b5",
+    "tasks/mhc2_ordinal_context_20261027/parity.py": "d6dd64376b752481c994f7189782364510a8eb7296e77e4ce0d2829c3049352c",
+    "tasks/mhc_shared_core_20261027_archive/formatting-repair.json": "f91f13deea44c2c2552c29e5fcd17f29c7cd1756982b43acde27100cd86c4f69",
+    "tasks/mhc_shared_core_20261027_archive/parity.executed.py.txt": "d2fce5d733496a7fcc52e0a36a26771d89f1d06a590b09b4aa7062a2c638454f",
+    "tasks/mhc_shared_core_20261027_replay.json": "d6d1440a647a72917fb9a3ee8f48bcb642d7995e764b041873727d270e11602e",
+    "tasks/mhc_shared_core_20261027_tests.xml": "f3af13295a9d0054463bb91844a478da68878320ec1847e0e655b9ff1aa7256d",
+    "tasks/verify_mhc_shared_core_20261027.py": "dbc70b7ff19f59c749954a8b4f6be83467da73bb5b5933d6575e088783e81b0d",
+    "tests/test_modular_hitlist.py": "bbf1b39057dab1a7c8514dff869f8ccbeb1ff9c9baf30c8481dbcbe19a029d54",
+    "tests/test_modular_ordinal_context.py": "cbe19f63e1e5226333da0a1bcd54d20ebdc6d2940545fa12542ae07bcafbf276",
+    "tests/test_modular_quantitative.py": "b62eec8d85d1d5faaa3ba7da5b7d1ab70fa93e774b8ea0a2324ac4b135432474"
+  },
+  "status": "passed",
+  "test_environment": {
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "checkout_parent": "/private/tmp/presto-shared-core-20261027",
+    "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+    "torch_interop_threads": 1,
+    "torch_threads": 1
+  },
+  "test_summary": {
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "tests": "244",
+    "time": "16.014"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "accession": "PXD009360",
+  "source_metadata": "data/availability_sources/snapshots/2026-10-22-mapp-series/PXD009360.files.json",
+  "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2018/10/PXD009360/tryptic-search.tar.gz",
+  "expected_bytes": 733580954,
+  "source_checksum": "9eac00e4363db3b32ffcc40652d62f3f912c89c0",
+  "destination": "/private/tmp/presto-mapp-tryptic-search.tar.gz",
+  "max_time_seconds": 900,
+  "started_at_utc": "2026-10-22T16:41:19.750276+00:00",
+  "status": "completed; deposited checksum and gzip integrity passed; quantitative and treatment mapping pending",
+  "download_command": "curl --fail --location --silent --show-error --max-time 900 'https://ftp.pride.ebi.ac.uk/pride/data/archive/2018/10/PXD009360/tryptic-search.tar.gz' --output /private/tmp/presto-mapp-tryptic-search.tar.gz",
+  "download_exit_code": 0,
+  "download_completion_verified_at_utc": "2026-10-22T16:54:22.897158+00:00",
+  "verification_command": "/Users/iskander/code/shared-virtual-env/bin/python experiments/2026-10-22_1630_codex_mapp-source-admission/reproduce/source/verify_tryptic_retrieval.py",
+  "header_command": "/Users/iskander/code/shared-virtual-env/bin/python experiments/2026-10-22_1630_codex_mapp-source-admission/reproduce/source/peek_tryptic.py",
+  "integrity_receipt": "retrievals/tryptic_receipt.json",
+  "header_receipt": "retrievals/tryptic_headers.json"
+}

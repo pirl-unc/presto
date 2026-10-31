@@ -1,0 +1,22 @@
+Traceback (most recent call last):
+  File "/private/tmp/presto-modular-model/experiments/2026-10-22_1736_codex_mapp-publisher-reconciliation/code/verify.py", line 160, in <module>
+    main()
+  File "/private/tmp/presto-modular-model/experiments/2026-10-22_1736_codex_mapp-publisher-reconciliation/code/verify.py", line 100, in main
+    assert keep == bool(arrays["masks"][k, i, j]), (name, pid, e)
+                        ~~~~~~^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/numpy/lib/_npyio_impl.py", line 257, in __getitem__
+    return format.read_array(
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/numpy/lib/_format_impl.py", line 871, in read_array
+    data = _read_bytes(fp, read_size, "array data")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/numpy/lib/_format_impl.py", line 1015, in _read_bytes
+    r = fp.read(size - len(data))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/zipfile/__init__.py", line 989, in read
+    data = self._read1(n)
+           ^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/zipfile/__init__.py", line 1065, in _read1
+    data = self._decompressor.decompress(data, n)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

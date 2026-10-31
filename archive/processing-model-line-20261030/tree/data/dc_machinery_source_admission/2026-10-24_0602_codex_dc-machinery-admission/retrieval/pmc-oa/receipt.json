@@ -1,0 +1,22 @@
+{
+  "requested_url": "https://www.ncbi.nlm.nih.gov/pmc/utils/oa/oa.fcgi?id=PMC2938112",
+  "started_at": "2026-10-24T10:06:46.016303+00:00",
+  "command": [
+    "experiments/2026-10-24_0602_codex_dc-machinery-admission/code/launch.py",
+    "pmc-oa",
+    "https://www.ncbi.nlm.nih.gov/pmc/utils/oa/oa.fcgi?id=PMC2938112"
+  ],
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "presto_head": "c7d538cfc64f2295e70c2bf693e333f08d1f34b6",
+  "launcher_sha256": "86c54f88a4c9edc743467e5a9acc2fd49d9fcdf57786562ac2f3b24a28eb1e4d",
+  "body_path": "/private/tmp/presto-modular-model/data/dc_machinery_source_admission/2026-10-24_0602_codex_dc-machinery-admission/retrieval/pmc-oa/body",
+  "purpose": "source-discovery-only; not a curated training observation",
+  "error": "ConnectionError: HTTPSConnectionPool(host='www.ncbi.nlm.nih.gov', port=443): Max retries exceeded with url: /pmc/utils/oa/oa.fcgi?id=PMC2938112 (Caused by NameResolutionError(\"HTTPSConnection(host='www.ncbi.nlm.nih.gov', port=443): Failed to resolve 'www.ncbi.nlm.nih.gov' ([Errno 8] nodename nor servname provided, or not known)\"))",
+  "elapsed_seconds": 0.08782429195707664
+}

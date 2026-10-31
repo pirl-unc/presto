@@ -24,7 +24,7 @@ from presto.data.vocab import (  # noqa: E402
     BINDING_ASSAY_READOUT,
     BINDING_ASSAY_TYPES,
 )
-from presto.models.presto import Presto  # noqa: E402
+from presto.legacy.presto import Presto  # noqa: E402
 
 AXIS_SIZES = {
     "assay_type": len(BINDING_ASSAY_TYPES),
@@ -88,7 +88,7 @@ class TestContractCompliance:
         """
         import inspect
 
-        from presto.scripts import train_synthetic
+        from presto.legacy.scripts import train_synthetic
 
         # Whole function, not a window around the first forward call. The
         # window version could only speak for one call site; `binding_context=`
@@ -103,7 +103,7 @@ class TestContractCompliance:
     def test_assay_labels_may_still_route_supervision(self):
         """Allowed, and required for the panel to train at all."""
         from presto.data.collate import PrestoCollator, PrestoSample
-        from presto.scripts import train_synthetic
+        from presto.legacy.scripts import train_synthetic
 
         batch = PrestoCollator()(
             [

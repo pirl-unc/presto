@@ -1,0 +1,11 @@
+{
+  "issue": 831,
+  "url": "https://github.com/pirl-unc/hitlist/issues/831#issuecomment-6391511226",
+  "body": "Shared source admission is implemented in draft PR #832. Presto [canonical-source report](https://github.com/pirl-unc/presto/blob/3ab625edce9ceb6aed9d94ee104306dcf84e248c/experiments/2026-10-25_0021_codex_intact-canonical/README.md) independently verifies every original XML cell/quantity, 17,862 input masses, 8,138 assignment/context joins and all 3,427 publisher links. The one quantity conflict, nine repeated views and missing IDs remain explicit.\n\nA prospectively specified support census retains 1,278 F2 cells/237 sequences. Intact substrate is available in all 21 kinetic acquisitions; 80 sequences have at least two early times and one late time. These are candidate/support counts, not predictive results. [Next model specification](https://github.com/pirl-unc/presto/blob/3ab625edce9ceb6aed9d94ee104306dcf84e248c/experiments/agents/codex/plans/intact-kinetic-forecast.md) defines a future product/substrate-ratio forecast with direct controls, exact mass-conserving span expectations and explicitly hybrid conditional trajectory-score gradients.\n\n45 focused source/query tests and 27 additional catalog-regression tests pass locally. Initial hosted CI found six stale global-version assertions; those were fixed without changing runtime/source bytes, and fresh full gates are required. No kinetic recipe or fit exists yet. Keep this issue open for numeric machinery data, physical replicate/material identity, unknown MS scaling and subsequent recipe qualification; source ingestion does not resolve those gaps.\n",
+  "source_pr": 832,
+  "presto_commit": "3ab625edce9ceb6aed9d94ee104306dcf84e248c",
+  "source_runtime_commit": "7ece0885b8423f4aae205bfdf36b801d2106c842",
+  "ci_assertion_followup_commit": "97d3311a239cd901aa11b8ff8b627a7ce910cbd4",
+  "runtime_unchanged": true,
+  "next": "shared kinetic recipe then registered forecast experiment"
+}

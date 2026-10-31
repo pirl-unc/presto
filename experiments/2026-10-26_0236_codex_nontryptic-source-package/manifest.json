@@ -1,0 +1,491 @@
+{
+  "schema_version": 1,
+  "experiment_id": "2026-10-26_0236_codex_nontryptic-source-package",
+  "status": "source_qualification_closed",
+  "hitlist_commit": "ac3e04841e5a8b0655b1bbd91df2ffd3e23d8cc0",
+  "required_artifacts": [
+    {
+      "path": "README.md",
+      "size_bytes": 7699,
+      "sha256": "4cbcbc3cbab6ba24d6c2f54d24649f1681c534726aa4291ce0fb8212aefcc812",
+      "required": true
+    },
+    {
+      "path": "code/inspect.py",
+      "size_bytes": 1481,
+      "sha256": "840f712d34fd6d22b4c6985a26a3d0eea595e294961993fad1d6c2b84a22d3b8",
+      "required": true
+    },
+    {
+      "path": "code/launch.py",
+      "size_bytes": 7676,
+      "sha256": "337b0957f12bced683299134c33465d6b26145fbaa4d9bc1e233832b437a9e27",
+      "required": true
+    },
+    {
+      "path": "code/launch_v2.py",
+      "size_bytes": 7689,
+      "sha256": "095b6974d4d6ee9c5845a583d02e06a6f25d4a51da896422b5761a8dbbc6c3b0",
+      "required": true
+    },
+    {
+      "path": "code/verify.py",
+      "size_bytes": 9533,
+      "sha256": "15c4ef5170e5079c8019ada0a21f0a44b4558387db15f458afa92a1b962a92df",
+      "required": true
+    },
+    {
+      "path": "code/verify_v2.py",
+      "size_bytes": 10483,
+      "sha256": "8ffd15dc71a4fcba606aaf86f800303b68352e6462e61201d151816d100ec667",
+      "required": true
+    },
+    {
+      "path": "launch_logs/inspect-attempt1.log",
+      "size_bytes": 4964,
+      "sha256": "ee9bd1becbbf6cd9c5f86f3b4647661d04b9d4d3c6b5d627c4c49da04f242396",
+      "required": true
+    },
+    {
+      "path": "launch_logs/verify-attempt1.log",
+      "size_bytes": 1628,
+      "sha256": "84010102f76251a4126d13eb92618ff42f924d3cc57643e83c522da9770476a5",
+      "required": true
+    },
+    {
+      "path": "launch_logs/verify-v2-1-launcher.log",
+      "size_bytes": 12521,
+      "sha256": "09f8f0aa142bbdf56e77513e522f61ac9bf8be2edd739d54c9c903f14aebf012",
+      "required": true
+    },
+    {
+      "path": "launch_logs/verify_v2-attempt1.log",
+      "size_bytes": 1810,
+      "sha256": "d68c40142413e0e1ea94edbb7555019a6f08368b1ef144ccbae7441efef8fc29",
+      "required": true
+    },
+    {
+      "path": "reproduce/amendment-1.md",
+      "size_bytes": 1065,
+      "sha256": "7fc4f870bb776b8986ab209c506105cde4c7eb3e71eb1e72dcdf224a18a42f54",
+      "required": true
+    },
+    {
+      "path": "reproduce/amendment-2.md",
+      "size_bytes": 1240,
+      "sha256": "c3b27984dd79bfe94c15d078075ad406878ad8535628129f0cc6c5cbb6e2777b",
+      "required": true
+    },
+    {
+      "path": "reproduce/inspect-attempt1-launch.json",
+      "size_bytes": 2977,
+      "sha256": "96bc53b0f17fd5dc20e12feafa4ba03c757471ad3cf21e9296f146d1657139cb",
+      "required": true
+    },
+    {
+      "path": "reproduce/launch.json",
+      "size_bytes": 1380,
+      "sha256": "3e553c0f2bb14f8b0e59ab490fd55eb6da7f17af0e82bb11b9c3dae507d4a0f2",
+      "required": true
+    },
+    {
+      "path": "reproduce/launch.sh",
+      "size_bytes": 241,
+      "sha256": "cbf4f1ac284f9ba76320e7db26e27ff3cf92a2efaa20bee24f34ad4d23754076",
+      "required": true
+    },
+    {
+      "path": "reproduce/launch_v2.sh",
+      "size_bytes": 244,
+      "sha256": "601bbc2b44f10d2c86438b6d8bad29375df841627754f3da575eecd4d5f8e010",
+      "required": true
+    },
+    {
+      "path": "reproduce/plan.md",
+      "size_bytes": 3692,
+      "sha256": "273acf91da379a3efbd7eb970ecf18dd8c1e5de017bd567cfc40173fbb1538d9",
+      "required": true
+    },
+    {
+      "path": "reproduce/requests/inspect-1.json",
+      "size_bytes": 1054,
+      "sha256": "0cb6dbcbff39f4e032557a7aa0acd0e31c5bcb271957735b76724dbbfa95ee6e",
+      "required": true
+    },
+    {
+      "path": "reproduce/requests/verify-1.json",
+      "size_bytes": 10424,
+      "sha256": "e768700041e2cfd0ada8402ce664b6b142d93fb2dd76a5580255692563a97d4e",
+      "required": true
+    },
+    {
+      "path": "reproduce/requests/verify-v2-1.json",
+      "size_bytes": 11361,
+      "sha256": "afe2c9883c935bfb4c9b7790732d6a7ec16c629af13f10e07ee40f6f8dae2cb5",
+      "required": true
+    },
+    {
+      "path": "reproduce/source/hitlist/__init__.py",
+      "size_bytes": 9297,
+      "sha256": "c000e48d92ed94c66e85ad1199095534046c0127b6f007883aae0d375e0f1d00",
+      "required": true
+    },
+    {
+      "path": "reproduce/source/hitlist/data/evidence_revisions/nontryptic_calibration.json",
+      "size_bytes": 12784,
+      "sha256": "997c998ce7963aaea144678e5919c32595b1c594bf992d924938a06c24aab53b",
+      "required": true
+    },
+    {
+      "path": "reproduce/source/hitlist/evidence_bindings.py",
+      "size_bytes": 55236,
+      "sha256": "941a06db007edfcbbf77b547afb4da0b2f0c6346d6f931ac7ea111467e789127",
+      "required": true
+    },
+    {
+      "path": "reproduce/source/hitlist/evidence_catalog.py",
+      "size_bytes": 206604,
+      "sha256": "614a715fc67682ff1a5797082c7724ed434e8efdf1f0effd6bafff7f3eec7e83",
+      "required": true
+    },
+    {
+      "path": "reproduce/source/hitlist/evidence_package.py",
+      "size_bytes": 5216,
+      "sha256": "8c63bcbd48923dd270251861d2993700e32772dc58e535b19efb690ea2584372",
+      "required": true
+    },
+    {
+      "path": "reproduce/source/hitlist/evidence_snapshot.py",
+      "size_bytes": 1974,
+      "sha256": "2945129a0f48375e90082066ce8336ebfff2d55d2809d91f7cde751fb585e71c",
+      "required": true
+    },
+    {
+      "path": "reproduce/source/hitlist/evidence_store.py",
+      "size_bytes": 35487,
+      "sha256": "680fa41a7a963bb7eba2424c10a15083fcb6d3271fcf8692a79afa8cc4a1c864",
+      "required": true
+    },
+    {
+      "path": "reproduce/source/hitlist/material_context.py",
+      "size_bytes": 4730,
+      "sha256": "2094cf6cd633fa57ac145ba88dc65b45c867c2af03b296445a343348ecaf88f3",
+      "required": true
+    },
+    {
+      "path": "reproduce/source/hitlist/nontryptic_calibration.py",
+      "size_bytes": 6776,
+      "sha256": "d83caec9227eadd5ca5355a12bf21c4c63f7c01f052ac83a79d3eb76bf0a7e86",
+      "required": true
+    },
+    {
+      "path": "reproduce/source/hitlist/nontryptic_calibration_compiler.py",
+      "size_bytes": 36223,
+      "sha256": "d023f7286d1e9c9cead9a2922e6a7066df3aef59a7ea0e88879f98f7608b83b0",
+      "required": true
+    },
+    {
+      "path": "reproduce/source/hitlist/nontryptic_calibration_schema.py",
+      "size_bytes": 12753,
+      "sha256": "53ea2fa9bb8ed2dc3450bcd58300ad79e26255809783d048ac651e1b97e67046",
+      "required": true
+    },
+    {
+      "path": "reproduce/source/hitlist/nontryptic_workbooks.py",
+      "size_bytes": 8390,
+      "sha256": "d6665fad51361f2c08dbaf08c259d91ff464a0d56937bd35b9c18f50675c39f8",
+      "required": true
+    },
+    {
+      "path": "reproduce/source/hitlist/version.py",
+      "size_bytes": 23,
+      "sha256": "eb89350b117a0701f3c546d4e481dab3e55ef24496e604b7f4b6dcf0fdcd9ae9",
+      "required": true
+    },
+    {
+      "path": "reproduce/source/inspect.py",
+      "size_bytes": 1481,
+      "sha256": "840f712d34fd6d22b4c6985a26a3d0eea595e294961993fad1d6c2b84a22d3b8",
+      "required": true
+    },
+    {
+      "path": "reproduce/source/launch.py",
+      "size_bytes": 7676,
+      "sha256": "337b0957f12bced683299134c33465d6b26145fbaa4d9bc1e233832b437a9e27",
+      "required": true
+    },
+    {
+      "path": "reproduce/source/launch_v2.py",
+      "size_bytes": 7689,
+      "sha256": "095b6974d4d6ee9c5845a583d02e06a6f25d4a51da896422b5761a8dbbc6c3b0",
+      "required": true
+    },
+    {
+      "path": "reproduce/source/verify.py",
+      "size_bytes": 9533,
+      "sha256": "15c4ef5170e5079c8019ada0a21f0a44b4558387db15f458afa92a1b962a92df",
+      "required": true
+    },
+    {
+      "path": "reproduce/source/verify_v2.py",
+      "size_bytes": 10483,
+      "sha256": "8ffd15dc71a4fcba606aaf86f800303b68352e6462e61201d151816d100ec667",
+      "required": true
+    },
+    {
+      "path": "reproduce/source-attempt2/hitlist/__init__.py",
+      "size_bytes": 9297,
+      "sha256": "c000e48d92ed94c66e85ad1199095534046c0127b6f007883aae0d375e0f1d00",
+      "required": true
+    },
+    {
+      "path": "reproduce/source-attempt2/hitlist/data/evidence_revisions/nontryptic_calibration.json",
+      "size_bytes": 12784,
+      "sha256": "997c998ce7963aaea144678e5919c32595b1c594bf992d924938a06c24aab53b",
+      "required": true
+    },
+    {
+      "path": "reproduce/source-attempt2/hitlist/evidence_bindings.py",
+      "size_bytes": 55236,
+      "sha256": "941a06db007edfcbbf77b547afb4da0b2f0c6346d6f931ac7ea111467e789127",
+      "required": true
+    },
+    {
+      "path": "reproduce/source-attempt2/hitlist/evidence_catalog.py",
+      "size_bytes": 206604,
+      "sha256": "614a715fc67682ff1a5797082c7724ed434e8efdf1f0effd6bafff7f3eec7e83",
+      "required": true
+    },
+    {
+      "path": "reproduce/source-attempt2/hitlist/evidence_package.py",
+      "size_bytes": 5216,
+      "sha256": "8c63bcbd48923dd270251861d2993700e32772dc58e535b19efb690ea2584372",
+      "required": true
+    },
+    {
+      "path": "reproduce/source-attempt2/hitlist/evidence_snapshot.py",
+      "size_bytes": 1974,
+      "sha256": "2945129a0f48375e90082066ce8336ebfff2d55d2809d91f7cde751fb585e71c",
+      "required": true
+    },
+    {
+      "path": "reproduce/source-attempt2/hitlist/evidence_store.py",
+      "size_bytes": 35487,
+      "sha256": "680fa41a7a963bb7eba2424c10a15083fcb6d3271fcf8692a79afa8cc4a1c864",
+      "required": true
+    },
+    {
+      "path": "reproduce/source-attempt2/hitlist/material_context.py",
+      "size_bytes": 4730,
+      "sha256": "2094cf6cd633fa57ac145ba88dc65b45c867c2af03b296445a343348ecaf88f3",
+      "required": true
+    },
+    {
+      "path": "reproduce/source-attempt2/hitlist/nontryptic_calibration.py",
+      "size_bytes": 6776,
+      "sha256": "d83caec9227eadd5ca5355a12bf21c4c63f7c01f052ac83a79d3eb76bf0a7e86",
+      "required": true
+    },
+    {
+      "path": "reproduce/source-attempt2/hitlist/nontryptic_calibration_compiler.py",
+      "size_bytes": 36655,
+      "sha256": "e2b6716208bdc7b0988350417f338bcb71911645edb7d21b8d3c53c83fafa2b1",
+      "required": true
+    },
+    {
+      "path": "reproduce/source-attempt2/hitlist/nontryptic_calibration_schema.py",
+      "size_bytes": 13252,
+      "sha256": "2924d4da777ee7d96a771dac733ffef7f8c0919f6e7837a6317d1a8286698fa0",
+      "required": true
+    },
+    {
+      "path": "reproduce/source-attempt2/hitlist/nontryptic_workbooks.py",
+      "size_bytes": 8390,
+      "sha256": "d6665fad51361f2c08dbaf08c259d91ff464a0d56937bd35b9c18f50675c39f8",
+      "required": true
+    },
+    {
+      "path": "reproduce/source-attempt2/hitlist/version.py",
+      "size_bytes": 23,
+      "sha256": "eb89350b117a0701f3c546d4e481dab3e55ef24496e604b7f4b6dcf0fdcd9ae9",
+      "required": true
+    },
+    {
+      "path": "reproduce/verify-attempt1-launch.json",
+      "size_bytes": 12454,
+      "sha256": "bcc2db41bd6872114a86470d06e39095a59886678e850579eef86b3ed9984590",
+      "required": true
+    },
+    {
+      "path": "reproduce/verify_v2-attempt1-launch.json",
+      "size_bytes": 13413,
+      "sha256": "3c657827d70160f11d4780442d37c3802d4eb05002d4e7174d9a28bd017f76d3",
+      "required": true
+    },
+    {
+      "path": "results/inspect-attempt1-process.json",
+      "size_bytes": 2236,
+      "sha256": "006d6aa9d5dda80fcc089b516574f064e6ac7e9ef26c40fbd305ed031abd273a",
+      "required": true
+    },
+    {
+      "path": "results/inspect-attempt1-runtime.json",
+      "size_bytes": 2665,
+      "sha256": "97ec75e7c1b9a1bf6246cc2b3a559067420b251dbe5677fdbe2d7ff1b0f939e9",
+      "required": true
+    },
+    {
+      "path": "results/package-manifest.json",
+      "size_bytes": 6890,
+      "sha256": "ee304b6e9976135316e931cdcda4fd007d8f1e76c8a968c5253e2298e57ed876",
+      "required": true
+    },
+    {
+      "path": "results/panel-length-diagnosis.json",
+      "size_bytes": 4963,
+      "sha256": "95d0e8178a2faa930ec1d985082f576965922bd4ff60236a4c8a98c2933b2f95",
+      "required": true
+    },
+    {
+      "path": "results/software/nontryptic-compiler-format-attempt1.log",
+      "size_bytes": 90,
+      "sha256": "cad982426af44ceb95567bea3c79c12e1f07db41bb68cb007a1db11bc03d9c2e",
+      "required": true
+    },
+    {
+      "path": "results/software/nontryptic-compiler-format-attempt2.log",
+      "size_bytes": 69,
+      "sha256": "7974ebdf0f6f9360eda3b9511638aef41c42cfb1a75a909b67abc4d21c11c703",
+      "required": true
+    },
+    {
+      "path": "results/software/nontryptic-compiler-lint-attempt1.log",
+      "size_bytes": 458,
+      "sha256": "5500e222a1939b98096e82f438d15ad0e8e4a26b3501265ab51dc5bcb584577b",
+      "required": true
+    },
+    {
+      "path": "results/software/nontryptic-compiler-lint-attempt2.log",
+      "size_bytes": 117,
+      "sha256": "3fe1b694dd477e14404c72cee4a8d47b7c585f40af72300fcb0d0d9189a5e109",
+      "required": true
+    },
+    {
+      "path": "results/software/nontryptic-compiler-test-attempt1.log",
+      "size_bytes": 1272,
+      "sha256": "22e96d7f1e92bfde0bef0c51a8444dbdd5ad8eb755865d750d68e6487b5da9be",
+      "required": true
+    },
+    {
+      "path": "results/software/nontryptic-compiler-test-attempt2.log",
+      "size_bytes": 24446,
+      "sha256": "cfc27e728fd0d64ea292a6d36a003349343ef1fefcf5229e0f479bd39e2f015d",
+      "required": true
+    },
+    {
+      "path": "results/software/nontryptic-package-format-attempt1.log",
+      "size_bytes": 90,
+      "sha256": "3773d61761df7db65cd5299f33eeed6df3859e709a5ed62e69f78bfc1b36af9a",
+      "required": true
+    },
+    {
+      "path": "results/software/nontryptic-package-format-attempt2.log",
+      "size_bytes": 69,
+      "sha256": "e493e3fa74b616b03f63fbcd65184895d307bd5dd2f15938b75514595698c696",
+      "required": true
+    },
+    {
+      "path": "results/software/nontryptic-package-format-attempt3.log",
+      "size_bytes": 69,
+      "sha256": "e493e3fa74b616b03f63fbcd65184895d307bd5dd2f15938b75514595698c696",
+      "required": true
+    },
+    {
+      "path": "results/software/nontryptic-package-full-test-attempt1.log",
+      "size_bytes": 35275,
+      "sha256": "94748323a272dfd718ba09c9d34bf3cae6be819d1bf7ddd4e4c4b6893a6600fd",
+      "required": true
+    },
+    {
+      "path": "results/software/nontryptic-package-full-test-attempt2.log",
+      "size_bytes": 35265,
+      "sha256": "a47030e3e1ccb372944f1128655957a82fe899f9d58a4829b19290ce58b1b2a2",
+      "required": true
+    },
+    {
+      "path": "results/software/nontryptic-package-lint-attempt1.log",
+      "size_bytes": 1088,
+      "sha256": "46d3cc0b58ebb0103284c943cb88e33a8a5f36de60e817ece7828cad3bb2b3a9",
+      "required": true
+    },
+    {
+      "path": "results/software/nontryptic-package-lint-attempt2.log",
+      "size_bytes": 117,
+      "sha256": "636fc4233ff8b08a240e2eb23826121778b00dc8428be33024e3842f8b79aaac",
+      "required": true
+    },
+    {
+      "path": "results/software/nontryptic-package-lint-attempt3.log",
+      "size_bytes": 117,
+      "sha256": "636fc4233ff8b08a240e2eb23826121778b00dc8428be33024e3842f8b79aaac",
+      "required": true
+    },
+    {
+      "path": "results/software/nontryptic-package-test-attempt1.log",
+      "size_bytes": 25139,
+      "sha256": "13ace12c24761cdce7a0f80a62ab797cc576e93a9b297ec20b5748c7526902f8",
+      "required": true
+    },
+    {
+      "path": "results/software/nontryptic-package-test-attempt3.log",
+      "size_bytes": 24609,
+      "sha256": "eac3f5ed3c8bcb635e46beb5944a7b3da72e5340b0e039c9bb5bd363e0ddadc1",
+      "required": true
+    },
+    {
+      "path": "results/software-verification.json",
+      "size_bytes": 571,
+      "sha256": "4b921cb020590e78d71ef06b479c582a635ccf31559c8bd48346111379ab02a7",
+      "required": true
+    },
+    {
+      "path": "results/source-package-verification-v2.json",
+      "size_bytes": 2048,
+      "sha256": "46f23fe8c228690b7ab692dcd5fef39f7e7af084a05b6dfe948ce12b7ae9ff54",
+      "required": true
+    },
+    {
+      "path": "results/verify-attempt1-process.json",
+      "size_bytes": 11399,
+      "sha256": "68c8366f4345742476b8902b9345450c653b6fc48c400a496d6e59ddc63f6123",
+      "required": true
+    },
+    {
+      "path": "results/verify-attempt1-runtime.json",
+      "size_bytes": 12142,
+      "sha256": "bcfb145a8ce31952a05ee8eb7f9f36ab74d3202518d9c283995cb7b65ae37367",
+      "required": true
+    },
+    {
+      "path": "results/verify_v2-attempt1-process.json",
+      "size_bytes": 12324,
+      "sha256": "383ef8cb2a5e4b9e219a39a0e6e3ef75ad2e5e8bd858ee3570a5772a0b08925b",
+      "required": true
+    },
+    {
+      "path": "results/verify_v2-attempt1-runtime.json",
+      "size_bytes": 13099,
+      "sha256": "4b121458ff051b3d896f552d95ba765df19bfcd8ea5102d9d47cfdc45d970d86",
+      "required": true
+    }
+  ],
+  "raw_package_directory": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/nontryptic_calibration_package/2026-10-26_0236_codex_nontryptic-source-package/attempt2",
+  "raw_package_manifest_sha256": "ee304b6e9976135316e931cdcda4fd007d8f1e76c8a968c5253e2298e57ed876",
+  "model_fits": 0,
+  "full_availability_goal_complete": false,
+  "excluded_artifacts": [
+    "__pycache__/",
+    "*.pyc",
+    "manifest.json (this inventory)"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "presto_head": "155f719b85130367bff37f7d514c60dcb3a66502",
+  "presto_pr": "https://github.com/pirl-unc/presto/pull/131",
+  "report": "https://github.com/pirl-unc/presto/blob/155f719b85130367bff37f7d514c60dcb3a66502/experiments/2026-10-25_1857_codex_nontryptic-transition-lineage/README.md",
+  "issue_comment": "https://github.com/pirl-unc/hitlist/issues/849#issuecomment-6406629463",
+  "issue_body_verified": true,
+  "presto_pr_body_verified": true,
+  "hitlist_pr_body_verified": true,
+  "verified_committed_manifest_entries": 63,
+  "preserved_unrelated_task_diff": {
+    "additions": 346,
+    "deletions": 4
+  },
+  "goal_turn_classification": "progress: source mapping audit completed; all54forms and684groups replayed; concrete observation and acquisition gaps published",
+  "latest_stage": {
+    "stage": "mapping_audit",
+    "attempt": 2,
+    "status": "passed",
+    "seconds": 1.1893135419813916,
+    "peak_rss_bytes": 103596032
+  },
+  "live_ci_handles": [
+    {
+      "id": 40257370317,
+      "status": "in_progress",
+      "event": "pull_request"
+    },
+    {
+      "id": 40257359409,
+      "status": "in_progress",
+      "event": "push"
+    }
+  ],
+  "next_actions": [
+    "Poll exact-head CI handles; do not relaunch on transient observation timeout",
+    "Implement the typed source package in Hitlist using the updated local nontryptic_calibration_spec.md",
+    "Register a peptide-grouped empirical-response test after shared source and recipe validation; no old biological held-outs"
+  ],
+  "scientific_source_code_frozen": true,
+  "hitlist_worktree": "/Users/iskander/code/presto/.worktrees/hitlist-nontryptic-calibration",
+  "hitlist_local_changes": "tasks/nontryptic_calibration_spec.md now records qualified source schema and unresolved aggregation/acquisition boundaries; uncommitted",
+  "full_goal_complete": false,
+  "model_fits_this_turn": 0,
+  "original_resource_guards_unchanged": true,
+  "source_only_resource_amendment_approved": false,
+  "public_pypi_upload_approved": false
+}

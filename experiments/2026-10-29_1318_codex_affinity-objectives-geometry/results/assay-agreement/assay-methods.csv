@@ -1,0 +1,36 @@
+assay_method,endpoint,mhc_class,n,qualifier,response_measured,unit
+purified MHC/direct/fluorescence,ec50,I,115,=,half maximal effective concentration (EC50),nM
+purified MHC/direct/fluorescence,ec50,II,84,=,half maximal effective concentration (EC50),nM
+purified MHC/direct/fluorescence,ec50,II,13,>,half maximal effective concentration (EC50),nM
+purified MHC/competitive/fluorescence,ic50,I,3617,=,half maximal inhibitory concentration (IC50),nM
+purified MHC/competitive/fluorescence,ic50,I,562,>,half maximal inhibitory concentration (IC50),nM
+purified MHC/competitive/fluorescence,ic50,I,175,>=,half maximal inhibitory concentration (IC50),nM
+purified MHC/competitive/radioactivity,ic50,I,13855,=,half maximal inhibitory concentration (IC50),nM
+purified MHC/competitive/radioactivity,ic50,I,322,>,half maximal inhibitory concentration (IC50),nM
+purified MHC/competitive/fluorescence,ic50,II,4710,=,half maximal inhibitory concentration (IC50),nM
+purified MHC/competitive/fluorescence,ic50,II,1227,>,half maximal inhibitory concentration (IC50),nM
+purified MHC/competitive/fluorescence,ic50,II,3,>=,half maximal inhibitory concentration (IC50),nM
+purified MHC/competitive/radioactivity,ic50,II,27550,=,half maximal inhibitory concentration (IC50),nM
+purified MHC/competitive/radioactivity,ic50,II,2708,>,half maximal inhibitory concentration (IC50),nM
+purified MHC/competitive/radioactivity,ic50,II,7,>=,half maximal inhibitory concentration (IC50),nM
+purified MHC/competitive/fluorescence,kd,I,4293,=,dissociation constant KD,nM
+purified MHC/competitive/fluorescence,kd,I,12056,>,dissociation constant KD,nM
+purified MHC/competitive/fluorescence,kd,II,14,=,dissociation constant KD,nM
+purified MHC/competitive/fluorescence,kd,II,4,>,dissociation constant KD,nM
+purified MHC/competitive/radioactivity,kd,II,1238,=,dissociation constant KD,nM
+purified MHC/competitive/radioactivity,kd,II,226,>,dissociation constant KD,nM
+purified MHC/direct/radioactivity,kd,II,1,=,dissociation constant KD,nM
+purified MHC/direct/fluorescence,kd_via_ec50,I,10632,=,dissociation constant KD (~EC50),nM
+purified MHC/direct/fluorescence,kd_via_ec50,I,25710,>,dissociation constant KD (~EC50),nM
+purified MHC/direct/fluorescence,kd_via_ec50,II,2157,=,dissociation constant KD (~EC50),nM
+purified MHC/direct/fluorescence,kd_via_ec50,II,433,>,dissociation constant KD (~EC50),nM
+purified MHC/competitive/fluorescence,kd_via_ic50,I,266,=,dissociation constant KD (~IC50),nM
+purified MHC/competitive/fluorescence,kd_via_ic50,I,77,>,dissociation constant KD (~IC50),nM
+purified MHC/competitive/radioactivity,kd_via_ic50,I,48586,=,dissociation constant KD (~IC50),nM
+purified MHC/competitive/radioactivity,kd_via_ic50,I,2506,>,dissociation constant KD (~IC50),nM
+purified MHC/competitive/radioactivity,kd_via_ic50,I,2,>=,dissociation constant KD (~IC50),nM
+purified MHC/competitive/fluorescence,kd_via_ic50,II,688,=,dissociation constant KD (~IC50),nM
+purified MHC/competitive/fluorescence,kd_via_ic50,II,145,>,dissociation constant KD (~IC50),nM
+purified MHC/competitive/radioactivity,kd_via_ic50,II,18427,=,dissociation constant KD (~IC50),nM
+purified MHC/competitive/radioactivity,kd_via_ic50,II,2226,>,dissociation constant KD (~IC50),nM
+purified MHC/competitive/radioactivity,kd_via_ic50,II,2,>=,dissociation constant KD (~IC50),nM

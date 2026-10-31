@@ -1,0 +1,34 @@
+{
+  "status": "passed",
+  "agent_model": "Codex / GPT-6",
+  "utc": "2026-10-26T19:10:09.069910+00:00",
+  "script_sha256": "6a697aced6ff429e5242928d14ad80fac4df8814c4beb4a633f40b7758edf800",
+  "source_rows_verified": 4071463,
+  "class_ii_ms_dispositions_verified": 1339673,
+  "positive_observations_verified": 98220,
+  "distinct_peptides": 56853,
+  "retained_contributor_links_verified": 196304,
+  "molecular_subtypes": {
+    "DQ": 28508,
+    "DR": 5982,
+    "DP": 63730
+  },
+  "context_factor_support": [
+    {
+      "family": "interventions",
+      "name": "transduction:CIITA",
+      "state": "absent",
+      "rows": 208
+    },
+    {
+      "family": "interventions",
+      "name": "transduction:CIITA",
+      "state": "present",
+      "rows": 4612
+    }
+  ],
+  "source_profile_replay": "all groups and categorical values match",
+  "elapsed_seconds": 132.117962332999,
+  "peak_rss_bytes": 668254208,
+  "predictive_qualification": false
+}

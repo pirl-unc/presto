@@ -1,0 +1,58 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "registered_at": "2026-10-24T02:59:24.620432-04:00",
+  "presto_commit": "593e3b5c2bc08ff9242b363145096f2ba6234e95",
+  "presto_dirty": " M tasks/todo.md\n",
+  "hitlist_checkout": "/private/tmp/hitlist-native-fix",
+  "hitlist_head": "ddc658186f1d16885e42637ec7b0086c357e17d0",
+  "hitlist_merge_head": "7649ffe9d9a3df0cfc3ba4fe1231a853a21d6acf",
+  "hitlist_source_sha256": {
+    "docs/evidence-store.md": "fc0a91ef5e887f21e58ac3cab55d098e5f27d14d2fafac532d9ff0b83463aed3",
+    "hitlist/distribution_recipe.py": "1c851eef5468887a73a9f36a23dabb8970d186a1fdcf9b7ab1e6d08e84bebd9d",
+    "hitlist/evidence_catalog.py": "976b0e7a9257b3d18910cfa76b555f4e19d73ccc317ecd7dd21646516e36be63",
+    "hitlist/evidence_package.py": "e96c6e7cc6fd4186c803d0bb4c76a916bb8069bfc17f6ae383f2455e4ec23b6e",
+    "hitlist/evidence_recipe.py": "7bbbaa44e5d3f8fd01a34e4b14d7ba17729da551523e26752ea30ebc13d81ce9",
+    "hitlist/tmab_peptidomics.py": "fcf18c3fbe18a86273f164b94b3ae660ed5bc839f575deb207ea891bd866f194",
+    "hitlist/tmab_response_recipe.py": "ae11e895a1ba50bda34bacecc6cabd2e2eaafade70ef25466563947ed1a97149",
+    "hitlist/version.py": "4cdc83806fb33f8ce6cfffd0e16f812945426ecf26fd79117bd359759126e402",
+    "tasks/tmab-native-response-recipe-791.md": "99f6f2c3bc8471c4a54ecab7b94a8653b3fd7304ff4035be68f506c9db044809",
+    "tasks/tmab-provenance-corrections-792.md": "fd60be288f742c06f89c5d5555e2a799f34f839b0cf0ac4ffa2f9d2bf7c7b6be",
+    "tasks/tmab-upstream-reconciliation.md": "08dbe0264a5cbe1192d9ec95cd88458ecc4a058162ea4d3e407d3c3f5c09e1a7",
+    "tasks/todo.md": "568fe4264c68ca3db1c8c21479ee26a0268f968f95295cf4ccbaef2eb59cb742",
+    "tests/test_binding_context_availability.py": "917598bfcfaa2c91cd0e171dcbbf962164a3b3cd982a3b970f68c4903f796dc0",
+    "tests/test_evidence_catalog.py": "78b511299ffb3efc11bad97959e57e255693eb868bbd97404a1eee185905a64c",
+    "tests/test_gomez_prediction_panel.py": "aec9a85528da381e3e4c76907c4528b0922f9df6e88bf0ec3ea10c2790d08e80",
+    "tests/test_tmab_peptidomics.py": "8f280d4e9b89fb183841880ce6ed65ab800179a6da46c3a7390606c881dc1cf0",
+    "tests/test_tmab_response_recipe.py": "bea8ce9c65a50efb03aabbda8f79707361f216cc1e033fd5b3db76eca1f88efc",
+    "tests/test_tmab_semantics.py": "06b2eabafa8c15114877f2145b363308a482c870d9507543db55dabd86753ba7"
+  },
+  "input_directory": "/private/tmp/presto-modular-model/data/native_peptidome_source_audit/2026-10-24_0117_codex_native-peptidome-admission/canonical-inputs",
+  "old_package": "/private/tmp/presto-modular-model/data/native_peptidome_source_audit/2026-10-24_0117_codex_native-peptidome-admission/hitlist-f4d3a6d-package",
+  "old_manifest_sha256": "b15de0b80c9fff1aad5b60f66e4e5b083c7f585ea01e723209a482182e26c32b",
+  "old_independent_audit": "/private/tmp/presto-modular-model/experiments/2026-10-24_0117_codex_native-peptidome-admission",
+  "source_package": "/private/tmp/presto-modular-model/data/native_peptidome_recipes/2026-10-24_0259_codex_native-response-admission/source-package",
+  "recipe_directory": "/private/tmp/presto-modular-model/data/native_peptidome_recipes/2026-10-24_0259_codex_native-response-admission/response-recipe",
+  "recipe": {
+    "schema_version": 1,
+    "name": "native-response-admission",
+    "registered_recipe": "tmab_native_response_v1",
+    "reference": {
+      "path": "/private/tmp/hitlist-v2-mapp-reference-second/external/pxd009092/assets/references/human-reviewed-2026_03-isoforms.fasta",
+      "sha256": "8c4459cc1e190caad54150511e5a0b5779863557f88387e5a86647a48d19a9d4",
+      "source_url": "https://rest.uniprot.org/uniprotkb/stream?query=%28organism_id%3A9606%29%20AND%20%28reviewed%3Atrue%29&format=fasta&includeIsoform=true",
+      "generation_label": "UniProt_2026_03_reviewed_human_isoform_inclusive",
+      "license": "CC BY 4.0",
+      "role": "model_reference_not_original_search"
+    }
+  },
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "seconds_cap": 600,
+  "rss_bytes_cap": 4294967296,
+  "training": "none: canonical source and recipe admission",
+  "predictive_evaluation": "none: preserve prospective split assignment; no model or predictive metrics"
+}

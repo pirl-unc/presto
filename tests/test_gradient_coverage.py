@@ -32,8 +32,8 @@ from presto.data.loaders import (  # noqa: E402
     TCellRecord,
     TcrEvidenceRecord,
 )
-from presto.models.presto import Presto  # noqa: E402
-from presto.scripts.train_synthetic import compute_loss  # noqa: E402
+from presto.legacy.presto import Presto  # noqa: E402
+from presto.legacy.scripts.train_synthetic import compute_loss  # noqa: E402
 
 CLASS1_SEQ = "GSHSMRYFYTAMSRPGRGEPRFIAVGYVDDTQFVRFDSDAASPR"
 CLASS2_SEQ = "RATPENYLFQGRQECYAFNGTQRFLERYIYNREEFARFDSDVGEFRAVTELGRPAAEYWNSQKDIL"
@@ -546,7 +546,7 @@ class TestEveryTaskIsSupervised:
     """
 
     def test_every_spec_receives_supervision(self):
-        from presto.scripts.train_synthetic import LOSS_TASK_SPECS, compute_loss
+        from presto.legacy.scripts.train_synthetic import LOSS_TASK_SPECS, compute_loss
 
         torch.manual_seed(0)
         model = Presto(d_model=32, n_layers=2, n_heads=4)
@@ -581,7 +581,7 @@ class TestEveryTaskIsSupervised:
 
     def test_the_panel_losses_are_supervised_too(self):
         """They sit outside LOSS_TASK_SPECS, so the check above misses them."""
-        from presto.scripts.train_synthetic import compute_loss
+        from presto.legacy.scripts.train_synthetic import compute_loss
 
         torch.manual_seed(0)
         model = Presto(d_model=32, n_layers=2, n_heads=4)

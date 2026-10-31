@@ -1,0 +1,197 @@
+{
+  "files": {
+    ".gitignore": {
+      "sha256": "46ba70e54dad7855c0ed2b56eeea8ce50fdbf9486ae409972346cbc850b355a3",
+      "size_bytes": 17
+    },
+    "README.md": {
+      "sha256": "03541414bab9c91e5b13c664a662668fe15dd9c49119981bd0021bc6d91a5bd3",
+      "size_bytes": 10024
+    },
+    "code/audit.py": {
+      "sha256": "7e843f3ad40ce11594af5edef39cccea54f50ac1f3faac9eb4311ae8fca62e65",
+      "size_bytes": 12612
+    },
+    "code/build.py": {
+      "sha256": "89efc29d2585e114268131ad1e6be679a5e806084976b7bffad89d7e38b82f6a",
+      "size_bytes": 3551
+    },
+    "code/candidates.py": {
+      "sha256": "23894b9c2cd9738aebc728e3dff8ada765156d16a334eb1d01469ba88ef2e46a",
+      "size_bytes": 7219
+    },
+    "launch_logs/build.log.gz": {
+      "sha256": "6ff222d96b7c6881e4341afd519b0cab9cc28813700de60cd4f2458b4bb57c02",
+      "size_bytes": 161
+    },
+    "launch_logs/candidate-admission.log.gz": {
+      "sha256": "d5dfd3f431cfcaa164c597919f581102e48d1af6d8aa1a30819385cdb94c4a49",
+      "size_bytes": 606
+    },
+    "launch_logs/hitlist-test-final.log.gz": {
+      "sha256": "72da0da4dbb1510ac870aac0f603190d83a3458bb9bdd34420a2d5974e7c52ec",
+      "size_bytes": 8981
+    },
+    "launch_logs/hitlist-test-host.log.gz": {
+      "sha256": "730585135f6dec638f327609e1fbf057201809ed74050a6670e46019929c70e5",
+      "size_bytes": 9537
+    },
+    "launch_logs/hitlist-test-restored-path.log.gz": {
+      "sha256": "0a91da87fbd3eb2a4e528f50519343443788dd1655a50c50bb197680325eedb1",
+      "size_bytes": 176
+    },
+    "launch_logs/hitlist-test.log.gz": {
+      "sha256": "0a91da87fbd3eb2a4e528f50519343443788dd1655a50c50bb197680325eedb1",
+      "size_bytes": 176
+    },
+    "launch_logs/independent-source-replay.log.gz": {
+      "sha256": "4c86c0688fbd5f921aa78bf0409d3e0c6ba0b91715f1872050a586210de4130b",
+      "size_bytes": 844
+    },
+    "reproduce/audit.sh": {
+      "sha256": "c70102a7ef629e42061657387f811eb0b3da3d3c70c5893e7a0efecb2b0cba22",
+      "size_bytes": 312
+    },
+    "reproduce/candidate-source/hitlist/distribution_recipe.py": {
+      "sha256": "b2ce1283b9eebfd2eb7c122c0bea039f691caa76fe0db0a3200be8fd3c7e067c",
+      "size_bytes": 14527
+    },
+    "reproduce/candidate-source/hitlist/evidence_recipe.py": {
+      "sha256": "41b13c54fe6ca776fb9c596fda7254fe5e67cf669dcef95c3723e6ef31448398",
+      "size_bytes": 37738
+    },
+    "reproduce/candidate-source/hitlist/goldberg_candidates.py": {
+      "sha256": "a281a145bb5ab4b1b52bec449e0701a0187e0bc47b2ee37ae585c5d44495cb69",
+      "size_bytes": 14144
+    },
+    "reproduce/candidate-source/metadata.json": {
+      "sha256": "5bd20cb6bb31a2d8f350e9bf1b0546861c98dfff0eceb7bf95c172cdd7265ccb",
+      "size_bytes": 662
+    },
+    "reproduce/candidate-source/tests/test_goldberg_mapp.py": {
+      "sha256": "f372f4a2c7f75d14d8ed140e296b64484dc0689366d7eabc200fd3482dac29ed",
+      "size_bytes": 14962
+    },
+    "reproduce/candidates.sh": {
+      "sha256": "a2be9268c2e8d0d6f8692f8bd519ba13998edc4b991907a753d63d8371249e97",
+      "size_bytes": 487
+    },
+    "reproduce/hitlist-final.diff.gz": {
+      "sha256": "21e70d352f33484a0bcc42e2ba919b3ea0ffc166fb8fae29db3538df3ec8aa51",
+      "size_bytes": 26031
+    },
+    "reproduce/hitlist-tracked.diff.gz": {
+      "sha256": "74df169a7eda1bdb8bd0dc5210abdea8465907fc2822b1f1e771d7202fce953f",
+      "size_bytes": 3083
+    },
+    "reproduce/launch.json": {
+      "sha256": "5b61c66ca38f006f3de992d95b0cc52947ed722e069bfe958493165c1291cec1",
+      "size_bytes": 2794
+    },
+    "reproduce/launch.sh": {
+      "sha256": "4486ad46dfe84c03f4304754958c5b324bf1f0c5fe00f7d1542e58ef005a03ce",
+      "size_bytes": 188
+    },
+    "reproduce/plan.md": {
+      "sha256": "087beccf15102e2b29eb97b3f71f452c1b72bf2aba15b61e3a956d890c4658aa",
+      "size_bytes": 5999
+    },
+    "reproduce/source/audit.py": {
+      "sha256": "7e843f3ad40ce11594af5edef39cccea54f50ac1f3faac9eb4311ae8fca62e65",
+      "size_bytes": 12612
+    },
+    "reproduce/source/build.py": {
+      "sha256": "304cdf2786a672df28375aa9dfd04f6442581a20f33fc81b7ea58b9430d17edb",
+      "size_bytes": 3266
+    },
+    "reproduce/source/candidates.py": {
+      "sha256": "23894b9c2cd9738aebc728e3dff8ada765156d16a334eb1d01469ba88ef2e46a",
+      "size_bytes": 7219
+    },
+    "reproduce/source/hitlist/data/evidence_revisions/goldberg_mapp.json": {
+      "sha256": "c7c140aa77d1557574df4e62f43f6662dc9e17a3657715806f33b6c37999dfa8",
+      "size_bytes": 4009
+    },
+    "reproduce/source/hitlist/evidence_bindings.py": {
+      "sha256": "e796f678c0447c0d52bea04f469d3f546a75fef497f5dfe96514bc267ebec422",
+      "size_bytes": 38621
+    },
+    "reproduce/source/hitlist/evidence_catalog.py": {
+      "sha256": "a07c3b42b66dc6e021ced062370788b4b862adf4674c247ff12f0026f56121cc",
+      "size_bytes": 189833
+    },
+    "reproduce/source/hitlist/evidence_package.py": {
+      "sha256": "0ab6bf03f7d00cbb3a1a3a224dfae2bb9c03a9e8853400425d0da5c4f9bea07b",
+      "size_bytes": 4314
+    },
+    "reproduce/source/hitlist/evidence_snapshot.py": {
+      "sha256": "2945129a0f48375e90082066ce8336ebfff2d55d2809d91f7cde751fb585e71c",
+      "size_bytes": 1974
+    },
+    "reproduce/source/hitlist/evidence_store.py": {
+      "sha256": "6b32b9019b541b93287e1902c77d577b7beb3a4696732b0d81e5f30238462ff8",
+      "size_bytes": 33271
+    },
+    "reproduce/source/hitlist/goldberg_mapp.py": {
+      "sha256": "b083f98c68cbd812e7558c360069cbf0bc44e153a06ea35173da070f92608b90",
+      "size_bytes": 31044
+    },
+    "reproduce/source/hitlist/goldberg_workbooks.py": {
+      "sha256": "cbd00641df3356f2c49ce10031a7e08277ed6ad01d04420b5da182a4d055dfe1",
+      "size_bytes": 10823
+    },
+    "reproduce/source/hitlist/mapp_evidence.py": {
+      "sha256": "fc52a0cdfab9f1498a0de2a3ae21dabfa5a35f1374304a23703b858f6a213045",
+      "size_bytes": 34271
+    },
+    "reproduce/source/hitlist/material_context.py": {
+      "sha256": "b3fd95e4815fd36c974605fff9e0b44cbfed30babceb1bbb687a5997fb0aa786",
+      "size_bytes": 4705
+    },
+    "reproduce/source/hitlist/provenance.py": {
+      "sha256": "55f36174cc24a9646cf3e747c7a38ce64896008c0fbc8fcc020e99675e12fa1c",
+      "size_bytes": 21055
+    },
+    "reproduce/source/hitlist/version.py": {
+      "sha256": "e9e932acec6d0ada519d364d7cf9daa1ed51a1701dc65b0aca777a0df8e412d8",
+      "size_bytes": 23
+    },
+    "reproduce/source/tests/test_goldberg_mapp.py": {
+      "sha256": "40cecd1a809b8b5e4aa40da72896e17858cab823dc707a79f65ec78956b9834a",
+      "size_bytes": 12874
+    },
+    "results/build-resource.json": {
+      "sha256": "487936b6cb75a84a7eba2bac72b8da88f57e1a5de0cedc7b1f4875736dd342d5",
+      "size_bytes": 428
+    },
+    "results/candidate-admission.json": {
+      "sha256": "0e6d862ab967f33cea1d7221db8b09498c19b6f1f67d6355d4e18cb3505402b3",
+      "size_bytes": 2210
+    },
+    "results/implementation-publication.json": {
+      "sha256": "fa94a9a31b30edf693102a0d69788d300569a34c1ead4dcf0f83bd90b2a51e0b",
+      "size_bytes": 317
+    },
+    "results/independent-source-replay.json": {
+      "sha256": "aba421b35cb562ee243799f094f319264eab2a7b8bbfc3891af1e7b31d08bfac",
+      "size_bytes": 2942
+    },
+    "results/log-archive-receipts.json": {
+      "sha256": "4acbae09a2e53d7675d580ecdacff7cab15e8cfeea5cd91b1ec65589ffe3a2eb",
+      "size_bytes": 2184
+    },
+    "results/package-manifest.json": {
+      "sha256": "cb1bbc22d03140aedff4b3d3a31df545712f36ce7709ec01e34abf7c76b7fc8f",
+      "size_bytes": 5444
+    },
+    "results/patch-archive-receipts.json": {
+      "sha256": "55284e61ef9222da5165bded8b69d4d13105a46847710cf263893c4543bda141",
+      "size_bytes": 490
+    },
+    "results/recipe-manifest.json": {
+      "sha256": "e99cfb216815f8ebb5c55d3890351962eca5a4bf54cf7ac1c3cf02fa5f16b701",
+      "size_bytes": 4535
+    }
+  },
+  "raw_logs_and_patches": "lossless gzip archives; literal .log and .diff files remain local"
+}

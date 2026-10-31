@@ -1,0 +1,55 @@
+{
+  "status": "pending_in_trainers",
+  "expected_scales": {
+    "ec50": {
+      "mean": 2.205902327397387,
+      "scale": 1.2217749646362066,
+      "exact_count": 199,
+      "floor": 0.001
+    },
+    "half_life": {
+      "mean": 1.469606931206776,
+      "scale": 1.2402569463054927,
+      "exact_count": 8720,
+      "floor": 0.001
+    },
+    "ic50": {
+      "mean": 2.8406464294881957,
+      "scale": 1.2450092784401297,
+      "exact_count": 49732,
+      "floor": 0.001
+    },
+    "kd": {
+      "mean": 2.1026252648121795,
+      "scale": 1.3067658400941011,
+      "exact_count": 5546,
+      "floor": 0.001
+    },
+    "kd_via_ec50": {
+      "mean": 2.2656107544938755,
+      "scale": 1.1617859546098435,
+      "exact_count": 12789,
+      "floor": 0.001
+    },
+    "kd_via_ic50": {
+      "mean": 2.7035132118164293,
+      "scale": 1.3770101866859144,
+      "exact_count": 67967,
+      "floor": 0.001
+    },
+    "koff": {
+      "mean": -4.362379195457084,
+      "scale": 1.1852063683573564,
+      "exact_count": 8,
+      "floor": 0.001
+    },
+    "td50": {
+      "mean": 56.43594017094015,
+      "scale": 10.572835686700087,
+      "exact_count": 468,
+      "floor": 0.001
+    }
+  },
+  "original_full_preflight_sha256": "a488f83dc479b51403ba21081a4bf3c17c0d3ce1b0fc663b2a0367f8511fb846",
+  "explanation": "CPU verified the 20-row delta and recomputed TRAIN scales/quotas. Each fit still executes full canonical preflight before any optimizer update."
+}

@@ -1,0 +1,44 @@
+{
+  "stage": "audit",
+  "attempt": 1,
+  "started_utc": "2026-10-25T14:33:02.153638+00:00",
+  "status": "passed",
+  "child_launched": true,
+  "exit_code": 0,
+  "resource_violation": null,
+  "memory_admission": {
+    "metric": "macos_free_plus_speculative",
+    "bytes": 9550495744
+  },
+  "disk_free_before_bytes": 19686232064,
+  "environment": {
+    "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "versions": {
+      "numpy": "2.5.4",
+      "scipy": "1.18.1",
+      "pyarrow": "26.0.0",
+      "psutil": "7.2.2"
+    },
+    "overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUNBUFFERED": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    }
+  },
+  "child_pid": 93936,
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "-B",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1423_codex_dilution-dose-diagnostic/code/audit.py"
+  ],
+  "elapsed_seconds": 1.0877280000131577,
+  "peak_observed_process_tree_rss_bytes": 1944174592,
+  "peak_child_process_rss_bytes": 1944354816,
+  "rss_poll_interval_seconds": 0.05,
+  "disk_free_after_bytes": 19686047744
+}

@@ -1,0 +1,176 @@
+# Metadata for each line-expression (RNA-seq / transcript-TPM) source used
+# by hitlist.line_expression.
+#
+# Purpose: callers joining per-peptide observations with per-sample expression
+# need to know which backend contributes each line's TPM, how the numbers
+# were normalized, at what granularity (gene vs transcript), and which
+# biological species. This metadata is denormalized onto every row of
+# ``line_expression.parquet`` so downstream tooling can reason about
+# cross-source comparability (e.g. "DepMap log2(TPM+1) is not the same scale
+# as ENCODE raw TPM").
+#
+# Field reference
+# ---------------
+#   source_id        stable key joined against line_expression_anchors.yaml
+#                    `source_ids` lists and against the parquet's `source_id`
+#                    column.
+#   pmid             primary citation (null for consortium resources).
+#   reference        free-text citation string, typically "PMID:<n>" or
+#                    "ENCODE:<accession>".
+#   study_label      display label.
+#   backend          matches `expression_backend` in the anchors YAML:
+#                    depmap_rna | packaged_rnaseq | encode_rnaseq
+#   granularity      gene | transcript | gene_and_transcript
+#   normalization    log2_tpm_plus_1 | tpm | fpkm
+#   quantifier       quantification method, e.g. rsem | kallisto | weighted_read_counts
+#   species          canonical species ("Homo sapiens (human)").
+#   build_status     packaged | downloadable | placeholder
+#                    - packaged: shipped inside the repo (CSV under
+#                      hitlist/data/line_expression/)
+#                    - downloadable: registered in downloads.py, user fetches
+#                    - placeholder: cited but no data ships yet; the builder
+#                      treats it as empty (lines listing this source_id fall
+#                      through to tier 2/3/etc. at resolve time)
+#   file             packaged CSV filename, when build_status == packaged
+#   download_key     downloads.py key, when build_status == downloadable
+#   cell_lines_covered
+#                    list of line_key values this source contributes rows for.
+#   license          usage license (so the parquet can be filtered before
+#                    re-distribution).
+#   notes            free text.
+
+sources:
+  - source_id: DepMap_24Q4_gene
+    pmid: null
+    reference: "doi:10.25452/figshare.plus.27993248.v1 (Broad Institute)"
+    study_label: "DepMap 24Q4 gene TPM"
+    backend: depmap_rna
+    granularity: gene
+    normalization: log2_tpm_plus_1
+    quantifier: rsem
+    species: "Homo sapiens (human)"
+    build_status: downloadable
+    download_key: depmap_rna
+    cell_lines_covered:
+      - HeLa
+      - A375
+      - SAOS2
+      - THP1
+      - K562
+    license: "CC BY 4.0 (Broad DepMap)"
+    notes: >
+      OmicsExpressionProteinCodingGenesTPMLogp1.csv from DepMap 24Q4.
+      `hitlist data fetch depmap` downloads the matrices and mapping companions
+      and builds the line index. Values are log2(TPM+1), not raw TPM; RSEM
+      unstranded processing. The actual matrix includes HAP1 even though its
+      library is marked stranded; that complete gene row ships separately as
+      DepMap_24Q4_HAP1_gene. Model.csv has no HEK293 entry in this release.
+
+  - source_id: DepMap_24Q4_transcript
+    pmid: null
+    reference: "doi:10.25452/figshare.plus.27993248.v1 (Broad Institute)"
+    study_label: "DepMap 24Q4 transcript TPM"
+    backend: depmap_rna
+    granularity: transcript
+    normalization: log2_tpm_plus_1
+    quantifier: rsem
+    species: "Homo sapiens (human)"
+    build_status: downloadable
+    download_key: depmap_rna_transcript
+    cell_lines_covered:
+      - HeLa
+      - A375
+      - SAOS2
+      - THP1
+      - K562
+      - HAP1
+    license: "CC BY 4.0 (Broad DepMap)"
+    notes: >
+      OmicsExpressionTranscriptsTPMLogp1Profile.csv from DepMap 24Q4.
+      RSEM unstranded processing. ProfileID rows join through OmicsProfiles.csv
+      and OmicsDefaultModelProfiles.csv; use one default RNA profile per model,
+      preserving its ProfileID. Model.csv supplies line names. Optional;
+      enables transcript-isoform-aware peptide-origin summation.
+
+  - source_id: ENCODE_GM12878_polyA_rnaseq
+    pmid: 22955616
+    reference: "PMID:22955616 / ENCODE:ENCSR000AEF"
+    study_label: "ENCODE GM12878 poly(A)+ RNA-seq"
+    backend: encode_rnaseq
+    granularity: gene
+    normalization: tpm
+    quantifier: rsem
+    species: "Homo sapiens (human)"
+    build_status: packaged
+    file: gm12878_encode_rnaseq_tpm.csv.gz
+    cell_lines_covered:
+      - GM12878
+    license: "ENCODE Data Use Policy (permissive; ~ CC0)"
+    notes: >
+      Gene-level TPM for the ENCODE Tier-1 B-LCL GM12878. Used as the
+      tier-3 EBV-LCL class anchor for any donor B-LCL (JY, HHC, GR, CD165,
+      RA957, ...) that lacks packaged exact-line RNA-seq. Derived from the
+      ENCODE processed RSEM output (gene-quantification TSV) filtered to
+      protein-coding genes.
+
+  - source_id: Pearson_BLCL_panel
+    pmid: 27841757
+    reference: "PMID:27841757 / doi:10.1172/JCI88590"
+    study_label: "Pearson 2016 JY validation transcriptome"
+    backend: packaged_rnaseq
+    granularity: gene
+    normalization: tpm
+    quantifier: kallisto
+    species: "Homo sapiens (human)"
+    build_status: placeholder
+    cell_lines_covered:
+      - JY
+    license: "Unverified for redistribution; no data packaged"
+    notes: >
+      Methods, Validation in independent data sets: external JY RNA from
+      Concha et al. 2012 was reprocessed with kallisto 0.42.5. Pearson's
+      own cohort comprised 18 donor B-LCLs; it does not establish HHC RNA
+      coverage. No JY quantification file is packaged or registered here,
+      so JY retains the GM12878 family surrogate until validated data land.
+
+  - source_id: Essletzbichler_2014_HAP1
+    pmid: 25373145
+    reference: "PMID:25373145 / doi:10.1101/gr.177220.114 / SRA:SRP044391"
+    study_label: "Essletzbichler 2014 HAP1 parental"
+    backend: packaged_rnaseq
+    granularity: gene
+    normalization: fpkm
+    quantifier: weighted_read_counts
+    species: "Homo sapiens (human)"
+    build_status: placeholder
+    cell_lines_covered:
+      - HAP1
+    license: "Unverified for redistribution; no data packaged"
+    notes: >
+      RNA sequencing and analysis: TopHat alignment against GENCODE v19,
+      gene read counts weighted by mapping multiplicity, reported as FPKM.
+      SRP044391 contains RNA sequencing; SRP044390 is HAP1 genome sequencing.
+      The paper compares parental HAP1 and engineered eHAP; these are distinct
+      samples. No processed expression values are packaged here. FPKM must
+      not be relabeled as TPM or attributed to kallisto.
+
+  - source_id: DepMap_24Q4_HAP1_gene
+    pmid: null
+    reference: "doi:10.25452/figshare.plus.27993248.v1 / ACH-002475 / PR-QtHaIL"
+    study_label: "DepMap 24Q4 HAP1 gene TPM"
+    backend: depmap_rna
+    granularity: gene
+    normalization: log2_tpm_plus_1
+    quantifier: rsem
+    species: "Homo sapiens (human)"
+    build_status: packaged
+    file: hap1_depmap24q4_gene_tpm.csv.gz
+    cell_lines_covered: [HAP1]
+    license: "CC BY 4.0 (Broad DepMap)"
+    notes: >
+      Complete 19,193-gene row from the checksum-verified 24Q4 gene matrix,
+      with raw TPM reconstructed as 2**log2_tpm - 1 and zero values retained.
+      Default RNA profile PR-QtHaIL; RSEM unstranded quantification mode.
+      This independent parental reference is not RNA measured in the Shapiro
+      KO arms. The downloadable gene copy is excluded to avoid duplication;
+      optional transcript rows retain the original DepMap transcript source.

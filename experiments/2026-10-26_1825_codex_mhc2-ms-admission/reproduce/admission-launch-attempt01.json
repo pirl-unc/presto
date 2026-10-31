@@ -1,0 +1,40 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "utc": "2026-10-26T18:56:52.517115+00:00",
+  "git_commit": "7560af31510f2af5fe45eb7e1a28560dc5caba9f",
+  "dirty_status": " M experiments/agents/codex/plans/2026-10-26_mhc2-ms-admission.md\n?? data/modular_hitlist_ms.py\n?? experiments/2026-10-26_1825_codex_mhc2-ms-admission/code/admit.py\n?? experiments/2026-10-26_1825_codex_mhc2-ms-admission/code/profile_inputs.py\n?? experiments/2026-10-26_1825_codex_mhc2-ms-admission/reproduce/profile-launch.json\n?? experiments/2026-10-26_1825_codex_mhc2-ms-admission/reproduce/source/profile_inputs.py\n?? experiments/2026-10-26_1825_codex_mhc2-ms-admission/results/\n?? tasks/mhc2_ms_admission_spec.md\n?? tests/test_modular_hitlist_ms.py\n",
+  "argv": [
+    "experiments/2026-10-26_1825_codex_mhc2-ms-admission/code/admit.py"
+  ],
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "source": {
+    "path": "/private/tmp/presto-mhc2-20261026/ms-source/training.parquet",
+    "sha256": "f902341e90c1c57defc93f4bc540ffcbea1b41061afb4492ddd8aaa7642c65bd"
+  },
+  "catalog": {
+    "path": "/Users/iskander/.cache/mhcseqs/mhc-full-seqs.csv",
+    "sha256": "ddc3493c64f4328de174a6c2cda1f007ec2f93a1ef649add25d2ef9c1720add1"
+  },
+  "contributors": {
+    "path": "/Users/iskander/.hitlist/corrected-corpus/public-downloads/v4/bundles/2026-10-16T07-20-43Z/observation_contributors.parquet",
+    "sha256": "41ff93e08bc6ea4af692fee16044726af26c4e20ec650ec6c7cd851974b71db1"
+  },
+  "context_profile_sha256": "48b33414115c473da7d524ddd5e942f9dbebef9158cd55bd861d330dee26b490",
+  "code": {
+    "experiments/2026-10-26_1825_codex_mhc2-ms-admission/code/admit.py": "6dc87f9c03f09bd4a5fa980d9e498883e6e03eda99aa1c0034c34bdc4fc1d334",
+    "data/modular_hitlist.py": "ad10998adc4d342dc63f30bf66fa6dc9bc2684b33273b95937cf9a6dad4e70b7",
+    "data/modular_hitlist_ms.py": "7369f1afd59b2c1d6e3f4815f2897eb2b5ba1e80b6b22d3ac99e84ff0033b0f4"
+  },
+  "limits": {
+    "threads": 1,
+    "seconds": 300,
+    "rss_bytes": 3221225472,
+    "output_bytes": 2147483648
+  },
+  "environment_overrides": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "PYTHONPATH": "/private/tmp/presto-mhc2-20261026:/private/tmp/presto-pr-completion-20261026/dependencies"
+  }
+}

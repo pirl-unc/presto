@@ -1,0 +1,1453 @@
+{
+  "passed": true,
+  "n_files": 144,
+  "logical_bytes": 201345087,
+  "before_free_bytes": 1048875008,
+  "after_free_bytes": 1243774976,
+  "observed_free_change_bytes": 194899968,
+  "independent_inodes": true,
+  "all_bytes_unchanged": true,
+  "files": [
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/builder.py",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/builder.py",
+      "sha256": "e963b766ad0c0b45023a93c47e819065f27b7e6fae325d44dedd7c40c53d6055",
+      "size_bytes": 94835,
+      "source_inode": 219263455,
+      "old_target_inode": 219343869,
+      "new_target_inode": 220574663,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/cli.py",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/cli.py",
+      "sha256": "3eb087774feb00a94d1483f3f175a9b66fe60872551c62bd1f422fde1a117f81",
+      "size_bytes": 98888,
+      "source_inode": 219263464,
+      "old_target_inode": 219343878,
+      "new_target_inode": 220574665,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/curation.py",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/curation.py",
+      "sha256": "8c0c3f232b9acdc7e1208b6270e452c21c53105bdb6c68407ecf42edb7b2b785",
+      "size_bytes": 169933,
+      "source_inode": 219263473,
+      "old_target_inode": 219343887,
+      "new_target_inode": 220574669,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/bulk_proteomics/bekker_jensen_2017_peptides.csv.gz",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/data/bulk_proteomics/bekker_jensen_2017_peptides.csv.gz",
+      "sha256": "3ec65dd05e8ec58c3293e0fb5720570197a8b152cd14778130bae4224106e3d3",
+      "size_bytes": 35074080,
+      "source_inode": 219263481,
+      "old_target_inode": 219343895,
+      "new_target_inode": 220574678,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/bulk_proteomics/bekker_jensen_2017_protein_abundance.csv.gz",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/data/bulk_proteomics/bekker_jensen_2017_protein_abundance.csv.gz",
+      "sha256": "17628f1a9c3ed5e3ee1ad7aab4480008000a6beb2c042928f3fbdf699366bc45",
+      "size_bytes": 4410669,
+      "source_inode": 219263482,
+      "old_target_inode": 219343896,
+      "new_target_inode": 220574705,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/bulk_proteomics/ccle_nusinow_2020.csv.gz",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/data/bulk_proteomics/ccle_nusinow_2020.csv.gz",
+      "sha256": "1cd9bdd7b40e1a22593c0045f5ba1d785004b64943c4845d4311bc44e7f97d82",
+      "size_bytes": 1671535,
+      "source_inode": 219263483,
+      "old_target_inode": 219343897,
+      "new_target_inode": 220574711,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/cell_lines.yaml",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/data/cell_lines.yaml",
+      "sha256": "763e87f3de212ee61a7c6afc165a97a6fb229418ffa9ed52f230caf4af043434",
+      "size_bytes": 69063,
+      "source_inode": 219263488,
+      "old_target_inode": 219343902,
+      "new_target_inode": 220574716,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/evidence_revisions/pmid_overrides_1_78.yaml",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/data/evidence_revisions/pmid_overrides_1_78.yaml",
+      "sha256": "5223fc63d0a0a563f469641b2abb58578a359b9bfac32218ce2611aa9cc8ef27",
+      "size_bytes": 745987,
+      "source_inode": 219263503,
+      "old_target_inode": 219343917,
+      "new_target_inode": 220574718,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/line_expression/ensembl_gene_id_symbol.csv",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/data/line_expression/ensembl_gene_id_symbol.csv",
+      "sha256": "cd5a8f42cd45137ffd3de580f395d42107e6ff4b77a80b0a746b9508c0f4c0e2",
+      "size_bytes": 257327,
+      "source_inode": 219263518,
+      "old_target_inode": 219343932,
+      "new_target_inode": 220574722,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/line_expression/gm12878_encode_rnaseq_tpm.csv.gz",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/data/line_expression/gm12878_encode_rnaseq_tpm.csv.gz",
+      "sha256": "b3d605f3426d283ecf166bd6a38006dc40d4d3aa9c4050c40f7f2101ff60d8ab",
+      "size_bytes": 271557,
+      "source_inode": 219263519,
+      "old_target_inode": 219343933,
+      "new_target_inode": 220574723,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/line_expression/hap1_depmap24q4_gene_tpm.csv.gz",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/data/line_expression/hap1_depmap24q4_gene_tpm.csv.gz",
+      "sha256": "9c91022631272fdd626369b03b848162da30062004295cc7249fc3140d149918",
+      "size_bytes": 253816,
+      "source_inode": 219263520,
+      "old_target_inode": 219343934,
+      "new_target_inode": 220574725,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/peptide_attributions/sarkizova_2020_patient_cohort.csv",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/data/peptide_attributions/sarkizova_2020_patient_cohort.csv",
+      "sha256": "f37af217074c08f23a9521c791bba5230a4cf849bf2871bfc20bed1aaaef0729",
+      "size_bytes": 1073141,
+      "source_inode": 219263526,
+      "old_target_inode": 219343940,
+      "new_target_inode": 220574730,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/pmid_overrides.yaml",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/data/pmid_overrides.yaml",
+      "sha256": "e6c68558da6cdb78ae2c3f11ae48fa96a4b9a6b3979cd43ea16abf87148e5afe",
+      "size_bytes": 746730,
+      "source_inode": 219263527,
+      "old_target_inode": 219343941,
+      "new_target_inode": 220574735,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/abelin_2019_dr_tissue.csv",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/data/supplementary/abelin_2019_dr_tissue.csv",
+      "sha256": "f95bb24097fc26a3272b3fb9942ae7dc8e4800b5a6cea2d9a6d92530d33b073c",
+      "size_bytes": 210368,
+      "source_inode": 219263534,
+      "old_target_inode": 219343948,
+      "new_target_inode": 220574737,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/abelin_2019_maptac_class1.csv",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/data/supplementary/abelin_2019_maptac_class1.csv",
+      "sha256": "74ec46e105ae406d89971fe2c87d3e03b36c8f650f8d78695425dd467bca9c42",
+      "size_bytes": 246822,
+      "source_inode": 219263535,
+      "old_target_inode": 219343949,
+      "new_target_inode": 220574741,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/abelin_2019_maptac_class2.csv",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/data/supplementary/abelin_2019_maptac_class2.csv",
+      "sha256": "a9b6454f05c24c11113bde92d35f3222d60eb0746ef8e6ac34ed2b0b6daa1c47",
+      "size_bytes": 1638237,
+      "source_inode": 219263536,
+      "old_target_inode": 219343950,
+      "new_target_inode": 220574742,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/gomez_zepeda_2024_hela.csv",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/data/supplementary/gomez_zepeda_2024_hela.csv",
+      "sha256": "56ea133ccd210f4267b366756d2693279349b962b95087e787f2c00cdc8f6709",
+      "size_bytes": 261764,
+      "source_inode": 219263537,
+      "old_target_inode": 219343951,
+      "new_target_inode": 220574747,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/gomez_zepeda_2024_jy.csv",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/data/supplementary/gomez_zepeda_2024_jy.csv",
+      "sha256": "9eecfa2a8deeb75dc504caecfe659fb8cbbb58625180046ab2a68782d7cfa8b2",
+      "size_bytes": 577082,
+      "source_inode": 219263538,
+      "old_target_inode": 219343952,
+      "new_target_inode": 220574749,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/gomez_zepeda_2024_raji.csv",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/data/supplementary/gomez_zepeda_2024_raji.csv",
+      "sha256": "6e9b2d322aec33ff69a20050c842ce97111521576d0b012c206ec5507110c672",
+      "size_bytes": 668528,
+      "source_inode": 219263540,
+      "old_target_inode": 219343954,
+      "new_target_inode": 220574755,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/gomez_zepeda_2024_skmel37.csv",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/data/supplementary/gomez_zepeda_2024_skmel37.csv",
+      "sha256": "c2d04f556f1bc39cee8856fc753a03739b5baf344e478cd973c7339496a1d207",
+      "size_bytes": 286030,
+      "source_inode": 219263541,
+      "old_target_inode": 219343955,
+      "new_target_inode": 220574759,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/shapiro_2025_hap1_calr_ko.csv",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/data/supplementary/shapiro_2025_hap1_calr_ko.csv",
+      "sha256": "6246a14486388806dc20f0bc7150be19653498f1fedffb6e7e45a51e4a4a0a69",
+      "size_bytes": 232191,
+      "source_inode": 219263543,
+      "old_target_inode": 219343957,
+      "new_target_inode": 220574760,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/shapiro_2025_hap1_canx_ko.csv",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/data/supplementary/shapiro_2025_hap1_canx_ko.csv",
+      "sha256": "8672e8c0d7bc0fd637a22a5b9d19f5b3020ff5d9c5d4f8fa1eecfbe36186d96b",
+      "size_bytes": 217182,
+      "source_inode": 219263544,
+      "old_target_inode": 219343958,
+      "new_target_inode": 220574765,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/shapiro_2025_hap1_erap1_ko.csv",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/data/supplementary/shapiro_2025_hap1_erap1_ko.csv",
+      "sha256": "596a10f1eadeee71d2c24f4fa1b512862775672b2bc4999b5a726624d1d8a170",
+      "size_bytes": 125926,
+      "source_inode": 219263545,
+      "old_target_inode": 219343959,
+      "new_target_inode": 220574766,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/shapiro_2025_hap1_ganab_ko.csv",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/data/supplementary/shapiro_2025_hap1_ganab_ko.csv",
+      "sha256": "5b6cec7cafafe17e823ca9789d5859ac2877f9120fdbe18c7621a330605bf2d2",
+      "size_bytes": 151604,
+      "source_inode": 219263546,
+      "old_target_inode": 219343960,
+      "new_target_inode": 220574768,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/shapiro_2025_hap1_irf2_ko.csv",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/data/supplementary/shapiro_2025_hap1_irf2_ko.csv",
+      "sha256": "91836f74a6868cac49b5638add348792d1920521b2e701be66ced1d5adfbdab5",
+      "size_bytes": 70407,
+      "source_inode": 219263547,
+      "old_target_inode": 219343961,
+      "new_target_inode": 220574773,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/shapiro_2025_hap1_pdia3_ko.csv",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/data/supplementary/shapiro_2025_hap1_pdia3_ko.csv",
+      "sha256": "a24382e88da5dc06c877a5e1027db6ab26a765911840ffc173613fc2560ab608",
+      "size_bytes": 95826,
+      "source_inode": 219263548,
+      "old_target_inode": 219343962,
+      "new_target_inode": 220574778,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/shapiro_2025_hap1_sppl3_ko.csv",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/data/supplementary/shapiro_2025_hap1_sppl3_ko.csv",
+      "sha256": "38d66d6ca3dd12f1e13e0e448cf06cac6b9c229ccf2682f440fe8a8fb74da4a8",
+      "size_bytes": 199225,
+      "source_inode": 219263549,
+      "old_target_inode": 219343963,
+      "new_target_inode": 220574779,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/shapiro_2025_hap1_tap1_ko.csv",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/data/supplementary/shapiro_2025_hap1_tap1_ko.csv",
+      "sha256": "babd57cb0fad48365369bbcb64f6c4fcb8a372f7bce6fd1e08e9d987c0e5bb38",
+      "size_bytes": 120243,
+      "source_inode": 219263550,
+      "old_target_inode": 219343964,
+      "new_target_inode": 220574780,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/shapiro_2025_hap1_wildtype.csv",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/data/supplementary/shapiro_2025_hap1_wildtype.csv",
+      "sha256": "ee2fe18ad0b10382d400670e3d2215c71714aad9234ac95b89bb9410055bdafb",
+      "size_bytes": 250548,
+      "source_inode": 219263553,
+      "old_target_inode": 219343967,
+      "new_target_inode": 220574781,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/strazar_2023_hla2.csv",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/data/supplementary/strazar_2023_hla2.csv",
+      "sha256": "3dc547ae7cd4cfd735794e30c52430bb33f52d3960644d24bf07e44d6496e085",
+      "size_bytes": 13932615,
+      "source_inode": 219263554,
+      "old_target_inode": 219343968,
+      "new_target_inode": 220574787,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/downloads.py",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/downloads.py",
+      "sha256": "43ff8fe94bf901bbe6d2c3217c5b52caebc8792dbc46815907b092b3e78cf922",
+      "size_bytes": 65802,
+      "source_inode": 219263565,
+      "old_target_inode": 219343979,
+      "new_target_inode": 220574802,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/export.py",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/export.py",
+      "sha256": "158cee3c8343dfc36eacde22c209746b251f7539958eeacc29e6de2155a26c6a",
+      "size_bytes": 236271,
+      "source_inode": 219263574,
+      "old_target_inode": 219343988,
+      "new_target_inode": 220574806,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/pmhc_query.py",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/pmhc_query.py",
+      "sha256": "cf0898437a26e7dc03460230c6ab05dc030f90ed9a4120666831b909d32434a8",
+      "size_bytes": 82001,
+      "source_inode": 219263600,
+      "old_target_inode": 219344014,
+      "new_target_inode": 220574807,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/proteome.py",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/proteome.py",
+      "sha256": "914705188322a6e74b75bb4d9a77b2e5eb0ade7255febfbb93a0023e8f042e97",
+      "size_bytes": 66575,
+      "source_inode": 219263604,
+      "old_target_inode": 219344018,
+      "new_target_inode": 220574808,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/qc.py",
+      "destination": "/private/tmp/hitlist-lymph-20261024/hitlist/qc.py",
+      "sha256": "151be95f8fa98f705870c7c700e291a981e9af1e377b3bd6c4826853c7768c63",
+      "size_bytes": 71620,
+      "source_inode": 219263612,
+      "old_target_inode": 219344026,
+      "new_target_inode": 220574809,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tasks/atlas-crosswalk-results/files-all.json.gz",
+      "destination": "/private/tmp/hitlist-lymph-20261024/tasks/atlas-crosswalk-results/files-all.json.gz",
+      "sha256": "ce68e10e00d9e4bd6d0d9d785b8e743e419b0076a892167d8a37e9462d23a74c",
+      "size_bytes": 367085,
+      "source_inode": 219263690,
+      "old_target_inode": 219344104,
+      "new_target_inode": 220574812,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tasks/atlas-crosswalk-results/inventory-crosswalk.tsv.gz",
+      "destination": "/private/tmp/hitlist-lymph-20261024/tasks/atlas-crosswalk-results/inventory-crosswalk.tsv.gz",
+      "sha256": "b44a1e076db8f1594d69a6f5df7b025f440c26c6d2bfc0536fe2c0420bdfb7ae",
+      "size_bytes": 181743,
+      "source_inode": 219263692,
+      "old_target_inode": 219344106,
+      "new_target_inode": 220574815,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tasks/atlas-crosswalk-results/sdrf-file-crosswalk.tsv.gz",
+      "destination": "/private/tmp/hitlist-lymph-20261024/tasks/atlas-crosswalk-results/sdrf-file-crosswalk.tsv.gz",
+      "sha256": "7f2deaec3b340ad8c6ecf34cedd8f9944d34050dfa0a906f93b57a5127900591",
+      "size_bytes": 117418,
+      "source_inode": 219263694,
+      "old_target_inode": 219344108,
+      "new_target_inode": 220574816,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tasks/corpus-qualification-requirements.txt",
+      "destination": "/private/tmp/hitlist-lymph-20261024/tasks/corpus-qualification-requirements.txt",
+      "sha256": "a23497ea0c27f5ecb6f961699f6e5165fbc2d9ab8213f524cb61a6da436458c9",
+      "size_bytes": 85807,
+      "source_inode": 219263742,
+      "old_target_inode": 219344156,
+      "new_target_inode": 220574817,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tasks/corrected-corpus-requirements.txt",
+      "destination": "/private/tmp/hitlist-lymph-20261024/tasks/corrected-corpus-requirements.txt",
+      "sha256": "842a0bc41d2bdfe1ff75d5c5bef16c8501ec2a46525ae32e9f579d8b6ceb9cf1",
+      "size_bytes": 85739,
+      "source_inode": 219263766,
+      "old_target_inode": 219344180,
+      "new_target_inode": 220574819,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tasks/evidence-store-results/audit.json",
+      "destination": "/private/tmp/hitlist-lymph-20261024/tasks/evidence-store-results/audit.json",
+      "sha256": "02dd24ac68ebbd68067437cfd906e04f2f059221c588ce0765326475676aa731",
+      "size_bytes": 271374,
+      "source_inode": 219263812,
+      "old_target_inode": 219344226,
+      "new_target_inode": 220574823,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tests/data/corpus_v3_arm_contexts.json",
+      "destination": "/private/tmp/hitlist-lymph-20261024/tests/data/corpus_v3_arm_contexts.json",
+      "sha256": "5d969f708827638e6c13b1e2b4c350c8cee8b72fbb0484905b8bf1a3fe428e90",
+      "size_bytes": 147662,
+      "source_inode": 219263923,
+      "old_target_inode": 219344337,
+      "new_target_inode": 220574824,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tests/test_curation.py",
+      "destination": "/private/tmp/hitlist-lymph-20261024/tests/test_curation.py",
+      "sha256": "1d0e693391b91ed9067fdf5111420b6f6fb82f495ff9be7058f2c239c621a480",
+      "size_bytes": 151532,
+      "source_inode": 219263978,
+      "old_target_inode": 219344392,
+      "new_target_inode": 220574826,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tests/test_export.py",
+      "destination": "/private/tmp/hitlist-lymph-20261024/tests/test_export.py",
+      "sha256": "99daa890d3a6e7e543542e626d33ac82f2ba3d49283891958816546e1f70e0d4",
+      "size_bytes": 163802,
+      "source_inode": 219264001,
+      "old_target_inode": 219344415,
+      "new_target_inode": 220574831,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tests/test_line_expression.py",
+      "destination": "/private/tmp/hitlist-lymph-20261024/tests/test_line_expression.py",
+      "sha256": "c42b76a3c25cb9912b1da8075427b1274edf0e16b4690befe44cb1cbed0756ff",
+      "size_bytes": 68198,
+      "source_inode": 219264016,
+      "old_target_inode": 219344430,
+      "new_target_inode": 220574832,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tests/test_pmhc_query.py",
+      "destination": "/private/tmp/hitlist-lymph-20261024/tests/test_pmhc_query.py",
+      "sha256": "2c4a3485b345b8cf2ae324c53286fc0f83468bbf9efc966ce4d7a3500b232dd1",
+      "size_bytes": 104769,
+      "source_inode": 219264035,
+      "old_target_inode": 219344449,
+      "new_target_inode": 220574833,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tests/test_qc.py",
+      "destination": "/private/tmp/hitlist-lymph-20261024/tests/test_qc.py",
+      "sha256": "ee46f4f6c1e086a42216f493e7951d0911822f2ac93e3780f84db898d39fc23b",
+      "size_bytes": 73022,
+      "source_inode": 219264044,
+      "old_target_inode": 219344458,
+      "new_target_inode": 220574838,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/uv.lock",
+      "destination": "/private/tmp/hitlist-lymph-20261024/uv.lock",
+      "sha256": "283b94ea6bd6147e35542dcad85c629a1fa37213cb7fbeee337905a02f5e9fcb",
+      "size_bytes": 552450,
+      "source_inode": 219264083,
+      "old_target_inode": 219344497,
+      "new_target_inode": 220574839,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/builder.py",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/builder.py",
+      "sha256": "e963b766ad0c0b45023a93c47e819065f27b7e6fae325d44dedd7c40c53d6055",
+      "size_bytes": 94835,
+      "source_inode": 219263455,
+      "old_target_inode": 219395499,
+      "new_target_inode": 220574841,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/cli.py",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/cli.py",
+      "sha256": "3eb087774feb00a94d1483f3f175a9b66fe60872551c62bd1f422fde1a117f81",
+      "size_bytes": 98888,
+      "source_inode": 219263464,
+      "old_target_inode": 219395508,
+      "new_target_inode": 220574845,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/curation.py",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/curation.py",
+      "sha256": "8c0c3f232b9acdc7e1208b6270e452c21c53105bdb6c68407ecf42edb7b2b785",
+      "size_bytes": 169933,
+      "source_inode": 219263473,
+      "old_target_inode": 219395517,
+      "new_target_inode": 220574846,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/bulk_proteomics/bekker_jensen_2017_peptides.csv.gz",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/data/bulk_proteomics/bekker_jensen_2017_peptides.csv.gz",
+      "sha256": "3ec65dd05e8ec58c3293e0fb5720570197a8b152cd14778130bae4224106e3d3",
+      "size_bytes": 35074080,
+      "source_inode": 219263481,
+      "old_target_inode": 219395525,
+      "new_target_inode": 220574859,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/bulk_proteomics/bekker_jensen_2017_protein_abundance.csv.gz",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/data/bulk_proteomics/bekker_jensen_2017_protein_abundance.csv.gz",
+      "sha256": "17628f1a9c3ed5e3ee1ad7aab4480008000a6beb2c042928f3fbdf699366bc45",
+      "size_bytes": 4410669,
+      "source_inode": 219263482,
+      "old_target_inode": 219395526,
+      "new_target_inode": 220574878,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/bulk_proteomics/ccle_nusinow_2020.csv.gz",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/data/bulk_proteomics/ccle_nusinow_2020.csv.gz",
+      "sha256": "1cd9bdd7b40e1a22593c0045f5ba1d785004b64943c4845d4311bc44e7f97d82",
+      "size_bytes": 1671535,
+      "source_inode": 219263483,
+      "old_target_inode": 219395527,
+      "new_target_inode": 220574879,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/cell_lines.yaml",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/data/cell_lines.yaml",
+      "sha256": "763e87f3de212ee61a7c6afc165a97a6fb229418ffa9ed52f230caf4af043434",
+      "size_bytes": 69063,
+      "source_inode": 219263488,
+      "old_target_inode": 219395532,
+      "new_target_inode": 220574880,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/evidence_revisions/pmid_overrides_1_78.yaml",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/data/evidence_revisions/pmid_overrides_1_78.yaml",
+      "sha256": "5223fc63d0a0a563f469641b2abb58578a359b9bfac32218ce2611aa9cc8ef27",
+      "size_bytes": 745987,
+      "source_inode": 219263503,
+      "old_target_inode": 219395548,
+      "new_target_inode": 220574882,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/line_expression/ensembl_gene_id_symbol.csv",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/data/line_expression/ensembl_gene_id_symbol.csv",
+      "sha256": "cd5a8f42cd45137ffd3de580f395d42107e6ff4b77a80b0a746b9508c0f4c0e2",
+      "size_bytes": 257327,
+      "source_inode": 219263518,
+      "old_target_inode": 219395563,
+      "new_target_inode": 220574888,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/line_expression/gm12878_encode_rnaseq_tpm.csv.gz",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/data/line_expression/gm12878_encode_rnaseq_tpm.csv.gz",
+      "sha256": "b3d605f3426d283ecf166bd6a38006dc40d4d3aa9c4050c40f7f2101ff60d8ab",
+      "size_bytes": 271557,
+      "source_inode": 219263519,
+      "old_target_inode": 219395564,
+      "new_target_inode": 220574890,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/line_expression/hap1_depmap24q4_gene_tpm.csv.gz",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/data/line_expression/hap1_depmap24q4_gene_tpm.csv.gz",
+      "sha256": "9c91022631272fdd626369b03b848162da30062004295cc7249fc3140d149918",
+      "size_bytes": 253816,
+      "source_inode": 219263520,
+      "old_target_inode": 219395565,
+      "new_target_inode": 220574894,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/peptide_attributions/sarkizova_2020_patient_cohort.csv",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/data/peptide_attributions/sarkizova_2020_patient_cohort.csv",
+      "sha256": "f37af217074c08f23a9521c791bba5230a4cf849bf2871bfc20bed1aaaef0729",
+      "size_bytes": 1073141,
+      "source_inode": 219263526,
+      "old_target_inode": 219395571,
+      "new_target_inode": 220574895,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/pmid_overrides.yaml",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/data/pmid_overrides.yaml",
+      "sha256": "e6c68558da6cdb78ae2c3f11ae48fa96a4b9a6b3979cd43ea16abf87148e5afe",
+      "size_bytes": 746730,
+      "source_inode": 219263527,
+      "old_target_inode": 219395572,
+      "new_target_inode": 220574897,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/abelin_2019_dr_tissue.csv",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/data/supplementary/abelin_2019_dr_tissue.csv",
+      "sha256": "f95bb24097fc26a3272b3fb9942ae7dc8e4800b5a6cea2d9a6d92530d33b073c",
+      "size_bytes": 210368,
+      "source_inode": 219263534,
+      "old_target_inode": 219395579,
+      "new_target_inode": 220574906,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/abelin_2019_maptac_class1.csv",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/data/supplementary/abelin_2019_maptac_class1.csv",
+      "sha256": "74ec46e105ae406d89971fe2c87d3e03b36c8f650f8d78695425dd467bca9c42",
+      "size_bytes": 246822,
+      "source_inode": 219263535,
+      "old_target_inode": 219395580,
+      "new_target_inode": 220574907,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/abelin_2019_maptac_class2.csv",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/data/supplementary/abelin_2019_maptac_class2.csv",
+      "sha256": "a9b6454f05c24c11113bde92d35f3222d60eb0746ef8e6ac34ed2b0b6daa1c47",
+      "size_bytes": 1638237,
+      "source_inode": 219263536,
+      "old_target_inode": 219395581,
+      "new_target_inode": 220574908,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/gomez_zepeda_2024_hela.csv",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/data/supplementary/gomez_zepeda_2024_hela.csv",
+      "sha256": "56ea133ccd210f4267b366756d2693279349b962b95087e787f2c00cdc8f6709",
+      "size_bytes": 261764,
+      "source_inode": 219263537,
+      "old_target_inode": 219395582,
+      "new_target_inode": 220574914,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/gomez_zepeda_2024_jy.csv",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/data/supplementary/gomez_zepeda_2024_jy.csv",
+      "sha256": "9eecfa2a8deeb75dc504caecfe659fb8cbbb58625180046ab2a68782d7cfa8b2",
+      "size_bytes": 577082,
+      "source_inode": 219263538,
+      "old_target_inode": 219395583,
+      "new_target_inode": 220574915,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/gomez_zepeda_2024_raji.csv",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/data/supplementary/gomez_zepeda_2024_raji.csv",
+      "sha256": "6e9b2d322aec33ff69a20050c842ce97111521576d0b012c206ec5507110c672",
+      "size_bytes": 668528,
+      "source_inode": 219263540,
+      "old_target_inode": 219395585,
+      "new_target_inode": 220574916,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/gomez_zepeda_2024_skmel37.csv",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/data/supplementary/gomez_zepeda_2024_skmel37.csv",
+      "sha256": "c2d04f556f1bc39cee8856fc753a03739b5baf344e478cd973c7339496a1d207",
+      "size_bytes": 286030,
+      "source_inode": 219263541,
+      "old_target_inode": 219395586,
+      "new_target_inode": 220574926,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/shapiro_2025_hap1_calr_ko.csv",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/data/supplementary/shapiro_2025_hap1_calr_ko.csv",
+      "sha256": "6246a14486388806dc20f0bc7150be19653498f1fedffb6e7e45a51e4a4a0a69",
+      "size_bytes": 232191,
+      "source_inode": 219263543,
+      "old_target_inode": 219395588,
+      "new_target_inode": 220574927,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/shapiro_2025_hap1_canx_ko.csv",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/data/supplementary/shapiro_2025_hap1_canx_ko.csv",
+      "sha256": "8672e8c0d7bc0fd637a22a5b9d19f5b3020ff5d9c5d4f8fa1eecfbe36186d96b",
+      "size_bytes": 217182,
+      "source_inode": 219263544,
+      "old_target_inode": 219395589,
+      "new_target_inode": 220574928,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/shapiro_2025_hap1_erap1_ko.csv",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/data/supplementary/shapiro_2025_hap1_erap1_ko.csv",
+      "sha256": "596a10f1eadeee71d2c24f4fa1b512862775672b2bc4999b5a726624d1d8a170",
+      "size_bytes": 125926,
+      "source_inode": 219263545,
+      "old_target_inode": 219395590,
+      "new_target_inode": 220574929,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/shapiro_2025_hap1_ganab_ko.csv",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/data/supplementary/shapiro_2025_hap1_ganab_ko.csv",
+      "sha256": "5b6cec7cafafe17e823ca9789d5859ac2877f9120fdbe18c7621a330605bf2d2",
+      "size_bytes": 151604,
+      "source_inode": 219263546,
+      "old_target_inode": 219395591,
+      "new_target_inode": 220574930,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/shapiro_2025_hap1_irf2_ko.csv",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/data/supplementary/shapiro_2025_hap1_irf2_ko.csv",
+      "sha256": "91836f74a6868cac49b5638add348792d1920521b2e701be66ced1d5adfbdab5",
+      "size_bytes": 70407,
+      "source_inode": 219263547,
+      "old_target_inode": 219395592,
+      "new_target_inode": 220574932,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/shapiro_2025_hap1_pdia3_ko.csv",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/data/supplementary/shapiro_2025_hap1_pdia3_ko.csv",
+      "sha256": "a24382e88da5dc06c877a5e1027db6ab26a765911840ffc173613fc2560ab608",
+      "size_bytes": 95826,
+      "source_inode": 219263548,
+      "old_target_inode": 219395593,
+      "new_target_inode": 220574933,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/shapiro_2025_hap1_sppl3_ko.csv",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/data/supplementary/shapiro_2025_hap1_sppl3_ko.csv",
+      "sha256": "38d66d6ca3dd12f1e13e0e448cf06cac6b9c229ccf2682f440fe8a8fb74da4a8",
+      "size_bytes": 199225,
+      "source_inode": 219263549,
+      "old_target_inode": 219395594,
+      "new_target_inode": 220574935,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/shapiro_2025_hap1_tap1_ko.csv",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/data/supplementary/shapiro_2025_hap1_tap1_ko.csv",
+      "sha256": "babd57cb0fad48365369bbcb64f6c4fcb8a372f7bce6fd1e08e9d987c0e5bb38",
+      "size_bytes": 120243,
+      "source_inode": 219263550,
+      "old_target_inode": 219395595,
+      "new_target_inode": 220574940,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/shapiro_2025_hap1_wildtype.csv",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/data/supplementary/shapiro_2025_hap1_wildtype.csv",
+      "sha256": "ee2fe18ad0b10382d400670e3d2215c71714aad9234ac95b89bb9410055bdafb",
+      "size_bytes": 250548,
+      "source_inode": 219263553,
+      "old_target_inode": 219395598,
+      "new_target_inode": 220574941,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/strazar_2023_hla2.csv",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/data/supplementary/strazar_2023_hla2.csv",
+      "sha256": "3dc547ae7cd4cfd735794e30c52430bb33f52d3960644d24bf07e44d6496e085",
+      "size_bytes": 13932615,
+      "source_inode": 219263554,
+      "old_target_inode": 219395599,
+      "new_target_inode": 220574942,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/downloads.py",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/downloads.py",
+      "sha256": "43ff8fe94bf901bbe6d2c3217c5b52caebc8792dbc46815907b092b3e78cf922",
+      "size_bytes": 65802,
+      "source_inode": 219263565,
+      "old_target_inode": 219395610,
+      "new_target_inode": 220574951,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/export.py",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/export.py",
+      "sha256": "158cee3c8343dfc36eacde22c209746b251f7539958eeacc29e6de2155a26c6a",
+      "size_bytes": 236271,
+      "source_inode": 219263574,
+      "old_target_inode": 219395619,
+      "new_target_inode": 220574952,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/pmhc_query.py",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/pmhc_query.py",
+      "sha256": "cf0898437a26e7dc03460230c6ab05dc030f90ed9a4120666831b909d32434a8",
+      "size_bytes": 82001,
+      "source_inode": 219263600,
+      "old_target_inode": 219395646,
+      "new_target_inode": 220574954,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/proteome.py",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/proteome.py",
+      "sha256": "914705188322a6e74b75bb4d9a77b2e5eb0ade7255febfbb93a0023e8f042e97",
+      "size_bytes": 66575,
+      "source_inode": 219263604,
+      "old_target_inode": 219395650,
+      "new_target_inode": 220574956,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/qc.py",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/hitlist/qc.py",
+      "sha256": "151be95f8fa98f705870c7c700e291a981e9af1e377b3bd6c4826853c7768c63",
+      "size_bytes": 71620,
+      "source_inode": 219263612,
+      "old_target_inode": 219395658,
+      "new_target_inode": 220574961,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tasks/atlas-crosswalk-results/files-all.json.gz",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/tasks/atlas-crosswalk-results/files-all.json.gz",
+      "sha256": "ce68e10e00d9e4bd6d0d9d785b8e743e419b0076a892167d8a37e9462d23a74c",
+      "size_bytes": 367085,
+      "source_inode": 219263690,
+      "old_target_inode": 219395736,
+      "new_target_inode": 220574962,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tasks/atlas-crosswalk-results/inventory-crosswalk.tsv.gz",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/tasks/atlas-crosswalk-results/inventory-crosswalk.tsv.gz",
+      "sha256": "b44a1e076db8f1594d69a6f5df7b025f440c26c6d2bfc0536fe2c0420bdfb7ae",
+      "size_bytes": 181743,
+      "source_inode": 219263692,
+      "old_target_inode": 219395738,
+      "new_target_inode": 220574963,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tasks/atlas-crosswalk-results/sdrf-file-crosswalk.tsv.gz",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/tasks/atlas-crosswalk-results/sdrf-file-crosswalk.tsv.gz",
+      "sha256": "7f2deaec3b340ad8c6ecf34cedd8f9944d34050dfa0a906f93b57a5127900591",
+      "size_bytes": 117418,
+      "source_inode": 219263694,
+      "old_target_inode": 219395740,
+      "new_target_inode": 220574964,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tasks/corpus-qualification-requirements.txt",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/tasks/corpus-qualification-requirements.txt",
+      "sha256": "a23497ea0c27f5ecb6f961699f6e5165fbc2d9ab8213f524cb61a6da436458c9",
+      "size_bytes": 85807,
+      "source_inode": 219263742,
+      "old_target_inode": 219395788,
+      "new_target_inode": 220574965,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tasks/corrected-corpus-requirements.txt",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/tasks/corrected-corpus-requirements.txt",
+      "sha256": "842a0bc41d2bdfe1ff75d5c5bef16c8501ec2a46525ae32e9f579d8b6ceb9cf1",
+      "size_bytes": 85739,
+      "source_inode": 219263766,
+      "old_target_inode": 219395812,
+      "new_target_inode": 220574966,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tasks/evidence-store-results/audit.json",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/tasks/evidence-store-results/audit.json",
+      "sha256": "02dd24ac68ebbd68067437cfd906e04f2f059221c588ce0765326475676aa731",
+      "size_bytes": 271374,
+      "source_inode": 219263812,
+      "old_target_inode": 219395858,
+      "new_target_inode": 220574969,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tests/data/corpus_v3_arm_contexts.json",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/tests/data/corpus_v3_arm_contexts.json",
+      "sha256": "5d969f708827638e6c13b1e2b4c350c8cee8b72fbb0484905b8bf1a3fe428e90",
+      "size_bytes": 147662,
+      "source_inode": 219263923,
+      "old_target_inode": 219395970,
+      "new_target_inode": 220574970,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tests/test_curation.py",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/tests/test_curation.py",
+      "sha256": "1d0e693391b91ed9067fdf5111420b6f6fb82f495ff9be7058f2c239c621a480",
+      "size_bytes": 151532,
+      "source_inode": 219263978,
+      "old_target_inode": 219396025,
+      "new_target_inode": 220574971,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tests/test_export.py",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/tests/test_export.py",
+      "sha256": "99daa890d3a6e7e543542e626d33ac82f2ba3d49283891958816546e1f70e0d4",
+      "size_bytes": 163802,
+      "source_inode": 219264001,
+      "old_target_inode": 219396048,
+      "new_target_inode": 220574972,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tests/test_line_expression.py",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/tests/test_line_expression.py",
+      "sha256": "c42b76a3c25cb9912b1da8075427b1274edf0e16b4690befe44cb1cbed0756ff",
+      "size_bytes": 68198,
+      "source_inode": 219264016,
+      "old_target_inode": 219396063,
+      "new_target_inode": 220574977,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tests/test_pmhc_query.py",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/tests/test_pmhc_query.py",
+      "sha256": "2c4a3485b345b8cf2ae324c53286fc0f83468bbf9efc966ce4d7a3500b232dd1",
+      "size_bytes": 104769,
+      "source_inode": 219264035,
+      "old_target_inode": 219396083,
+      "new_target_inode": 220574978,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tests/test_qc.py",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/tests/test_qc.py",
+      "sha256": "ee46f4f6c1e086a42216f493e7951d0911822f2ac93e3780f84db898d39fc23b",
+      "size_bytes": 73022,
+      "source_inode": 219264044,
+      "old_target_inode": 219396092,
+      "new_target_inode": 220574979,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/uv.lock",
+      "destination": "/private/tmp/hitlist-lymph-recipe-20261024/uv.lock",
+      "sha256": "283b94ea6bd6147e35542dcad85c629a1fa37213cb7fbeee337905a02f5e9fcb",
+      "size_bytes": 552450,
+      "source_inode": 219264083,
+      "old_target_inode": 219396131,
+      "new_target_inode": 220574980,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/builder.py",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/builder.py",
+      "sha256": "e963b766ad0c0b45023a93c47e819065f27b7e6fae325d44dedd7c40c53d6055",
+      "size_bytes": 94835,
+      "source_inode": 219263455,
+      "old_target_inode": 220206667,
+      "new_target_inode": 220574981,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/cli.py",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/cli.py",
+      "sha256": "3eb087774feb00a94d1483f3f175a9b66fe60872551c62bd1f422fde1a117f81",
+      "size_bytes": 98888,
+      "source_inode": 219263464,
+      "old_target_inode": 220206676,
+      "new_target_inode": 220574982,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/curation.py",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/curation.py",
+      "sha256": "8c0c3f232b9acdc7e1208b6270e452c21c53105bdb6c68407ecf42edb7b2b785",
+      "size_bytes": 169933,
+      "source_inode": 219263473,
+      "old_target_inode": 220206685,
+      "new_target_inode": 220574983,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/bulk_proteomics/bekker_jensen_2017_peptides.csv.gz",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/data/bulk_proteomics/bekker_jensen_2017_peptides.csv.gz",
+      "sha256": "3ec65dd05e8ec58c3293e0fb5720570197a8b152cd14778130bae4224106e3d3",
+      "size_bytes": 35074080,
+      "source_inode": 219263481,
+      "old_target_inode": 220206693,
+      "new_target_inode": 220574989,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/bulk_proteomics/bekker_jensen_2017_protein_abundance.csv.gz",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/data/bulk_proteomics/bekker_jensen_2017_protein_abundance.csv.gz",
+      "sha256": "17628f1a9c3ed5e3ee1ad7aab4480008000a6beb2c042928f3fbdf699366bc45",
+      "size_bytes": 4410669,
+      "source_inode": 219263482,
+      "old_target_inode": 220206695,
+      "new_target_inode": 220575027,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/bulk_proteomics/ccle_nusinow_2020.csv.gz",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/data/bulk_proteomics/ccle_nusinow_2020.csv.gz",
+      "sha256": "1cd9bdd7b40e1a22593c0045f5ba1d785004b64943c4845d4311bc44e7f97d82",
+      "size_bytes": 1671535,
+      "source_inode": 219263483,
+      "old_target_inode": 220206696,
+      "new_target_inode": 220575028,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/cell_lines.yaml",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/data/cell_lines.yaml",
+      "sha256": "763e87f3de212ee61a7c6afc165a97a6fb229418ffa9ed52f230caf4af043434",
+      "size_bytes": 69063,
+      "source_inode": 219263488,
+      "old_target_inode": 220206701,
+      "new_target_inode": 220575029,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/evidence_revisions/pmid_overrides_1_78.yaml",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/data/evidence_revisions/pmid_overrides_1_78.yaml",
+      "sha256": "5223fc63d0a0a563f469641b2abb58578a359b9bfac32218ce2611aa9cc8ef27",
+      "size_bytes": 745987,
+      "source_inode": 219263503,
+      "old_target_inode": 220206717,
+      "new_target_inode": 220575030,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/line_expression/ensembl_gene_id_symbol.csv",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/data/line_expression/ensembl_gene_id_symbol.csv",
+      "sha256": "cd5a8f42cd45137ffd3de580f395d42107e6ff4b77a80b0a746b9508c0f4c0e2",
+      "size_bytes": 257327,
+      "source_inode": 219263518,
+      "old_target_inode": 220206732,
+      "new_target_inode": 220575036,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/line_expression/gm12878_encode_rnaseq_tpm.csv.gz",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/data/line_expression/gm12878_encode_rnaseq_tpm.csv.gz",
+      "sha256": "b3d605f3426d283ecf166bd6a38006dc40d4d3aa9c4050c40f7f2101ff60d8ab",
+      "size_bytes": 271557,
+      "source_inode": 219263519,
+      "old_target_inode": 220206733,
+      "new_target_inode": 220575038,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/line_expression/hap1_depmap24q4_gene_tpm.csv.gz",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/data/line_expression/hap1_depmap24q4_gene_tpm.csv.gz",
+      "sha256": "9c91022631272fdd626369b03b848162da30062004295cc7249fc3140d149918",
+      "size_bytes": 253816,
+      "source_inode": 219263520,
+      "old_target_inode": 220206734,
+      "new_target_inode": 220575040,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/peptide_attributions/sarkizova_2020_patient_cohort.csv",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/data/peptide_attributions/sarkizova_2020_patient_cohort.csv",
+      "sha256": "f37af217074c08f23a9521c791bba5230a4cf849bf2871bfc20bed1aaaef0729",
+      "size_bytes": 1073141,
+      "source_inode": 219263526,
+      "old_target_inode": 220206740,
+      "new_target_inode": 220575041,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/pmid_overrides.yaml",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/data/pmid_overrides.yaml",
+      "sha256": "e6c68558da6cdb78ae2c3f11ae48fa96a4b9a6b3979cd43ea16abf87148e5afe",
+      "size_bytes": 746730,
+      "source_inode": 219263527,
+      "old_target_inode": 220206741,
+      "new_target_inode": 220575043,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/abelin_2019_dr_tissue.csv",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/data/supplementary/abelin_2019_dr_tissue.csv",
+      "sha256": "f95bb24097fc26a3272b3fb9942ae7dc8e4800b5a6cea2d9a6d92530d33b073c",
+      "size_bytes": 210368,
+      "source_inode": 219263534,
+      "old_target_inode": 220206748,
+      "new_target_inode": 220575045,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/abelin_2019_maptac_class1.csv",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/data/supplementary/abelin_2019_maptac_class1.csv",
+      "sha256": "74ec46e105ae406d89971fe2c87d3e03b36c8f650f8d78695425dd467bca9c42",
+      "size_bytes": 246822,
+      "source_inode": 219263535,
+      "old_target_inode": 220206749,
+      "new_target_inode": 220575053,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/abelin_2019_maptac_class2.csv",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/data/supplementary/abelin_2019_maptac_class2.csv",
+      "sha256": "a9b6454f05c24c11113bde92d35f3222d60eb0746ef8e6ac34ed2b0b6daa1c47",
+      "size_bytes": 1638237,
+      "source_inode": 219263536,
+      "old_target_inode": 220206750,
+      "new_target_inode": 220575054,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/gomez_zepeda_2024_hela.csv",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/data/supplementary/gomez_zepeda_2024_hela.csv",
+      "sha256": "56ea133ccd210f4267b366756d2693279349b962b95087e787f2c00cdc8f6709",
+      "size_bytes": 261764,
+      "source_inode": 219263537,
+      "old_target_inode": 220206751,
+      "new_target_inode": 220575069,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/gomez_zepeda_2024_jy.csv",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/data/supplementary/gomez_zepeda_2024_jy.csv",
+      "sha256": "9eecfa2a8deeb75dc504caecfe659fb8cbbb58625180046ab2a68782d7cfa8b2",
+      "size_bytes": 577082,
+      "source_inode": 219263538,
+      "old_target_inode": 220206752,
+      "new_target_inode": 220575073,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/gomez_zepeda_2024_raji.csv",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/data/supplementary/gomez_zepeda_2024_raji.csv",
+      "sha256": "6e9b2d322aec33ff69a20050c842ce97111521576d0b012c206ec5507110c672",
+      "size_bytes": 668528,
+      "source_inode": 219263540,
+      "old_target_inode": 220206754,
+      "new_target_inode": 220575074,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/gomez_zepeda_2024_skmel37.csv",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/data/supplementary/gomez_zepeda_2024_skmel37.csv",
+      "sha256": "c2d04f556f1bc39cee8856fc753a03739b5baf344e478cd973c7339496a1d207",
+      "size_bytes": 286030,
+      "source_inode": 219263541,
+      "old_target_inode": 220206755,
+      "new_target_inode": 220575075,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/shapiro_2025_hap1_calr_ko.csv",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/data/supplementary/shapiro_2025_hap1_calr_ko.csv",
+      "sha256": "6246a14486388806dc20f0bc7150be19653498f1fedffb6e7e45a51e4a4a0a69",
+      "size_bytes": 232191,
+      "source_inode": 219263543,
+      "old_target_inode": 220206757,
+      "new_target_inode": 220575076,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/shapiro_2025_hap1_canx_ko.csv",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/data/supplementary/shapiro_2025_hap1_canx_ko.csv",
+      "sha256": "8672e8c0d7bc0fd637a22a5b9d19f5b3020ff5d9c5d4f8fa1eecfbe36186d96b",
+      "size_bytes": 217182,
+      "source_inode": 219263544,
+      "old_target_inode": 220206758,
+      "new_target_inode": 220575077,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/shapiro_2025_hap1_erap1_ko.csv",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/data/supplementary/shapiro_2025_hap1_erap1_ko.csv",
+      "sha256": "596a10f1eadeee71d2c24f4fa1b512862775672b2bc4999b5a726624d1d8a170",
+      "size_bytes": 125926,
+      "source_inode": 219263545,
+      "old_target_inode": 220206759,
+      "new_target_inode": 220575078,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/shapiro_2025_hap1_ganab_ko.csv",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/data/supplementary/shapiro_2025_hap1_ganab_ko.csv",
+      "sha256": "5b6cec7cafafe17e823ca9789d5859ac2877f9120fdbe18c7621a330605bf2d2",
+      "size_bytes": 151604,
+      "source_inode": 219263546,
+      "old_target_inode": 220206760,
+      "new_target_inode": 220575081,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/shapiro_2025_hap1_irf2_ko.csv",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/data/supplementary/shapiro_2025_hap1_irf2_ko.csv",
+      "sha256": "91836f74a6868cac49b5638add348792d1920521b2e701be66ced1d5adfbdab5",
+      "size_bytes": 70407,
+      "source_inode": 219263547,
+      "old_target_inode": 220206761,
+      "new_target_inode": 220575089,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/shapiro_2025_hap1_pdia3_ko.csv",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/data/supplementary/shapiro_2025_hap1_pdia3_ko.csv",
+      "sha256": "a24382e88da5dc06c877a5e1027db6ab26a765911840ffc173613fc2560ab608",
+      "size_bytes": 95826,
+      "source_inode": 219263548,
+      "old_target_inode": 220206762,
+      "new_target_inode": 220575091,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/shapiro_2025_hap1_sppl3_ko.csv",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/data/supplementary/shapiro_2025_hap1_sppl3_ko.csv",
+      "sha256": "38d66d6ca3dd12f1e13e0e448cf06cac6b9c229ccf2682f440fe8a8fb74da4a8",
+      "size_bytes": 199225,
+      "source_inode": 219263549,
+      "old_target_inode": 220206763,
+      "new_target_inode": 220575093,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/shapiro_2025_hap1_tap1_ko.csv",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/data/supplementary/shapiro_2025_hap1_tap1_ko.csv",
+      "sha256": "babd57cb0fad48365369bbcb64f6c4fcb8a372f7bce6fd1e08e9d987c0e5bb38",
+      "size_bytes": 120243,
+      "source_inode": 219263550,
+      "old_target_inode": 220206764,
+      "new_target_inode": 220575094,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/shapiro_2025_hap1_wildtype.csv",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/data/supplementary/shapiro_2025_hap1_wildtype.csv",
+      "sha256": "ee2fe18ad0b10382d400670e3d2215c71714aad9234ac95b89bb9410055bdafb",
+      "size_bytes": 250548,
+      "source_inode": 219263553,
+      "old_target_inode": 220206767,
+      "new_target_inode": 220575095,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/data/supplementary/strazar_2023_hla2.csv",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/data/supplementary/strazar_2023_hla2.csv",
+      "sha256": "3dc547ae7cd4cfd735794e30c52430bb33f52d3960644d24bf07e44d6496e085",
+      "size_bytes": 13932615,
+      "source_inode": 219263554,
+      "old_target_inode": 220206768,
+      "new_target_inode": 220575098,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/downloads.py",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/downloads.py",
+      "sha256": "43ff8fe94bf901bbe6d2c3217c5b52caebc8792dbc46815907b092b3e78cf922",
+      "size_bytes": 65802,
+      "source_inode": 219263565,
+      "old_target_inode": 220206782,
+      "new_target_inode": 220575128,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/export.py",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/export.py",
+      "sha256": "158cee3c8343dfc36eacde22c209746b251f7539958eeacc29e6de2155a26c6a",
+      "size_bytes": 236271,
+      "source_inode": 219263574,
+      "old_target_inode": 220206791,
+      "new_target_inode": 220575129,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/pmhc_query.py",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/pmhc_query.py",
+      "sha256": "cf0898437a26e7dc03460230c6ab05dc030f90ed9a4120666831b909d32434a8",
+      "size_bytes": 82001,
+      "source_inode": 219263600,
+      "old_target_inode": 220206820,
+      "new_target_inode": 220575131,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/proteome.py",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/proteome.py",
+      "sha256": "914705188322a6e74b75bb4d9a77b2e5eb0ade7255febfbb93a0023e8f042e97",
+      "size_bytes": 66575,
+      "source_inode": 219263604,
+      "old_target_inode": 220206824,
+      "new_target_inode": 220575140,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/hitlist/qc.py",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/hitlist/qc.py",
+      "sha256": "151be95f8fa98f705870c7c700e291a981e9af1e377b3bd6c4826853c7768c63",
+      "size_bytes": 71620,
+      "source_inode": 219263612,
+      "old_target_inode": 220206832,
+      "new_target_inode": 220575142,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tasks/atlas-crosswalk-results/files-all.json.gz",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/tasks/atlas-crosswalk-results/files-all.json.gz",
+      "sha256": "ce68e10e00d9e4bd6d0d9d785b8e743e419b0076a892167d8a37e9462d23a74c",
+      "size_bytes": 367085,
+      "source_inode": 219263690,
+      "old_target_inode": 220206910,
+      "new_target_inode": 220575144,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tasks/atlas-crosswalk-results/inventory-crosswalk.tsv.gz",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/tasks/atlas-crosswalk-results/inventory-crosswalk.tsv.gz",
+      "sha256": "b44a1e076db8f1594d69a6f5df7b025f440c26c6d2bfc0536fe2c0420bdfb7ae",
+      "size_bytes": 181743,
+      "source_inode": 219263692,
+      "old_target_inode": 220206912,
+      "new_target_inode": 220575146,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tasks/atlas-crosswalk-results/sdrf-file-crosswalk.tsv.gz",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/tasks/atlas-crosswalk-results/sdrf-file-crosswalk.tsv.gz",
+      "sha256": "7f2deaec3b340ad8c6ecf34cedd8f9944d34050dfa0a906f93b57a5127900591",
+      "size_bytes": 117418,
+      "source_inode": 219263694,
+      "old_target_inode": 220206914,
+      "new_target_inode": 220575148,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tasks/corpus-qualification-requirements.txt",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/tasks/corpus-qualification-requirements.txt",
+      "sha256": "a23497ea0c27f5ecb6f961699f6e5165fbc2d9ab8213f524cb61a6da436458c9",
+      "size_bytes": 85807,
+      "source_inode": 219263742,
+      "old_target_inode": 220206962,
+      "new_target_inode": 220575155,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tasks/corrected-corpus-requirements.txt",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/tasks/corrected-corpus-requirements.txt",
+      "sha256": "842a0bc41d2bdfe1ff75d5c5bef16c8501ec2a46525ae32e9f579d8b6ceb9cf1",
+      "size_bytes": 85739,
+      "source_inode": 219263766,
+      "old_target_inode": 220206986,
+      "new_target_inode": 220575157,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tasks/evidence-store-results/audit.json",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/tasks/evidence-store-results/audit.json",
+      "sha256": "02dd24ac68ebbd68067437cfd906e04f2f059221c588ce0765326475676aa731",
+      "size_bytes": 271374,
+      "source_inode": 219263812,
+      "old_target_inode": 220207032,
+      "new_target_inode": 220575159,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tests/data/corpus_v3_arm_contexts.json",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/tests/data/corpus_v3_arm_contexts.json",
+      "sha256": "5d969f708827638e6c13b1e2b4c350c8cee8b72fbb0484905b8bf1a3fe428e90",
+      "size_bytes": 147662,
+      "source_inode": 219263923,
+      "old_target_inode": 220207147,
+      "new_target_inode": 220575162,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tests/test_curation.py",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/tests/test_curation.py",
+      "sha256": "1d0e693391b91ed9067fdf5111420b6f6fb82f495ff9be7058f2c239c621a480",
+      "size_bytes": 151532,
+      "source_inode": 219263978,
+      "old_target_inode": 220207202,
+      "new_target_inode": 220575174,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tests/test_export.py",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/tests/test_export.py",
+      "sha256": "99daa890d3a6e7e543542e626d33ac82f2ba3d49283891958816546e1f70e0d4",
+      "size_bytes": 163802,
+      "source_inode": 219264001,
+      "old_target_inode": 220207225,
+      "new_target_inode": 220575177,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tests/test_line_expression.py",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/tests/test_line_expression.py",
+      "sha256": "c42b76a3c25cb9912b1da8075427b1274edf0e16b4690befe44cb1cbed0756ff",
+      "size_bytes": 68198,
+      "source_inode": 219264016,
+      "old_target_inode": 220207240,
+      "new_target_inode": 220575180,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tests/test_pmhc_query.py",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/tests/test_pmhc_query.py",
+      "sha256": "2c4a3485b345b8cf2ae324c53286fc0f83468bbf9efc966ce4d7a3500b232dd1",
+      "size_bytes": 104769,
+      "source_inode": 219264035,
+      "old_target_inode": 220207262,
+      "new_target_inode": 220575181,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/tests/test_qc.py",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/tests/test_qc.py",
+      "sha256": "ee46f4f6c1e086a42216f493e7951d0911822f2ac93e3780f84db898d39fc23b",
+      "size_bytes": 73022,
+      "source_inode": 219264044,
+      "old_target_inode": 220207271,
+      "new_target_inode": 220575182,
+      "verified": true
+    },
+    {
+      "source": "/private/tmp/hitlist-release-2026/uv.lock",
+      "destination": "/private/tmp/hitlist-mapp2025-20261024/uv.lock",
+      "sha256": "283b94ea6bd6147e35542dcad85c629a1fa37213cb7fbeee337905a02f5e9fcb",
+      "size_bytes": 552450,
+      "source_inode": 219264083,
+      "old_target_inode": 220207310,
+      "new_target_inode": 220575183,
+      "verified": true
+    }
+  ],
+  "interpretation": "shared-volume free-space change may include unrelated activity; no original data or checkpoints deleted"
+}

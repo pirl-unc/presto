@@ -1,0 +1,17 @@
+{
+  "frozen_at": "2026-10-24T08:29:39.961347+00:00",
+  "source_sha256": {
+    "experiments/2026-10-24_0410_codex_native-processing/analysis/verify.py": "5b6d402fec0173aced8f044db64c349fb06ee55e9790708fdfb832048141aea6",
+    "experiments/2026-10-24_0410_codex_native-processing/reproduce/closure-plan.md": "70607f5021f62e89fea9f552e89be303648604eaab882bb18269ed9d388d1b64"
+  },
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "experiments/2026-10-24_0410_codex_native-processing/analysis/verify.py"
+  ],
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "test_metrics_opened": false
+}

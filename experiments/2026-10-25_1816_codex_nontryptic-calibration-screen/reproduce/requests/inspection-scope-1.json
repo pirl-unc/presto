@@ -1,0 +1,21 @@
+{
+  "action": "inventory_and_semantic_qualification_only",
+  "source_doi": "10.1073/pnas.2111173118",
+  "accession": "PXD024917",
+  "files": [
+    "pnas.2111173118.sapp.pdf",
+    "pnas.2111173118.sd01.xlsx",
+    "pnas.2111173118.sd03.xlsx",
+    "pnas.2111173118.sd07.xlsx"
+  ],
+  "before_opening_numeric_workbooks": true,
+  "no_model_fit_or_test_access": true,
+  "verification": "Official MD5 plus two independent worksheet-cell parsers, preserving literal text, cached formulas, headers and coordinates. Parse methods text with two PDF parsers and inspect rendered relevant pages.",
+  "admission_requirements": [
+    "At least12distinct nontryptic peptide identities with at least3known-dose/raw-signal pairs each",
+    "Separate amount and raw response columns; normalized ratios or inferred endogenous amounts alone do not satisfy this",
+    "Source-backed sequence/isotope identities, matrix, spike stage, dose units and acquisition/filemap",
+    "Preserve selection/HLA-restriction and purity/ELISA-assignment uncertainty; no claim this estimates intracellular free peptides"
+  ],
+  "if_incomplete": "Report missing exact file/fields and shared Hitlist dependency; no calibration training or dose reconstruction from response values"
+}

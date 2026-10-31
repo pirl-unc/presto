@@ -10,8 +10,8 @@ import torch
 import torch.nn.functional as F
 
 from presto.data.collate import PrestoCollator, PrestoSample, TCR_EVIDENCE_METHOD_BINS
-from presto.models.presto import Presto
-from presto.scripts.train_synthetic import compute_loss, evaluate
+from presto.legacy.presto import Presto
+from presto.legacy.scripts.train_synthetic import compute_loss, evaluate
 from presto.training.data_support import audit_split_support, write_split_support_artifacts
 from presto.training.evaluation_ledger import reconcile_prediction_artifact
 from presto.training.holdout_eval import collect_holdout_predictions, write_holdout_artifacts

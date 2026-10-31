@@ -1,0 +1,8 @@
+{
+  "status": "failed independent context assertion",
+  "source_sha256": "05dc96ab86f840c454ac7b742674ac35801866da0a346cf91e951e27190f7690",
+  "cause": "Native PMID is numeric; grouped profile serializes it as text. The verifier looked up integer keys in a string-keyed vocabulary, losing explicit-none comparison support.",
+  "diagnostic": "results/context-verification-diagnostic.json",
+  "admitted_outputs_changed": false,
+  "remedy": "Normalize study keys to decimal strings in the independent reader, preserving raw native values in provenance."
+}

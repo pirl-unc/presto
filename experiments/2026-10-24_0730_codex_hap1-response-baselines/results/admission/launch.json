@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "experiments/2026-10-24_0730_codex_hap1-response-baselines/code/admit.py",
+    "--experiment",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0730_codex_hap1-response-baselines",
+    "--source",
+    "/private/tmp/presto-modular-model/data/hap1_quantitative_source_admission/2026-10-24_0612_codex_hap1-quantitative-admission/canonical-package-v2",
+    "--output",
+    "/private/tmp/presto-modular-model/data/hap1_response_recipes/2026-10-24_0730_v1"
+  ],
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "source": "/private/tmp/presto-modular-model/data/hap1_quantitative_source_admission/2026-10-24_0612_codex_hap1-quantitative-admission/canonical-package-v2",
+  "output": "/private/tmp/presto-modular-model/data/hap1_response_recipes/2026-10-24_0730_v1",
+  "source_manifest_sha256": "88cad10d7bc2a638305cb0d37ad96ac2826c3badaf7b3e0aad7928820df5c4b8",
+  "hitlist_commit": "2f4bbe0df02b128a041a9b79d46505fdebbda461",
+  "hitlist_dirty": " M hitlist/distribution_recipe.py\n M hitlist/evidence_recipe.py\n M hitlist/version.py\n M tasks/todo.md\n?? hitlist/hap1_response_recipe.py\n?? tasks/hap1_response_spec.md\n?? tests/test_hap1_response_recipe.py\n",
+  "environment": {
+    "PYTHONPATH": "/private/tmp/hitlist-hap1-recipe",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  }
+}

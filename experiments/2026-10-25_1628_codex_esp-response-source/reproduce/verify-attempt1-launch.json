@@ -1,0 +1,85 @@
+{
+  "argv": [
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1628_codex_esp-response-source/code/launch.py",
+    "verify",
+    "--attempt",
+    "1",
+    "--requests",
+    "experiments/2026-10-25_1628_codex_esp-response-source/reproduce/requests/verify-1.json"
+  ],
+  "configuration": {
+    "agent_model": "Codex / GPT-6",
+    "created_utc": "2026-10-25T16:28:05.152933+00:00",
+    "experiment_id": "2026-10-25_1628_codex_esp-response-source",
+    "presto_commit": "e176f7d220360431e5c2002506710f71765ae28e",
+    "dirty_tracked": true,
+    "dirty_scope": "Preserved unrelated tasks plus ESP-source registration",
+    "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+    "data_directory": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/esp_response_sources/2026-10-25_1628_codex_esp-response-source",
+    "public_hosts": [
+      "www.ebi.ac.uk",
+      "pmc-oa-opendata.s3.amazonaws.com",
+      "pmc.ncbi.nlm.nih.gov",
+      "www.nature.com",
+      "static-content.springer-cdn.com"
+    ],
+    "limits": {
+      "stage_seconds": 1200,
+      "rss_bytes": 3221225472,
+      "startup_memory_bytes": 3221225472,
+      "disk_floor_bytes": 1073741824,
+      "start_margin_bytes": 33554432
+    },
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUNBUFFERED": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    },
+    "frozen_code_sha256": {
+      "code/fetch.py": "1bda902de950a889bab3a23487ca45cb430713afb42f7dc5b4a577dd37578dbb",
+      "code/launch.py": "337b0957f12bced683299134c33465d6b26145fbaa4d9bc1e233832b437a9e27",
+      "reproduce/source/fetch.py": "1bda902de950a889bab3a23487ca45cb430713afb42f7dc5b4a577dd37578dbb",
+      "reproduce/source/launch.py": "337b0957f12bced683299134c33465d6b26145fbaa4d9bc1e233832b437a9e27",
+      "reproduce/launch.sh": "bd27eee7e3798282788ee4d3eca38565cc6b093616c6462f370bb75e70252012"
+    },
+    "plan_sha256": "49cb9da7e74abe8dc0819f9897c6916458d98e11f8e44522d458e47c0539c15d",
+    "input_sha256": {},
+    "network_limits": {
+      "metadata_requests": 3,
+      "metadata_bytes_each": 5242880,
+      "processed_bytes_each": 67108864,
+      "total_bytes": 134217728,
+      "connect_seconds": 10,
+      "read_seconds": 30,
+      "request_wall_seconds": 120
+    },
+    "training_contract": null,
+    "test_split": null,
+    "reason_no_predictions": "Public source access/schema/semantic admission only; no model fitting or outer-data access.",
+    "extension_policy": "Every discovered request set is an immutable JSON file under reproduce/requests, citing observed source links/API documentation and its stage/scope before execution.",
+    "discovery_budget": {
+      "total_operations": 6,
+      "operations_used_before_registration": 3,
+      "remaining_guarded_metadata_requests": 3,
+      "note": "Any additional browser operation consumes this same remaining budget; no independent tool budgets."
+    }
+  },
+  "request_set": {
+    "scope": "Original article identity/contract verification only; no numeric supplements or predictive dataset.",
+    "article_path": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/esp_response_sources/2026-10-25_1628_codex_esp-response-source/fusaro2009-article.xml",
+    "metadata_path": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/esp_response_sources/2026-10-25_1628_codex_esp-response-source/fusaro2009-s3.json",
+    "input_sha256": {
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/esp_response_sources/2026-10-25_1628_codex_esp-response-source/fusaro2009-article.xml": "3b4834e44fe949675881e8aa1afd349d5dc8e6ffa46aee4d9bc9c88b48e7333f",
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/esp_response_sources/2026-10-25_1628_codex_esp-response-source/fusaro2009-s3.json": "78aeec5850be83954b3e26db9942584c5366fb6df4aa0775a383d16d5d3b777f"
+    },
+    "source_sha256": {
+      "code/verify.py": "c5719e20e58a48ce7a927469c0041bc1507d4e58fc2adadef67d651295d58af6",
+      "reproduce/source/verify.py": "c5719e20e58a48ce7a927469c0041bc1507d4e58fc2adadef67d651295d58af6"
+    }
+  },
+  "request_set_sha256": "9121b75ad0cd5c1e3c0657c3e25b5b818bd845db83683d51992a53915249c345"
+}

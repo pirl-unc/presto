@@ -1,0 +1,33 @@
+[
+  {
+    "name": "Dilute_peptide_quantities.csv",
+    "kind": "csv",
+    "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2025/09/PXD024809/Dilute_peptide_quantities.csv",
+    "expected_bytes": 13073500,
+    "deposit_metadata_sha256": "3e5b9b29f9cd531d7f55d44b16fdb579a79f75664dbbc6e8c4ac6332589837c0",
+    "deposit_checksum": "",
+    "transport_note": "HTTPS equivalent of the public PRIDE FTP location; identical filename and archive path.",
+    "started_utc": "2026-10-25T08:17:14.386790+00:00",
+    "status": 200,
+    "final_url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2025/09/PXD024809/Dilute_peptide_quantities.csv",
+    "headers": {
+      "Date": "Sun, 25 Oct 2026 08:17:15 GMT",
+      "Server": "Apache",
+      "Last-Modified": "Thu, 04 Sep 2025 02:16:40 GMT",
+      "ETag": "\"c77c5c-63df04fc4b200\"",
+      "Accept-Ranges": "bytes",
+      "Content-Length": "13073500",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET,OPTIONS",
+      "Access-Control-Allow-Headers": "Authorization,Origin,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Accept",
+      "Connection": "close",
+      "Content-Type": "text/csv"
+    },
+    "bytes": 13073500,
+    "sha256": "646f8054ca9f60d9ebad46722a994c507c0b30c0c897a75df356586f0bfcccb8",
+    "passed": false,
+    "error_type": "AssertionError",
+    "error": "Expected a comma-separated header",
+    "elapsed_seconds": 20.360550415993202
+  }
+]

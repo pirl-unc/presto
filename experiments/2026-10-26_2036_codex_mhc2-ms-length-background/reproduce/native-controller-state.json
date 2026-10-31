@@ -1,0 +1,18 @@
+{
+  "status": "stopped_on_failure",
+  "events": [
+    {
+      "utc": "2026-10-26T20:43:03.450922+00:00",
+      "argv": [
+        "/Users/iskander/code/shared-virtual-env/bin/python",
+        "/private/tmp/presto-mhc2-20261026/presto/experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/native.py",
+        "fit",
+        "native101"
+      ]
+    }
+  ],
+  "current_action": "fit-native101",
+  "pid": 30039,
+  "error": "RuntimeError('fit-native101 exited1; stopped without retry')",
+  "updated_utc": "2026-10-27T00:36:37.566657+00:00"
+}

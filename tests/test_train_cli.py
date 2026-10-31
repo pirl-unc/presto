@@ -1,396 +1,56 @@
-"""Tests for train CLI parser wiring."""
+"""One manifest CLI contract; historical architecture flags must fail."""
+
+import pytest
 
 from presto.cli import train as train_cli
 from presto.cli.main import create_parser
-from presto.scripts.train_iedb import IEDB_DEFAULTS
 
 
-def test_parser_wires_train_iedb_run_dir():
-    parser = create_parser()
-    args = parser.parse_args(
+@pytest.mark.parametrize("mode", [None, "unified", "synthetic", "pretrain", "finetune"])
+def test_every_training_alias_has_one_contract(mode):
+    argv = ["train", *([mode] if mode else []), "--manifest", "fixture.json", "--preflight"]
+    args = create_parser().parse_args(argv)
+    assert args.func is train_cli.cmd_train
+    assert args.observations_manifest == "fixture.json"
+    assert args.modular_preflight is True
+    assert args.model_kind == "shared"
+    assert not hasattr(args, "latent_topology")
+    assert not hasattr(args, "synthetic_negative_ratio")
+
+
+@pytest.mark.parametrize(
+    "flags",
+    [
+        ["--model-kind", "legacy"],
+        ["--d_model", "256"],
+        ["--epochs", "5"],
+        ["--profile", "canary"],
+        ["--data-source", "hitlist"],
+        ["--config", "old.yml"],
+        ["--latent-topology", "expanded"],
+        ["--use-pcgrad"],
+        ["--batch_size", "16"],
+        ["--no-filter-unresolved-mhc"],
+        ["--synthetic-pmhc-negative-ratio", "1"],
+    ],
+)
+def test_old_training_flags_fail_instead_of_selecting_another_path(flags):
+    with pytest.raises(SystemExit, match="2"):
+        create_parser().parse_args(["train", "--manifest", "fixture.json", *flags])
+
+
+def test_manifest_is_required_and_resume_is_explicit():
+    with pytest.raises(SystemExit, match="2"):
+        create_parser().parse_args(["train", "unified"])
+    args = create_parser().parse_args(
         [
             "train",
-            "unified",
+            "--observations-manifest",
+            "fixture.json",
+            "--resume",
             "--run-dir",
-            "/tmp/unified",
+            "run",
         ]
     )
-    assert args.func is train_cli.cmd_train_unified
-    assert args.run_dir == "/tmp/unified"
-
-
-def test_parser_train_iedb_default_record_caps_unlimited():
-    parser = create_parser()
-    args = parser.parse_args(["train", "unified"])
-    assert args.func is train_cli.cmd_train_unified
-    assert args.profile == "full"
-    assert args.require_merged_input is True
-    assert args.balanced_batches is True
-    assert args.merged_tsv is None
-    assert args.cedar_binding_file is None
-    assert args.cedar_tcell_file is None
-    assert args.max_binding == 0
-    assert args.max_kinetics == 0
-    assert args.max_stability == 0
-    assert args.max_processing == 0
-    assert args.max_elution == 0
-    assert args.max_tcell == 0
-    assert args.num_workers == 4
-    assert args.pin_memory is True
-    assert args.profile_performance is True
-    assert args.supervised_loss_aggregation == "task_mean"
-    assert args.perf_log_interval_batches == 100
-    assert args.track_pmhc_flow is True
-    assert args.pmhc_flow_batches == 2
-    assert args.pmhc_flow_max_samples == 512
-    assert args.filter_unresolved_mhc is True
-    assert args.strict_mhc_resolution is True
-    assert args.latent_topology == IEDB_DEFAULTS["latent_topology"] == "expanded"
-    # Synthetic negative categories are enabled by default.
-    assert args.synthetic_pmhc_negative_ratio > 0.0
-    assert args.synthetic_elution_negative_ratio is None
-    assert args.synthetic_cascade_elution_negative_ratio is None
-    assert args.synthetic_cascade_tcell_negative_ratio is None
-    assert args.synthetic_class_i_no_mhc_beta_negative_ratio > 0.0
-    assert args.synthetic_processing_negative_ratio > 0.0
-
-
-def test_data_integrity_parser_defaults_match_config_merge_registry():
-    args = create_parser().parse_args(["train", "unified"])
-    destinations = (
-        "data_seed",
-        "exclude_target",
-        "synthetic_elution_negative_ratio",
-        "synthetic_cascade_elution_negative_ratio",
-        "synthetic_cascade_tcell_negative_ratio",
-        "require_split_target",
-        "require_all_active_target_support",
-        "require_binary_balance_target",
-        "require_all_active_binary_balance",
-        "min_split_target_support",
-        "require_traceable_lineage",
-        "forbid_fake_null_sequences",
-        "expected_split_support_sha256",
-        "data_preflight_only",
-    )
-
-    for destination in destinations:
-        assert destination in IEDB_DEFAULTS
-        assert getattr(args, destination) == IEDB_DEFAULTS[destination]
-
-
-def test_parser_wires_data_preflight_contract_flags():
-    parser = create_parser()
-    args = parser.parse_args(
-        [
-            "train",
-            "unified",
-            "--data-seed",
-            "17",
-            "--synthetic-elution-negative-ratio",
-            "1",
-            "--synthetic-cascade-elution-negative-ratio",
-            "0",
-            "--synthetic-cascade-tcell-negative-ratio",
-            "0",
-            "--exclude-target",
-            "koff",
-            "--exclude-target",
-            "tm",
-            "--require-split-target",
-            "elution",
-            "--require-all-active-target-support",
-            "--require-binary-balance-target",
-            "elution",
-            "--require-all-active-binary-balance",
-            "--min-split-target-support",
-            "3",
-            "--require-traceable-lineage",
-            "--forbid-fake-null-sequences",
-            "--expected-split-support-sha256",
-            "abc123",
-            "--data-preflight-only",
-        ]
-    )
-
-    assert args.func is train_cli.cmd_train_unified
-    assert args.data_seed == 17
-    assert args.synthetic_elution_negative_ratio == 1.0
-    assert args.synthetic_cascade_elution_negative_ratio == 0.0
-    assert args.synthetic_cascade_tcell_negative_ratio == 0.0
-    assert args.exclude_target == ["koff", "tm"]
-    assert args.require_split_target == ["elution"]
-    assert args.require_all_active_target_support is True
-    assert args.require_binary_balance_target == ["elution"]
-    assert args.require_all_active_binary_balance is True
-    assert args.min_split_target_support == 3
-    assert args.require_traceable_lineage is True
-    assert args.forbid_fake_null_sequences is True
-    assert args.expected_split_support_sha256 == "abc123"
-    assert args.data_preflight_only is True
-
-
-def test_parser_wires_train_synthetic_run_dir():
-    parser = create_parser()
-    args = parser.parse_args(
-        [
-            "train",
-            "synthetic",
-            "--run-dir",
-            "/tmp/synth",
-        ]
-    )
-    assert args.func is train_cli.cmd_train_synthetic
-    assert args.run_dir == "/tmp/synth"
-
-
-def test_parser_wires_train_config_file():
-    parser = create_parser()
-    args = parser.parse_args(
-        [
-            "train",
-            "synthetic",
-            "--config",
-            "train.yaml",
-        ]
-    )
-    assert args.func is train_cli.cmd_train_synthetic
-    assert args.config == "train.yaml"
-
-
-def test_parser_wires_synthetic_advanced_flags():
-    parser = create_parser()
-    args = parser.parse_args(
-        [
-            "train",
-            "synthetic",
-            "--weight_decay",
-            "0.02",
-            "--no-uncertainty-weighting",
-            "--use-pcgrad",
-        ]
-    )
-    assert args.func is train_cli.cmd_train_synthetic
-    assert args.weight_decay == 0.02
-    assert args.use_uncertainty_weighting is False
-    assert args.use_pcgrad is True
-
-
-def test_parser_accepts_supervised_loss_aggregation_flags():
-    parser = create_parser()
-    synth = parser.parse_args(
-        [
-            "train",
-            "synthetic",
-            "--supervised-loss-aggregation",
-            "task_mean",
-        ]
-    )
-    assert synth.func is train_cli.cmd_train_synthetic
-    assert synth.supervised_loss_aggregation == "task_mean"
-
-    unified = parser.parse_args(
-        [
-            "train",
-            "unified",
-            "--supervised-loss-aggregation",
-            "task_mean",
-        ]
-    )
-    assert unified.func is train_cli.cmd_train_unified
-    assert unified.supervised_loss_aggregation == "task_mean"
-
-
-def test_parser_wires_consistency_and_pmhc_flags():
-    parser = create_parser()
-    args = parser.parse_args(
-        [
-            "train",
-            "unified",
-            "--synthetic-pmhc-negative-ratio",
-            "0.9",
-            "--consistency-cascade-weight",
-            "0.3",
-            "--consistency-no-b2m-weight",
-            "1.2",
-            "--consistency-tcell-context-weight",
-            "0.4",
-        ]
-    )
-    assert args.func is train_cli.cmd_train_unified
-    assert args.synthetic_pmhc_negative_ratio == 0.9
-    assert args.consistency_cascade_weight == 0.3
-    assert args.consistency_no_b2m_weight == 1.2
-    assert args.consistency_tcell_context_weight == 0.4
-
-
-def test_parser_train_unified_accepts_no_mhc_beta_negative_ratio_flag():
-    parser = create_parser()
-    args = parser.parse_args(
-        [
-            "train",
-            "unified",
-            "--synthetic-class-i-no-mhc-beta-negative-ratio",
-            "0.33",
-        ]
-    )
-    assert args.func is train_cli.cmd_train_unified
-    assert args.synthetic_class_i_no_mhc_beta_negative_ratio == 0.33
-
-
-def test_parser_train_iedb_alias_still_supported():
-    parser = create_parser()
-    args = parser.parse_args(["train", "iedb"])
-    assert args.func is train_cli.cmd_train_unified
-
-
-def test_parser_train_unified_accepts_canary_profile():
-    parser = create_parser()
-    args = parser.parse_args(["train", "unified", "--profile", "canary"])
-    assert args.func is train_cli.cmd_train_unified
-    assert args.profile == "canary"
-
-
-def test_parser_train_unified_accepts_diagnostic_profile():
-    parser = create_parser()
-    args = parser.parse_args(["train", "unified", "--profile", "diagnostic"])
-    assert args.func is train_cli.cmd_train_unified
-    assert args.profile == "diagnostic"
-
-
-def test_parser_train_unified_allows_raw_fallback():
-    parser = create_parser()
-    args = parser.parse_args(["train", "unified", "--allow-raw-fallback"])
-    assert args.func is train_cli.cmd_train_unified
-    assert args.require_merged_input is False
-
-
-def test_parser_train_unified_allows_unresolved_mhc_override():
-    parser = create_parser()
-    args = parser.parse_args(["train", "unified", "--allow-unresolved-mhc"])
-    assert args.func is train_cli.cmd_train_unified
-    assert args.strict_mhc_resolution is False
-
-
-def test_parser_train_unified_filter_unresolved_mhc_flag():
-    parser = create_parser()
-    args = parser.parse_args(["train", "unified", "--filter-unresolved-mhc"])
-    assert args.func is train_cli.cmd_train_unified
-    assert args.filter_unresolved_mhc is True
-
-
-def test_parser_train_unified_no_filter_unresolved_mhc_flag():
-    parser = create_parser()
-    args = parser.parse_args(["train", "unified", "--no-filter-unresolved-mhc"])
-    assert args.func is train_cli.cmd_train_unified
-    assert args.filter_unresolved_mhc is False
-
-
-def test_parser_train_unified_accepts_mhc_attention_sparsity_flags():
-    parser = create_parser()
-    args = parser.parse_args(
-        [
-            "train",
-            "unified",
-            "--mhc-attention-sparsity-weight",
-            "0.2",
-            "--mhc-attention-sparsity-min-residues",
-            "35",
-            "--mhc-attention-sparsity-max-residues",
-            "55",
-        ]
-    )
-    assert args.func is train_cli.cmd_train_unified
-    assert args.mhc_attention_sparsity_weight == 0.2
-    assert args.mhc_attention_sparsity_min_residues == 35.0
-    assert args.mhc_attention_sparsity_max_residues == 55.0
-
-
-def test_parser_train_unified_probe_tracking_defaults_and_overrides():
-    parser = create_parser()
-    defaults = parser.parse_args(["train", "unified"])
-    assert defaults.track_probe_affinity is True
-    assert defaults.probe_peptide == "SLLQHLIGL"
-    assert defaults.probe_alleles == "HLA-A*02:01,HLA-A*24:02"
-
-    disabled = parser.parse_args(
-        [
-            "train",
-            "unified",
-            "--no-track-probe-affinity",
-            "--probe-peptide",
-            "SIINFEKL",
-            "--probe-alleles",
-            "HLA-A*02:01",
-        ]
-    )
-    assert disabled.track_probe_affinity is False
-    assert disabled.probe_peptide == "SIINFEKL"
-    assert disabled.probe_alleles == "HLA-A*02:01"
-
-
-def test_parser_train_unified_performance_and_loader_flags():
-    parser = create_parser()
-    args = parser.parse_args(
-        [
-            "train",
-            "unified",
-            "--num-workers",
-            "2",
-            "--no-pin-memory",
-            "--no-profile-performance",
-            "--perf-log-interval-batches",
-            "25",
-        ]
-    )
-    assert args.func is train_cli.cmd_train_unified
-    assert args.num_workers == 2
-    assert args.pin_memory is False
-    assert args.profile_performance is False
-    assert args.perf_log_interval_batches == 25
-
-
-def test_parser_train_unified_pmhc_flow_tracking_defaults_and_overrides():
-    parser = create_parser()
-    defaults = parser.parse_args(["train", "unified"])
-    assert defaults.track_pmhc_flow is True
-    assert defaults.pmhc_flow_batches == 2
-    assert defaults.pmhc_flow_max_samples == 512
-
-    disabled = parser.parse_args(
-        [
-            "train",
-            "unified",
-            "--no-track-pmhc-flow",
-            "--pmhc-flow-batches",
-            "3",
-            "--pmhc-flow-max-samples",
-            "120",
-        ]
-    )
-    assert disabled.track_pmhc_flow is False
-    assert disabled.pmhc_flow_batches == 3
-    assert disabled.pmhc_flow_max_samples == 120
-
-
-def test_parser_train_unified_output_latent_tracking_defaults_and_overrides():
-    parser = create_parser()
-    defaults = parser.parse_args(["train", "unified"])
-    assert defaults.track_output_latent_stats is True
-    assert defaults.output_latent_stats_batches == 2
-    assert defaults.output_latent_stats_max_samples == 512
-
-    disabled = parser.parse_args(
-        [
-            "train",
-            "unified",
-            "--no-track-output-latent-stats",
-            "--output-latent-stats-batches",
-            "5",
-            "--output-latent-stats-max-samples",
-            "200",
-        ]
-    )
-    assert disabled.track_output_latent_stats is False
-    assert disabled.output_latent_stats_batches == 5
-    assert disabled.output_latent_stats_max_samples == 200
+    assert args.modular_resume and args.run_dir == "run"
+    assert train_cli.cmd_train_unified is train_cli.cmd_train_synthetic is train_cli.cmd_train

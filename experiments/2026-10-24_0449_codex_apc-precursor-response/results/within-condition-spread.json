@@ -1,0 +1,488 @@
+[
+  {
+    "variant": "no_change",
+    "split": "train",
+    "condition": "CT2A",
+    "prediction_weighted_sd": 0.0,
+    "prediction_range": 0.0,
+    "target_weighted_sd": 0.1289336127739164,
+    "target_range": 1.4302958728767594
+  },
+  {
+    "variant": "no_change",
+    "split": "train",
+    "condition": "GL261",
+    "prediction_weighted_sd": 0.0,
+    "prediction_range": 0.0,
+    "target_weighted_sd": 0.09715337005912057,
+    "target_range": 0.8677046866218359
+  },
+  {
+    "variant": "no_change",
+    "split": "val",
+    "condition": "CT2A",
+    "prediction_weighted_sd": 0.0,
+    "prediction_range": 0.0,
+    "target_weighted_sd": 0.1543126696162797,
+    "target_range": 1.8716837493969485
+  },
+  {
+    "variant": "no_change",
+    "split": "val",
+    "condition": "GL261",
+    "prediction_weighted_sd": 0.0,
+    "prediction_range": 0.0,
+    "target_weighted_sd": 0.10012208923813247,
+    "target_range": 0.8965982976369814
+  },
+  {
+    "variant": "no_change",
+    "split": "test",
+    "condition": "CT2A",
+    "prediction_weighted_sd": 0.0,
+    "prediction_range": 0.0,
+    "target_weighted_sd": 0.13721820325341746,
+    "target_range": 1.050910888687698
+  },
+  {
+    "variant": "no_change",
+    "split": "test",
+    "condition": "GL261",
+    "prediction_weighted_sd": 0.0,
+    "prediction_range": 0.0,
+    "target_weighted_sd": 0.09716756670516512,
+    "target_range": 0.7813045950287356
+  },
+  {
+    "variant": "condition",
+    "split": "train",
+    "condition": "CT2A",
+    "prediction_weighted_sd": 4.5102810375396997e-17,
+    "prediction_range": 0.0,
+    "target_weighted_sd": 0.1289336127739164,
+    "target_range": 1.4302958728767594
+  },
+  {
+    "variant": "condition",
+    "split": "train",
+    "condition": "GL261",
+    "prediction_weighted_sd": 3.4694469519536165e-18,
+    "prediction_range": 0.0,
+    "target_weighted_sd": 0.09715337005912057,
+    "target_range": 0.8677046866218359
+  },
+  {
+    "variant": "condition",
+    "split": "val",
+    "condition": "CT2A",
+    "prediction_weighted_sd": 3.4694469519536126e-18,
+    "prediction_range": 0.0,
+    "target_weighted_sd": 0.1543126696162797,
+    "target_range": 1.8716837493969485
+  },
+  {
+    "variant": "condition",
+    "split": "val",
+    "condition": "GL261",
+    "prediction_weighted_sd": 1.0408340855860841e-17,
+    "prediction_range": 0.0,
+    "target_weighted_sd": 0.10012208923813247,
+    "target_range": 0.8965982976369814
+  },
+  {
+    "variant": "condition",
+    "split": "test",
+    "condition": "CT2A",
+    "prediction_weighted_sd": 6.938893903907226e-18,
+    "prediction_range": 0.0,
+    "target_weighted_sd": 0.13721820325341746,
+    "target_range": 1.050910888687698
+  },
+  {
+    "variant": "condition",
+    "split": "test",
+    "condition": "GL261",
+    "prediction_weighted_sd": 3.469446951953613e-18,
+    "prediction_range": 0.0,
+    "target_weighted_sd": 0.09716756670516512,
+    "target_range": 0.7813045950287356
+  },
+  {
+    "variant": "precursor",
+    "split": "train",
+    "condition": "CT2A",
+    "prediction_weighted_sd": 0.0928115664857093,
+    "prediction_range": 0.8458657988291081,
+    "target_weighted_sd": 0.1289336127739164,
+    "target_range": 1.4302958728767594
+  },
+  {
+    "variant": "precursor",
+    "split": "train",
+    "condition": "GL261",
+    "prediction_weighted_sd": 0.06082347196566961,
+    "prediction_range": 0.7002830906317218,
+    "target_weighted_sd": 0.09715337005912057,
+    "target_range": 0.8677046866218359
+  },
+  {
+    "variant": "precursor",
+    "split": "val",
+    "condition": "CT2A",
+    "prediction_weighted_sd": 0.1491383622798469,
+    "prediction_range": 1.411863073142409,
+    "target_weighted_sd": 0.1543126696162797,
+    "target_range": 1.8716837493969485
+  },
+  {
+    "variant": "precursor",
+    "split": "val",
+    "condition": "GL261",
+    "prediction_weighted_sd": 0.11356213646559415,
+    "prediction_range": 1.029888388982262,
+    "target_weighted_sd": 0.10012208923813247,
+    "target_range": 0.8965982976369814
+  },
+  {
+    "variant": "precursor",
+    "split": "test",
+    "condition": "CT2A",
+    "prediction_weighted_sd": 0.11089841185820393,
+    "prediction_range": 0.7813285317682344,
+    "target_weighted_sd": 0.13721820325341746,
+    "target_range": 1.050910888687698
+  },
+  {
+    "variant": "precursor",
+    "split": "test",
+    "condition": "GL261",
+    "prediction_weighted_sd": 0.05532769935478673,
+    "prediction_range": 0.43637285336597226,
+    "target_weighted_sd": 0.09716756670516512,
+    "target_range": 0.7813045950287356
+  },
+  {
+    "variant": "condition_precursor",
+    "split": "train",
+    "condition": "CT2A",
+    "prediction_weighted_sd": 0.0928115664857093,
+    "prediction_range": 0.845865798829108,
+    "target_weighted_sd": 0.1289336127739164,
+    "target_range": 1.4302958728767594
+  },
+  {
+    "variant": "condition_precursor",
+    "split": "train",
+    "condition": "GL261",
+    "prediction_weighted_sd": 0.06082347196566962,
+    "prediction_range": 0.7002830906317218,
+    "target_weighted_sd": 0.09715337005912057,
+    "target_range": 0.8677046866218359
+  },
+  {
+    "variant": "condition_precursor",
+    "split": "val",
+    "condition": "CT2A",
+    "prediction_weighted_sd": 0.1491383622798469,
+    "prediction_range": 1.411863073142409,
+    "target_weighted_sd": 0.1543126696162797,
+    "target_range": 1.8716837493969485
+  },
+  {
+    "variant": "condition_precursor",
+    "split": "val",
+    "condition": "GL261",
+    "prediction_weighted_sd": 0.11356213646559415,
+    "prediction_range": 1.029888388982262,
+    "target_weighted_sd": 0.10012208923813247,
+    "target_range": 0.8965982976369814
+  },
+  {
+    "variant": "condition_precursor",
+    "split": "test",
+    "condition": "CT2A",
+    "prediction_weighted_sd": 0.11089841185820393,
+    "prediction_range": 0.7813285317682344,
+    "target_weighted_sd": 0.13721820325341746,
+    "target_range": 1.050910888687698
+  },
+  {
+    "variant": "condition_precursor",
+    "split": "test",
+    "condition": "GL261",
+    "prediction_weighted_sd": 0.05532769935478673,
+    "prediction_range": 0.4363728533659723,
+    "target_weighted_sd": 0.09716756670516512,
+    "target_range": 0.7813045950287356
+  },
+  {
+    "variant": "uniform_exact",
+    "split": "train",
+    "condition": "CT2A",
+    "prediction_weighted_sd": 0.09281712974802382,
+    "prediction_range": 0.845865798829108,
+    "target_weighted_sd": 0.1289336127739164,
+    "target_range": 1.4302958728767594
+  },
+  {
+    "variant": "uniform_exact",
+    "split": "train",
+    "condition": "GL261",
+    "prediction_weighted_sd": 0.060825294145737153,
+    "prediction_range": 0.7004078184013547,
+    "target_weighted_sd": 0.09715337005912057,
+    "target_range": 0.8677046866218359
+  },
+  {
+    "variant": "uniform_exact",
+    "split": "val",
+    "condition": "CT2A",
+    "prediction_weighted_sd": 0.1491108481033613,
+    "prediction_range": 1.411577979657637,
+    "target_weighted_sd": 0.1543126696162797,
+    "target_range": 1.8716837493969485
+  },
+  {
+    "variant": "uniform_exact",
+    "split": "val",
+    "condition": "GL261",
+    "prediction_weighted_sd": 0.11355885465258532,
+    "prediction_range": 1.029847671927041,
+    "target_weighted_sd": 0.10012208923813247,
+    "target_range": 0.8965982976369814
+  },
+  {
+    "variant": "uniform_exact",
+    "split": "test",
+    "condition": "CT2A",
+    "prediction_weighted_sd": 0.1109350410709863,
+    "prediction_range": 0.7822020284787937,
+    "target_weighted_sd": 0.13721820325341746,
+    "target_range": 1.050910888687698
+  },
+  {
+    "variant": "uniform_exact",
+    "split": "test",
+    "condition": "GL261",
+    "prediction_weighted_sd": 0.0553344563878856,
+    "prediction_range": 0.4364975811356052,
+    "target_weighted_sd": 0.09716756670516512,
+    "target_range": 0.7813045950287356
+  },
+  {
+    "variant": "sequence_exact",
+    "split": "train",
+    "condition": "CT2A",
+    "prediction_weighted_sd": 0.09281812589235666,
+    "prediction_range": 0.8458733630036047,
+    "target_weighted_sd": 0.1289336127739164,
+    "target_range": 1.4302958728767594
+  },
+  {
+    "variant": "sequence_exact",
+    "split": "train",
+    "condition": "GL261",
+    "prediction_weighted_sd": 0.060825503043052065,
+    "prediction_range": 0.7004193451014806,
+    "target_weighted_sd": 0.09715337005912057,
+    "target_range": 0.8677046866218359
+  },
+  {
+    "variant": "sequence_exact",
+    "split": "val",
+    "condition": "CT2A",
+    "prediction_weighted_sd": 0.14910769898533047,
+    "prediction_range": 1.4115389166394456,
+    "target_weighted_sd": 0.1543126696162797,
+    "target_range": 1.8716837493969485
+  },
+  {
+    "variant": "sequence_exact",
+    "split": "val",
+    "condition": "GL261",
+    "prediction_weighted_sd": 0.1135585498150859,
+    "prediction_range": 1.0298432424065536,
+    "target_weighted_sd": 0.10012208923813247,
+    "target_range": 0.8965982976369814
+  },
+  {
+    "variant": "sequence_exact",
+    "split": "test",
+    "condition": "CT2A",
+    "prediction_weighted_sd": 0.11093815132647084,
+    "prediction_range": 0.7822889656834577,
+    "target_weighted_sd": 0.13721820325341746,
+    "target_range": 1.050910888687698
+  },
+  {
+    "variant": "sequence_exact",
+    "split": "test",
+    "condition": "GL261",
+    "prediction_weighted_sd": 0.055334931736680935,
+    "prediction_range": 0.4365087542884663,
+    "target_weighted_sd": 0.09716756670516512,
+    "target_range": 0.7813045950287356
+  },
+  {
+    "variant": "sequence_hybrid",
+    "split": "train",
+    "condition": "CT2A",
+    "prediction_weighted_sd": 0.09281812543058265,
+    "prediction_range": 0.8458725532996023,
+    "target_weighted_sd": 0.1289336127739164,
+    "target_range": 1.4302958728767594
+  },
+  {
+    "variant": "sequence_hybrid",
+    "split": "train",
+    "condition": "GL261",
+    "prediction_weighted_sd": 0.060822284849823285,
+    "prediction_range": 0.7001861335487112,
+    "target_weighted_sd": 0.09715337005912057,
+    "target_range": 0.8677046866218359
+  },
+  {
+    "variant": "sequence_hybrid",
+    "split": "val",
+    "condition": "CT2A",
+    "prediction_weighted_sd": 0.1491077911910819,
+    "prediction_range": 1.4115409525547677,
+    "target_weighted_sd": 0.1543126696162797,
+    "target_range": 1.8716837493969485
+  },
+  {
+    "variant": "sequence_hybrid",
+    "split": "val",
+    "condition": "GL261",
+    "prediction_weighted_sd": 0.11356847698545972,
+    "prediction_range": 1.030026525267699,
+    "target_weighted_sd": 0.10012208923813247,
+    "target_range": 0.8965982976369814
+  },
+  {
+    "variant": "sequence_hybrid",
+    "split": "test",
+    "condition": "CT2A",
+    "prediction_weighted_sd": 0.1109379964859353,
+    "prediction_range": 0.7822853088149668,
+    "target_weighted_sd": 0.13721820325341746,
+    "target_range": 1.050910888687698
+  },
+  {
+    "variant": "sequence_hybrid",
+    "split": "test",
+    "condition": "GL261",
+    "prediction_weighted_sd": 0.05531499589360714,
+    "prediction_range": 0.43613442034164684,
+    "target_weighted_sd": 0.09716756670516512,
+    "target_range": 0.7813045950287356
+  },
+  {
+    "variant": "sequence_no_precursor",
+    "split": "train",
+    "condition": "CT2A",
+    "prediction_weighted_sd": 0.00024416116529367844,
+    "prediction_range": 0.0014052847919040056,
+    "target_weighted_sd": 0.1289336127739164,
+    "target_range": 1.4302958728767594
+  },
+  {
+    "variant": "sequence_no_precursor",
+    "split": "train",
+    "condition": "GL261",
+    "prediction_weighted_sd": 6.664401464625343e-05,
+    "prediction_range": 0.0003834104994391227,
+    "target_weighted_sd": 0.09715337005912057,
+    "target_range": 0.8677046866218359
+  },
+  {
+    "variant": "sequence_no_precursor",
+    "split": "val",
+    "condition": "CT2A",
+    "prediction_weighted_sd": 0.0002450230248880021,
+    "prediction_range": 0.0012006182564516191,
+    "target_weighted_sd": 0.1543126696162797,
+    "target_range": 1.8716837493969485
+  },
+  {
+    "variant": "sequence_no_precursor",
+    "split": "val",
+    "condition": "GL261",
+    "prediction_weighted_sd": 6.687537463961001e-05,
+    "prediction_range": 0.0003275416597984457,
+    "target_weighted_sd": 0.10012208923813247,
+    "target_range": 0.8965982976369814
+  },
+  {
+    "variant": "sequence_no_precursor",
+    "split": "test",
+    "condition": "CT2A",
+    "prediction_weighted_sd": 0.0002782298137353999,
+    "prediction_range": 0.0010113960582603387,
+    "target_weighted_sd": 0.13721820325341746,
+    "target_range": 1.050910888687698
+  },
+  {
+    "variant": "sequence_no_precursor",
+    "split": "test",
+    "condition": "GL261",
+    "prediction_weighted_sd": 7.594734059479511e-05,
+    "prediction_range": 0.00027606354632178295,
+    "target_weighted_sd": 0.09716756670516512,
+    "target_range": 0.7813045950287356
+  },
+  {
+    "variant": "prior_exact",
+    "split": "train",
+    "condition": "CT2A",
+    "prediction_weighted_sd": 0.0927589083577014,
+    "prediction_range": 0.8475694724760199,
+    "target_weighted_sd": 0.1289336127739164,
+    "target_range": 1.4302958728767594
+  },
+  {
+    "variant": "prior_exact",
+    "split": "train",
+    "condition": "GL261",
+    "prediction_weighted_sd": 0.060819407951945785,
+    "prediction_range": 0.7002949793534816,
+    "target_weighted_sd": 0.09715337005912057,
+    "target_range": 0.8677046866218359
+  },
+  {
+    "variant": "prior_exact",
+    "split": "val",
+    "condition": "CT2A",
+    "prediction_weighted_sd": 0.149128225606123,
+    "prediction_range": 1.4135198171878107,
+    "target_weighted_sd": 0.1543126696162797,
+    "target_range": 1.8716837493969485
+  },
+  {
+    "variant": "prior_exact",
+    "split": "val",
+    "condition": "GL261",
+    "prediction_weighted_sd": 0.11356215213133838,
+    "prediction_range": 1.0299057500710649,
+    "target_weighted_sd": 0.10012208923813247,
+    "target_range": 0.8965982976369814
+  },
+  {
+    "variant": "prior_exact",
+    "split": "test",
+    "condition": "CT2A",
+    "prediction_weighted_sd": 0.11074933766935684,
+    "prediction_range": 0.7803336317389791,
+    "target_weighted_sd": 0.13721820325341746,
+    "target_range": 1.050910888687698
+  },
+  {
+    "variant": "prior_exact",
+    "split": "test",
+    "condition": "GL261",
+    "prediction_weighted_sd": 0.055326793548894485,
+    "prediction_range": 0.43638394076648257,
+    "target_weighted_sd": 0.09716756670516512,
+    "target_range": 0.7813045950287356
+  }
+]

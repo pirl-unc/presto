@@ -16,7 +16,7 @@ from presto.data.vocab import (
     EXCISION_P1_RULES,
     PROTEASOME_MIXTURE_COMPONENTS,
 )
-from presto.models.presto import Presto
+from presto.legacy.presto import Presto
 
 REAL_AAS = "ACDEFGHIKLMNPQRSTVWY"
 

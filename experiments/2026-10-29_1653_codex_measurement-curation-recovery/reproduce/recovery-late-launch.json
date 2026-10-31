@@ -1,0 +1,21 @@
+{
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "-m",
+    "modal",
+    "run",
+    "--detach",
+    "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/recover_late.py"
+  ],
+  "git_commit": "734af3d45c45ac2c9b96b8bf436fd212a0128c47",
+  "git_dirty": " M experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/acquire_serial.py\n M experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/recover_strazar.py\n M experiments/agents/codex/ideas.md\n M experiments/agents/codex/plans/2026-10-29_measurement-curation-recovery.md\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/recover_late.py\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/acquisition-strazar-late-launch.json\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/recovery-late-manifest.json\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/source/acquire_serial-acquisition-strazar-late.py\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/source/late-recover_late.py\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/source/late-recover_strazar.py\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/results/acquisition-strazar-late.json\n?? experiments/2026-10-29_1956_codex_curated-data-retrain/.pipeline.lock\n?? experiments/2026-10-29_1956_codex_curated-data-retrain/results/live.json\n",
+  "source_hashes": {
+    "recover_late.py": "b19badd6edce1b59e9d8e3141e57dc628e75f5cb4bf72940ec19c2bfd450dcfe",
+    "recover_strazar.py": "3276b205d1538d47b3897a5ebd270340b6ad04b85fa3532e18221f93f205935a"
+  },
+  "manifest_sha256": "85e293c2ee4497465406610e2c7e2489aa0a4d0c1293f6d105b85361049a3267",
+  "started_unix": 1793306459.400775,
+  "requested_gpu": null,
+  "cpu": 4,
+  "memory_mib": 16384
+}

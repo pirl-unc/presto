@@ -1,0 +1,42 @@
+{
+  "all_pass": true,
+  "arm": "analytical",
+  "updates_replayed": 200,
+  "maximum_adam_update_error": 8.881784197001252e-16,
+  "analytical_gradient_checks": 200,
+  "maximum_analytical_gradient_error": 1.8207657603852567e-13,
+  "fragment_directional_checks": [],
+  "n_predictions_verified": 105452,
+  "maximum_required_natural_log_error": 9.202978751042329e-14,
+  "maximum_response_error": 0.0,
+  "metrics": {
+    "train": {
+      "shape_mse": 1.3557001650391811,
+      "shape_rmse": 1.1643453804774515,
+      "shape_pearson": 0.2983862712048887,
+      "shape_spearman": 0.2848232426060535,
+      "prediction_sd": 0.6075248520304647,
+      "target_sd": 1.2595713416152294,
+      "ratio_rmse": 0.9543653608004576,
+      "ratio_pearson": 0.24697763455086355,
+      "ratio_spearman": 0.18631332679234697
+    },
+    "val": {
+      "shape_mse": 1.5998899956040757,
+      "shape_rmse": 1.2648675802644622,
+      "shape_pearson": 0.25468024339048617,
+      "shape_spearman": 0.24512176452233686,
+      "prediction_sd": 0.6044812652720826,
+      "target_sd": 1.2523925434074963,
+      "ratio_rmse": 1.144170747743528,
+      "ratio_pearson": 0.3452504528831247,
+      "ratio_spearman": 0.3093397007702717
+    }
+  },
+  "training_data_mse": 1.3557001650391804,
+  "training_offset_optimization_gap": 1.9458568995451625e-29,
+  "all_allocated_materially_trained": true,
+  "maximum_condition_weighted_residual": 2.0568670464765626e-15,
+  "seconds": 4.698942208022345,
+  "scope": "All source identities/targets/weights checked against the unchanged pinned observation loader; all final physical amounts independently recomputed with direct analytical or NumPy eight-step fragment equations. All200 Adam updates replayed; analytical gradients all200, fragment whole-condition offsets and fixed-offset block gradients at three fixed steps/nine directions plus38linear components at each. Other fragment gradients not independently recomputed."
+}

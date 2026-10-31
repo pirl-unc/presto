@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/private/tmp/presto-modular-model/experiments/2026-10-24_2338_codex_intact-degradomics-source/code/quantities.py", line 257, in <module>
+    main()
+  File "/private/tmp/presto-modular-model/experiments/2026-10-24_2338_codex_intact-degradomics-source/code/quantities.py", line 68, in main
+    x["row"] for x in assignments if x["MultiMass Assignment"] != counts[x["Mass ID"]]
+                                     ~^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'MultiMass Assignment'

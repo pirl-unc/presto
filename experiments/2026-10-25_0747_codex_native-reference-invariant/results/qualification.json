@@ -1,0 +1,102 @@
+{
+  "passed": true,
+  "synthetic_pairs": 90,
+  "synthetic_groups": 30,
+  "selected_alpha": 0.01,
+  "known_context_rmse": 0.009365652730948797,
+  "identity_checks": [
+    {
+      "n_endpoints": 2,
+      "n_pairs": 1,
+      "n_reference_degrees": 1,
+      "maximum_gram_identity_error": 2.220446049250313e-16,
+      "maximum_gradient_identity_error": 4.440892098500626e-16
+    },
+    {
+      "n_endpoints": 2,
+      "n_pairs": 1,
+      "n_reference_degrees": 1,
+      "maximum_gram_identity_error": 1.7763568394002505e-15,
+      "maximum_gradient_identity_error": 4.440892098500626e-16
+    },
+    {
+      "n_endpoints": 2,
+      "n_pairs": 1,
+      "n_reference_degrees": 1,
+      "maximum_gram_identity_error": 2.220446049250313e-16,
+      "maximum_gradient_identity_error": 2.220446049250313e-16
+    },
+    {
+      "n_endpoints": 3,
+      "n_pairs": 3,
+      "n_reference_degrees": 2,
+      "maximum_gram_identity_error": 1.7763568394002505e-15,
+      "maximum_gradient_identity_error": 1.7763568394002505e-15
+    },
+    {
+      "n_endpoints": 3,
+      "n_pairs": 3,
+      "n_reference_degrees": 2,
+      "maximum_gram_identity_error": 3.552713678800501e-15,
+      "maximum_gradient_identity_error": 4.440892098500626e-16
+    },
+    {
+      "n_endpoints": 3,
+      "n_pairs": 3,
+      "n_reference_degrees": 2,
+      "maximum_gram_identity_error": 8.881784197001252e-16,
+      "maximum_gradient_identity_error": 1.7763568394002505e-15
+    },
+    {
+      "n_endpoints": 4,
+      "n_pairs": 6,
+      "n_reference_degrees": 3,
+      "maximum_gram_identity_error": 8.881784197001252e-16,
+      "maximum_gradient_identity_error": 4.440892098500626e-16
+    },
+    {
+      "n_endpoints": 4,
+      "n_pairs": 6,
+      "n_reference_degrees": 3,
+      "maximum_gram_identity_error": 2.220446049250313e-15,
+      "maximum_gradient_identity_error": 2.220446049250313e-16
+    },
+    {
+      "n_endpoints": 4,
+      "n_pairs": 6,
+      "n_reference_degrees": 3,
+      "maximum_gram_identity_error": 1.3322676295501878e-15,
+      "maximum_gradient_identity_error": 4.440892098500626e-16
+    },
+    {
+      "n_endpoints": 9,
+      "n_pairs": 36,
+      "n_reference_degrees": 8,
+      "maximum_gram_identity_error": 3.552713678800501e-15,
+      "maximum_gradient_identity_error": 4.440892098500626e-16
+    },
+    {
+      "n_endpoints": 9,
+      "n_pairs": 36,
+      "n_reference_degrees": 8,
+      "maximum_gram_identity_error": 3.9968028886505635e-15,
+      "maximum_gradient_identity_error": 4.440892098500626e-16
+    },
+    {
+      "n_endpoints": 9,
+      "n_pairs": 36,
+      "n_reference_degrees": 8,
+      "maximum_gram_identity_error": 3.552713678800501e-15,
+      "maximum_gradient_identity_error": 4.440892098500626e-16
+    }
+  ],
+  "checks": [
+    "all-pair/anchor quadratic and gradient identities",
+    "common shift and permutation invariance",
+    "actual fitting and inner selection",
+    "pair reversal and duplicate-weight invariance",
+    "nontraining rejection",
+    "component bootstrap and both decisions"
+  ],
+  "synthetic_biological_training": false
+}

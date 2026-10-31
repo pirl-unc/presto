@@ -1,0 +1,47 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "argv": [
+    "modal",
+    "run",
+    "--detach",
+    "/private/tmp/presto-flank-benchmark-20261027/presto/experiments/2026-10-27_1930_codex_modal-cross-class/code/modal_run.py"
+  ],
+  "cwd": "/private/tmp/presto-flank-benchmark-20261027/presto",
+  "git_commit": "0659b43cbd296f9d590a215b6f4358c2780439b1",
+  "git_dirty": true,
+  "source_pins": {
+    "worker.py": "d879522bb3b36509571bf65bb9d738a38804d2d6770b7f33fddddfe4bc122c35",
+    "modal_run.py": "c98e5d11593963eb25a93ef225e2c0908ba1412a59da6b246a944dc2137ad793"
+  },
+  "transport_metadata_sha256": "8163641cbed792c1efce91187b4511463aeb72af20d8d621216a130442929d4f",
+  "conditions": [
+    "shared-I-s42",
+    "shared-II-s42",
+    "shared-joint-s42",
+    "full-joint-s42",
+    "three-aa-joint-s42",
+    "shared-I-s43",
+    "shared-II-s43",
+    "shared-joint-s43",
+    "full-joint-s43",
+    "three-aa-joint-s43"
+  ],
+  "requirements": [
+    "torch==2.14.1",
+    "numpy==2.5.4",
+    "pyyaml==6.0.3",
+    "mhcgnomes==3.64.6",
+    "mhcseqs==2.6.13",
+    "tqdm==4.70.1",
+    "psutil==7.2.2"
+  ],
+  "requested_gpu": "H100!",
+  "cpu": 4,
+  "memory_mib": 16384,
+  "max_containers": 2,
+  "timeout_seconds": 7200,
+  "environment": {
+    "PRESTO_MODAL_GPU": "H100!"
+  },
+  "started_unix": 1793130084.062816
+}

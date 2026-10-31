@@ -1,0 +1,36 @@
+{
+  "registered_utc": "2026-10-24T22:44:24.676770+00:00",
+  "agent": "Codex",
+  "model": "GPT-6",
+  "presto_head": "98d0ac85356692237b16903a2156ee2b6f51b013",
+  "presto_dirty": true,
+  "hitlist_head": "176a62e3e86a98d986d80fcb7dd3120da5e7f92d",
+  "hitlist_dirty": true,
+  "hitlist_checkout": "/private/tmp/hitlist-goldberg-composition-20261024",
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "source": "data/mapp2025_source/2026-10-24_2210_canonical",
+  "recipe": "goldberg2025_observed_baseline_composition_v1",
+  "environment_overrides": {
+    "PYTHONPATH": "/private/tmp/hitlist-goldberg-composition-20261024",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1"
+  },
+  "resource_limits": {
+    "rss_bytes": 6442450944,
+    "seconds_per_fit": 1200,
+    "family_seconds": 7200,
+    "output_bytes": 10737418240
+  },
+  "status": "registered_before_admission_and_fitting",
+  "recipe_directory": "data/mapp2025_source/2026-10-24_2244_composition",
+  "source_manifest_sha256": "cb1bbc22d03140aedff4b3d3a31df545712f36ce7709ec01e34abf7c76b7fc8f",
+  "hitlist_files_sha256": {
+    "hitlist/goldberg_composition.py": "5d45a839b51fe66c44ad2cbe2f936e84704c5cad826fdd324e3c0b6fa003b5e3",
+    "hitlist/evidence_recipe.py": "40e60b0c2877812efcd36ed585a09ee3b5145a89b96dc4460b5890e507412aa4",
+    "hitlist/distribution_recipe.py": "356e089d5ab1a196dfcef9b47a13776119f743ff52a58ad974cf43ac0cc95f86",
+    "hitlist/version.py": "e90fcc2ba492a4588bb027327c71ed1a2c862ce773485ea97d1a64cbe3ca3c12"
+  }
+}

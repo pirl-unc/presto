@@ -1,0 +1,119 @@
+{
+  "model": {
+    "acquisition_features": [],
+    "acquisition_units": {},
+    "auxiliary_context": [],
+    "cell_types": [],
+    "component_activity_units": {},
+    "components": [],
+    "context_species": [],
+    "cytokine_dose_units": {},
+    "cytokine_duration_features": [],
+    "cytokines": [],
+    "dropout": 0.1,
+    "endpoints": [
+      "ic50",
+      "elution_observation"
+    ],
+    "enzymes": [],
+    "identity_tasks": [],
+    "identity_threshold": 0.8,
+    "interventions": [],
+    "machinery_profiles": {},
+    "machinery_references": [],
+    "max_length": 512,
+    "mhc_classes": [
+      "I",
+      "II"
+    ],
+    "observation_features": [],
+    "observation_units": {},
+    "preparation_features": [],
+    "preparation_units": {},
+    "processing_pathways": [],
+    "quantity_domains": {},
+    "register_pooling": true,
+    "source_categories": [],
+    "source_context": false,
+    "species": [
+      "human"
+    ],
+    "species_defaults": true
+  },
+  "pretrained": {
+    "freeze": [
+      "ic50"
+    ],
+    "path": "/Users/iskander/code/presto/artifacts/2026-10-26_1610_codex_ic50-convergence/seed42/selected.pt",
+    "sha256": "db2585e63489cb5aac8c7a32fd7e522bcbc51035846c05f8cd2794c4449e3dc5"
+  },
+  "schema": "presto.modular.manifest.v1",
+  "sources": [
+    {
+      "label_policy": "explicit_generated_sequence_background_not_measured_nondetection",
+      "partition": "test",
+      "path": "/private/tmp/presto-mhc2-20261026/ms-length-background/cohort/test-control.jsonl",
+      "population": "qualified DP/K562 detection enrichment",
+      "sha256": "1f19e0be53c7818a55c760b93fc7d7bedcc54c666067cff184e11a2f96c1977a",
+      "source": "generated_mhc2_ms_background",
+      "split_policy": "frozen_nine_residue_components_and_initializer_exclusion_v1"
+    },
+    {
+      "label_policy": "reported_positive_ms_detection",
+      "partition": "test",
+      "path": "/private/tmp/presto-mhc2-20261026/ms-length-background/cohort/test-positive.jsonl",
+      "population": "qualified DP/K562 detection enrichment",
+      "sha256": "784ea55996e83cd5f50c10c9e7b812b911dc6b9a89dc4471804e4e1379a780cd",
+      "source": "hitlist_native_ms",
+      "split_policy": "frozen_nine_residue_components_and_initializer_exclusion_v1"
+    },
+    {
+      "label_policy": "explicit_generated_sequence_background_not_measured_nondetection",
+      "partition": "train",
+      "path": "/private/tmp/presto-mhc2-20261026/ms-length-background/cohort/train-control.jsonl",
+      "population": "qualified DP/K562 detection enrichment",
+      "sha256": "acdae56f76032884cb1c9567fc34c94c5dee46fe7d31047836fc1226572d47d6",
+      "source": "generated_mhc2_ms_background",
+      "split_policy": "frozen_nine_residue_components_and_initializer_exclusion_v1"
+    },
+    {
+      "label_policy": "reported_positive_ms_detection",
+      "partition": "train",
+      "path": "/private/tmp/presto-mhc2-20261026/ms-length-background/cohort/train-positive.jsonl",
+      "population": "qualified DP/K562 detection enrichment",
+      "sha256": "5d796bda94bb417eaed8a4734236eb1c4bccb3bff684971d4a4bd189f65c0cd9",
+      "source": "hitlist_native_ms",
+      "split_policy": "frozen_nine_residue_components_and_initializer_exclusion_v1"
+    },
+    {
+      "label_policy": "explicit_generated_sequence_background_not_measured_nondetection",
+      "partition": "validation",
+      "path": "/private/tmp/presto-mhc2-20261026/ms-length-background/cohort/validation-control.jsonl",
+      "population": "qualified DP/K562 detection enrichment",
+      "sha256": "6b145b7645651665f8b7f4012558659695e2642fadb0e0e781f579802a8036c8",
+      "source": "generated_mhc2_ms_background",
+      "split_policy": "frozen_nine_residue_components_and_initializer_exclusion_v1"
+    },
+    {
+      "label_policy": "reported_positive_ms_detection",
+      "partition": "validation",
+      "path": "/private/tmp/presto-mhc2-20261026/ms-length-background/cohort/validation-positive.jsonl",
+      "population": "qualified DP/K562 detection enrichment",
+      "sha256": "624f9db8ef71924cba155afd8d5725d9d5dec723ca56c062bdc1ce986c99dcaa",
+      "source": "hitlist_native_ms",
+      "split_policy": "frozen_nine_residue_components_and_initializer_exclusion_v1"
+    }
+  ],
+  "training": {
+    "batch_size": 64,
+    "checkpoint_every_steps": 50,
+    "identity_weight": 0,
+    "learning_rate": 0.0003,
+    "max_epochs": 3,
+    "max_steps": 2592,
+    "min_epochs": 3,
+    "patience": 100,
+    "seed": 102,
+    "weight_decay": 0.0001
+  }
+}

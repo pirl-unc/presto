@@ -1,0 +1,18 @@
+{
+  "phase": "metadata",
+  "scope": "Use the established official PeptideAtlas SBEAMS accession viewer after the www.peptideatlas.org host failed TLS hostname validation. Keep TLS validation enabled, use no credentials, and inspect metadata only.",
+  "requests": [
+    {
+      "name": "pass01163-sbeams.html",
+      "url": "https://db.systemsbiology.net/sbeams/cgi/PeptideAtlas/PASS_View?identifier=PASS01163",
+      "expected_kind": "html",
+      "discovery_provenance": "Primary study DOI10.1038/s42003-018-0087-6 names PASS01163. Official SBEAMS PASS_View?identifier= accession route is explicitly linked in primary deposited-data statements, including https://pmc.ncbi.nlm.nih.gov/articles/PMC5923262/. Only the original study accession is queried."
+    },
+    {
+      "name": "pass01200-sbeams.html",
+      "url": "https://db.systemsbiology.net/sbeams/cgi/PeptideAtlas/PASS_View?identifier=PASS01200",
+      "expected_kind": "html",
+      "discovery_provenance": "Same documented official accession route as the preceding request, scoped to the primary study's second accession PASS01200."
+    }
+  ]
+}

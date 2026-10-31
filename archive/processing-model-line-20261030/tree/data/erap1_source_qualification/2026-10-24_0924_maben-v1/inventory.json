@@ -1,0 +1,1947 @@
+{
+  "argv": [
+    "experiments/2026-10-24_0924_codex_erap1-source-qualification/code/launch.py",
+    "--archive",
+    "/private/tmp/hitlist-erap1-809-assets/maben2021-source-data.zip",
+    "--out",
+    "data/erap1_source_qualification/2026-10-24_0924_maben-v1"
+  ],
+  "utc": "2026-10-24T13:22:41.886486+00:00",
+  "python": "/Users/iskander/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python",
+  "python_version": "3.12.14",
+  "git_commit": "e6ce3b2477e34ae636012d416f2a9e092a304e4b",
+  "tracked_dirty": " M tasks/todo.md\n",
+  "archive_sha256": "a9d7bcbae52b25e55aec5f725578238fd0e6719720153dc829b999dd4bde5d2c",
+  "training": null,
+  "evaluation": null,
+  "workbooks": [
+    {
+      "name": "Source Data_Main Figures.xlsx",
+      "bytes": 83636,
+      "sha256": "e0b81a3ca8d20db6de0ed776e07b711aee91409a031736cbc643c720b7b2be58",
+      "sheets": [
+        {
+          "name": "Fig 1a",
+          "state": "visible",
+          "dimension": "B1:D104",
+          "occupied_cells": 305,
+          "cell_types": {
+            "s": 5,
+            "n": 300
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "B1",
+              "value": "Representative ERAP1 SAXS curve collected using SAXS/WAXS data collection"
+            },
+            {
+              "address": "B3",
+              "value": "q (Å-1)"
+            },
+            {
+              "address": "C3",
+              "value": "ERAP1"
+            },
+            {
+              "address": "C4",
+              "value": "Mean"
+            },
+            {
+              "address": "D4",
+              "value": "SEM"
+            }
+          ],
+          "merged_ranges": [
+            "C3:D3"
+          ]
+        },
+        {
+          "name": "Fig 1b",
+          "state": "visible",
+          "dimension": "B2:K6",
+          "occupied_cells": 26,
+          "cell_types": {
+            "s": 16,
+            "n": 10
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "B2",
+              "value": "Rg analysis (SEM) of ERAP1+DG013"
+            },
+            {
+              "address": "B4",
+              "value": "ERAP1 (HTSAXS)"
+            },
+            {
+              "address": "D4",
+              "value": "ERAP1 (#1)"
+            },
+            {
+              "address": "F4",
+              "value": "ERAP1 (#2)"
+            },
+            {
+              "address": "H4",
+              "value": "ERAP1+DG013  (#1)"
+            },
+            {
+              "address": "J4",
+              "value": "ERAP1+DG013  (#2)"
+            },
+            {
+              "address": "B5",
+              "value": "Rg"
+            },
+            {
+              "address": "C5",
+              "value": "SEM"
+            },
+            {
+              "address": "D5",
+              "value": "Rg"
+            },
+            {
+              "address": "E5",
+              "value": "SEM"
+            },
+            {
+              "address": "F5",
+              "value": "Rg"
+            },
+            {
+              "address": "G5",
+              "value": "SEM"
+            },
+            {
+              "address": "H5",
+              "value": "Rg"
+            },
+            {
+              "address": "I5",
+              "value": "SEM"
+            },
+            {
+              "address": "J5",
+              "value": "Rg"
+            },
+            {
+              "address": "K5",
+              "value": "SEM"
+            }
+          ],
+          "merged_ranges": [
+            "B4:C4",
+            "D4:E4",
+            "F4:G4",
+            "H4:I4",
+            "J4:K4"
+          ]
+        },
+        {
+          "name": "Fig 1c",
+          "state": "visible",
+          "dimension": "B2:U126",
+          "occupied_cells": 1251,
+          "cell_types": {
+            "s": 26,
+            "n": 1225
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "B2",
+              "value": "ERAP1 experimental SAXS curve (n=1) from panel a overlaid with calculated SAXS curves generated from three structural models. A largely open model derived from molecular dynamics simulation with q=67° fits best"
+            },
+            {
+              "address": "D4",
+              "value": "Top panel (log intensities)"
+            },
+            {
+              "address": "O4",
+              "value": "Bottom panel (fit residuals)"
+            },
+            {
+              "address": "C5",
+              "value": "q (Å-1)"
+            },
+            {
+              "address": "D5",
+              "value": "ERAP1 experimental data"
+            },
+            {
+              "address": "F5",
+              "value": "2yd0-closed"
+            },
+            {
+              "address": "H5",
+              "value": "3mdj-open"
+            },
+            {
+              "address": "M5",
+              "value": "q (Å-1)"
+            },
+            {
+              "address": "N5",
+              "value": "ERAP1 experimental data"
+            },
+            {
+              "address": "P5",
+              "value": "ERAP1_67_model"
+            },
+            {
+              "address": "R5",
+              "value": "2yd0"
+            },
+            {
+              "address": "T5",
+              "value": "3mdj"
+            },
+            {
+              "address": "D6",
+              "value": "Mean"
+            },
+            {
+              "address": "E6",
+              "value": "SEM"
+            },
+            {
+              "address": "F6",
+              "value": "Mean"
+            },
+            {
+              "address": "G6",
+              "value": "SEM"
+            },
+            {
+              "address": "H6",
+              "value": "Mean"
+            },
+            {
+              "address": "I6",
+              "value": "SEM"
+            },
+            {
+              "address": "N6",
+              "value": "Mean"
+            },
+            {
+              "address": "O6",
+              "value": "SEM"
+            },
+            {
+              "address": "P6",
+              "value": "Mean"
+            },
+            {
+              "address": "Q6",
+              "value": "SEM"
+            },
+            {
+              "address": "R6",
+              "value": "Mean"
+            },
+            {
+              "address": "S6",
+              "value": "SEM"
+            },
+            {
+              "address": "T6",
+              "value": "Mean"
+            },
+            {
+              "address": "U6",
+              "value": "SEM"
+            }
+          ],
+          "merged_ranges": [
+            "R5:S5",
+            "T5:U5",
+            "D5:E5",
+            "F5:G5",
+            "H5:I5",
+            "N5:O5",
+            "P5:Q5"
+          ]
+        },
+        {
+          "name": "Fig 1d",
+          "state": "visible",
+          "dimension": "B2:E20",
+          "occupied_cells": 39,
+          "cell_types": {
+            "s": 4,
+            "n": 35
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "B2",
+              "value": "Theta analysis of ERAP1+DG013"
+            },
+            {
+              "address": "C4",
+              "value": "ERAP1"
+            },
+            {
+              "address": "D4",
+              "value": "ERAP1+DG013 (1)"
+            },
+            {
+              "address": "E4",
+              "value": "ERAP1+DG013 (2)"
+            }
+          ],
+          "merged_ranges": []
+        },
+        {
+          "name": "Fig 2h",
+          "state": "visible",
+          "dimension": "C2:I16",
+          "occupied_cells": 87,
+          "cell_types": {
+            "s": 5,
+            "n": 82
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "E2",
+              "value": "Rate of LF9 peptide hydrolysis by ERAP1 Wt and C404S, C443S ERAP1 mutants"
+            },
+            {
+              "address": "C4",
+              "value": "LF9 peptide (M)"
+            },
+            {
+              "address": "D4",
+              "value": "ERAP1"
+            },
+            {
+              "address": "F4",
+              "value": "C404S ERAP1"
+            },
+            {
+              "address": "H4",
+              "value": "C443S ERAP1"
+            }
+          ],
+          "merged_ranges": [
+            "D4:E4",
+            "F4:G4",
+            "H4:I4"
+          ]
+        },
+        {
+          "name": "Fig 2i",
+          "state": "visible",
+          "dimension": "E3:U25",
+          "occupied_cells": 123,
+          "cell_types": {
+            "s": 19,
+            "n": 104
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "F3",
+              "value": "Rate of L-pNA hydrolysis (sec-1) by ERAP1 Wt and C404S, C443S mutants"
+            },
+            {
+              "address": "E9",
+              "value": "L-pNA (M)"
+            },
+            {
+              "address": "F9",
+              "value": "ERAP1 wt"
+            },
+            {
+              "address": "K9",
+              "value": "L-pNA (M)"
+            },
+            {
+              "address": "L9",
+              "value": "ERAP1  C404S"
+            },
+            {
+              "address": "R9",
+              "value": "L-pNA (M)"
+            },
+            {
+              "address": "S9",
+              "value": "ERAP1  C443S"
+            },
+            {
+              "address": "F21",
+              "value": "Khalf"
+            },
+            {
+              "address": "K21",
+              "value": "Kcat"
+            },
+            {
+              "address": "Q21",
+              "value": "Hill coefficient"
+            },
+            {
+              "address": "F23",
+              "value": "Wt"
+            },
+            {
+              "address": "G23",
+              "value": "C404S"
+            },
+            {
+              "address": "H23",
+              "value": "C443S"
+            },
+            {
+              "address": "K23",
+              "value": "Wt"
+            },
+            {
+              "address": "L23",
+              "value": "C404S"
+            },
+            {
+              "address": "M23",
+              "value": "C443S"
+            },
+            {
+              "address": "P23",
+              "value": "Wt"
+            },
+            {
+              "address": "Q23",
+              "value": "C404S"
+            },
+            {
+              "address": "R23",
+              "value": "C443S"
+            }
+          ],
+          "merged_ranges": [
+            "F9:H9",
+            "L9:N9",
+            "S9:U9"
+          ]
+        },
+        {
+          "name": "Fig 2j",
+          "state": "visible",
+          "dimension": "C2:I12",
+          "occupied_cells": 61,
+          "cell_types": {
+            "s": 5,
+            "n": 56
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "C2",
+              "value": "Percent L-AMC hydrolysis in presence of varying concentrations of compound 3"
+            },
+            {
+              "address": "C4",
+              "value": "Compound 3 (M)"
+            },
+            {
+              "address": "D4",
+              "value": "ERAP1"
+            },
+            {
+              "address": "F4",
+              "value": "C404S ERAP1"
+            },
+            {
+              "address": "H4",
+              "value": "C443S ERAP1"
+            }
+          ],
+          "merged_ranges": [
+            "D4:E4",
+            "F4:G4",
+            "H4:I4"
+          ]
+        },
+        {
+          "name": "Fig 3f",
+          "state": "visible",
+          "dimension": "B3:I7",
+          "occupied_cells": 13,
+          "cell_types": {
+            "s": 7,
+            "n": 6
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "B3",
+              "value": "Solvation energy of the closed conformer increases on binding long peptide substrates as compared to open conformer"
+            },
+            {
+              "address": "B6",
+              "value": "no ligand (3MDJ-2YD0)"
+            },
+            {
+              "address": "C6",
+              "value": "DG23-L838"
+            },
+            {
+              "address": "D6",
+              "value": "DG23-L677"
+            },
+            {
+              "address": "E6",
+              "value": "DG23-L686"
+            },
+            {
+              "address": "F6",
+              "value": "10mer-6RQX"
+            },
+            {
+              "address": "G6",
+              "value": "15-mer-6RYF"
+            }
+          ],
+          "merged_ranges": []
+        },
+        {
+          "name": "Fig 3g",
+          "state": "visible",
+          "dimension": "B3:H16",
+          "occupied_cells": 71,
+          "cell_types": {
+            "s": 16,
+            "n": 55
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "B3",
+              "value": "Buried surface area (BSA) of peptide residues in domain I, II, III (green) and domain IV (magenta) in open (open bars) and closed conformer (closed bars) along the length of the peptide DG0230-L838"
+            },
+            {
+              "address": "E5",
+              "value": "open D123"
+            },
+            {
+              "address": "F5",
+              "value": "open D4"
+            },
+            {
+              "address": "G5",
+              "value": "closed D123"
+            },
+            {
+              "address": "H5",
+              "value": "closed D4"
+            },
+            {
+              "address": "C6",
+              "value": "Phe-1"
+            },
+            {
+              "address": "C7",
+              "value": "Leu-2"
+            },
+            {
+              "address": "C8",
+              "value": "Lys-3"
+            },
+            {
+              "address": "C9",
+              "value": "His-4"
+            },
+            {
+              "address": "C10",
+              "value": "His-5"
+            },
+            {
+              "address": "C11",
+              "value": "Ala-6"
+            },
+            {
+              "address": "C12",
+              "value": "Phe-7"
+            },
+            {
+              "address": "C13",
+              "value": "Ser-8"
+            },
+            {
+              "address": "C14",
+              "value": "Phe-9"
+            },
+            {
+              "address": "C15",
+              "value": "Lys-10"
+            },
+            {
+              "address": "C16",
+              "value": "PBF-11"
+            }
+          ],
+          "merged_ranges": []
+        },
+        {
+          "name": "Fig 3h",
+          "state": "visible",
+          "dimension": "D3:I20",
+          "occupied_cells": 81,
+          "cell_types": {
+            "s": 7,
+            "n": 74
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "D3",
+              "value": "Cumulative difference in BSA along the length of the peptide between closed and open conformer increases for the C-terminal residues for long peptide substrates"
+            },
+            {
+              "address": "D5",
+              "value": "position"
+            },
+            {
+              "address": "E5",
+              "value": "DG023-L677"
+            },
+            {
+              "address": "F5",
+              "value": "DG023-L838"
+            },
+            {
+              "address": "G5",
+              "value": "DG023-L686"
+            },
+            {
+              "address": "H5",
+              "value": "15mer"
+            },
+            {
+              "address": "I5",
+              "value": "10mer"
+            }
+          ],
+          "merged_ranges": []
+        },
+        {
+          "name": "Fig 4b",
+          "state": "visible",
+          "dimension": "B2:C7",
+          "occupied_cells": 9,
+          "cell_types": {
+            "s": 3,
+            "n": 6
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "B2",
+              "value": "Percent hydrolysis of L-AMC in presence of compound 3 by ERAP1"
+            },
+            {
+              "address": "B4",
+              "value": "ERAP1"
+            },
+            {
+              "address": "C4",
+              "value": "ERAP1+Compound 3"
+            }
+          ],
+          "merged_ranges": []
+        },
+        {
+          "name": "Fig 4c",
+          "state": "visible",
+          "dimension": "C3:H7",
+          "occupied_cells": 10,
+          "cell_types": {
+            "s": 4,
+            "n": 6
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "C3",
+              "value": "Rg analysis of ERAP1 in presence of compound 3"
+            },
+            {
+              "address": "C6",
+              "value": "ERAP1"
+            },
+            {
+              "address": "E6",
+              "value": "ERAP1+ compound 3 (#1)"
+            },
+            {
+              "address": "G6",
+              "value": "ERAP1+ compound 3 (#2)"
+            }
+          ],
+          "merged_ranges": [
+            "C6:D6",
+            "E6:F6",
+            "G6:H6"
+          ]
+        },
+        {
+          "name": "Fig 4d",
+          "state": "visible",
+          "dimension": "C3:F19",
+          "occupied_cells": 36,
+          "cell_types": {
+            "s": 4,
+            "n": 32
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "C3",
+              "value": "Theta analysis of ERAP1 in presence of compound 3"
+            },
+            {
+              "address": "D6",
+              "value": "ERAP1"
+            },
+            {
+              "address": "E6",
+              "value": "ERAP1+Compound 3 (#1)"
+            },
+            {
+              "address": "F6",
+              "value": "ERAP1+Compound 3 (#2)"
+            }
+          ],
+          "merged_ranges": []
+        },
+        {
+          "name": "Fig 4e",
+          "state": "visible",
+          "dimension": "B2:J96",
+          "occupied_cells": 554,
+          "cell_types": {
+            "s": 14,
+            "n": 540
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "B2",
+              "value": "Residual plot of best structural model fit to SAXS data in the presence of compound 3, with crystal structure model fits shown for reference"
+            },
+            {
+              "address": "B5",
+              "value": "q (Å-1)"
+            },
+            {
+              "address": "C5",
+              "value": "ERAP1 experimental data"
+            },
+            {
+              "address": "E5",
+              "value": "ERAP1loop_56_model"
+            },
+            {
+              "address": "G5",
+              "value": "2yd0"
+            },
+            {
+              "address": "I5",
+              "value": "3mdj"
+            },
+            {
+              "address": "C6",
+              "value": "Mean"
+            },
+            {
+              "address": "D6",
+              "value": "SEM"
+            },
+            {
+              "address": "E6",
+              "value": "Mean"
+            },
+            {
+              "address": "F6",
+              "value": "SEM"
+            },
+            {
+              "address": "G6",
+              "value": "Mean"
+            },
+            {
+              "address": "H6",
+              "value": "SEM"
+            },
+            {
+              "address": "I6",
+              "value": "Mean"
+            },
+            {
+              "address": "J6",
+              "value": "SEM"
+            }
+          ],
+          "merged_ranges": [
+            "C5:D5",
+            "E5:F5",
+            "G5:H5",
+            "I5:J5"
+          ]
+        },
+        {
+          "name": "Fig 5b",
+          "state": "visible",
+          "dimension": "C2:S12",
+          "occupied_cells": 74,
+          "cell_types": {
+            "s": 13,
+            "n": 61
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "C2",
+              "value": "IC50 of DG013 for L-AMC hydrolysis by K528 and R528 ERAP1"
+            },
+            {
+              "address": "C5",
+              "value": "Log [DG013] (M)"
+            },
+            {
+              "address": "D5",
+              "value": " Lys528"
+            },
+            {
+              "address": "G5",
+              "value": "Arg528"
+            },
+            {
+              "address": "N6",
+              "value": "IC50 (µM)"
+            },
+            {
+              "address": "N7",
+              "value": " Lys528"
+            },
+            {
+              "address": "Q7",
+              "value": "Arg528"
+            },
+            {
+              "address": "N8",
+              "value": "Mean"
+            },
+            {
+              "address": "O8",
+              "value": "upper limit"
+            },
+            {
+              "address": "P8",
+              "value": "lower limit"
+            },
+            {
+              "address": "Q8",
+              "value": "Mean"
+            },
+            {
+              "address": "R8",
+              "value": "upper limit"
+            },
+            {
+              "address": "S8",
+              "value": "lower limit"
+            }
+          ],
+          "merged_ranges": [
+            "N7:P7",
+            "Q7:S7",
+            "D5:F5",
+            "G5:I5",
+            "N6:P6",
+            "Q6:S6"
+          ]
+        },
+        {
+          "name": "Fig 5c",
+          "state": "visible",
+          "dimension": "C3:V18",
+          "occupied_cells": 81,
+          "cell_types": {
+            "s": 13,
+            "n": 68
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "C3",
+              "value": "IC50 of compound 3 for L-AMC hydrolysis by K528 and R528 ERAP1"
+            },
+            {
+              "address": "C6",
+              "value": "Log [Compound 3] (M)"
+            },
+            {
+              "address": "D6",
+              "value": " Lys528"
+            },
+            {
+              "address": "G6",
+              "value": "Arg528"
+            },
+            {
+              "address": "Q8",
+              "value": "IC50 (µM)"
+            },
+            {
+              "address": "Q9",
+              "value": " Lys528"
+            },
+            {
+              "address": "T9",
+              "value": "Arg528"
+            },
+            {
+              "address": "Q10",
+              "value": "Mean"
+            },
+            {
+              "address": "R10",
+              "value": "upper limit"
+            },
+            {
+              "address": "S10",
+              "value": "lower limit"
+            },
+            {
+              "address": "T10",
+              "value": "Mean"
+            },
+            {
+              "address": "U10",
+              "value": "upper limit"
+            },
+            {
+              "address": "V10",
+              "value": "lower limit"
+            }
+          ],
+          "merged_ranges": [
+            "Q9:S9",
+            "T9:V9",
+            "D6:F6",
+            "G6:I6",
+            "N7:P7",
+            "Q8:S8",
+            "T8:V8"
+          ]
+        },
+        {
+          "name": "Fig 5d",
+          "state": "visible",
+          "dimension": "C3:U14",
+          "occupied_cells": 77,
+          "cell_types": {
+            "s": 13,
+            "n": 64
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "C3",
+              "value": "IC50 of compound 2 for L-AMC hydrolysis by K528 and R528 ERAP1"
+            },
+            {
+              "address": "C6",
+              "value": "Log [Compound 2] (M)"
+            },
+            {
+              "address": "D6",
+              "value": "Lys528"
+            },
+            {
+              "address": "G6",
+              "value": "Arg528"
+            },
+            {
+              "address": "P9",
+              "value": "IC50 (µM)"
+            },
+            {
+              "address": "P10",
+              "value": " Lys528"
+            },
+            {
+              "address": "S10",
+              "value": "Arg528"
+            },
+            {
+              "address": "P11",
+              "value": "Mean"
+            },
+            {
+              "address": "Q11",
+              "value": "upper limit"
+            },
+            {
+              "address": "R11",
+              "value": "lower limit"
+            },
+            {
+              "address": "S11",
+              "value": "Mean"
+            },
+            {
+              "address": "T11",
+              "value": "upper limit"
+            },
+            {
+              "address": "U11",
+              "value": "lower limit"
+            }
+          ],
+          "merged_ranges": [
+            "S9:U9",
+            "P10:R10",
+            "S10:U10",
+            "D6:F6",
+            "G6:I6",
+            "L8:N8",
+            "O8:Q8",
+            "P9:R9"
+          ]
+        },
+        {
+          "name": "Fig 5e",
+          "state": "visible",
+          "dimension": "D3:S6",
+          "occupied_cells": 25,
+          "cell_types": {
+            "s": 9,
+            "n": 16
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "G3",
+              "value": "Rg analysis of K528 and R528 in presence of inhibitors and allosteric modulator"
+            },
+            {
+              "address": "D5",
+              "value": "K528"
+            },
+            {
+              "address": "F5",
+              "value": "K528+DG013"
+            },
+            {
+              "address": "H5",
+              "value": "K528+Compound 3"
+            },
+            {
+              "address": "J5",
+              "value": "K528+Compound 2"
+            },
+            {
+              "address": "L5",
+              "value": "R528"
+            },
+            {
+              "address": "N5",
+              "value": "R528+DG013"
+            },
+            {
+              "address": "P5",
+              "value": "R528+Compound 3"
+            },
+            {
+              "address": "R5",
+              "value": "R528+Compound 2"
+            }
+          ],
+          "merged_ranges": [
+            "R5:S5",
+            "N5:O5",
+            "P5:Q5",
+            "D5:E5",
+            "J5:K5",
+            "F5:G5",
+            "H5:I5",
+            "L5:M5"
+          ]
+        },
+        {
+          "name": "Fig 5f",
+          "state": "visible",
+          "dimension": "C2:J31",
+          "occupied_cells": 99,
+          "cell_types": {
+            "s": 9,
+            "n": 90
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "C2",
+              "value": "Theta analysis of K528 and R528 ERAP1 in absence and presence of inhibitors and allosteric modulator"
+            },
+            {
+              "address": "C4",
+              "value": "K528-none"
+            },
+            {
+              "address": "D4",
+              "value": "K528-DG013"
+            },
+            {
+              "address": "E4",
+              "value": "K528-cmpd3 "
+            },
+            {
+              "address": "F4",
+              "value": "K528-cmpd2 "
+            },
+            {
+              "address": "G4",
+              "value": "R528-none"
+            },
+            {
+              "address": "H4",
+              "value": "R528-DG013"
+            },
+            {
+              "address": "I4",
+              "value": "R528-cmpd3"
+            },
+            {
+              "address": "J4",
+              "value": "R528-cmpd2"
+            }
+          ],
+          "merged_ranges": []
+        }
+      ]
+    },
+    {
+      "name": "Source Data_Supplementary Figures.xlsx",
+      "bytes": 441065,
+      "sha256": "f99cb8ca319ae36e68d0a5632f32171e570f9eb43bc8536648887d9643c0bd23",
+      "sheets": [
+        {
+          "name": "Fig S1b",
+          "state": "visible",
+          "dimension": "E4",
+          "occupied_cells": 1,
+          "cell_types": {
+            "s": 1
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "E4",
+              "value": "SDS-PAGE analysis of purified ERAP1 proteins used for SAXS experiments"
+            }
+          ],
+          "merged_ranges": []
+        },
+        {
+          "name": "Fig S2a",
+          "state": "visible",
+          "dimension": "C3:N9",
+          "occupied_cells": 21,
+          "cell_types": {
+            "s": 13,
+            "n": 8
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "C3",
+              "value": "Rg analysis of ERAP1 in presence of inhibitors or peptide substrate"
+            },
+            {
+              "address": "C7",
+              "value": "ERAP1"
+            },
+            {
+              "address": "E7",
+              "value": "ERAP1+ Bestatin"
+            },
+            {
+              "address": "G7",
+              "value": "ERAP1 + LeuSH "
+            },
+            {
+              "address": "I7",
+              "value": "ERAP1 + SIINFEKL"
+            },
+            {
+              "address": "C8",
+              "value": "Mean"
+            },
+            {
+              "address": "D8",
+              "value": "SEM"
+            },
+            {
+              "address": "E8",
+              "value": "Mean"
+            },
+            {
+              "address": "F8",
+              "value": "SEM"
+            },
+            {
+              "address": "G8",
+              "value": "Mean"
+            },
+            {
+              "address": "H8",
+              "value": "SEM"
+            },
+            {
+              "address": "I8",
+              "value": "Mean"
+            },
+            {
+              "address": "J8",
+              "value": "SEM"
+            }
+          ],
+          "merged_ranges": [
+            "C7:D7",
+            "E7:F7",
+            "G7:H7",
+            "I7:J7",
+            "M7:N7"
+          ]
+        },
+        {
+          "name": "Fig S2b",
+          "state": "visible",
+          "dimension": "B3:G6",
+          "occupied_cells": 7,
+          "cell_types": {
+            "s": 3,
+            "n": 4
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "B3",
+              "value": "Rg analysis of ERAP1 in presence of DG014"
+            },
+            {
+              "address": "B5",
+              "value": "ERAP1"
+            },
+            {
+              "address": "D5",
+              "value": "ERAP1+ DG014"
+            }
+          ],
+          "merged_ranges": [
+            "D5:E5",
+            "F5:G5",
+            "B5:C5"
+          ]
+        },
+        {
+          "name": "Fig S2c",
+          "state": "visible",
+          "dimension": "C3:D18",
+          "occupied_cells": 27,
+          "cell_types": {
+            "s": 3,
+            "n": 24
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "C3",
+              "value": "Theta analysis of ERAP1+DG014"
+            },
+            {
+              "address": "C5",
+              "value": "ERAP1"
+            },
+            {
+              "address": "D5",
+              "value": "ERAP1+DG014"
+            }
+          ],
+          "merged_ranges": []
+        },
+        {
+          "name": "Fig S5",
+          "state": "visible",
+          "dimension": "C3:P15",
+          "occupied_cells": 99,
+          "cell_types": {
+            "s": 7,
+            "n": 92
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "D3",
+              "value": "IC50 plots of substrate analogs DG013, DG014, DG023 for L-AMC hydrolysis by ERAP1"
+            },
+            {
+              "address": "C7",
+              "value": "[DG023] (M)"
+            },
+            {
+              "address": "D7",
+              "value": "L-AMC hydrolysis rate (% control)"
+            },
+            {
+              "address": "H7",
+              "value": "[DG014] (M)"
+            },
+            {
+              "address": "I7",
+              "value": "L-AMC hydrolysis rate (% control)"
+            },
+            {
+              "address": "M7",
+              "value": "[DG013] (M)"
+            },
+            {
+              "address": "N7",
+              "value": "L-AMC hydrolysis rate (% control)"
+            }
+          ],
+          "merged_ranges": [
+            "D7:F7",
+            "I7:K7",
+            "N7:P7"
+          ]
+        },
+        {
+          "name": "Fig S7",
+          "state": "visible",
+          "dimension": "C2:H19",
+          "occupied_cells": 88,
+          "cell_types": {
+            "s": 20,
+            "n": 68
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "C2",
+              "value": "Displacement between open and closed crystal structures for the three M1 family aminopeptidases"
+            },
+            {
+              "address": "D5",
+              "value": "ERAP1-6m8p_A - 6mgq_A"
+            },
+            {
+              "address": "E5",
+              "value": "IRAP-5mj6 - 4p8q"
+            },
+            {
+              "address": "F5",
+              "value": "CD13-5lds - 4f5c"
+            },
+            {
+              "address": "G5",
+              "value": "CD13-5lds - 5lhd"
+            },
+            {
+              "address": "H5",
+              "value": "ERAP1-3qnf_A - 2yd0"
+            },
+            {
+              "address": "C6",
+              "value": "H3 N"
+            },
+            {
+              "address": "C7",
+              "value": "H3 C"
+            },
+            {
+              "address": "C8",
+              "value": "H4 N"
+            },
+            {
+              "address": "C9",
+              "value": "H4 C"
+            },
+            {
+              "address": "C10",
+              "value": "H4a N"
+            },
+            {
+              "address": "C11",
+              "value": "H4a C"
+            },
+            {
+              "address": "C12",
+              "value": "H5 N"
+            },
+            {
+              "address": "C13",
+              "value": "H5 C"
+            },
+            {
+              "address": "C14",
+              "value": "H6 N"
+            },
+            {
+              "address": "C15",
+              "value": "H6 C"
+            },
+            {
+              "address": "C16",
+              "value": "H10 N"
+            },
+            {
+              "address": "C17",
+              "value": "H10 C"
+            },
+            {
+              "address": "C18",
+              "value": "H12 N"
+            },
+            {
+              "address": "C19",
+              "value": "H12 C"
+            }
+          ],
+          "merged_ranges": []
+        },
+        {
+          "name": "Fig S8c",
+          "state": "visible",
+          "dimension": "B3:G13",
+          "occupied_cells": 44,
+          "cell_types": {
+            "s": 4,
+            "n": 40
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "B3",
+              "value": "Rate of L-pNA hydrolysis by ERAP1 after UV irradiation"
+            },
+            {
+              "address": "C5",
+              "value": "L-pNA (M)"
+            },
+            {
+              "address": "D5",
+              "value": "ERAP1"
+            },
+            {
+              "address": "F5",
+              "value": "ERAP1+UV"
+            }
+          ],
+          "merged_ranges": [
+            "D5:E5",
+            "F5:G5"
+          ]
+        },
+        {
+          "name": "Fig S8d",
+          "state": "visible",
+          "dimension": "B1:J13",
+          "occupied_cells": 60,
+          "cell_types": {
+            "s": 7,
+            "n": 53
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "B1",
+              "value": "C-terminal BPA group used for crosslinking experiment does not interfere with processing by ERAP1"
+            },
+            {
+              "address": "D3",
+              "value": "LVAFKARKF (LF9)"
+            },
+            {
+              "address": "I3",
+              "value": "LLKHHAFSFK-BPA"
+            },
+            {
+              "address": "C4",
+              "value": "Time (min)"
+            },
+            {
+              "address": "D4",
+              "value": "LF9-20uM"
+            },
+            {
+              "address": "H4",
+              "value": "Time (min)"
+            },
+            {
+              "address": "I4",
+              "value": "BPA peptide-20uM"
+            }
+          ],
+          "merged_ranges": [
+            "D4:E4",
+            "I4:J4"
+          ]
+        },
+        {
+          "name": "Fig S9a",
+          "state": "visible",
+          "dimension": "C3:H7",
+          "occupied_cells": 13,
+          "cell_types": {
+            "s": 7,
+            "n": 6
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "C3",
+              "value": "The solvent-accessible area of the open conformer minus that of the closed conformer in the presence of peptide substrate"
+            },
+            {
+              "address": "C6",
+              "value": "no ligand (3MDJ-2YD0)"
+            },
+            {
+              "address": "D6",
+              "value": "DG23-L838"
+            },
+            {
+              "address": "E6",
+              "value": "DG23-L677"
+            },
+            {
+              "address": "F6",
+              "value": "DG23-L686"
+            },
+            {
+              "address": "G6",
+              "value": "10mer 6RQX"
+            },
+            {
+              "address": "H6",
+              "value": "15-mer 6RYF"
+            }
+          ],
+          "merged_ranges": []
+        },
+        {
+          "name": "Fig S9b",
+          "state": "visible",
+          "dimension": "B2:H17",
+          "occupied_cells": 72,
+          "cell_types": {
+            "s": 17,
+            "n": 55
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "B2",
+              "value": "Buried surface area of peptide residues in domain I, II, III (green) and domain IV (magenta) in open (open bars) and closed conformer (closed bars) along the length of the peptide"
+            },
+            {
+              "address": "C4",
+              "value": "DG023-L677 peptide"
+            },
+            {
+              "address": "E6",
+              "value": "open D123"
+            },
+            {
+              "address": "F6",
+              "value": "open D4"
+            },
+            {
+              "address": "G6",
+              "value": "closed D123"
+            },
+            {
+              "address": "H6",
+              "value": "closed D4"
+            },
+            {
+              "address": "C7",
+              "value": "Phe-1"
+            },
+            {
+              "address": "C8",
+              "value": "Leu-2"
+            },
+            {
+              "address": "C9",
+              "value": "Lys-3"
+            },
+            {
+              "address": "C10",
+              "value": "His-4"
+            },
+            {
+              "address": "C11",
+              "value": "His-5"
+            },
+            {
+              "address": "C12",
+              "value": "Ala-6"
+            },
+            {
+              "address": "C13",
+              "value": "Phe-7"
+            },
+            {
+              "address": "C14",
+              "value": "Ser-8"
+            },
+            {
+              "address": "C15",
+              "value": "Phe-9"
+            },
+            {
+              "address": "C16",
+              "value": "Lys-10"
+            },
+            {
+              "address": "C17",
+              "value": "PBF-11"
+            }
+          ],
+          "merged_ranges": []
+        },
+        {
+          "name": "Fig S9c",
+          "state": "visible",
+          "dimension": "B2:H17",
+          "occupied_cells": 72,
+          "cell_types": {
+            "s": 17,
+            "n": 55
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "B2",
+              "value": "Buried surface area of peptide residues in domain I, II, III (green) and domain IV (magenta) in open (open bars) and closed conformer (closed bars) along the length of the peptide"
+            },
+            {
+              "address": "C4",
+              "value": "DG023-L686 peptide"
+            },
+            {
+              "address": "E6",
+              "value": "open D123"
+            },
+            {
+              "address": "F6",
+              "value": "open D4"
+            },
+            {
+              "address": "G6",
+              "value": "closed D123"
+            },
+            {
+              "address": "H6",
+              "value": "closed D4"
+            },
+            {
+              "address": "C7",
+              "value": "Phe-1"
+            },
+            {
+              "address": "C8",
+              "value": "Leu-2"
+            },
+            {
+              "address": "C9",
+              "value": "Lys-3"
+            },
+            {
+              "address": "C10",
+              "value": "His-4"
+            },
+            {
+              "address": "C11",
+              "value": "His-5"
+            },
+            {
+              "address": "C12",
+              "value": "Ala-6"
+            },
+            {
+              "address": "C13",
+              "value": "Phe-7"
+            },
+            {
+              "address": "C14",
+              "value": "Ser-8"
+            },
+            {
+              "address": "C15",
+              "value": "Phe-9"
+            },
+            {
+              "address": "C16",
+              "value": "Lys-10"
+            },
+            {
+              "address": "C17",
+              "value": "PBF-11"
+            }
+          ],
+          "merged_ranges": []
+        },
+        {
+          "name": "Fig S9d",
+          "state": "visible",
+          "dimension": "B2:I15",
+          "occupied_cells": 59,
+          "cell_types": {
+            "s": 15,
+            "n": 44
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "B2",
+              "value": "Buried surface area of peptide residues in domain I, II, III (green) and domain IV (magenta) in open (open bars) and closed conformer (closed bars) along the length of the peptide"
+            },
+            {
+              "address": "D4",
+              "value": "10mer peptide"
+            },
+            {
+              "address": "F6",
+              "value": "open D123"
+            },
+            {
+              "address": "G6",
+              "value": "open D4"
+            },
+            {
+              "address": "H6",
+              "value": "closed D123"
+            },
+            {
+              "address": "I6",
+              "value": "closed D4"
+            },
+            {
+              "address": "D7",
+              "value": "KF2"
+            },
+            {
+              "address": "D8",
+              "value": "Lys-2"
+            },
+            {
+              "address": "D9",
+              "value": "His-3"
+            },
+            {
+              "address": "D10",
+              "value": "His-4"
+            },
+            {
+              "address": "D11",
+              "value": "Ala-5"
+            },
+            {
+              "address": "D12",
+              "value": "Phe-6"
+            },
+            {
+              "address": "D13",
+              "value": "Ser-7"
+            },
+            {
+              "address": "D14",
+              "value": "Phe-8"
+            },
+            {
+              "address": "D15",
+              "value": "Lys-9"
+            }
+          ],
+          "merged_ranges": []
+        },
+        {
+          "name": "Fig S9e",
+          "state": "visible",
+          "dimension": "B2:I22",
+          "occupied_cells": 69,
+          "cell_types": {
+            "s": 16,
+            "n": 53
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "B2",
+              "value": "Buried surface area of peptide residues in domain I, II, III (green) and domain IV (magenta) in open (open bars) and closed conformer (closed bars) along the length of the peptide"
+            },
+            {
+              "address": "D4",
+              "value": "15mer peptide"
+            },
+            {
+              "address": "F6",
+              "value": "open D123"
+            },
+            {
+              "address": "G6",
+              "value": "open D4"
+            },
+            {
+              "address": "H6",
+              "value": "closed D123"
+            },
+            {
+              "address": "I6",
+              "value": "closed D4"
+            },
+            {
+              "address": "D7",
+              "value": "KF2"
+            },
+            {
+              "address": "D8",
+              "value": "Arg-2"
+            },
+            {
+              "address": "D9",
+              "value": "Ile-3"
+            },
+            {
+              "address": "D10",
+              "value": "Gln-4"
+            },
+            {
+              "address": "D15",
+              "value": "Arg-9"
+            },
+            {
+              "address": "D16",
+              "value": "Ala-10"
+            },
+            {
+              "address": "D17",
+              "value": "Phe-11"
+            },
+            {
+              "address": "D18",
+              "value": "Val-12"
+            },
+            {
+              "address": "D19",
+              "value": "Thr-13"
+            },
+            {
+              "address": "D20",
+              "value": "Ile-14"
+            }
+          ],
+          "merged_ranges": []
+        },
+        {
+          "name": "Fig S12a",
+          "state": "visible",
+          "dimension": "C3:K15",
+          "occupied_cells": 44,
+          "cell_types": {
+            "s": 4,
+            "n": 40
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "C3",
+              "value": "Rate of LpNA hydrolysis by Lys528 and Arg528 ERAP1"
+            },
+            {
+              "address": "C7",
+              "value": "[Leu-pNA] (M)"
+            },
+            {
+              "address": "D7",
+              "value": "Lys528"
+            },
+            {
+              "address": "F7",
+              "value": "Arg528"
+            }
+          ],
+          "merged_ranges": [
+            "F7:G7",
+            "D7:E7"
+          ]
+        },
+        {
+          "name": "Fig S12b",
+          "state": "visible",
+          "dimension": "B2:K10",
+          "occupied_cells": 28,
+          "cell_types": {
+            "s": 10,
+            "n": 18
+          },
+          "formulas": [],
+          "labels": [
+            {
+              "address": "B2",
+              "value": "Fit parameters of allosteric sigmoidal curve from the individual experiments of Lys528 and Arg528"
+            },
+            {
+              "address": "B5",
+              "value": "kcat"
+            },
+            {
+              "address": "F5",
+              "value": "Khalf"
+            },
+            {
+              "address": "J5",
+              "value": "Hill Coefficient"
+            },
+            {
+              "address": "B7",
+              "value": "Lys528"
+            },
+            {
+              "address": "C7",
+              "value": "Arg528"
+            },
+            {
+              "address": "F7",
+              "value": "Lys528"
+            },
+            {
+              "address": "G7",
+              "value": "Arg528"
+            },
+            {
+              "address": "J7",
+              "value": "Lys528"
+            },
+            {
+              "address": "K7",
+              "value": "Arg528"
+            }
+          ],
+          "merged_ranges": []
+        }
+      ]
+    }
+  ],
+  "elapsed_seconds": 0.11573845898965374,
+  "peak_rss_bytes": 33636352
+}

@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "name": "pxd057588-reported-responses-with-reference-context",
+  "mapping_policy": "no_expansion",
+  "sources": [
+    {
+      "evidence_type": "external_quantity_measurement",
+      "row_id": "measurement_id",
+      "select": [
+        "source_dataset",
+        "native.measurement_id",
+        "native.result_id",
+        "native.contrast_id",
+        "native.representation",
+        "native.reported_value",
+        "native.recomputed_value",
+        "native.absolute_replay_error",
+        "native.unit",
+        "native.quantity_scale",
+        "native.value_status",
+        "native.source_cell",
+        "native.normalization_policy",
+        "reference_context.native.result_id",
+        "reference_context.native.peptide_row_id",
+        "reference_context.native.source_dataset",
+        "reference_context.native.sequence_id",
+        "reference_context.native.component",
+        "reference_context.native.source_parent_status",
+        "reference_context.native.reference_identity_count",
+        "reference_context.native.reference_full_sequence_count",
+        "reference_context.native.reference_occurrence_count",
+        "reference_context.native.table_number",
+        "reference_context.native.measured_pool",
+        "reference_context.native.measured_population",
+        "reference_context.native.partner_population",
+        "reference_context.native.material_link_precision",
+        "reference_context.native.specimen_status",
+        "reference_context.native.organism_taxon_id",
+        "reference_context.native.organism_source_scope"
+      ],
+      "joins": [
+        "reference_context"
+      ],
+      "where": {
+        "representation": "reported_log2_fold_change"
+      },
+      "target": {
+        "field": "reported_value",
+        "mode": "numeric",
+        "unit_field": "measurement_unit",
+        "allowed_units": [
+          "log2_ratio"
+        ],
+        "scale_field": "quantity_scale",
+        "allowed_scales": [
+          "relative_to_contrast_controls"
+        ],
+        "status_field": "value_status",
+        "allowed_statuses": [
+          "source_reported_verified_derivation"
+        ],
+        "unit_conversion": {
+          "output_unit": "log10_ratio",
+          "factor_by_unit": {
+            "log2_ratio": 0.3010299956639812
+          }
+        }
+      },
+      "required_fields": [
+        "reference_context.component"
+      ],
+      "context_precision": {
+        "field": "reference_context.material_link_precision",
+        "allowed": [
+          "assay_channel_unresolved_specimen"
+        ],
+        "on_mismatch": "ambiguous"
+      },
+      "grouping": {
+        "fields": [
+          "reference_context.component"
+        ],
+        "on_missing": "ambiguous"
+      },
+      "limit": null
+    }
+  ]
+}

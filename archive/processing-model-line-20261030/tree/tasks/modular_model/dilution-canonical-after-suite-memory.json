@@ -1,0 +1,144 @@
+{
+  "observed_at_utc": "2026-10-25T12:39:58.193040+00:00",
+  "page_size": 16384,
+  "memory_counters": {
+    "Pages free": 3669,
+    "Pages active": 902910,
+    "Pages inactive": 900288,
+    "Pages speculative": 1484,
+    "Pages throttled": 0,
+    "Pages wired down": 152897,
+    "Pages purgeable": 33514,
+    "\"Translation faults\"": 5412260184,
+    "Pages copy-on-write": 531329717,
+    "Pages zero filled": 2556310961,
+    "Pages reactivated": 559325130,
+    "Pages purged": 13348638,
+    "File-backed pages": 551671,
+    "Anonymous pages": 1253011,
+    "Pages stored in compressor": 463909,
+    "Pages occupied by compressor": 83483,
+    "Decompressions": 547963653,
+    "Compressions": 685856342,
+    "Pageins": 252307627,
+    "Pageouts": 2493917,
+    "Swapins": 21405098,
+    "Swapouts": 26289228
+  },
+  "memory_admission_bytes": 84426752,
+  "disk_free_bytes": 23411945472,
+  "project_cwd_processes": [
+    {
+      "pid": 11483,
+      "ppid": 8588,
+      "name": "node",
+      "rss_bytes": 2441216,
+      "cwd": "/Users/iskander/code/presto",
+      "is_this_audit": false,
+      "pytest_or_test_sh_command": false,
+      "created_at_utc": "2026-10-23T06:07:12.400981+00:00"
+    },
+    {
+      "pid": 11485,
+      "ppid": 8588,
+      "name": "node_repl",
+      "rss_bytes": 9846784,
+      "cwd": "/Users/iskander/code/presto",
+      "is_this_audit": false,
+      "pytest_or_test_sh_command": false,
+      "created_at_utc": "2026-10-23T06:07:12.401250+00:00"
+    },
+    {
+      "pid": 11653,
+      "ppid": 11483,
+      "name": "node_repl",
+      "rss_bytes": 11911168,
+      "cwd": "/Users/iskander/code/presto",
+      "is_this_audit": false,
+      "pytest_or_test_sh_command": false,
+      "created_at_utc": "2026-10-23T06:07:12.499712+00:00"
+    },
+    {
+      "pid": 23650,
+      "ppid": 11653,
+      "name": "codex",
+      "rss_bytes": 7192576,
+      "cwd": "/Users/iskander/code/presto",
+      "is_this_audit": false,
+      "pytest_or_test_sh_command": false,
+      "created_at_utc": "2026-10-24T15:25:56.194872+00:00"
+    },
+    {
+      "pid": 23651,
+      "ppid": 11653,
+      "name": "codex",
+      "rss_bytes": 7192576,
+      "cwd": "/Users/iskander/code/presto",
+      "is_this_audit": false,
+      "pytest_or_test_sh_command": false,
+      "created_at_utc": "2026-10-24T15:25:56.222995+00:00"
+    },
+    {
+      "pid": 23652,
+      "ppid": 23651,
+      "name": "node",
+      "rss_bytes": 31457280,
+      "cwd": "/Users/iskander/code/presto",
+      "is_this_audit": false,
+      "pytest_or_test_sh_command": false,
+      "created_at_utc": "2026-10-24T15:25:58.413174+00:00"
+    },
+    {
+      "pid": 23653,
+      "ppid": 23650,
+      "name": "node",
+      "rss_bytes": 5914624,
+      "cwd": "/Users/iskander/code/presto",
+      "is_this_audit": false,
+      "pytest_or_test_sh_command": false,
+      "created_at_utc": "2026-10-24T15:25:58.434814+00:00"
+    },
+    {
+      "pid": 23654,
+      "ppid": 11653,
+      "name": "codex",
+      "rss_bytes": 37339136,
+      "cwd": "/Users/iskander/code/presto",
+      "is_this_audit": false,
+      "pytest_or_test_sh_command": false,
+      "created_at_utc": "2026-10-24T15:25:58.611722+00:00"
+    },
+    {
+      "pid": 62691,
+      "ppid": 8588,
+      "name": "python3.12",
+      "rss_bytes": 25493504,
+      "cwd": "/Users/iskander/code/presto/.worktrees/presto-modular-model",
+      "is_this_audit": true,
+      "pytest_or_test_sh_command": false,
+      "created_at_utc": "2026-10-25T12:39:58.079670+00:00"
+    },
+    {
+      "pid": 86932,
+      "ppid": 86931,
+      "name": "zsh",
+      "rss_bytes": 573440,
+      "cwd": "/Users/iskander/code/presto",
+      "is_this_audit": false,
+      "pytest_or_test_sh_command": false,
+      "created_at_utc": "2026-10-20T14:00:36.665919+00:00"
+    },
+    {
+      "pid": 87006,
+      "ppid": 86932,
+      "name": "codex",
+      "rss_bytes": 234635264,
+      "cwd": "/Users/iskander/code/presto",
+      "is_this_audit": false,
+      "pytest_or_test_sh_command": false,
+      "created_at_utc": "2026-10-20T14:00:41.051839+00:00"
+    }
+  ],
+  "unavailable_probes": 260,
+  "actions": "read-only; no processes terminated"
+}

@@ -1,0 +1,78 @@
+{
+  "passed": true,
+  "finished_epoch": 1792898564.487913,
+  "before_free_bytes": 2996686848,
+  "after_free_bytes": 5880664064,
+  "additional_clones": 526,
+  "metadata_skips": 24,
+  "worktree_state_unchanged": true,
+  "baseline_worktree_state": {
+    "/Users/iskander/code/presto": {
+      "head": "f54dd32a901d5d3130011daa3f67d4d9f5f7972b",
+      "tracked_status": " M README.md\n M cli/main.py\n M data/collate.py\n M data/hitlist_source.py\n M data/loaders.py\n M docs/assay_learning_scheme.md\n M experiments/2026-09-09_1541_codex_canonical-coverage/README.md\nA  experiments/2026-09-09_1541_codex_canonical-coverage/analysis/compare_class_count_cost.py\nA  experiments/2026-09-09_1541_codex_canonical-coverage/analysis/verify_report_reuse.py\nA  experiments/2026-09-09_1541_codex_canonical-coverage/results/verification/class_count_cost.json\nA  experiments/2026-09-09_1541_codex_canonical-coverage/results/verification/report_reuse_parity.json\nA  experiments/2026-09-09_1541_codex_canonical-coverage/results/verification/report_reuse_parity_3532ae1.json\n M experiments/experiment_log.md\n M scripts/train_iedb.py\n M tasks/coverage_report_reuse_spec.md\n M tasks/lessons.md\n M tasks/todo.md\n M tests/test_hitlist_source.py\n M tests/test_output_coverage.py\n M tests/test_row_supervision.py\n M tests/test_train_cli.py\n M training/checkpointing.py\n M training/data_support.py\n M training/holdout_eval.py\n M training/output_coverage.py\n M training/run_logger.py\n M training/supervision.py\n",
+      "working_diff_sha256": "34a115710ae7eca05c32db477d66e3a792b30e779f9cafd8854d2ee9566eeacc",
+      "staged_diff_sha256": "665f7a34c98623fa3c4f074a78ea2c22c2af2786efa34b243dd1ba0104b0c501",
+      "modified_paths": [
+        "README.md",
+        "cli/main.py",
+        "data/collate.py",
+        "data/hitlist_source.py",
+        "data/loaders.py",
+        "docs/assay_learning_scheme.md",
+        "experiments/2026-09-09_1541_codex_canonical-coverage/README.md",
+        "experiments/2026-09-09_1541_codex_canonical-coverage/analysis/compare_class_count_cost.py",
+        "experiments/2026-09-09_1541_codex_canonical-coverage/analysis/verify_report_reuse.py",
+        "experiments/2026-09-09_1541_codex_canonical-coverage/results/verification/class_count_cost.json",
+        "experiments/2026-09-09_1541_codex_canonical-coverage/results/verification/report_reuse_parity.json",
+        "experiments/2026-09-09_1541_codex_canonical-coverage/results/verification/report_reuse_parity_3532ae1.json",
+        "experiments/experiment_log.md",
+        "scripts/train_iedb.py",
+        "tasks/coverage_report_reuse_spec.md",
+        "tasks/lessons.md",
+        "tasks/todo.md",
+        "tests/test_hitlist_source.py",
+        "tests/test_output_coverage.py",
+        "tests/test_row_supervision.py",
+        "tests/test_train_cli.py",
+        "training/checkpointing.py",
+        "training/data_support.py",
+        "training/holdout_eval.py",
+        "training/output_coverage.py",
+        "training/run_logger.py",
+        "training/supervision.py",
+        ""
+      ]
+    },
+    "/private/tmp/presto-modular-model": {
+      "head": "3bb3d62e96bd2e989f33a3d4cfc382068101c1e6",
+      "tracked_status": " M tasks/todo.md\n",
+      "working_diff_sha256": "dfa754aad3fe150057ff157e4fb9ceab6b44c07703d7ecc5d5881adfda6c09fd",
+      "staged_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "modified_paths": [
+        "tasks/todo.md",
+        ""
+      ]
+    },
+    "/private/tmp/presto-pr66-completion": {
+      "head": "777faaec85cebc54d9aa686318870d22c7a0fb29",
+      "tracked_status": "",
+      "working_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "staged_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "modified_paths": [
+        ""
+      ]
+    },
+    "/private/tmp/presto-specificity-audit": {
+      "head": "6196143048fa9eaf6257b7826f1adb5a14f9c0a9",
+      "tracked_status": " M tasks/lessons.md\n M tasks/todo.md\n",
+      "working_diff_sha256": "a3dbf63bfd2e1e1348f8cca17f28b1f84bc02903ed0a5051afa52f76ebc8dc69",
+      "staged_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "modified_paths": [
+        "tasks/lessons.md",
+        "tasks/todo.md",
+        ""
+      ]
+    }
+  },
+  "recovery_journal_sha256": "ffa1f8e4f6acd8dbe8e2a5cd3136b52298e9179e4f52bbccc8e4e56b5cd51146"
+}

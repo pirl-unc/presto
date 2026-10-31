@@ -1,0 +1,53 @@
+{
+  "checks": [
+    {
+      "probe": 0,
+      "condition": "wt",
+      "numpy_global_vs_counts": 2.294118530699052e-07,
+      "numpy_local_vs_counts": 4.324647306930274e-10,
+      "actual_torch_vs_counts": 2.294118530699052e-07,
+      "actual_torch_vs_local": 2.2910035113454796e-07
+    },
+    {
+      "probe": 0,
+      "condition": "ko",
+      "numpy_global_vs_counts": 2.3745997168589383e-07,
+      "numpy_local_vs_counts": 6.216396286617965e-10,
+      "actual_torch_vs_counts": 2.3745997168589383e-07,
+      "actual_torch_vs_local": 2.3800657800165936e-07
+    },
+    {
+      "probe": 1,
+      "condition": "wt",
+      "numpy_global_vs_counts": 6.485197445726953e-08,
+      "numpy_local_vs_counts": 1.48929757415317e-10,
+      "actual_torch_vs_counts": 6.485197445726953e-08,
+      "actual_torch_vs_local": 6.493655746453442e-08
+    },
+    {
+      "probe": 1,
+      "condition": "ko",
+      "numpy_global_vs_counts": 5.324454832589254e-08,
+      "numpy_local_vs_counts": 1.0413714335300028e-10,
+      "actual_torch_vs_counts": 5.324454832589254e-08,
+      "actual_torch_vs_local": 5.331276042852551e-08
+    },
+    {
+      "probe": 2,
+      "condition": "wt",
+      "numpy_global_vs_counts": 1.5044315659906715e-07,
+      "numpy_local_vs_counts": 5.707079253625125e-11,
+      "actual_torch_vs_counts": 1.5044315659906715e-07,
+      "actual_torch_vs_local": 1.5045770851429552e-07
+    },
+    {
+      "probe": 2,
+      "condition": "ko",
+      "numpy_global_vs_counts": 9.961422620108351e-08,
+      "numpy_local_vs_counts": 8.822098607197404e-11,
+      "actual_torch_vs_counts": 9.961422620108351e-08,
+      "actual_torch_vs_local": 9.960695024346933e-08
+    }
+  ],
+  "scope": "Separate producer error from independent NumPy global-sum error after the gate failure. Frozen original executed producer."
+}

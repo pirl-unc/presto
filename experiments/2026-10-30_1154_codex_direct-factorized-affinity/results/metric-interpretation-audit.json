@@ -1,0 +1,69 @@
+{
+  "source_predictions": "artifacts/2026-10-30_1154_codex_direct-factorized-affinity/collected/direct-s43/validation-predictions.jsonl.gz",
+  "condition": "direct-s43",
+  "split": "validation",
+  "posthoc_assay_group_diagnostic": {
+    "n": 169,
+    "spearman": 0.6361605573160835,
+    "score": "1 for fluorescence, 0 for radioactivity",
+    "caveat": "Post hoc target-distribution diagnostic, not a trained or prospectively qualified baseline. Does not use peptide or MHC sequence; group ordering inspected after evaluation."
+  },
+  "bounds": [
+    {
+      "class": "II",
+      "qualifier": ">=",
+      "threshold_nM": 10000.0,
+      "n": 18,
+      "satisfied": 0,
+      "failed_prediction_median_nM": 1632.896050420246,
+      "failed_median_shortfall_fold": 6.124088546497728
+    },
+    {
+      "class": "II",
+      "qualifier": ">",
+      "threshold_nM": 10000.0,
+      "n": 65,
+      "satisfied": 19,
+      "failed_prediction_median_nM": 4152.883292475082,
+      "failed_median_shortfall_fold": 2.407965573730363
+    },
+    {
+      "class": "I",
+      "qualifier": ">=",
+      "threshold_nM": 100000.0,
+      "n": 175,
+      "satisfied": 43,
+      "failed_prediction_median_nM": 30660.987943612654,
+      "failed_median_shortfall_fold": 3.2614735110266486
+    }
+  ],
+  "ligand_class_II_population": [
+    {
+      "label": 0,
+      "background": "same_protein",
+      "n": 3460
+    },
+    {
+      "label": 0,
+      "background": "reference_proteome",
+      "n": 10
+    },
+    {
+      "label": 1,
+      "background": null,
+      "n": 694
+    }
+  ],
+  "mhc_I_exact_target_medians_nM": {
+    "radioactivity": 9.0,
+    "fluorescence": 8327.850863217955
+  },
+  "mhc_II_ligand_validation_studies": [
+    "pmid:35561310"
+  ],
+  "netmhciipan_reference": {
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10672173/",
+    "figure": "2",
+    "comparison": "Different evaluation population; figure visually inspected; not matched external-tool evaluation"
+  }
+}

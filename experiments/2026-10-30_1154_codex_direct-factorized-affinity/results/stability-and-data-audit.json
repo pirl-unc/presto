@@ -1,0 +1,196 @@
+{
+  "status": "independently_recomputed",
+  "description": "Post-run reporting audit; no new fits or data relabeling. Counts are observations, not necessarily unique peptide-MHC pairs. Previously inspected development holdouts.",
+  "inputs": [
+    {
+      "path": "experiments/2026-10-30_1154_codex_direct-factorized-affinity/results/direct-s42/collection.json",
+      "sha256": "e0bd12b0f68fb7b2ff6b6fd51e2e1fd77d6d0a00bce1b8d9dec60bd7a89bcdb7"
+    },
+    {
+      "path": "/Users/iskander/code/presto/.worktrees/shared-training/presto/artifacts/2026-10-30_1154_codex_direct-factorized-affinity/collected/direct-s42/validation-predictions.jsonl.gz",
+      "sha256": "02ec00c4a7fc01f671f53442a1f96466cda205c67894acdb6d4758f1123f7286"
+    },
+    {
+      "path": "/Users/iskander/code/presto/.worktrees/shared-training/presto/artifacts/2026-10-30_1154_codex_direct-factorized-affinity/collected/direct-s42/test-predictions.jsonl.gz",
+      "sha256": "16224fa8c7451c152474b1a241485e77207260a0064babe3a08e4c96801a9429"
+    },
+    {
+      "path": "experiments/2026-10-30_1154_codex_direct-factorized-affinity/results/direct-s43/collection.json",
+      "sha256": "6e9b04085b9babf7be4b03a33a584e9ccaadcb71bd43861062db8e85488d0894"
+    },
+    {
+      "path": "/Users/iskander/code/presto/.worktrees/shared-training/presto/artifacts/2026-10-30_1154_codex_direct-factorized-affinity/collected/direct-s43/validation-predictions.jsonl.gz",
+      "sha256": "f080719bbf617aec4377f072df8a3d4c630267addbb034ba10138f9e32515df0"
+    },
+    {
+      "path": "/Users/iskander/code/presto/.worktrees/shared-training/presto/artifacts/2026-10-30_1154_codex_direct-factorized-affinity/collected/direct-s43/test-predictions.jsonl.gz",
+      "sha256": "cd80117345f85cf474bccab279d1757933dbd5bedcf4befc03364368a4484b8d"
+    },
+    {
+      "path": "experiments/2026-10-30_1154_codex_direct-factorized-affinity/reproduce/parent-prepared.json",
+      "sha256": "07de8edee6d5d51f0667c3b9b10deaabade367880283fe0a34232ba0f423f7a8"
+    },
+    {
+      "path": "experiments/2026-10-29_1956_codex_curated-data-retrain/results/cohort-composition.json",
+      "sha256": "d99183ab40e6217d5f20543696854486eb9c3f0b4f8bdbc6a2182ac0cca7a2e7"
+    }
+  ],
+  "calculation": "Exact rows only, one MHC class per row; validate target against log10(raw_value) for half_life/koff and raw_value for thermal endpoints; scipy Spearman/Pearson and sqrt(mean squared residual).",
+  "stability_metrics": [
+    {
+      "seed": 42,
+      "split": "validation",
+      "endpoint": "half_life",
+      "mhc_class": "I",
+      "train_n": 8588,
+      "target_space": "log10(minutes)",
+      "n": 71,
+      "spearman": 0.4138880494656217,
+      "pearson": 0.48945870741875463,
+      "rmse": 1.420688869689438
+    },
+    {
+      "seed": 42,
+      "split": "validation",
+      "endpoint": "td50",
+      "mhc_class": "I",
+      "train_n": 489,
+      "target_space": "degrees_Celsius",
+      "n": 145,
+      "spearman": 0.19604678408204518,
+      "pearson": 0.17449483422783985,
+      "rmse": 6.268524562190679
+    },
+    {
+      "seed": 42,
+      "split": "test",
+      "endpoint": "half_life",
+      "mhc_class": "I",
+      "train_n": 8588,
+      "target_space": "log10(minutes)",
+      "n": 62,
+      "spearman": 0.06475673318531737,
+      "pearson": 0.15768834550551836,
+      "rmse": 1.3481098182012625
+    },
+    {
+      "seed": 42,
+      "split": "test",
+      "endpoint": "half_life",
+      "mhc_class": "II",
+      "train_n": 135,
+      "target_space": "log10(minutes)",
+      "n": 148,
+      "spearman": -0.07260983988238615,
+      "pearson": -0.04387108154337664,
+      "rmse": 0.6663883056775425
+    },
+    {
+      "seed": 42,
+      "split": "test",
+      "endpoint": "td50",
+      "mhc_class": "I",
+      "train_n": 489,
+      "target_space": "degrees_Celsius",
+      "n": 140,
+      "spearman": 0.31633067119357855,
+      "pearson": 0.3012230759772256,
+      "rmse": 5.576812399466336
+    },
+    {
+      "seed": 43,
+      "split": "validation",
+      "endpoint": "half_life",
+      "mhc_class": "I",
+      "train_n": 8588,
+      "target_space": "log10(minutes)",
+      "n": 71,
+      "spearman": 0.4451267826680938,
+      "pearson": 0.6097245409429981,
+      "rmse": 1.2158382858685197
+    },
+    {
+      "seed": 43,
+      "split": "validation",
+      "endpoint": "td50",
+      "mhc_class": "I",
+      "train_n": 489,
+      "target_space": "degrees_Celsius",
+      "n": 145,
+      "spearman": 0.4390129174830031,
+      "pearson": 0.4384989770446549,
+      "rmse": 5.5851401643777026
+    },
+    {
+      "seed": 43,
+      "split": "test",
+      "endpoint": "half_life",
+      "mhc_class": "I",
+      "train_n": 8588,
+      "target_space": "log10(minutes)",
+      "n": 62,
+      "spearman": 0.316022936813327,
+      "pearson": 0.41164725165234206,
+      "rmse": 1.208846316604077
+    },
+    {
+      "seed": 43,
+      "split": "test",
+      "endpoint": "half_life",
+      "mhc_class": "II",
+      "train_n": 135,
+      "target_space": "log10(minutes)",
+      "n": 148,
+      "spearman": -0.1805962200638927,
+      "pearson": -0.16580518414322026,
+      "rmse": 0.8581475839967062
+    },
+    {
+      "seed": 43,
+      "split": "test",
+      "endpoint": "td50",
+      "mhc_class": "I",
+      "train_n": 489,
+      "target_space": "degrees_Celsius",
+      "n": 140,
+      "spearman": 0.3824489403338191,
+      "pearson": 0.3818258811968348,
+      "rmse": 5.316437537934504
+    }
+  ],
+  "train_stability": {
+    "half_life": {
+      "I": 8588,
+      "II": 135
+    },
+    "koff": {
+      "I": 5,
+      "II": 2
+    },
+    "td50": {
+      "I": 489,
+      "II": 7
+    },
+    "tm": {
+      "I": 0,
+      "II": 0
+    }
+  },
+  "mhc_II_population_comparison": {
+    "presto_train": {
+      "observed_ligands": 306303,
+      "generated_comparators": 306302,
+      "concentration_observations": 61143,
+      "literal_ic50": 35512
+    },
+    "netmhciipan_4_3_published_dataset": {
+      "positive_ligands": 675364,
+      "generated_negatives": 6886973,
+      "binding_affinity": 129110,
+      "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10672173/"
+    },
+    "limitations": "Presto TRAIN versus published full development corpus; different source, species, curation, and endpoint-normalization contracts; no matched external-tool predictions."
+  },
+  "architecture_limitation": "Half-life, koff, td50 and tm share the biological encoder but are excluded from AFFINITY_ENDPOINTS and do not use the categorical concentration decoder.",
+  "synthetic_label_policy": "Unobserved ligand comparisons have binary elution labels. Random numeric affinity thresholds are not measured bounds; none were added in this audit."
+}

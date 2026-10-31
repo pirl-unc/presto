@@ -1,0 +1,92 @@
+{
+  "catalog_schema_version": 28,
+  "coverage": {
+    "examples_per_run": {
+      "pxd021013:run:423f4a14345ac4435be9197e250daad724e57188ce38dd6f42f81e499de82525": 470,
+      "pxd021013:run:ba4dba1a1e3c250210d89ade3a4a67456503a3b7e9b06dbe926a2024aa3b399d": 677
+    },
+    "n_admitted_forms": 1147,
+    "n_dependence_components": 1,
+    "n_excluded_forms": 2591,
+    "n_planned_product_run_pairs": 1500,
+    "n_runs": 2,
+    "n_selected_pools": 2,
+    "n_source_forms": 3738,
+    "planned_status_counts": {
+      "admitted": 1147,
+      "observed_not_admitted": 204,
+      "unobserved_unknown_cause_not_negative": 149
+    },
+    "reason_counts": {
+      "form_PEP_not_in_range": 1005,
+      "form_reverse_or_contaminant": 14,
+      "form_signal_not_positive_finite": 61,
+      "not_intended_product_in_this_pool": 2323,
+      "sequence_PEP_not_in_range": 993,
+      "sequence_reverse_or_contaminant": 14,
+      "sequence_signal_not_positive_finite": 59,
+      "variable_modification_out_of_scope": 379
+    }
+  },
+  "files": {
+    "contract.json": {
+      "sha256": "ddd17f60991ac7a2a4126ce94e595f3c547696106fadb3059bf0958eb72281ba",
+      "size_bytes": 1270
+    },
+    "dependence_groups.json": {
+      "sha256": "578ae899e0c44c1deacaf4889f3f83718081616336cb331ec833fa19e3c63f7e",
+      "size_bytes": 184
+    },
+    "dispositions.json": {
+      "sha256": "2240309451af9a2264c8fdf38728f1432255b27be63a9e73d6bd9400a05ba2fc",
+      "size_bytes": 2200542
+    },
+    "examples.json": {
+      "sha256": "c8cc1da9c67f06266958c28e05a341273fe2782f05352820e1f44669011053b0",
+      "size_bytes": 1329233
+    },
+    "planned_dispositions.json": {
+      "sha256": "c11cf7235a003bcb92739ab4d25fd27c764bd8612cf86325f9985faf4ad19de9",
+      "size_bytes": 470236
+    },
+    "source_manifest.json": {
+      "sha256": "fa32ddc4ec30675dea28ba873dbf2667954833183dcfabf60f61d6364f7454ff",
+      "size_bytes": 3256
+    },
+    "source_tables/contexts.parquet": {
+      "sha256": "10cc71a93cf4b0bf8cd4ff3f30b5261aa40c063bb2353995d7e9877af25f19cd",
+      "size_bytes": 5391
+    },
+    "source_tables/forms.parquet": {
+      "sha256": "b122a92db9e9bf5b8c22676d32e0c6b98d7b31320a1feab3a58a2e6fe4fb514b",
+      "size_bytes": 518892
+    },
+    "source_tables/peptides.parquet": {
+      "sha256": "98fcb4dd901b64d28c02b2464c2ed9219899a7fced0c4c6d0bd9a9b15d1f2192",
+      "size_bytes": 379854
+    },
+    "source_tables/planned_products.parquet": {
+      "sha256": "617a0aec8260788195a50cd5eeddecbf3b522a335d58d75b2dce365b6b8f8ffa",
+      "size_bytes": 14776921
+    },
+    "source_tables/runs.parquet": {
+      "sha256": "5eef1d308d9866f37647566dc93a0194989f62c015693664221ab17daecac607",
+      "size_bytes": 6873
+    },
+    "summary.json": {
+      "sha256": "ba91a9f8bb0b5a024841e83da27c9bddb503e125e4bbcef58f3721f470c2ce7f",
+      "size_bytes": 909
+    }
+  },
+  "hitlist_version": "2.0.26",
+  "output_kind": "registered_proteometools_response",
+  "recipe": {
+    "name": "audited_two_pool_relative_MS1",
+    "registered_recipe": "pxd021013_intended_unmodified_ms1_v1",
+    "schema_version": 1
+  },
+  "recipe_sha256": "5ab6d441fab0036c432360fe5dc48123eade3e7f91e6b1de7beeaade3b398b0e",
+  "schema_version": 1,
+  "source_package_manifest_sha256": "fa32ddc4ec30675dea28ba873dbf2667954833183dcfabf60f61d6364f7454ff",
+  "source_package_schema_version": 23
+}

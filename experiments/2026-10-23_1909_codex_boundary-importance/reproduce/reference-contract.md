@@ -1,0 +1,7 @@
+# Frozen reference and stored-evidence contract
+
+Ordinary targets use a separately constructed32-state cut-mask generator and analytical Frechet derivative matrices. Rare eta0 [1,5) targets use exact log independent-cut probabilities and bond scores. For the eta derivative, integrate the complete-path score over the two independent truncated-exponential boundary times, splitting both event orders; no allowed outside bonds remain for this fixture. Factor out the tiny internal survival before integration. Save quadrature errors and independently replay the eta reference with another quadrature representation.
+
+Save every group mean, scaled weight sum, squared sum, weighted score numerator, proposal-score mean, log-density ratio discrepancy, and linear-underflow count. Retain a full raw primary group per state and8 complete event histories per state for independent score/density replay. Other groups retain sufficient statistics, not every raw path. Test zero-time intact and impossible-target behavior explicitly.
+
+For contextual comparison, reanalyze the unchanged preceding unconditional full-path state-count/score-sum artifacts at their original K1024/8192/65536; do not rerun or relabel those counts as matched currentK. Every target can reuse the same unconditional paths, whereas the new proposal runs per target. Retain zero-hit groups and undefined log scores rather than dropping or smoothing them. This is no claim of a whole-biological-objective runtime advantage.

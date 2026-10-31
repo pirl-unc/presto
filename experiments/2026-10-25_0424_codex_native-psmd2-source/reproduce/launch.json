@@ -1,0 +1,53 @@
+{
+  "agent": "codex",
+  "model": "GPT-6",
+  "registered_utc": "2026-10-25T04:25:31.107709+00:00",
+  "git_commit": "8454ef9c40913c89d56bca5cd02f923701af91f6",
+  "git_dirty": true,
+  "python": "3.12.6",
+  "raw_directory": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/native_psmd2_sources/2026-10-25_0424_codex_native-psmd2-source",
+  "input_assets": [
+    {
+      "path": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/proteasome_quantity_sources/2026-10-25_0344_codex_proteasome-quantity-source/PXD018722-project-files-page0-retry1.json",
+      "sha256": "964741188e866a6a23722d31e80aaa7ecd6a9bdb2e780f6a10cefb9802caf1f2",
+      "size_bytes": 54459
+    },
+    {
+      "path": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/proteasome_quantity_sources/2026-10-25_0344_codex_proteasome-quantity-source/Hi20S_mqpar.xml",
+      "sha256": "1aabf54c072497ad70c5a6a33c3aed4d47d727b487988b6f64c1783fa6f507e8",
+      "size_bytes": 22385
+    },
+    {
+      "path": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/proteasome_quantity_sources/2026-10-25_0344_codex_proteasome-quantity-source/Hi20S_experimentalDesignTemplate.txt",
+      "sha256": "e0e094a5d13f27d9941aa3ea5469ce0f48dbff749c9e88c8e4f61e2357e0b162",
+      "size_bytes": 156
+    },
+    {
+      "path": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/proteasome_quantity_sources/2026-10-25_0344_codex_proteasome-quantity-source/sahu-article.xml",
+      "sha256": "6b1687f4fd729a959e323502d57b07710bda66fd1ffe09569e44d84624090d95",
+      "size_bytes": 241272
+    },
+    {
+      "path": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/proteasome_quantity_sources/2026-10-25_0344_codex_proteasome-quantity-source/complete-members/41467_2021_26427_MOESM10_ESM.xlsx",
+      "sha256": "f29811e09144f6d526ce1f2955681bb5f07a7ed0a4957e1a9f596740fc492ea5",
+      "size_bytes": 1975294
+    }
+  ],
+  "limits": {
+    "asset_bytes": 67108864,
+    "total_raw_bytes": 268435456,
+    "request_seconds": 30,
+    "acquisition_seconds": 1200,
+    "stage_seconds": 1200,
+    "disk_floor_bytes": 1073741824,
+    "start_margin_bytes": 33554432,
+    "rss_bytes": 3221225472
+  },
+  "dataset": "Sahu2021 PXD018722 original Dataset7 Hi20S native intracellular quantities",
+  "training": "none; source qualification only",
+  "validation": "none; no predictor",
+  "test": "none; no predictor and no held-out cohort access",
+  "non_default_environment_overrides": {
+    "PYTHONDONTWRITEBYTECODE": "1"
+  }
+}

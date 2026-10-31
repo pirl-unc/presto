@@ -1,0 +1,58 @@
+{
+  "stage": "fetch",
+  "attempt": 1,
+  "started_utc": "2026-10-25T15:49:05.790849+00:00",
+  "status": "passed",
+  "child_launched": true,
+  "exit_code": 0,
+  "resource_violation": null,
+  "memory_admission": {
+    "metric": "macos_free_plus_speculative",
+    "bytes": 6359973888
+  },
+  "disk_free_before_bytes": 19257876480,
+  "request_set_sha256": "0d6ae3d2d74d2bb94b5aad76f662110d8a10c26d830f1d47bcfaeed29ebbc999",
+  "request_set": {
+    "phase": "metadata",
+    "scope": "Follow the already observed public Browse FTP upload area link; inspect only displayed file/download links.",
+    "requests": [
+      {
+        "name": "pass05890-upload-index.html",
+        "url": "https://db.systemsbiology.net/sbeams/cgi/PeptideAtlas/PASS_View?identifier=PASS05890&browseArea=upload&path=/",
+        "expected_kind": "html",
+        "encoding": "latin-1",
+        "discovery_provenance": "Exact public href in parent family1451 archived pass05890-sbeams.html and extracted links; this was not fetched in that family."
+      }
+    ]
+  },
+  "environment": {
+    "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "versions": {
+      "requests": "2.34.2",
+      "psutil": "7.2.2"
+    },
+    "overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUNBUFFERED": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    }
+  },
+  "child_pid": 99712,
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "-B",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1548_codex_skyline-response-qualification/code/fetch.py",
+    "--requests",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1548_codex_skyline-response-qualification/reproduce/requests/metadata-1.json"
+  ],
+  "elapsed_seconds": 9.583648833038751,
+  "peak_observed_process_tree_rss_bytes": 45236224,
+  "peak_child_process_rss_bytes": 45400064,
+  "rss_poll_interval_seconds": 0.05,
+  "disk_free_after_bytes": 19256127488
+}

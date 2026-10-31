@@ -1,0 +1,114 @@
+{
+  "states": {
+    "uniform_alone_mse": {
+      "n_allocated_parameters": 1,
+      "n_changed_parameters": 1,
+      "n_gradient_supported_parameters": 1,
+      "runtime_seconds": 1.0695430830237456,
+      "n_candidate_scores": 334668,
+      "n_sampled_peptides": 0
+    },
+    "uniform_observer_mse": {
+      "n_allocated_parameters": 1,
+      "n_changed_parameters": 1,
+      "n_gradient_supported_parameters": 1,
+      "runtime_seconds": 0.33046795800328255,
+      "n_candidate_scores": 334668,
+      "n_sampled_peptides": 0
+    },
+    "sequence_alone_mse": {
+      "n_allocated_parameters": 39,
+      "n_changed_parameters": 39,
+      "n_gradient_supported_parameters": 39,
+      "runtime_seconds": 0.8122131249983795,
+      "n_candidate_scores": 334668,
+      "n_sampled_peptides": 0
+    },
+    "sequence_observer_mse": {
+      "n_allocated_parameters": 39,
+      "n_changed_parameters": 39,
+      "n_gradient_supported_parameters": 39,
+      "runtime_seconds": 0.8228051249752752,
+      "n_candidate_scores": 334668,
+      "n_sampled_peptides": 0
+    },
+    "sequence_observer_exact_42": {
+      "n_allocated_parameters": 39,
+      "n_changed_parameters": 39,
+      "n_gradient_supported_parameters": 39,
+      "runtime_seconds": 1.4651610419969074,
+      "n_candidate_scores": 334668,
+      "n_sampled_peptides": 0
+    },
+    "sequence_observer_exact_43": {
+      "n_allocated_parameters": 39,
+      "n_changed_parameters": 39,
+      "n_gradient_supported_parameters": 39,
+      "runtime_seconds": 1.4742172079859301,
+      "n_candidate_scores": 334668,
+      "n_sampled_peptides": 0
+    },
+    "sequence_observer_exact_44": {
+      "n_allocated_parameters": 39,
+      "n_changed_parameters": 39,
+      "n_gradient_supported_parameters": 39,
+      "runtime_seconds": 1.4718775840010494,
+      "n_candidate_scores": 334668,
+      "n_sampled_peptides": 0
+    },
+    "sequence_observer_reinforce_42": {
+      "n_allocated_parameters": 39,
+      "n_changed_parameters": 39,
+      "n_gradient_supported_parameters": 39,
+      "runtime_seconds": 1.717201124993153,
+      "n_candidate_scores": 334668,
+      "n_sampled_peptides": 1152000
+    },
+    "sequence_observer_reinforce_43": {
+      "n_allocated_parameters": 39,
+      "n_changed_parameters": 39,
+      "n_gradient_supported_parameters": 39,
+      "runtime_seconds": 1.7099373749806546,
+      "n_candidate_scores": 334668,
+      "n_sampled_peptides": 1152000
+    },
+    "sequence_observer_reinforce_44": {
+      "n_allocated_parameters": 39,
+      "n_changed_parameters": 39,
+      "n_gradient_supported_parameters": 39,
+      "runtime_seconds": 1.7132868750486523,
+      "n_candidate_scores": 334668,
+      "n_sampled_peptides": 1152000
+    }
+  },
+  "matched": {
+    "exact": {
+      "rmse": {
+        "mean": 0.5470522448931969,
+        "population_seed_sd": 0.0
+      },
+      "reverse_kl": {
+        "mean": 0.7062642307809751,
+        "population_seed_sd": 1.1102230246251565e-16
+      },
+      "spearman": {
+        "mean": 0.2714698259903739,
+        "population_seed_sd": 0.0
+      }
+    },
+    "reinforce": {
+      "rmse": {
+        "mean": 0.5449251050048032,
+        "population_seed_sd": 0.004814961173274103
+      },
+      "reverse_kl": {
+        "mean": 0.710201710050748,
+        "population_seed_sd": 0.01514053421763923
+      },
+      "spearman": {
+        "mean": 0.26917931630260394,
+        "population_seed_sd": 0.007373413834105496
+      }
+    }
+  }
+}

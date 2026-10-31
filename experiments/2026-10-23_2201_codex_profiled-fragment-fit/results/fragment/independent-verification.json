@@ -1,0 +1,124 @@
+{
+  "all_pass": true,
+  "arm": "fragment",
+  "updates_replayed": 200,
+  "maximum_adam_update_error": 1.1102230246251565e-16,
+  "analytical_gradient_checks": 0,
+  "maximum_analytical_gradient_error": 0.0,
+  "fragment_directional_checks": [
+    {
+      "step": 1,
+      "block_id": 22,
+      "direction": 0,
+      "independent_fd": 0.019255612415669532,
+      "stored_gradient": 0.019255612492015232,
+      "absolute_error": 7.634570059478207e-11,
+      "tolerance": 1.001925561241567e-05
+    },
+    {
+      "step": 1,
+      "block_id": 22,
+      "direction": 1,
+      "independent_fd": 0.02795343708728026,
+      "stored_gradient": 0.02795343714720101,
+      "absolute_error": 5.992074891825183e-11,
+      "tolerance": 1.002795343708728e-05
+    },
+    {
+      "step": 1,
+      "block_id": 22,
+      "direction": 2,
+      "independent_fd": 0.5563283840603894,
+      "stored_gradient": 0.5563283841731902,
+      "absolute_error": 1.1280076872566269e-10,
+      "tolerance": 1.055632838406039e-05
+    },
+    {
+      "step": 100,
+      "block_id": 27,
+      "direction": 0,
+      "independent_fd": 0.3968783607644077,
+      "stored_gradient": 0.3968783603437035,
+      "absolute_error": 4.207041937043243e-10,
+      "tolerance": 1.0396878360764409e-05
+    },
+    {
+      "step": 100,
+      "block_id": 27,
+      "direction": 1,
+      "independent_fd": 0.2805352006252093,
+      "stored_gradient": 0.2805352011107736,
+      "absolute_error": 4.855643109813457e-10,
+      "tolerance": 1.028053520062521e-05
+    },
+    {
+      "step": 100,
+      "block_id": 27,
+      "direction": 2,
+      "independent_fd": 1.2589198926549194,
+      "stored_gradient": 1.2589198926832832,
+      "absolute_error": 2.8363755788518574e-11,
+      "tolerance": 1.125891989265492e-05
+    },
+    {
+      "step": 200,
+      "block_id": 11,
+      "direction": 0,
+      "independent_fd": 0.030963406250084088,
+      "stored_gradient": 0.030963406295860522,
+      "absolute_error": 4.5776434726141346e-11,
+      "tolerance": 1.0030963406250085e-05
+    },
+    {
+      "step": 200,
+      "block_id": 11,
+      "direction": 1,
+      "independent_fd": -0.11076149023514502,
+      "stored_gradient": -0.11076149022867876,
+      "absolute_error": 6.4662580845364914e-12,
+      "tolerance": 1.0110761490235146e-05
+    },
+    {
+      "step": 200,
+      "block_id": 11,
+      "direction": 2,
+      "independent_fd": -0.03652927154096375,
+      "stored_gradient": -0.03652927147234771,
+      "absolute_error": 6.861603646379777e-11,
+      "tolerance": 1.0036529271540964e-05
+    }
+  ],
+  "n_predictions_verified": 105452,
+  "maximum_required_natural_log_error": 1.3293191529283365e-14,
+  "maximum_response_error": 0.0,
+  "metrics": {
+    "train": {
+      "shape_mse": 1.3374410289529752,
+      "shape_rmse": 1.156477854934099,
+      "shape_pearson": 0.30362579621678515,
+      "shape_spearman": 0.29098686803428925,
+      "prediction_sd": 0.5679634685953858,
+      "target_sd": 1.2595713416152294,
+      "ratio_rmse": 0.935042058100422,
+      "ratio_pearson": 0.2319699915811115,
+      "ratio_spearman": 0.17212176637507862
+    },
+    "val": {
+      "shape_mse": 1.594457671394684,
+      "shape_rmse": 1.2627183658261585,
+      "shape_pearson": 0.2530559776880782,
+      "shape_spearman": 0.24265250158247337,
+      "prediction_sd": 0.5784141624544021,
+      "target_sd": 1.2523925434074963,
+      "ratio_rmse": 1.1309800084407058,
+      "ratio_pearson": 0.3171383989863578,
+      "ratio_spearman": 0.25550457879143185
+    }
+  },
+  "training_data_mse": 1.3374410289529741,
+  "training_offset_optimization_gap": 2.498059533199871e-29,
+  "all_allocated_materially_trained": true,
+  "maximum_condition_weighted_residual": 2.0018708912772354e-15,
+  "seconds": 75.72842604201287,
+  "scope": "All source identities/targets/weights checked against the unchanged pinned observation loader; all final physical amounts independently recomputed with direct analytical or NumPy eight-step fragment equations. All200 Adam updates replayed; analytical gradients all200, fragment whole-condition offsets and fixed-offset block gradients at three fixed steps/nine directions plus38linear components at each. Other fragment gradients not independently recomputed."
+}

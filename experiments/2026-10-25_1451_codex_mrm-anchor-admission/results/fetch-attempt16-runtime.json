@@ -1,0 +1,57 @@
+{
+  "stage": "fetch",
+  "attempt": 16,
+  "started_utc": "2026-10-25T15:18:32.215810+00:00",
+  "status": "passed",
+  "child_launched": true,
+  "exit_code": 0,
+  "resource_violation": null,
+  "memory_admission": {
+    "metric": "macos_free_plus_speculative",
+    "bytes": 6611255296
+  },
+  "disk_free_before_bytes": 19429609472,
+  "request_set_sha256": "d749e13c086ff7b62fcb8a0d7deb755fc77a1c4e4c907bdf715247416ef7c56d",
+  "request_set": {
+    "phase": "metadata",
+    "scope": "First listed TableS3 assay selected by source order, not response; inspect public deposit links only.",
+    "requests": [
+      {
+        "name": "cptac-non-CPTAC-6077.html",
+        "url": "https://assays.cancer.gov/non-CPTAC-6077",
+        "expected_kind": "html",
+        "discovery_provenance": "PDF pr4c00576_si_002.pdf TableS3 page4 first row FFAGIVWQHVYEK; pypdf text matches rendered page. PDF source MD5 06b920ba04ca44f8d70142515d9d03b3."
+      }
+    ]
+  },
+  "environment": {
+    "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "versions": {
+      "requests": "2.34.2",
+      "psutil": "7.2.2"
+    },
+    "overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUNBUFFERED": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    }
+  },
+  "child_pid": 98305,
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "-B",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1451_codex_mrm-anchor-admission/code/fetch_v4.py",
+    "--requests",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1451_codex_mrm-anchor-admission/reproduce/requests/metadata-11.json"
+  ],
+  "elapsed_seconds": 1.310823249979876,
+  "peak_observed_process_tree_rss_bytes": 52281344,
+  "peak_child_process_rss_bytes": 52838400,
+  "rss_poll_interval_seconds": 0.05,
+  "disk_free_after_bytes": 19428753408
+}

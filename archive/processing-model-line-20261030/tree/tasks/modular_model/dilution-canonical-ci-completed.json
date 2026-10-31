@@ -1,0 +1,847 @@
+{
+  "observed_at_utc": "2026-10-25T10:38:44.976Z",
+  "presto_head": "d92606a4ec2cde5cd9f9edd255a62108203f6556",
+  "hitlist_head": "1b3ad5639a7bbbea7a24fdde41c25e12a1bc2511",
+  "presto": {
+    "jobs": [
+      {
+        "id": 121141428421,
+        "name": "lint-test",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 40184204117,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Run actions/setup-python@v5",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Install dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Lint",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Test",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Build and validate installable distributions",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7
+          },
+          {
+            "name": "Run actions/upload-artifact@v7",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8
+          },
+          {
+            "name": "Post Run actions/setup-python@v5",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 15
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 16
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 17
+          }
+        ]
+      },
+      {
+        "id": 121141428565,
+        "name": "docs",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 40184204117,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Run actions/setup-python@v5",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Install mkdocs",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Build docs",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Post Run actions/setup-python@v5",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 10
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11
+          }
+        ]
+      }
+    ]
+  },
+  "hitlist_tests": {
+    "jobs": [
+      {
+        "id": 121139728815,
+        "name": "integration",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 40183613623,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Set up Python 3.11",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Install dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Check the editable install matches this checkout (#553)",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Provision memory for the full corpus",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Restore corpus cache",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7
+          },
+          {
+            "name": "Install and verify the complete pinned corpus through datacache",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8
+          },
+          {
+            "name": "Audit retained allele restrictions and blank rows",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9
+          },
+          {
+            "name": "Upload allele candidate coverage audit",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 10
+          },
+          {
+            "name": "Save corpus cache",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11
+          },
+          {
+            "name": "Run integration tests (with coverage)",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 12
+          },
+          {
+            "name": "Report memory state after the integration suite",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 13
+          },
+          {
+            "name": "Upload integration coverage data",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 14
+          },
+          {
+            "name": "Post Set up Python 3.11",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 27
+          },
+          {
+            "name": "Post Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 28
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 29
+          }
+        ]
+      },
+      {
+        "id": 121139728933,
+        "name": "unit (3.14)",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 40183613623,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Set up Python 3.14",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Install dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Check the editable install matches this checkout (#553)",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Run unit tests (with coverage)",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 6
+          },
+          {
+            "name": "Upload unit coverage data",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 7
+          },
+          {
+            "name": "Run unit tests (no coverage)",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8
+          },
+          {
+            "name": "Post Set up Python 3.14",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 15
+          },
+          {
+            "name": "Post Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 16
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 17
+          }
+        ]
+      },
+      {
+        "id": 121139728961,
+        "name": "unit (3.10)",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 40183613623,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Set up Python 3.10",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Install dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Check the editable install matches this checkout (#553)",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Run unit tests (with coverage)",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 6
+          },
+          {
+            "name": "Upload unit coverage data",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 7
+          },
+          {
+            "name": "Run unit tests (no coverage)",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8
+          },
+          {
+            "name": "Post Set up Python 3.10",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 15
+          },
+          {
+            "name": "Post Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 16
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 17
+          }
+        ]
+      },
+      {
+        "id": 121139728964,
+        "name": "lint",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 40183613623,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Set up Python",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Install dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Lint and check formatting (pyproject's [tool.ruff] include list)",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Post Set up Python",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9
+          },
+          {
+            "name": "Post Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 10
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11
+          }
+        ]
+      },
+      {
+        "id": 121139728990,
+        "name": "unit (3.13)",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 40183613623,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Set up Python 3.13",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Install dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Check the editable install matches this checkout (#553)",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Run unit tests (with coverage)",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 6
+          },
+          {
+            "name": "Upload unit coverage data",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 7
+          },
+          {
+            "name": "Run unit tests (no coverage)",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8
+          },
+          {
+            "name": "Post Set up Python 3.13",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 15
+          },
+          {
+            "name": "Post Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 16
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 17
+          }
+        ]
+      },
+      {
+        "id": 121139728991,
+        "name": "unit (3.12)",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 40183613623,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Set up Python 3.12",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Install dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Check the editable install matches this checkout (#553)",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Run unit tests (with coverage)",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 6
+          },
+          {
+            "name": "Upload unit coverage data",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 7
+          },
+          {
+            "name": "Run unit tests (no coverage)",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8
+          },
+          {
+            "name": "Post Set up Python 3.12",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 15
+          },
+          {
+            "name": "Post Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 16
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 17
+          }
+        ]
+      },
+      {
+        "id": 121139729043,
+        "name": "unit (3.11)",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 40183613623,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Set up Python 3.11",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Install dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Check the editable install matches this checkout (#553)",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Run unit tests (with coverage)",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Upload unit coverage data",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7
+          },
+          {
+            "name": "Run unit tests (no coverage)",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 8
+          },
+          {
+            "name": "Post Set up Python 3.11",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 15
+          },
+          {
+            "name": "Post Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 16
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 17
+          }
+        ]
+      },
+      {
+        "id": 121143484512,
+        "name": "coverage",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 40183613623,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Set up Python",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Install coverage",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Download coverage data from both test tiers",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Combine unit and integration coverage",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Upload coverage to Coveralls",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7
+          },
+          {
+            "name": "Post Set up Python",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 13
+          },
+          {
+            "name": "Post Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 14
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 15
+          }
+        ]
+      }
+    ]
+  },
+  "hitlist_docs": {
+    "jobs": [
+      {
+        "id": 121139653382,
+        "name": "build",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 40183613700,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Set up Python",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Install dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Build docs",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Upload artifact",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Post Set up Python",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11
+          },
+          {
+            "name": "Post Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 12
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 13
+          }
+        ]
+      },
+      {
+        "id": 121139790518,
+        "name": "deploy",
+        "status": "completed",
+        "conclusion": "skipped",
+        "run_id": 40183613700,
+        "logs_url": null,
+        "steps": null
+      }
+    ]
+  },
+  "full_local_tests_passed": false,
+  "source_package_materialized": false,
+  "independent_source_replay_passed": false
+}

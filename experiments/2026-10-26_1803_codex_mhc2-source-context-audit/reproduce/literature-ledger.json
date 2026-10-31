@@ -1,0 +1,16 @@
+{
+  "operation_budget": 8,
+  "operations_used": 7,
+  "accounting": "Each query, page open, or direct source fetch counts separately even within one tool call.",
+  "operations": [
+    {"number": 1, "kind": "web_search", "query": "Abelin 2019 31495665 MAPTAC HLA II antigen processing HLA DM cell line", "result": "Primary PubMed record located"},
+    {"number": 2, "kind": "web_search", "query": "Strazar 2023 HLA II immunopeptidome 42 alleles HLA DM", "result": "Primary PMC/PubMed record located"},
+    {"number": 3, "kind": "web_open", "url": "https://pubmed.ncbi.nlm.nih.gov/31495665/", "result": "Abstract available; reports HLA-DM sensitivity and APC processing context; original Methods not recovered"},
+    {"number": 4, "kind": "web_open", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10519123/", "result": "Browser challenge; no full text recovered"},
+    {"number": 5, "kind": "web_open", "url": "https://europepmc.org/articles/PMC10519123", "result": "Tool URL inaccessible"},
+    {"number": 6, "kind": "http_fetch", "url": "https://ars.els-cdn.com/content/image/1-s2.0-S1074761319303632-mmc2.xlsx", "result": "HTTP 403; no workbook bytes recovered"},
+    {"number": 7, "kind": "http_fetch", "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC10519123/fullTextXML", "result": "HTTP 500; no XML recovered"}
+  ],
+  "direct_fetch_receipt": "/private/tmp/presto-mhc2-20261026/source-documents/retrieval-attempt01.json",
+  "inference_limit": "Source-condition loss is established from pinned Hitlist import bytes and its curation contract. Original workbook arm/cell counts have not been independently recovered. No new mechanistic labels or protocol interpretation are admitted."
+}

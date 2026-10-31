@@ -1,0 +1,273 @@
+{
+  "status": "frozen",
+  "family": "2026-10-28_1540_codex_temporal-multi-output",
+  "frozen_unix": 1793247014.999922,
+  "prepared_record_sha256": "87fed4b6390b7036c2847ee639d9d78dab826a1d4d5a5fae3529fb8f1d26a628",
+  "manifests": {
+    "wide-multi-s42": {
+      "path": "/runs/2026-10-28_1540_codex_temporal-multi-output/prepared/wide-multi-s42.json",
+      "sha256": "5541024b53ce7d09ef6779639eb9fb1b7fd2f72c770f84ba311a5b294053b9a1",
+      "seed": 42,
+      "max_steps": 51099
+    },
+    "wide-multi-s43": {
+      "path": "/runs/2026-10-28_1540_codex_temporal-multi-output/prepared/wide-multi-s43.json",
+      "sha256": "6dfc997ea93a8fa0f0f4cbf446def3b08ac7c36ddc6b0f43338c0e451c4f3c95",
+      "seed": 43,
+      "max_steps": 51099
+    }
+  },
+  "model": {
+    "endpoints": [
+      "ec50",
+      "elution_observation",
+      "half_life",
+      "ic50",
+      "kd",
+      "kd_via_ec50",
+      "kd_via_ic50",
+      "koff",
+      "qualitative_binding",
+      "td50"
+    ],
+    "mhc_classes": [
+      "I",
+      "II"
+    ],
+    "d_model": 192,
+    "n_layers": 3,
+    "n_heads": 6,
+    "d_ff": 768,
+    "dropout": 0.1,
+    "source_context": false
+  },
+  "counts": {
+    "test:ec50:I:=": 70,
+    "test:ec50:II:=": 107,
+    "test:elution_observation:I:=": 31510,
+    "test:elution_observation:II:=": 39656,
+    "test:half_life:I:=": 62,
+    "test:half_life:II:=": 148,
+    "test:ic50:I:=": 100,
+    "test:ic50:II:=": 267,
+    "test:ic50:II:>": 111,
+    "test:ic50:II:>=": 1,
+    "test:kd:I:=": 386,
+    "test:kd:I:>": 63,
+    "test:kd:II:=": 21,
+    "test:kd:II:>": 9,
+    "test:kd_via_ec50:I:=": 66,
+    "test:kd_via_ec50:II:=": 149,
+    "test:kd_via_ec50:II:>": 190,
+    "test:kd_via_ic50:I:=": 604,
+    "test:kd_via_ic50:II:=": 55,
+    "test:qualitative_binding:I:=": 290,
+    "test:qualitative_binding:II:=": 151,
+    "test:td50:I:=": 140,
+    "train:ec50:I:=": 115,
+    "train:ec50:II:=": 84,
+    "train:ec50:II:>": 13,
+    "train:elution_observation:I:=": 2673288,
+    "train:elution_observation:II:=": 585507,
+    "train:half_life:I:=": 8584,
+    "train:half_life:I:>": 8,
+    "train:half_life:II:=": 136,
+    "train:half_life:II:>": 1,
+    "train:ic50:I:=": 17472,
+    "train:ic50:I:>": 884,
+    "train:ic50:I:>=": 175,
+    "train:ic50:II:=": 32260,
+    "train:ic50:II:>": 3935,
+    "train:ic50:II:>=": 10,
+    "train:kd:I:=": 4293,
+    "train:kd:I:>": 12056,
+    "train:kd:II:=": 1253,
+    "train:kd:II:>": 230,
+    "train:kd_via_ec50:I:=": 10632,
+    "train:kd_via_ec50:I:>": 25710,
+    "train:kd_via_ec50:II:=": 2157,
+    "train:kd_via_ec50:II:>": 433,
+    "train:kd_via_ic50:I:=": 48852,
+    "train:kd_via_ic50:I:>": 2583,
+    "train:kd_via_ic50:I:>=": 2,
+    "train:kd_via_ic50:II:=": 19115,
+    "train:kd_via_ic50:II:>": 2371,
+    "train:kd_via_ic50:II:>=": 2,
+    "train:koff:I:=": 6,
+    "train:koff:II:=": 2,
+    "train:qualitative_binding:I:=": 22181,
+    "train:qualitative_binding:II:=": 18279,
+    "train:td50:I:=": 461,
+    "train:td50:I:>": 31,
+    "train:td50:I:>=": 4,
+    "train:td50:II:=": 7,
+    "validation:ec50:I:=": 69,
+    "validation:elution_observation:I:=": 10328,
+    "validation:elution_observation:II:=": 4164,
+    "validation:half_life:I:=": 71,
+    "validation:ic50:I:=": 141,
+    "validation:ic50:II:=": 1129,
+    "validation:kd:I:=": 151,
+    "validation:kd:I:>": 381,
+    "validation:kd_via_ec50:I:=": 106,
+    "validation:kd_via_ec50:II:=": 352,
+    "validation:kd_via_ec50:II:>": 70,
+    "validation:kd_via_ic50:I:=": 83,
+    "validation:kd_via_ic50:I:>": 13,
+    "validation:kd_via_ic50:II:=": 246,
+    "validation:qualitative_binding:I:=": 689,
+    "validation:qualitative_binding:II:=": 446,
+    "validation:td50:I:=": 145
+  },
+  "train_strata": {
+    "ec50:I": 115,
+    "ec50:II": 97,
+    "elution_observation:I": 2673288,
+    "elution_observation:II": 585507,
+    "half_life:I": 8592,
+    "half_life:II": 137,
+    "ic50:I": 18531,
+    "ic50:II": 36205,
+    "kd:I": 16349,
+    "kd:II": 1483,
+    "kd_via_ec50:I": 36342,
+    "kd_via_ec50:II": 2590,
+    "kd_via_ic50:I": 51437,
+    "kd_via_ic50:II": 21488,
+    "koff:I": 6,
+    "koff:II": 2,
+    "qualitative_binding:I": 22181,
+    "qualitative_binding:II": 18279,
+    "td50:I": 496,
+    "td50:II": 7
+  },
+  "epoch_quotas": {
+    "ec50:I": 11253,
+    "ec50:II": 10334,
+    "elution_observation:I": 2673288,
+    "elution_observation:II": 1251092,
+    "half_life:I": 97259,
+    "half_life:II": 12282,
+    "ic50:I": 545561,
+    "ic50:II": 762567,
+    "kd:I": 134162,
+    "kd:II": 40407,
+    "kd_via_ec50:I": 200027,
+    "kd_via_ec50:II": 53399,
+    "kd_via_ic50:I": 237969,
+    "kd_via_ic50:II": 153809,
+    "koff:I": 2571,
+    "koff:II": 1484,
+    "qualitative_binding:I": 171420,
+    "qualitative_binding:II": 155613,
+    "td50:I": 23369,
+    "td50:II": 2777
+  },
+  "max_steps": 51099,
+  "weighted_epoch_examples": 6540643,
+  "background_contract": {
+    "train_ratio": 1,
+    "evaluation_ratio": 5,
+    "seed": 20261028,
+    "with_replacement": true,
+    "positive_blacklist": "all canonical known positive peptides, including held-out sources; conservative exclusion only",
+    "proteome": {
+      "path": "/Users/iskander/Library/Caches/pyensembl/GRCh38/ensembl112/7fa50041eebe6c62f62f5f3f009bb956e10e294d7eb748bae30f40ffc7ecf070-Homo_sapiens.GRCh38.pep.all.fa.gz",
+      "sha256": "2868236131342d14afbfa8dbd8a5e3fb56ba85210fdca196b65db3e17c7ece83",
+      "source": "Ensembl release 112 human GRCh38 all peptide FASTA",
+      "url": "https://ftp.ensembl.org/pub/release-112/fasta/homo_sapiens/pep/Homo_sapiens.GRCh38.pep.all.fa.gz"
+    },
+    "primary_evaluation": "same-protein; fallback proteome reported separately"
+  },
+  "verification": {
+    "status": "passed",
+    "original_measurements": 1896840,
+    "generated_comparators": 1689032,
+    "independent_exclusions": {
+      "peptide_embargo": 127096
+    },
+    "source_and_target_conservation": true,
+    "whole_study_aliases_disjoint": true,
+    "exact_peptides_disjoint": true,
+    "background_sequence_lineage_and_positive_blacklist_verified": true,
+    "background_ratios_verified": true,
+    "training_scales_independently_verified": true,
+    "seconds": 1163.6133335099994,
+    "review_revision": "kinetic-review-v2",
+    "exact_reviewed_row_removal": true,
+    "removed_rows": 20,
+    "retained_source_bytes_and_order_verified": true,
+    "unchanged_holdouts_and_backgrounds": true,
+    "input_receipts": {
+      "hitlist-v4-iedb-test.jsonl": {
+        "before_sha256": "0bfcabe1c2b0765fcf912460d76699ef0196f4c66c866950b613897564304d67",
+        "after_sha256": "0bfcabe1c2b0765fcf912460d76699ef0196f4c66c866950b613897564304d67"
+      },
+      "hitlist-v4-iedb-train.jsonl": {
+        "before_sha256": "d87c062bb156af8fb9be730cb28f874ce2cb62e6b457a2a29970552e6827448a",
+        "after_sha256": "c76aeafbb47c66b7fa904c191502de95f8812d45275cdfe680821838a37200b1"
+      },
+      "hitlist-v4-iedb-validation.jsonl": {
+        "before_sha256": "cc93d281fd2138cc7a7af1c262f694dd0a28012da22e91098a76e36bbda27fd5",
+        "after_sha256": "cc93d281fd2138cc7a7af1c262f694dd0a28012da22e91098a76e36bbda27fd5"
+      },
+      "hitlist_ligand_background-test.jsonl": {
+        "before_sha256": "c1c1cf95caf66903721d2226caa9744d062acabed44cae9052f929b0f08911a9",
+        "after_sha256": "c1c1cf95caf66903721d2226caa9744d062acabed44cae9052f929b0f08911a9"
+      },
+      "hitlist_ligand_background-train.jsonl": {
+        "before_sha256": "6c264dcdc771a400fe73a7730fe2149b205984ce24f21638e78faeb4f7e60b1d",
+        "after_sha256": "6c264dcdc771a400fe73a7730fe2149b205984ce24f21638e78faeb4f7e60b1d"
+      },
+      "hitlist_ligand_background-validation.jsonl": {
+        "before_sha256": "0f32d0f097e0a691be50b66689deba2a473c629ae73552d7d48ce3dcc8a1795d",
+        "after_sha256": "0f32d0f097e0a691be50b66689deba2a473c629ae73552d7d48ce3dcc8a1795d"
+      },
+      "hitlist_native_ms-test.jsonl": {
+        "before_sha256": "a1a3507783cc1a258c24f455691837b039d1e03028e364ad57ba3ad2e59e6d05",
+        "after_sha256": "a1a3507783cc1a258c24f455691837b039d1e03028e364ad57ba3ad2e59e6d05"
+      },
+      "hitlist_native_ms-train.jsonl": {
+        "before_sha256": "bc709276b36bd456a09451deba140aeb618c9614a79505981e7567d1a0b0e203",
+        "after_sha256": "bc709276b36bd456a09451deba140aeb618c9614a79505981e7567d1a0b0e203"
+      },
+      "hitlist_native_ms-validation.jsonl": {
+        "before_sha256": "0023355b4b6b695223e12031b7fbe4bee752704be7c0e8184fe10a26800d3923",
+        "after_sha256": "0023355b4b6b695223e12031b7fbe4bee752704be7c0e8184fe10a26800d3923"
+      }
+    },
+    "canonical_preflight": "pending_in_trainers",
+    "inherited_full_verification": {
+      "status": "passed",
+      "original_measurements": 1896860,
+      "generated_comparators": 1689032,
+      "independent_exclusions": {
+        "peptide_embargo": 127096
+      },
+      "source_and_target_conservation": true,
+      "whole_study_aliases_disjoint": true,
+      "exact_peptides_disjoint": true,
+      "background_sequence_lineage_and_positive_blacklist_verified": true,
+      "background_ratios_verified": true,
+      "training_scales_independently_verified": true,
+      "seconds": 1163.6133335099994
+    }
+  },
+  "source_review": {
+    "revision": "kinetic-review-v2",
+    "policy_sha256": "d1d1ae11d51314da292e9b37b41f9e8241d34bc50555d33ac6b3a243070cd829",
+    "removed_rows": 20,
+    "reasons": {
+      "published_time_unit_conflicts_with_export": 14,
+      "association_measurement_scope_unresolved": 6
+    },
+    "runtime_source": "aa2b3f7a358010f1d6163cbaad7c28dd1e1fa97e"
+  },
+  "canonical_preflight": "pending_in_trainers",
+  "runtime_pins_sha256": "bd0b301dc5ff864c382d3ecbd51b69e52378f5e9218b00430fd384aecc82fa9a",
+  "requested_gpu": "H100!",
+  "max_concurrent_gpus": 2,
+  "seed_selection": "minimum equal-endpoint validation loss; seed breaks ties",
+  "test_used_for_selection": false,
+  "interpretation": "Whole 2026 study holdouts and older assay holdouts are reported separately; other 2026 studies can be in TRAIN, so this is not a strict date-cutoff benchmark. Every TRAIN row is used by the completed fit; the validation-selected checkpoint may precede full coverage and its actual unique-row exposure is reported."
+}

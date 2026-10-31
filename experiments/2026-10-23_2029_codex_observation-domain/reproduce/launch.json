@@ -1,0 +1,85 @@
+{
+  "registered_at": "2026-10-24T00:29:42.702818+00:00",
+  "agent": "Codex / GPT-6",
+  "git_commit": "6347987636c2de32a4f20001c356fb1d24febbc7",
+  "git_dirty": true,
+  "source_hashes": {
+    "/private/tmp/presto-modular-model/experiments/agents/codex/plans/fragment-observation-domain.md": "712ac3bdada81c8ffd9b22a28ef3ccf61c5ed5ed6e00ccd4a4c2692583646ca4",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_1501_codex_shared-observation/code/observation.py": "bf612679f2280bee81bdcfaddd02771bada80f1db0978a86925ab48f9b07420f",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_1501_codex_shared-observation/reproduce/launch.json": "cfc71e045b633a9e3b1633903257425d4d9e8329acb0efd1dc8cac1af82b7012",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_1501_codex_shared-observation/results/context-summary.json": "050c284cc04b0e11286b4a10e28573648bc9e8426ae68bbb9da54fa9332a50df",
+    "/private/tmp/hitlist-digestion-209-review-candidate/manifest.json": "5f616170b5514cb4d8f0c7b7843d232959e9514eebbca6483f976e17b0846615",
+    "/private/tmp/hitlist-digestion-209-review-candidate/examples.json": "8b89735c3a0f4fe11d863dd886118e64b2ff1fb8570b4e01f4d209e5078f3d8c",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_1202_codex_biological-cut-rates/results/fits.json": "2400f214141b6ab421cc0b5168ec08b3209507b62b7cf0a590fd719937bd267f",
+    "/private/tmp/presto-modular-model/models/independent_cut.py": "6b6a2afa884ed3d0fa4ba553a1f6c94d884e9299f3ece68d62cd34bcc6f3771f",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_1846_codex_fragment-rational-solver/code/rational.py": "dd67d8450d89d8faa04964c322abc79411338ed3785f297768ad7c655a377bb0",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_1846_codex_fragment-rational-solver/reproduce/coefficients.json": "fdd57fa2eb3ebf5b0612203f5081b5c4c3e3cb51e2096961b4fc6d1f140bc218",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_1920_codex_boundary-exponential/code/actual_reference.py": "ae54b269db67f5fe0acb7c7fde544d63e1c7bb5928ddf63555d3d6a72099061d"
+  },
+  "source_family": "/private/tmp/presto-modular-model/experiments/2026-10-23_1501_codex_shared-observation",
+  "recipe_directory": "/private/tmp/hitlist-digestion-209-review-candidate",
+  "initial_fit": "/private/tmp/presto-modular-model/experiments/2026-10-23_1202_codex_biological-cut-rates/results/fits.json",
+  "eta_values": [
+    -1.0,
+    0.0,
+    1.0
+  ],
+  "substeps": [
+    2,
+    4,
+    8
+  ],
+  "order": 48,
+  "gate": {
+    "log_max_abs": 1e-05,
+    "fd_absolute": 1e-05,
+    "fd_relative": 1e-06,
+    "fd_step": 1e-05
+  },
+  "runtime_limits": {
+    "seconds": 120,
+    "rss_bytes": 4294967296
+  },
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "argv": [
+    "sh",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_2029_codex_observation-domain/reproduce/launch.sh"
+  ],
+  "biological_fit_allowed": false,
+  "quantity_policy": "JSON serialization read and parsed; only train identity/support/context fields projected; quantities never accessed. Existing initializer retained by hash.",
+  "frozen_at": "2026-10-24T00:32:54.731513+00:00",
+  "n_cases": 84,
+  "software": {
+    "python": "3.12.6",
+    "torch": "2.14.1",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "platform": "macOS-26.5-arm64-arm-64bit"
+  },
+  "hardware": {
+    "query": "sysctl -n machdep.cpu.brand_string hw.memsize",
+    "result": {
+      "args": [
+        "sysctl",
+        "-n",
+        "machdep.cpu.brand_string",
+        "hw.memsize"
+      ],
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "sysctl: sysctl fmt -1 1024 1: Operation not permitted\n"
+    }
+  },
+  "preflight": {
+    "original": "launch_logs/preflight.txt",
+    "qualified": "launch_logs/preflight-qualified.txt",
+    "test_pythonpath": "/private/tmp/presto-modular-model/experiments/2026-10-23_2029_codex_observation-domain/code",
+    "tests_passed": 2,
+    "correction": "Explicit family code PYTHONPATH required by repository importlib-mode pytest; no numerical change."
+  }
+}

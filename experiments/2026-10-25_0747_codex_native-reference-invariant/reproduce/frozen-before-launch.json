@@ -1,0 +1,28 @@
+{
+  "utc": "2026-10-25T07:54:00.962367+00:00",
+  "launch_json_sha256": "6a0163a6a8b2b04d310bee65f72672dcb049f26f2843fdfed229c09109f22de9",
+  "code_sha256_file": "ce5d0e86e5b67decb1601e6fa5af4ba678f5671abcd1f6786033ad71250eee37",
+  "actual_commands": [
+    "experiments/2026-10-25_0747_codex_native-reference-invariant/reproduce/launch.sh qualify",
+    "experiments/2026-10-25_0747_codex_native-reference-invariant/reproduce/launch.sh support",
+    "experiments/2026-10-25_0747_codex_native-reference-invariant/reproduce/launch.sh prepare",
+    "experiments/2026-10-25_0747_codex_native-reference-invariant/reproduce/launch.sh fit",
+    "experiments/2026-10-25_0747_codex_native-reference-invariant/reproduce/launch.sh evaluate",
+    "experiments/2026-10-25_0747_codex_native-reference-invariant/reproduce/launch.sh replay"
+  ],
+  "unchanged_original_core_functions": [
+    "correlation",
+    "differences",
+    "dump",
+    "fit",
+    "inner_fold",
+    "metrics",
+    "predict",
+    "select",
+    "weights"
+  ],
+  "unchanged_feature_modules": [
+    "features.py",
+    "context.py"
+  ]
+}

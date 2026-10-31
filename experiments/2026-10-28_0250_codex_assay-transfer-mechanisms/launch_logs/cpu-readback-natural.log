@@ -1,0 +1,24 @@
+╭───────────────────── Traceback (most recent call last) ──────────────────────╮
+│ /Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/20 │
+│ 26-10-28_0250_codex_assay-transfer-mechanisms/analysis/readback_modal.py:32  │
+│ in <module>                                                                  │
+│                                                                              │
+│    31                                                                        │
+│ ❱  32 @app.function(                                                         │
+│    33 │   image=modal.Image.debian_slim(python_version="3.12"),              │
+│                                                                              │
+│ /Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/a │
+│ pp.py:1003 in wrapped                                                        │
+│                                                                              │
+│   1002 │   │   │                                                             │
+│ ❱ 1003 │   │   │   function = _Function._from_local(                         │
+│   1004 │   │   │   │   info,                                                 │
+│                                                                              │
+│ /Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_ │
+│ functions.py:786 in _from_local                                              │
+│                                                                              │
+│    785 │   │   │   if is_generator:                                          │
+│ ❱  786 │   │   │   │   raise InvalidError("Generator Functions do not suppor │
+│    787                                                                       │
+╰──────────────────────────────────────────────────────────────────────────────╯
+InvalidError: Generator Functions do not support retries.

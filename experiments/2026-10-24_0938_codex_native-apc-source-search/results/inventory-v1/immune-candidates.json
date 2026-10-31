@@ -1,0 +1,3550 @@
+[
+  {
+    "project": {
+      "PeptidomicsDB project ID": "PPD007",
+      "Original project accession": "PXD028862",
+      "Title": "Public T cell epitopes shared among SARS-CoV-2 Public T cell epitopes shared among SARS-CoV-2 variants are presented on prevalent HLA class I alleles variants are presented on prevalent HLA class I alleles",
+      "Description": "In this project, we used MS-based immunopeptidomics and T-cell screening assays to identify SARS-CoV-2 epitopes. The MS identified epitopes were further valdiated for CD8 T cell immunogenecity. PBMC from a large number of patients infected with SARS-CoV-2 were used for valdiation of MS identifed and predected CD 8 T cell epotipes.",
+      "Reference": "PubMed: 36656713",
+      "No. of biological samples": 55,
+      "Species": "Homo sapiens",
+      "Tissue": "B721.221 Cell line",
+      "Diseases/status": "Covid-19",
+      "Peptidomics category": "MHC-I immunopeptidomics",
+      "Instrument": "Q Exactive",
+      "Acquisition mode": "DDA",
+      "Quantification type": "Label-free",
+      "Enzyme": "None",
+      "Fragment": "HCD",
+      "Precursor mass tolerance": "10 ppm",
+      "Fragment mass tolerance": "0.05 Da"
+    },
+    "n_sample_rows": 55,
+    "sample_categories": {
+      "MHC-I immunopeptidomics": 55
+    },
+    "sample_species": [
+      "Homo sapiens"
+    ],
+    "sample_tissues": [
+      "B721.221 Cell line"
+    ],
+    "metadata_term_hits": [
+      {
+        "scope": "project",
+        "field": "Description",
+        "terms": [
+          "PBMC"
+        ]
+      }
+    ],
+    "eligibility": "primary_source_review_required"
+  },
+  {
+    "project": {
+      "PeptidomicsDB project ID": "PPD008",
+      "Original project accession": "PXD005231",
+      "Title": "Fully unsupervised identification of HLA-I motifs",
+      "Description": "The precise identification of Human Leukocyte Antigen class I (HLA-I) binding motifs plays a central role in our ability to understand and predict (neo-)antigen presentation in infectious diseases and cancer. Here, by exploiting co-occurrence of HLA-I alleles across publicly available as well as ten newly generated high quality HLA peptidomics datasets, we show that we can rapidly and accurately identify HLA-I binding motifs and map them to their corresponding alleles without any a priori knowledge of HLA-I binding specificity. This fully unsupervised approach uncovers new motifs for several alleles without known ligands and significantly improves neo-epitope predictions in three melanoma patients.",
+      "Reference": "PubMed: 28832583",
+      "No. of biological samples": 34,
+      "Species": "Homo sapiens",
+      "Tissue": "Tumor-Infiltrating Lymphocytes; Dendritic cell; GD149 cell line; PD42 cell line; Leukapheresis; CM647 cell line; RA957 cell line; MD155 cell line",
+      "Diseases/status": "Melanoma",
+      "Peptidomics category": "MHC-I immunopeptidomics",
+      "Instrument": "Orbitrap Fusion\nQ Exactive",
+      "Acquisition mode": "DDA",
+      "Quantification type": "Label-free",
+      "Enzyme": "None",
+      "Fragment": "HCD",
+      "Precursor mass tolerance": "6 ppm",
+      "Fragment mass tolerance": "0.02 Da"
+    },
+    "n_sample_rows": 34,
+    "sample_categories": {
+      "MHC-I immunopeptidomics": 34
+    },
+    "sample_species": [
+      "Homo sapiens"
+    ],
+    "sample_tissues": [
+      "CM647 cell line",
+      "Dendritic cell",
+      "GD149 cell line",
+      "Leukapheresis",
+      "MD155 cell line",
+      "PD42 cell line",
+      "RA957 cell line",
+      "Tumor-Infiltrating Lymphocytes"
+    ],
+    "metadata_term_hits": [
+      {
+        "scope": "project",
+        "field": "Tissue",
+        "terms": [
+          "Dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0080009",
+        "field": "Tissue",
+        "terms": [
+          "Dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0080011",
+        "field": "Tissue",
+        "terms": [
+          "Dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0080012",
+        "field": "Tissue",
+        "terms": [
+          "Dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0080013",
+        "field": "Tissue",
+        "terms": [
+          "Dendritic"
+        ]
+      }
+    ],
+    "eligibility": "primary_source_review_required"
+  },
+  {
+    "project": {
+      "PeptidomicsDB project ID": "PPD012",
+      "Original project accession": "PXD028874",
+      "Title": "The HLA ligandome comprises a limited repertoire of O-GlcNAcylated antigens preferentially associated with HLA-B07:02",
+      "Description": "Mass-spectrometry based immunopeptidomics has provided unprecedented insights into antigen presentation, not only charting an enormous ligandome of self-antigens, but also cancer neo-antigens and peptide antigens harbouring post-translational modifications. Here we concentrate on the latter, focusing on the small subset of HLA Class I peptides (less than 1%) that has been observed to be post-translationally modified (PTM) by a O-linked N-acetylglucosamine (GlcNAc). Just like neo-antigens these modified antigens may have specific immunomodulatory functions. Here we compiled from literature, and a new dataset originating from JY B cell lymphoblastoid line cells, a concise albeit comprehensive list of O-GlcNAcylated HLA class I peptides. The cumulative list of O-GlcNAcylated HLA peptides originates from diverse datasets, entailing normal and cancer cell lines as well as tissue samples. Interestingly, the overlap in detected O-GlcNAcylated HLA peptides as well as their source proteins is strikingly high. From the compiled list we extract that O-GlcNAcylated HLA Class I peptides are preferentially presented by the HLA-B07:02 allele. This allele accommodates a Proline anchoring site at position 2, and a binding groove that can accommodate the recently proposed consensus sequence for O-GlcNAcylation, P(V/A/T/S)g(S/T). Most of the O-GlcNAcylated HLA peptides originate from nuclear proteins, notably transcription factors. The conclusions drawn from the compiled list, may assist to predict novel O-GlcNAcylated HLA antigens, which will likely be presented best by patients harbouring HLA-B7:02, or related, alleles that uses Proline as anchoring residue.",
+      "Reference": "PubMed: 34925382",
+      "No. of biological samples": 1,
+      "Species": "Homo sapiens",
+      "Tissue": "B lymphoblastoid cell line",
+      "Diseases/status": "",
+      "Peptidomics category": "MHC-I immunopeptidomics",
+      "Instrument": "Orbitrap Fusion Lumos",
+      "Acquisition mode": "DDA",
+      "Quantification type": "Label-free",
+      "Enzyme": "None",
+      "Fragment": "HCD",
+      "Precursor mass tolerance": "10 ppm",
+      "Fragment mass tolerance": "0.03 Da"
+    },
+    "n_sample_rows": 1,
+    "sample_categories": {
+      "MHC-I immunopeptidomics": 1
+    },
+    "sample_species": [
+      "Homo sapiens"
+    ],
+    "sample_tissues": [
+      "B lymphoblastoid cell line"
+    ],
+    "metadata_term_hits": [
+      {
+        "scope": "project",
+        "field": "Description",
+        "terms": [
+          "B cell",
+          "lymphoblast"
+        ]
+      },
+      {
+        "scope": "project",
+        "field": "Tissue",
+        "terms": [
+          "lymphoblast"
+        ]
+      },
+      {
+        "scope": "PPD0120001",
+        "field": "Tissue",
+        "terms": [
+          "lymphoblast"
+        ]
+      }
+    ],
+    "eligibility": "primary_source_review_required"
+  },
+  {
+    "project": {
+      "PeptidomicsDB project ID": "PPD027",
+      "Original project accession": "PXD079009",
+      "Title": "Immunopeptidomics on pulmonary macrophages from mice post ascaris suum infection",
+      "Description": "During the pulmonary migratory phase, Ascaris larvae induce severe acute inflammation that can transition into long-term respiratory morbidity. To investigate the molecular mechanisms underlying this chronic pathology, we mapped the major histocompatibility complex class II (MHC-II) ligandome of pulmonary macrophages following the clearance of the parasite.",
+      "Reference": "PubMed: 42263117",
+      "No. of biological samples": 1,
+      "Species": "Mus musculus",
+      "Tissue": "Pulmonary macrophages",
+      "Diseases/status": "Ascariasis",
+      "Peptidomics category": "MHC-II immunopeptidomics",
+      "Instrument": "Q Exactive HF",
+      "Acquisition mode": "DDA",
+      "Quantification type": "Label-free",
+      "Enzyme": "None",
+      "Fragment": "HCD",
+      "Precursor mass tolerance": "10 ppm",
+      "Fragment mass tolerance": "0.02 Da"
+    },
+    "n_sample_rows": 1,
+    "sample_categories": {
+      "MHC-II immunopeptidomics": 1
+    },
+    "sample_species": [
+      "Mus musculus"
+    ],
+    "sample_tissues": [
+      "Pulmonary macrophages"
+    ],
+    "metadata_term_hits": [
+      {
+        "scope": "project",
+        "field": "Title",
+        "terms": [
+          "macrophag"
+        ]
+      },
+      {
+        "scope": "project",
+        "field": "Description",
+        "terms": [
+          "macrophag"
+        ]
+      },
+      {
+        "scope": "project",
+        "field": "Tissue",
+        "terms": [
+          "macrophag"
+        ]
+      },
+      {
+        "scope": "PPD0270001",
+        "field": "Tissue",
+        "terms": [
+          "macrophag"
+        ]
+      }
+    ],
+    "eligibility": "primary_source_review_required"
+  },
+  {
+    "project": {
+      "PeptidomicsDB project ID": "PPD028",
+      "Original project accession": "PXD013599",
+      "Title": "A single T cell epitope drives the neutralizing anti-drug antibody response to natalizumab in multiple sclerosis patients",
+      "Description": "Natalizumab (NZM), a humanized monoclonal IgG4 antibody to α4 integrins, is used to treat patients with relapsing-remitting multiple sclerosis (MS), but in about 6% of the cases persistent neutralizing anti-drug antibodies (ADAs) are induced leading to therapy discontinuation. To understand the basis of the ADA response and the mechanism of ADA-mediated neutralization, we performed an in-depth analysis of the B and T cell responses in two patients. By characterizing a large panel of NZM-specific monoclonal antibodies, we found that, in both patients, the response was polyclonal and targeted different epitopes of the NZM idiotype. The neutralizing activity was acquired through somatic mutations and correlated with a slow dissociation rate, a finding that was supported by structural data. Interestingly, in both patients, the analysis of the CD4+ T cell response, combined with mass spectrometry-based peptidomics, revealed a single immunodominant T cell epitope spanning the FR2-CDR2 region of the NZM light chain. Moreover, a CDR2-modified version of NZM was not recognized by T cells, while retaining binding to α4 integrins. Collectively, our integrated analysis identifies the basis of T-B collaboration that leads to ADA-mediated therapeutic resistance and delineates an approach to design novel deimmunized antibodies for autoimmune disease and cancer treatment.",
+      "Reference": "PubMed: 31501610",
+      "No. of biological samples": 2,
+      "Species": "Homo sapiens",
+      "Tissue": "B cell",
+      "Diseases/status": "Multiple sclerosis",
+      "Peptidomics category": "MHC-II immunopeptidomics",
+      "Instrument": "Q Exactive",
+      "Acquisition mode": "DDA",
+      "Quantification type": "Label-free",
+      "Enzyme": "None",
+      "Fragment": "HCD",
+      "Precursor mass tolerance": "4.5 ppm",
+      "Fragment mass tolerance": "0.02 Da"
+    },
+    "n_sample_rows": 2,
+    "sample_categories": {
+      "MHC-II immunopeptidomics": 2
+    },
+    "sample_species": [
+      "Homo sapiens"
+    ],
+    "sample_tissues": [
+      "B cell"
+    ],
+    "metadata_term_hits": [
+      {
+        "scope": "project",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0280001",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0280003",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      }
+    ],
+    "eligibility": "primary_source_review_required"
+  },
+  {
+    "project": {
+      "PeptidomicsDB project ID": "PPD030",
+      "Original project accession": "PXD072997",
+      "Title": "Dimethyl Sulfoxide Enhances HLA Peptide Identification",
+      "Description": "Immunopeptidomics relies on LC-MS/MS for comprehensive profiling of HLA-bound peptides, yet detection remains challenging due to their non-tryptic nature, variable lengths, and lack of basic residues, which limit ionisation and fragmentation efficiency. To address these limitations, we investigated the impact of incorporating 5% dimethyl sulfoxide (DMSO) into LC-MS/MS mobile phase buffers on immunopeptidomic workflows. Using B-lymphoblastoid cell lines expressing HLA class I and II alleles and elastase-digested HeLa lysates as a surrogate for non-tryptic peptides, we assessed peptide identification, ionisation efficiency, charge state distribution, and fragmentation quality. DMSO significantly increased peptide identifications across all sample types, with gains of ~1.33-fold for HLA class I, ~1.55-fold for HLA class II, and ~1.24-fold for elastase digests. Improvements were systematic and reproducible, driven by enhanced electrospray ionisation, higher charge states, and superior MS2 spectral quality, evidenced by a two-fold increase in b- and y-ion intensities. Importantly, DMSO did not introduce major sequence bias, preserving motif integrity and predicted binding characteristics. Overall, these findings establish DMSO as a robust additive for improving sensitivity and reliability in immunopeptidomics, particularly for low-input or clinically derived samples.",
+      "Reference": "PubMed: 41893728",
+      "No. of biological samples": 4,
+      "Species": "Homo sapiens",
+      "Tissue": "B lymphoblastoid cell line",
+      "Diseases/status": "",
+      "Peptidomics category": "MHC-I immunopeptidomics; MHC-II immunopeptidomics",
+      "Instrument": "Q Exactive HF",
+      "Acquisition mode": "DDA",
+      "Quantification type": "Label-free",
+      "Enzyme": "None",
+      "Fragment": "HCD",
+      "Precursor mass tolerance": "10 ppm",
+      "Fragment mass tolerance": "0.02 Da"
+    },
+    "n_sample_rows": 4,
+    "sample_categories": {
+      "MHC-I immunopeptidomics": 2,
+      "MHC-II immunopeptidomics": 2
+    },
+    "sample_species": [
+      "Homo sapiens"
+    ],
+    "sample_tissues": [
+      "B lymphoblastoid cell line"
+    ],
+    "metadata_term_hits": [
+      {
+        "scope": "project",
+        "field": "Description",
+        "terms": [
+          "lymphoblast"
+        ]
+      },
+      {
+        "scope": "project",
+        "field": "Tissue",
+        "terms": [
+          "lymphoblast"
+        ]
+      },
+      {
+        "scope": "PPD0300001",
+        "field": "Tissue",
+        "terms": [
+          "lymphoblast"
+        ]
+      },
+      {
+        "scope": "PPD0300004",
+        "field": "Tissue",
+        "terms": [
+          "lymphoblast"
+        ]
+      },
+      {
+        "scope": "PPD0300007",
+        "field": "Tissue",
+        "terms": [
+          "lymphoblast"
+        ]
+      },
+      {
+        "scope": "PPD0300010",
+        "field": "Tissue",
+        "terms": [
+          "lymphoblast"
+        ]
+      }
+    ],
+    "eligibility": "primary_source_review_required"
+  },
+  {
+    "project": {
+      "PeptidomicsDB project ID": "PPD048",
+      "Original project accession": "PXD031451",
+      "Title": "Immunopeptidomics-based design of highly effective mRNA vaccine formulations against Listeria monocytogenes",
+      "Description": "Listeria monocytogenes is a foodborne intracellular bacterial pathogen leading to human listeriosis. Despite a high mortality rate and increasing antibiotic resistance no clinically approved vaccine against Listeria is available. To identify antigens for this bacterial pathogen that can be encoded in mRNA vaccine formulations, we screened for Listeria epitopes presented on the surface of infected human cell lines by mass spectrometry-based immunopeptidomics. In between more than 15,000 human self-peptides, we detected 68 Listeria epitopes from 42 different bacterial proteins, including several known antigens. Peptide epitopes presented on different cell lines were often derived from the same bacterial surface proteins, classifying these antigens as potential vaccine candidates. Encoding these highly presented antigens in lipid nanoparticle mRNA vaccine formulations resulted in high levels of protection in vaccination challenge experiments in mice. Our results pave the way for the development of a clinical mRNA vaccine against Listeria and demonstrate the power of immunopeptidomics for next-generation bacterial vaccine development.",
+      "Reference": "PubMed: 36241641",
+      "No. of biological samples": 16,
+      "Species": "Homo sapiens",
+      "Tissue": "HeLa cell line; HCT-116 cell line",
+      "Diseases/status": "Listeriosis",
+      "Peptidomics category": "MHC-I immunopeptidomics",
+      "Instrument": "Orbitrap Fusion Lumos; Q Exactive HF",
+      "Acquisition mode": "DDA",
+      "Quantification type": "Label-free",
+      "Enzyme": "None",
+      "Fragment": "HCD",
+      "Precursor mass tolerance": "10 ppm",
+      "Fragment mass tolerance": "0.02 Da"
+    },
+    "n_sample_rows": 16,
+    "sample_categories": {
+      "MHC-I immunopeptidomics": 16
+    },
+    "sample_species": [
+      "Homo sapiens"
+    ],
+    "sample_tissues": [
+      "HCT-116 cell line",
+      "HeLa cell line"
+    ],
+    "metadata_term_hits": [
+      {
+        "scope": "project",
+        "field": "Title",
+        "terms": [
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "project",
+        "field": "Description",
+        "terms": [
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0480002",
+        "field": "Condition",
+        "terms": [
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0480004",
+        "field": "Condition",
+        "terms": [
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0480006",
+        "field": "Condition",
+        "terms": [
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0480008",
+        "field": "Condition",
+        "terms": [
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0480010",
+        "field": "Condition",
+        "terms": [
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0480012",
+        "field": "Condition",
+        "terms": [
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0480014",
+        "field": "Condition",
+        "terms": [
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0480016",
+        "field": "Condition",
+        "terms": [
+          "monocyt"
+        ]
+      }
+    ],
+    "eligibility": "primary_source_review_required"
+  },
+  {
+    "project": {
+      "PeptidomicsDB project ID": "PPD049",
+      "Original project accession": "PXD039789",
+      "Title": "Restoring Tumor Immunogenicity with Dendritic Cell Reprogramming",
+      "Description": "Immune evasion is an important hallmark of cancer ensured by diverse strategies, including immunosuppression and downregulation of antigen presentation. Here, to restore immunogenicity of cancer cells, we employed the minimal gene regulatory network of highly immunogenic type 1 conventional dendritic cells (cDC1) to reprogram cancer cells into professional antigen presenting cells (APCs). We showed that enforced expression of PU.1, IRF8 and BATF3 (PIB) was sufficient to induce cDC1 phenotype in 33 cell lines derived from human and mouse hematological and solid tumors. PIB gradually modified the cancer cell transcriptional and epigenetic program imposing global antigen presentation and cDC1 gene signatures within 9 days. cDC1 reprogramming restored the expression of antigen presentation complexes as well as co-stimulatory molecules at the cell surface, leading to the presentation of endogenous antigens on MHC-I, and to CD8+ T cell mediated killing. Functionally, tumor- APCs acquired the ability to uptake and process exogenous proteins and dead cells, secreted inflammatory cytokines and cross-presented antigens to naïve CD8+ T cells. Importantly, tumor-APCs were efficiently generated at the single cell level from primary cancer cells of 7 solid tumors that presented antigens to memory and naïve T-cells, as well as to activated patient-specific intra-tumoral lymphocytes. Alongside antigen presentation, tumor-APCs harboring TP53, KRAS and PTEN mutations showed impaired tumorigenicity in vitro and in vivo. Finally, using in vivo mouse models of melanoma, we showed that intra-tumoral injection of tumor-APCs promoted lymphoid infiltration, delayed tumor growth and increased survival. The anti-tumor immunity elicited by tumor-APCs was synergistic with immune checkpoint inhibitors enabling tumor eradication. Our approach combines cDC1’s antigen processing and presenting abilities with endogenous generation of tumor antigens and serves as a platform for the development of novel immunotherapies based on endowed antigen presentation in cancer cells.",
+      "Reference": "PubMed: 37418548",
+      "No. of biological samples": 15,
+      "Species": "Mus musculus",
+      "Tissue": "B16-F10 cell line",
+      "Diseases/status": "Melanoma",
+      "Peptidomics category": "MHC-I immunopeptidomics",
+      "Instrument": "Q Exactive HF",
+      "Acquisition mode": "DDA; DIA",
+      "Quantification type": "Label-free",
+      "Enzyme": "None",
+      "Fragment": "HCD",
+      "Precursor mass tolerance": "10 ppm",
+      "Fragment mass tolerance": "0.02 Da"
+    },
+    "n_sample_rows": 15,
+    "sample_categories": {
+      "MHC-I immunopeptidomics": 15
+    },
+    "sample_species": [
+      "Mus musculus"
+    ],
+    "sample_tissues": [
+      "B16-F10 cell line"
+    ],
+    "metadata_term_hits": [
+      {
+        "scope": "project",
+        "field": "Title",
+        "terms": [
+          "Dendritic"
+        ]
+      },
+      {
+        "scope": "project",
+        "field": "Description",
+        "terms": [
+          "dendritic"
+        ]
+      }
+    ],
+    "eligibility": "primary_source_review_required"
+  },
+  {
+    "project": {
+      "PeptidomicsDB project ID": "PPD059",
+      "Original project accession": "PXD020011",
+      "Title": "Biogenesis of HLA ligand presentation in immune cells upon activation reveals changes in peptide length preference",
+      "Description": "Induction of an effective tumor immunity is a complex process that includes the appropriate presentation of the tumor antigens, activation of specific T cells, and the elimination of malignant cells. Potent and efficient T cell activation is dependent on multiple factors, such as timely expression of co-stimulatory molecules, the differentiation state of professional antigen presenting cells (e.g. dendritic cells; DCs), the functionality of the antigen processing and presentation machinery (APPM), and the repertoire of HLA class I and II-bound peptides (termed immunopeptidome) presented to T cells. So far, how molecular perturbations underlying DCs maturation and differentiation affect the in vivo cross-presented HLA class I and II immunopeptidomes is largely unknown. Yet, this knowledge is crucial for further development of DC-based immunotherapy approaches. We applied a state-of-the-art sensitive MS-based immunopeptidomics approach to characterize the naturally presented HLA-I and -II immunopeptidomes eluted from autologous immune cells having distinct functional and biological states including CD14+ monocytes, immature DC (ImmDC) and mature DC (MaDC) monocyte-derived DCs and naive or activated T and B cells. We revealed a presentation of significantly longer HLA peptides upon activation that is HLA allotype specific. This was apparent in the self-peptidome upon cell activation and in the context of presentation of exogenously loaded antigens. Importantly, a similar trend was also present in a large collection of immunogenic HLA-I epitopes from pathogens, suggesting that peptide length is an important feature with potential implications on the rational design of anti-cancer vaccines.",
+      "Reference": "PubMed: 32983136",
+      "No. of biological samples": 99,
+      "Species": "Homo sapiens",
+      "Tissue": "CD14+ monocyte; CD19+ B cell; CD4+ T cell; CD8+ T cell; Dendritic cell",
+      "Diseases/status": "Healthy",
+      "Peptidomics category": "MHC-I immunopeptidomics; MHC-II immunopeptidomics",
+      "Instrument": "Q Exactive",
+      "Acquisition mode": "DDA",
+      "Quantification type": "Label-free",
+      "Enzyme": "None",
+      "Fragment": "HCD",
+      "Precursor mass tolerance": "6 ppm",
+      "Fragment mass tolerance": "20 ppm"
+    },
+    "n_sample_rows": 99,
+    "sample_categories": {
+      "MHC-I immunopeptidomics": 47,
+      "MHC-II immunopeptidomics": 52
+    },
+    "sample_species": [
+      "Homo sapiens"
+    ],
+    "sample_tissues": [
+      "CD14+ monocyte",
+      "CD19+ B cell",
+      "CD4+ T cell",
+      "CD8+ T cell",
+      "Dendritic cell"
+    ],
+    "metadata_term_hits": [
+      {
+        "scope": "project",
+        "field": "Description",
+        "terms": [
+          "B cells",
+          "dendritic",
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "project",
+        "field": "Tissue",
+        "terms": [
+          "B cell",
+          "Dendritic",
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0590001",
+        "field": "Tissue",
+        "terms": [
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0590003",
+        "field": "Tissue",
+        "terms": [
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0590004",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0590004",
+        "field": "Condition",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0590006",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0590006",
+        "field": "Condition",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0590008",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0590008",
+        "field": "Condition",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0590021",
+        "field": "Tissue",
+        "terms": [
+          "Dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590021",
+        "field": "Condition",
+        "terms": [
+          "dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590023",
+        "field": "Tissue",
+        "terms": [
+          "Dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590023",
+        "field": "Condition",
+        "terms": [
+          "dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590024",
+        "field": "Tissue",
+        "terms": [
+          "Dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590024",
+        "field": "Condition",
+        "terms": [
+          "dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590026",
+        "field": "Tissue",
+        "terms": [
+          "Dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590026",
+        "field": "Condition",
+        "terms": [
+          "dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590027",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0590027",
+        "field": "Condition",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0590029",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0590029",
+        "field": "Condition",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0590031",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0590031",
+        "field": "Condition",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0590044",
+        "field": "Tissue",
+        "terms": [
+          "Dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590044",
+        "field": "Condition",
+        "terms": [
+          "dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590046",
+        "field": "Tissue",
+        "terms": [
+          "Dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590046",
+        "field": "Condition",
+        "terms": [
+          "dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590047",
+        "field": "Tissue",
+        "terms": [
+          "Dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590047",
+        "field": "Condition",
+        "terms": [
+          "dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590049",
+        "field": "Tissue",
+        "terms": [
+          "Dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590049",
+        "field": "Condition",
+        "terms": [
+          "dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590051",
+        "field": "Tissue",
+        "terms": [
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0590053",
+        "field": "Tissue",
+        "terms": [
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0590055",
+        "field": "Tissue",
+        "terms": [
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0590057",
+        "field": "Tissue",
+        "terms": [
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0590059",
+        "field": "Tissue",
+        "terms": [
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0590061",
+        "field": "Tissue",
+        "terms": [
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0590063",
+        "field": "Tissue",
+        "terms": [
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0590066",
+        "field": "Tissue",
+        "terms": [
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0590067",
+        "field": "Tissue",
+        "terms": [
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0590069",
+        "field": "Tissue",
+        "terms": [
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0590071",
+        "field": "Tissue",
+        "terms": [
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0590073",
+        "field": "Tissue",
+        "terms": [
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0590075",
+        "field": "Tissue",
+        "terms": [
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0590077",
+        "field": "Tissue",
+        "terms": [
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0590080",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0590080",
+        "field": "Condition",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0590082",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0590082",
+        "field": "Condition",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0590084",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0590084",
+        "field": "Condition",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0590086",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0590086",
+        "field": "Condition",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0590121",
+        "field": "Tissue",
+        "terms": [
+          "Dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590121",
+        "field": "Condition",
+        "terms": [
+          "dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590123",
+        "field": "Tissue",
+        "terms": [
+          "Dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590123",
+        "field": "Condition",
+        "terms": [
+          "dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590125",
+        "field": "Tissue",
+        "terms": [
+          "Dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590125",
+        "field": "Condition",
+        "terms": [
+          "dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590127",
+        "field": "Tissue",
+        "terms": [
+          "Dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590127",
+        "field": "Condition",
+        "terms": [
+          "dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590130",
+        "field": "Tissue",
+        "terms": [
+          "Dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590130",
+        "field": "Condition",
+        "terms": [
+          "dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590133",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0590133",
+        "field": "Condition",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0590135",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0590135",
+        "field": "Condition",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0590136",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0590136",
+        "field": "Condition",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0590138",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0590138",
+        "field": "Condition",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0590173",
+        "field": "Tissue",
+        "terms": [
+          "Dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590173",
+        "field": "Condition",
+        "terms": [
+          "dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590174",
+        "field": "Tissue",
+        "terms": [
+          "Dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590174",
+        "field": "Condition",
+        "terms": [
+          "dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590176",
+        "field": "Tissue",
+        "terms": [
+          "Dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590176",
+        "field": "Condition",
+        "terms": [
+          "dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590178",
+        "field": "Tissue",
+        "terms": [
+          "Dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590178",
+        "field": "Condition",
+        "terms": [
+          "dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590181",
+        "field": "Tissue",
+        "terms": [
+          "Dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590181",
+        "field": "Condition",
+        "terms": [
+          "dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590183",
+        "field": "Tissue",
+        "terms": [
+          "Dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590183",
+        "field": "Condition",
+        "terms": [
+          "dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590185",
+        "field": "Tissue",
+        "terms": [
+          "Dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590185",
+        "field": "Condition",
+        "terms": [
+          "dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590187",
+        "field": "Tissue",
+        "terms": [
+          "Dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590187",
+        "field": "Condition",
+        "terms": [
+          "dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590189",
+        "field": "Tissue",
+        "terms": [
+          "Dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590189",
+        "field": "Condition",
+        "terms": [
+          "dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590191",
+        "field": "Tissue",
+        "terms": [
+          "Dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590191",
+        "field": "Condition",
+        "terms": [
+          "dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590193",
+        "field": "Tissue",
+        "terms": [
+          "Dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0590193",
+        "field": "Condition",
+        "terms": [
+          "dendritic"
+        ]
+      }
+    ],
+    "eligibility": "primary_source_review_required"
+  },
+  {
+    "project": {
+      "PeptidomicsDB project ID": "PPD065",
+      "Original project accession": "PXD015646",
+      "Title": "Immunopeptidomics of Bacillus Calmette-Guérin (BCG)-infected Thp-1 cells",
+      "Description": "We have immunoprecipitated MHC class-I and class-II complexes from THP-1 macrophages infected with BCG, eluted MHC-bound peptides and analysed them by liquid chromatography tandem mass spectrometry.",
+      "Reference": "PubMed: 31908851",
+      "No. of biological samples": 12,
+      "Species": "Homo sapiens",
+      "Tissue": "THP-1-derived macrophages",
+      "Diseases/status": "Tuberculosis",
+      "Peptidomics category": "MHC-I immunopeptidomics; MHC-II immunopeptidomics",
+      "Instrument": "Orbitrap Fusion Lumos",
+      "Acquisition mode": "DDA",
+      "Quantification type": "Label-free",
+      "Enzyme": "None",
+      "Fragment": "HCD",
+      "Precursor mass tolerance": "5 ppm",
+      "Fragment mass tolerance": "0.03 Da"
+    },
+    "n_sample_rows": 12,
+    "sample_categories": {
+      "MHC-I immunopeptidomics": 6,
+      "MHC-II immunopeptidomics": 6
+    },
+    "sample_species": [
+      "Homo sapiens"
+    ],
+    "sample_tissues": [
+      "THP-1-derived macrophages"
+    ],
+    "metadata_term_hits": [
+      {
+        "scope": "project",
+        "field": "Title",
+        "terms": [
+          "Thp-1"
+        ]
+      },
+      {
+        "scope": "project",
+        "field": "Description",
+        "terms": [
+          "THP-1",
+          "macrophag"
+        ]
+      },
+      {
+        "scope": "project",
+        "field": "Tissue",
+        "terms": [
+          "THP-1",
+          "macrophag"
+        ]
+      },
+      {
+        "scope": "PPD0650001",
+        "field": "Tissue",
+        "terms": [
+          "THP-1",
+          "macrophag"
+        ]
+      },
+      {
+        "scope": "PPD0650002",
+        "field": "Tissue",
+        "terms": [
+          "THP-1",
+          "macrophag"
+        ]
+      },
+      {
+        "scope": "PPD0650003",
+        "field": "Tissue",
+        "terms": [
+          "THP-1",
+          "macrophag"
+        ]
+      },
+      {
+        "scope": "PPD0650004",
+        "field": "Tissue",
+        "terms": [
+          "THP-1",
+          "macrophag"
+        ]
+      },
+      {
+        "scope": "PPD0650005",
+        "field": "Tissue",
+        "terms": [
+          "THP-1",
+          "macrophag"
+        ]
+      },
+      {
+        "scope": "PPD0650006",
+        "field": "Tissue",
+        "terms": [
+          "THP-1",
+          "macrophag"
+        ]
+      },
+      {
+        "scope": "PPD0650013",
+        "field": "Tissue",
+        "terms": [
+          "THP-1",
+          "macrophag"
+        ]
+      },
+      {
+        "scope": "PPD0650014",
+        "field": "Tissue",
+        "terms": [
+          "THP-1",
+          "macrophag"
+        ]
+      },
+      {
+        "scope": "PPD0650015",
+        "field": "Tissue",
+        "terms": [
+          "THP-1",
+          "macrophag"
+        ]
+      },
+      {
+        "scope": "PPD0650016",
+        "field": "Tissue",
+        "terms": [
+          "THP-1",
+          "macrophag"
+        ]
+      },
+      {
+        "scope": "PPD0650017",
+        "field": "Tissue",
+        "terms": [
+          "THP-1",
+          "macrophag"
+        ]
+      },
+      {
+        "scope": "PPD0650018",
+        "field": "Tissue",
+        "terms": [
+          "THP-1",
+          "macrophag"
+        ]
+      }
+    ],
+    "eligibility": "primary_source_review_required"
+  },
+  {
+    "project": {
+      "PeptidomicsDB project ID": "PPD073",
+      "Original project accession": "PXD037843",
+      "Title": "Immunopeptidomics reveals determinants of Mycobacterium tuberculosis antigen presentation on MHC class I (SureQuant data)",
+      "Description": "CD8+ T cells contribute to protective immunity to Mycobacterium tuberculosis (Mtb), but the principles that govern presentation of Mtb peptides on MHC class I (MHC-I) on the surface of infected macrophages for CD8+ T cell recognition are incompletely understood. Here, we use internal standard parallel reaction monitoring (IS-PRM, also known as SureQuant) to rigorously validate identifications of Mtb-derived MHC-I peptides obtained in data-dependent MS analyses. We further use SureQuant to quantify presentation of Mtb peptides derived from the secreted effector proteins EsxA and EsxJ across multiple experimental conditions. We show that presentation of both EsxA- and EsxJ-derived peptides requires the activity of the mycobacterial ESX-1 type VII secretion system, possibly indicating that ESX-1-mediated phagosome membrane damage allows Mtb proteins to access MHC-I antigen processing pathways. We show that this requirement is independent of type I interferon signaling that occurs downstream of phagosome damage. Treatment with inhibitors of conventional proteolytic pathways involved in MHC-I antigen processing inhibits presentation of self peptides as expected, but does not inhibit presentation of Mtb peptides, implying an alternative or redundant mechanism of processing.",
+      "Reference": "PubMed: 34342538",
+      "No. of biological samples": 12,
+      "Species": "Homo sapiens",
+      "Tissue": "Macrophage",
+      "Diseases/status": "Tuberculosis",
+      "Peptidomics category": "MHC-I immunopeptidomics",
+      "Instrument": "Orbitrap Exploris 480",
+      "Acquisition mode": "DDA",
+      "Quantification type": "Label-free",
+      "Enzyme": "None",
+      "Fragment": "HCD",
+      "Precursor mass tolerance": "10 ppm",
+      "Fragment mass tolerance": "0.02 Da"
+    },
+    "n_sample_rows": 12,
+    "sample_categories": {
+      "MHC-I immunopeptidomics": 12
+    },
+    "sample_species": [
+      "Homo sapiens"
+    ],
+    "sample_tissues": [
+      "Macrophage"
+    ],
+    "metadata_term_hits": [
+      {
+        "scope": "project",
+        "field": "Description",
+        "terms": [
+          "macrophag"
+        ]
+      },
+      {
+        "scope": "project",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      },
+      {
+        "scope": "PPD0730001",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      },
+      {
+        "scope": "PPD0730002",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      },
+      {
+        "scope": "PPD0730003",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      },
+      {
+        "scope": "PPD0730004",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      },
+      {
+        "scope": "PPD0730005",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      },
+      {
+        "scope": "PPD0730006",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      },
+      {
+        "scope": "PPD0730007",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      },
+      {
+        "scope": "PPD0730008",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      },
+      {
+        "scope": "PPD0730009",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      },
+      {
+        "scope": "PPD0730010",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      },
+      {
+        "scope": "PPD0730011",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      },
+      {
+        "scope": "PPD0730012",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      }
+    ],
+    "eligibility": "primary_source_review_required"
+  },
+  {
+    "project": {
+      "PeptidomicsDB project ID": "PPD074",
+      "Original project accession": "PXD055952",
+      "Title": "Immunopeptidomics informs discovery and delivery of Mycobacterium tuberculosis MHC-II antigens for vaccine design",
+      "Description": "No currently licensed vaccine reliably prevents pulmonary tuberculosis, a leading cause of infectious disease mortality with a growing rate of extensive drug resistance. Developing effective new vaccines will likely require identifying Mycobacterium tuberculosis (Mtb)-derived antigens presented on MHC class II (MHC-II) by infected phagocytes that CD4+ T cells can recognize to mediate protective immunity. To prime T cells capable of recognizing infected cells, vaccines will also need to deliver antigens to appropriate processing pathways. Here, we use mass spectrometry (MS) to identify 27 Mtb-derived MHC-II peptides presented by infected human dendritic cells, derived from 13 source proteins. Using targeted quantitative MS, we assess and optimize the ability of vaccines to drive presentation of MHC-II epitopes that match those presented by Mtb-infected cells, including the existing Bacillus Calmette Guerin (BCG) vaccine and new mRNA-encoded immunogens. Our results identify potential antigenic targets and immunogen design principles for tuberculosis vaccine development.",
+      "Reference": "PubMed: 41191777",
+      "No. of biological samples": 12,
+      "Species": "Homo sapiens",
+      "Tissue": "Monocyte-derived dendritic cells; Human monocyte-derived dendritic cells; GM-CSF-differentiated human monocyte-derived macrophages; Human dendritic cells",
+      "Diseases/status": "Tuberculosis",
+      "Peptidomics category": "MHC-II immunopeptidomics",
+      "Instrument": "Orbitrap Exploris 480",
+      "Acquisition mode": "DDA",
+      "Quantification type": "Label-free",
+      "Enzyme": "None",
+      "Fragment": "HCD",
+      "Precursor mass tolerance": "10 ppm",
+      "Fragment mass tolerance": "0.02 Da"
+    },
+    "n_sample_rows": 12,
+    "sample_categories": {
+      "MHC-II immunopeptidomics": 12
+    },
+    "sample_species": [
+      "Homo sapiens"
+    ],
+    "sample_tissues": [
+      "GM-CSF-differentiated human monocyte-derived macrophages",
+      "Human dendritic cells",
+      "Human monocyte-derived dendritic cells",
+      "Monocyte-derived dendritic cells"
+    ],
+    "metadata_term_hits": [
+      {
+        "scope": "project",
+        "field": "Description",
+        "terms": [
+          "dendritic"
+        ]
+      },
+      {
+        "scope": "project",
+        "field": "Tissue",
+        "terms": [
+          "Monocyt",
+          "dendritic",
+          "macrophag",
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0740001",
+        "field": "Tissue",
+        "terms": [
+          "Monocyt",
+          "dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0740002",
+        "field": "Tissue",
+        "terms": [
+          "Monocyt",
+          "dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0740003",
+        "field": "Tissue",
+        "terms": [
+          "dendritic",
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0740004",
+        "field": "Tissue",
+        "terms": [
+          "dendritic",
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0740005",
+        "field": "Tissue",
+        "terms": [
+          "macrophag",
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0740006",
+        "field": "Tissue",
+        "terms": [
+          "macrophag",
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0740007",
+        "field": "Tissue",
+        "terms": [
+          "dendritic",
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0740008",
+        "field": "Tissue",
+        "terms": [
+          "dendritic",
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0740009",
+        "field": "Tissue",
+        "terms": [
+          "dendritic",
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0740010",
+        "field": "Tissue",
+        "terms": [
+          "dendritic",
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0740011",
+        "field": "Tissue",
+        "terms": [
+          "dendritic"
+        ]
+      },
+      {
+        "scope": "PPD0740012",
+        "field": "Tissue",
+        "terms": [
+          "dendritic"
+        ]
+      }
+    ],
+    "eligibility": "primary_source_review_required"
+  },
+  {
+    "project": {
+      "PeptidomicsDB project ID": "PPD079",
+      "Original project accession": "PXD055726",
+      "Title": "pathMHC: a workflow to selectively target pathogen-derived MHC peptides in discovery immunopeptidomics experiments for vaccine target identification",
+      "Description": "Neutrophils have emerged as diverse regulators of tissue states, displaying functions in both the resolution and promotion of tissue inflammation. While neutrophils have widely been associated with tumor promotion, immune suppression, and poor patient outcome, we provide evidence to support direct tumor cytotoxic properties of neutrophils. Using various models of murine breast cancer; we establish that TLR-mediated engagement, combined with complex I inhibition, within the breast tumor microenvironment, acting either directly or indirectly on neutrophils, primes these innate immune cells to acquire direct tumor killing properties, both in vitro and in vivo, and independently of CD8+ T cell immunity. TLR engagement stimulates emergency granulopoiesis, increasing levels of neutrophils in the circulation and infiltrating into tumors without inducing the formation of a pro-metastatic niche. Mechanistically, we show that systemic administration of various TLR agonists, while increasing systemic inflammation, elevates NFB signalling in neutrophils, to contribute to their tumoricidal functions. Moreover, using bulk- and single-cell RNA sequencing, along with proteomics approaches, we show that neutrophils which are trained to acquire these anti-tumorigenic functions both enhance secretory granule production and increase expression NADPH-oxidase machinery. Concomitantly, these tumoricidal neutrophils increase production of toxic levels of reactive oxygen species, which can be overcome with myeloperoxidase inhibitors or overexpression of ROS scavengers. Taken together, we describe a new class of neutrophils that possess direct and intrinsic tumoricidal functions, which can be exploited to eradicate immune cold breast tumors which otherwise are refractory to standard immunotherapies, including immune checkpoint blockade.",
+      "Reference": "PubMed: 39314426",
+      "No. of biological samples": 14,
+      "Species": "Homo sapiens",
+      "Tissue": "Human monocyte-derived dendritic cells; Human primary monocyte-derived dendritic cells",
+      "Diseases/status": "Tuberculosis; Mycobacterium smegmatis infection",
+      "Peptidomics category": "MHC-I immunopeptidomics; MHC-II immunopeptidomics",
+      "Instrument": "Orbitrap Exploris 480",
+      "Acquisition mode": "DDA",
+      "Quantification type": "Label-free",
+      "Enzyme": "None",
+      "Fragment": "HCD",
+      "Precursor mass tolerance": "10 ppm",
+      "Fragment mass tolerance": "0.02 Da"
+    },
+    "n_sample_rows": 14,
+    "sample_categories": {
+      "MHC-I immunopeptidomics": 8,
+      "MHC-II immunopeptidomics": 6
+    },
+    "sample_species": [
+      "Homo sapiens"
+    ],
+    "sample_tissues": [
+      "Human monocyte-derived dendritic cells"
+    ],
+    "metadata_term_hits": [
+      {
+        "scope": "project",
+        "field": "Tissue",
+        "terms": [
+          "dendritic",
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0790001",
+        "field": "Tissue",
+        "terms": [
+          "dendritic",
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0790003",
+        "field": "Tissue",
+        "terms": [
+          "dendritic",
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0790005",
+        "field": "Tissue",
+        "terms": [
+          "dendritic",
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0790007",
+        "field": "Tissue",
+        "terms": [
+          "dendritic",
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0790011",
+        "field": "Tissue",
+        "terms": [
+          "dendritic",
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0790013",
+        "field": "Tissue",
+        "terms": [
+          "dendritic",
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0790015",
+        "field": "Tissue",
+        "terms": [
+          "dendritic",
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0790017",
+        "field": "Tissue",
+        "terms": [
+          "dendritic",
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0790019",
+        "field": "Tissue",
+        "terms": [
+          "dendritic",
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0790020",
+        "field": "Tissue",
+        "terms": [
+          "dendritic",
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0790021",
+        "field": "Tissue",
+        "terms": [
+          "dendritic",
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0790023",
+        "field": "Tissue",
+        "terms": [
+          "dendritic",
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0790028",
+        "field": "Tissue",
+        "terms": [
+          "dendritic",
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "PPD0790030",
+        "field": "Tissue",
+        "terms": [
+          "dendritic",
+          "monocyt"
+        ]
+      }
+    ],
+    "eligibility": "primary_source_review_required"
+  },
+  {
+    "project": {
+      "PeptidomicsDB project ID": "PPD089",
+      "Original project accession": "PXD029895",
+      "Title": "An ERAP2 inhibitor induces cell-surface presentation of many new and potentially antigenic peptides by cancer cells",
+      "Description": "Recent studies have linked the activity of ER aminopeptidase 2 (ERAP2) to increased efficacy of immune-checkpoint inhibitor cancer immunotherapy, suggesting that pharmacological inhibition of ERAP2 could have important therapeutic implications. To explore the effects of ERAP2 inhibition on the immunopeptidome of cancer cells we treated MOLT4 T lymphoblast leukaemia cells with a recently developed selective ERAP2 inhibitor, isolated Major Histocompatibility class I molecules (MHCI) and sequenced bound peptides by tandem liquid chromatography mass spectrometry. Inhibitor treatment induced significant shifts on the immunopeptidome so as more than 20% of detected peptides were either novel or significantly upregulated. Most of the inhibitor-induced peptides were 9mers and had sequence motifs and predicted affinity consistent with being optimal ligands for at least one of the MHCI alleles carried by MOLT4 cells. Such inhibitor-induced peptides could serve as triggers for novel cytotoxic responses against cancer cells and synergize with the therapeutic effect of immune-checkpoint inhibitors.",
+      "Reference": "PubMed: 35163832",
+      "No. of biological samples": 6,
+      "Species": "Homo sapiens",
+      "Tissue": "MOLT-4 cell line",
+      "Diseases/status": "T lymphoblast leukemia",
+      "Peptidomics category": "MHC-I immunopeptidomics",
+      "Instrument": "Q Exactive HF-X",
+      "Acquisition mode": "DDA",
+      "Quantification type": "Label-free",
+      "Enzyme": "None",
+      "Fragment": "HCD",
+      "Precursor mass tolerance": "20 ppm",
+      "Fragment mass tolerance": "0.5 Da"
+    },
+    "n_sample_rows": 6,
+    "sample_categories": {
+      "MHC-I immunopeptidomics": 6
+    },
+    "sample_species": [
+      "Homo sapiens"
+    ],
+    "sample_tissues": [
+      "MOLT-4 cell line"
+    ],
+    "metadata_term_hits": [
+      {
+        "scope": "project",
+        "field": "Description",
+        "terms": [
+          "lymphoblast"
+        ]
+      }
+    ],
+    "eligibility": "primary_source_review_required"
+  },
+  {
+    "project": {
+      "PeptidomicsDB project ID": "PPD090",
+      "Original project accession": "PXD038782",
+      "Title": "TOFIMS mass spectrometry-based immunopeptidomics refines tumor antigen identification",
+      "Description": "T cell recognition of human leukocyte antigen (HLA)-presented tumor-associated peptides is central for cancer immune surveillance. Mass spectrometry (MS)-based immunopeptidomics represents the only unbiased method for directly identifying and characterizing naturally presented tumor-associated peptides, which represent a key prerequisite for the development of T cell-based immunotherapies. This study reports on the de novo implementation of ion mobility separation-based timsTOF MS for next-generation immunopeptidomics, enabling high-speed and sensitive detection of HLA peptides. A direct comparison of timsTOF-based with state-of-the-art immunopeptidomics using orbitrap technology showed significantly increased HLA peptide identifications from benign and malignant primary samples of solid tissue and hematological origin. First application of timsTOF immunopeptidomics for tumor antigen discovery enabled (i) the expansion of benign reference immunopeptidome databases with more than 150,000 HLA peptides from 94 primary benign tissue samples, (ii) the refinement of previously described tumor antigens, and (iii) the identification of a vast array of novel tumor antigens comprising low abundant neoepitopes that might serve as targets for future cancer immunotherapy development.",
+      "Reference": "",
+      "No. of biological samples": 20,
+      "Species": "Homo sapiens",
+      "Tissue": "Head and neck; PBMCs; Blood and bone marrow; Kidney; Lung; Liver; Brain; Spleen; Thymus",
+      "Diseases/status": "Head and neck squamous cell carcinoma; Healthy; Chronic lymphocytic leukemia; Renal cell carcinoma",
+      "Peptidomics category": "MHC-II immunopeptidomics; MHC-I immunopeptidomics",
+      "Instrument": "Orbitrap Fusion Lumos; TimsTOF Pro",
+      "Acquisition mode": "DDA",
+      "Quantification type": "Label-free",
+      "Enzyme": "None",
+      "Fragment": "HCD; CID",
+      "Precursor mass tolerance": "20 ppm",
+      "Fragment mass tolerance": "0.02 Da"
+    },
+    "n_sample_rows": 20,
+    "sample_categories": {
+      "MHC-II immunopeptidomics": 10,
+      "MHC-I immunopeptidomics": 10
+    },
+    "sample_species": [
+      "Homo sapiens"
+    ],
+    "sample_tissues": [
+      "Blood and bone marrow",
+      "Brain",
+      "Head and neck",
+      "Kidney",
+      "Liver",
+      "Lung",
+      "PBMCs",
+      "Spleen",
+      "Thymus"
+    ],
+    "metadata_term_hits": [
+      {
+        "scope": "project",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD0900003",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD0900032",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      }
+    ],
+    "eligibility": "primary_source_review_required"
+  },
+  {
+    "project": {
+      "PeptidomicsDB project ID": "PPD092",
+      "Original project accession": "PXD023954",
+      "Title": "Chicken MHC class II presented Marek's disease virus (MDV) and infectious bursal disease virus (IBDV) antigenic peptides",
+      "Description": "Viral diseases pose major threats to humans and other animals, including the billions of chickens that are an important food source as well as a public health concern due to zoonotic pathogens. Unlike humans and other typical mammals, the major histocompatibility complex (MHC) of chickens can confer decisive resistance or susceptibility to many viruses. Examples are Marek's disease virus (MDV) and Infectious bursal disease virus (IBDV). We used a new in vitro infection system and immunopeptidomics to identify peptides presented to T lymphocytes via classical MHC class II molecules.",
+      "Reference": "PubMed: 33901176",
+      "No. of biological samples": 15,
+      "Species": "Marek's disease virus; Gallus gallus; Infectious bursal disease virus",
+      "Tissue": "M11 B cell line; R11 B cell line; Chicken embryo fibroblasts; Bursa of fabricius tissue",
+      "Diseases/status": "Marek's disease; Infectious bursal disease; Healthy",
+      "Peptidomics category": "MHC-II immunopeptidomics",
+      "Instrument": "Orbitrap Fusion Lumos",
+      "Acquisition mode": "DDA",
+      "Quantification type": "Label-free",
+      "Enzyme": "None",
+      "Fragment": "CID",
+      "Precursor mass tolerance": "5 ppm",
+      "Fragment mass tolerance": "0.02 Da"
+    },
+    "n_sample_rows": 15,
+    "sample_categories": {
+      "MHC-II immunopeptidomics": 15
+    },
+    "sample_species": [
+      "Gallus gallus",
+      "Infectious bursal disease virus; Gallus gallus",
+      "Marek's disease virus; Gallus gallus"
+    ],
+    "sample_tissues": [
+      "Bursa of fabricius tissue",
+      "Chicken embryo fibroblasts",
+      "M11 B cell line",
+      "R11 B cell line"
+    ],
+    "metadata_term_hits": [
+      {
+        "scope": "project",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0920001",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0920004",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0920007",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0920010",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0920013",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0920016",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD0920019",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      }
+    ],
+    "eligibility": "primary_source_review_required"
+  },
+  {
+    "project": {
+      "PeptidomicsDB project ID": "PPD096",
+      "Original project accession": "PXD005704",
+      "Title": "Antigen Presentation Profiling Reveals T-cell Recognition of Lymphoma Immunoglobulin Neoantigens",
+      "Description": "Cancer somatic mutations can generate neoantigens that distinguish malignant from normal cells. Such neoantigens have been implicated in response to immunotherapies including immune checkpoint blockade, yet their identification and validation remains challenging. Here we discover neoantigens in human mantle cell lymphomas using an integrated strategy for genomic and proteomic tumor antigen discovery that interrogates peptides presented within the tumor major histocompatibility complex (MHC) class I and class II molecules. We applied this approach to systematically identify neoantigen peptides in diagnostic tumor specimens from 17 patients and several cell lines. Remarkably, the discovered neoantigenic peptides were invariably derived from the lymphoma immunoglobulin (Ig) heavy or light chain variable regions. Although we could identify MHC presentation of private germline polymorphic alleles, no mutated peptides were recovered from non-Ig somatically mutated genes. The immunoglobulin variable region somatic mutations were almost exclusively presented by MHC-II. We found T-cells specific for an immunoglobulin-derived neoantigen in the blood of a patient using MHC-II tetramers, and these T-cell clones expanded in frequency following tumor vaccination. These results demonstrate that an integrative approach combining MHC isolation, peptide identification and exome sequencing is an effective platform to uncover tumor neoantigens. Application of this strategy to human lymphoma implicates immunoglobulin neoantigens as targets for lymphoma immunotherapy.",
+      "Reference": "PubMed: 28329770",
+      "No. of biological samples": 4,
+      "Species": "Homo sapiens",
+      "Tissue": "Raji cell line",
+      "Diseases/status": "Burkitt lymphoma",
+      "Peptidomics category": "MHC-I immunopeptidomics",
+      "Instrument": "LTQ Orbitrap Elite",
+      "Acquisition mode": "DDA",
+      "Quantification type": "Label-free",
+      "Enzyme": "None",
+      "Fragment": "HCD",
+      "Precursor mass tolerance": "20 ppm",
+      "Fragment mass tolerance": "0.02 Da"
+    },
+    "n_sample_rows": 4,
+    "sample_categories": {
+      "MHC-I immunopeptidomics": 4
+    },
+    "sample_species": [
+      "Homo sapiens"
+    ],
+    "sample_tissues": [
+      "Raji cell line"
+    ],
+    "metadata_term_hits": [
+      {
+        "scope": "project",
+        "field": "Tissue",
+        "terms": [
+          "Raji"
+        ]
+      },
+      {
+        "scope": "PPD0960001",
+        "field": "Tissue",
+        "terms": [
+          "Raji"
+        ]
+      },
+      {
+        "scope": "PPD0960004",
+        "field": "Tissue",
+        "terms": [
+          "Raji"
+        ]
+      },
+      {
+        "scope": "PPD0960007",
+        "field": "Tissue",
+        "terms": [
+          "Raji"
+        ]
+      },
+      {
+        "scope": "PPD0960010",
+        "field": "Tissue",
+        "terms": [
+          "Raji"
+        ]
+      }
+    ],
+    "eligibility": "primary_source_review_required"
+  },
+  {
+    "project": {
+      "PeptidomicsDB project ID": "PPD102",
+      "Original project accession": "PXD018151",
+      "Title": "Deciphering and predicting CD4+ T cell immunodominance of Influenza virus hemagglutinin",
+      "Description": "The importance of CD4+ T helper (Th) cells is well appreciated in view of their essential role in the elicitation of antibody and cytotoxic T cell responses. However, the mechanisms that determine the selection of immunodominant epitopes within complex protein antigens remain elusive. Here, we used ex vivo stimulation of memory T cells and screening of naïve and memory T cell libraries, combined with T cell cloning and TCR sequencing, to dissect the human naïve and memory CD4+ T cell repertoire against the influenza pandemic H1 hemagglutinin (H1-HA). We found that naïve CD4+ T cells have a broad repertoire, being able to recognize naturally processed as well as cryptic peptides spanning the whole H1-HA sequence. In contrast, memory Th cells were primarily directed against just a few immunodominant peptides that were readily detected by mass spectrometry-based MHC-II peptidomics and predicted by structural accessibility analysis. Collectively, these findings reveal the presence of a broad repertoire of naïve T cells specific for cryptic H1-HA peptides, and demonstrate that antigen processing represents a major constraint determining immunodominance.",
+      "Reference": "PubMed: 32644114",
+      "No. of biological samples": 15,
+      "Species": "Homo sapiens",
+      "Tissue": "Monocyte-derived dendritic cells; EBV-transformed B cell line",
+      "Diseases/status": "Healthy",
+      "Peptidomics category": "MHC-II immunopeptidomics",
+      "Instrument": "Q Exactive HF",
+      "Acquisition mode": "DDA",
+      "Quantification type": "Label-free",
+      "Enzyme": "None",
+      "Fragment": "HCD",
+      "Precursor mass tolerance": "4.5 ppm",
+      "Fragment mass tolerance": "0.02 Da"
+    },
+    "n_sample_rows": 15,
+    "sample_categories": {
+      "MHC-II immunopeptidomics": 15
+    },
+    "sample_species": [
+      "Homo sapiens"
+    ],
+    "sample_tissues": [
+      "EBV-transformed B cell line",
+      "Monocyte-derived dendritic cells"
+    ],
+    "metadata_term_hits": [
+      {
+        "scope": "project",
+        "field": "Tissue",
+        "terms": [
+          "B cell",
+          "Monocyt",
+          "dendritic"
+        ]
+      },
+      {
+        "scope": "PPD1020001",
+        "field": "Tissue",
+        "terms": [
+          "Monocyt",
+          "dendritic"
+        ]
+      },
+      {
+        "scope": "PPD1020002",
+        "field": "Tissue",
+        "terms": [
+          "Monocyt",
+          "dendritic"
+        ]
+      },
+      {
+        "scope": "PPD1020003",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD1020006",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD1020007",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD1020008",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD1020009",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD1020010",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD1020011",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD1020012",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD1020013",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD1020014",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD1020015",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD1020016",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      },
+      {
+        "scope": "PPD1020017",
+        "field": "Tissue",
+        "terms": [
+          "B cell"
+        ]
+      }
+    ],
+    "eligibility": "primary_source_review_required"
+  },
+  {
+    "project": {
+      "PeptidomicsDB project ID": "PPD116",
+      "Original project accession": "PXD035750",
+      "Title": "DNMT and HDAC inhibition induces immunogenic neoantigens from human endogenous retroviral element-derived transcripts",
+      "Description": "Immunotherapies targeting cancer-specific neoantigens have revolutionized the treatment of cancer patients. Recent evidence suggests that epigenetic therapies synergize with immunotherapies, mediated bythe de-repression of endogenous retroviral element (ERV)-encoded promoters, and the initiation of transcription. Here, we use deep RNA sequencing from cancer cell lines treated with DNA methyltransferase inhibitors (DNMTi) and/or Histone deacetylase transferase inhibitors (HDACi), to assemble a de novo transcriptome and identified 3,023 ERV-derived, treatment-induced novel polyadenylated transcripts (TINPATs), encoding for 61,426 open reading frames. Using Immunopeptidomics, we further demonstrate the human leukocyte antigen (HLA) presentation of treatment-induced neoepitopes (t-neoepitopes) derived from TINPATs. We illustrate the potential of the identified t-neoepitopes to elicit a T-cell response and cancer cell killing. The presence of t-neoepitopes was further verified in AML patient samples 48/96 h after in vivo treatment with the DNMT inhibitor Decitabine. Our findings highlight a novel mechanism of ERV-derived neoantigens in epigenetic and immune therapies.",
+      "Reference": "PubMed: 37872136",
+      "No. of biological samples": 18,
+      "Species": "Homo sapiens",
+      "Tissue": "H1299 cell line; PBMCs",
+      "Diseases/status": "Non-small cell lung cancer; Acute myeloid leukemia",
+      "Peptidomics category": "MHC-I immunopeptidomics; MHC-II immunopeptidomics",
+      "Instrument": "Orbitrap Fusion Lumos",
+      "Acquisition mode": "DDA",
+      "Quantification type": "Label-free",
+      "Enzyme": "None",
+      "Fragment": "CID(MHC-I); HCD(MHC-II)",
+      "Precursor mass tolerance": "5 ppm",
+      "Fragment mass tolerance": "0.02 Da"
+    },
+    "n_sample_rows": 18,
+    "sample_categories": {
+      "MHC-I immunopeptidomics": 12,
+      "MHC-II immunopeptidomics": 6
+    },
+    "sample_species": [
+      "Homo sapiens"
+    ],
+    "sample_tissues": [
+      "H1299 cell line",
+      "PBMCs"
+    ],
+    "metadata_term_hits": [
+      {
+        "scope": "project",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1160031",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1160036",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1160041",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1160046",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1160051",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1160056",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1160061",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1160066",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1160071",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1160076",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1160081",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1160086",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      }
+    ],
+    "eligibility": "primary_source_review_required"
+  },
+  {
+    "project": {
+      "PeptidomicsDB project ID": "PPD120",
+      "Original project accession": "PXD022150",
+      "Title": "Identification of microbial-derived HLA-bound peptides in melanoma",
+      "Description": "Various bacterial species are known to colonize human tumors , proliferate within them and modulate immune function, ultimately affecting patient survival and response to treatment. However, it is not known whether intracellular bacterial antigens are presented by HLA-I and HLA-II molecules of tumor cells, and whether potential tumor-presented bacterial-derived antigens may elicit a tumor infiltrating T-cell immune response. Here, we used 16S rRNA gene sequencing and HLA-peptidomics to unbiasedly identify an intracellular bacterial peptide repertoire presented on HLA-I and HLA-II molecules in melanoma tumors. Our microbial analysis of 17 melanoma metastases, derived from 9 patients, revealed 248 and 38 unique HLA-I and HLA-II peptides, respectively, derived from 41 different classified bacterial species. Recurrent bacterial peptides were identified in different tumors. Our study reveals that intra-tumor intracellular bacteria can be presented by tumor cells and elicit immune-reactivity, thus providing insight into how bacteria influence immune system activation and response to therapy.",
+      "Reference": "PubMed: 33731925",
+      "No. of biological samples": 136,
+      "Species": "Fusobacterium nucleatum; Ligilactobacillus animalis; Lactiplantibacillus plantarum; Staphylococcus capitis; Staphylococcus caprae; Homo sapiens",
+      "Tissue": "Fusobacterium nucleatum; Lactobacillus animalis; Lactobacillus plantarum; Staphylococcus capitis; Staphylococcus caprae; Tumors; 51AL cell line; 55A3 cell line; 58A cell line; 721.221 cell line; IHW01070 cell line; Macrophages cell line",
+      "Diseases/status": "Melanoma",
+      "Peptidomics category": "MHC-I immunopeptidomics; MHC-II immunopeptidomics; Host-Pathogen peptidomics",
+      "Instrument": "Q Exactive",
+      "Acquisition mode": "DDA",
+      "Quantification type": "Label-free",
+      "Enzyme": "None",
+      "Fragment": "HCD",
+      "Precursor mass tolerance": "10 ppm",
+      "Fragment mass tolerance": "0.02 Da"
+    },
+    "n_sample_rows": 136,
+    "sample_categories": {
+      "MHC-I immunopeptidomics": 30,
+      "MHC-I immunopeptidomics; Host-Pathogen peptidomics": 39,
+      "MHC-II immunopeptidomics": 29,
+      "MHC-II immunopeptidomics; Host-Pathogen peptidomics": 38
+    },
+    "sample_species": [
+      "Fusobacterium nucleatum",
+      "Homo sapiens",
+      "Homo sapiens; Fusobacterium nucleatum",
+      "Homo sapiens; Lactiplantibacillus plantarum",
+      "Homo sapiens; Ligilactobacillus animalis",
+      "Homo sapiens; Staphylococcus capitis",
+      "Homo sapiens; Staphylococcus caprae",
+      "Lactiplantibacillus plantarum",
+      "Ligilactobacillus animalis",
+      "Staphylococcus capitis",
+      "Staphylococcus caprae"
+    ],
+    "sample_tissues": [
+      "51AL cell line",
+      "55A3 cell line",
+      "58A cell line",
+      "721.221 cell line",
+      "Fusobacterium nucleatum",
+      "IHW01070 cell line",
+      "Lactobacillus animalis",
+      "Lactobacillus plantarum",
+      "Macrophages cell line",
+      "Staphylococcus capitis",
+      "Staphylococcus caprae",
+      "Tumors"
+    ],
+    "metadata_term_hits": [
+      {
+        "scope": "project",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      },
+      {
+        "scope": "PPD1200068",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      },
+      {
+        "scope": "PPD1200069",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      },
+      {
+        "scope": "PPD1200070",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      },
+      {
+        "scope": "PPD1200137",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      },
+      {
+        "scope": "PPD1200138",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      },
+      {
+        "scope": "PPD1200139",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      }
+    ],
+    "eligibility": "primary_source_review_required"
+  },
+  {
+    "project": {
+      "PeptidomicsDB project ID": "PPD126",
+      "Original project accession": "PXD040500",
+      "Title": "KRAB zinc finger proteins ZNF587/ZNF417 protect lymphoma cells from replicative stress-induced inflammation",
+      "Description": "The role of Krüppel-associated box zinc finger proteins (KZFPs), the largest family of repressive transcription factors (TFs) of the human genome, in the pathogenesis of diffuse large B cell lymphoma has not been addressed so far. By correlating the expression of KZFPs with patient outcome, we delineated a subset of 18 co-expressed KZFPs associated to poor prognosis, higher copy number alterations (CNA), and the suppression of hallmarks gene sets linked to immune rejection. Among them, the depletion of the ZNF587-ZNF417 pair of TF paralogs drastically impaired the proliferation of both activated B cell (ABC) and germinal center B (GCB) DLBCL cell lines, by triggering replicative stress through the awakening of dormant replication origins and profound alterations of the heterochromatin landscape. ZNF587/417 knockdown profoundly altered the transcriptomic landscape of U2932 (ABC) and OCI-Ly7 (GCB) cells, rewiring gene expression networks associated with good prognosis and upregulating interferon (IFN)/inflammatory-related genes through activation of the cGAS-STING DNA sensing pathway. These cells showed signs of altered immunogenicity with an enhanced MHC class I surface expression and a reshuffling of their immunopeptidome. Our study provides evidence that the ZNF587-ZNF417 paralog pair may promote lymphoma growth, the acquisition of genetic diversity, and its immune evasion by preventing excessive replicative stress. This suggests that these TFs participate in the epigenetic memory of lymphoma cells, thus highlighting the critical role of constitutive heterochromatin in maintaining the identity of poor-prognosis DLBCL.",
+      "Reference": "PubMed: 38345497",
+      "No. of biological samples": 9,
+      "Species": "Homo sapiens",
+      "Tissue": "U2932 cell line",
+      "Diseases/status": "Diffuse large B-cell lymphoma",
+      "Peptidomics category": "MHC-I immunopeptidomics",
+      "Instrument": "Q Exactive HF",
+      "Acquisition mode": "DDA; DIA",
+      "Quantification type": "Label-free",
+      "Enzyme": "None",
+      "Fragment": "HCD",
+      "Precursor mass tolerance": "10 ppm",
+      "Fragment mass tolerance": "0.02 Da"
+    },
+    "n_sample_rows": 9,
+    "sample_categories": {
+      "MHC-I immunopeptidomics": 9
+    },
+    "sample_species": [
+      "Homo sapiens"
+    ],
+    "sample_tissues": [
+      "U2932 cell line"
+    ],
+    "metadata_term_hits": [
+      {
+        "scope": "project",
+        "field": "Description",
+        "terms": [
+          "B cell"
+        ]
+      }
+    ],
+    "eligibility": "primary_source_review_required"
+  },
+  {
+    "project": {
+      "PeptidomicsDB project ID": "PPD136",
+      "Original project accession": "PXD006939",
+      "Title": "High-throughput MS-based immunopeptidomics",
+      "Description": "Comprehensive knowledge of the HLA class-I and class-II peptides presented to T-cells is crucial for designing innovative therapeutics against cancer and other diseases. However methodologies for their extraction for mass-spectrometry analysis have been a major limitation. We designed a novel high-throughput, reproducible and sensitive method for sequential extraction of HLA-I and -II peptides from up to 96 samples in a plate format from cell lines or tissues. Our methodology drastically reduces sample-handling and can be completed within six hours. We report identification and quantification of thousands of peptides with excellent reproducibility (Pearson correlations reaching 0.98 and 0.97, class I and II, respectively). Due to improved sensitivity, as many as 1,846 HLA-I and 2,633 HLA-II peptides were accurately identified from only 107 B-cells. We demonstrate the feasibility of performing drug-screening by using ovarian cancer cells treated with interferon gamma. This straightforward method is applicable for basic and clinical applications.",
+      "Reference": "PubMed: 29242379",
+      "No. of biological samples": 94,
+      "Species": "Homo sapiens",
+      "Tissue": "UWB.1 289 cell line; RA957 cell line; CD165 cell line; CM647 cell line; JY cell line; PD42 cell line; TIL1 cell line; TIL3 cell line; Brain; 3865-DM cell line; 3830-NJF cell line; 3849-BR cell line; 3912-BAM cell line",
+      "Diseases/status": "Ovarian carcinoma; Meningioma",
+      "Peptidomics category": "MHC-I immunopeptidomics; MHC-II immunopeptidomics",
+      "Instrument": "Q Exactive",
+      "Acquisition mode": "DDA",
+      "Quantification type": "Label-free",
+      "Enzyme": "None",
+      "Fragment": "HCD",
+      "Precursor mass tolerance": "6 ppm",
+      "Fragment mass tolerance": "0.02 Da"
+    },
+    "n_sample_rows": 94,
+    "sample_categories": {
+      "MHC-I immunopeptidomics": 51,
+      "MHC-II immunopeptidomics": 43
+    },
+    "sample_species": [
+      "Homo sapiens"
+    ],
+    "sample_tissues": [
+      "3830-NJF cell line",
+      "3849-BR cell line",
+      "3865-DM cell line",
+      "3912-BAM cell line",
+      "Brain",
+      "CD165 cell line",
+      "CM647 cell line",
+      "JY cell line",
+      "PD42 cell line",
+      "RA957 cell line",
+      "TIL1 cell line",
+      "TIL3 cell line",
+      "UWB.1 289 cell line"
+    ],
+    "metadata_term_hits": [
+      {
+        "scope": "project",
+        "field": "Description",
+        "terms": [
+          "B-cells"
+        ]
+      }
+    ],
+    "eligibility": "primary_source_review_required"
+  },
+  {
+    "project": {
+      "PeptidomicsDB project ID": "PPD138",
+      "Original project accession": "PXD068488",
+      "Title": " Autoreactive T Cells Recognize Unique MBP Peptides Naturally Presented by EBV-Infected B Cells and Multiple Sclerosis Brain Tissue",
+      "Description": "Epstein-Barr virus (EBV) is involved in causing and probably also perpetuating multiple sclerosis (MS). Among several mechanisms, how EBV may contribute, are transcriptome alterations including changes of antigen processing and preferential presentation of both viral and self-antigens. Here, we found that EBV reprograms the transcriptome and immunopeptidome presented on the MS-associated HLA-DR15 molecules of infected B cells. Identical myelin basic protein (MBP) peptides were found to be presented on both EBV-infected B cells and MS brain tissue but not primary B cells and thymic tissue. Peripheral memory and cerebrospinal fluid (CSF)-derived CD4+ T cells of HLA-DR15+ MS patients responded to MBP peptides, MBP(78-90) and/or MBP(83-90), and T cell clones raised with these peptides recognized all MBP peptides ending at amino acid MBP90 in MS brain tissues. Our study provides a new mechanistic link how the environmental and genetic risk factors, EBV infection and HLA-DR15 haplotype, may contribute jointly to MS.",
+      "Reference": "PubMed: 41534530",
+      "No. of biological samples": 38,
+      "Species": "Homo sapiens",
+      "Tissue": "EBV-infected B cells; Primary B cells; Brain; Thymus",
+      "Diseases/status": "Relapsing-remitting multiple sclerosis; Healthy; Multiple sclerosis",
+      "Peptidomics category": "MHC-II immunopeptidomics",
+      "Instrument": "LTQ Orbitrap XL; Orbitrap Fusion Lumos",
+      "Acquisition mode": "DDA",
+      "Quantification type": "Label-free",
+      "Enzyme": "None",
+      "Fragment": "HCD",
+      "Precursor mass tolerance": "5 ppm",
+      "Fragment mass tolerance": "0.02 Da"
+    },
+    "n_sample_rows": 38,
+    "sample_categories": {
+      "MHC-II immunopeptidomics": 38
+    },
+    "sample_species": [
+      "Homo sapiens"
+    ],
+    "sample_tissues": [
+      "Brain",
+      "EBV-infected B cells",
+      "Primary B cells",
+      "Thymus"
+    ],
+    "metadata_term_hits": [
+      {
+        "scope": "project",
+        "field": "Title",
+        "terms": [
+          "B Cells"
+        ]
+      },
+      {
+        "scope": "project",
+        "field": "Description",
+        "terms": [
+          "B cells"
+        ]
+      },
+      {
+        "scope": "project",
+        "field": "Tissue",
+        "terms": [
+          "B cells"
+        ]
+      },
+      {
+        "scope": "PPD1380001",
+        "field": "Tissue",
+        "terms": [
+          "B cells"
+        ]
+      },
+      {
+        "scope": "PPD1380004",
+        "field": "Tissue",
+        "terms": [
+          "B cells"
+        ]
+      },
+      {
+        "scope": "PPD1380007",
+        "field": "Tissue",
+        "terms": [
+          "B cells"
+        ]
+      },
+      {
+        "scope": "PPD1380009",
+        "field": "Tissue",
+        "terms": [
+          "B cells"
+        ]
+      },
+      {
+        "scope": "PPD1380011",
+        "field": "Tissue",
+        "terms": [
+          "B cells"
+        ]
+      },
+      {
+        "scope": "PPD1380014",
+        "field": "Tissue",
+        "terms": [
+          "B cells"
+        ]
+      },
+      {
+        "scope": "PPD1380017",
+        "field": "Tissue",
+        "terms": [
+          "B cells"
+        ]
+      },
+      {
+        "scope": "PPD1380020",
+        "field": "Tissue",
+        "terms": [
+          "B cells"
+        ]
+      },
+      {
+        "scope": "PPD1380023",
+        "field": "Tissue",
+        "terms": [
+          "B cells"
+        ]
+      },
+      {
+        "scope": "PPD1380026",
+        "field": "Tissue",
+        "terms": [
+          "B cells"
+        ]
+      },
+      {
+        "scope": "PPD1380029",
+        "field": "Tissue",
+        "terms": [
+          "B cells"
+        ]
+      },
+      {
+        "scope": "PPD1380032",
+        "field": "Tissue",
+        "terms": [
+          "B cells"
+        ]
+      },
+      {
+        "scope": "PPD1380035",
+        "field": "Tissue",
+        "terms": [
+          "B cells"
+        ]
+      },
+      {
+        "scope": "PPD1380038",
+        "field": "Tissue",
+        "terms": [
+          "B cells"
+        ]
+      },
+      {
+        "scope": "PPD1380041",
+        "field": "Tissue",
+        "terms": [
+          "B cells"
+        ]
+      },
+      {
+        "scope": "PPD1380044",
+        "field": "Tissue",
+        "terms": [
+          "B cells"
+        ]
+      },
+      {
+        "scope": "PPD1380047",
+        "field": "Tissue",
+        "terms": [
+          "B cells"
+        ]
+      },
+      {
+        "scope": "PPD1380050",
+        "field": "Tissue",
+        "terms": [
+          "B cells"
+        ]
+      },
+      {
+        "scope": "PPD1380053",
+        "field": "Tissue",
+        "terms": [
+          "B cells"
+        ]
+      },
+      {
+        "scope": "PPD1380056",
+        "field": "Tissue",
+        "terms": [
+          "B cells"
+        ]
+      },
+      {
+        "scope": "PPD1380059",
+        "field": "Tissue",
+        "terms": [
+          "B cells"
+        ]
+      },
+      {
+        "scope": "PPD1380062",
+        "field": "Tissue",
+        "terms": [
+          "B cells"
+        ]
+      }
+    ],
+    "eligibility": "primary_source_review_required"
+  },
+  {
+    "project": {
+      "PeptidomicsDB project ID": "PPD139",
+      "Original project accession": "PXD025716",
+      "Title": "Upstream open reading frames regulate proto-oncogene translation and encode HLA-presented immunogenic tumor antigens",
+      "Description": "Upstream open reading frames (uORFs) represent translational control elements within eukaryotic transcript leader sequences. Recent data showed that uORFs can encode for biologically active proteins and human leucocyte antigen (HLA)-presented peptides and suggest their potential role in cancer cell development and survival. However, it is so far unclear if uORF-encoded peptides could serve as tumor-associated antigen targets and thus also play a role in cancer immune surveillance. Combining mass spectrometry-based immunopeptidome analysis in primary tumor and healthy tissues and evaluation of proto-oncogene-associated uORF-mediated translational control we here identified a panel of HLA-presented tumor-associated uORF-derived antigens. These uORF-derived tumor antigens were further shown to induce multifunctional antigen-specific T cells, validating their suitability as antigen targets for T cell-based cancer immunotherapy. Our data further unravel the role of uORF-encoded peptides in malignant disease, suggesting uORF-derived tumor-associated antigens as targets for anti-cancer immune surveillance and immunotherapy development.",
+      "Reference": "PubMed: 35239002",
+      "No. of biological samples": 65,
+      "Species": "Homo sapiens",
+      "Tissue": "PBMCs/BMNCs; CD34⁺ hematopoietic progenitor cells; PBMCs",
+      "Diseases/status": "Acute myeloid leukemia; Chronic lymphocytic leukemia; Healthy",
+      "Peptidomics category": "MHC-I immunopeptidomics",
+      "Instrument": "LTQ Orbitrap; Orbitrap Fusion Lumos",
+      "Acquisition mode": "DDA",
+      "Quantification type": "Label-free",
+      "Enzyme": "None",
+      "Fragment": "CID",
+      "Precursor mass tolerance": "5 ppm",
+      "Fragment mass tolerance": "0.02 Da"
+    },
+    "n_sample_rows": 65,
+    "sample_categories": {
+      "MHC-I immunopeptidomics": 65
+    },
+    "sample_species": [
+      "Homo sapiens"
+    ],
+    "sample_tissues": [
+      "CD34⁺ hematopoietic progenitor cells",
+      "PBMCs",
+      "PBMCs/BMNCs"
+    ],
+    "metadata_term_hits": [
+      {
+        "scope": "project",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390001",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390007",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390016",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390019",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390022",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390032",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390042",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390053",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390059",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390070",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390073",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390082",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390093",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390096",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390099",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390102",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390105",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390108",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390111",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390114",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390117",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390120",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390123",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390126",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390129",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390132",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390135",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390138",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390141",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390144",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390166",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390171",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390176",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390181",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390186",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390191",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390196",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390201",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390206",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390207",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390212",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390217",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390222",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390227",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390232",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390238",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390243",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390248",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390253",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390258",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390263",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390265",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390267",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390269",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390271",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390274",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390277",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390280",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390283",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1390286",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      }
+    ],
+    "eligibility": "primary_source_review_required"
+  },
+  {
+    "project": {
+      "PeptidomicsDB project ID": "PPD140",
+      "Original project accession": "PXD043022",
+      "Title": "Identification of novel canonical and cryptic HCMV-specific T cell epitopes",
+      "Description": "Infection or reactivation with human cytomegalovirus (HCMV) is still a major cause of morbidity and mortality in patients undergoing solid organ transplantation or allogeneic stem cell transplantation (alloSCT). Recent studies have shown that protection against latent HCMV infection relies on a much broader antigen spectrum than previously expected. The identification of novel immunogenic HCMV-derived peptides that facilitate HCMV control is therefore essential to improve immune monitoring of HCMV-specific T cells and HCMV vaccine development. In particular, only a few HCMV-derived peptides have been described for less common HLA alleles, such as HLA-A*03:01 and HLA-B*15:01, limiting the implementation of these techniques for a substantial number of patients. Here, we identified novel HCMV-derived HLA-A*03:01- and HLA-B*15:01-restricted immunogenic peptides by an innovative combined in vitro and in silico approach. We utilized the computational tools Peptide-PRISM (1) and PRICE (2) to analyze mass spectrometric (MS) and ribosome sequencing (ribo-seq) datasets, respectively. To refine our in silico approach, we utilized machine learning to rate the identified peptide candidates based on their translational activity, binding affinity and positioning within the small open reading frames (sORFs), with the goal of assessing their likelihood to be presented on HLA-A*03:01 and HLA-B*15:01 molecules. After identifying the highest-scoring 49 canonical and 49 cryptic potentially immunogenic peptides for each HLA allele, we assessed their immunogenicity by screening HCMV-seropositive and -seronegative healthy donors, as well as alloSCT patients for their peptide-specific T-cell responses. We used a stimulation procedure in two consecutive steps: peripheral blood cells (PBMCs) were stimulated starting with peptide pools and subsequently with potentially reactive single peptides. In vitro T-cell stimulation resulted in the direct identification of three canonical and one cryptic HLA-A*03-restricted immunogenic peptides as well as five canonical and one cryptic HLA-B*15-restricted immunogenic peptide, with a specific IFNγ+/CD8+ T cell response of ≥ 0.02%. Highest T-cell responses were identified against two HLA-A*03-restricted and three HLA-B*15-restricted canonical peptides with up to 3.42% of IFNγ+/CD8+ T cells in patients 180 days post alloSCT. In conclusion, we identified specific T-cell responses against eight canonical and two cryptic HLA-A*03:01- and HLA-B*15:01-restricted peptides in healthy individuals and post-transplanted patients and which were classified as immunogenic. Of these, six peptides are novel HCMV-derived, immunogenic peptides according to the UniProt database, broadening the spectrum of immunogenic HCMV-derived peptides for personalized immune monitoring and vaccine development.",
+      "Reference": "PubMed: 38127299",
+      "No. of biological samples": 2,
+      "Species": "Homo sapiens",
+      "Tissue": "HF-γ cell line; HF-99-7 cell line",
+      "Diseases/status": "",
+      "Peptidomics category": "MHC-I immunopeptidomics",
+      "Instrument": "Orbitrap Fusion Lumos",
+      "Acquisition mode": "DDA",
+      "Quantification type": "Label-free",
+      "Enzyme": "None",
+      "Fragment": "CID",
+      "Precursor mass tolerance": "10 ppm",
+      "Fragment mass tolerance": "0.015 Da"
+    },
+    "n_sample_rows": 2,
+    "sample_categories": {
+      "MHC-I immunopeptidomics": 2
+    },
+    "sample_species": [
+      "Homo sapiens"
+    ],
+    "sample_tissues": [
+      "HF-99-7 cell line",
+      "HF-γ cell line"
+    ],
+    "metadata_term_hits": [
+      {
+        "scope": "project",
+        "field": "Description",
+        "terms": [
+          "PBMC"
+        ]
+      }
+    ],
+    "eligibility": "primary_source_review_required"
+  },
+  {
+    "project": {
+      "PeptidomicsDB project ID": "PPD141",
+      "Original project accession": "PXD037837",
+      "Title": "Immunopeptidomics reveals determinants of Mycobacterium tuberculosis antigen presentation on MHC class I (DDA data)",
+      "Description": "Tuberculosis (TB), caused by Mycobacterium tuberculosis (Mtb), is a leading cause of infectious disease mortality worldwide for which no sufficiently protective vaccine exists. CD8+ T cells contribute to protective immunity to TB, but the antigenic targets presented on MHC-I by macrophages infected with virulent Mtb for recognition by CD8+ T cells have not been conclusively defined. Here, we use mass spectrometry to directly identify Mtb-derived peptides presented on MHC class I (MHC-I) by infected primary human monocyte-derived macrophages. We identified 16 MHC-I peptides derived from 12 Mtb proteins, and validated these identifications using internal standard parallel reaction monitoring (SureQuant). Our results show that this set of antigens is highly enriched for substrates of type VII secretion systems (T7SS) relative to the Mtb proteome. Our results identify specific Mtb proteins that may be suitable targets for subunit vaccines designed to elicit protective CD8+ T cell-mediated immunity and suggest that T7SS substrates may be a fruitful class of antigens to prioritize for further vaccine target discovery efforts. Note: donors labeled A, C, D, E, H, and I in file names here are renamed sequentially (A, B, C, D, E, and F) in the manuscript describing this study to avoid confusion.",
+      "Reference": "PubMed: 34342538",
+      "No. of biological samples": 12,
+      "Species": "Homo sapiens",
+      "Tissue": "Macrophage",
+      "Diseases/status": "Tuberculosis",
+      "Peptidomics category": "MHC-I immunopeptidomics",
+      "Instrument": "Orbitrap Exploris 480",
+      "Acquisition mode": "DDA",
+      "Quantification type": "Label-free",
+      "Enzyme": "None",
+      "Fragment": "HCD",
+      "Precursor mass tolerance": "10 ppm",
+      "Fragment mass tolerance": "0.02 Da"
+    },
+    "n_sample_rows": 12,
+    "sample_categories": {
+      "MHC-I immunopeptidomics": 12
+    },
+    "sample_species": [
+      "Homo sapiens"
+    ],
+    "sample_tissues": [
+      "Macrophage"
+    ],
+    "metadata_term_hits": [
+      {
+        "scope": "project",
+        "field": "Description",
+        "terms": [
+          "macrophag",
+          "monocyt"
+        ]
+      },
+      {
+        "scope": "project",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      },
+      {
+        "scope": "PPD1410001",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      },
+      {
+        "scope": "PPD1410002",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      },
+      {
+        "scope": "PPD1410003",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      },
+      {
+        "scope": "PPD1410004",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      },
+      {
+        "scope": "PPD1410005",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      },
+      {
+        "scope": "PPD1410006",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      },
+      {
+        "scope": "PPD1410007",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      },
+      {
+        "scope": "PPD1410008",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      },
+      {
+        "scope": "PPD1410009",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      },
+      {
+        "scope": "PPD1410010",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      },
+      {
+        "scope": "PPD1410011",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      },
+      {
+        "scope": "PPD1410012",
+        "field": "Tissue",
+        "terms": [
+          "Macrophag"
+        ]
+      }
+    ],
+    "eligibility": "primary_source_review_required"
+  },
+  {
+    "project": {
+      "PeptidomicsDB project ID": "PPD142",
+      "Original project accession": "PXD054494",
+      "Title": "ERAP1 as a regulator of the immunopeptidome, proteome and cellular homeostasis of cancer cells. Immunopeptdome_PartII",
+      "Description": "Endoplasmic reticulum aminopeptidase 1 (ERAP1) metabolizes peptides inside the ER and shapes the peptide repertoire available for binding to Major Histocompatibility Class I molecules (MHC-I). Moreover, it may have additional effects on cellular homeostasis, which have not been explored. To address these questions, we utilized genetic silencing of ERAP1 expression as well as a selective allosteric ERAP1 inhibitor to probe changes in the immunopeptidome and proteome of the A375 melanoma cancer cell line. We observed significant immunopeptidome shifts upon both methods of ERAP1 functional disruption, which were distinct for each method. Both methods of inhibition led to mild enhancement of cancer cell killing by stimulated human PBMCs from a healthy donor. ERAP1 functional disruption also resulted in significant proteomic alterations that focused on pathways related to metabolism and cellular stress. Similar proteomic changes were also observed in the leukemia cell line THP-1. Biochemical analyses suggested that ERAP1 inhibition affected ER stress, reactive oxygen species production and mitochondrial metabolism. Although the proteomics shifts were significant, their potential in shaping immunopeptidome shifts was limited since only 15.8% of differentially presented peptides belonged to proteins with altered expression and 4.8% of proteins with altered expression were represented in the immunopeptidome shifts. Taken together, our findings suggest that inhibition of ERAP1 can generate unique immunopeptidomes, primarily due to altered peptide processing in the ER, but also induce compensatory changes in the cellular proteome and metabolic state which may have additional effects on cancer cells.",
+      "Reference": "PubMed: 40189142",
+      "No. of biological samples": 6,
+      "Species": "Homo sapiens",
+      "Tissue": "A375 cell line",
+      "Diseases/status": "Melanoma",
+      "Peptidomics category": "MHC-I immunopeptidomics",
+      "Instrument": "Q Exactive HF-X",
+      "Acquisition mode": "DIA",
+      "Quantification type": "Label-free",
+      "Enzyme": "None",
+      "Fragment": "HCD",
+      "Precursor mass tolerance": "10 ppm",
+      "Fragment mass tolerance": "0.02 Da"
+    },
+    "n_sample_rows": 6,
+    "sample_categories": {
+      "MHC-I immunopeptidomics": 6
+    },
+    "sample_species": [
+      "Homo sapiens"
+    ],
+    "sample_tissues": [
+      "A375 cell line"
+    ],
+    "metadata_term_hits": [
+      {
+        "scope": "project",
+        "field": "Description",
+        "terms": [
+          "PBMC",
+          "THP-1"
+        ]
+      }
+    ],
+    "eligibility": "primary_source_review_required"
+  },
+  {
+    "project": {
+      "PeptidomicsDB project ID": "PPD143",
+      "Original project accession": "PXD054491",
+      "Title": "ERAP1 as a regulator of the immunopeptidome, proteome and cellular homeostasis of cancer cells. A375 Immunopeptidome, Part I.",
+      "Description": "Endoplasmic reticulum aminopeptidase 1 (ERAP1) metabolizes peptides inside the ER and shapes the peptide repertoire available for binding to Major Histocompatibility Class I molecules (MHC-I). Moreover, it may have additional effects on cellular homeostasis, which have not been explored. To address these questions, we utilized genetic silencing of ERAP1 expression as well as a selective allosteric ERAP1 inhibitor to probe changes in the immunopeptidome and proteome of the A375 melanoma cancer cell line. We observed significant immunopeptidome shifts upon both methods of ERAP1 functional disruption, which were distinct for each method. Both methods of inhibition led to mild enhancement of cancer cell killing by stimulated human PBMCs from a healthy donor. ERAP1 functional disruption also resulted in significant proteomic alterations that focused on pathways related to metabolism and cellular stress. Similar proteomic changes were also observed in the leukemia cell line THP-1. Biochemical analyses suggested that ERAP1 inhibition affected ER stress, reactive oxygen species production and mitochondrial metabolism. Although the proteomics shifts were significant, their potential in shaping immunopeptidome shifts was limited since only 15.8% of differentially presented peptides belonged to proteins with altered expression and 4.8% of proteins with altered expression were represented in the immunopeptidome shifts. Taken together, our findings suggest that inhibition of ERAP1 can generate unique immunopeptidomes, primarily due to altered peptide processing in the ER, but also induce compensatory changes in the cellular proteome and metabolic state which may have additional effects on cancer cells.",
+      "Reference": "PubMed: 40189142",
+      "No. of biological samples": 6,
+      "Species": "Homo sapiens",
+      "Tissue": "A375 cell line",
+      "Diseases/status": "Melanoma",
+      "Peptidomics category": "MHC-I immunopeptidomics",
+      "Instrument": "Q Exactive HF-X",
+      "Acquisition mode": "DIA",
+      "Quantification type": "Label-free",
+      "Enzyme": "None",
+      "Fragment": "HCD",
+      "Precursor mass tolerance": "10 ppm",
+      "Fragment mass tolerance": "0.02 Da"
+    },
+    "n_sample_rows": 6,
+    "sample_categories": {
+      "MHC-I immunopeptidomics": 6
+    },
+    "sample_species": [
+      "Homo sapiens"
+    ],
+    "sample_tissues": [
+      "A375 cell line"
+    ],
+    "metadata_term_hits": [
+      {
+        "scope": "project",
+        "field": "Description",
+        "terms": [
+          "PBMC",
+          "THP-1"
+        ]
+      }
+    ],
+    "eligibility": "primary_source_review_required"
+  },
+  {
+    "project": {
+      "PeptidomicsDB project ID": "PPD152",
+      "Original project accession": "PXD024053",
+      "Title": "BoLA-DRimmunopeptidomics in Theileria parva infected, bovine cell lines",
+      "Description": "The ability to maintain T.parva-infected cell lines as rapidly proliferating cells in vitro that express high levels of both MHCI and MHCII, makes this a particularly amenable system in which to apply MHCp elution analysis. Furthermore, the ability of T. parva-infected cells to recall antigen-specific T-cells without the need for supplementary APCs indicates that the peptides presented by T. parva are those that stimulate T-cell responses. We have utilised the repertoire of bovine derived peptides from MHCp elution studies conducted on T. parva-infected cells to define the peptide binding motifs of a variety of BoLA-MHCI and BoLA-DR molecules and facilitated the development of novel more accurate peptide binding prediction algorithms.",
+      "Reference": "PubMed: 33789985",
+      "No. of biological samples": 9,
+      "Species": "Bos taurus",
+      "Tissue": "2229 Cell line; PBMCs; 5072 Cell line; 5350 Cell line; 641 Cell line; 2123 Cell line; 2824 Cell line; 495 Cell line",
+      "Diseases/status": "Theileriasis",
+      "Peptidomics category": "MHC-II immunopeptidomics",
+      "Instrument": "Orbitrap Fusion Lumos; Q Exactive HF",
+      "Acquisition mode": "DDA",
+      "Quantification type": "Label-free",
+      "Enzyme": "None",
+      "Fragment": "HCD",
+      "Precursor mass tolerance": "5 ppm",
+      "Fragment mass tolerance": "0.03 Da"
+    },
+    "n_sample_rows": 9,
+    "sample_categories": {
+      "MHC-II immunopeptidomics": 9
+    },
+    "sample_species": [
+      "Bos taurus"
+    ],
+    "sample_tissues": [
+      "2123 Cell line",
+      "2229 Cell line",
+      "2824 Cell line",
+      "495 Cell line",
+      "5072 Cell line",
+      "5350 Cell line",
+      "641 Cell line",
+      "PBMCs"
+    ],
+    "metadata_term_hits": [
+      {
+        "scope": "project",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      },
+      {
+        "scope": "PPD1520002",
+        "field": "Tissue",
+        "terms": [
+          "PBMC"
+        ]
+      }
+    ],
+    "eligibility": "primary_source_review_required"
+  }
+]

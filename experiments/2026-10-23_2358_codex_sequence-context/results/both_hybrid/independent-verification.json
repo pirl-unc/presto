@@ -1,0 +1,59 @@
+{
+  "all_pass": true,
+  "arm": "both_hybrid",
+  "updates_replayed": 2000,
+  "n_predictions_verified": 105452,
+  "maximum_adam_error": 8.881784197001252e-16,
+  "selected_gradient_checks": [
+    {
+      "step": 1,
+      "maximum_gradient_error": 1.5064338665382593e-14
+    },
+    {
+      "step": 100,
+      "maximum_gradient_error": 2.4770333353907326e-14
+    },
+    {
+      "step": 1000,
+      "maximum_gradient_error": 1.110418181016204e-14
+    },
+    {
+      "step": 2000,
+      "maximum_gradient_error": 8.356813505083771e-15
+    }
+  ],
+  "maximum_log10_amount_error": 5.329070518200751e-15,
+  "all_allocated_materially_trained": true,
+  "metrics": {
+    "train": {
+      "shape_mse": 1.0983386679059697,
+      "shape_rmse": 1.048016539900955,
+      "shape_pearson": 0.46701741364241356,
+      "shape_spearman": 0.45871577946998054,
+      "prediction_sd": 0.7298104959415816,
+      "target_sd": 1.2595713416152294,
+      "ratio_rmse": 0.9185168164054048,
+      "ratio_pearson": 0.3815131958432838,
+      "ratio_spearman": 0.29758364520692604,
+      "persistent_mse": 0.8146257714231133,
+      "temporal_mse": 0.28371289648285825,
+      "persistent_fraction": 0.7416890575074001
+    },
+    "val": {
+      "shape_mse": 1.5590136808394952,
+      "shape_rmse": 1.2486046935838,
+      "shape_pearson": 0.3455528777521656,
+      "shape_spearman": 0.3401203497467842,
+      "prediction_sd": 0.7397102416044944,
+      "target_sd": 1.2523925434074963,
+      "ratio_rmse": 1.101178491100096,
+      "ratio_pearson": 0.43828794721552,
+      "ratio_spearman": 0.3806322435915377,
+      "persistent_mse": 1.143046329653913,
+      "temporal_mse": 0.4159673511855835,
+      "persistent_fraction": 0.7331855670685368
+    }
+  },
+  "seconds": 266.965963500028,
+  "scope": "New raw features independently rebuilt; all final physical/source/metric values and Adam arithmetic replay. Four fixed gradient states; hybrid uses independent NumPy conditional score/importance arithmetic with PyTorch RNG draws. Other gradients not replayed. Pinned source loader reused; no new raw-source curation."
+}

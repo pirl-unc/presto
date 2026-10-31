@@ -1,0 +1,30 @@
+{
+  "train_counts": {
+    "ec50": 212,
+    "elution_observation": 3258795,
+    "half_life": 8729,
+    "ic50": 54736,
+    "kd": 17832,
+    "kd_via_ec50": 38932,
+    "kd_via_ic50": 72925,
+    "koff": 8,
+    "qualitative_binding": 40460,
+    "td50": 503
+  },
+  "allocated": [
+    "ec50",
+    "elution_observation",
+    "half_life",
+    "ic50",
+    "kd",
+    "kd_via_ec50",
+    "kd_via_ic50",
+    "koff",
+    "qualitative_binding",
+    "td50"
+  ],
+  "unsupported": [
+    "kon"
+  ],
+  "rule": "reviewed TRAIN support; quantitative heads need distinct exact values"
+}

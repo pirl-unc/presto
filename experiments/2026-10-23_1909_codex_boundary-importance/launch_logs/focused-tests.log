@@ -1,0 +1,13 @@
+
+==================================== ERRORS ====================================
+_ ERROR collecting experiments/2026-10-23_1909_codex_boundary-importance/code/test_boundary.py _
+ImportError while importing test module '/private/tmp/presto-modular-model/experiments/2026-10-23_1909_codex_boundary-importance/code/test_boundary.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+experiments/2026-10-23_1909_codex_boundary-importance/code/test_boundary.py:6: in <module>
+    from boundary import sample
+E   ModuleNotFoundError: No module named 'boundary'
+=========================== short test summary info ============================
+ERROR experiments/2026-10-23_1909_codex_boundary-importance/code/test_boundary.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 1.15s

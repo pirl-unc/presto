@@ -1,0 +1,38 @@
+{
+  "gains": {
+    "all_pairs:zero": -0.0009517130142906449,
+    "all_pairs:length": -0.0015127329634221365,
+    "all_pairs:sequence": -4.769120203707011e-05,
+    "reference:boundary": -0.000804130535501546
+  },
+  "prediction_target_sd_ratio": 0.013666287619014549,
+  "improved_folds_vs_reference_objective": 1,
+  "intervals": {
+    "all_pairs:zero": [
+      -0.002925799080604968,
+      0.0018445730220035203
+    ],
+    "all_pairs:length": [
+      -0.010423084281910305,
+      0.008240895967152797
+    ],
+    "all_pairs:sequence": [
+      -0.0018933997366509525,
+      0.002007467912998078
+    ],
+    "reference:boundary": [
+      -0.0019802316818598453,
+      0.0005610700236197828
+    ]
+  },
+  "gates": {
+    "gain_over_all_matched_controls": false,
+    "spread": false,
+    "four_of_five_folds": false,
+    "positive_matched_bootstrap_lower_bound": false
+  },
+  "prioritize_independent_confirmation": false,
+  "stop_response_only_feature_optimizer_expansion": true,
+  "complete_APC_concentration_model": false,
+  "evidence_scope": "Training-component development; pairs are dependent, outer cohorts remain closed."
+}

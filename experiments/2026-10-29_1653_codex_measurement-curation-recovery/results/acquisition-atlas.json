@@ -1,0 +1,27 @@
+[
+  {
+    "id": "hla-ligand-atlas-2020.12",
+    "url": "https://hla-ligand-atlas.org/rel/hla_2020.12.zip",
+    "kind": "measured_tissue_ligand_atlas",
+    "catalog": "https://hla-ligand-atlas.org/downloads",
+    "license": "CC-BY-4.0",
+    "training_eligibility": "sample/donor candidate sets; distinguish predictions from observed ligands; review PTM and overlap",
+    "status": "downloaded",
+    "path": "/Users/iskander/code/presto/artifacts/2026-10-29_1653_codex_measurement-curation-recovery/sources/hla-ligand-atlas-2020.12/hla_2020.12.zip",
+    "bytes": 12684944,
+    "sha256": "e9622ddaab5cb18592e9378b5df917b73afcbe6e08a5151be99b18aa59a232d1",
+    "seconds": 189.88635233300738
+  },
+  {
+    "id": "hla-peptideatlas-2026.09",
+    "url": "https://peptideatlas.org/builds/human/hla/202609/atlas_build_617.tsv.zip",
+    "kind": "reprocessed_human_ligand_atlas",
+    "catalog": "https://peptideatlas.org/builds/human/hla/",
+    "training_eligibility": "requires sample/study lineage and 2026 holdout embargo; no deconvolution predictions treated as measured restriction",
+    "status": "downloaded",
+    "path": "/Users/iskander/code/presto/artifacts/2026-10-29_1653_codex_measurement-curation-recovery/sources/hla-peptideatlas-2026.09/atlas_build_617.tsv.zip",
+    "bytes": 1577040076,
+    "sha256": "15f9f78ef6fd5896376256f1284838389dd44acd4b91b76b0bedad52dc226286",
+    "seconds": 898.0784929579822
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "condition": "wide-multi-s42",
+    "selected_steps": 7000,
+    "completed_steps": 51099,
+    "selected_unique_rows": 687255,
+    "completed_unique_rows": 3493132,
+    "parameters": 1675594,
+    "requested_gpu": "H100!",
+    "actual_gpu": "NVIDIA H100 80GB HBM3",
+    "wall_seconds": 35615.10843485,
+    "optimizer_seconds": 24587.09843893768,
+    "peak_rss": 8309620736,
+    "peak_gpu_allocated": 3721623552,
+    "peak_gpu_reserved": 14631829504
+  },
+  {
+    "condition": "wide-multi-s43",
+    "selected_steps": 32000,
+    "completed_steps": 51099,
+    "selected_unique_rows": 2418755,
+    "completed_unique_rows": 3493132,
+    "parameters": 1675594,
+    "requested_gpu": "H100!",
+    "actual_gpu": "NVIDIA H100 80GB HBM3",
+    "wall_seconds": 47121.068694219,
+    "optimizer_seconds": 32180.183843175153,
+    "peak_rss": 8336621568,
+    "peak_gpu_allocated": 3852753920,
+    "peak_gpu_reserved": 15770583040
+  }
+]

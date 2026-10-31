@@ -1,0 +1,12 @@
+{
+  "phase": "metadata",
+  "scope": "Operation4; one supported-local-client attempt after web tool cannot access official EuropePMC fullTextXML. Article only, no supplementary numeric dataset yet.",
+  "requests": [
+    {
+      "name": "fusaro2009.xml",
+      "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC2753399/fullTextXML",
+      "expected_kind": "xml",
+      "discovery_provenance": "Primary PMC identifier2753399 from exact-title primary bibliography; official EuropePMC fullTextXML route already used successfully in prior source audits."
+    }
+  ]
+}

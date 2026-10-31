@@ -1,3 +1,41 @@
+## 2026-10-31 — Tool-clean re-scoring of the external NetMHC benchmark
+
+- **Agent/model:** claude (Claude Sonnet 5.5); [experiment and reproduction](2026-10-31_1100_claude_netmhc-clean-rescore/README.md);
+  pre-registration `agents/claude/plans/2026-10-31_netmhc-clean-rescore.md` (plan commit 4f2bf4ad, before any clean metric). CPU only, no Modal.
+- **Contract:** same dumps, rows, harness, pooling and bootstrap as the PR #149 benchmark (full subset reproduces it exactly);
+  rows split by whether the tool's own training files (NetMHCpan-4.1/NetMHCIIpan-4.3 DTU BA+EL; MHCflurry pan train_data + curated affinity)
+  contain the exact (peptide, allele) pair; peptide-seen and nested-seen sensitivities. Tool data not redistributed; hash-keyed overlap mask released.
+- **Seen fractions (test exact BA, pair):** class I NetMHCpan 0.43, MHCflurry 0.55; class II NetMHCIIpan 0.64. Seen-ness is near all-or-nothing per study.
+- **Result:** every clean cell is a single study (none headline-grade). Tool-minus-Presto Spearman gap (direct-s43): class I fluorescence +0.19 -> +0.07,
+  class I radioactivity +0.34 -> +0.52 (NetMHCpan), +0.28 -> +0.49 (MHCflurry), class II fluorescence +0.33 -> +0.15; curated-s43 class I radioactivity +0.14 -> +0.12.
+  Presto beats no tool on clean rows (RMSE is lower in two single-study cells while ranking/AUROC stay worse). Within-study seen-vs-unseen not estimable.
+- **Artifacts:** `experiments/2026-10-31_1100_claude_netmhc-clean-rescore/results/`; raw dumps in gitignored `artifacts/2026-10-31_clean-rescore/`.
+
+## 2026-10-31 — External NetMHC benchmark: Presto BA vs NetMHCpan-4.1 / NetMHCIIpan-4.3 / MHCflurry 2.3.16
+
+- **Agent/model:** claude (Claude Sonnet 5.5); [experiment and reproduction](2026-10-31_0830_claude_netmhc-benchmark/README.md);
+  pre-registration `agents/claude/plans/2026-10-31_external-netmhc-benchmark.md`; PR #149; issue #140. CPU only, no Modal.
+- **Scored populations:** per-example validation (developmental) and test dumps of direct-factorized-affinity
+  (s42, s43) and curated-data-retrain (s42, s43). Literal exact-value `ic50/kd/kd_via_ic50/kd_via_ec50` rows,
+  one single-allelic four-digit HLA allele, identical rows for every method. Zero rows excluded by the
+  multi-allelic/residue/length/unsupported-allele/tool-failure rules. Test exact rows: direct I 1313 / II 982,
+  curated I 1156 / II 492 (censored and qualitative counted separately in the README).
+- **Training/loss/assay-output mapping:** not trained here; Presto predictions are the dumps' `prediction`
+  (log10 nM, track chosen by assay method). Baseline: per-endpoint TRAIN mean from each run's frozen scales.
+- **Tools:** NetMHCpan 4.1b `-BA`, NetMHCIIpan 4.3e `-BA`, mhcflurry 2.3.16 `--affinity-only` (default models).
+  Overlap audit impossible (training sets not shipped): all external results UNAUDITED.
+- **Held-out test, within-study mean-of-study Spearman (class x detector pools of 1-5 studies):**
+  class I fluorescence Presto .37-.41 (direct), .40 (curated) vs NetMHCpan .60/.70, MHCflurry .55/.58;
+  class I radioactivity Presto .30-.32 (direct), .50 (curated) vs NetMHCpan .64, MHCflurry .58;
+  class II fluorescence Presto .37-.39 (direct), .54-.55 (curated) vs NetMHCIIpan .70/.77;
+  class II radioactivity (1 study) Presto .05-.28 vs .43. Validation gaps smaller for the curated family.
+  Full CIs, RMSE, thresholded metrics, censored satisfaction and qualitative AUROC in the experiment dir.
+- **Winner/takeaway:** external tools lead everywhere on pooled within-study ranking; the curated-data family
+  narrows but does not close the gap. Direct-factorized class I fluorescence RMSE is worse than the TRAIN-mean
+  constant. Gap is an upper bound because tool training overlap is unaudited. Not a fresh confirmation set.
+- **Artifacts:** `artifacts/2026-10-31_0830_claude_netmhc-benchmark/` (per-example dumps; hashes in
+  `results/prediction_dump_hashes.json`).
+
 ## 2026-10-16 — Molecular MHC species and independent source-role audit
 
 - **Agent/model:** Codex / GPT-6; [experiment and reproduction](2026-10-16_1440_codex_molecular-species-lineage/README.md).
@@ -1719,3 +1757,4140 @@ Publication closure: all 23 public downloads, 48 archive members, 9,053 source/p
   Source, invocation, full module tables and loss/gradient evidence are preserved
   in the family. No new predictions, training, test selection or held-out metrics;
   see [the architecture/training report](../docs/model_training_audit.md).
+
+### 2026-10-21_0353_codex_modular-memorization-control — registered, preparation pending
+
+- Agent/model: Codex / GPT-6. [Family](2026-10-21_0353_codex_modular-memorization-control/README.md), [prospective contract](agents/codex/plans/modular-assay-only-memorization.md).
+- One supplied-metadata assay-only condition: 32 exact purified IC50 observations, 16 per class, explicit class-II chain pairs, pinned Hitlist v4/catalog; old held-out peptides excluded. No pretraining or synthetic labels.
+- AdamW 0.0003, constant schedule, zero dropout/weight decay, seed 42, full batch; 2,000 updates/20-minute optimization ceiling. Local CPU, one thread, no GPU/Modal.
+- Target/output: direct raw log10(nM) IC50, standardized training squared residual; no auxiliary loss. Fixed overall/per-class RMSE/Spearman/spread and real-update gates are specified before fitting.
+- No validation/test split intentionally: training-only capacity diagnostic, no generalization claim. No results, winner or qualified checkpoint yet.
+
+#### Closure: 2026-10-21_0353_codex_modular-memorization-control
+
+- **Date/agent/model:** 2026-10-21 UTC; Codex / GPT-6. [Full writeup, source and artifact links](2026-10-21_0353_codex_modular-memorization-control/README.md).
+- **Frozen execution:** commit `122b611124563b653fbddbbce30f921ea0f14fff`, tracked files clean; only redirected fit log untracked. Exact argv/environment/versions in `reproduce/launch.json`, rerun helper in `reproduce/launch.sh`, executed launcher snapshot under `reproduce/source/`.
+- **Dataset/curation:** pinned Hitlist v4 binding parquet, pinned mhcseqs catalog and historical held-out exclusions. 814,268 raw rows →26,619 eligible exact purified IC50 candidates; 841 inconsistent input groups excluded for this diagnostic; 32 hash-selected consistent inputs, 16 I/16 II with explicitly named partners. All raw nM targets and original assay lineage retained. New cohort, not historical-fit membership; no clipping or partner imputation.
+- **Training/pretraining:** fresh shared d128/l2/h4 modular network, supplied human molecular species/class, direct IC50 and learned II register pooling; no auxiliaries/pretraining/replay/synthetic data. Full batch 32, AdamW constant 0.0003, weight decay/dropout 0, seed 42, one squared standardized log10(nM) loss per exact assay. Censored/proxy/stability/MS/TCR/other assays excluded from this diagnostic only.
+- **Hardware/runtime:** local CPU, one Torch/BLAS thread, no Modal/GPU requested or observed; 100 updates, 33.05 s, peak RSS 716,193,792 bytes. Prespecified 2,000-step/20-minute ceiling; first overall AND per-class gate pass at step 100.
+
+| Condition / training subset | N | RMSE log10(nM) | Spearman | Pearson | Prediction/target SD |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Assay-only, overall | 32 | 0.03294 | 0.99927 | 0.99976 | 0.99978 |
+| Assay-only, class I | 16 | 0.04333 | 1.00000 | 0.99973 | 1.00000 |
+| Assay-only, class II | 16 | 0.01711 | 0.99706 | 0.99987 | 0.99897 |
+| Training-mean comparator, overall | 32 | 1.42546 | undefined | undefined | 0 |
+
+- **Evidence:** initial overall RMSE 1.43145/SD ratio .02760; final standardized loss .00053406. All 32 allocated parameter tensors and exposed features have gradient-driven updates; register weights updated on all 100 steps. A fresh process reproduced every prediction/metric and passed the public support guards. Initial/intermediate/final predictions and all threshold metrics are retained; raw-checkpoint/disposition paths/hashes are in the results receipts.
+- **Validation/test:** intentionally absent because this is a training-only capacity gate; all observations are fit targets. Historical held-out peptides excluded; future independent evaluation must account for this diagnostic exposure. No generalization winner or endpoint qualification.
+- **Decision/context:** fixed capacity gate passed with nonconstant predictions in both classes, without identity tasks. This does not demonstrate auxiliary benefit or isolate the cause of the historical failed architecture's collapse. Full-cohort mean/ridge comparisons, held-out evaluation and the wider holistic model requirements remain pending.
+
+### 2026-10-21_0512_codex_weirdo-reference-pretraining
+
+- **Date / agent:** 2026-10-21 UTC; Codex / GPT-6.
+- **Directory:** [bounded peptide-source pretraining](2026-10-21_0512_codex_weirdo-reference-pretraining/README.md).
+- **Status:** initial preparation stopped before scanning/fitting; amended preparation pending. No model evaluation executed.
+- **Source/data contract:** pinned local Weirdo reference and category archive;
+  uniform label-blind 5,000/1,000/1,000 train/validation/test eight-mers, seeds
+  42/43/44. Every selected membership/fold/bucket must independently reconstruct
+  against all reference proteins before fitting. Source mnemonic-prefix grouping
+  does not establish homology independence. Hashes and exact policy are in the
+  [prospective plan](agents/codex/plans/weirdo-reference-pretraining.md).
+- **Training contract:** shared modular encoder, peptide-source head only; ten
+  independent membership labels per peptide with mean CE. No assay labels,
+  pretraining weights, replay, generated labels or synthetic sequences. AdamW
+  3e-4, weight decay 1e-4, dropout .1, batch 64, seed 42; at most 20 complete
+  epochs, validation patience five after five epochs. CPU, one Torch/BLAS thread;
+  fitting ceiling 15 minutes. No requested/observed Modal GPU.
+- **Reproduction:** family `reproduce/` and `code/`; actual git/env/package records
+  are generated at preparation and fitting launch. Source and code remain pinned.
+- **Qualification:** prospective validation CE comparison against prior and
+  composition controls, paired source-component bootstrap; no test-based choices.
+  Per-category support, calibration and discrimination remain required. No
+  biological species-origin or assay-transfer claim follows from this screen.
+
+| Condition | Data / outcome | Held-out validation | Held-out test |
+| --- | --- | --- | --- |
+| Training prevalence | Same reference memberships; smoothed category priors | Not run | Not run |
+| Composition logistic | Same rows; 20 residue frequencies, fixed L2 logistic models | Not run | Not run |
+| Modular peptide-source | Shared encoder plus ten independent source memberships | Not run | Not run |
+
+No winner or predictive conclusion yet. This family remains incomplete until
+admission, all executed metrics/predictions, checkpoint replay and closure are
+recorded; the full MHC/TCR/APC/MS/affinity goal remains open.
+
+Preparation attempt 0 (`42689fd`) stopped after 0.1085 seconds because the actual
+pinned archive lacks `train_groups` (and all other grouping arrays). Actual array
+headers, frozen source, invocation and failure/log are retained in the family.
+No selected-row audit, optimization or test prediction occurred. The prospective
+plan records an amendment before retry: unchanged source hashes/selection/labels,
+explicit missing-group state, and reference-derived grouping required before
+admission. No supplied bucket is invented; actual supplied buckets must still
+agree with reference reconstruction. The retry has its own attempt directory.
+
+#### Closure: 2026-10-21_0512_codex_weirdo-reference-pretraining
+
+- **Date/agent/model:** 2026-10-21 UTC; Codex / GPT-6. [Full family](2026-10-21_0512_codex_weirdo-reference-pretraining/README.md).
+- **Frozen source/reproduction:** preparation `de3cdfc`, fit `1d3c96b`; exact full hashes, dirty status, command/environment and package versions in the family receipts. Tracked fit sources were clean; generated cohort/log untracked. Frozen executed model/trainer/launcher source, failed preparation and amended attempt are retained.
+- **Data:** same pinned Weirdo reference/archive/meta; fixed label-blind 5,000/1,000/1,000 eight-mers, ten overlapping reference-category memberships. All 7,000 memberships/folds agree with exact occurrences across 569,516 proteins. No selected cross-fold peptide. Train/validation/test have 3,486/705/723 connected mnemonic-family components; homology independence unverified. Missing archive buckets reconstructed explicitly, never represented as supplied evidence. No reselection/relabeling.
+- **Assays/synthetic contract:** auxiliary-only; no affinity/stability/MS/TCR outcomes, exact/censored numeric assays, synthetic sequences or generated labels. Reference absence is not absence across all biological organisms. The old table-verification statistic is not this selected-row reference audit.
+- **Training:** independent smoothed category priors; fixed `C=1` L2 logistic on 20 residue frequencies (all ten models converged); modular encoder d128/l2/h4 with ten independent source logits, mean binary CE, no initial weights/replay. AdamW 3e-4, weight decay 1e-4, dropout .1, batch 64, seed 42, max 20 epochs, patience 5 after 5. The replay weight is inactive in this auxiliary-only condition. Validation selects epoch 5 / 395 updates; stop at epoch 10 / 790 updates.
+- **Runtime/hardware:** CPU, one Torch/BLAS thread, no requested/observed GPU/Modal. Reference audit 8.96 s; baseline fit 0.067 s; network child 64.30 s (trainer 58.82 s); whole comparison 69.93 s. Peak child/parent RSS 908,427,264/468,910,080 bytes; 900 s ceiling not reached.
+
+| Fixed condition | Train CE | Validation CE | Test CE |
+| --- | ---: | ---: | ---: |
+| Training prevalence | 0.303358 | 0.292560 | 0.308435 |
+| Composition logistic | 0.294973 | 0.286331 | 0.300864 |
+| Modular source network | 0.295201 | 0.285826 | 0.302032 |
+
+- **Screen:** failed. Paired validation network-minus-prior CE=-0.006734, 95% component-bootstrap interval[-0.009581,-0.003564]; versus composition=-0.000506[-0.001971,0.001117]. 2,000 resamples, 705 connected components, seed 20261021; all categories meet the fixed support minimum. Test was evaluated once after selection and did not change the recipe. No accepted neural winner; composition has the lowest descriptive test CE.
+- **Evidence:** per-example predictions for all three splits/conditions, per-category CE/discrimination/confusions/Brier/ECE/spread, coefficients, history, coverage, plot, complete receipts and raw artifact hashes are retained. Independent sklearn AP/AUROC/CE agreement on all 90 condition/split/category cases. All 29 allocated parameter tensors/exposed features updated; fresh-process first-training-batch replay matches exactly (no test rescore). Test probability SD 0.0092–0.1108 across categories. No IC50/500 nM metrics apply to this auxiliary-only family.
+- **Takeaway:** real source pretraining and nonconstant outputs are demonstrated on this bounded reference task, but improvement over composition and affinity transfer are not established. No checkpoint promotion. The 32-row IC50 memorization control addresses a different question; full held-out affinity, MHC/TCR auxiliaries, APC/MS/TCR qualification and the overall model goal remain open.
+
+### 2026-10-21_0618_codex_mhc-reference-admission — registered before preparation
+
+- **Date/agent/model:** 2026-10-21 UTC; Codex / GPT-6. [Family](2026-10-21_0618_codex_mhc-reference-admission/README.md), [prospective contract](agents/codex/plans/mhc-reference-admission.md).
+- **Data:** pinned 56,440-row MHC reference; fixed exact human/mouse/rat/rhesus taxon mapping, functional/flag/domain checks, source-label conflict deferral and domain-alias collapse. All raw rows retain dispositions. No missing partner or class/pairing label generated.
+- **Partition contract:** connected exact-domain/original-chain components; fixed SHA25670/15/15 assignment, no homology-independence claim. Readiness requires at least20 domains and3 components per species/split; no salt/vocabulary reselection after inspection.
+- **Training/evaluation:** none; CPU data-only preparation, no GPU/Modal, optimizer, losses, synthetic sequences or predictions. Validation/test partitions are preparation outputs; predictive metrics are inapplicable until a separate registered fit.
+- **Status:** not executed. Actual source/code/environment, dispositions, replay checks, counts and artifact hashes must be recorded before closure. This is one source-admission step in the full model goal.
+
+#### Closure: 2026-10-21_0618_codex_mhc-reference-admission
+
+- **Date/agent/model:** 2026-10-21 UTC; Codex / GPT-6. [Complete family](2026-10-21_0618_codex_mhc-reference-admission/README.md).
+- **Frozen execution:** clean `1b218e7f77337398889bffdefa37309597dfa6bc`; exact command, environment, runtime versions and executed sources in the reproduction bundle. Pinned existing 56,440-row MHC catalog SHA256 `ddc3493c64f4328de174a6c2cda1f007ec2f93a1ef649add25d2ef9c1720add1`; its producer version is unknown, independently of installed package versions.
+- **Data/curation:** four exact human/mouse/rat/rhesus taxonomy strings, explicit functional/flag/source-member/domain guards. One species annotation per unique actual groove slot/sequence, retaining every alias. Class-II single chains remain single chains. No fabricated partner, class/pairing target, synthetic sequence or inferred species label. Nonclassical source genes remain explicit and do not certify peptide presentation.
+- **Conservation:** 12,612 original rows contribute new annotations, 7,211 are duplicate aliases and 36,617 are excluded. All 56,440 dispositions, 13,218 unique annotations and 33,696 admitted source-domain aliases replay independently against the original CSV. No conflicting species sequence; 3,687 connected components. Canonical species-only preflight passes.
+- **Partition:** exact-domain/original-protein components; fixed hash 70/15/15 assignment, unchanged after inspection. Mechanical minimum of 20 annotations and three components per species/split passes. Homology independence is unverified.
+
+| Species | Train annotations / components | Validation annotations / components | Test annotations / components |
+| --- | ---: | ---: | ---: |
+| Human | 4,848 / 2,060 | 419 / 416 | 6,160 / 430 |
+| Mouse | 142 / 80 | 34 / 19 | 42 / 19 |
+| Rat | 131 / 70 | 35 / 17 | 37 / 18 |
+| Rhesus macaque | 971 / 389 | 206 / 92 | 193 / 77 |
+
+- **Observed limitation:** a 5,664-annotation human B/C component supplies 91.95% of human test and 88.06% of all test annotations; a human A component supplies 54.10% of human training. The retained partition is strongly concentrated despite passing the mechanical minimum. This is not a broad generalization or calibration certificate; no reseeding or rebalancing was performed.
+- **Training/evaluation contract:** data-only, no optimizer, pretraining, model predictions, loss weights or synthetic labels. No affinity/stability/processing/MS/TCR assay supervision or censoring applies. Both held-out partitions exist, but predictive metrics and per-example prediction dumps are inapplicable because no model was evaluated. No preferred model or checkpoint.
+- **Hardware/runtime:** local CPU, one Torch/BLAS thread, no requested/observed GPU or Modal. Preparation 4.4094 seconds, peak process RSS 641,744,896 bytes. Independent source replay is separate from that timing.
+- **Artifacts:** complete dispositions, annotation aliases, empty conflict artifact, preflight, source hashes, actual launch/source snapshots and independent replay/concentration tables/logs. Generated shared cohort manifest SHA256 `4e4d4a5d2b3d47fc16ddf63ddeeaf6111836138661356ab6805945f13c7ef06c`; observation SHA256 `5ba2ef6f40b047ddc256c61fb06e802c82bc2a400830a178d44a0a82455ef510`.
+- **Decision:** source-traceable species annotations are available for a separately registered comparison; no MHC-class/pairing training, affinity transfer, calibrated species inference or biological qualification is established. This closes the admission family only. Controlled assay-only versus auxiliary affinity evidence and the full model objective remain open.
+
+### 2026-10-21_0647_codex_full-ic50-admission — registered before execution
+
+- **Date/agent/model:** 2026-10-21 UTC; Codex / GPT-6. [Family](2026-10-21_0647_codex_full-ic50-admission/README.md), [frozen policy](agents/codex/plans/full-ic50-admission.md).
+- **Data:** hash-pinned Hitlist v4 direct IEDB/CEDAR purified human HLA IC50, all eligible raw exact/censored values and concentration units; canonical peptides and unambiguous explicit catalog-resolved MHC pairs. No source caps, no consistency filter on independent measurements, no partner imputation or target clipping.
+- **Lineage/partition:** canonical original-assay deduplication and conflicting-copy deferral. Connect exact peptides/original assays; preserve historical and 32-row memorization exposure, defer incompatible fixed assignments, hash only new components at fixed80/10/10. Exact-only and exact-plus-censored manifests share all validation/test rows. No study/donor independence claim.
+- **Training/evaluation:** data preparation only, local CPU/one thread, no requested/observed GPU/Modal, optimizer, pretraining, synthetic labels or model predictions. No predictive metrics/dumps apply. Subsequent fitting needs its own registered recipe and matched baselines; auxiliary qualification does not block the supplied-metadata control.
+- **Status:** pending preparation and independent replay. Preserve all raw dispositions, aliases, target/split/source checks, full counts and fixed readiness outcomes before closing this family.
+
+#### Closure: 2026-10-21_0647_codex_full-ic50-admission
+
+- **Date/agent/model:** 2026-10-21 UTC; Codex / GPT-6. [Full evidence](2026-10-21_0647_codex_full-ic50-admission/README.md).
+- **Executed source:** clean `2214086783b83b741a6c9f0d0dda7137cd718c09`; exact argv, environment, runtime/parser versions, source hashes and application/launcher snapshots retained. Existing catalog producer version remains unknown.
+- **Dataset/curation:** all eligible pinned Hitlist v4 direct purified human HLA IC50 with canonical unmodified peptides, finite positive raw concentration, exact/censored qualifiers and explicit unambiguous MHC partners. All 814,268 raw dispositions replay independently; 29,283 measurements admitted, 751,790 excluded and 33,195 deferred (33,165 missing explicit partners; 30 unresolved names). No row caps, partner imputation, clipping, generated labels or synthetic sequences. Actual admitted measurements are all IEDB/nM and have unique original assay IRIs.
+- **Independent outcomes:** 1,002 same-input sets have different reported values and/or qualifiers and remain separate votes. This count does not imply all censor intervals are inconsistent. No original-outcome copies/conflicting exports occurred in this actual eligible source; targeted software tests cover their handling. All 84 used catalog names/aliases and strict groove extraction verified.
+
+| Split / class | All measurements | Exact | Exact peptide groups | Exact binders / nonbinders at 500 nM |
+| --- | ---: | ---: | ---: | ---: |
+| Train I | 15,266 | 14,375 | 6,532 | 7,815 / 6,560 |
+| Train II | 8,289 | 7,261 | 1,117 | 1,789 / 5,472 |
+| Validation I | 2,051 | 1,968 | 863 | 1,045 / 923 |
+| Validation II | 874 | 758 | 141 | 212 / 546 |
+| Test I | 1,845 | 1,758 | 777 | 991 / 767 |
+| Test II | 958 | 842 | 133 | 204 / 638 |
+
+- **Conditions:** exact-only has 21,636 training measurements; exact-plus-censored adds 1,919 bounds. Entire validation/test partitions are identical (2,925/2,803, both including censored observations). Source/manifest/label/split replay proves that only censored training exposure differs. Raw values above 50,000 nM remain: 1,577/214/188 train/validation/test, exact and censored combined.
+- **Partitions:** 9,908 peptide components, original-assay uniqueness verified; fixed old assignments and 32-row memorization exposure retained, only new components use declared hash80/10/10. Historical assignment counts 2,117/230/219 and new counts 21,438/2,695/2,584. No target-based assignment or reseeding. Old held-outs remain previously inspected, not fresh.
+- **Limits:** 114 train/validation, 117 train/test and 90 validation/test shared studies; donor/specimen/acquisition identity absent. This is not study/donor/homology independence or unseen-allele qualification. Frozen mechanical count/threshold-support readiness passes for both classes; predictive quality is untested.
+- **Training/evaluation:** none; no optimizer/pretraining, loss weights or predictive model selection. Other affinity/stability/proxy/APC/MS/TCR outcomes are outside this IC50 diagnostic contract, not relabelled as IC50. Both held-outs exist; prediction dumps, losses, correlations and classifier metrics are inapplicable because no model was evaluated. No winner/checkpoint.
+- **Hardware/runtime:** local CPU, one Torch/BLAS thread, no requested/observed GPU or Modal; 42.6482 seconds, peak process RSS 1,202,814,976 bytes. A separate four-worker regression ran concurrently; not an isolated runtime benchmark. Independent replay timing excluded.
+- **Artifacts:** full source dispositions, components, catalog aliases, paired preflights/manifests, source/recipe snapshots, independent verification and logs. Local generated cohort 137 MiB, raw preparation 407 MiB linked in receipt. The first independent-analysis setup failed from a source-edit error; failed source/log preserved, corrected analysis passes without rerunning preparation or fitting.
+- **Decision:** proceed to a separately registered supplied-metadata assay-only mean/ridge/network comparison. Neither auxiliary success nor this source audit establishes affinity learning. The full MHC/TCR/APC/MS and scientific qualification objective remains open.
+
+### 2026-10-21_1700_codex_discrete-distribution-comparison — registered before fitting
+
+- **Date/agent/model:** 2026-10-21 UTC; Codex / GPT-6. [Family](2026-10-21_1700_codex_discrete-distribution-comparison/README.md), [prospective contract](agents/codex/plans/discrete-distribution-comparison.md).
+- **Data:** entirely artificial integer-symbol strings, length 16, alphabet 0–7;
+  all 70 spans of lengths 1–5, four generic contexts per parent. Parent-disjoint
+  96/24/24 split gives 384/96/96 rows; short substrings intentionally overlap.
+  Fixed data/teacher seeds 20261021/20261022. Full target distributions are known
+  from a frozen linear hierarchical oracle. No biological sequence or assay.
+- **Training:** same two-stage start/length policy with two 83→32→1 Tanh MLPs;
+  matched initialization and minibatches for seeds 42/43/44. Adam 0.003, zero
+  weight decay, batch 16, 60 complete epochs/1,440 updates. Exact reverse KL
+  versus REINFORCE with 8 or 64 sampled spans and a leave-one-out baseline.
+  Seed-42 reward-only/no-entropy control intentionally optimizes another objective.
+  No pretraining, real assay families, quantities/censoring or affinity thresholds.
+- **Selection/evaluation:** validation reverse KL every five epochs; test once
+  after selection. Save complete distributions, multiset samples and training-row
+  replay. CPU/one thread; no requested or observed Modal GPU. Logical target-query
+  counts are not an external-oracle runtime benchmark; both methods compute dense
+  policy logits and share the precomputed teacher data.
+- **Status:** verification/source freezing pending; no fitted model or predictive
+  result yet. Full source/env/commit receipts, per-example outputs, independent
+  metric/teacher checks and closure are required before concluding this family.
+- **Claim boundary:** this tests generic learning and sampling on a known target;
+  it does not implement biological processing, infer gene-loss effects, calibrate
+  MS detection or establish a real nonbinder product distribution.
+
+#### Closure: 2026-10-21_1700_codex_discrete-distribution-comparison
+
+- **Date/agent/model:** 2026-10-21 UTC; Codex / GPT-6. [Complete report and artifacts](2026-10-21_1700_codex_discrete-distribution-comparison/README.md).
+- **Frozen execution:** `adab28ad8ac389a5f3a395b0b8dfd6e89253221c`; executable source committed/frozen, dirty state limited to task/planning documents. Source SHA256 `e66c3a5cffc0d512989094ad653ba7ea4f3ff56778d3b298fecb8e809eee5945`. Exact launch/env/version/status/diff receipts retained in the reproduction bundle and verified archive.
+- **Data/curation:** unique integer-symbol parents, alphabet 0–7, length 16; all 70 spans of lengths 1–5. Fixed 96/24/24 parent split and four generic contexts produce 384/96/96 observations. Data seed 20261021; fixed linear hierarchical probability teacher seed 20261022. Parent splits are disjoint but short substrings overlap. No real sequences, assay families, units, qualifiers/censoring, synthetic affinity labels or biological supervision.
+- **Training:** identical start/conditional-length 83→32→1 Tanh MLPs, final scalar biases disabled; matched initialization/minibatches across three seeds. Adam 0.003, no weight decay, batch 16, 60 complete epochs/1,440 updates. No pretraining, dropout or early stop. Unit-weight exact reverse KL or its REINFORCE estimator (8/64 discrete samples, leave-one-out baseline); single-seed reward-only diagnostic removes entropy and deliberately changes the objective. All matched models select epoch 60 by minimum full validation reverse KL; reward-only selects epoch 5. Test scored once after selection.
+- **Outputs/label mapping:** known synthetic target probabilities supervise the full span distribution. Arbitrary arithmetic compatibility/response factors define an evaluation-only selected distribution; they are not learned pMHC/MS outputs. Noncompatible spans retain positive mass. IC50/log10(nM)/500 nM classifier metrics are inapplicable. All split/context probability loss, RMSE, Pearson/Spearman, entropy and mass metrics are preserved.
+
+| Condition | Seeds | Validation reverse KL | Validation TV | Test reverse KL | Test TV | Test noncompatible-mass MAE | Mean fit seconds |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Uniform | Unfitted | 5.431799 | 0.836928 | 5.514706 | 0.831593 | 0.252382 | — |
+| Exact differentiable | 42/43/44 | 0.000863 | 0.009968 | 0.001915 | 0.010716 | 0.002794 | 1.515 |
+| REINFORCE 8 | 42/43/44 | 0.001129 | 0.012481 | 0.002274 | 0.013602 | 0.003634 | 1.122 |
+| REINFORCE 64 | 42/43/44 | 0.000910 | 0.010509 | 0.001941 | 0.011359 | 0.003061 | 3.937 |
+| Reward only 64 | 42 | 0.241687 | 0.236445 | 0.268665 | 0.253689 | 0.089269 | 3.412 |
+
+- **Screen/preferred condition:** all three seeds of all matched methods pass the prospective validation recovery screen; reward-only fails. Exact enumeration is the preferred finite-support reference, with lowest mean validation/test error. REINFORCE 64 is close; REINFORCE 8 uses fewer logical fitting target terms with noisier gradients. No test-driven selection or hyperparameter changes.
+- **Mechanism:** target test noncompatible mass 0.731255; exact/RL8/RL64 retain 0.731109/0.730798/0.731052. Target entropy 1.663642 versus matched 1.669352/1.666400/1.668913 and reward-only 1.135009. The prespecified fixed-batch 128-repeat gradient probe has summed variance 1.768517 for 8 samples and 0.207713 for 64. Logical fitting lookups/run are 1,612,800 exact, 184,320 RL8 and 1,474,560 RL64; both methods still compute dense policy logits and share precomputed teacher data, so this is not an external-oracle speedup result.
+- **Runtime/hardware:** local CPU, one Torch/BLAS thread, macOS 26.5 arm64, Python 3.12.6, Torch 2.14.1, NumPy 2.5.4. No requested/observed GPU or Modal. Whole family 26.784 seconds, peak RSS 388,694,016 bytes. Fit timings include validation in one sequential execution; not a repeated isolated runtime benchmark.
+- **Verification/artifacts:** six focused tests, explicit experiment Ruff checks, independent reconstruction of 576 teacher rows, all 99 original artifact hashes, 30 condition/split and 120 context metric checks, 61,440 decoded discrete draws, all six parameter tensors updated, and fresh-process replay of all ten selected checkpoints pass. Complete per-example train/validation/test predictions, checkpoints, histories, samples and receipts are preserved in a 10,181,857-byte compressed bundle; all 100 archived files match original bytes. Tables, plot, execution/analysis/replay/package receipts and exact source snapshots are directly linked from the report.
+- **Takeaway relative to prior work:** both generic learning routes are executable and nonconstant on this known-oracle problem; reward-only optimization fails to reproduce the distribution. This closes the basic algorithm comparison requested alongside #132. It neither resolves earlier real IC50 underfitting nor qualifies species/APC/MS/TCR biology; application model/trainer code is unchanged and no synthetic checkpoint is promoted.
+
+### 2026-10-22_1120_codex_grpo-ingredient-factorial — registered before fitting
+
+- **Date/agent/model:** 2026-10-22 UTC; Codex / GPT-6. [Family](2026-10-22_1120_codex_grpo-ingredient-factorial/README.md), [prospective specification](agents/codex/plans/grpo-ingredient-factorial.md).
+- **Data:** exact prior synthetic integer-span contract: 144 parent strings, 70 candidates each, four contexts, 384/96/96 rows by parent; fixed data/teacher seeds. No biological assays, concentration/censor labels or synthetic binding outcomes. Compatibility/response are arbitrary evaluation-only tags.
+- **Training/conditions:** 2×2×2×2 clipping/standardization/reuse/reference-KL factorial, exact and original REINFORCE controls, two hybrid sample budgets and separate query-matched reuse controls; seeds 42/43/44, total 69 fits. Adam .003, batch 16, no pretraining, main 1,440-update budget; query-matched reuse controls 5,760 updates. Declare changed beta objective and its analytic optimum explicitly.
+- **Evaluation/hardware:** validation selects by declared objective every 120 steps; test once after selection. Fixed pre-fit on/off-policy gradient probes; full split predictions, parameter/work accounting and fresh-process replay. Local CPU/one thread, no requested/observed GPU/Modal. IC50 and binding-threshold metrics inapplicable.
+- **Status:** implementation/source verification pending; no fitted outcomes. This family does not close the active biological availability/concentration goal or the requested later partial-observation/multiset comparisons.
+
+#### Closure: 2026-10-22_1120_codex_grpo-ingredient-factorial
+
+- **Date/agent/model:** 2026-10-22 UTC; Codex / GPT-6. [Complete 69-fit report](2026-10-22_1120_codex_grpo-ingredient-factorial/README.md).
+- **Source/reproduction:** committed frozen source `4a31eaa097e5494d490a2a5101bc612ec84348ce`; dirty status limited to task/pending planning docs. Exact invocation, environment, source/plan hashes and working-tree diff preserved. Launcher SHA256 `893ca18d317ea726daaeb34c8ff45c222ab4d70de0ab95bed49ad6a7cb81b5da`.
+- **Dataset:** unchanged integer-symbol teacher/source contract, 70 spans per parent, four contexts, 384/96/96 observations by disjoint parent. Original teacher/data seeds and hashes retained. Short-span overlap remains. No biological data, pretraining, assay/censor targets, synthetic affinity labels or nM/binder metrics.
+- **Training/loss/output:** full clipping × standardization × reuse × reference-KL factorial; three seeds per condition, six exact fits, original REINFORCE control, two hybrid budgets and separate query-matched controls. KL(q||target)+beta KL(q||initial reference), beta 0/.1, with analytic regularized optimum evaluated separately. Same two MLPs, Adam .003, batch 16, no weight decay/dropout/early stop; 1,440 main updates or 5,760 query-matched reuse updates. Validation every 120 steps selects the declared objective; test once after selection. GRPO-style recomputed density costs and joint-span ratios, not canonical frozen-advantage/token-wise GRPO.
+
+| Selected condition | Validation TV to optimum | Test TV to original | Test TV to optimum | Mean target terms | Mean fit seconds |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Exact beta 0 | 0.009968 | 0.010716 | 0.010716 | 1,612,800 | 1.025 |
+| Original REINFORCE-8 | 0.012481 | 0.013602 | 0.013602 | 184,320 | 1.064 |
+| Standardization, fresh samples | 0.014671 | 0.016237 | 0.016237 | 184,320 | 1.291 |
+| Reuse 4, no standardization/clipping | 0.023842 | 0.025839 | 0.025839 | 46,080 | 1.123 |
+| Reuse 4 plus clipping | 0.021277 | 0.023572 | 0.023572 | 46,080 | 1.174 |
+| Reuse 4, query-matched, unclipped | 0.018304 | 0.019524 | 0.019524 | 184,320 | 4.222 |
+| Reuse 4, query-matched, clipped | 0.019333 | 0.021820 | 0.021820 | 184,320 | 4.344 |
+| Hybrid 2 starts | 0.015567 | 0.017576 | 0.017576 | 174,864 | 1.034 |
+| Hybrid 8 starts | 0.011287 | 0.012454 | 0.012454 | 698,104 | 1.044 |
+| Exact beta .1 | 0.010880 | 0.041213 | 0.011521 | 1,612,800 | 1.009 |
+
+- **Results:** all 69 fits complete and all three seeds of every condition pass the prospective loose recovery screen. Exact enumeration remains the preferred reference. Group standardization worsens mean recovery here. Clipping is inactive at reuse 1 and mildly helps one reuse-4 comparison; it does not rescue query-matched reuse. Reuse trades target terms for error; extra optimizer work at matched target terms does not beat fresh REINFORCE. Hybrid eight-start enumeration improves fidelity at greater target cost, whereas two-start enumeration loses to REINFORCE at similar cost. KL regularization changes the target rather than improving original-target accuracy. Complete factorial, all metrics and context/seed values are in the family report/JSON/CSV.
+- **Mechanism evidence:** initial-policy REINFORCE mean-gradient relative discrepancy .079714; standardization .748277 (mostly scaling, mean cosine .988222), hybrid two starts .155966, hybrid eight starts .062945 across 128 repeats. Standardization's smaller raw variance is not a fidelity gain. The fixed off-policy perturbation never activates clipping; this limitation is retained. Active clipping is confirmed in training and a separate analytic branch test. All six tensors update; no inference about biological learning follows.
+- **Hardware/runtime:** local CPU/one Torch/BLAS thread, no requested/observed GPU/Modal. Python 3.12.6, Torch 2.14.1, NumPy 2.5.4, macOS 26.5 arm64. Whole family 108.284 seconds, peak RSS 392,314,880 bytes. Dense policy logits are evaluated in all methods; logical target terms are not external-oracle runtime savings. One sequential execution, not a repeated isolated runtime study.
+- **Verification/artifacts:** 16 pre-fit tests plus a post-run active-clipping test pass. Independent reconstruction of 576 teacher rows, 1,035 split/context metric sets, all 423 raw hashes, source/plan/selection/budget checks, 69 fresh-process checkpoint replays, nine initial-reference split replays and 18 bitwise matches to prior exact/RL predictions pass. All 424 original files retained in a verified 18,320,086-byte compressed bundle, with complete train/validation/test arrays, references, checkpoints and histories. Archive SHA256 `c2849f8f25d737c3e85ebdaab15ef9388c72cf61ad33607a5e97ac556502de36`.
+- **Decision:** retain exact/original REINFORCE as fixed references for the next partial-observation and multiset studies. No synthetic checkpoint is promoted. The biological availability/concentration goal, precursor normalization and real-source qualification remain open.
+
+## 2026-10-22_1317 — Partial observations and whole-multiset objectives (registered)
+
+- **Date / agent:** October 22, 2026; Codex / GPT-6.
+- **Directory:** [2026-10-22_1317_codex_partial-observation-multiset](2026-10-22_1317_codex_partial-observation-multiset/README.md).
+- **Contract:** Same synthetic integer strings/70 spans, 384/96/96 parent-disjoint
+  rows as prior algorithm families. Known positive or partially blind observation
+  weights; 32/256 nested counts per row. No biological assays, censoring or units.
+- **Training:** 60 fits; exact CE, exact L2, unbiased multiset L2 K16/K64/G4 and
+  naive MSE K16/G4; seeds42/43/44, Adam .003, batch16, 1,440 steps, no pretraining.
+  Selection uses validation count CE only. Oracle is excluded from fitting.
+- **Hardware:** local one-thread CPU; no Modal/GPU. Exact invocation/source hashes
+  frozen in the reproduction bundle; execution commit recorded at launch.
+- **Status:** eight mathematical/data-boundary tests passed before fitting;
+  held-out metrics and conclusions pending. Full predictions/counts required.
+
+### Closure — partial-observation/multiset family, October 22, 2026
+
+All60 fits completed on frozen source `942cb62c925f01b6aaaadd96d3a1b41270e02fa0`;
+Codex / GPT-6. Full contract and artifacts are in the [report](2026-10-22_1317_codex_partial-observation-multiset/README.md).
+Same synthetic parent-disjoint integer dataset, positive/blind known observation
+weights and nested32/256 empirical counts. No biological assays/qualifiers/censoring
+or molecular units. Counts supervise conditional observed distributions; oracle
+latent probabilities are excluded from fitting and selection. Exact CE, exact L2,
+corrected multiset L2 K16/K64/G4, and naive histogram MSE K16/G4; naive expectation
+adds `(1-sum q²)/K`. No additional entropy/RL penalties. All loss weights1.
+Seed-matched two83→32→1 MLPs; Adam.003, batch16,1,440updates, no pretraining;
+minimum validation count CE checkpoint. Every trainable tensor updates.
+
+| Condition | Val count CE | Val observed TV | Test count CE | Test observed TV | Test latent TV | Seconds |
+|---|---:|---:|---:|---:|---:|---:|
+| blind-n256-ce | 1.29438 | 0.02280 | 1.20015 | 0.02335 | 0.04418 | 1.004 |
+| blind-n256-l2 | 1.29542 | 0.02638 | 1.20277 | 0.02990 | 0.05116 | 0.995 |
+| blind-n256-multiset16 | 1.30260 | 0.04744 | 1.21093 | 0.05012 | 0.07811 | 1.108 |
+| blind-n256-multiset64 | 1.29975 | 0.04082 | 1.20675 | 0.04131 | 0.06072 | 1.249 |
+| blind-n256-naive | 1.30539 | 0.05182 | 1.21413 | 0.05532 | 0.08041 | 1.157 |
+| blind-n32-ce | 1.29282 | 0.04440 | 1.19440 | 0.04457 | 0.06841 | 0.996 |
+| blind-n32-l2 | 1.29768 | 0.05421 | 1.20044 | 0.05786 | 0.08080 | 1.009 |
+| blind-n32-multiset16 | 1.30294 | 0.06471 | 1.20735 | 0.06725 | 0.08601 | 1.311 |
+| blind-n32-multiset64 | 1.30318 | 0.06274 | 1.20814 | 0.06734 | 0.08703 | 1.202 |
+| blind-n32-naive | 1.30715 | 0.07072 | 1.21110 | 0.07482 | 0.10067 | 1.107 |
+| positive-n256-ce | 1.55126 | 0.02244 | 1.57073 | 0.02472 | 0.02678 | 1.069 |
+| positive-n256-l2 | 1.55322 | 0.02773 | 1.57358 | 0.03175 | 0.03324 | 1.003 |
+| positive-n256-multiset16 | 1.56509 | 0.05427 | 1.58678 | 0.05745 | 0.05978 | 1.109 |
+| positive-n256-multiset64 | 1.55826 | 0.04355 | 1.58095 | 0.04855 | 0.05035 | 1.197 |
+| positive-n256-naive | 1.56890 | 0.06080 | 1.59170 | 0.06634 | 0.07324 | 1.102 |
+| positive-n32-ce | 1.55552 | 0.04870 | 1.60337 | 0.05059 | 0.05336 | 1.175 |
+| positive-n32-l2 | 1.56347 | 0.06223 | 1.61056 | 0.06127 | 0.06784 | 1.174 |
+| positive-n32-multiset16 | 1.57235 | 0.07194 | 1.62774 | 0.07808 | 0.08470 | 1.320 |
+| positive-n32-multiset64 | 1.56796 | 0.06919 | 1.61918 | 0.07357 | 0.08194 | 1.240 |
+| positive-n32-naive | 1.57884 | 0.07845 | 1.63527 | 0.08342 | 0.09448 | 1.111 |
+
+Preferred condition is exact CE for every data contract here; exact L2 is the
+objective-matched reference and beats corrected sampled multiset objectives.
+K64 usually helps relative to K16 but not at blind/n32; naive MSE is worse than
+corrected K16 in all means. Three seeds, no significance claim. Uniform test
+latent TV0.83159, observed TV0.82462 positive/0.76559 blind. Blind invisible mass
+is0.73125; low hidden-mass error under this teacher does not prove identifiability.
+The exact counterexample preserves identical observations despite different mass.
+
+No Modal/GPU: one-thread local macOSarm64 CPU; family72.504s, peakRSS436,043,776bytes.
+All methods score1,612,800 span logits/access count cells; sampled variants add
+1,474,560 or5,898,240 draws. No expensive-oracle or large-support speedup is tested.
+Eight pre-fit tests, independent924metric sets/1,152observation rows/576teacher rows,
+all60checkpoint replays, and368archive members pass. All split predictions/counts,
+checkpoints, invocation/env, source snapshots, logs, plot, full RMSE/correlation/KL/
+entropy/context metrics are retained. These synthetic outcomes do not resolve
+real-data IC50 quality or qualify a biological concentration model; continue
+source-qualified biological admission and held-out evaluation under the active goal.
+
+## 2026-10-22_1410 — PXD057588 source inventory and shared-curation acceptance cases
+
+- **Date / agent:** October22,2026; Codex / GPT-6.
+- **Directory:** [2026-10-22_1410_codex_availability-source-audit](2026-10-22_1410_codex_availability-source-audit/README.md).
+- **Sources / curation:** publisher Tables7–12 and community SDRF for mouse
+  PXD057588, with project/file metadata; PXD009092 discovery metadata only.
+  Seventeen original assets,11,532,567bytes, frozen URL/size/SHA-256 receipts and
+  six publisher-MD5 checks; immutable datacache inputs under `data/availability_sources/`.
+  Preserve native labels/scales, table blocks, scope, complete-case filtering and
+  reported q≤.05 policy. No missing-to-zero conversion, no admitted training rows.
+- **Training contract:** no model/pretraining/training/loss/head mapping/synthetic
+  data; no train/validation/test split or prediction dumps because this is a source
+  inventory, not predictive evaluation. No held-out loss/regression/binding metrics.
+- **Reproduction:** source snapshot and exact invocation in the directory's
+  `reproduce/`; base932ccef, dirty audit additions. Python3.12.6, datacache1.29.2,
+  openpyxl3.1.5; local macOSarm64 CPU, no Modal or requested/observed GPU. Recorded
+  inspection runtime excludes acquisition; not an optimizer benchmark.
+
+| Source block | Peptide rows | Channels | Distinct parent labels |
+|---|---:|---:|---:|
+| Table7 pro-inflammatory macrophage MHC-I |2,824|6|2,139|
+| Table8 anti-inflammatory macrophage MHC-I |3,554|6|2,562|
+| Table9 macrophage MHC-I, ordinary tumor coculture |1,309|9|1,096|
+| Table10 macrophage MHC-I, MHC-I-loss tumor partners |2,613|11|1,997|
+| Table11 macrophage proteomics digest peptides |25,110|9|4,495|
+| Table12 tumor-cell MHC-I |362|12|348|
+
+All309,126quantities are positive numeric values in explicitly complete-case tables.
+Parent counts are literal labels, not validated protein identities. Eight of nine
+Table9/11channel assignments differ; matching TMT labels would mix conditions.
+663parent labels overlap,433Table9labels lack an exactTable11match; no specimen or
+precursor-normalization join is established. SDRF72rows×45columns covers6/50rawfiles,
+not the macrophage/proteomics arms. Repeated headings, independently sorted panels,
+Table8's M2-description conflict and Table10's n=3-versus-four-labeled-channel
+conflict require preserved source assertions. Table10's loss is in the tumor
+partner, not the measured macrophage. Independent OOXML/TSV verification of17hashes,
+six inventories,309,126quantity cells and3,240SDRFcells passes.
+
+**Decision:** use these actual cases to qualify existing Hitlist materials/protocols
+and cross-modality work, then freeze biological eligibility. No preferred model is
+selected here. The sources support observed presentation/digest signals, not the
+full intracellular pool. Wolf-Levy SEARCH.7z remained incomplete after two timed-out
+downloads and was excluded. Compared with the preceding129synthetic fits, this is
+progress in biological-source definition, not biological model validation. Shared
+metadata implementation, source admission and the availability goal remain open.
+
+## 2026-10-22_1601 — PXD057588 quantity reconciliation
+
+- **Date / agent:** October 22, 2026; Codex / GPT-6.
+- **Directory:** [2026-10-22_1601_codex_pxd057588-quantity-reconciliation](2026-10-22_1601_codex_pxd057588-quantity-reconciliation/README.md).
+- **Data / curation:** exact six source workbooks in the preceding immutable
+  17-asset bundle; 10,662 MHC-I and 25,110 digest-peptide rows, 32 contrasts and
+  200,724 primary fold-change cells. Preserve complete-case scope, source q≤0.05
+  policy and quantities; no inferred zeros, parent mapping, aggregation or
+  specimen joins. Source-policy contract and every source-cell comparison frozen.
+- **Training / evaluation:** no model, pretraining, training, loss, head mapping,
+  synthetic data or train/validation/test split: this is complete source arithmetic
+  reconciliation, not predictive evaluation. Source-cell dumps replace prediction
+  dumps; held-out IC50/500 nM metrics do not apply. No Modal/GPU.
+- **Reproduction / runtime:** frozen launch and verifier scripts, input hashes and
+  environment in `reproduce/`; dirty Presto51b895e; local macOS arm64, Python3.12.6,
+  NumPy2.5.4, openpyxl3.1.5; calculation6.432s and final scalar verification5.067s.
+
+| Policy comparison | Cells | Mismatches at 1e-8 log2 | Error |
+|---|---:|---:|---|
+| Published assay-specific calculation | 200,724 | 0 | Maximum absolute error1.63e-14 |
+| Opposite normalization policy | 200,724 | 200,724 | Per-table RMSE0.0826–0.6782 log2 |
+
+**Decision:** all published transformations reconcile; no model winner is selected.
+Independent scalar replay verifies every cell, source coordinates, parent support
+and aggregate errors. Tables9/11 share663 literal parent labels; only110 have
+multiple observed ligands and multiple digest peptides (258ligand rows). Preserve
+normalization and control membership in shared Hitlist evidence. Compared with the
+prior inventory, target arithmetic is now qualified; biological fitting, exact
+material/reference joins, normalized source admission and concentration claims are
+still unresolved. This does not address the earlier IC50 predictive failure.
+
+### Source-audit recovery addendum, October 22, 2026, 16:22 UTC
+
+The previously partial PXD009092 `SEARCH.7z` completed on the third resumed
+request. All51,736,986bytes match the PRIDE size and checksum (SHA-1); derived
+SHA-256 is `ff1c9a2adcef2f1d4f585254c7f8ee0cfdd373dc545439fc3667985d60011237`.
+All13archive entries decode successfully with CRC checks and no filesystem
+extraction. Original archive is now immutable in datacache; separate recovery
+manifest/script/receipt under the1410source-audit directory preserve the original
+17-asset contract. Verification4.754s. This qualifies transfer integrity only;
+processed-table semantics, study/sample curation and model admission remain open.
+
+## 2026-10-22_1630 — MAPP source and processed-evidence admission
+
+- **Date / agent:** October 22, 2026; Codex / GPT-6.
+- **Directory:** [2026-10-22_1630_codex_mapp-source-admission](2026-10-22_1630_codex_mapp-source-admission/README.md).
+- **Exact inputs:** 16 immutable originals, 53,293,496 bytes: seven PRIDE project/file
+  inventories, recovered PXD009092 SEARCH.7z and primary accepted manuscript;
+  five archive-member hashes. All source rows/flags/scales retained. No missing-zero
+  conversion or parent abundance inferred from fragment-derived protein groups.
+- **Contract:** 18 MAPP acquisitions; 10,673 unique peptide rows, 149,959 evidence
+  rows; 2,003 indexable protein groups plus 36 quarantined source records. Preserve
+  run versus aggregate rows, reverse/contaminants, direct versus transferred IDs,
+  source FDR-level distinctions, bead-filtered quantities and reference uncertainty.
+- **Training / evaluation:** no model, pretraining, training, loss/head mapping,
+  synthetic data or train/validation/test split. No predictive metrics or dumps:
+  every source quantity/support comparison is preserved instead. No Modal/GPU.
+- **Reproduction / runtime:** frozen scripts/manifests/launch environment at dirty
+  Presto30cc536; local Python3.12.6/macOS arm64. Initial invalid-ID stop is preserved;
+  revised row-quarantine audit17.170s; independent pandas verification3.008s.
+
+| Source comparison | Count |
+|---|---:|
+| Reported positive and evidence sum agree within declared rounding tolerance | 95,336 |
+| Both zero | 55,483 |
+| Reported zero despite positive underlying evidence | 9,276 |
+| Other quantity discrepancies | 0 |
+| Structural UT/cytokine support | 2,272 peptides / 572 groups |
+| Multiple-peptide support within those groups | 1,971 peptides / 271 groups |
+| Training-admitted rows | 0 |
+
+**Decision:** keep PXD009092 as the concrete cell-line contrast candidate, but resolve
+filtering/confidence/source context before fitting. An independent parser verifies
+all160,095quantity comparisons and10,673support rows against original evidence.
+The paper's4,983enriched-peptide result is not yet reconstructed. The archive's
+protein-group LFQ is not independent precursor measurement. Shared Hitlist metadata
+and actual whole-proteome pairing remain prerequisites; candidate PXD009360 archive
+retrieval is recorded separately. Compared with the prior transfer audit, actual
+biological support is now quantified. No concentration or APC generalization is
+claimed, and the availability goal remains active.
+
+Later source continuation: PXD009360's733,580,954-byte tryptic archive completed;
+deposited checksum/gzip integrity pass, immutable SHA-256
+`45b1f2b278937b43a40913798b96c7fb31a0d1a7753ebcf99951287c0ebe91c7`. Verification8.349s;
+header audit6.938s. Nine actual Trypsin/P runs have bare experiment
+IDs448–456, without a resolved treatment/specimen map. Candidate quantities remain
+unqualified; do not infer a precursor join from numeric run order. Separate
+receipt/commands preserve this later download without changing the16-input audit.
+
+## 2026-10-22_1736 — MAPP publisher/deposit quantity reconciliation
+
+- **Date / agent:** October 22, 2026; Codex / GPT-6.
+- **Directory:** [2026-10-22_1736_codex_mapp-publisher-reconciliation](2026-10-22_1736_codex_mapp-publisher-reconciliation/README.md).
+- **Source contract:** three hash-pinned original publisher assets, plus five
+  original PXD009092 member tables from the prior source audit. Original cells,
+  source IDs, condition columns, alternatives, missingness and quantities retained.
+  All 6,311 publisher sequences match the deposit. No invented specimen mapping.
+- **Training / eval:** no model/pretraining/loss/head mapping, synthetic data,
+  GPU/Modal or predictive split. This is source reconciliation, with complete
+  per-cell and mapping evidence instead of predictive metrics/dumps.
+- **Reproduction / runtime:** dirty e80fd42, frozen scripts/manifest/commands;
+  local Python 3.12.6, pandas 3.0.6, NumPy 2.5.4, openpyxl 3.1.5. Audit 57.791s;
+  independent scalar replay 5.958s. Membership 0.416s; independent check 0.276s.
+  Interrupted verifier with repeated NPZ decompression is preserved; cached
+  immutable arrays resolve that I/O problem without changing numerical policy.
+
+| Comparison | Verified result |
+|---|---|
+| Run intensity versus 2× median bead control |160,095/160,095 deposited cells|
+| Other eight prespecified filter rules |2,357–22,851 mismatching cells|
+| Publisher UT / TNF+IFN log medians |4,983/4,983 and 5,311/5,311 matches|
+| Publisher membership without imposing unique group IDs |Both sets match exactly|
+| Imputed E / F versus their named conditions |Only 2/6,311 matches each|
+| Imputed E / F versus unexpected CHX / UT conditions |4,868 / 4,913 matches|
+| Publisher UT / TNF+IFN rows with multiple group IDs |559 / 604|
+
+**Decision:** the exact background reconstruction and publisher medians now resolve
+an arithmetic admission gap. Keep the twofold criterion's stated provenance
+separate from the empirically reconstructed run/median algorithm. Filtered zeros
+are not biological absence. Imputed E/F columns have unresolved condition-label
+conflicts and cannot provide measured targets. Preserve leading-razor assignments
+and alternative parent mappings separately; do not identify unique origin from an
+assignment. The selected 131-gene Data3 panel supplies no precursor acquisition map.
+Original reference, confidence-setting discrepancy, parent mapping, shared Hitlist
+import and endpoint-specific eligibility remain open. New inputs belong in
+[Hitlist #746](https://github.com/pirl-unc/hitlist/issues/746), not a parallel registry.
+
+Independent checks cover eight input hashes, 160,095 quantity cells, 1,440,855 rule
+decisions, 229,160 publisher-cell comparisons, 10,294 membership rows with six
+mapping fields, and 524 Data3 quantity cells. No biological fit or concentration
+claim is made; the full availability goal stays active.
+
+## 2026-10-22_1745 — Local CPU / Apple GPU IC50 training feasibility
+
+- **Date / agent:** October22,2026; Codex / GPT-6.
+- **Directory:** [2026-10-22_1745_codex_local-ic50-feasibility](2026-10-22_1745_codex_local-ic50-feasibility/README.md).
+- **Exact data:** hash-pinned admitted manifest914e0930…; all21,636exact purified
+  human HLA IC50 train observations;2,925validation/2,803test including bounds.
+  Original peptide-disjoint historical splits; shared studies, unresolved specimen
+  identity and prior held-out inspection. No clipping/averaging/generated labels.
+- **Training:** unchanged455,041-parameter modular shared sequence encoder,
+  explicit classII registers/flanks and pooled direct IC50 output. Supplied
+  human species/class. Fresh seed42, AdamW3e-4/wd1e-4, batch64/dropout0.1, one
+  complete epoch339updates. No auxiliary/pretraining/APC/MS/TCR modules; no synthetic
+  data. Exact train-only standardized log10(nM) squared error weight1; one-sided
+  squared error for held-out bounds. Other assay families excluded.
+- **Hardware / reproduction:** local M1 Pro10CPU/16GPU cores,32GiB; no Modal.
+  Frozen launch/source/environment receipts at dirtyef4b4c1. Four CPU threads,
+  inter-op1, no MPS CPU fallback. Canonical trainer/checkpoints/evaluation path.
+  CPU median0.4274s/update versusMPS0.4866s from8measured updates after4warmup,
+  matching batch identities. Preliminary short timing comparison, not a replicated
+  hardware ranking. CPU selected by timing alone.
+- **Runtime / verification:** full fit and evaluation169.97s, full wrapper183.76s,
+  CPU peakRSS2.59GiB. All32allocated tensors have gradient-driven updates and
+  feature coverage passes. Independent82,092-record metric/source replay,
+  ridge refit and fresh-checkpoint training replay pass (zero replay difference).
+  Per-example predictions for all methods/splits, runtime/checkpoint hashes and
+  coverage preserved.35training/resume tests pass. Constant-baseline Pearson
+  reporting bug fixed with failing-before/passing-after regression evidence;
+  seven original numerical artifacts explicitly corrected to undefined/null.
+
+| Condition | Validation RMSE | Validation Spearman | Test RMSE | Test Spearman | Test500nM AUROC |
+|---|---:|---:|---:|---:|---:|
+| Train mean |1.3606|undefined|1.3420|undefined|0.5000|
+| Fixed composition/class ridge |1.2235|0.4581|1.2291|0.4306|0.7067|
+| One-epoch neural fit |1.1431|0.5521|1.1613|0.5117|0.7371|
+
+**Decision:** local training is viable. Neural exact-value RMSE/ranking improve on
+this fixed ridge, and test predictionSD0.6949 (target1.3419) is not constant.
+However test binderF1 is0.6184 versusridge0.6199, classII recall only0.0882,
+and none of203test bounds is satisfied. One seed/epoch is not convergence,
+replication or source-independent qualification. Comparison to the historical
+9,053-row failure is not controlled. Availability/concentration and source-admission
+work remain open. Continue locally; CPU is the measured choice for this current
+small audited loop, with GPU batching/synchronization improvements untested.
+
+## 2026-10-22_1845 — MAPP parent-reference and exact-span audit
+
+- **Date / agent:** October22,2026; Codex / GPT-6.
+- **Directory:** [2026-10-22_1845_codex_mapp-parent-reference](2026-10-22_1845_codex_mapp-parent-reference/README.md).
+- **Exact data:** all10,673 original PXD009092 peptide records, five pinned table
+  members, frozen publisher/support ledgers; unchanged2,272 structurally supported
+  untreated/TNF+IFN contrast peptides. No new training admission.
+- **Reference conditions:** local2023 reviewed-human canonical DAT20,422entries,
+  SHA256defd9fd7… with recorded secondary aliases; official UniProt2026_03 reviewed
+  human isoform-inclusive FASTA42,562entries, SHA2568c4459cc… with exact IDs only.
+  Different releases, scopes and alias policies; not a controlled isoform ablation.
+  The original2016 search FASTA remains unavailable. No suffix stripping, I/L
+  conflation, approximate matching or source-coordinate repair.
+- **Contract:** exact peptide/position alternatives, original parent/group/razor
+  fields, source flags, leading-coordinate/flank comparisons, reference inventory
+  and full matched parent sequences. Uniqueness is reference-scoped. Every missing
+  accession and sequence-negative resolved candidate remains represented.
+- **Training/evaluation:** none. Relative captured MAPP signal is not fitted here
+  and is not intracellular concentration. No pretraining, loss terms, assay-output
+  mapping, synthetic training data, GPU/Modal, predictive split or prediction dumps.
+  Synthetic strings test scanner software only. Flags and prior selection remain
+  unchanged; missing/filtered signal is not relabeled as a biological zero.
+- **Runtime / reproduction:** producer11.537s; independent verifier17.734s, local
+  CPU. Dirty4d938e0, frozen code/commands/input receipts, Biopython1.88. Complete
+  independent Aho-Corasick scan matches37,721 positions; source replay verifies
+  64,538accession rows,26,978positive and14negative resolved candidates. All62,984
+  reference records,10,673source records,14subset summaries and graph components
+  checked. No predictive validation/test metrics apply.
+
+| Contrast-subset result | 2023 canonical | 2026_03 with isoforms |
+|---|---:|---:|
+| Exact-matched peptides /2,272 |2,262|2,269|
+| Source-leading coordinate and flank agreement |1,678|1,676|
+| One distinct possible full parent sequence |2,030|1,013|
+| Multiple distinct possible parent sequences |232|1,256|
+| Peptides with additional non-source-listed matches |18|1,114|
+| Exact position alternatives |2,613|4,529|
+| All-source components intersecting subset |540|542|
+
+**Decision:** use the isoform-inclusive generation as the broader prospective
+reference, preserving ambiguity; do not duplicate one peptide observation into
+independent alternative-parent labels. The542components (largest175subset
+peptides) constrain future splitting but are not homology clusters or proof of
+independent specimens. Three contrast peptides remain unmatched;26have resolved
+leading-coordinate conflicts. Shared Hitlist ingestion and endpoint-specific
+admission remain open. Merged PR749 now supplies the common external-source mechanism
+and PXD057588; MAPP is still a contract candidate. Full biological availability,
+APC context and concentration objective remains active.
+
+## 2026-10-22_1914 — Shared PXD057588 mouse sequence and precursor support
+
+- **Date/agent:** October 22, 2026; Codex / GPT-6.
+- **Directory:** [2026-10-22_1914_codex_pxd057588-shared-sequence-admission](2026-10-22_1914_codex_pxd057588-shared-sequence-admission/README.md).
+- **Exact data:** shared Hitlist 1.82.22 generation daff7930…, all 87 files verified
+  natively and independently, then rechecked after mapping. All 35,772 primary
+  PXD057588 rows (10,662 MHC-bound; 25,110 digest), 30,587 distinct sequences.
+  Original complete-case selection/quantities retained. No measurement duplicated
+  across parent alternatives; no inferred specimen pairing or biological zeros.
+- **Reference:** official reviewed mouse release2026_03 including isoforms,
+  25,758 entries; SHA25641bc0fa6…. Literal overlapping spans only; no I/L or
+  alias/suffix transformations. Separate model and original search references.
+- **Training/eval:** none; no model/pretraining/loss/synthetic training/GPU/Modal,
+  predictive split or prediction dumps. Native quantities remain observed relative
+  MHC/digest signals; no intracellular concentration label or validation claim.
+- **Runtime/reproduction:** native plus full package hash check10.899s, mapping
+  7.591s, independent replay8.975s, local CPU. Frozen code/commands/inputs at dirty
+  6cd7edc. Independent Biopython/complete character scan reproduces52,277positions,
+  all35,772source mappings,71,544original worksheet cells,26,449support records,
+  all table summaries;36copied input and10output hashes pass.
+
+| Table9/11 parent-support definition | Shared keys | ≥2 ligand and ≥2 digest keys | Distinct ligand/digest rows in multi-peptide support |
+|---|---:|---:|---:|
+| Literal parent label |663|110|258 /1,919|
+| Verified source ID plus peptide occurrence |661|110|258 /1,919|
+| All exact reference identities |1,136|236|277 /2,128|
+| All distinct full-sequence alternatives |1,134|236|277 /2,128|
+
+**Decision:** 35,771rows match the mouse reference;35,747match their reported parent.
+Preserve24missing source IDs, one resolved-ID/absent-peptide case, and11,725rows
+with multiple full parent sequences. Prefer verified occurrence support over
+literal labels; broader alternative support adds uncertainty, not independent
+measurements. The5,374all-table components (largest862sequences) constrain future
+splits but do not establish homology/specimen independence. Use the shared recipe
+path for a prospective observable-signal comparison; exact precursor pairing and
+protein aggregation remain unresolved. MAPP752 and the broader availability goal
+remain open. This is shared-source admission evidence, not another registry.
+
+## 2026-10-22_1938 — Full-protein exact versus lazy span computation
+
+- **Date/agent:** October 22, 2026; Codex / GPT-6.
+- **Directory:** [2026-10-22_1938_codex_variable-span-computation](2026-10-22_1938_codex_variable-span-computation/README.md).
+- **Inputs:** eight full proteins, four predeclared length bands per human/mouse
+  verified reference source, selected by sequence hash without assay labels.
+  Span lengths 1–40 and 1–53; all valid positions, no MHC/nonbinder filtering.
+- **Model:** new variable-length policy, fixed one-hot/prefix composition and
+  boundary/length/position features; two hidden32 tanh heads, 5,536parameters in
+  six tensors. Synthetic numeric context[0.25,-0.5], not biological metadata.
+  Start prior uses valid-length counts; no structurally cancelled output bias.
+- **Objective/training:** fixed seed42 weights; zero optimizer updates. Synthetic
+  span energy only. Exact expectation sum q*(logq+energy); fresh REINFORCE with
+  leave-one-out baseline, 8/64draws. No clipping, normalization, sample reuse,
+  reference KL, pretraining or biological training labels. No predictive split,
+  held-out assay metrics or predictive dumps apply; full mathematical references
+  and sample traces are preserved.
+- **Conditions/runtime:** exact, dense8/lazy8, dense64/lazy64 across16cases;
+  4warmups+12measured calls, seeded interleaving, CPU4threads/interop1/float32.
+  1,280calls; no Modal/GPU. Whole benchmark13.45s, family peakRSS0.719GiB;
+  independent replay1.141s. Exact source/config/model/checkpoint hashes and
+  executed recipes frozen at dirty24f1d2b.
+
+| Human2,240residues, lengths1–40 | Median forward/backward | Conditional-network rows | Cost queries |
+|---|---:|---:|---:|
+| Exact expected cost |31.371ms|89,600|88,820|
+| Dense REINFORCE8 |17.296ms|89,600|8|
+| Lazy REINFORCE8 |2.374ms|320|8|
+| Dense REINFORCE64 |17.309ms|89,600|64|
+| Lazy REINFORCE64 |3.364ms|2,513.3mean|64|
+
+All conditions also score2,240starts. Actual hook counts verify network work;
+query counts alone do not establish savings. Across16cases, dense/lazy runtime
+ratios are2.06–8.79×(8draws),1.33–6.91×(64draws). All512paired sample traces agree;
+max selected-gradient difference1.77e-8. Independent NumPy MLP/normalization and
+analytic backprop reproduce678,190span probabilities and all16exact gradients,
+source selection and raw timing/work summaries. Fourteen unit tests, Ruff and
+strict docs pass. Scope is this local fixed-weight workload, not convergence or
+a hardware ranking.
+
+Mean-gradient probes,128fresh estimates each: human relative L2error0.341/0.106
+for8/64draws; mouse0.279/0.104. Corresponding64-draw cosines0.9946/0.9949. Sampling
+still introduces estimator noise even though dense/lazy selected gradients agree.
+
+**Decision:** retain exact enumeration as reference and use lazy conditional
+scoring for sampled comparisons. It reduces actual network work without changing
+the policy/objective. The O(L) start calculation remains, and chunked enumeration
+does not automatically bound autograd storage. The primitive is not yet wired
+into the canonical mixed-assay trainer or biologically fitted; precursor yield,
+clearance, MS response, APC context and calibrated concentration remain separate
+requirements. Shared recipe739/MAPP752 and the broader availability goal stay open.
+
+## 2026-10-22_2212 — Shared MAPP source ingestion
+
+- **Date/agent:** October22,2026,22:12America/New_York; Codex / GPT-6.
+- **Directory:** [shared-mapp-import](2026-10-22_2212_codex_shared-mapp-import/README.md).
+- **Source:** eleven pinned PXD009092 original tables/publisher workbooks and
+  PRIDE project/file snapshots; shared Hitlist source adapter with existing
+  PXD057588 and verified supporting predecessor. Proteasome-associated HEK293
+  fragments, not free concentration, flux or MHC-selected ligands.
+- **Curation:** preserve every raw field/row, flags, quarantined group IDs,
+  actual six conditions, unresolved specimens, parent claims, confidence conflict,
+  search6–40scope and publisher imputation conflict. No negative labels from
+  missing/filtered zeros; no inferred precursor denominator or gene knockouts.
+- **Training contract:** no model, pretraining, optimizer, synthetic biological
+  labels, assay heads, loss or predictive split; held-out predictive metrics do
+  not apply. This is a source-integration experiment, not a fit.
+- **Runtime:** producer43.29s, independent replay9.46s, local CPU; no Modal/GPU.
+  Frozen dirtyHitlistca0c729/Presto80d5f9c, exact commands and source snapshots.
+  First completed package is development1.82.24; pending source PR reserves1.82.25.
+
+| Verified item | Count |
+|---|---:|
+| Original TSV records |162,767|
+| Peptides / evidence / source runs |10,673 /149,959 /18|
+| Quantity representations |362,882|
+| Derivation edges |540,034|
+| Workbook XML cells |36,207|
+| Missing evidence PEP NaN values |74,573|
+| Filtered zeros with positive evidence |9,276|
+| Reproduced publisher numeric UT /TNF+IFN |4,983 /5,311|
+
+Independent original TSV/XML and relation replay verifies111package files and
+all listed values/edges. All160,095filtered values reproduce within frozen
+relative1e-4/absolute1rounding tolerance; maximumrelative8.16e-5. Two failed
+attempts are preserved (launcher path type, explicit source PEPNaN), followed by
+successful source generation.16focused tests and format/lint pass; full normal
+suite passes3,224tests in356.83s (10warnings). Missing parallel-proteome run metadata
+and independent precursor estimates are tracked in Hitlist757. Reference join/query/deployment and biological fitting
+remain open in Hitlist752/739. No model winner applies; decision is to carry the
+verified shared importer forward in [Hitlist draftPR758](https://github.com/pirl-unc/hitlist/pull/758), commitd012527, retaining uncertainty and the full goal.
+
+## 2026-10-22_2251 — Shared MAPP reference alternatives
+
+- **Date/agent:** October22,2026,22:51America/New_York; Codex / GPT-6.
+- **Directory:** [shared-mapp-references](2026-10-22_2251_codex_shared-mapp-references/README.md).
+- **Data/curation:** thirteen pinned inputs: eleven original MAPP assets plus
+  historical reviewed-human canonical DAT and modern2026_03isoform-inclusive
+  FASTA. Original2016search reference unavailable; later references explicitly
+  distinguished. Shared adapter schema2 preserves exact literal sequences,
+  reference-local aliases, all occurrences, source claims, negative candidates,
+  coordinates/flanks and coverage. Quantity observations remain unduplicated.
+- **Assay/label contract:** captured proteasome-associated HEK293 fragments,
+  search6–40, original contexts/confidence/missingness/filtering preserved. No
+  affinity filter or biological negatives from missing/filtered quantities.
+  No precursor denominator, origin assignment or free concentration claim.
+- **Training:** no model, pretraining, optimizer, synthetic biological labels,
+  loss terms, assay heads or predictive split. Held-out regression/binding
+  metrics and prediction dumps do not apply to this source-conservation audit.
+- **Runtime/reproduction:** producer54.80s; independent replay20.22s,
+  peakRSS0.987GiB; localCPU, no Modal/GPU. Frozen code/commands/input receipts and
+  dirtyGit state: Hitlistfa54fbf, Presto396f771. The completed producer's outer
+  timing wrapper exited1 on a sandbox-denied kernel resource query; independent
+  verification exits0. Full producer memory profile unavailable, recorded as such.
+
+| Reference condition | Full proteins | Mapped source peptides | All exact positions | Resolved candidates lacking peptide |
+|---|---:|---:|---:|---:|
+| Historical canonical, recorded secondary aliases |20,422|8,753|14,258|9|
+| Modern isoform-inclusive, primary FASTA IDs |42,562|8,790|23,463|5|
+
+Independent BioPython parsing, complete Aho-Corasick scanning and graph traversal
+verify all62,984proteinrecords/133,414accessionclaims/37,721positions,
+64,538originalsourceclaims,26,992candidate resolutions and21,346coverage rows.
+All120packagefiles verify. All eleven original MAPP typed tables and PXD057588
+source artifacts are byte-identical to the previous independently audited
+source generation. Unmatched singletons are explicit components; exact sharing
+establishes neither homology nor specimen independence. Historical alias support
+and modern isoform coverage are different contracts, not a model-winner comparison.
+
+**Decision:** use the shared reference relations for the next declared endpoint
+recipe; preserve ambiguity without multiplying measurements.21focused tests and
+format/lint pass. The initial full-suite preflight refused0.77GiBavailable; a
+normal one-worker retry admitted3.89GiB and passed3,236tests/10warnings in320.81s.
+Indexed-corpus integration CI remains separate.
+Release/query/endpoint admission and biological fitting remain open under
+Hitlist752/739; independent precursor/pairing gap is in757. The full availability
+goal remains active. This is an external-source generation, not a rebuilt later
+T-cell/numeric/query export or a trained concentration model.
+
+Shared reference implementation committed as1ad9aae in Hitlist draft758.
+Presto formatting/lint and strict docs pass. Final publication does not close
+source/recipe issues or the persistent biological availability objective.
+
+## 2026-10-22_2330 — First biological MAPP exact-versus-sampled fits
+
+- **Date/agent:** Registered October 22, fitted October 23, 2026; Codex / GPT-6.
+- **Directory:** [mapp-biological-comparison](2026-10-22_2330_codex_mapp-biological-comparison/README.md).
+- **Source/curation:** Verified shared Hitlist MAPP package, manifest `55f7a3d5…`; recipe `mapp_captured_composition_min2_v1`, manifest `df78d02f…`. Human HEK293 PXD009092 UT/TNF+IFN, original nonimputed median of three filtered runs including zeros; canonical20, no reverse/contaminant, one source group/full reference sequence, replicated positive quantities, direct MS/MS, peptide PEP ≤0.01, source-leading coordinates/flanks. Original global-FDR/reference/specimen limitations remain. Duplicate aliases/positions do not multiply labels.
+- **Admission/splits:** Original ≥3-peptide recipe failed prospective support gate at 51/7/7 parents; no fit. Pre-fit ≥2-peptide amendment preserves all old partitions/targets and source graph. Admitted 616 peptides / 101 parents, 72/15/14 train/validation/test, 144/30/28 condition distributions. Fixed all-source full-sequence/protein-group components, including excluded bridges; no homology/specimen-independence claim. Both immutable cohorts and every exclusion archived.
+- **Label/output:** Within-parent observed captured-intensity composition → full-parent start/length policy, marginalized over each peptide's positions and normalized among admitted candidates. Conditional signal only; peptide-specific MS/capture response and outside-set mass unidentified. No unreported negatives, concentration, precursor denominator, MHC-affinity filter, binding-threshold metric or synthetic biological labels.
+- **Training:** Hidden32 two-tanh-MLP policy, support1–40, optional treatment0/1. Three seeds42/43/44, Adam lr0.003/no decay, batch8,40epochs/720updates; no pretraining/dropout. Unit-weight mean reverse KL per parent/condition. Exact and fresh REINFORCE64 share initial weights/order/objective; leave-one-out baseline, no clipping/std/reuse/reference penalty. Separate no-context architecture and uniform controls. Best validation KL selects; test once after selection, no refit.
+- **Runtime/reproduction:** Local CPU4/interop1, no Modal/GPU. Nine fits54.98s, peakRSS0.466GiB; training commit8242200 with dirty status and exact overrides frozen in reproduce/training.json. Raw artifacts, all-split prediction dumps, initial/selected/final states, histories and masks archived in results/training-artifacts.tar.gz. Shared source and recipes pinned, frozen commands/sources in reproduce/.
+
+| Method | Validation KL | Test KL | Test TV | Test log10 RMSE | Test Spearman | Condition-change RMSE | Seconds/fit |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| exact-context | 0.1668 ± 0.0076 | 0.3039 ± 0.0078 | 0.2759 ± 0.0059 | 0.3341 ± 0.0062 | 0.0090 ± 0.0412 | 0.1565 ± 0.0001 | 6.09 |
+| reinforce64-context | 0.1673 ± 0.0082 | 0.3119 ± 0.0034 | 0.2804 ± 0.0033 | 0.3394 ± 0.0028 | -0.0011 ± 0.0395 | 0.1565 ± 0.0001 | 6.18 |
+| exact-no-context | 0.1645 ± 0.0037 | 0.3079 ± 0.0082 | 0.2783 ± 0.0054 | 0.3362 ± 0.0052 | -0.0182 ± 0.0106 | 0.1566 ± 0.0000 | 6.00 |
+| Uniform | 0.2031 | 0.2890 | 0.2705 | 0.3213 | undefined | 0.1566 | unfitted |
+
+Means ± population SD across seeds, not biological confidence intervals. Validation15/test14 parents. Full held-out Pearson/Spearman/RMSE, forward/reverse KL, TV, spread, condition contrasts and two-versus-larger-set strata are in the linked report/JSON/CSV. Uniform correlations are undefined; raw near-zero centering artifacts are preserved but not interpreted as ranks.
+
+**Winner/decision:** uniform remains the held-out reference. Every fitted model improves validation initially but fails test reverse KL and RMSE; selected epochs2–3, later validation worsens. Context response is nearly flat (predicted changeSD≈0.001 versus target0.176). Nonconstant composition and all six tensors updating do not establish useful biology:704parameter elements have no nonzero gradients, and the conditional objective leaves total selected mass unidentifiable. No conclusion about earlier IC50-collapse causes.
+
+Independent original-source replay verifies all10,673dispositions/1,232contributors and old/new partition conservation. Independent NumPy forward/metric/checkpoint/work replay checks11,088prediction values, maximum logq error1.35e-6. Exact score-function expectation error5.55e-17; position-marginalization gradient error8.33e-17. Each fit scores36,720selected candidates; REINFORCE draws368,640terms and saves no network scores here. This is different from the earlier synthetic full-oracle and lazy full-protein compute experiments.
+
+Shared recipe [Hitlist760](https://github.com/pirl-unc/hitlist/pull/760) passes3,243normal tests/10warnings in327.51s,14focused tests,format/lint and strict docs; hosted recipe CI remains separate. [Hitlist759](https://github.com/pirl-unc/hitlist/issues/759) requests controlled proteasome-inhibition/reporter panels; precursor/specimen mapping remains in757. Next: training-only capacity/interaction and replicate-variation diagnostics, followed by untouched biological evaluation. Existing test is now observed. This completed negative family advances, but does not complete, the full availability/concentration goal.
+
+Posthoc training-only saved-checkpoint replay (registered before execution, no fit/reselection/additional test checkpoints): initial trainKL0.329–0.338 falls to final0.0227–0.0304, training Spearman0.729–0.784. This policy can fit the training objective while validation deteriorates; generalization failure is established for this family, but its biological/statistical cause and historical IC50 behavior remain unresolved. All diagnostic predictions and exact source/invocation are retained.
+
+## 2026-10-23_0037 — MAPP repeatability and parsimonious sequence scores
+
+- **Date/agent:** October 23, 2026, 00:37 America/New_York; Codex / GPT-6.
+- **Directory:** [mapp-run-repeatability](2026-10-23_0037_codex_mapp-run-repeatability/README.md).
+- **Data/curation:** shared PXD009092 human HEK293 UT/TNF+IFN MAPP generation, manifest `55f7a3d…`. Original min2 recipe unchanged (`df78d02f…`): canonical20, no reverse/contaminant, one full reference sequence/source group, replicated positive quantities/direct evidence, PEP≤0.01, source-leading coordinates/flanks, ≥2 peptides per parent. Fixed all-source sequence/group components, no homology/specimen-independence claim. No MHC affinity filter or synthetic biological labels.
+- **Stage A:** new shared `mapp_complete_run_composition_v1` preserves all 3,696 run records and source metadata from 616 base peptides. Complete positive six-run profiles and ≥2 complete peptides leave 369 peptides / 71 parents (55/7/9 inherited strata). Keep 50 background-filtered and 234 no-positive-evidence zeros; no pseudocount/imputation or biological-negative labels. Both old eight-file recipe generations replay byte-identically. Manifest `23bcfeb4…`.
+- **Observation endpoint:** centered log10 captured-intensity composition, held-out acquisition predicted from the other runs; condition differences use all nine UT/TNF run combinations without asserting specimen pairing. No model fitting in Stage A. Macro parent MSE; pooled correlations/spread. Previously observed validation/test strata are descriptive/development data, not a new biological test.
+
+| Scope | Parents | Composition RMSE: other runs / uniform | Composition Pearson | Change RMSE: other runs / zero | Change Pearson |
+|---|---:|---:|---:|---:|---:|
+| all | 71 | 0.1553 / 0.3547 | 0.9136 | 0.2197 / 0.1916 | 0.1719 |
+| train | 55 | 0.1461 / 0.3538 | 0.9230 | 0.2066 / 0.1759 | 0.1881 |
+| validation | 7 | 0.2030 / 0.3399 | 0.8327 | 0.2871 / 0.2500 | 0.1746 |
+| test | 9 | 0.1670 / 0.3716 | 0.9072 | 0.2362 / 0.2283 | 0.1263 |
+
+Baseline composition repeats well (Pearson 0.914, Spearman 0.909); unshrunk condition differences repeat weakly (0.172/0.178) and lose to zero-change RMSE. Macro condition-mean RMS change 0.1236 versus estimated sampling-noise RMS 0.1036; adjusted mean square +0.004554, with negative parent estimates retained. This is not a calibrated biological noise ceiling. Within-parent normalization also removes genuine parent-wide processing-yield changes.
+
+- **Stage B data/training:** the original 616-peptide / 101-parent median cohort, 72/15/14 parents, not the smaller complete-case subset. Captured-intensity composition → observed-set linear softmax score. Length-only (1 parameter), sequence (92 train-supported directions) and explicit treatment×sequence interactions (184). Training-only centering/RMS/QR. Original 105 features are length, composition, termini, adjacent residues/boundary and relative position. Every final/selected parameter changes; omitted contrast directions remain unidentifiable.
+- **Fixed comparison:** 15 deterministic exact fits (three representations × five L2 weights 0/0.001/0.01/0.1/1) and 15 interaction REINFORCE64 fits (same weights × seeds42/43/44). Zero initialization, Adam lr0.03, 1,000 full-batch updates, no decay/dropout/pretraining. Unit-weight mean reverse KL plus L2 sum of squared weights; fresh replacement draws/leave-one-out, no clipping/std/reuse/reference penalty. Validate at 0 and every25 updates; choose regularizer/checkpoint by validation only. Evaluate six selected models on development-test; unselected fits intentionally preserve validation dumps only.
+
+| Model | Parameters | L2 / selected update | Validation KL | Development-test KL | Test log10 RMSE | Test Spearman | Change RMSE |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| length / exact | 1 | 0 / 25 | 0.1919 | 0.2972 | 0.3258 | -0.0663 | 0.1566 |
+| sequence / exact | 92 | 1 / 875 | 0.1694 | 0.2928 | 0.3246 | -0.0225 | 0.1566 |
+| interaction / exact | 184 | 1 / 25 | 0.1646 | 0.2908 | 0.3241 | 0.0500 | 0.1712 |
+| interaction / reinforce64 / seed42 | 184 | 1 / 500 | 0.1601 | 0.2971 | 0.3290 | 0.0524 | 0.1749 |
+| interaction / reinforce64 / seed43 | 184 | 1 / 475 | 0.1594 | 0.2940 | 0.3269 | -0.0042 | 0.1717 |
+| interaction / reinforce64 / seed44 | 184 | 1 / 625 | 0.1533 | 0.3095 | 0.3358 | -0.0422 | 0.1768 |
+| Uniform | 0 | — | 0.2031 | 0.2890 | 0.3213 | undefined | 0.1566 |
+
+**Winner/decision:** interaction exact is best exact architecture by validation; uniform remains the development-test reference. Every model fails test KL/RMSE. Explicit interactions increase condition-change SD to0.062–0.074 but worsen change RMSE to0.171–0.177 versus zero-change0.1566. No model promotion or further hyperparameter tuning. 144/202 development-test and12/112 validation centered feature rows lie outside the training contrast span, versus zero train rows. All allocated weights training does not establish coverage of absent contrasts.
+
+**Verification/runtime:** independent source replay verifies all3,696 run quantities/metadata and10,673 dispositions; scalar replay checks1,065 fold records/5,535 prediction values (max difference1.78e-15). Independent sequence-feature/QR/NumPy-score/metric/checkpoint replay checks30 fits and10,080 prediction values (max logq error4.14e-7). Analytic gradient error1.25e-16; finite differences7.97e-12; mean128 sampled gradients relative error0.01374. An initial verifier compared differently padded validation batches; corrected checks match each metric to its actual dump and retain the measured ≤2.39e-7 logq discrepancy, without rerunning fits.
+
+Local CPU only, no Modal/GPU: source materialization plus old recipe replay27.18s/2.13GiB; independent source replay3.66s/3.49GiB; analysis0.097s/148MiB; 30 actual fits25.81s/427MiB, 30,000 optimizer updates. Exact/sampled each score918,000 valid candidates per fit; sampled target terms9,216,000 versus918,000 exact, no score saving. These differ from the earlier nonlinear model's batch/thread/training budget and are contextual, not a controlled causal representation comparison.
+
+**Artifacts/reproduction:** stage-specific plans, exact commands/env/dirty Git receipts, source snapshots, all run predictions, all initial/selected/final model states/optimizers/masks/histories and selected train/validation/test dumps in the experiment directory; portable complete-run recipe and linear-artifact archives with hashes. Execution commits Presto `dccafe1`, Hitlist `b94289d`. nM/binder metrics do not apply. Full Pearson/Spearman/loss/RMSE/TV/dispersion and condition contrasts are retained.
+
+Twenty focused Hitlist tests, format/lint/strict docs pass. Normal local full tests were refused twice by the unchanged memory guard before workers launched; no local full-suite pass is claimed. Python3.10–3.14 unit CI passes; retrieved3.11 log:3,247passed/2optional-data-package skips/397warnings in217.11s. Indexed-corpus integration remains separate. Shared recipe stays in Hitlist760/739; precursor/yield metadata in757 and controlled perturbation/reporter data in759. Next: explicitly separate MS-response transfer and processing/yield supervision, broaden source coverage and preserve untouched evaluation. Full concentration/availability goal remains active.
+
+Current-family closure: Hitlist b94289d integration/coverage and all Python unit, lint and docs checks pass. All 186 linear-fitting artifact files and complete-run recipe archive members independently match their original files/hashes. Independent MS-response calibration is tracked in [Hitlist #762](https://github.com/pirl-unc/hitlist/issues/762), separate from precursor #757 and processing-panel #759.
+
+Publication follow-up: report/artifacts published and read back at `6845eb9`. Concurrent Hitlist PR761 merged (`0dfa170`) and closed739. The pinned MAPP experiment remains on its recorded generation; draft source758/recipe760 require integration with the released EvidenceStore/canonical recipe interface before merge. No release verification or migration is implied by this experiment.
+
+## 2026-10-23_0149_codex_mapp-v2-integration — canonical shared source/recipe conservation
+
+- Date:2026-10-23; agent/model:Codex / GPT-6. [Experiment report](2026-10-23_0149_codex_mapp-v2-integration/README.md), [exact reproduction](2026-10-23_0149_codex_mapp-v2-integration/reproduce/launch.sh).
+- Contract: append historical verified MAPP PXD009092/reference data to the actual Hitlist2.0 schema7 reference package, preserving all MHC/context/bulk/T-cell/numeric/mouse data. Hitlist execution1442c03; source manifests and environment/dirty state frozen. New schema8 manifest `83a21da963d7d938c68a9570d7b868e578107302ba466ac55df09c839309b693`. Unknown specimens, FDR/search-reference conflicts and capture/response remain explicit.
+- No training/pretraining/synthetic training data, optimizer or loss; no new validation/test split or predictive dumps/metrics. Endpoint is exact source/API/target conservation, not biological accuracy. The previous biological development result remains negative. nM/binder metrics do not apply.
+- All124 predecessor files (including manifest) preserved with separate inodes;33 MAPP files unchanged.158 total generation files.71 materialized evidence types,18 MAPP relations; independent replay matches all1,829,008 queried native rows and32 previous baselines.
+- Three recipe conditions: original min3=544peptides/65parents/130distributions; min2=616/101/202; complete-run=369/71/142. All original target/disposition/contributor/split files byte-identical, including all-run records for the complete recipe.3,058 overlapping-cohort target values independently recomputed; new canonical source/producer envelope recorded separately. Preferred interface: EvidenceStore/materialize/verify-recipe; removed the separate draft recipe exporter.
+- Runtime: local CPU only;64.26s source build,21.14s open/catalog/audit,8.88s full query,26.92s recipes;3.02GiB producer peakRSS. Independent replay12.86s/607MiB. No Modal GPU requested/observed.
+-55 focused Hitlist checks, format/lint/strict docs pass. Normal full local suite refused by intact memory guard (0.67GiB/2.5required).159 Presto archival/legacy-v4 regression tests pass against actual2.0 after explicit source-module import repair. Integrated-head CI/review/release still required.
+- Takeaway: existing source/target contract now works through the current canonical API without dropping newer modalities. This adds no concentration label, calibrated MS response or new machinery contrast. Next owners: Hitlist762/757/759; broader goal open. Portable complete recipe archive, source manifest, all query fingerprints, independent receipts and logs linked from the report.
+
+Integration publication review: source execution remains pinned to1442c03. Published Hitlist6e275fe reconciles merged snapshot PR763 and adds only an import-order correction to executable code; frozen sources remain exact. Final55 focused tests, format/lint and both strict-docs builds pass. Source758 ancestry is verified in the integrated branch. Full integrated-head CI/review/release remain separate gates.
+
+## 2026-10-23_0216_codex_ms-calibration-admission — known-load MS-response source admission
+
+- Date/agent: October23,2026; Codex / GPT-6. [Full report](2026-10-23_0216_codex_ms-calibration-admission/README.md), [shared Hitlist admission contract](2026-10-23_0216_codex_ms-calibration-admission/reproduce/hitlist-admission-contract.md). Presto7020b62 / Hitlist6e275fe; dirty registration state and frozen stage commands/source hashes recorded.
+- Data: original PXD004886 Supplementary Data1/2/4/8, public Europe PMC archive with byte-identical publisher Data2/8. Original hashes, labels, cells, formula caches, missingness and failed retrieval/replay attempts retained. No repaired source values. Human HEK293 digest is background context for synthetic standards, not an APC processing label.
+- Independent audit:12,941 values/formulas;30 nominal sequences/five groups;31 reporter forms;25 exact threefold design amounts. Raw S4 has2,372 positive responses among3,069 planned slots; normalized has2,398. No numeric zero. Source form multiplicity, missing run/day links and nominal-amount versus molecular-form uncertainty remain explicit.
+- Comparisons:26 normalized-only positive cells;39/97 paired columns do not follow a single shared ratio at1e-6. All162 source Avg/SD/CV checks match (relative error≤1.96e-14). Data8 self-label differs from publication label; positional curve-grid/design differences include111 versus100fmol.1,914/3,410 positions differ>5%, but some are missing observations or rounding-sensitive low amounts, and the positional join is not a supplied sample identity.
+- Runtime: local CPU, no Modal; initial partial inventory1.17s/85.8MB;59.9MB public archive GET174.37s; final independent replay0.181s. Four complete original files plus full cells/source receipts remain available.
+- No training/pretraining/synthetic labels/loss/held-out predictive split or prediction dump: source admission only. No predictive accuracy or binding metrics apply. Fixed decision: no calibrated curve training until source joins/forms/normalization are reconciled; implement source-faithful typed relations and consider bounded raw S4 admission through Hitlist762. This does not identify the cause of MAPP's negative fits or complete the availability/concentration goal.
+
+
+## 2026-10-23 — Shared MS-calibration source and protocol conservation
+
+- **Agent/model:** Codex / GPT-6; [registered experiment/reproduction](2026-10-23_0316_codex_shared-ms-calibration/README.md). Presto3f1ae1b registration with existing dirty task notes; corrected shared source clean Hitlist04f7369 (2.0.3 candidate, not released). Exact commands/env/source snapshots retained.
+- **Dataset/curation:** PXD004886 original Data1/2/4/8/13/14/15 and article XML,8 pinned assets;30 selected synthetic standards,25 nominal fmol-on-column design loads,32 distinct cross-asset reporter labels,6,138 raw/normalized S4 slots,3,410 curve positions and520 protocol parameters. No form-molarity, run/day, curve-sample, selection/censor or APC labels invented. Source title/aggregation/normalization conflicts retained.
+- **Training/assays:** source/API conservation only. No pretraining/training, synthetic labels, loss terms/weights, assay heads, new held-out evaluation or predictions. MS response is not processing/yield/concentration; regression/binder metrics are inapplicable. All prior MAPP biological targets and previously exposed splits unchanged.
+- **Conditions:** first source import f7ebc08 fails on exact cross-table label equality; retained failed attempt. Corrected04f7369 preserves Data4 SMD2 versus Data8 SMD2.sum4 as different reporters. Full source/API and independent XML/Parquet/recipe audit pass.
+- **Results:**13,561 source cells/formulas verified;162 source-summary arithmetic checks;157 prior files byte-identical with independent inodes;84 materialized types;31 full queried relations/1,853,831 rows;3 original MAPP recipes conserved,28 archived files verified.26 normalized-only values and39 nonuniform columns remain unresolved. No predictive improvement claimed.
+- **Resources:** local CPU, no Modal/GPU. Build65.72s,open/audit22.04s,queries8.90s,recipes27.77s;producer peak3.22GiB. Independent audit13.66s/0.64GiB. Format/lint,56 focused tests and strict docs pass; normal full-suite memory guard refuses0.65/2.5GiB before workers.
+- **Preferred contract/decision:** separate reporter identities with explicit unresolved aggregation equivalence; shared ingestion is ready for review, training admission remains pending. Hitlist762 updated with source-backed acceptance criteria and recovered reference-protocol volume/site/gradient/window context. Next is a bounded canonical raw-S4 recipe and local response diagnostic; concentration goal and earlier MAPP/IC50 failures remain unresolved.
+
+
+## 2026-10-23 — Raw-S4 conditional MS-response admission and nested peptide CV
+
+- **Agent/model:** Codex / GPT-6; [full registered family and exact reproduction](2026-10-23_0359_codex_raw-s4-response/README.md). Presto50dbfad registration; clean executed Hitlist96b9232, unreleased2.0.3. Local CPU only, no Modal/GPU/environment changes.
+- **Dataset/curation:** canonical Hitlist raw-S4 nominal-response recipe from pinned PXD004886 source. All3,069 raw slots retain dispositions;1,974 positives form224 peptide×site summaries for22 sequences. One of23 form-eligible sequences has no positive raw response. Exclude multiple forms, explicit aggregation and isotope mismatches. Normalized rows/curves are outside target scope; missing/censored/absent are not zeros or negatives. Nominal fmol remains a covariate, not certified form concentration.
+- **Training/assays:** synthetic standards after background digestion; no processing/MHC/concentration labels, synthetic training examples or pretraining. Five fixed canonical-sequence folds; nested fourfold inner selection of ridge alpha[1e-4,1e-3,.01,.1,1,10,100]. Weighted MSE + alpha coefficient L2, training-only scaling, equal total peptide weight. Median log10 raw peak area maps directly to one regression output. No neural/full Presto or RL training.
+- **Held-out results:** nested outer diagnostic CV, no untouched external biological test. Mean RMSE1.1796; nominal-load/site ridge**0.8084** (Pearson.8805,Spearman.9013); added length/AA fractions1.2762 (Pearson−.0277,Spearman−.0814). All inner-validation and outer-test losses/predictions retained. Binding thresholds/IC50 metrics inapplicable. Sequence-minus-context RMSE+.4677,paired22-peptide bootstrap95%[.1533,.7886].
+- **Conditions/decision:** mean control,context ridge,sequence-augmented ridge; context preferred for this selected source contract. Larger jointly selected regularization shrinks context too in the sequence arm; failure is not proof of absent sequence signal. Methionine column unexposed and removed. No calibration transfer or concentration claim.
+- **Verification/resources:** independent original-XML admission passes; independent augmented least-squares replay verifies all295 fits,12,544 validation and672 test predictions,group isolation/alpha choices/metrics (maxprediction discrepancy7.93e-11). Fitting.742s/106MiB; independent replay.852s/91MiB. Admission18.60s/744MiB; independent source replay.082s/66MiB. Full8-file recipe archive byte-identical. Format/lint61 focused tests and strict docs pass; full local runner refuses0.30/2.5GiB before workers without bypass.
+- **Next:** retain context baseline, qualify broader response data under Hitlist762 and investigate controlled-processing/known-substrate panels under759 for the next exact-versus-sampled availability comparison. Biological MAPP/IC50 failures and full concentration goal remain unresolved.
+
+
+## 2026-10-23 — Controlled MAPP source recovery and kinetic-data request
+
+- **Agent/model:** Codex / GPT-6; [report and reproduction](2026-10-23_0434_codex_mapp-controlled-admission/README.md). Presto9f8e4e0 with recorded unrelated dirty work; clean Hitliste186dd7; canonical source manifest bce500f3….
+- **Dataset/curation:** inventoried all seven original MAPP projects; fully retrieved/checksum-verified PXD009508 controls and PXD007263 time-course processed archives. Source counts:6,060/3,146 peptide rows,19,581/27,196 evidence rows,18/12 exact run assignments. Controls cross alpha6/isotype/GAPDH labels with UT/epoxomicin; time-course labels are0/1/2/6 with three numbered replicates. Preserve literal labels, unresolved specimens, source confidence/search/MBR and missingness; no binding filter, inferred missing negatives or precursor/concentration labels.
+- **Training/evaluation:** source arithmetic/admission audit only; no model, pretraining, synthetic data, losses/weights, assay-head mapping or requested/observed Modal GPU. No held-out split or validation/test predictions because source qualification precedes fitting. IC50/binder metrics inapplicable; no new model winner.
+- **Conditions/results:** literal-join attempt stopped on punctuation differences; explicit unique candidate aliases retain original names. All109,080 controls and37,752 time-course quantity comparisons agree with linked evidence within fixed rounding tolerance or are both zero. Positive agreeing cells15,484/20,940; no source-zero/positive-evidence mismatch. All146,832 comparisons and ten original table files independently replay via BSD tar/pandas grouping; zero sum difference. Reporter/Velcade assets remain unresolved, not proven absent from all raw data.
+- **Resources/reproducibility:** failed146-second full transfers preserved;143 verified HTTP ranges recovered both archives in1,290.53s. Inventory3.28s, arithmetic1.35s, independent verification7.63s/397MiB. Full source hashes, stage configurations/frozen scripts, source/member metadata, row-level quantity dumps and first failed attempt retained. Local CPU only, unchanged environment. Both starting commits' hosted CI passes; earlier local full-suite memory refusal remains recorded.
+- **Decision/ownership:** prioritize shared Hitlist admission of the recovered inhibitor panel under#759, then repeated-observation signal and frozen biological comparison. Filed [#770](https://github.com/pirl-unc/hitlist/issues/770) for quantitative full-protein digestion time courses (MSV000092631), with actual505-file inventory and source selection/background requirements. ProteasomeDB identification-only fields are not concentration targets. Exact and sampled kinetic baselines are specified prospectively with the same span support; no new fit or completed cellular availability model is claimed.
+
+
+## 2026-10-23 — Adjudications and shared-source conservation
+
+- **Agent/model:** Codex / GPT-6; [registered reproduction and report](2026-10-23_0551_codex_adjudication-source-conservation/README.md). Clean executed Hitlist `0219827` (unreleased2.0.5), Presto `7d4c7a5` plus recorded dirty registration. Exact commands, thread overrides, source snapshots and original failed verifier retained.
+- **Dataset/curation:** pinned reviewed schema8 predecessor plus unchanged PXD009092/PXD004886 original assets. New schema9/catalog12 preserves all126 predecessor files,9 review claims,33 MAPP and23 calibration files:183 files total. No measured row, source scope, confidence/censor/filter policy or assay admission changes.
+- **Training/evaluation:** none; no model/pretraining/synthetic data/loss or assay-output mapping change. No new train/validation/test split or predictive dumps: this is source/query/recipe conservation. All four earlier recipe targets/contributors/partitions remain byte-identical, including616-peptide/101-parent MAPP and224-summary/22-peptide rawS4 cohorts. IC50/binder metrics inapplicable.
+- **Conditions/results:** actual historical adjudication and source schema8 readers both pass; combined schema9 exposes85 materialized types. Independent hashing/direct Parquet replay checks all183files and1,853,840mixed-grain rows across32queries. Canonical and earlier standalone MAPP payloads both match. Initial verifier selected standalone baselines lackingcoverage.json; amended baseline contract and initial failure retained, no producer/target rerun.
+- **Resources:** local CPU, no Modal/requested or observed GPU. Producer148.01s/3.28GiBpeakRSS; independent verifier12.83s/0.64GiB. Format/lint/docs/70focused checks pass; normal local suite3,317passed/10warnings in321.51s with unchanged memoryguard andoneworker. Hosted CI separate.
+- **Preferred condition/decision:** combined schema9 preserves current reviewed evidence and both source drafts. Fix pushed to Hitlist767, issue771. No new biological-performance or concentration claim; continue controls admission759 and the registered local biological comparison. Complete manifests, query hashes, recipe-export archive and logs are in the experiment directory.
+
+
+## 2026-10-23 — Controlled MAPP admission and selected training response signal
+
+- **Agent/model:** Codex / GPT-6; [report and reproduction](2026-10-23_0645_codex_controlled-mapp-signal/README.md). Presto registration a52157c with recorded dirty state; clean executed Hitlist1da88e6, candidate2.0.6/schema9/catalog13. Local CPU only; no Modal/GPU or environment changes.
+- **Data/curation:** original PXD009508 and PXD007263, 9,206 peptides/46,777 evidence rows/30 acquisitions/146,832 reported quantities. Shared `mapp_controlled_run_intensity_v1`: canonical20, nonreverse/noncontaminant, peptide PEP<=.01, one source group, reported/replayed positives. All zeros, missing intensities, exclusions, contributors, label aliases, capture/treatment/scoped species/cell context and reference alternatives retained. No affinity/ligand-length filter or biological-negative inference.21,607 positive observations; train/val/test14,862/4,072/2,673, outcome-independent sequence/parent components.
+- **Training/assays:** no model/pretraining/synthetic data. Training alpha6 subset requires three positives per arm and direct MS/MS in both arms:59 peptides/40 components, only2.56% of2,301 training peptides with any qualifying signal. Nine leave-one-run-per-arm-out empirical log10 differences versus a common shift; equal-weight squared error. Unresolved specimen pairing is not manufactured. Held-out14/14 peptide eligibility counts only; no held-out response statistics or predictions, intentionally reserved for the frozen next fit. IC50/binder metrics do not apply.
+
+| Training-only endpoint | Common-shift RMSE | Peptide-specific RMSE | MSE improvement | Component-bootstrap95% interval |
+|---|---:|---:|---:|---:|
+| Captured signal shift |0.90314|0.67608|0.35858|[0.18812,0.55524]|
+| Fixed-support composition shift |0.85018|0.60351|0.35858|[0.19023,0.54767]|
+
+- **Decision:** descriptive residual-repeatability gate passes in all9 comparisons; no predictive winner yet. Identical average MSE improvement under normalization is algebraic, not independent confirmation. Bootstrap1000 component draws/seed20261023 is conditional on these acquisitions, not causal biological confidence. Fixed-support total signal epoxo/UT0.71187 versus0.23338 across all qualifying observed training signals emphasizes selection/missingness. Neither is intracellular concentration.
+- **Verification/resources:** independent raw-table/hash/scanner replay verifies218files, all183 old files unchanged,17 canonical queries/1,098,915 mixed-grain rows, all quantities/193,609 contributor edges,40,539 exact reference occurrences and every recipe target/disposition/split. Independent scalar recomputation verifies all1,062 diagnostic predictions and bootstrap draws. Admission135.712s/5.031GiB; independent27.962s/2.521GiB; signal0.207s/.261GiB. Full reports, per-peptide observations/predictions, stage source/configuration hashes and raw artifact paths retained. A stdlib-shadowing import failure was preserved and corrected by renaming the entrypoint before reading data; scientific contract unchanged.
+- **Checks/next:**78 focused tests, format/lint/strict docs pass; normal full local runner refused at2.10 and2.47GiB versus unchanged2.5GiB guard, not a suite pass. Upstream stack/version reconciliation, review/current CI and release remain distinct. [Next frozen experiment](agents/codex/plans/controlled-mapp-exact-sampled-fit.md): four sequence coefficients plus captured-signal scale, conditional on observed UT baseline, exact versus REINFORCE32/128 and mean/ridge controls. Not launched. Requests remain Hitlist759/757/762/770; full concentration goal stays active.
+
+## 2026-10-23 — Controlled inhibitor response: exact and sampled fits
+
+- **Agent/model:** Codex / GPT-6; [full report and reproduction](2026-10-23_0721_codex_controlled-mapp-fit/README.md). Registered before fitting on Presto80ffa7e with dirty state and executed source hashes retained; clean shared Hitlist0be964d/candidate2.0.6. Local CPU only, no Modal/GPU/environment changes.
+- **Data/curation:** PXD009508 human HEK293 alpha6 untreated/epoxomicin, shared `mapp_controlled_complete_alpha6_response_v1`; standard20, nonreverse/noncontaminant, PEP<=.01, one source group, positive reported/replayed quantities, all three positive runs and direct MS/MS in each arm. All run and peptide exclusions, raw quantities, contexts and contributor IDs remain. No MHC/length filter, imputation or negative labels. Same-study sequence/parent components; train59peptides/40components, validation14/5, test14/9; six source values per peptide. Only2.56% of training positive support survives both-arm selection. Exact source/recipe hashes in the report; all eight prior run-export files remain byte-identical.
+- **Model/training:** observed untreated mean intensity plus four train-standardized sequence features (log length, AVILMFYW/KR/DE fractions) → conditional softmax composition and one training log-total-ratio scalar → predicted treated captured-MS intensity. Four rank-supported policy coefficients and the scale are all fitted. Exact vs REINFORCE32/128, three sampled seeds20261023/24/25, Adam.03,2,000updates,float64,one CPU thread, final checkpoint, no validation tuning. Matched reverse KL +.1*||w||²/2; fresh replacement sampling/LOO baseline, no clip/std/reuse/reference KL. No pretraining or synthetic biological labels. Separate unchanged/common-shift controls and ridge MSE+.1*sum(slopes²), unpenalized intercept. IC50/binder metrics inapplicable.
+
+| Condition | Val response RMSE | Test response RMSE | Val reverse KL | Test reverse KL |
+|---|---:|---:|---:|---:|
+| No change |1.16807|.74509|1.33880|.33326|
+| Common shift |1.07057|.63536|1.33880|.33326|
+| Exact |1.03605|.64789|1.62046|.30000|
+| REINFORCE32, three-seed mean |1.03276|.64603|1.63194|.30133|
+| REINFORCE128, three-seed mean |1.03141|.64421|1.61507|.29804|
+| Ridge |1.09002|.62374|1.26770|.38587|
+
+- **Decision:** no fitted condition passes the frozen requirement to improve both validation and test response RMSE with nonconstant predictions. All sampled seeds fail individually. Common shift remains the response reference. Exact improves test composition KL but worsens response RMSE; ridge has opposite trade-offs and worse validation RMSE. All fitted-model test paired-MSE component-bootstrap95% intervals cross zero (nine components,1,000draws/seed20261023). Full train/val/test losses, Pearson/Spearman/RMSE/TV/spread and870 per-example predictions retained. No model promotion or test-directed extension.
+- **Learning:** exact final gradient norm4.92e-16; train KL.82458→.53192 while train response RMSE.71048→.81946. Posthoc saved-state analysis finds top-five peptides carry65.3% of treated signal, effective support6.81/59. Convergence of this distribution objective does not guarantee equal-peptide response accuracy. K128 reduces gradient noise but gives no consistent predictive benefit. This does not establish absence of sequence biology or identify a single cause of the broader MAPP failure.
+- **Verification/resources:** pre-fit finite differences8.21e-11 and exhaustive K2 score-gradient expectation4.16e-17;4,096 K32 groups all within.57 Monte Carlo standard errors. Independent NumPy Adam/sampling replay verifies14,000updates,28checkpoints, optimizer/RNG states,870predictions,30metric sets, ridge least squares and bootstrap/gates; maxweight discrepancy8.60e-16. Fits/eval2.866s/.331GiB; independent.480s/.205GiB. Optimizer time exact.218s, REINFORCE32/128 means.246/.250s; all score118,000training policy rows, target terms118,000/64,000/256,000. Corrected accounting adds four exact-probe reference calls omitted from original counters; no fit or metric changed. Shared materialization64.04s/3.303GiB, independent source replay1.319s.
+- **Checks/next:** format/lint,50 focused Hitlist tests and strict docs pass. Normal full local suite refused.64/2.5GiB before collection with guard unchanged; source/current hosted checks and review/release are separate. All source/config/checkpoints/history/probe/prediction artifacts retained. As prespecified, advance known-substrate kinetic source qualification under Hitlist770, preserving fragment yield and MS observation as distinct quantities. Full intracellular availability goal remains active.
+
+
+## 2026-10-23_0800 — Known-substrate digestion source audit
+
+- **Date/agent:** October23,2026; Codex / GPT-6. [Report](2026-10-23_0800_codex_digestion-source-audit/README.md).
+- **Contract:** original MSV000092631/PXD044463 processed archive, identifier workbook, deposited methods and15 exact FASTAs;18 files pinned by hashes/URLs. No training admission, synthetic labels, MHC binding filter or qualifier imputation. Preserve raw/filtered/corrected/selected quantity semantics and unknowns.
+- **Coverage:**17 condition archives/391 entries; all outer/inner CRCs pass.388 acquisition identities,5,792,969 Skyline rows,545,664 raw peptide/run quantities,53,144 quantified final peptide/biological-replicate rows plus269 annotation-only rows. All17 final substrate sequences exactly match deposited constructs.
+- **Assay/output:** purified proteasome digestion MS response over time, not cellular concentration. No model, training/pretraining, losses, held-out splits, metrics or prediction dumps; source audit only.
+- **Evidence:** all raw sources join metadata; RF1 has2,278 rows whose quantity time1h conflicts with metadata/filename0h. Six contaminant-digest enzyme labels conflict. Final vectors contain62,860 zeros,4,782NaNs and9,716rows with repeated time labels; source processing forces zero-time corrected values to zero.
+- **Independent replay:** H4 only:27,432 raw quantities and13,284 final vector entries match to<=5.04e-15 relative error, including444missing outcomes and1,455background-censored contributors. Synthesis-error filtering and other substrates' arithmetic remain pending; full archive integrity does not prove those derivations.
+- **Runtime:** local CPU, no Modal/GPU/install. Full963,763,954byte download258.56s; archive audit32.69s; H4 replay1.98s. Memory not recorded. Presto1110d49 plus frozen dirty-state/source bundle. Source tag aSPIRE1.0/c3d6c9112b2fd88d7e9453b1f23dc338f52c172b is a reference, not an asserted deposited execution version.
+- **Decision:** source supports a richer kinetic experiment after shared Hitlist#770 admission; quarantine/reconcile RF1 time conflict, preserve control/censor provenance and group all Ffh ratios. No predictive winner; previous common-shift and uniform controls remain. Follow the frozen exact bond-cut/discrete-partition design only after a coherent observation likelihood and source recipe exist. Full availability/concentration goal remains active.
+- **Reproduction/artifacts:** `reproduce/launch.sh`, source hashes/config and retained failure logs; raw `/private/tmp/presto-digestion-assets`, source-assets.json/member inventory; report/results linked above.
+
+
+## 2026-10-23_1018 — Shared purified-proteasome digestion source
+
+- Date/agent: October23,2026; Codex / GPT-6. [Report](2026-10-23_1018_codex_shared-digestion-source/README.md), [exact source/launch contract](2026-10-23_1018_codex_shared-digestion-source/reproduce/launch.json).
+- Source: all18 pinned MSV000092631/PXD044463 originals,17 condition archives/15 literal constructs,388 acquisitions. Shared Hitlist candidate2.0.8/catalog14; producer b1c5de4 plus frozen adapter/catalog changes. All218 previous source payloads retained byte-identically;250 package files verify and33 baseline audits match.
+- Curation: no training selection. Separate raw, filtered and final layers; full original fields, modifications, splice/position claims, enzyme/substrate species, physical protocol, controls and replicate labels. Preserve2,278 RF1 time conflicts, six enzyme-label conflicts,269 annotation-only rows,62,860 forced zeros and4,782 final missing slots. No implicit negatives or concentration conversion.
+- Training/pretraining/synthetic labels/loss weights/assay mapping: none. No predictive split or validation/test predictions because this is source qualification. Binding thresholds do not apply.
+- Condition/outcome: shared source generation and all11 canonical relation queries pass. Independent no-Hitlist verifier replays every selected original CSV/workbook/FASTA/RData record and typed numeric state against canonical query hashes. This is typing/source conservation, not independent all-substrate preprocessing arithmetic.
+- Runtime: local CPU, no Modal/GPU;379.52s build/open/query,3.884GiB process peak. Independent replay183.15s/1.001GiB. R child memory not separately measured. Exact environment/git/dirty/source receipts and verification commands retained.
+- Software: Hitlist977adc2;37 focused tests and the normal guarded suite3,341 tests pass, with format/lint and strict docs. Source bytes remain exact to the frozen execution.
+- Decision: source support qualified for review; no training-ready recipe yet. H4-only arithmetic proof remains narrower than the source. Next replay admitted quantitative transformations, exclude/reconcile RF1, inspect temporal repeatability and freeze canonical recipe/splits/observation likelihood. Hitlist770 and full APC concentration objective remain open.
+
+## 2026-10-23_1021 — Independent-cut exact versus sampled kinetic qualification
+
+- Date/agent: October23,2026; Codex / GPT-6. [Report](2026-10-23_1021_codex_independent-cut-qualification/README.md), [prospective plan](2026-10-23_1021_codex_independent-cut-qualification/reproduce/plan.md), [launch/source/environment contract](2026-10-23_1021_codex_independent-cut-qualification/reproduce/launch.json).
+- Synthetic data: one six-residue substrate/five irreversible independent cuts, rates0.08/0.18/0.45/0.9/1.4 per hour. All21 contiguous products, complete fragment partitions, conserved residue mass, unit MS response, no noise/missingness/selection. Outputs are expected copies per initial molecule. No biological assay labels or binding-threshold metrics.
+- Training: five directly learned log rates (no sequence encoder); matched seeds42/43/44, Adam lr0.03,1,000 full-time updates, no pretraining/regularization/GRPO modifications. Exact MSE of expected amounts versus unbiased two-independent-group score gradients with leave-one-out baselines. One-rate exact control shares same budget. Fixed final checkpoint; no validation/test selection.
+- Splits: train times0.2/0.7/1.5/4/12, validation0.4/1/2.5/8, test0.1/0.6/2/6/20 hours. Temporal holdouts on one known synthetic substrate, not biological generalization. All2,940 per-span train/validation/test predictions and targets preserved.
+
+| Variant | Median relative rate error | Median validation RMSE | Median test RMSE | Median fit seconds |
+| --- | ---: | ---: | ---: | ---: |
+| exact | 1.542e-16 | 4.7256e-17 | 5.0678e-17 | 0.1745 |
+| sampled32 | 0.03431 | 0.0071473 | 0.0063282 | 0.2809 |
+| sampled128 | 0.016633 | 0.0031173 | 0.0027702 | 0.4626 |
+| constant | 0.72036 | 0.16516 | 0.14176 | 0.1685 |
+
+- Mathematics: exact span expectations versus all32 cut states error1.11e-16, residue mass error0, two-group gradient expectation error1.82e-17. Gradient RMS relative error0.788/0.344/0.170 for groups8/32/128 at fixed initial probe. All stored probes/SE retained.
+- Verification: independent NumPy state sums/analytic derivatives/Adam replay all10,000 updates and match30 noninitial checkpoints (max3.46e-14 log-rate error),2,940 prediction values and metrics (max1.93e-15). Torch used only for uniform RNG stream. Preserved initial verifier failure reveals analytically tied control ranks; explicit mathematical-class correction changes no fit or gate.
+- Winner/decision: exact preferred reference while enumerable. Both sampled sizes pass frozen recovery criteria; median relative rate errors3.43%/1.66%. Synthetic success does not resolve biological production/MS identifiability, learn sequence-to-rate transfer or establish APC concentrations.
+- Runtime/work: local CPU float64/one thread, no Modal/GPU. Complete checks/fits4.26s/338.2MiB; first exact fit includes startup1.068s versus0.174s later, so runtime medians are descriptive. Per-run exact105,000 span expectations versus320,000/1,280,000 sampled partitions; all25,000 bond-probability evaluations. No compute-saving claim. Code, checkpoints, predictions, raw gradient probes, both verifier attempts, source snapshots and original launch are in the family directory.
+
+Publication follow-up: both reports and frozen artifacts are pushed at Presto1503d67. All77 closure artifacts match tracked hashes and remote README blob hashes match local files. Hitlist draft773 and issue770 retain the source/recipe distinction; Presto131 remains draft. Local3,341 Hitlist tests pass; hosted checks remain in progress. The independent-cut recovery is synthetic and does not promote any biological availability baseline.
+
+
+## 2026-10-23 — All-substrate digestion arithmetic
+
+- Agent/model: Codex / GPT-6; [report/reproduction](2026-10-23_1057_codex_digestion-arithmetic/README.md). Registered before replay, Presto5a10094 plus recorded dirty state/source hashes. Local CPU only, OMP/OPENBLAS1; no Modal/GPU.
+- Data: original Soh2024 MSV000092631/PXD04446317-condition archive, source package b3cfffc4, original CSV and independently decoded RData. Source faithfulness, no predictive split or synthetic labels; no fitting/pretraining/losses/assay heads or nM/binding metrics. Exact recipe and aSPIRE reference pinned in launch.json.
+- All17 conditions pass:545,664 raw quantities,1,187,416 distinct precursor rows,280,664 final slots. Maximum relative error9.30e-15 across raw/technical/biological/final layers; all4,782 missing slots and62,860 zeros match. Complete per-condition CSV/JSON and empty discrepancy ledger retained.
+- New admission-relevant finding:10,746 mock zero rows inserted for CaM(b1,b2), IF2(b1), UBE2S(2), RF1(b1,b2). This means missing filtered baselines, not proof that original raw zero controls are absent. RF1 time conflict remains despite arithmetic agreement. Search/synthesis filtering not independently qualified.
+- Verifier checks prior independent H4 invariants and detects deliberate in-memory raw/final perturbations plus downstream mean errors; originals unchanged. Runtime58.247s/1.332GiB peakRSS. No model winner; decision is actual-baseline-aware shared admission, preserving exclusions and short/nonbinding products. Full concentration objective stays open.
+
+## 2026-10-23 — Shared contiguous digestion time-course admission
+
+- Agent/model: Codex / GPT-6; [report/reproduction](2026-10-23_1123_codex_digestion-timecourse-admission/README.md). Frozen initial recipe/source and reviewed3e0b999 full archive retained. Local CPU only; no training, pretraining, synthetic labels, predictive metrics or binding thresholds because this is source/eligibility verification, not a model evaluation.
+- Data: original source PCP/no splice alternative, canonical20, unique I/L-equivalent contiguous span, actual filtered and metadata-agreeing raw zero evidence, no RF1 time conflict, at least three positive nonzero times and repeated source biological labels sharing three times. Preserve raw arbitrary MS targets, all slots/aliases/reasons; no normalization or negative imputation. No MHC affinity/length cut. Original selection remains a limitation.
+- Fixed components over all source final peptides and identical constructs before eligibility; all Ffh conditions grouped. Sorted component hashes round-robin5; folds0/1=test/val, others train. No response-based resplit.15 source groups;11 admitted parents.
+
+| Partition | Parents | Conditions | Curves | Positive measurements |
+|---|---:|---:|---:|---:|
+| Train |6|7|23,054|91,226|
+| Validation |3|3|3,832|15,037|
+| Test |2|2|3,680|19,160|
+
+- Independent Hitlist-free replay checks all50,372 curve dispositions,280,664 source slots and125,423 targets, grouping, spans and zero provenance. Admission50.335s/3.235GiB; verification7.867s/2.001GiB. Canonical original/reviewed derived exports archived, full raw paths/hash receipts explicit.
+- Reviewed source migration retains every quantitative/mapping column;17 context JSON strings add exactly nine inventory counts. Original failed over-strict comparison preserved. Verification-only amendment confirms unchanged numerical targets/eligibility/partitions; explicit unit/scale and source slot statuses added. Reviewed manifest42cda75e. Subsequent raw-zero cardinality strengthening changes one already-excluded curve reason only; admitted examples/components byte-identical, receipt retained.
+-35 initial focused tests; immutable3e0b999 normal guarded suite3,350passed/10warnings/176.08s, two workers, no memory override; not an integration-suite or later-head claim. Source773 merged; later recipe review/deployment remains separate. No biological predictive winner. Next train-only repeatability then frozen kinetics. Upstream review independently inspected held-out descriptive repeatability; record exposure, preserve splits and require external validation.
+
+## 2026-10-23 — Training-only digestion temporal repeatability
+
+- Agent/model: Codex / GPT-6; [report/reproduction](2026-10-23_1138_codex_digestion-temporal-signal/README.md). Presto5a10094/dirty state, exact source/code/configuration hashes and commands retained. Shared reviewed recipe42cda75e; no extra selection. Local CPU only,1.347s/0.936GiB, one-thread overrides, no Modal/GPU.
+- Endpoint: log10 positive MS signal ratio to each peptide/condition's earliest common positive time. Matched other source biological-label response predicts each label in both directions; no-change predicts0. No learned parameter, optimizer/pretraining/synthetic biological label or nM/binding metrics. These are supplied-measurement comparisons, not zero-shot sequence predictions. No validation/test responses evaluated by this family; all67,576 train predictions are retained.
+- Weight times within curve, curves within condition, conditions within parent, parents equally. Training23,054curves/11,527pairs/seven conditions/six parents. Gate frozen before outcomes: lower equal-parent MSE and improvement in at least half the parents.
+
+| Condition | Equal-parent log10 RMSE | Pooled log10 RMSE | Pooled Pearson | Pooled Spearman |
+|---|---:|---:|---:|---:|
+| No change |0.98579|1.08604|undefined|undefined|
+| Other biological label |0.67267|0.61799|0.81557|0.75792|
+
+- Gate passes5/6 parents; LEDGF worsens and remains included. Ffh ratios count as one parent. Pooled prediction/target SD1.01755 are equal by the bidirectional design, not independent confirmation. Independent scalar log-ratio/source/ID and hierarchical-statistic replay checks every prediction and gate. Plot/CSV expose each parent.
+- Decision: proceed to a small ordered sequence-to-cut-rate model, fixed exact expectation reference and explicitly qualified sampled/hybrid gradients. Original selection/background processing, reference noise, only six training parents and missing MS calibration remain. Subsequent upstream held-out descriptive repeatability was seen; no held-out kinetic model fit exists, and future transfer is exploratory same-study evidence. Full APC concentration objective remains active. [Next model specification](agents/codex/plans/biological-independent-cut-fit.md).
+
+
+## 2026-10-23 — Biological sequence-to-cut-rate exact and sampled-hybrid fits
+
+- Agent/model: Codex / GPT-6. [Report and reproduction](2026-10-23_1202_codex_biological-cut-rates/README.md). Registered before implementation/fitting at Prestofc4d24a plus recorded dirty state; source hashes and original commands in reproduce/launch.json and phase receipts. Local macOS CPU float64, one Torch/BLAS thread; no Modal/GPU or environment changes.
+- Data: Soh2024 purified human standard20S, MSV000092631/PXD044463; shared Hitlist2.0.9 digestion_contiguous_timecourses_v1, manifest5f616170b5514cb4d8f0c7b7843d232959e9514eebbca6483f976e17b0846615. Original source-component split unchanged:6/3/2 parents;30,566 curves/125,423 positive source values. Shared contiguous/positive/baseline/time admission and original exclusions preserved. No zero or missing value becomes a negative; no MHC/affinity length selection.
+- Endpoint: log10 MS signal ratio to each peptide's earliest common positive time,67,576/10,990/15,168 train/val/test targets. Original-unit predictions require measured per-peptide reference signal on every split. No calibrated MS gain or absolute concentration. Previously exposed held-out descriptive repeatability is documented; future same-cohort work is development evidence.
+- Model: independent irreversible bond cuts with exact mass-conserving fragment expectations; log-linear rate variants have1/39/40 coefficients (shared rate; ordered additive left/right residue effects; plus supplied log enzyme-concentration proxy). Every allocated coefficient has gradient/update support. No pretraining, synthetic biological labels, APC/MHC/TCR/transport/clearance or detectability module. Small synthetic fixtures only verify mathematical correctness.
+- Training: equal-parent hierarchical log10-response MSE +0.01/2 times squared nonintercept coefficients; Adam0.03, betas0.9/0.999, eps1e-8,2,000 full-batch updates/fixed final checkpoint, initial0.01/hour. No validation selection. No-change and shared-time quadratic weighted-LS controls retained. Assay mapping is measured temporal MS response to predicted fragment log-ratio; nM/binder thresholds do not apply.
+
+| Condition | Train RMSE | Validation RMSE | Test RMSE | Test Pearson | Test Spearman |
+|---|---:|---:|---:|---:|---:|
+| No change |0.98579|1.16704|1.44253|undefined|undefined|
+| Shared time |0.88014|1.10936|1.15749|-0.0551|0.1294|
+| One cut rate |0.99001|1.18114|1.01798|0.2573|0.3537|
+| Sequence exact |0.90327|1.09796|1.02205|0.2797|0.3843|
+| Sequence + protocol exact |0.90257|1.09556|1.02057|0.2832|0.3869|
+| Same model, integrated-presence sampled hybrid512 |0.91048|1.07721|1.04386|0.2337|0.3396|
+
+- Comparison: actual sampled fit uses one seed42, fresh512 complete partitions per condition/time, same model/loss/initialization/Adam/budget, with exact residuals/probabilities retained. Integrating irrelevant cut scores reduces observed probe variance, but rare events remain noisy; naive sampled log-ratios are undefined for94.3–99.8% of weighted targets at tested budgets. No clipping/group standardization/reuse/referenceKL or compute-saving claim.
+- Runtime: exact variant fits19.5–20.7s; entire exact stage72.208s/1.123GiB. Sampled training323.040s,325.157s with terminal predictions/1.124GiB, roughly16.6times exact fitting.28.672million partitions/9.417billion bond draws/47.215billion presence tests. Detailed work/timing receipts retained.
+- Verification: independent NumPy derivatives/Adam replay all8,000 updates and16 noninitial checkpoints, maximum coefficient discrepancy5.72e-15; all562,404 predictions independently reproduced. All source IDs, references, hierarchical metrics and outcomes checked. Raw numerical tied-rank artifacts retained alongside canonical analytic Spearman reporting; no fit/RMSE/gate changed.18 focused tests pass after AST-identical formatting.
+- Learning: outputs are nonconstant (exact test SD0.7005 versus target0.8844). Exact stationarity is reached, but no sequence model beats all controls on both held-out splits. Training-only analytic shape diagnostics show repeated envelope/concavity violations; observation effects versus process mismatch are unresolved. No biological model promoted; exact remains the tractable estimator reference. Source-linked raw/baseline observation diagnosis is next; full APC concentration goal stays active.
+- Artifacts: all raw/canonical train/validation/test prediction dumps, coefficients/checkpoint histories, raw gradient estimates, comparison/by-parent tables, figures, frozen source and failure logs are in the linked family. Prior admission contains original/reviewed source and derived archives; external paths/manifests are explicit in the report.
+
+
+## 2026-10-23 — Training-only digestion observation effects
+
+- Agent/model: Codex / GPT-6. [Report/reproduction](2026-10-23_1257_codex_digestion-observation-effects/README.md). Registered before analysis, Prestoaa4c809 plus dirty-state/source hashes. Shared Hitlist2.0.9 digestion_contiguous_timecourses_v1, manifest5f616170b5514cb4d8f0c7b7843d232959e9514eebbca6483f976e17b0846615; no new curation/import. Full source_tables already expose required contributors.
+- Data: original six training parents/seven purified human standard20S conditions;23,054 admitted curves/91,226 positive points/67,576 fixed log10 temporal targets. Original common times/per-peptide references/admission preserved. No validation/test evaluation by design: this is a training-only source-transformation diagnostic, not a generalization estimate. All three layers'202,728 ratio predictions and133,566 triplets retained.
+- Conditions: original corrected means; restored pre-subtraction means over identical retained contributors; pre-subtraction means over all filtered contributors. No relabeling as concentration, no missing-as-negative policy, no fitting/pretraining/synthetic biological labels/loss/assay-head change. Other measured biological label predicts each label bidirectionally; no change predicts zero. nM/binder thresholds do not apply. Prior model used only for frozen training-residual associations.
+
+| Layer | Other-label equal-parent RMSE | Pooled growth violations | Equal-parent growth violations | Pooled concavity violations |
+|---|---:|---:|---:|---:|
+| Corrected |0.67267|7.4745%|6.4629%|9.5863%|
+| Restored |0.61972|6.9344%|5.7829%|9.5301%|
+| Before residual censoring |0.62868|7.1608%|5.9906%|9.5863%|
+
+- Findings: baseline restoration leaves4,684/5,051 growth and4,215/4,268 concavity violations.94.73% of hierarchical weight has <25% reference baseline subtraction; fixed model RMSE there0.8608 versus other-label0.6418. Changing retained source technical-label signatures marks6.13% of weight and higher disagreement, without proving physical acquisition pairing or causality. Changes in layer/dynamic range mean smaller diagnostic RMSE is not a trained-model improvement.
+- Reporting correction: prior kinetic prose incorrectly called pooled7.47%/9.59% shape fractions weighted. Original numerical artifacts, models and gates are unchanged; corrected README and explicit dual reductions retained.
+- Verification: independent original-field Pandas replay checks all91,226 points/195,586 contributor occurrences, ratios/triplets/weights, stored-model residuals, aggregate/per-parent statistics and shape/stratum reductions. Maximum layer relative error5.11e-15; metric discrepancy zero. Actual baseline/contributor perturbations detected. Read-only-array verifier failure preserved; outputs unchanged.
+- Runtime: local CPU, OMP/OPENBLAS/MKL1, no GPU/Modal/env change. Layer replay10.915s/1.318GiB; analysis10.543s/1.087GiB; independent verification10.931s/1.857GiB. Exact commands/source hashes, full prediction/provenance dumps, figures and logs in the family.
+- Decision: no model winner/promotion. Baseline subtraction alone is insufficient to account for the shape discrepancy; other measurement explanations remain. Next qualify a parsimonious substrate-entry delay, explicitly verifying which restrictions it relaxes and retaining exact/sampled references. [Next specification](agents/codex/plans/substrate-entry-comparison.md). Full APC concentration objective remains active.
+
+
+## 2026-10-23_1324 — Substrate-entry differentiable versus sampled comparison
+
+- **Date/agent:** October 23, 2026, registered13:24 America/New_York; Codex / GPT-6. [Report, all artifacts and frozen phases](2026-10-23_1324_codex_substrate-entry/README.md).
+- **Source/curation:** unchanged canonical Hitlist2.0.9 digestion recipe, manifest5f616170b5514cb4d8f0c7b7843d232959e9514eebbca6483f976e17b0846615; original positive corrected MS signal, source/contributor/reference identities, contiguous construct mapping and exclusions.6training parents/7conditions/67,576ratios;3development parents/10,990ratios. Previous2test parents excluded before target construction; no new test metrics/dump because known test outcomes must not drive development.
+- **Model/training:** exponential substrate-entry event followed by the complete independent-cut process, every product retained and residue mass conserved.40sequence/protocol coefficients+1entry rate, versus2-parameter one-rate+entry and saved immediate controls. Same fixed2,000full-batch Adam.03updates, float64, original initializer, no pretraining. Hierarchical log10 temporal-ratio MSE+.01/2 shared nonintercept coefficient penalty; entry unpenalized. Assay mapping: measured same-peptide time/reference MS signal ratio maps to expected fragment amount ratio. No binding/elution/TCR/stability or synthetic biological training labels; binder/nM metrics inapplicable.
+
+| Condition | Parameters | Train RMSE | Development RMSE | Development Pearson / Spearman | Prediction SD | Seconds |
+|---|---:|---:|---:|---:|---:|---:|
+| Immediate one-rate |1|0.990008|1.181136|.31469/.28869|.46325|8.49|
+| Entry one-rate |2|0.990313|1.181390|.31478/.28861|.46345|238.85|
+| Immediate sequence/context |40|0.902566|1.095559|.42877/.36165|.45384|8.68|
+| Entry sequence/context |41|0.902838|1.095745|.42881/.36162|.45408|239.46|
+| Entry sampled hybrid K512/seed42 |41|0.949424|1.113748|.40369/.34697|.44399|1295.28|
+
+**Decision:** shared entry delay earns no gain; retain the immediate sequence model. Fitted mean delays6.10/5.92/2.85seconds approach immediate entry against hour-scale measurements. The sampled final loss worsens; exact final gradient norm.3233, no convergence or earlier-checkpoint substitution. All allocated coefficients train, but finite delay is not identified. No promotion, APC concentration or cross-peptide MS calibration.
+
+**Qualification/verification:** original fixed-age fit stops at500 on its numerical guard; preserved source/config/log/checkpoint. Registered positive fast-entry quadrature amendment changes integration only, qualifies32nodes throughlambda1e6/hour and all actual checkpoints; initial probe values/gradients bitwise unchanged. Entry relaxes early growth power but preserves log-concavity. Initial integrated/full-score RMS relative gradient errors.35946/.47690. The sampled estimator uses continuous entry/partition draws with irrelevant-bond scores integrated out and quadrature residuals/denominators, with no clipping/std/reuse/reference penalty or score-saving claim. Actual work28.67million partitions/9.42billion bond draws/46.40billion presence terms.
+
+Independent source/NumPy/SciPy replay verifies392,830predictions(max3.11e-15error), final objectives/gradients, all2,000sampled Adam arithmetic updates and five independently rebuilt sampled gradients(max3.99e-15). Exact-entry optimizer trajectory and every sampled gradient were not independently rerun. Raw and structural-tie-adjusted metrics retained.22focused tests pass; figure inspected. Local CPU only, unchanged environment, OMP/OPENBLAS/MKL=1; no Modal/GPU. Sampled fit overlaps read-only/capacity work, so observed wall times are not an isolated hardware benchmark. Expanded qualification64.56s/2.61GB; independent closure9.89s/1.81GB.10,000successful updates plus500preserved failed updates. Execution base311744e with frozen dirty-source snapshots and exact phase commands. Next: training-only capacity/optimization decomposition, retaining full APC availability goal.
+
+## 2026-10-23_1401 — Training-only kinetic capacity decomposition
+
+- **Date/agent:** October23,2026, registered14:01 America/New_York; Codex / GPT-6. [Report and reproducibility bundle](2026-10-23_1401_codex_kinetic-capacity/README.md).
+- **Data/curation:** same pinned shared digestion manifest5f616170…; only6training parents/7conditions/11,527condition-span groups/67,576ratios. Both previous held-out strata are filtered before target construction. Original corrected positive values, source labels, reference times and hierarchical weights retained. No missing negatives, relabeling, binding/TCR/elution/synthetic labels or pretraining. No held-out metrics/dumps by design: this is a capacity diagnostic, not predictive evaluation. Every training prediction is preserved.
+- **Fixed comparisons:** saved regularized40-feature reference; same40features without penalty; free supported condition-specific bond-rate groups; per-curve necessary-shape quadratic programs and unconstrained replicate/time means. Assay mapping is unchanged log10 fragment/time-reference ratio versus observed same-peptide MS ratio. Free groups are diagnostic identities, not a transferable model.
+
+| Condition | Kind | Parameters | Training MSE | Training RMSE |
+|---|---|---:|---:|---:|
+| Saved regularized sequence |Fixed reference|40|.814625|.902566|
+| No-penalty sequence |Nonstationary capacity fit|40|.779949|.883147|
+| Free condition rates |Nonstationary capacity fit|2,121|.635750|.797339|
+| Immediate necessary shapes |Per-curve lower bound|—|.197476|.444383|
+| Entry necessary shapes |Per-curve lower bound|—|.166156|.407622|
+| Replicate/time means |Disagreement floor|—|.113122|.336336|
+
+**Training/support:** same saved initial rate field; no-penalty hierarchical MSE;2,000Adam.01updates per fit then L-BFGS-B with explicit500-evaluation cap. Both fits exhaust that cap above gradient tolerance; final states are not proven optima. All40/2,121allocated parameters change and receive gradients. Among2,299bonds,15unsupported remain fixed; identical incidence groups preserve initial observed hazards. Additional nonlinear equivalences remain possible. Numerical preflight key mismatch is preserved; correction pins the older metrics artifact, with no optimizer updates in the failed attempt.
+
+**Shape evidence:** common per-curve log response must have nonincreasing physical-time slopes and growth power≤b(immediate) or≤b+1(entry). These necessary constraints are not a sufficient characterization of any globally consistent rate process. Their excess MSE over source-label/time means is.08435/.05303; neither means nor projections are a biological noise ceiling or predictive concentration model.50independent SLSQP checks agree to4.45e-16.
+
+**Verification/runtime:** independent original-field replay verifies23,054KKTcertificates and67,576predictions(max3.81e-15KKT,1.78e-15prediction); actual per-curve perturbations are rejected. Separate direct-sum verification checks135,152fitted predictions(max1.68e-13), all incidence allocations and finite differences of all40sequence/48free coordinates(max1.71e-10/6.24e-12). No complete optimizer replay/global-optimum claim. Stable rank predictions/raw artifacts retained. Shape projection3.36s/1.05GB; verification2.64s/.94GB; fits24.15/24.20s; fit verification9.39s/1.05GB.4,000Adamupdates and1,000polishing evaluations. Local CPU one thread, unchanged environment, no Modal/GPU; overlaps prior sampled fit, not isolated runtime comparison. Base311744e plus exact source/config snapshots.
+
+**Decision:** regularization and sequence/context sharing account for part of the observed training gap. Neither unconverged fit proves the remaining error is caused by process misspecification. No promotion. Next [rate-space optimization audit](agents/codex/plans/digestion-rate-space-optimization.md) examines conditioning and rate-boundary limits before expanding the biological model. APC machinery, independent MS response, transfer and full concentration validation remain unresolved.
+
+
+## 2026-10-23_1438 — Direct-rate optimization and abundance degeneracy
+
+- **Agent/model:** Codex / GPT-6; [complete report/reproduction](2026-10-23_1438_codex_rate-space-audit/README.md). Presto e1f7403 with recorded dirty state; exact stage commands/environment/source hashes retained. Local CPU, no Modal/GPU/environment changes.
+- **Data/curation:** same canonical Hitlist digestion manifest5f616170…; six training substrates/seven conditions/67,576 original positive log10 time/reference MS ratios and fixed hierarchical weights. All original source/contributor identities, censor/exclusion rules and2,121 incidence groups retained. Both previous held-out strata filtered before targets; no validation/test output because this is training-only optimization/identifiability diagnosis. No imputed or synthetic biological labels.
+- **Model/training:** unchanged independent-cut process, per-condition free-rate capacity diagnostic. One saved warm start per block, direct nonnegative rate coordinates, sparse analytic TRF/LSMR, Jacobian scaling, max300 evaluations/180seconds each, ftol=xtol1e-12/gtol1e-10. No pretraining/statistical penalty. Original log10 temporal signal ratio maps to predicted fragment ratio; no affinity/stability/TCR/elution heads or nM/binder metrics. Zero-rate ratio closure explicitly does not define positive fragment yield.
+
+| Condition | Training RMSE | Interpretation |
+|---|---:|---|
+| Previous regularized shared40-rate features |0.902566|Fixed reference|
+| Previous unregularized shared40 features |0.883147|Budget-limited|
+| Previous free2,121 log-rate groups |0.797339|Budget-limited|
+| Direct-rate sparse solve |0.797292|Six ftol exits; IL37b300-evaluation cap; no global optimum proof|
+
+- **Metrics/outcome:** direct pooled Pearson0.603785, raw Spearman0.496366, SD0.785654; all675 evaluations50.159s, peak1.005GiB. Per-condition metrics/evaluations/optimality, full traces and all predictions in report. MSE improves0.01185%, while1,288rates fall below1e-10/hour. Reference amounts below1e-20copies/parent increase from0.186% to53.732% of rows (51.799% of weight); median log10 amount drops14.28. Ratio fit does not identify concentrations.
+- **Verification:** high-precision boundary/derivative, sparse-JVP and constrained-toy checks pass; independent raw-source/direct-sum replay verifies67,576predictions and all2,121gradients (max2.61e-14/5.79e-16), all target/weight values and saved final trace membership. StageA2.530s/1.012GiB; verification3.153s. Original Spearman-agreement failure retained; amended report preserves both near-tie raw ranks differing1.53e-7 with no fit/output replacement. No optimizer trajectory replay/global proof claim.
+- **Decision:** no transferable model promotion; stop local solver-budget expansion. Next frozen shared-observation comparison retains cross-peptide signal, profiles only condition-wide scale and qualifies exact/sampled gradients before fitting. Canonical run/instrument contributor projection belongs to770, broader known-load response to762;775 stays closed. Full APC concentration goal remains active.
+
+Publication closure: report/artifacts committed and pushed at `eb96219`; all59 recorded artifact hashes match committed blobs and immutable remote README bytes match. Hitlist770/762 and Presto131 updates have exact body/state readbacks; draft131 and closed775 preserved. Parent e1f7403CI passed; current experiment CI40007342075 is in progress. All local fitting/verification/publication processes are terminal. No biological model is promoted.
+
+
+## 2026-10-23_1501 — Shared MS observation and conditional sampled kinetics
+
+- **Agent/model:** Codex / GPT-6; [full report and artifacts](2026-10-23_1501_codex_shared-observation/README.md). Prestoce86bdb with unrelated dirty work recorded; clean Hitlist61baed9 unchanged. Local CPUfloat64/one thread only, no Modal/GPU/environment changes.
+- **Source/curation:** unchanged canonical digestion recipe5f616170/sourcead62414d.6training parents/7conditions/23,054curves/90,630common-positive signals;3development parents/3,832curves/14,822signals. Original corrected MS1 arbitrary units, source slots, positive selection, missingness and exclusions preserved; no MHC/affinity filter or negative imputation. Previous test parents excluded before collection; no new test loss/dump because outcomes are already exposed.
+- **Context:** existing EvidenceStore raw-quantity/acquisition join suffices;365,001rows and105,452aggregate memberships independently replay. All candidate runs agree on instrument;21,718observations have multiple candidate forms. Exact technical/form contribution remains unresolved. No new Hitlist adapter needed; receipt metadata-variable defect documented separately.
+- **Training:** same40sequence/protocol kinetic coefficients; add38training-supported instrument/length/composition response directions. One analytically profiled offset per condition, no peptide IDs or per-peptide calibration. Hierarchical log10-signal MSE+.01/2 squared nonintercept/response weights. Original ratio checkpoint warm start,zero response; Adam.03,2,000full-batch updates,fixed final checkpoint. No pretraining/new synthetic biological labels. Only purified-digestion signals train; no binding/elution/TCR/stability/APC labels or nM/binder metrics.
+
+| Variant | Train shape RMSE | Development shape RMSE | Development Pearson / Spearman | Development temporal-ratio RMSE |
+|---|---:|---:|---:|---:|
+| Condition scale only | 1.21471 | 1.28060 | undefined | 1.16704 |
+| MS-response features only | 1.17668 | 1.27936 | 0.0961 / 0.1040 | 1.16704 |
+| Shared time quadratic | 1.19993 | 1.27383 | 0.0876 / 0.0835 | 1.10889 |
+| Old ratio-trained kinetics, fixed | 1.24799 | 1.29302 | 0.2151 / 0.1970 | 1.09556 |
+| Old kinetics fixed + fitted response | 1.20344 | 1.29793 | 0.2187 / 0.2046 | 1.09556 |
+| Refitted kinetics, constant response | 1.19004 | 1.26809 | 0.2363 / 0.2273 | 1.17697 |
+| Exact kinetics + sequence response | 1.13843 | 1.26510 | 0.2561 / 0.2452 | 1.16391 |
+| Conditional sampled hybrid + response | 1.13906 | 1.26279 | 0.2572 / 0.2464 | 1.15644 |
+
+- **Estimator qualification:** unconditionalK512 fails its frozen mean-gradient gate (uniform-state meanerror.20195;72–73%observed span/time events unseen). Separately prospective conditional complete-partition importance proposal passes stricter mean/RMS gates: .0444/.1476 and.0410/.0856. Enumerated32-state density/score proof and32,768draw-law check pass. K32/128 and uniform proposals retained. The hybrid retains exact forward/response/conditional scores and currently computes the exact backward before replacing kinetic gradients; no pure simulation or score-saving claim.
+- **Learning:** exact development MSE gain2.406%versus constant and.471%versus kinetics-only; H4 remains worse than constant. Old temporal-ratio error worsens1.09556→1.16391. Conditional1.26279 versus exact1.26510 is one seed, not a robust RL winner. All40/78/78allocated coefficients train. Exact sequence-response/sampled final gradient norms.0180/.0481 are nonstationary. Response can span2.90log10 units; absolute calibration/transfer unresolved. Fixed-response rate-scale probes constrain one direction, not joint identification.
+- **Verification/runtime:** all843,616final predictions,6,000Adam arithmetic updates, final gradients,15selected exact/same-RNGsampled gradients, ridge/feature support and15sensitivity probes independently replay. Maximum prediction error1.07e-14,gradient7.44e-15,Adam8.88e-16; no raw rank discrepancy. Every sampled gradient/form contribution is not independently verified. Initial1.18e-12dense-LS qualification failure and compensated-scalar amendment preserved. Exact combined fit28.96s,sampled440.89s; whole exactfamily70.70s/1.17GiB,sampled444.34s/1.06GiB; overlapping verification means no isolated benchmark.28.672million sampled partitions; no network score saving.
+- **Winner/decision:** exact is preferred for this tractable expectation problem; conditional hybrid is a qualified stochastic reference. No biological/concentration model promotion or stable-baseline replacement. Canonical report includes every source/hash/command, checkpoints,predictions,diagnostics and plots. Next prospective [single fragment-state length effect](agents/codex/plans/fragment-state-length-qualification.md) must pass exact/discrete numerical qualification before biological fitting. Hitlist770/762 retain form/calibration scope;775 stays closed. Full APC availability/concentration objective remains active.
+
+
+## 2026-10-23_1816 — Complete-fragment state dependence and runtime qualification
+
+- **Date/agent:** October23,2026; Codex / GPT-6; [family](2026-10-23_1816_codex_fragment-state-qualification/README.md).
+- **Model:** effective bond hazard multiplied by `(fragment_length/20)^eta`, eta=-1/0/+1. All spans1..L retained; binary cuts conserve residues. Exact O(L²) moment action/positive uniformization versus complete continuous-time branching paths with event, waiting and terminal-survival scores. Eta0 recovers independent cuts.
+- **Source/curation:** input-only projection of unchanged canonical digestion recipe manifest5f616170… and known40-coefficient initializer2400f214…. Six training parents/seven conditions, lengths123–533; no quantities/new labels loaded. No source eligibility, censor or assay-label change.
+- **Training/evaluation:** no fitting/pretraining/optimizer or synthetic biological labels. Numerical fixture five rates [.02,.07,.11,.03,.15], eta=-1/0/+1, times0/.5/2/8; arbitrary linear readout. No held-out validation/test split because this is numerical/input-runtime qualification. Biological Spearman/Pearson/IC50/binder metrics inapplicable; full numerical arrays/statistics retained. No pMHC/TCR/MS head trained.
+- **Numerical result:** all12 expectation/gradient cases and9 primary K65536 Monte Carlo gates pass.10,764,288 paths; independent32-state generator/Frechet replay maximum count/gradient discrepancy1.39e-15/1.18e-14; all432 groups and288 complete event histories replay. Primary mean-relative-gradient error0.000390–0.00552 and RMS0.00630–0.0235. SmallerK1024/8192 diagnostics retained.
+
+| Actual-parent condition | Exact completed | Sampled completed | Decision |
+|---|---:|---:|---|
+| eta=-1, seven conditions |7/7|7/7|numerically executable|
+| eta=0, seven conditions |7/7|7/7|independent-cut amounts/gradients replay|
+| eta=+1, seven conditions |3/7|7/7|bothFfh,LEDGF,hTau exact60s timeouts|
+
+- **Precision/runtime:** K512 one-group tagged-residue TV0.146–0.744 and40-feature/eta gradient relative error0.0346–0.185 across17 matched cases; artificial readout, no biological variance guarantee. All38 successful full outputs replay. Qualification10.565s/424MB;42-worker suite332.458s; independent verification0.634s/199MB. CPUfloat64/complex-free reference, one thread, no Modal/GPU or environment mutation.
+- **Reproduction:** HEAD0361e0d plus explicitly frozen dirty module/test sources; launch/runtime/verify scripts and hash configs under reproduce/, all worker arrays and failures under results/ and launch_logs/. Nine focused production tests pass1.59s; no full-suite claim.
+- **Winner/decision:** mathematical formulations qualify, but differentiable runtime gate fails. No biological model promoted or new fit admitted. Preserve full support and qualify a structured triangular shifted solve/CRAM exponential under the next frozen plan. Sampling speed does not establish distribution fidelity. The full APC concentration goal remains active; no new Hitlist data gap arose from this numerical experiment.
+
+
+## 2026-10-23_1846 — Structured full-fragment rational solver
+
+- **Date/agent:** October23,2026; Codex / GPT-6; [family](2026-10-23_1846_codex_fragment-rational-solver/README.md).
+- **Model/source:** same complete-fragment length-dependent cut model and canonical frozen training-parent inputs74f615a7…; manifest5f616170…/40-coefficient initializer2400f214…. All lengths1..L, eta=-1/0/+1, no new measured quantities, source recipes or labels. The O(L²) decreasing-length shifted solve feeds fixed IPF CRAM16/48; positive uniformization and discrete full-path references remain unchanged.
+- **Training/evaluation:** no fitting/pretraining/optimizer/biological loss or synthetic biological labels; arbitrary numerical count readout only. No validation/test split or assay metrics because this is input-only numerical/runtime qualification. No binding/stability/TCR/MS-response head trained. Full270 numerical predicted/reference count/gradient records and50 full-parent outputs retained.
+- **Numerical gates:** all27 shifted-solve value/gradient probes and270 dense exponential/Frechet cases pass accuracy. CRAM16/48 maximum count error1.73e-13/5.47e-15, gradient2.44e-12/2.70e-13. Strict positivity fails24/19 numerical cases, minimum−9.53e-15/−9.13e-45. Values are not clipped or floored.
+
+| Actual-parent variant | Completed | Seconds/case | PeakRSS | Cases with negatives |
+|---|---:|---:|---:|---:|
+|CRAM16, one step|21/21|0.182–1.363|554MB|13|
+|CRAM48, one step|21/21|0.552–4.156|1,180MB|10|
+|CRAM16, two steps on prior timeouts|4/4|1.960–2.757|874MB|4|
+|CRAM48, two steps on prior timeouts|4/4|6.082–8.458|2,100MB|4|
+
+- **Verification/runtime:** 50-worker suite138.279s; qualification4.244s/256MB; independent replay23.178s/169MB. All50 full arrays/readouts and negativity records replay. CRAM48 matches17 preceding uniformization count/gradient arrays to3.78e-15/2.39e-15; eta0 independent formulas pass. Three independent FD directions on16 formerly-timed-out variant cases agree within1.11e-10. Those directions and cross-order agreement are not a universal true-error certificate. All original failures preserved.
+- **Reproduction:** HEAD2903e11 plus frozen dirty experiment sources, full stage commands/configs/hashes/source copies. Float64/complex128 one-thread local CPU, no Modal/GPU or environment mutation. Production fragment module unchanged; separate prior nine-test evidence remains. Original family165 closure hashes and immutable remote README verified at2903e11.
+- **Decision:** CRAM48 is the more accurate numerical candidate and fixes the observed runtime limitation, but neither method is admitted to biological log training under the frozen positivity rule. Next: positive boundary-conditioned full-path importance means/scores, including rare-product log and finite-sample bias/variance qualification. No new Hitlist data gap; machinery/observation/clearance and the full APC concentration objective remain open.
+
+Publication closure: report/code/artifacts at556e2ee; all186 closure hashes and immutable remote README match. PR131 body-only update reads back exactly and preserves open/draft state. Prior2903e11CI succeeds;556e2eeCI runs40037397437/40037390050 are in progress. All local experiment handles terminal. Full goal remains active; next is the prospectively frozen boundary-importance qualification.
+
+## 2026-10-23_1909 — Positive boundary-conditioned importance sampling
+
+- **Date/agent:** October 23, 2026; Codex / GPT-6. [Full report](2026-10-23_1909_codex_boundary-importance/README.md).
+- **Data/curation:** Fixed six-residue numerical system, five bond rates, eta=-1/0/+1, three times/five target spans and three prescribed rare stresses. No biological targets, source changes or new curation. Full fragment support, including monomers and nonbinding products, remains intact.
+- **Model/estimator:** Original fragment-length hazard; independently uniform forced target-boundary times with all other allowed cuts sampled under original hazards. Exact complete path density ratio restores forbidden-event survival. No floor/clipping; positive log-space count estimates and original-path score gradients.
+- **Training/assays:** Zero optimization or pretraining, no assay labels/loss weights or synthetic biological labels. Numerical reference probabilities/gradients only. No held-out validation/test split because this is estimator qualification; complete group/raw/path numerical dumps replace predictive assay dumps. Binding/nM metrics do not apply.
+- **Contract/reproduction:** Same registered45 ordinary/3 rare states, K256/2048/16384,16groups, fixed seeds and K16384 gates. Source702d66b with dirty status, code hashes, frozen source and launchers in reproduce/. CPU float64 one thread, OMP/OpenBLAS/MKL=1; no Modal/GPU or environment changes.
+
+| Primary scope | Passed | Worst probability relative error | Worst absolute mean log bias | Worst RMS gradient error |
+|---|---:|---:|---:|---:|
+| Ordinary |45/45|0.002009|0.002004|0.244641|
+| Rare |2/3|0.066063|0.053024|0.100319|
+
+- **Runtime/verification:** 14,352,384paths/2,304groups,24.81s/318MB. Independent21-fragment generator/Frechet and closed rare-eta reference verify all groups,48raw primary groups and384full event histories; max trace error9.10e-13. Three focused tests pass; initial import-path collection failure and corrected launcher retained.
+- **Decision:** Uniform boundary proposal fails fast-boundary stress; ESS34.55/16384. Log estimates remain accurate near log probability-1682 despite all linear weights underflowing. No full-parent/biological fit admitted. Existing unconditional zero-hit reference retained at its different K; no matched-cost claim. The separately registered truncated-time proposal is the next comparison; full APC availability/concentration goal stays open.
+
+## 2026-10-23_1920 — Truncated boundary proposal, score control and full-parent failure
+
+- **Date/agent:** October23,2026; Codex / GPT-6. [Full report and tables](2026-10-23_1920_codex_boundary-exponential/README.md).
+- **Data/curation:** Same numerical matrix plus frozen canonical training-input projection74f615a7… from shared purified human20S digestion package5f616170… and original40-coefficient initializer2400f214…. Seven conditions/six full constructs,123–533residues; no quantity/development/test tables read, no new source/exclusions or biological fitting.
+- **Model/estimator:** Same complete branching process. Required boundary times use initial-fragment truncated exponentials; exact original/proposal density scores retained. Primary leave-one-out proposal-score control has unbiased unnormalized numerator, but normalized log-gradient estimates retain finite-K bias. Plain scores preserved; no clipping or probability floor.
+- **Training/assays:** Zero new optimizer/pretraining steps; no measured assay losses/labels or synthetic biological training labels. No held-out predictive validation/test split: fixed-state numerical qualification using training-parent inputs only. Numerical arrays/path/group dumps retained; regression/binder metrics inapplicable. No APC, MS-response or pMHC validation implied.
+- **Reproduction:** Source702d66b/recorded dirty state, exact launch/source hashes and commands in reproduce/. CPU float64 one thread, OMP/OpenBLAS/MKL=1; no Modal/GPU or environment mutation. Small qualification14,352,384paths/18.25s/320MB; all48primary states pass. Fast-boundary controlled/plain RMS gradient error0.000496/0.005915; ESS16384. All48raw groups/384saved histories independently replay.
+- **Full-parent contract:** eta=-1/0/+1,24h, centered lengths1/9/40 selected from parent length, fixed signed log readout and all41parameter gradients, K64/512×8groups; primary512. CRAM48 two/fourstep target references positive and agreeing within1e-5; full-output tiny-tail negativity remains unresolved. Every case retains its original status.
+
+| eta | Primary passed / 7 | Worst mean absolute log error | Worst mean gradient error | Worst RMS gradient error | Minimum ESS / 512 |
+|---|---:|---:|---:|---:|---:|
+| -1 |0/7|0.185814|0.339250|0.749008|17.11|
+| 0 |7/7|5.77e-15|0.011553|0.022798|512|
+| +1 |1/7|0.529441|0.594019|1.358499|2.76|
+
+- **Verification/runtime:** All21workers complete,290,304paths/467.45s/maximum1.98GiB. Independent full-array replay,63directional finite differences (max1.70e-7), all group algebra,63raw groups and504saved full histories pass in85.20s. This is not every-component or every-unsaved-path verification. Three focused tests pass.
+- **Reporting correction:** Worker used absolute signed mean log error; registered plan required mean absolute log error. Independent closure enforces original criterion without changing outputs/seeds/thresholds. Three primary decisions change11/21→8/21; five change across both K. Both gates and reductions retained.
+- **Decision:** No full-parent/biological admission. Initial-rate proposal mismatch under changing fragment lengths is a hypothesis; larger states/lower K also differ from toy checks. One [prospective state-adaptive proposal](agents/codex/plans/fragment-boundary-adaptive.md) is frozen with unchanged physical law/cases/counts/gates and a defined biological next-stage gate. No new Hitlist data gap arose; original MAPP failures, independent observation calibration and full APC concentration objective remain unresolved.
+
+## 2026-10-23_2000 — State-adaptive boundary proposal
+
+- **Date/agent:** October23,2026; Codex / GPT-6. [Full report](2026-10-23_2000_codex_boundary-adaptive/README.md).
+- **Source/curation:** Same fixed numerical fixture and canonical seven-training-condition/six-construct projection74f615a7…, package5f616170… and original initializer2400f214…. All required target definitions/counts/seeds/gates unchanged; no source quantities, development/test observations, new curation or fitted biological labels.
+- **Model/estimator:** Same full-support fragment-length-dependent branching law. Only proposal changes: recompute each required boundary's truncated-exponential hazard after every cut, including exact adaptive waiting/event densities and proposal scores. All outside fragments retained; no clipping/floors. Same leave-one-out proposal-score control; normalized logs/gradients retain finite-K bias.
+- **Training/evaluation:** Zero optimization/pretraining, no assay loss or synthetic biological labels. No held-out predictive split: fixed mathematical/reference qualification and training-input-only study. Numerical counts/gradients/raw paths substitute for assay prediction dumps; nM/binder metrics inapplicable. No APC-concentration or MS-response validation.
+- **Reproduction:** Source2c6cb97/recorded dirty state, exact source/launch/test/verifier snapshots in reproduce/. CPUfloat64 one thread, OMP/OpenBLAS/MKL=1; no Modal/GPU or environment changes. Six analytical/path tests plus the explicit mean-absolute-error cancellation test pass. Small matrix14,352,384paths/23.21s/317MB; all48primary cases pass, worst ordinary RMS gradient error0.012494. All2,304groups/48raw groups/384saved histories independently replay.
+
+| eta | Previous proposal passes | Adaptive passes | Worst mean absolute log error | Worst mean gradient error | Worst RMS gradient error | Minimum ESS / 512 |
+|---|---:|---:|---:|---:|---:|---:|
+| -1 |0/7|0/7|0.175523|0.359927|0.815162|7.96|
+| 0 |7/7|7/7|1.57e-14|0.008050|0.021198|512|
+| +1 |1/7|0/7|0.095046|0.084908|0.228954|61.37|
+
+- **Full-parent runtime/verification:** All21workers complete;290,304conditional paths,333.98s total/308.55s inside sampler calls,323MB maximum worker RSS. Exact references are reused by verified hash; prior totals included construction, so no matched end-to-end speedup claim. Independent replay verifies63raw groups,504full saved histories, all group algebra and original mean-absolute gate; max path discrepancy8.67e-13,3.238s. No new reference finite differences or unsaved-path replay is claimed.
+- **Decision:** Positive-eta worst gradient RMS improves1.3585→0.2290 and worst logMAE0.5294→0.0950, but all length-dependent cases still fail atK512; overall7/21 versus prior8/21. Stop this proposal extension without sample tuning. The [next full-observation admission specification](agents/codex/plans/fragment-observation-domain.md) checks every actual training span/time before a bounded differentiable biological comparison, keeping the sampled failure and prior controls visible. It explicitly limits numerical admission to required outputs without retroactively passing old blanket positivity gates. Full APC goal remains active; no new Hitlist gap arose.
+
+
+## 2026-10-23_2029 — Complete training-observation fragment numerical admission
+
+- **Date/agent:** October23,2026; Codex / GPT-6. [Full report](2026-10-23_2029_codex_observation-domain/README.md).
+- **Source/curation:** Unchanged canonical Hitlist digestion recipe manifest5f616170… and original40-coordinate initializer. Every90,630training observation is retained:45,315unique span/time queries,seven conditions/six constructs,123–533residues,1/2/4/24h. Complete source JSON is parsed, including excluded records, but measured quantities are never consulted by projection or numerical decisions. Support identities and equal-parent/condition/curve/time weights independently reconstruct. No new exclusions, negative labels, ambiguous-origin assignments or source curation.
+- **Model:** Complete1..L fragment branching law `exp(x@theta)*(length/20)**eta`, with40ordered sequence/protocol coefficients and one global eta. Expected copies per initial parent, without observed-set normalization, floors or clipping. Eta fixed−1/0/+1; no fitted biological parameter or MS-response update.
+- **Training/evaluation:** Zero new optimizer/pretraining updates or biological assay loss. No predictive held-out validation/test evaluation because this is numerical admission; original test parents stay excluded and development is not a new blind test. All135,945required span/eta predictions and full arrays are retained. Assay correlations, nM/binder metrics and synthetic biological labels do not apply.
+
+| eta | Admitted condition/time cases | Unresolved required queries |
+|---|---:|---:|
+| −1 |28/28|0|
+| 0 |28/28|0|
+| +1 |28/28|0|
+
+- **Precision:** Every required value is positive and finite. Maximum two/four/eight-step natural-log disagreement 1.5099e-14 against1e-5criterion. All252directional checks agree within registered1e-5+1e-6*absolute-FD tolerance; maximum discrepancy2.00716e-10. Independent NumPy eight-step recomputation of all84full outputs gives maximum full-array error9.4369e-16 and required-log error1.24345e-14. This is fixed-state empirical qualification, not a universal gradient/error proof.
+- **Scope limitation:** Full arrays still contain tiny negative unobserved tails (maximum41,297entries/call), all preserved. This prospectively registered required-output gate does not retroactively pass earlier blanket positivity or qualify arbitrary unseen queries. Maximum absolute residue-mass discrepancy5.11591e-12. Every future selected training block and final full observation domain must be checked again.
+- **Verification/runtime:** All84workers terminal; suite1464.95s, maximum2.055GiB. Three focused tests pass, including dense-generator/variable-time and analytical-refinement counterexamples. Independent full-reference work83.26s; source/array/gate closure4.40s. Worker eta0 scalar compares eight steps; closure enforces analytical agreement across all three, changing0decisions. Original import-path preflight failure preserved; corrected family PYTHONPATH invocation passes.
+- **Reproduction:** HEAD6347987636c2de32a4f20001c356fb1d24febbc7 with recorded dirty state, source hashes, exact support projection, frozen scripts/launches/configs in reproduce/. CPUfloat64/complex128, OMP/OpenBLAS/MKL=1; no Modal/GPU or environment changes. Hardware sysctl query was sandbox-denied and is recorded rather than guessed. All168primary/independent raw array files are byte-verified archives with restore helper.
+- **Decision:** Differentiable solver is numerically admitted on the complete required training domain at the frozen states. The sampled adaptive estimator's prior7/21full-parent result remains unchanged; no sampled biological fit is admitted. Next: [qualify matched offset/minibatch objective](agents/codex/plans/fragment-minibatch-objective.md), freeze bounded biological execution and test whether the one added length effect improves real development performance. No new Hitlist gap; live reads confirm770/762/757open and739closed. Independent response calibration, APC machinery/transport/clearance and cellular concentration validation remain open.
+
+
+## 2026-10-23_2108 — Real biological fragment-length fit: small gain, no new best model
+
+- **Date/agent:** October 23, 2026 local registration, October 24 UTC execution; Codex / GPT-6. [Full report and artifacts](2026-10-23_2108_codex_fragment-biological-fit/README.md).
+- **Source/curation:** Unchanged canonical Hitlist recipe manifest `5f616170b5514cb4d8f0c7b7843d232959e9514eebbca6483f976e17b0846615`, MSV000092631/PXD044463 purified human standard 20S digestion. Original positive background-corrected MS signals; 90,630 training measurements from six parent constructs/seven conditions and 14,822 development measurements from three parents. Existing complete-case eligibility, contributor/modified-form ambiguity, instruments and equal-parent/condition/curve/time weights preserved. No extra filtering, new negatives or local curator. Only this digestion-MS endpoint trains; IC50/pMHC/TCR/APC machinery and concentration outputs are absent. No censor inequalities or synthetic biological labels.
+- **Models:** Analytical independent-cut expectation versus full fragment-branching expectation with one added bounded scalar, `eta=tanh(rho)`, hazard `exp(x@theta)*(current_length/20)^eta`. Both retain all fragment lengths 1..L, including monomers/nonbinders, and predict expected copies per initial precursor. Shared 40 rate coefficients, 38 instrument/length/composition response coefficients and seven condition-scale offsets; fragment adds the 86th parameter. Original corrected log10 MS signal maps to log10 expected count + relative response + scale. MS response is jointly estimated, not independently calibrated detectability.
+- **Training:** Same original 40-coordinate ratio-trained initializer, zero response, optimal initial offsets, 200 identical seed-42 condition/time-block draws (all 28 visited), Adam lr .03 / betas .9,.999 / eps 1e-8, no clipping/decay/dropout. Probability-weighted block MSE has the full hierarchical objective as its expectation. Add .005 squared nonintercept rate/response coefficients and .005 physical eta squared; offsets unpenalized. Final checkpoint only, no development-selected extension/retry or new pretraining. Both arms completed; every 85/86 allocated coordinate has material gradients and updates. No new RL fit: the earlier length-dependent sampler remains unqualified.
+
+| Condition | Train shape RMSE | Development shape RMSE | Development Pearson / Spearman | Development temporal-ratio RMSE | Seconds / peak GiB |
+|---|---:|---:|---:|---:|---:|
+| Analytical, 200 joint-offset block updates |1.18192|1.28894|.2320 / .2283|1.23295|14.86 / 1.222|
+| Fragment length effect, same 200 updates |1.16259|1.27630|.2401 / .2354|1.20013|1692.91 / 2.262|
+| Prior constant scale |1.21471|1.28060|undefined|1.16704|prior family|
+| Prior time quadratic |1.19993|1.27383|.0876 / .0835|1.10889|prior family|
+| Prior exact + response, 2,000 full batches/profiled offsets |1.13843|1.26510|.2561 / .2452|1.16391|prior family|
+| Prior sampled hybrid + response, 2,000 full batches/profiled offsets |1.13906|1.26279|.2572 / .2464|1.15644|prior family|
+
+- **Evaluation limits:** Shape metrics profile one condition scale using development labels; they evaluate relative MS signal shape, not absolute signal/concentrations. MSE is hierarchically weighted; correlation and SD are pooled/unweighted. Fragment development prediction SD .6111 versus target 1.2524. Development parents were previously inspected; original test parents remain deliberately excluded to keep this optimizer/mechanism diagnostic from consuming test data. Full train/development prediction dumps are retained; no new test prediction/performance claim or binder/nM metrics apply. Older longer fits are contextual, not matched optimization budgets.
+- **Optimization finding:** Final total training objectives 1.620957 analytical / 1.508486 fragment versus common initial 1.595535. Independently verified nonoptimal-offset MSE gaps .196090 / .129245. Final fragment eta .197406. This establishes an incomplete nuisance optimization problem, not the cause of weak generalization or a causal length effect.
+- **Verification/resources:** Both 200-step optimizer trajectories independently replay; every analytical gradient, fixed fragment gradients at steps 1/100/200 (nine rate/eta directions plus 45 linear coordinates per state), all 105,452 predictions per arm, and all global metrics independently verify. Separate NumPy eight-step final physical expectations agree; maximum fragment natural-log discrepancy 1.23e-14. Every selected block before/after update and final query passes required positive finite 2/4-step checks; tiny unobserved negative tails remain unqualified. CPU float64/complex128, one thread, no Modal/GPU/environment changes; full suite 1712.01 s. Descriptive runtimes include guards/artifacts/evaluation and limited verifier overlap, not isolated benchmarks.
+- **Reproduction:** Source HEAD `120d55ac26b1906c0d22c465254c4ab0051470da`, recorded dirty state; exact external hashes, source snapshots, original qualification launch and separately frozen fitting/verification receipts in `reproduce/`. Initial `launch.json` remains the zero-update qualification receipt; `fitting.json`/`fit.sh` and completed receipts record the subsequent 400 updates. All original states, moments, checkpoints and reference arrays are byte-verified archives; prediction gzip files are direct. Original outputs are not replaced.
+- **Decision:** Fragment beats its matched control and barely beats constant shape RMSE, but loses to the older exact/hybrid and even time-quadratic controls. It does not improve temporal-ratio RMSE over constant. **No new best biological model and no validated APC concentration model.** Next [profile nuisance offsets exactly](agents/codex/plans/fragment-profiled-minibatches.md) at each current parameter state, holding biology/data/schedule fixed. No new Hitlist limitation arose; existing independent calibration/precursor gaps remain. Full availability goal stays active.
+
+
+## 2026-10-23_2201 — Profiled offsets improve digestion fits, with weak biological prediction
+
+- **Agent/model/source:** Codex / GPT-6, source a6c6559 with recorded dirty state; [completed report and reproduction](2026-10-23_2201_codex_profiled-fragment-fit/README.md). Registered before implementation and updates. Exact executed fitting/source/data hashes retained.
+- **Data:** Unchanged MSV000092631/PXD044463 canonical Hitlist digestion manifest5f616170…; 90,630 training/14,822 development positive corrected MS observations. Same source forms/contributors/instruments, partitions and hierarchical weights as prior 2108 family. Only digestion-MS targets train; no IC50/MHC/TCR/APC machinery labels, inequalities, synthetic biological targets or new negatives. Original test parents excluded from this optimizer diagnostic; previously inspected development is not a blind test. Full prediction dumps retained per completed arm.
+- **Hypothesis/change:** Replace seven learned condition offsets with exact weighted optima at every current parameter state, detached for sampled-block gradients. Same one-scale-per-condition objective, rates/response/length effect, original ratio-trained initializer, 200 seed42 draws, Adam .03/.9/.999/1e-8 and .005 squared nonintercept/response/eta penalties. Allocate 78/79 parameters; no new pretraining, clipping, dropout or development-based selection. No new RL arm is admitted. All-fragment expected copies + relative response + condition scale predicts original log10 MS signal, not concentrations.
+- **Pre-fit qualification:** Toy counterexample rejects per-time profiling; all 28 actual blocks at two predetermined states agree with full profiled objective and independent gradients (<3e-14 error). Actual eta-zero common-gradient parity passes. Longest-parent target-free cost26.09s sets a prospective 8,400s/4GiB cap. Local CPU float64/complex128, one thread, no Modal/GPU/environment change.
+
+| Condition | Train shape RMSE | Development shape RMSE | Development Pearson / Spearman | Development temporal-ratio RMSE |
+|---|---:|---:|---:|---:|
+| Analytical, exact offsets, 200 draws |1.164345|1.264868|.254680 / .245122|1.144171|
+| Fragment, exact offsets, 200 draws |1.156478|1.262718|.253056 / .242653|1.130980|
+| Prior analytical, learned offsets, same 200 draws |1.181919|1.288941|.232033 / .228289|1.232951|
+| Prior fragment, learned offsets, same 200 draws |1.162592|1.276300|.2401 / .2354|1.200130|
+| Constant condition scale |1.21471|1.28060|undefined|1.16704|
+| Earlier exact, 2,000 full batches |1.13843|1.26510|.2561 / .2452|1.16391|
+| Earlier hybrid, 2,000 full batches |1.13906|1.26279|.2572 / .2464|1.15644|
+
+- **Analytical evidence:** All 78 coordinates materially train; all 200 gradients/updates and 105,452 source-linked predictions/metrics independently replay. Final training objective1.378363 versus initial1.595535; residual offset gap1.95e-29MSE. Runtime7.76s, peak1.224GiB. Development prediction SD.60448 versus target1.25239. Shape metric profiles scales using development labels, not absolute signal; MSE weighted, correlations pooled/unweighted. No binder/nM metrics apply.
+- **Fragment evidence:** All 79 coordinates materially train; final eta .317001. All 200 Adam updates and 105,452 source-linked final predictions/metrics independently verify; nine fixed rate/eta directional checks at steps 1/100/200 plus all 38 response components at those states pass. Other fragment gradients are not independently recomputed. Maximum final physical natural-log difference 1.33e-14. Final training objective1.360604 versus initial1.595535; residual offset gap2.50e-29MSE. Runtime3051.87s, peak2.364GiB; full two-arm suite3061.99s. Prediction SD.57841 versus target1.25239. Numerical guards pass for required outputs; tiny negative unobserved tails remain unqualified.
+- **Decision:** The nuisance optimization fix improves both matched models. Fragment beats analytical by only .00215 development RMSE, with slightly worse rank correlation; its1.26272 is effectively tied with the earlier sampled hybrid1.26279 on this small, already inspected cohort. The gain over constant is about1.4% RMSE. No robust biological superiority or APC concentration validation is established. All fitting/verification handles are terminal, every train/development prediction is retained, and raw checkpoints/optimizer/reference arrays are byte-verified archives. The paired result does not admit a new length-dependent RL sampler. Target persistent cross-peptide signal error and independent MS-response support next, before further sampler expansion; existing MAPP/calibration/precursor limits and full availability goal remain open.
+
+
+## 2026-10-23_2214 — Persistent versus temporal training residuals
+
+- **Agent/model/source:** Codex / GPT-6, a6c6559 with recorded dirty state; [report, plot, per-curve evidence and reproduction](2026-10-23_2214_codex_residual-decomposition/README.md). Prospective arithmetic plan and all input hashes frozen before calculation. This is a diagnostic of fixed predictions, not another fit.
+- **Data/target:** Same canonical Hitlist digestion manifest5f616170…, MSV000092631/PXD044463; all90,630 training corrected-positive log10 MS observations,23,054 original source curves, seven conditions/six constructs. Preserve every source identity/value/weight and original parent/condition/curve/time reduction. No new negatives, censor reinterpretation, synthetic biological labels or source curator. Full input files include development records, which are parsed but skipped before their quantities enter the diagnostic. No new validation/test metrics or predictions because this is training-only residual arithmetic; original test excluded. Existing full hash-pinned predictions remain per-example evidence. Binding/nM metrics do not apply.
+- **Contract:** Zero optimizer/pretraining updates or new assay loss. For original condition-centered residuals, split weighted MSE exactly into squared curve-mean residual and residual variation within that curve. Source curves include biological-label and unresolved contributor/form scope; these are not independent unique molecular peptides or pure detector/processing terms. Compare five completed fits and a constant condition-scale baseline; do not inspect the live profiled-fragment checkpoints.
+
+| Fixed model | Total training MSE | Persistent curve-mean MSE | Temporal MSE | Persistent share |
+|---|---:|---:|---:|---:|
+| Constant condition scale |1.475509|1.150526|.324983|77.97%|
+| Joint-offset analytical,200 draws |1.396931|1.038436|.358496|74.34%|
+| Profiled-offset analytical,same200 draws |1.355700|1.042360|.313340|76.89%|
+| Joint-offset fragment,200 draws |1.351619|1.023909|.327710|75.75%|
+| Earlier exact,2,000 full batches |1.296025|.986178|.309847|76.09%|
+| Earlier hybrid,2,000 full batches |1.297461|.986934|.310527|76.07%|
+
+- **Finding:** Exact condition-offset solving improves temporal MSE by .045156 while persistent MSE worsens .003925. The remaining persistent share is71.77–81.06% across all six training constructs, not one exceptional parent. Older long exact/hybrid fits retain the same broad pattern. This locates residual error but does not identify its cause or prove a noise ceiling.
+- **Verification/resources:** Independent NumPy grouping from every original input prediction verifies138,324 curve records, all source identities/targets/weights, per-condition/construct reductions and fractions; max component error8.88e-16. Nonuniform toy checks the identity and rejects unweighted-mean substitution. Producer8.56s/0.968GiB; verifier6.40s. Local CPU, one-thread numerical settings, no Modal/GPU/environment change. Producer remains within120s/4GiB. Original arrays need no separate archive; compressed per-curve CSV and full source prediction pointers are retained.
+- **Decision:** Finish the live paired biological fit unchanged, then target persistent cross-curve signal error as well as temporal kinetics. Do not grow a sampler merely because it is numerically qualified or add per-peptide offsets that erase abundance information. No model promotion, calibrated detector response or APC concentration conclusion. Read-only native bulk source review confirms an already tracked peptide-intensity omission in the inspected bundled CSV: Hitlist95open, with existing scale/lineage/missingness requirements; no duplicate issue. Known-load support762 and precursor757 remain open. Full availability goal remains active.
+
+
+## 2026-10-23_2358 — Wider cleavage context improves digestion prediction; sampled hybrid adds no gain
+
+- **Agent/model:** Codex / GPT-6; source010be23818400d47a55d6ce0f386b95c222ce8ec, recorded dirty state. [Family and frozen prospective specification](2026-10-23_2358_codex_sequence-context/README.md). Prior-head CI40056708162 passes docs, lint, tests and distribution checks.
+- **Source/curation:** Unchanged canonical Hitlist digestion manifest5f616170b5514cb4d8f0c7b7843d232959e9514eebbca6483f976e17b0846615; purified human standard20S MSV000092631/PXD044463. Same90,630training observations from six constructs/seven conditions and14,822development observations from three parents; positive corrected log10MS signals and original parent/condition/curve/time weights. No new negatives, source importer, exclusions, synthetic labels or censor reinterpretation. Original test parents excluded; already inspected development is not a blind test. Full train/development predictions retained, no applicable nM/binder metrics.
+- **Hypothesis/models:** 2x2 factorial of original adjacent-residue rates versus six-residue bond context and original instrument/length/composition response versus added peptide first/last residues. Original40rate/38response coordinates remain; training-only residualized/eigen-supported additions allocate80rate and72response coefficients. Independent-cut expected copies across all1..Lfragments plus response and one exact condition scale predicts MS signal. No peptide-identity offset. All source forms/contributors remain ambiguous as previously documented. No APC KO/species/transport/clearance, MHC or TCR supervision; no independent detector calibration.
+- **Training:** Same original ratio-trained40rate initializer, zero additions/response,2,000full-batch Adam updates per arm at.03/.9/.999/1e-8. Weighted profiled MSE plus.005squared coefficients except rate intercept; final checkpoint only. No new pretraining, dropout, clipping, seed/penalty search or development selection. The prospectively named fifth arm uses both additions with K512conditional complete-partition sampled kinetic gradients, seed42,90%gradient-norm/10%uniform proposal, exact probabilities/residuals/conditional scores/response gradients. It is a hybrid, not simulator-only RL or a compute-saving claim.
+
+| Model | Parameters | Train RMSE | Development shape RMSE | Development Pearson / Spearman | Development ratio RMSE |
+|---|---:|---:|---:|---:|---:|
+| base |78|1.13843|1.26510|0.2561 / 0.2452|1.16391|
+| rate_context |158|1.06433|1.22853|0.3555 / 0.3487|1.09848|
+| response_termini |150|1.12157|1.27193|0.2538 / 0.2442|1.16216|
+| both |230|1.04616|1.24659|0.3467 / 0.3426|1.09710|
+| both_hybrid |230|1.04802|1.24860|0.3456 / 0.3401|1.10118|
+
+- **Biological interpretation:** Wider cleavage context improves development shape and temporal error; terminal response additions improve training error but worsen development shape error. Wider rates alone improve all three development-parent RMSEs, with most gain in one. This does not yet qualify general cellular concentrations or establish a causal response/processing separation. Constant shapeRMSE1.28060; old exact1.26510/hybrid1.26279; new base reproduces old exact.
+- **Qualification/runtime:** Independent feature construction, zero-extension/old-objective parity, two fixed NumPy objective/Jacobian states and enumerated conditional-mixture toy checks pass. K512mean relative gradient errors.03864/.03093 and RMS.15391/.13643 pass both predetermined gates. Prospective local caps600sexact/1800shybrid,4GiB each; CPUfloat64one thread, no Modal/GPU/environment change. Source-freeze invocation-path failure occurred before qualification/fitting and is preserved; corrected invocation changes no code/data/settings.
+- **Final comparison:** Conditional sampled hybrid developmentRMSE1.248605 versusmatchedboth-exact1.246593, Spearman.340120 versus.342622; no accuracy advantage in this single seed. Wider-rate-only exact is the preferred representation hypothesis (1.228529,.348720), improving matched base RMSE about2.9% and constant about4.1%. Extra response features fit training better but generalize worse. Do not promote them based on extra flexibility. Wider rates improve AnnexinA1 RMSE1.035409→1.024307, H3 1.317240→1.316613, H4 1.412173→1.321052; most gain is H4. No independent study robustness or calibrated cellular concentration is established.
+- **Verification:** All five fits and their independent verifiers complete. Every10,000Adam arithmetic updates,527,260source-linked final predictions, global/per-parent metrics and persistent/temporal residual components verify. Four fixed gradient states per arm replay; hybrid uses independent NumPy conditional score/importance arithmetic and preserved PyTorch RNG draws. Other gradients are not independently replayed. All78/158/150/230/230allocated coefficients materially train. New raw features independently reconstruct; source loader remains the unchanged pinned canonical consumer. Exact final check scope and errors are retained in each arm.
+- **Resources:** Local CPU/float64, one thread. Limited fit/verifier overlap means these are descriptive end-to-end times, not isolated implementation benchmarks.
+
+| Arm | Seconds | Peak GiB |
+|---|---:|---:|
+| base |31.82|1.463|
+| rate_context |35.23|1.454|
+| response_termini |52.27|1.346|
+| both |51.46|1.351|
+| both_hybrid |1104.58|1.466|
+
+- **Artifacts/decision:** Full report, comparison plot, CSV, source/config snapshots, original failure/correction logs, source-linked train/development prediction dumps and byte-verified optimizer/checkpoint archives are retained. No original test evaluation, sampled retry or outcome-driven extension. [Next prospective transfer plan](agents/codex/plans/digestion-to-mapp-transfer.md) freezes the learned cleavage prior and tests a minimal input/removal bridge on existing cellular MAPP, with its observation limits explicit. Separate literature discovery filed [Hitlist788](https://github.com/pirl-unc/hitlist/issues/788) for native intracellular peptidome perturbation panels with censored ratios and cross-paper reuse; no such workbook is admitted or fitted yet. Full APC availability/concentration objective remains active.
+
+## 2026-10-24_0043_codex_digestion-cellular-transfer — Frozen digestion rates tested on cellular captured-peptide composition
+
+- **Agent/model:** Codex / GPT-6; source5b888cccf97796d205e519f6371c7556076cf4f2, registered dirty state. [Report, source snapshots and reproduction](./2026-10-24_0043_codex_digestion-cellular-transfer/README.md).
+- **Source/curation:** PXD009092 human HEK293 proteasome-associated fragments; unchanged canonical Hitlist MAPPmin2 manifestdf78d02f8200809c659e43adfae29866c48b712122b740379106994622f4ac80.72 train parents / 144 examples / 918 measurements;15 historically inspected validation parents / 30 examples / 112 measurements. Original14testparents excluded; no new test metrics/dumps by prospective design. No source curator, new negatives/imputation/censor conversion or synthetic biological labels. Original source/run/parent/material limitations retained. No applicable nM/binder metrics.
+- **Model/training:** Continuous precursor input plus independent cleavage/common removal, F_s=int C_s(t)exp(-delta*t)dt over all 1..Lspans. Occurrence-summed centered log10F predicts centered log10MS. Uniform rates versus frozen 40adjacent or120wider digestion coefficients; no transfer of MS-response terms. Only log(delta) learns, initialized log(.01),2,000 full-batch Adam .03/.9/.999/1e-8, equalparent/condition/candidateMSE, no penalty/clipping/selection/restarts/new pretraining. No treatment/KO/species/TCR/pMHC/transport branch trains. Uncalibratedcapture/MSresponse and imported time scale preclude concentration/half-life claims.
+
+| Model | Train RMSE | Validation RMSE | Validation Pearson / Spearman | Prediction SD | Delta | Seconds |
+|---|---:|---:|---:|---:|---:|---:|
+| Uniform observed composition | 0.35609 | 0.28603 | undefined / undefined | 0.00000 | undefined | 0.00 |
+| Uniform cleavage | 0.41394 | 0.36972 | 0.4416 / 0.3723 | 0.43871 | 0.105202 | 138.46 |
+| Frozen adjacent rates | 0.44012 | 0.39307 | 0.4067 / 0.3456 | 0.43028 | 0.167398 | 135.09 |
+| Frozen wider rates | 0.57514 | 0.55627 | 0.1685 / 0.1258 | 0.57088 | 0.175558 | 131.31 |
+
+
+- **Decision:** Neither frozen sequence prior improves both no-sequence controls on this development endpoint. These are already inspected validation parents, not a newly blind result. No APC concentration model is promoted. All physical fits have varying outputs; wider-context validation prediction SD exceeds the target SD. The failure is not constant-output collapse. These numbers use validation, not the older14parenttestcontract. ForwardKL(target||prediction) is secondary; older reverseKL-trained models are contextual, not matched objective controls. All train/validation predictions and global/per-parent/exposure metrics retained.
+- **Sampled comparison:** Conditional-age complete-partition estimator passes enumerated toy and16 K512 groups at 3 fixed states (meanrelative<=.00118,RMS<=.00639). It retains exact forward/conditional scores and is hybrid, not simulator-onlyRL. Original target-independent projection8598s exceeds7200 s ceiling; sampled training is not launched. This family supplies no fitted RL accuracy comparison. No prospective budget extension.
+- **Exposure/verification:** No digestion-training construct/peptide overlap or unsupported algebraic bond directions in either MAPPsplit; prior digestion development overlaps separately reported. No homology/specimenindependenceclaim. Independent feature-transform/source/physical/metric checks verify4120predictionrows,6000Adamupdates and4fixedgradients perfit. Every allocated scalar receives updates; frozen imported sequence coefficients intentionally remain frozen. Allsmall-parentresolvent/integration/finite-difference/massconservation checks pass.
+- **Resources/reproducibility:** Local CPU float64, one thread, noModal/GPU/environmentchanges. Exactcaps690/517/525s,4GiB; raw optimizer/checkpointJSON,predictionGZ,source/configreceipts directly stored. Initial NumPy boolserialization failure preserved; same seed/settings resume with ORIGINALcostcaps. No biologicalfitretry. Correctedqualification61.58s,1.08GiB. Runtimes include artifacts and limited verifieroverlap, not isolatedbenchmarks. Independentcalibration, precursor/clearance, nativecellularsource788 and APCvalidation remain open; fullgoalactive.
+
+## 2026-10-24_0106_codex_cellular-amplitude — Calibration helps the non-sequence control; stop the MAPP transfer bridge
+
+- **Date / agent:** 2026-10-24T01:06:11.535884-04:00; Codex / GPT-6; source `ebb70e3f4a86fd6ba33f9e2422dd0df63d56479b`, recorded dirty state. [Report and frozen reproduction bundle](2026-10-24_0106_codex_cellular-amplitude/README.md).
+- **Source / curation:** Unchanged canonical MAPPmin2, PXD009092 human HEK293 captured proteasome fragments; manifest `df78d02f8200809c659e43adfae29866c48b712122b740379106994622f4ac80`. Verified 0043 predictions: 72 train parents/144 examples/918 rows, 15 historically inspected validation parents/30 examples/112 rows. Original 14 test parents explicitly excluded: no new test metrics/dumps. No new curator, filtering, negatives, synthetic labels, censor reinterpretation or source independence claim. No applicable affinity/binder metrics.
+- **Training / outputs:** All physical rates and prior removal parameters frozen. Fit one nonnegative scalar beta per physical arm by exact training-weighted least squares, no optimizer/pretraining/penalty/search or validation calibration. `beta * centered log10 residence amount` maps to original centered log10 captured-MS intensity. Three new scalar parameters; no physical/APC/KO/treatment/species/MHC/TCR/transport training. Original unscaled and uniform composition controls retained; no sampled fit in this analytic diagnostic.
+
+| Model | Beta | Train RMSE | Validation RMSE | Validation Pearson / Spearman | Validation prediction SD |
+|---|---:|---:|---:|---:|---:|
+| Uniform composition | 1.000000 | 0.35609 | 0.28603 | undefined | 0.00000 |
+| Uniform cleavage | 1.000000 | 0.41394 | 0.36972 | 0.4416 / 0.3723 | 0.43871 |
+| Uniform cleavage + calibration | 0.302123 | 0.34137 | 0.26711 | 0.4416 / 0.3723 | 0.13255 |
+| Adjacent sequence rates | 1.000000 | 0.44012 | 0.39307 | 0.4067 / 0.3456 | 0.43028 |
+| Adjacent sequence rates + calibration | 0.265903 | 0.34161 | 0.27590 | 0.4067 / 0.3456 | 0.11441 |
+| Wider sequence rates | 1.000000 | 0.57514 | 0.55627 | 0.1685 / 0.1258 | 0.57088 |
+| Wider sequence rates + calibration | 0.113527 | 0.35129 | 0.28697 | 0.1685 / 0.1258 | 0.06481 |
+
+
+- **Decision:** The calibrated uniform-cleavage control wins. Neither imported sequence prior beats both controls, so the prospective stop rule is triggered: stop extending this bridge on the same MAPP development set. Uniform calibration improves validation RMSE about 6.6% versus uniform composition and helps 10/15 parents (4 worse,1 tie); this is modest geometry-based captured-signal prediction. Adjacent loses to calibrated uniform on 9 parents, wider on 11. Positive beta preserves ranking; no proof of detector calibration, physical abundance or APC concentrations. Validation selection history remains explicit. Keep the best control provisional for this development contract only, not the older test contract.
+- **Metrics:** Hierarchical-weighted MSE/RMSE/R2, pooled Pearson/Spearman/SD, forward KL(target||prediction), per-parent/exposure strata and all train/validation predictions retained. Calibrated uniform validation R2 .12793 and predictionSD .13255 versus targetSD .35130. No new untouched test.
+- **Verification / runtime:** Independently reconstruct 4,120 input source/physical predictions using the pinned prior reference; weighted least-squares/KKT verify all3 beta values; all7,210 output rows, metrics/strata and stop decision replay (max prediction error1.78e-15). Producer 0.935s/104.14MiB, verifier 9.196s; declared60s/2GiB. Local CPU one-thread, no Modal/GPU/environment change or failed-run retry. Source/config receipts, coefficients/cross moments, plot/CSV and compressed predictions directly stored.
+- **Next:** Enforce the stop rule and prioritize canonical native cellular source788, independent response95/762 and precursor/machinery evidence. Full APC availability/concentration goal remains active; no further tuning of this bridge on the same MAPP development set.
+
+## 2026-10-24_0117_codex_native-peptidome-admission — Native source replay succeeds; semantic errors defer training
+
+- **Agent/model/date:** Codex / GPT-6; October24,2026. Registered before retrieval/schema arithmetic at132404d1d0a2b714dcff9804e7e052b909f28f6d with recorded dirty task state. [Report, complete cell evidence and reproduction](2026-10-24_0117_codex_native-peptidome-admission/README.md).
+- **Exact source/curation:** Public Dasgupta2014/Gelman2013 native human HEK293T/SH-SY5Y extract peptidomics. Thirteen PLOS assets retrieved; six OOXML workbooks audited, including derived heatmap/dose/time tables. Original2012 epoxomicin XML retrieval failsHTTP500; primary-source lineage remains unresolved. No author outreach. Original cells/qualifiers/unknown peaks/annotations remain unchanged; no predictive recipe admitted.
+- **Shared implementation:** Hitlist790 merged during audit. Its pinnedf4d3a6d public writer/EvidenceStore produces a schema15/catalog20 package, code2.0.15; PyPI publication not verified here. No new source curator or shared environment changes. Exact canonical manifestb15de0b80c9fff1aad5b60f66e4e5b083c7f585ea01e723209a482182e26c32b; input paths/hashes, execution receipts and source snapshots preserved.
+- **Training/assays/splits:** No model, optimizer, pretraining, synthetic biological labels, loss weights or assay-head mapping. Relative isotope-channel ratios are observed endpoints, not concentration or MHC labels. No validation/test split/predictions or regression/binder metrics because this is source qualification before independence/identity admission. No winner/checkpoint; MAPP transfer stop remains in force.
+
+| Audit condition | Outcome |
+|---|---|
+| Independent XML versus openpyxl |271,778explicit cells across6workbooks;0disagreements|
+| Canonical source-row replay |10,564rows;328,880values including blanks, all agree|
+| Canonical query and independent quantity parsing |61,908slots, all source values/statuses/operators replay|
+| Candidate cross-paper reuse |830fingerprint groups/1,660rows versus0canonical matches;552groups also share normalized experiment labels,278need label adjudication|
+| Identification eligibility |16,807numeric exact slots have no sequence;213have explicitly tentative outer parentheses|
+| Projected heatmap identity |173Gelman rows use adjacent-residue column instead of peptide column|
+
+- **Quantity policy:**34,763reported numeric exact slots;15,753bounds;4,113empty;7,217nd;60po;2spreadsheet errors. Three numeric values are nonpositive. These are measurement slots, including controls/derived averages, not independent targets. Parenthesis-containing annotations have219exact slots including one uncertain-modification form;540slots containMoxwhose modification is lost by the normalized parser.
+- **Findings/decision:** Source bytes replay, but semantic admission fails. Reuse hash includespaperID; parenthesized acetylation can add a residue; modifications and tentative evidence are lost; Gelman heatmap column is wrong; acquisition assignsG1universally despite2014G2Methods. Treatment/harvest intervals need source scope:2014keeps inhibitor during washing, so35min total remains supported. File and read back [Hitlist791](https://github.com/pirl-unc/hitlist/issues/791); retain corrected-source and canonical-recipe work before fitting. No APC concentration claim.
+- **Resources/reproduction:** Local CPU, one-thread environment, no Modal/GPU. Workbook audit14.64s/332.33MiB; canonical build/query/replay14.60s/997.98MiB; semantic verification1.02s. Allcaps pass; no failed audit execution/retry. All raw cell/layout/candidate evidence, receipts and source snapshots retained; original assets/package referenced underdata/native_peptidome_source_audit. Python explicitly linted outside normal experiment exclusions. Presto132404dCI docs/lint/tests/distribution jobs pass.
+- **Next:** Correct shared semantics under791, qualify a native-response recipe and preregister the bounded biological exact-versus-sampled comparison. The full APC availability/concentration goal remains active.
+
+
+## 2026-10-24_0156_codex_tmab-semantic-replay — Corrected native peptide semantics preserve sources; recipe still pending
+
+- **Agent/model/source:** Codex / GPT-6; Presto b298ea9 with recorded task dirt, Hitlist f4d3a6d plus frozen correction diff/files. [Full report and reproduction](2026-10-24_0156_codex_tmab-semantic-replay/README.md). Execution version 2.0.16, revision v2/schema16/catalog21; delivery status separate.
+- **Dataset:** Same four pinned public Dasgupta2014/Gelman2013 primary/heatmap workbooks as0117. Native human HEK293T/SH-SY5Y extract isotope-channel ratios, not APC concentrations or MHC measurements. Old manifestb15de0b8…; corrected manifest `f84bd8e738a2c14d446956c719cfeaba91bc867a95aebd62dac1c91d3e3a1666`. Source quantities/qualifiers/missingness/overlap/errors, row arrays and measurement IDs unchanged. No new curator or environment changes.
+- **Conditions/results:** Shared public writer/EvidenceStore versus original package and independent source grammar/memberships:10,564rows/61,908measurement slots preserved;830possible cross-paper row groups/1,660rows,552with matching normalized experiment labels and278different. Structured modifications, tentative/unresolved identification,173Gelman heatmap projections, acquisition scope and source timeline examples verify. Source candidates:7,933exact and4,662censored treated/control ratios. Controls/derived means remain deferred; these are not independent targets.
+- **Failure/correction:** Original execution failed1,242context-label comparisons because its verifier ignored existing whitespace trimming in projected labels. Raw rows retain original bytes/values. All other assertions passed. Separate frozen closure verifies every discrepancy against both versions and original cells, with0unexplained differences; initial code/log/results/package remain immutable. No production change or outcome-driven biological retry.
+- **Training/evaluation:** No model/pretraining/optimizer/loss/assay head/synthetic biological labels. No predictive validation/test split or prediction dumps because this is source admission. Full semantic-change/query/membership dumps are retained; nM/binder metrics inapplicable. No predictive gain or concentration qualification.
+- **Resources/verification:** Local CPU one thread, no Modal/GPU. Original replay38.99s/1152.34MiB; closure2.49s/554.45MiB, within registered caps.43focused tests pass;14fail/1pass on pinned old code. Full ./test.sh passes:3,403tests/723.92s; hosted/release gates remain pending. Exact commands/env/source snapshots and old/new manifests in reproduce/results.
+- **Decision:** Corrected source semantics pass; native-response recipe still pending shared-control/charge/reuse grouping and parent mapping. [Hitlist791](https://github.com/pirl-unc/hitlist/issues/791) and implementation792 remain upstream owners. No more MAPP bridge tuning on the inspected development set; proceed toward real native peptide perturbation prediction. Full APC availability/concentration goal stays active.
+
+## 2026-10-24_0259_codex_native-response-admission — Canonical source, parent alternatives and grouped response targets qualify
+
+- **Agent/model/date:** Codex / GPT-6, October24,2026; [report and frozen reproduction](2026-10-24_0259_codex_native-response-admission/README.md). Presto593e3b5 with recorded task dirt; Hitlist frozen merge of ddc6581/7649ffe, now committed/pushed as b3f1079 in PR793. Sourcev3/schema17/catalog22/version2.0.17; release not yet verified. The original0156v2 replay is not evidence for concurrentPR794's differentv2 implementation.
+- **Source/curation:** Same four public Dasgupta2014/Gelman2013 workbooks, native HEK293T/SH-SY5Y peptide extracts. All10,564rows/61,908slots and1,736,376original-field invariants preserved. Possible reuse includes830identified and553unidentified groups; no specimen identity invented. Modern UniProt2026_03human reviewed isoform reference42,562records, all1,155exact occurrences/345used records retained; no original-search or unique-origin claim.
+- **Recipe:** Positive reported supported-identity exact/bounded treated/control ratios; defer controls/means/unknown/tentative/unsupported/nonquantifiable/conflicting copies. No generated labels, negatives, MHC length filter or quantity averaging. Components use all source sequences, possible reuse, parent/gene assertions and all reference alternatives before filtering. Weights average condition/component/form/observation. Source manifest7f80844b…, recipe manifestc72980c0…; complete hashes/paths in report.
+
+| Split | Groups | Components with targets | Effective observations | Exact | Bounded | Full-parent-supported groups |
+|---|---:|---:|---:|---:|---:|---:|
+| Train |1,861|86|6,735|4,301|2,434|1,855|
+| Validation |245|19|932|504|428|245|
+| Test |631|16|2,447|1,278|1,169|631|
+
+- **Verification/resources:** Public materialization54.87s/1.415GiB; independent grammar/Aho–Corasick/BFS/target/weight replay10.59s/1.069GiB. All source, reference, component, disposition and observation checks pass. Initial independent verifier incorrectly required a space after taxonomy; valid end-of-header token correction is preserved with original failure, without source/split/gate changes. Hitlist format/lint and3,414normal local tests pass630.18s. Local CPU/one thread; no Modal/GPU/environment changes. Frozen exact invocations/source/files/results retained.
+- **Training/evaluation/decision:** No model, pretraining, loss optimization or predictive validation/test evaluation in admission; no prediction dumps or nM/binder metrics applicable. The prospective split is retained for0314biological fitting. Thirty-three control proxies cross splits; specimen/denominator/homology/external-study independence unresolved. Native relative ratios, drugs and source parent alternatives do not identify APC concentrations, KO activity or unique precursor origin. Admission closes; full goal remains active.
+
+## 2026-10-24_0314_codex_native-response-baselines — Real native response prediction: condition effects transfer, direct sequence models overfit
+
+- **Agent/model/source:** Codex / GPT-6, October24,2026; Presto593e3b5 with recorded dirt. [Full report, plot, fitted models, predictions and frozen plan](2026-10-24_0314_codex_native-response-baselines/README.md). Canonical native response recipec72980c0… after independent0259qualification; no Presto-only source curator.
+- **Exact data/assays:** Native HEK293T/SH-SY5Y chemical treated/control isotope-channel ratios. Train1,861groups/86components/28conditions/6,735effective observations; validation245groups/19components/27conditions/932observations. Train4,301exact/2,434bounded; validation504exact/428bounded. Source qualifiers, contributors and condition/component/form/observation weights unchanged. No target clipping/averaging, generated negatives, synthetic biological labels or affinity-length filter. Other affinity/elution/TCR/APC assays excluded. No500nMmetric applies.
+- **Training/features:** Six prospectively fixed arms: zero, weighted exact training mean, exact/censored optimal constant, condition-only, shared sequence, compound-dependent sequence. Sequence=loglength/20AAfractions/first+last residues/acetylation/oxidation; literal compound interactions only. Training-only scaling and rank-support projection;28/83/582allocated linear parameters all change, with zero unseen validation condition/compound categories. No pretraining. Weighted exact squared error plus one-sided bound violation; .01coefficient penalty except globalintercept. Zero-init float64L-BFGS-B maxiter1000/gtol1e-9/ftol1e-12, final checkpoint only, no tuning/restarts. Iterations10/37/215; all converge by stated solver rules, latter two by objective-change tolerance.
+
+| Model | Parameters | Train loss | Validation loss | Validation exact RMSE | Validation Pearson / Spearman | Weighted bound satisfaction |
+|---|---:|---:|---:|---:|---:|---:|
+| No change |0|.225013|.186297|.257019|undefined|0%|
+| Exact train mean |1|.235781|.208923|.254223|undefined|0%|
+| Censored constant |1|.224752|.183884|.260793|undefined|0%|
+| Condition only |28|.130494|**.073495**|**.247726**|.4518 / .4279|0%|
+| Shared sequence |83|.088709|.129189|.372097|.2833 / .2297|22.45%|
+| Compound-dependent sequence |582|**.045652**|.153178|.364586|.2980 / .2881|45.88%|
+
+- **Decision:** Condition-only is the provisional reference, reducing validation primary loss60.5% versus nochange but exactRMSE only3.6%; it still satisfies zero bounds. Sequence variants worsen primary loss75.8%/108.4% versus condition-only despite training gains. Shared sequence loses on21/27conditions and11/19components; compound sequence on20/27conditions and12/19components. Neither passes the biological screen; no proof that sequence is irrelevant or unique root cause. Do not extend this direct feature sweep on the same validation data. Next is the small full-parent mechanistic model with matched differentiable/sampled gradients, frozen in [native-processing-comparison.md](agents/codex/plans/native-processing-comparison.md).
+- **Test policy:**631testgroups remain reserved for the final predeclared physical-model comparison. No test metrics/predictions here by design, no validation selection. Full train/validation per-observation dumps permit metric recomputation. These are seen-treatment, held-out-component results, with shared studies/control proxies and unresolved specimen/homology independence; not APC concentration validation.
+- **Verification/resources:** Six arms4.639s/418,185,216bytes, local CPU/one numerical thread/noModal/GPU/envchanges. Independent checks verify46,002source-linked predictions, training transforms/support/final objectives/gradients,12global and960stratified metrics. Exact input tie correction changes149correlation records, maxpredictionchange3.28e-15; losses/RMSE/decisions unchanged. Original outputs retained; `results/qualified-v2` are canonical reported predictions. Scalar verifier completed mathematical checks but failed180s budget; vectorizing only coordinate products passes6.956s/458,981,376bytes and agrees with saved scalar reference1.17e-15. No fit retry or changed gate. Numerical toy and finite-difference directions pass; optimizer history is not independently replayed. Full APC availability/concentration goal remains active.
+
+
+## 2026-10-24_0410_codex_native-processing — Small real held-out processing gains; sampled gradients add cost
+
+- **Date / agent / source:** October24,2026; Codex / GPT-6. Source2cb7db0fff076180e3235ea11ef9d30b6cb2872e with recorded dirt and frozen new module/launcher. [Full report, plot, frozen plan and artifacts](2026-10-24_0410_codex_native-processing/README.md).
+- **Source and curation:** Canonical Hitlist native-response manifestc72980c070cb1296609bbe7d296e27b6a2a22d3ff354ef846c1c99ad7959ccfc, independently admitted0259. Dasgupta2014/Gelman2013 HEK293T/SH-SY5Y native extract chemical treated/control isotope ratios. Full-parent-supported subset: train1,855groups/85components/6,707observations(4,289exact/2,418bounds), validation245/19/932(504/428), test631/16/2,447(1,278/1,169). Six unsupported train groups/28observations omitted, all source IDs retained. Original hierarchical weights renormalized once per selected split. No synthetic labels, negatives, imputation, target averaging, cutoff or chosen parent. All six0314controls refit on the matched subset.
+- **Model and output:** Continuous unit parent input, independent cuts and common removal delta1; all contiguous1..Lproducts implicitly supported. Uniform rates versus38supported adjacent-residue coordinates, plus globalrate and28condition rate/28condition offset coordinates:57/95parameters. Train-only supported feature transform over5,008reachable bonds/236parents. Keep all source origin alternatives, collapse identical parent sequences, sum occurrences and average candidate-parent inputs. Predict b_condition+log10(Ftreated/Fcontrol), with a shared treatment rate multiplier; no peptide-specific offset. Distant outside bonds integrate out. Form labels retained without a PTM rate model. This is native response, not APC concentrations.
+- **Training:** Four fixed arms, zero init,200full-batch float64Adamsteps,lr.02/betas.9,.999/eps1e-8, penalty.01 exceptbglobalintercept. Exact squared log-ratio error plus one-sided squared bound violations; no pretraining/selection/restarts/synthetic data. No binding/stability/elution/TCR/APC machinery or species auxiliary supervision. Direct controls use unchanged0314ridge/SVD/L-BFGS-B contract. Every57/95coordinate changes. All fits terminate before once-only test evaluation; all settings/checkpoints/constants/transforms sealed. Test is now inspected and may not be tuned against.
+- **Sampling:** K512conditional origin/age draws per response group,seed42, paired treatment/control uniforms. Exact forward amounts/residuals/origin probabilities/offset gradients; conditional unnormalized event-score kinetic gradients. Hybrid, not simulator-only RL/GRPO. No clipping/group-standardization/reuse/KL. Four fixed probes pass meanrelative.00279–.00321/RMS.00912–.01142 versus.10/.25gates; zero shared-rate cancellation and finite differences pass.
+
+| Model | Train loss | Validation loss | Test loss | Test exact RMSE | Test Spearman |
+|---|---:|---:|---:|---:|---:|
+| No change |0.225345|0.186297|0.202817|0.255458|undefined|
+| Condition only |0.130686|0.073514|0.130557|0.250953|0.5324|
+| Direct shared sequence |0.088821|0.129940|0.226896|0.331508|0.4473|
+| Direct compound × sequence |0.045643|0.152802|0.372538|0.499235|0.2226|
+| Uniform cleavage / exact |0.129261|0.072834|0.130125|0.249390|0.5280|
+| Uniform cleavage / sampled |0.129287|0.073126|0.129744|0.249202|0.5345|
+| Sequence cleavage / exact |0.124510|0.070384|0.129789|0.243207|0.5373|
+| Sequence cleavage / sampled |0.124566|0.070619|0.129336|0.242887|0.5383|
+
+- **Decision:** Exact sequence processing improves condition-only primary loss4.26%validation/0.59%test, exactRMSE0.71%/3.09%. TestPearson/Spearman.5578/.5373; weighted exactR2.0929 versuscondition.0342. ValidationSpearman declines.4279→.4221. Wins13/19validation and10/16testcomponents, only14/27 and15/28conditions. Testbound satisfaction14.92%, validation1.30%; most bounded extremes remain unsatisfied. Direct sequence regressions overfit again. Nominal primary-loss screen passes, but incremental signal is small and unreplicated. Exact is the practical provisional processing reference; no source-independent or concentration qualification.
+- **Exact versus sampled:** Sequence exacttestRMSE.243207 versushybrid.242887, primaryloss.129789 versus.129336; validation slightly favors exact. Single-seed near-equivalence supplies no convincing sampling advantage. Uniform exact5.40s/hybrid146.61s; sequence exact5.55s/hybrid138.74s. Each hybrid uses379,904,000conditional event scores; all prescribed200steps complete under300s/1800s and4GiB. PeakRSS.412–.659GiB. Exact finalgradientinf8.36e-6/3.46e-5; sampled.00809/.00734. Bounded fits, not a global convergence proof. Local CPU, one requested numerical thread; no Modal/GPU/environment changes.
+- **Verification and artifacts:** Nine physical/substrate tests pass (3.39s); original float32 test-reference failure retained and corrected without model/gate changes. Independent scalar physical reconstruction, source lineage/qualifiers/weights and global/stratified metric closure verify100,860predictionrows/2,180metricrecords; maxprediction/logamount error3.55e-15,86.08s/.277GiB. All checkpoints/trajectories/gradients/conditional probes, source snapshots, configs, train/validation/test predictions, tables/plot and receipts stored. Optimizer trajectories retained but not independently replayed. nM/500nMmetrics do not apply.
+- **Limits and next:** Same studies/seen treatment categories; unresolved specimen, shared-control and homology independence. Chemical labels are not measured enzyme activities or KO states; same-form detector cancellation and equal candidate-parent input remain assumptions. Actual APC data, precursor-relative calibration, causal machinery effects, transport and independent MS response remain open. Do not tune this inspected test or extend sampling machinery on numerical success alone. Full availability goal remains active.
+
+## 2026-10-24_0449_codex_apc-precursor-response — Actual APC ligand response: processing fails to beat context
+
+- **Date / agent / source:** October 24, 2026; Codex / GPT-6. Presto f7b76a30fbbffce6f2d36752ee16d85b6b3fa1a6 with recorded task dirt and frozen new experiment code. [Full report, predictions, checkpoints and reproduction](2026-10-24_0449_codex_apc-precursor-response/README.md). Local CPU, one numerical thread, no Modal/GPU or environment changes.
+- **Dataset/curation:** PXD057588 Table9 macrophage MHC-I treated/control log2 fold changes, explicitly converted to log10 ratio; Table11 digest peptides supply condition-level precursor surrogates. Current Hitlist2.0.17 consumer b3f1079 against verified schema7/2.0.0 source package manifest d99f67e6…; canonical response recipe93ef0b23…. Source quantities/derivations/context/all origin alternatives retained. Require ≥2 distinct digest sequences for every candidate parent; mean per-sequence channel log-ratios then median across digest sequences. Not exact aliquot matching:8/9channel mappings differ between tables. Digest normalization differs from MHC; Table10KO is tumor-partner, not macrophage. No source curator added to Presto.
+- **Split/weights:** All-source canonical dependency components hashed with fixed salt before filtering. Train492peptide rows/984groups/361components/2,952observations; val96/192/69/576; test129/258/82/774. All717peptides have CT2A and GL261 conditions;920candidate parent sequences/1,840parent-condition surrogates. Weights average condition/component/peptide/channel. All admitted targets exact, no imputation/clipping/target averaging/negatives/synthetic biological labels. Other assay families excluded; nM/binder metrics inapplicable. Shared study/conditions/controls and unresolved specimen/homology independence remain.
+- **Model/training:** Continuous unit parent input, independent bond cleavage, common removal1; all1..Lspans implicit. Query sequence/boundaries and parent-specific precursor ratio produce conditionoffset+log10(sum treated amounts/sum control amounts). Uniform,38supported adjacent-residue coordinates, or frozen0410human-native rate prior. Train-only scaling/SVD/equal-parent weighting;2condition coordinates. Four fixed controls use zero or precursor-only prediction, or2parameter L-BFGS-B condition offsets. Five physical arms use200zero-init full-batch float64Adamsteps,lr.02/betas.9,.999/eps1e-8,seed42. Weighted MSE+.01coefficient penalty except globaloffset. All5/43/4allocated coordinates change. Prior rates frozen, only condition scales/offsets fitted; zero exact peptide overlap with priortraining, no held-out exact full-parent overlap. No affinity/stability/TCR/KO/species or independent detector module is trained.
+- **Sampling contract:** K512conditional origin/age scores with precursor-weighted exact origin probabilities, paired treatment/control uniforms, exact forward/residual/offset gradients. Hybrid, not simulator-only RL/GRPO. No clipping/std/reuse/KL. Four fixed probes pass meanrelative.000716–.001628/RMS.004194–.007620 against.10/.25; finite differences and no-input cancellation pass. No biological fit retry or held-out selection; all attempts sealed before once-only evaluation.
+
+| Model | Validation MSE | Test MSE | Validation RMSE | Test RMSE | Test Spearman |
+|---|---:|---:|---:|---:|---:|
+| No change |.017453|.014547|.132111|.120611|undefined|
+| Condition only |.017035|.014403|.130517|.120011|.2512|
+| Precursor only |.026993|.019088|.164295|.138158|.2241|
+| Condition + precursor |.027396|.019394|.165518|.139264|.2642|
+| Uniform processing + precursor |.027390|.019398|.165498|.139278|.2639|
+| Sequence processing + precursor |.027389|.019398|.165496|.139278|.2641|
+| Sampled sequence + precursor |.027398|.019404|.165524|.139298|.2643|
+| Sequence without precursor |.017032|.014402|.130508|.120008|.2323|
+| Frozen native prior + precursor |.027407|.019375|.165551|.139193|.2646|
+
+- **Decision / preferred reference:** Negative. Keep condition-only for this contract. No-precursor sequence testMSE gain only.0052%, weightedR2.00136 versus.00131. Its within-condition testpredictionSD.000278/.0000759 versus target.1372/.0972 is nearly constant. Precursor input produces variation but worsens error; processing does not rescue it. Native prior gives no useful transfer. Stronger ranking with precursor does not offset its substantially worse MSE. This does not identify whether normalization, noisy precursor surrogates, fixed proportional scaling, regularization, restricted kinetics or changing selection/measurement dominates. Test now inspected; no tuning against it.
+- **Runtime:** Exactuniform2.58s,sequence1.92s,noinput1.90s,prior1.34s; hybrid67.48s (~35×sequenceexact),201,523,200event scores, no gain. All200steps/300s-exact/1800s-sampled/4GiB caps pass;physical peak.416–.540GiB. Fourcontrols each<.002s aftersetup. Exactfinalgradientinf1.4–1.9e-6 versus hybrid.000591; bounded local stationarity, not global convergence proof. Numerical qualification16.73s.
+- **Verification / artifacts:** Source closure1,256,555relationrows/200,718responses/1,840precursors/4,302admittedobservations passes13.23s. Separate scalar physical reconstruction and independent NumPy/SciPy metrics verify38,718predictionrows/4,743metricrecords,maxerror3.55e-15,7.21s/.319GiB. No optimizer replay or external biological validation. Original export/nullable-reference consumer failures retained and corrected before fitting; no reachable upstream sequence omission. Frozen launch/config/source/prior/dependency receipts, all checkpoints/trajectories/predictions, summaries/CSV/PNG/PDF and overlap/spread diagnostics preserved. Figure layout correction does not change numbers.
+- **Next:** Address precursor calibration and kinetic identifiability on training data, then require a fresh prospective biological population for further predictive claims. Independent machinery/selection/detection and precursor-relative concentrations remain open. Exact and sampled agree on this failure; do not extend sampler machinery as its remedy. Full availability goal stays active.
+
+## 2026-10-24_0527_codex_apc-training-diagnostic — Nonconstant APC fits overfit; fixed precursor scaling is unsupported
+
+- **Date / agent / source:** October24,2026; Codex / GPT-6. Presto34568ca with recorded task dirt and frozen new code. [Report, predictions, checkpoints and reproduction](2026-10-24_0527_codex_apc-training-diagnostic/README.md). Registered after0449failure, before diagnostic arithmetic. Local CPU/one numerical thread; no Modal/GPU/shared-environment changes.
+- **Exact source/curation:** Only original0449training subset of canonical PXD057588 recipe93ef0b23…:492peptides,984condition groups,361components,2,952exact source-channel log10responses. Table9MHC-bound targets, Table11condition-level parent surrogates; all original values/weights/origin alternatives/contributors preserved. Same sample-pairing/normalization limitations. No synthetic labels, imputation/clipping/negative generation; other assay families excluded. Original sourceJSON is filtered before modeling; originalvalidation/test outcomes are not fitted/predicted/scored.
+- **Evaluation contract:** Posthoc training/development diagnostic. Fixed sha256component fivefold innerCV with86/100/125/92/89validationpeptides; feature transforms and calibration refitted within each fold. Original hierarchical weights normalized inside fitting subsets and retained for pooledCV. Each arm also fits full originaltraining. No untouched outertest or nM/binder metrics; no external concentration claim. Every inner-validation observation is preserved once pervariant with source IDs.
+- **Model/training:** Four analytic controls(nochange,condition,fixedprecursor,calibratedprecursor). Single nonnegative gamma from within-condition covariance/variance; two unpenalized condition offsets. Physical factorial shared versus condition-specific adjacent-residue treatment preferences × kinetic penalty.01/0. Fold-specific gamma frozen and applied to each parent's input exponent. 38train-supported residue coordinates;41/117kinetic parameters, all update; two offsets profiled exactly at each objective.400zero-init full-batch float64Adamsteps,lr.02/betas.9,.999/eps1e-8,seed42,finalcheckpoint. Weighted MSE+registeredkineticpenalty; no pretraining/selection/restarts. This different offset/calibration contract is not a controlled repeat of0449.
+
+| Model | Full-training RMSE | Inner-CV RMSE | Inner-CV R2 | Inner-CV Spearman |
+|---|---:|---:|---:|---:|
+| No change |.116091|.116091|-.00168|undefined|
+| Condition only |.114155|.114185|.03095|.1890|
+| Fixed precursor coefficient1 |.136207|.136383|-.38246|.1568|
+| Calibrated precursor |.114083|.114738|.02154|.2210|
+| Shared preferences, penalty.01 |.114057|.114715|.02193|.2222|
+| Shared preferences, no penalty |.105947|.116482|-.00844|.2039|
+| Condition-specific, penalty.01 |.105242|.115730|.00454|.2577|
+| Condition-specific, no penalty |.098916|.127096|-.20059|.2194|
+
+- **Finding / decision:** Full-training gamma.05163,foldrange.00165–.14445; calibration removes most damage from forcing1 but does not beat condition-onlyCV. Initial condition-centered weighted Jacobian ranks5/41shared,81/117flexible atrelative1e-8; final full-data ranks41/41and117/117. This diagnoses local first-order sensitivity, not causal identification. Less penalty/more flexible rates fit training better but overfit components. Keep condition-only comparator; no production baseline promotion. Within-group channel variation MSE.002354 accounts for18%of conditiontrainingerror,82%between groupmeans; this is not a biological/noise decomposition.
+- **RL decision:** Predesignated flexible/unpenalized exact arm must beat calibratedprecursor innerCVRMSE by≥2% with SD>.001bothconditions. Variationpasses(.0920/.0630),RMSEworsens10.77%; gatefails. No sampled fit or sampled numerical qualification ran; do not claim an exact-versus-RL result from this family. Conditional-score code retained, noGRPOclips/std/reuse/KL. Stop adding sampler complexity or expanding this source's sequence features.
+- **Runtime / checks:**24physical400stepfits complete,sumrecordedfitloops/finaloutputs100.02s,individual3.50–5.25s,peak.467GiB. All300s/4GiBcaps pass. Sharedpenaltygradientinf<8e-13; flexibleunpenalized.0042–.0254,not convergenceproof. Fourfixed finite-difference probes/three directions each pass1e-7; qualification3.58s. Independent source/fold/scaling/calibration,scalarphysical/profiledoffset andNumPy/SciPyclosure verifies47,232predictions/5,824metricrecords,maxerror2.84e-14,28.70s/.861GiB. Optimizer/Jacobiantrajectories retained but not independently replayed. No failed biological run discarded.
+- **Artifacts / next:** Full/foldcoefficients,transforms,calibration,loss/gradient/updatehistories,100stepoptimizer/RNGcheckpoints,source-linkedfulltrain/innerCVpredictions,metrics/CSV/PNG/PDF,numericalprobes,ranks and frozen code/config/source/commands retained. No originaloutertest dumps by explicit diagnostic design. [Hitlist798](https://github.com/pirl-unc/hitlist/issues/798) now requests canonical quantitative deVerteuil2010DC machinery-loss admission with replicate/control/concurrent-state and separateRNA/protein metadata; requestreadbackverified,sourceassetsnotadmitted. Need independent prospective biological population/measurementconstraints. Full APC availability/concentration goal active and unachieved.
+
+## 2026-10-24_0602_codex_dc-machinery-admission — Original quantitative supplements not yet accessible
+
+- **Date/agent:** October24,2026; Codex/GPT-6; Presto c7d538c with recorded task dirt. [Report and reproducibility bundle](2026-10-24_0602_codex_dc-machinery-admission/README.md). Hitlist fda1eff/2.0.18 inspected; unchanged source code.
+- **Source contract:** deVerteuil2010 PMID20484733/PMC2938112. Quantitative admission remains pending:13 retrieval attempts,10 hashed HTTP bodies, no original quantitative asset/observation admitted. EuropePMC metadata hasSupplY/OAN; supplementary API returns explicit non-OA XML error despiteHTTP200. Current official PMC archive listing is empty/untruncated; legacy API retired. Publisher article/linkedPDF403; no access-control bypass or author messages.
+- **Training/evaluation:** none. No pretraining, synthetic labels, loss, output mapping, split, validation/test prediction dumps, affinity metrics or selected model because actual source schema was not available. Published aggregate counts are not training rows. Full APC availability goal stays active.
+- **Verification/runtime:** independent size/hash/receipt checks pass for every retained response, including metadata identity and explicit error-body checks. SumHTTPtime5.59s; local work, no GPU/Modal/environment change. PyPI2.0.17JSON separately returns404; release deployment still unverified. Exact commands/environment, original failures, source paths and source snapshots retained.
+- **Decision:** preserve Hitlist798 access gap; require original quantities, qualifiers, source filtering, concurrent machinery state and uncertainty. Continue existingHitlist726 HAP1 quantitative panel as a machinery-conditioning dataset, not a professional-APC concentration validation. No practical biological baseline changes.
+
+## 2026-10-24_0612_codex_hap1-quantitative-admission — Original quantities recovered; training admission pending
+
+- **Date / agent / source:** October 24, 2026; Codex / GPT-6. Presto c7d538c with recorded task dirt; Hitlist fda1eff/2.0.18 inspected. [Report, source receipts and replay bundle](2026-10-24_0612_codex_hap1-quantitative-admission/README.md). Registration preceded retrieval; numerical replay hypotheses were written after header inventory and before comparison.
+- **Dataset contract:** Shapiro 2025, PMID40113210/PMC12090245/PXD056426. Human HAP1 wildtype plus 11 machinery KO conditions; three declared biological replicates each. MHC-I elution and global proteomics, not direct free-peptide concentrations or professional APCs. Original XML, eight supplements, canonical Search.zip and SDRF retrieved; 167-file deposit inventory complete. Noncanonical processed archive and raw acquisitions only inventoried. No Presto-only curator, synthetic labels, zero imputation or reinterpretation of missing values.
+- **Source arithmetic:** All 296,483 numeric canonical peptide cells reproduce normalized precursor sums averaged across all declared technical runs (maximum error 7.45e-9); raw quantities do not. All 166,028 numeric protein intensity cells reproduce MaxLFQ exactly. Field names alone would misidentify both quantities. Full per-cell comparisons and original source fields/identities remain in the bundle.
+- **Open lineage:** Two of 69 DIA runs remain unmapped (40,529 rows). All 36 peptide NA cells with a deposited reconstruction have zero quantity. Protein NA cells include 42,608 deposited zeros and 23,096 positive MaxLFQ values; source-filter lineage is unresolved and these values are not silently filled. The 36 proteomics filenames have unique punctuation aliases, without proof of paired specimens. Preserve confidence fields: 2,059 mapped rows exceed .01 global Q although per-run/library Q meet .01.
+- **Training/evaluation:** None. This source audit has no pretraining, model parameters, loss, assay-output mapping, train/validation/test split, predictions or binding/concentration metrics. It supplies no new predictive success or model promotion. Prior inspected biological tests remain closed.
+- **Runtime / initial artifacts:** Replay 55.03s, peak RSS 0.635GiB; Search.zip retrieval 117.73s, SDRF .64s. Local CPU, no Modal/GPU/environment changes. Actual headers, sample workbooks, hashes, commands/env, original response bodies, frozen launch/replay source and comparison dumps are retained.
+- **Shared implementation:** [Hitlist PR806](https://github.com/pirl-unc/hitlist/pull/806), draft commit2f4bbe0 on current base e8faa7f, adds the canonical standalone source package and ten EvidenceStore relations. Package schema20/catalog25/version2.0.20. Original build v1 failed before quantity projection on repeated SDRF column names; positional preservation and its regression fix the issue. Build v2 and complete source replay pass in379.92s/1.163GiB, manifest88cad10d7bc2a638305cb0d37ad96ac2826c3badaf7b3e0aad7928820df5c4b8.
+- **Actual source closure:** 2,391,692 supplement cells including missing;558,216 deposited protein cells;607,928DIA rows;62,496 source records;40,964 FASTA entries;60,447 occurrence/unmapped records;83 sample groups/166runs/24contexts. Extra sample labels belong to DDA library construction, not additional quantitative replicates. A separate raw-format checker verifies every quantity/DIA row, source/sample/run links and each59,726 emitted exact match, with721 unmapped peptide rows;96.90s/.987GiB. It does not independently prove search exhaustiveness or specimen independence. No model fit or new predictive metric.
+- **Query/testing:** Real unresolved-context querying exposed Hitlist805. Three null-join regressions fail before the fix; optional null rows now retain typed null metadata and cannot match null identities. Actual package queries pass. Format/lint and55 focused package/catalog/query tests pass. Full test script refused to launch on actual0.22GiB free against2.5GiB minimum; guard retained, full-suite/hosted validation and merge/release pending. All build attempts freeze source/config/diffs; original failure is retained.
+- **Decision:** Complete Hitlist726 endpoint eligibility/recipe and source release, then preregister a fresh biological comparison. No Presto-only source adapter and no claim that elution data alone identify processing or intracellular concentrations. Prior biological baselines/tests remain unchanged. Full APC availability goal remains active and unachieved.
+
+## 2026-10-24_0730_codex_hap1-response-baselines — Sequence predicts machinery response beyond controls
+
+- **Date / agent / source:** October 24, 2026; Codex / GPT-6. Presto6045dd2 and Hitlist2f4bbe0 plus frozen recipe code, subsequently published as abbc376 in [Hitlist PR807](https://github.com/pirl-unc/hitlist/pull/807). [Report and reproduction](2026-10-24_0730_codex_hap1-response-baselines/README.md). Local CPU, float64, one numerical thread; no Modal, GPU or environment changes.
+- **Source / curation:** Shapiro2025 PXD056426 human HAP1, canonical MHC-I elution plus supplemental MaxLFQ. Source88cad10d… / recipea1eec392…. One positive KO replicate minus mean log10 of at least two positive WT replicates. WT reference and B2M background only; exclude 520 B2M-positive sequences. Preserve all origins and source missingness; no imputation, inferred bounds or synthetic labels. Every candidate parent requires one unambiguous protein group and at least two positive WT/KO protein cells for the matched baseline population. Equal-parent log-ratio surrogate, without exact aliquot or molar claims. Other assay labels excluded.
+- **Grouping / evaluation:** All-source peptide, claim, exact-parent and protein-group components precede eligibility filtering. Fixed 70/15/15 hash partitions. Complete-precursor training: 87,260 cells / 6,317 peptides / 1,798 components / ten KO conditions. Five fixed inner component folds; weights average condition/component/peptide/replicate. Outer validation (19,744 responses) and test (22,724) deliberately remain unscored, reserved for a frozen physical-model comparison. Same-study, seen-KO development; specimen, clone and homology independence unresolved. No applicable nM/binder metrics.
+- **Training / output:** Four analytic controls; three condition-specific ridge penalties (0.001/0.01/0.1) using 61 length/composition/N/C features. Training-only transforms and closed-form weighted MSE plus L2; no optimizer, pretraining, restarts or identity parameters. Single log10 elution-response output. Nonnegative precursor gamma: full fit0.189554, folds0.121589–0.262808. Sequence slots610, supported/nonzero580, structural zeros30; ten offsets and gamma additional. No physical, detector, affinity/stability, TCR or auxiliary branch trains.
+
+| Model | Training RMSE | Inner-CV RMSE | Inner-CV R² | Inner-CV Spearman |
+|---|---:|---:|---:|---:|
+| zero | 0.703614 | 0.703614 | -0.1417 | undefined |
+| condition | 0.638312 | 0.638870 | 0.0588 | 0.2137 |
+| fixed_precursor | 0.645376 | 0.645887 | 0.0380 | 0.2022 |
+| calibrated_precursor | 0.637901 | 0.638745 | 0.0591 | 0.2215 |
+| sequence_0.001 | 0.553116 | 0.576014 | 0.2349 | 0.4601 |
+| sequence_0.01 | 0.553141 | 0.575716 | 0.2357 | 0.4601 |
+| sequence_0.1 | 0.554784 | 0.574832 | 0.2380 | 0.4587 |
+
+- **Decision:** Fixed sequence penalty0.1 improves inner-CV RMSE by10.006% over calibrated precursor. All ten KOs improve (4.0–13.4%); within-condition prediction SD0.1266–0.5307. The prespecified 2%-gain/0.001-spread gate passes. Useful biological response signal; no blind-test, concentration, causal-machinery or unseen-KO qualification. Preserve as the development reference for a matched physical exact/sampled comparison. No RL fit ran in this family.
+- **Verification / resources:** Source and recipe424.19s/1.802GiB. Independent audit of all2,391,692 dispositions,220,271 responses,45,981 inputs and full graph114.83s/1.109GiB; maximum ratio discrepancy1.78e-15. All42 fits214.21s/1.027GiB, within caps. Independent augmented-LS replay of1,221,640 predictions/global metrics/gate52.37s/0.992GiB; prediction/coefficient discrepancies2.94e-12/1.90e-12. Detailed strata remain producer summaries backed by verified predictions. No biological retry. Hitlist43 focused and3,439 full unit tests pass; memory guard retained.
+- **Artifacts / next:** Every training/inner-CV prediction, fitted cohort, coefficient/transform/support record, source/launch receipt, comparison CSV/PNG/PDF and verification log is retained. No outer-test dump by design. Shared canonical source/recipe paths are in the README. Hitlist806/807 merge/release remain separate pending work. Prior MAPP/native/macrophage tests stay closed. Full APC availability/concentration goal remains active.
+
+## 2026-10-24_0810_codex_erap1-trimming — Correct trimming estimators, no gain beyond the biological sequence baseline
+
+- **Date / agent / source:** October24,2026; Codex / GPT-6. Presto5699b9f plus frozen new module/launcher and recorded dirty state. [Full report, plan, predictions and reproduction](2026-10-24_0810_codex_erap1-trimming/README.md). Local CPU, float64, one numerical thread; no Modal/GPU/environment changes.
+- **Dataset / curation:** Shapiro2025 PXD056426 human HAP1 canonical MHC-I elution plus supplemental MaxLFQ, source88cad10d… / registered recipea1eec392…. Only ERAP1 from the preceding complete-precursor outer-training population:8,281observations/3,304peptides/1,296components/1,514parents/3,409origins. One positive KO replicate relative to at least two positive WT cells; original B2M exclusions, all origins, unknowns and source lineage retained. No imputation, synthetic labels, target averaging, inferred bounds or source curator. Protein inputs are condition-level surrogates, not aliquot-paired concentrations. Other assay families excluded; nM/binder metrics inapplicable.
+- **Model / output:** Unit full-parent input, fixed uniform cleavage/exit source compartment, then residue-dependent N-terminal trimming and clearance. All1..Lspans supported, including nonbinding/short products; monomers do not trim. Enumerate1,741,916birth paths using removed-residue counts, sum all origins, predict an offset plus log10 KO/WT amount ratio. KO rates use fitted effective sigmoid reduction; KO parent inputs use frozen fold-matched0730gamma. Augmented arm adds the physical correction to frozen sequence predictions and subtracts their precursor term. No trained TAP, selection/detector, affinity/stability, TCR or species/class branch. Elution alone does not identify rates or free-peptide concentrations.
+- **Training / evaluation:** Uniform exact2parameters; residue exact/augmented exact/augmented sampled21each. Fourarms×(full+fiveinnerfolds)=24fits; zero init,150full-batchAdamsteps,lr.03/betas.9,.999/eps1e-8,seed42,finalcheckpoint. MSE+.01mean(log-rate²)+.01reduction-logit²; offsets profiled using fitting rows only. Every allocated coordinate updates; frozen baseline intentionally unchanged. Original molecular components/folds/weights retained. **Outer validation/test intentionally unscored** in this development family; previous inspected tests closed. Full per-observation train/inner-CV/fold dumps preserved; specimen/homology/external independence remains unproved.
+- **Sampling:** Exact forward plus conditional score-function gradients, paired WT/KO quantiles; hybrid, not simulator-only RL/GRPO. No clipping/standardization/reuse/KL. K128 fails RMS.317–.334; predeclaredK512passes meanrelative.047–.052/RMS.127–.193 against.10/.25. Threefixedprobes/eightdraws, no regularization masking. Both attempts and numerical checks retained.
+
+| Condition | Train RMSE | Inner-CV RMSE | CV R² | CV Spearman |
+|---|---:|---:|---:|---:|
+| Condition only |.686424|.686516|-.0003|-.0036|
+| Calibrated precursor |.687914|.688302|-.0055|-.0100|
+| Frozen sequence, penalty.1 |.581462|**.596370**|**.2452**|.5243|
+| Uniform trimming / exact |.688704|.689090|-.0078|-.0451|
+| Residue trimming / exact |.681335|.683779|.0077|.1389|
+| Sequence + trimming / exact |.581296|.596436|.2450|.5248|
+| Sequence + trimming / sampled |.581292|.596417|.2451|.5249|
+
+- **Decision:** Keep the frozen sequence baseline. Exact augmentation is.0112%worse, failing the2%gate despite correctionSD.01023; component wins654/1296 versus642losses. Sampled is essentially tied, with no advantage over baseline. Physical-only residue model beats condition-only by only0.4%RMSE. No new causal/activity/concentration conclusion. All seven original controls, including zero/fixedprecursor/otherpenalties, are in the report and machine-readable summaries.
+- **Resources / training evidence:** All24fits888.29s/2.280GiB. Summed fits:uniform377.46s,residue132.20s,augmentedexact93.46s,sampled280.82s (~3×matchedexact). Early fits were slower and brief source-integration checks overlapped; observed runtime, not an isolated hardware benchmark. Everyfit526,058,632exactpathscores; sampled adds507,494,400drawscores. Qualification57.60s/2.352GiB. Augmentedexactfinalgradientinf≤1.99e-7,sampled≤6.58e-5; local numerical stability does not establish correct biology.
+- **Verification / artifacts:** Eight relevant software tests pass. Independent source/cohort/weight/fold/path checks and scalar recurrence reconstruct198,744fit predictions,maxerror9.05e-15; final offsets/penalties/losses/globalmetrics/gate checked and28,512component metric rows saved.8.34s/1.227GiB. Original raw-source audit reused; optimizer updates/gradient vectors not independently replayed. All checkpoints, histories, attempts, prediction dumps, sources/configs/logs,CSV/PNG/PDF retained.
+- **Next:** Stop expanding this sampler on the basis of numerical correctness. Seek independent substrate-dependent processing and selection/detection constraints before a new prospective biological comparison. Shared Hitlist integration remains separately tracked. Full APC precursor-relative availability/concentration objective stays active.
+
+- **Post-run source lead:** [Hitlist809](https://github.com/pirl-unc/hitlist/issues/809) requests independently measured ERAP1 substrate/product evidence with units, context and figure-versus-raw distinctions. Primary literature motivates auditing missing substrate-context effects; no such new labels enter this completed experiment.
+
+## 2026-10-24_0924_codex_erap1-source-qualification — Deposited numbers do not provide a sequence-diverse processing cohort
+
+- **Date/agent/source:** October24,2026; Codex/GPT-6. Presto e6ce3b2 with frozen new audit code and unrelated task dirt. [Report and reproduction](2026-10-24_0924_codex_erap1-source-qualification/README.md). Registered before workbook-cell inspection; executes the independent-source plan after the negative ERAP1 comparison. Local bundled Python3.12, no Modal/GPU/installations.
+- **Exact dataset/curation:** Maben2021 DOI10.1038/s41467-021-25564-w, original Source Data ZIP a9d7bcba…/479,402bytes, two workbooks. Read-only source-field inventory, no production curator or biological-label admission. Primary article XML3776aa57… confirms assay/figure context. The2023 correction concerns an acknowledgment. Preserve missing, zero, above100 values, nonstandard probe chemistry, enzyme variants and unresolved experiment identities.
+- **Conditions/evidence:** 34sheets:21structural/derived,2peptide-assay,9reporter-activity/mixed-fit,1reporter-fit and1image panel.3,726populated/3,390numeric cells, noformulas. Fig2h has70response cells/72slots for one peptide across12concentrations/three enzyme conditions. FigS8d has35/36cells for two probes/nine times. Both probes share the same N-terminal residue; no broad product-resolved substrate cohort. A duplicate concentration column inFig2i must not be read as a rate replicate. Numeric cells are not independent observation counts.
+- **Training/evaluation:** none. No pretraining, synthetic labels, optimizer, loss, assay-output mapping, parameters, validation/test split, predictions or nM/binding metrics. The source audit precedes model admission; HAP1 outervalidation/test remain unscored and no prior biological baseline changes. No winner among predictive variants.
+- **Verification/runtime:** ZIP/member integrity and byte preservation pass. Independent openpyxl3.1.5 reconstructs every populated cell, exact numeric floats, worksheet identity and counts. Inventory.116s, verification.044s/55.9MiB peak. Semantic classification is manual primary-source interpretation, not independently established assay calibration. Ruff and diffchecks pass; original executed/pre-format source is retained alongside final source. Every raw artifact is hash-linked.
+- **Decision/next:** Fails admission as the independently anchored sequence-processing cohort sought after0810. Narrow biochemical observations could be represented later with actual units/context, but cannot train the intended specificity model alone. Update Hitlist809 with exact ranges, missingness, derived quantities and remaining metadata. Seek broader substrate/product measurements or native intracellular peptidomics from APC material. Full precursor-relative APC availability objective remains active and unachieved.
+
+## 2026-10-24_0938_codex_native-apc-source-search — Public metadata available; capture semantics prevent native-APC admission
+
+- **Date/agent/source:** October24,2026; Codex/GPT-6; Prestoeb4e8d8 plus frozen new audit files and unrelated task dirt. [Report and reproduction](2026-10-24_0938_codex_native-apc-source-search/README.md). Prospective source-selection plan precedes workbook retrieval. PeptidomicsDB DOI10.1093/nar/gkag1032, official public metadata exports, no per-sample peptide CSV retrieval. Local bundled Python3.12/openpyxl3.1.5, no GPU/Modal/installations.
+- **Dataset/curation contract:** Original project/sample/dataset workbooks,468,673bytes total, exact URLs/hashes/receipts retained.151projects,3,992sample rows,249pairwise/14context datasets. Read-only inventory retains all source columns and identifiers.3,983unique raw-file names; sample counts reconcile but do not establish biological independence. No label generation, imputation, category normalization or source/parser admission to Presto.
+- **Conditions/findings:** Fixed immune-cell lexical screen identifies29projects, all MHC-tagged;35human/mouse projects have non-MHC category labels. Manual review exposes lexical limitations and capture-versus-compartment ambiguity.20solely intracellular-tagged rows are enteroendocrine cells. JY samplePPD0170004 is both intracellular/MHC-tagged but primaryPMID34211107 uses HLA purification. GenericPPD070/PXD009801 is dynamic HLA-I/source-proteome labeling(PMID24715725), not admitted free-peptide evidence. Preserve source assertions and require primary preparation evidence. No exhaustive absence claim.
+- **Training/evaluation:** none. No pretraining, optimizer, synthetic targets, loss/output mapping, validation/test split, prediction dumps or affinity/binder metrics; this is metadata qualification before a biological experiment. No new baseline or predictive winner. HAP1 outer outcomes remain unscored.
+- **Verification/runtime:** Metadata inventory.255s/51.7MiB. Independent original-OOXML versus openpyxl comparison verifies all63,761nonempty values across four sheets,.559s/90.1MiB; original blank payloads stay separate fromzero, noformulas. All source hashes/CRCs pass.20exact source-row/cell locators preserve the manually reviewed examples. Checks prove fidelity, not assay/replicate semantics. Frozen code/launch/plans, candidate lists, source receipts and verification summaries retained.
+- **Decision/next:** No native APC free-peptide cohort qualified in this screen. [Hitlist811](https://github.com/pirl-unc/hitlist/issues/811) requests shared source inventory and distinct specimen compartment, capture, laboratory digestion, search-enzyme, reanalysis-confidence, quantity and replicate fields with regressions for the concrete cases. Continue primary-source qualification and independent processing evidence; full APC precursor-relative concentration goal remains active and unachieved.
+
+
+## 2026-10-24_1007_codex_erap1-length-response — Registered length-dependence diagnostic
+
+- Codex / GPT-6; [prospective plan](agents/codex/plans/erap1-length-response.md), [experiment](2026-10-24_1007_codex_erap1-length-response/README.md). Same HAP1 ERAP1 outer-training cohort, grouped folds and frozen baseline as0810. Test three fixed remaining-length bands with exact and qualified sampled gradients. Explicit limited revision of the independent-numeric-anchor requirement; no new numeric source, physical-rate or concentration claim. Outer validation/test intentionally unscored. No results yet.
+
+### HAP1 upstream publication closure (October24,14:28UTC)
+
+Hitlist PR806/source and807/recipe are merged and deployed as2.0.22/2.0.23. Both successful manual release-build wheel/sdist artifacts match PyPI hashes; recipe artifacts also pass the clean-main release verifier atc7eed83ee58e97460fb549959bd3a6c132c87ae2. They were already published when this turn checked; no duplicate upload. [Verification receipt](../tasks/modular_model/hap1-release-verification.json). Original experimental source/recipe manifests and consumer versions remain unchanged; no new biological performance claim.
+
+
+### Closure — 2026-10-24_1007_codex_erap1-length-response: length dependence adds no predictive gain
+
+- **Date/agent/source:** October24,2026, Codex/GPT-6; Presto0248f11 with recorded dirt and frozen new code. [Report and reproduction](2026-10-24_1007_codex_erap1-length-response/README.md). Local float64CPU/one numerical thread; noModal/GPU/installations.
+- **Data/curation:** unchanged Shapiro2025 PXD056426 HAP1 ERAP1 complete-precursor outer-training cohort:8,281positive replicate-response cells/3,304peptides/1,296components/1,514parents/3,409origins/1,741,916paths. Canonical source88cad10d…/recipea1eec392…, all origins/B2M exclusions/missingness/lineage retained; no imputation, inferred bounds, synthetic biology or new source curator. Target=log10 KO/WT MHC-elution response. Protein inputs are condition-level surrogates, not aliquot-matched concentration. Other assays and nM/binder metrics excluded/inapplicable.
+- **Training/model:** add two remaining-length log-rate modifiers (1–8,9–16reference,>=17) to the previous N-terminal model. Uniform+length4coordinates or residue+length23; profiled fitting-only offset. Physical-only exact, residue+length exact, frozen sequence+physical exact and matched sampled arms each full+5fold fits. Same frozen sequence_0.1/gamma, hierarchical weights and component folds.150zero-initAdamsteps,lr.03,seed42,float64; MSE+.01mean(theta²)+.01mean(eta²)+.01z². No pretraining/other Presto heads. Every allocated coordinate updates. Explicit limited revision of the numeric-anchor prerequisite; fitted rates are not independently anchored.
+- **Sampling/enumeration:** exact posterior/forward hybrid, K512paired conditional path draws, no clipping/std/reuse/KL. All paths and2,516,006padded states remain enumerated. Three fixed probes×eight draws pass meanrelative.0397–.0521/RMS.1374–.1652 against.10/.25gates; K2048fallback unused. Exact full-path equality<=6.22e-10, response<=9e-14. This is not simulator-onlyRL.
+
+| Model | Train RMSE | Inner-CV RMSE | CV R² | CV Spearman |
+|---|---:|---:|---:|---:|
+| Old uniform |0.688704|0.689090|-0.0078|-0.0451|
+| Length-only |0.688273|0.688680|-0.0066|-0.0248|
+| Old residue-only |0.681335|0.683779|0.0077|0.1389|
+| Residue + length |0.680819|0.683296|0.0091|0.1466|
+| Frozen direct baseline |0.581462|0.596370|0.2452|0.5243|
+| Baseline + old exact |0.581296|0.596436|0.2450|0.5248|
+| Baseline + new exact |0.581294|0.596442|0.2450|0.5248|
+| Baseline + new sampled |0.581291|0.596422|0.2450|0.5249|
+
+- **Decision/evaluation scope:** gateFAIL; augmented exact0.0121%worse than baseline, sampled also worse. CorrectionSD.010261/.010146; nonzero variation does not establish useful prediction. Physical-only residue+length explains<1%weightedvariance. Keep direct baseline; stop this length extension without new tuning on these inner folds. Outer validation/test intentionally unscored and no test dumps; [separate prospective outer evaluation](agents/codex/plans/hap1-frozen-outer-evaluation.md) is next. No external, unseen-KO, native APC or concentration validation. Observed peptides8–14aa; shorter/nonbinding products remain unvalidated latent states.
+- **Numerical failure preserved:** global-prefix attempt was stopped at11complete+1incomplete fits after a late full-path check found2.375e-7error above2e-9. Actual producer and independent diagnosis agree. Per-origin sums with bounded padding recover the unchanged mathematical model; all gates pass before the replacement fixed family. Original checkpoints/source/logs remain underattempt-global-prefix. Original1e-12gradient-floor typo was inactive; independent1e-8reduction identical, corrected before recovery. No biological settings/tolerances changed.
+- **Resources/verification:** qualified24fits1319.54s/1.979GiB. Matched augmented exact290.51s vs sampled442.43s(1.52x), observed fitting times not replicated hardware benchmark. Independent scalar/source/weights/folds/offset/penalty/metric closure verifies198,744predictions,max1.52e-13;38,880component and210length-stratum rows;9.94s/1.288GiB. Initial closure checker hit a variable-name collision after reconstructing all24fits; original retained and name-only correction passes. Optimizer histories/RNG saved, not independently replayed.11tests,tracked-source lint/format and strictdocs pass; untracked historic raw-audit formatting exceptions preserved.
+- **Artifacts/next:** all per-example full/fold and inner-CV predictions, checkpoints0/50/100/150, histories, source/phase receipts, tables/plots and failed-attempt outputs retained. Broader availability objective active and unachieved. [Hitlist812](https://github.com/pirl-unc/hitlist/issues/812) requests original APC-derived endolysosomal quantities/context; the linked software's example data are explicitly synthetic and not admitted.
+
+## 2026-10-24_1503_codex_hap1-frozen-outer — Sequence prediction survives the reserved test; processing adds no gain
+
+- **Date / agent / source:** October 24, 2026, Codex / GPT-6; Presto9a8742d with recorded task dirt and frozen new evaluation code. [Full report, predictions and reproduction](2026-10-24_1503_codex_hap1-frozen-outer/README.md). [Prospective plan](agents/codex/plans/hap1-frozen-outer-evaluation.md) predates outcome access. Local float64 CPU, one numerical thread; no Modal/GPU/environment changes.
+- **Data / curation:** unchanged Shapiro2025 PXD056426 HAP1 canonical source88cad10d…/recipea1eec392…. Positive MHC-I KO replicate intensity relative to mean log10 WT intensity, with original >=2positive-WT/B2M-background/complete-precursor policies, all candidate origins and source lineage. Validation19,744 and test22,724 cells across ten KOs; ERAP1 subset1,970/2,297 cells. MaxLFQ inputs are condition-level surrogates, not paired concentrations. No missing-value imputation, synthetic labels, inferred censoring or additional source curator. Other assay families and nM/500nM metrics are inapplicable.
+- **Models / training contract:** no new training, calibration, offsets, transforms, optimizer, seeds, early stopping or outer model selection. Seven0730full-training direct/control checkpoints, including three ridge penalties, and all four0810 plus four1007physical checkpoints. Direct inputs are61length/composition/terminal features, KO identity and calibrated precursor ratio; one log10 elution-response output. Physical inference sums all origins and birth paths with frozen N-terminal rates, optional remaining-length modifiers, effective KO scale, gamma and original training-only offset. Exact forward inference for both exact- and conditional-score-hybrid-trained parameters. No new RL/GRPO comparison or other Presto branch training.
+- **Evaluation / weights:** both covariate-only prediction sets sealed before either outcome set loaded. Equal condition/component/peptide/replicate hierarchical weights computed within each split, ERAP1 renormalized. Weighted error/R²/SD, unweighted Pearson/Spearman. Shared study/WT controls and unresolved specimen/clone/homology independence remain. Component disjointness verified; no independent-cohort or unseen-condition test. Outer sets now inspected and closed to tuning.
+
+| Predeclared comparison | Validation RMSE | Test RMSE | Test R² | Test Spearman |
+|---|---:|---:|---:|---:|
+| Ten-KO calibrated precursor |0.648257|0.631249|0.09081|0.23639|
+| Ten-KO sequence_0.1 |**0.577617**|**0.573380**|**0.24986**|**0.46623**|
+| ERAP1 sequence_0.1 |0.603220|**0.585327**|0.30062|0.57538|
+| ERAP1 residue + length physical only |0.692245|0.698824|0.00310|0.14823|
+| ERAP1 sequence + new exact physical |0.602332|0.585337|0.30060|0.57794|
+| ERAP1 sequence + new sampled-trained physical |0.602393|0.585335|0.30060|0.57795|
+
+- **Decision:** preselected direct model passes >=2%RMSE/nonconstant gates:10.897%validation and9.167%test gains. All ten KOs improve test RMSE4.25–16.61%, within-condition SD0.126–0.474. This is now held-out biological response evidence, beyond prior inner CV. Both physical gates fail: validation gain0.1471%; test0.001744%worse despite correctionSD0.010165. Keep sequence_0.1; other penalties/physical variants are fully reported descriptively, not selected from test. No demonstrated sampled-training advantage.
+- **Verification / resources:** source/checkpoint hashes and677,068archived training predictions replayed before outcome access; target mutation leaves inference unchanged. Preparation15.84s/1.826GiB. Evaluation7.56s/1.490GiB, including metrics. Independent source/origin/precursor/group/weight/affine/scalar reconstruction verifies361,281held-out prediction values,max1.16e-13,and50,995stratum metric records;14.62s/1.267GiB. All caps pass. Inference runtime is not a training-throughput comparison. Five near-constant uniform/length-only validation component-stratum correlations are explicitly undefined in qualified strata; raw numerical values retained, all predictions/primary metrics/gates unchanged. Equivalent lint amendment preserved before preparation. Figure visually checked; experiment code lint passes.
+- **Artifacts / limits:** full per-example validation/test source-linked predictions, frozen transforms/parameters/offsets, NPZs sealed before outcome access, complete metrics/strata, CSV/PNG/PDF, source/launch/verification receipts and raw logs retained. `model_to_beat.md` updated for the scoped HAP1 contract. HAP1 is not a professional APC; elution combines processing, selection and detection. Free-peptide amounts, short/nonbinding products, causal rates, independent detection and precursor-relative APC concentration remain unvalidated. Full availability goal active and unachieved; new independent biological constraints/cohorts are required rather than tuning these inspected sets.
+
+
+## 2026-10-24_1521_codex_endolysosomal-source-qualification — Original APC-derived supplements do not supply a peptide quantity cohort
+
+- **Date / agent / source:** October24,2026; Codex / GPT-6. Registered atbf7b3e64e484fd280ce311dffe2c15a93e6c4aca with existing task dirt. [Report, asset table and independent verification](2026-10-24_1521_codex_endolysosomal-source-qualification/README.md); reproduce/launch.json, launch.sh, source snapshots, exact source receipts and reconstructed follow-up argument vectors retained. Local CPU; no Modal/GPU/environment changes.
+- **Dataset / qualification:** Öztemiz2026 DOI10.3389/falgy.2026.1936335, isolated murine JAWSII endolysosomal preparation with two plant allergens. Official article/XML, all five listed version1 PDF supplements and pinned linked software tree inspected. Preserve original source bytes, quantities/context limits and access failures. Source intensity is semi-quantitative; search-length filtering excludes short products, and reduction/alkylation affects observation. No invented peptide quantities, negatives, censor bounds or replicate identities.
+- **Conditions / evidence:** S1 reporter-activity graph; S2 protein half-life graph plus eight aggregate n/mean/SD/SEM values; S3/S4 peptide span maps with color-binned intensity; S5 peptide time-course graph. Five pages and zero embedded files independently verified. Linked61-entry repository has one explicitly synthetic example workbook, excluded without download. No original peptide-by-sample numeric table recovered from these assets. Separate Figshare metadata request HTTP404 remains an access failure, not absence evidence; initial DNS failure followed by successful public retrieval is preserved.
+- **Training / evaluation:** no model, pretraining, optimizer, loss, synthetic biological labels or assay-to-output mapping. No validation/test split or predictions because quantitative source admission precedes modeling. Regression/binder metrics do not apply. No existing outer outcomes reopened or model promoted.
+- **Verification / runtime:**15 successful asset hashes,14,805,139 PDF bytes, five pages/no attachments, eight literal aggregate values and61 repository entries independently checked. Rendering/inventory17.61s/0.440GiB; independent Poppler/XML/hash verification0.43s/0.047GiB; retrieval receipt times sum14.97s excluding failed Figshare/discovery. All figures visually reviewed. Pypdf form-XObject truncation on S3/S4 explicitly retained; original text/log archives round-trip byte-for-byte. New verifier lint passes; frozen fetch sources retain two UP017 style findings without source mutation.
+- **Decision / next:** admit no quantitative peptide cohort from the inspected public assets; this is not an exhaustive absence statement or denial of valid aggregate protein measurements. Update shared ownerHitlist812 with exact asset coverage and missing peptide/sample/replicate fields. Independent measured MS-response data underHitlist762 are the next constraint to qualify. APC concentration/availability objective stays active and unachieved.
+
+
+## 2026-10-24_1546_codex_measured-ms1-source — Recover original nontryptic MS response and intended products; reject equimolar assumptions for all IDs
+
+- **Date / agent / reproducibility:** October24,2026; Codex / GPT-6. Registered at2bf8ca1f0a5ee5ace7599920b6a43528be66e604 with task dirt and new source audit. [Report, source inventories, row dispositions and independent checks](2026-10-24_1546_codex_measured-ms1-source/README.md). Frozen launch.json/sh, executed scripts, original/corrected resource plan, actual per-asset retrievals and explicit extraction operation retained. Local CPU; no cloud/GPU/environment changes.
+- **Exact source / curation:** PXD021013 experimentally synthesized nontryptic human peptides, original2021 DOI10.1038/s41467-021-23713-9; discovered through2023 reanalysis DOI10.1016/j.csbj.2023.07.027. Inventory all1,865 RAW/1,865 SEARCH references (one nominal ZIP exposed as directory), community SDRF1,008raw names, two first named HLA-I/HLA-II DDA archives, and all four original intended-sequence mapping sheets. Keep source bytes/cells, molecular forms, zeros, PEP, reverse/contaminant status and planned membership; no source repair or training adapter. Other1,863 search references remain uninspected. PXD004732/PXD010595 and PXD003472 are not quantitatively admitted by this audit.
+- **Source findings:**305,331 intended sequence-to-pool rows across421 pools,610,670 populated map cells independently verify. Two processed archives have3,649 peptide/3,738 form rows: planned positive quality sequence signals759/484, corresponding unmodified positive quality forms677/470. Off-planned identifications1,101/1,197 must not inherit the intended standard's nominal amount. Planned-but-unobserved sequences140/9 are not pure detector negatives. Source uses crude products and estimated200or500fmol injection; true per-peptide purity/amount and run-specific load choice remain unresolved. SDRF material=cell, generic Fusion/invariableHCD/run1 conflict with primary synthetic/Lumos/multimodal context; retain raw assertions, do not infer specimens. Repeated modification columns preserved by position. Search enzyme is not laboratory digestion. Published reanalysis filters recurrence/CV and final tryptic subset; its accuracy does not establish nontryptic transfer.
+- **Training / evaluation:** none. No model/pretraining/optimizer/loss, no fabricated labels, no assay-to-model output, no validation/test split or predictions because this is source qualification. No regression/binder metrics or new predictive improvement claimed. Existing biological held-outs remain closed.
+- **Verification / runtime:**369,548 original literal tab cells independently agree via CSV/pandas,0.28s/0.224GiB. Full intended-map XML/openpyxl comparison610,670cells,26.58s/0.436GiB; combined980,218cells, all sampled row dispositions retained. Original232,332,843-byte public supplement bundle retrieved in50.03s after prospective cap amendment100→400MiB for this asset, total transfer<=1GiB; member63,188,883bytes retains original CRC/hash. Initial over-cap attempt and inaccessible individual routes preserved, no access bypass. Expanded request begins15:58:38UTC; original heading's rounded15:59caption is explicitly corrected/preserved. Initial index assertion failure retained; recovery correctly records nominal ZIP-as-directory, no data changes. New code lint/format passes; raw logs losslessly archived.
+- **Decision / next:** source existence and intended-product joins pass. A canonical shared relative-MS1-response recipe is feasible; true molar detector calibration is not established. Implement shared Hitlist762 ingestion/recipe with planned product, molecular form, run/pool dependencies, all dispositions and load/context uncertainty. Then preregister sequence-versus-constant/length response prediction with grouped held-outs, retaining synthesis/handling confounding. Use direct differentiation for this continuous observer; later exact/sampled processing comparisons must share its frozen independently evaluated response term. No claim that this completes APC concentration/availability prediction.
+
+## 2026-10-24_1635_codex_ms1-canonical-admission — Canonical original MS1 quantities and conditional response recipe
+
+- **Date / agent / reproducibility:** October24,2026; Codex / GPT-6. [Report and all dispositions](2026-10-24_1635_codex_ms1-canonical-admission/README.md); [prospective plan](agents/codex/plans/ms1-canonical-admission.md). Presto a39d527 with recorded task dirt; Hitlist bafa4fa plus frozen source/diff, candidate2.0.26. Exact launch/env/source snapshots and separately frozen final grouping amendment retained. Local CPU, no cloud/GPU or environment installation.
+- **Source / curation:** same two original PXD021013 nontryptic synthesis-pool DDA archives qualified1546. Full305,331row intended mapping, primary protocol, README and positional SDRF;117,129,479original bytes. Canonical standalone EvidenceStore source23/catalog28 and registered intended-unmodified response. Both sequence/form positive finite,PEP[0,.01),no reverse/contaminant,canonical/intended/unique variable-Unmodified form; fixed CAM explicit. Unknown purity/run load and conflicting metadata preserved. No missing negatives, synthetic biological labels, CV filtering or molar calibration.
+- **Outcomes:** HLA-I677/HLA-II470admitted products from3,649peptide/3,738form rows;1,147admitted,204observed-excluded,149unobserved among1,500planned pairs. All forms retain dispositions. Independent original decoding verifies320,222literal cells and every target. Source and final recipe hashes in report. Counts independently match prior1546membership audit.
+- **Dependence / corrections:**106shared observed identities are all outside both intended pools. Initial graph unnecessarily merged them; before any fit, revised grouping uses all intended products including unobserved ones. Two components; all1,147targets unchanged. Original grouping and overlap audit preserved. Also preserve two parser failures (experiment totals and repeated parameter rows), source snapshots and explicit corrections; no eligibility relaxation.
+- **Training / eval:** none; no pretraining, optimizer, loss, assay-to-model output or held-out metrics. No test split or prediction dumps because this is source qualification; examples contain measured conditional log10 signal targets, not predictions. Synthetic files only test software. No model promoted and previous biological held-outs remain closed.
+- **Resources / decision:** main build/replay/independent audit27.78s/1.011GiB; final grouping qualification9.89s/1.116GiB,within3GiBprocess/1GiBartifact caps. Shared canonical ingestion is ready for review; release and larger grouped observer fitting remain pending. Proceed to prospectively selected pools and sequence/length/constant response comparison, then freeze observer for matched processing methods. Actual APC availability/concentration objective remains unachieved.
+
+
+## 2026-10-24_1702_codex_ms1-grouped-observer — Held-out sequence signal in measured non-MHC MS1 response
+
+- **Date / agent / source:** October 24, 2026; Codex / GPT-6. Presto1606976 with recorded task dirt and frozen experiment-local code. [Full report, exact launch/env, predictions and checkpoints](2026-10-24_1702_codex_ms1-grouped-observer/README.md). Local float64 CPU, one Torch/BLAS thread; no Modal/GPU or shared-environment modification.
+- **Dataset / curation:** original PXD021013 synthesized nontryptic peptide pools, canonical Hitlist source e373789b… and recipe0183d91b… (`pxd021013_intended_unmodified_ms1_v1`, runtimeb9b1047). Metadata-only fixed-hash selection excludes pilot overlap and enforces intended-sequence-disjoint pools. All24 original indexed DDA archives, fixedCAM/MaxQuant1.5.3.30/unspecific context. Positive finite intended canonical sequence and unique variable-Unmodified form, PEP[0,.01), no reverse/contaminant.17,517intended products:12,877admitted,1,852observed excluded,2,788unobserved unknown-cause, not negatives. Train16pools/8,712examples, validation4/2,104, test4/2,061. No synthetic numerical biology, imputation, bounds or affinity labels; nM/binder metrics inapplicable.
+- **Target / information flow:** sequence features predict one centered log10 measured MS1 signal; per-run centering uses predicted scores, never target offsets. Conditional on admitted positive candidates. Unknown synthesis/purity/load/handling confound pure detector response. HLA-I/II library origin is provenance, not measured restriction. Same-study pool holdout, not independent biological/instrument transfer.
+- **Training:** zero, length ridge (2coefficients), sequence ridge (42supported coefficients), alpha.001/.01/.1/1 selected by validation; weightedMSE + alpha*mean(coefficient²). Neural53features→32tanh→scalar, no output bias,1,760parameters; seeds42/43/44,400full-batch Adamsteps,lr.003,betas.9/.999,eps1e-8,penalty.001mean(parameter²), no pretraining/dropout/restarts. Validation checkpoints every25 select50/75/75; fixed ensemble. All allocated neural coordinates receive gradients and change. No RL or other Presto branches trained; continuous observation subproblem. All C-terminal main effects are unidentifiable under these pools/centering, and nine terminal categories are absent in training. Validation/test raw-range extrapolation897/8examples is retained.
+
+| Fixed comparison | Validation RMSE | Test RMSE | Test R² | Test Spearman |
+|---|---:|---:|---:|---:|
+| Zero |0.534813|0.520561|0.000000|undefined|
+| Selected length ridge |0.534663|0.520456|0.000405|0.078182|
+| **Selected sequence ridge** |**0.470624**|**0.449828**|**0.253294**|**0.525644**|
+| Fixed neural ensemble |0.463737|0.443033|0.275683|0.547499|
+
+- **Decision:** primary passes all gates:11.98%validation/13.57%test RMSE gains, positive Pearson/Spearman in4/4test pools, prediction SD/target SD.4726/.4574. Secondary ensemble13.27%/14.88%gain; keep predeclared sequence ridge as scoped reference, not a test-selected winner. All13variants, every pool/library stratum and source-linked per-example dumps retained. Errors/R²/SD equal-pool weighted; correlations unweighted. No independent-study replication or confidence interval; all held-outs now closed.
+- **Verification / runtime:**4,767,232original cells and12,877targets independently reconcile. Two math/gradient tests pass1.21s. All checkpoints and test covariate predictions sealed before reserved evaluation. Independent feature/weighted least-squares/neural inference/dump/metric reconstruction verifies167,401predictions and182metricrecords,max1.0814e-13. Source admission39.18s/1.716GiB, original replay9.18s/.778GiB, allfits5.42wall/5.48CPU seconds/.393GiB, evaluation1.00s/.267GiB, independent prediction replay.66s/.163GiB. Optimizer trajectories retained, not independently replayed. This is not a replicated throughput study.
+- **Artifacts / failures:**660,751,734download bytes including partial attempts; raw+canonical1,582,596,202logical bytes, all resource gates pass. HTTPS403/S3-500 and initial FTP timeout preserved; original HLA63/HLA112 recovered via public FTP with metadata/CRC/hash checks, no cohort change. Actual remaining-download script's missing FTP fallback corrected in a new frozen launcher. New code isolated lint and tracked-source pinned lint/format pass; whole-tree lint's two preexisting frozen untracked ERAP1 lines remain unchanged. Plot visually checked. Raw/canonical paths and source/recipe manifests, all receipts/logs/checkpoints are in the report.
+- **Context / next:** advances from source admission to measured-response generalization, but does not show that MS response caused MAPP/macrophage failures. Test a frozen observer on a new prospective biological cohort before combining it with processing as a validated correction. Exact and sampled methods must share it and the same objective; omitted between-pool/terminal effects and unknown load remain. APC free-peptide concentrations and short/nonbinding products are still unvalidated; full availability goal active and unachieved.
+
+
+### Canonical MS1 release closure (October 24, 17:52 UTC)
+
+Hitlist814 is merged at68dea0b and **2.0.26 is published**. The clean-main release build40115753764 passed formatting/lint,3,457unit tests (one skip because Ensembl release data were not installed),96integration tests, distribution checks and artifact provenance verification. Runtimeb9b1047 and merge68dea0b have identical source trees. PyPI wheel/sdist SHA256 hashes exactly match the tested artifact manifest. [Release receipt](../tasks/modular_model/ms1-release-verification.json), full compressed build log and release manifest are retained. The user's shared Hitlist editable remains1.82.2 at its original checkout; pipcheck passes. This closes source distribution, not biological calibration or the full availability goal.
+
+The next [prospective admission plan](agents/codex/plans/observer-composition-transfer-admission.md) recognizes that a fixed peptide-response factor cancels from same-peptide treatment/control ratios. Candidate PXD057588 Tables7/8 may supply within-condition raw TMT compositions, but prior-component overlap, chemistry/domain transfer and comparable cross-peptide quantities must be qualified before fitting. No new biological cohort or predictive result is claimed by that plan.
+
+
+## 2026-10-24_1755_codex_apc-composition-admission — Fresh macrophage composition cohort fails prospective support
+
+- **Date / agent / reproduction:** October 24, 2026; Codex / GPT-6. Presto534ae42 with recorded task dirt; [full report and frozen invocation](2026-10-24_1755_codex_apc-composition-admission/README.md). Local CPU/one numerical thread, no Modal/GPU/environment changes.
+- **Data / contract:** canonical PXD057588 Tables7/8 raw positive TMT quantities, source d99f67e6… through released Hitlist2.0.26. Canonical sequence, one full-parent sequence, at least three distinct peptides per parent/table/channel. Exclude all dependencies on prior Table9 training/validation/test components or parents. Fixed component hash split; >=100/25/25 parents required. Preserve all source cells/origins, unknowns and missingness; no imputation, invented negatives or synthetic biology. MHC-selected composition is not intracellular concentration.
+- **Results:** 6,378 rows, 38,268 quantities, 2,760 eligible rows before group minimum. Only **45 train / 5 validation / 7 test parents**, in324/30/54 channel groups: all three gates fail. Repeated channels are not independent parents. No predictive winner or baseline change.
+- **Training / evaluation:** none; no pretraining, optimizer, loss, assay-output mapping or predictions. Candidate partitions inspected only for support, so validation/test predictive metrics/dumps and affinity/binder metrics are inapplicable. The1702observer remains frozen; no biological transfer claim.
+- **Verification / resources:** independent OOXML and graph reconstruction verifies38,268 quantities,12,756 sequence/parent cells,6,378 dispositions and13,770 candidate groups. Inventory17.05s/0.948GiB; verifier1.02s/0.474GiB. Initial verifier numeric-header text mismatch preserved; rendering-only correction passes without source/gate/split changes. Failed primary XML HTTP500 receipt retained with public-server cookie headers redacted from publication derivatives.
+- **Decision:** no fit under this design; retain failed support screen. TMT/form aggregation differs from unmodified MS1 calibration, and exact specimen/acquisition links remain unresolved. Need an independent quantitative biological cohort for observer transfer; do not reopen inspected tests or relax this split. Full APC availability/concentration goal remains active and unachieved.
+
+
+## 2026-10-24_1818_codex_do-source-qualification — Recover embedded HLA-DO spectrum intensities; quantitative semantics remain unqualified
+
+- **Date/agent/reproduction:** October24,2026; Codex / GPT-6, Presto e8d5daf with task dirt. [Report, receipts, exact sources and independent checks](2026-10-24_1818_codex_do-source-qualification/README.md). Local CPU/one numerical thread, no Modal/GPU/environment changes.
+- **Source/contract:** Nanaware2019 PMID30573663/PMC6398211/MSV000082570/PXD010301. Downstream MHC-II composition/measurement candidate; preserve human/mouse, clones, DO-loss, predicted cores, outcome-selected isotope standards and intracellular versus MHC-bound quantity distinctions. Existing Hitlist IEDB arm mismatch retained; no private training curator.
+- **Initial error/correction:** field-name-only audit incorrectly inferred absence of numeric observations. Full-attribute review recovered `intensity=...` inside spectrum titles. Initial source/result/report/issue preserved; [Hitlist816](https://github.com/pirl-unc/hitlist/issues/816) corrected. Separate XML and string decoders verify4,751source results:4,256positive/495missing values,4,080distinct positive values,349results sharing a positive value;4,800identification alternatives retained. Duplicate name/CV titles are one observation, not two. Units/precursor integration/normalization/aggregation remain unresolved; no source-equivalent peptide quantities admitted.
+- **Other evidence/access:**328-file repository inventory and10original hashes/14,866,858bytes verified. Original quantitative supplements not recovered: EuropePMCXML500, retired OAAPI404, documented cloud-prefix empty, supplement API200 error XML, supplemental-index200 browser challenge. Preserve failures without an exhaustive data-absence claim. Three large parental-lineMSF files remain uninspected. Vendor normalization documentation is not proof of this historical export's settings.
+- **Training/evaluation:** none; no model/pretraining/optimizer/synthetic targets/loss/output mapping or predictive split/dumps. Regression/binder metrics inapplicable; no predictive winner or baseline promotion.
+- **Resources/decision:** initial inventory2.66s/0.207GiB; independent title recovery0.49s/0.198GiB. Retain recovered observations for canonical source-semantic qualification; supplements/access and aggregation remain upstream gaps. Next independent2024lymph/DCsource now has original workbooks retrieved; eligibility/paired materials still pending. Full APC availability/concentration goal remains active and unachieved.
+
+
+## 2026-10-24_1829_codex_lymph-source-qualification — Original lymph/DC quantities recovered; admission remains pending
+
+- **Date / agent:** October24,2026, Codex / GPT-6. [Registered source audit and current status](2026-10-24_1829_codex_lymph-source-qualification/README.md); frozen plan, exact retrieval stages, original bytes and independent verification retained. Source qualification is closed by the independent1903canonical source replay; this is not a training family.
+- **Source:** Nanaware2024 PMID38848214 / PMC11233987.319, seven original workbooks plus primary XML/license metadata, 80,601,182bytes in the processed stage. Native human lymph, mouse lymph proteomics and separate DC I-Ab immunopeptidomics are distinct populations. Exact specimen/precursor joins and confidence/normalization policies remain pending.
+- **Verification:** Nine source hashes/MD5s, seven ZIP CRCs,72sheet identities and14,567original cells pass independent decoding;1.129s,0.157GiB,localCPU. Original S6(a) has1783positive area-bearing rows/1138literal forms. Two S4(e) algorithm blocks have1581/1020rows and2536/4632positive area cells; these are not independent replicates or admitted examples. Multipart-ETag/shared-formula/elapsed-time/time-of-day failures and serialization corrections are preserved without changing source quantities.
+- **Training/evaluation:** None; no optimizer, pretraining, loss, synthetic labels, assay head, held-out metrics or per-example predictions applies. This does not raise biological predictive accuracy or establish APC concentrations. Complete inventories, sample semantics, independent quantity-count replay and canonical Hitlist admission before a fresh frozen biological comparison; old predictive tests remain closed.
+
+
+## 2026-10-24_1903_codex_lymph-canonical-admission — Shared original lymph/DC quantities and deposited references verify
+
+- **Date / agent:** October24,2026; Codex / GPT-6. [Report and frozen reproduction](2026-10-24_1903_codex_lymph-canonical-admission/README.md). Presto e8d5daf, isolated Hitlist base68dea0b with exact changed-source snapshots; imported2.0.27development while shared installed1.82.2remains unchanged.
+- **Source/curation:** Nanaware2024 PMID38848214,19original public assets. Project only human S6(a) A:Q and independent mouse DC S4(e) database/library blocks.4384source observations,32995quantity cells including missing,3430deposited reference entries and23455identification alternatives. Three typed contexts/seven exported channel labels/fourteen assertions preserve species, compartment, DC expansion, MHC capture, instrument conflict, unknown donor/specimen/KO links and algorithm dependence. No row-wise cross-block joins, normalization, filtering, aggregation or synthetic biological labels.
+- **Verification/resources:** Independent121346original-cell/32995quantity-cell replay and every reference/evidence alternative pass. Three PRIDE inventories4/13/50files and two MassIVE132/44files reconcile. Source build/API15.217s/0.461GiB; independent verification2.267s/0.557GiB,localCPUone thread. No Modal/GPU/RAW acquisition/environment change. Exact manifest6e82a782b0511ba56425855f0764c4c40127e715fdb10b10e6c12118ab539c4c, input paths/snapshots/receipts retained.
+- **Training/metrics:** None; no pretraining, optimizer, assay loss/output, test split, prediction dump or binding cutoff applies. Eight source-focused tests and43source/catalog focused tests pass; full required local suite passes3466tests after updating seven catalog-version expectations. PR818published; CI/merge/release pending. This source result does not improve biological predictive accuracy.
+- **Decision:** Source quantities are usable as evidence; training eligibility is not yet established. Native human lymph is extracellular and DC peptides are MHC-selected. Exclude mouse no-enzyme re-searches from native-processing supervision until preparation is resolved. [Hitlist817](https://github.com/pirl-unc/hitlist/issues/817) owns source/metadata requirements. Next register the observable-composition recipe and a prospective matched biological comparison; old predictive tests remain closed, full APC-concentration goal active.
+
+1903structural follow-up: declared accession-token matching supports1612human/875DCdatabase/941DClibraryrows with186/196/191candidate parent sequences. Raw full-label control and per-observation alternatives remain preserved. All2601DCreportedlengths are one residue short; all2601full literal modified masses match source Mass within0.1Da, while none of the shortened hypotheses match. Two independent mass calculators agree within0.002Da. No sequence/source correction or training admission occurred; Hitlist817records the evidence. Full per-row structural/mass results and frozen commands retained.
+
+## 2026-10-24_1938_codex_lymph-composition — Independent biological MS transfer and processing fail held-out gates
+
+- **Date/agent/reproduction:** October24,2026; Codex / GPT-6. [Full report, checkpoints, trajectories, prediction dumps and exact reproduction](2026-10-24_1938_codex_lymph-composition/README.md). Presto992cc934with recorded task dirt and frozen new source. Isolated Hitlist2.0.28recipe PR819/c61ad506; source818merged9133736d. Exact runtime patch/dependencies/env in reproduce. Local float64CPU/oneTorch-BLASthread; no Modal/GPU/shared-environment changes.
+- **Data/curation:** Nanaware2024 original human native extracellular IBD lymphS6(a), separate mouse expanded DC I-AbS4(e)database/library. Source manifest6e82a782… and registered `nanaware2024_observed_composition_v1`. Positive originalPEAKSarea; representative feature chosen by confidence then charge/ID before quantities; no charge sum, missing negatives, imputation, newFDRclaim or synthetic biological labels. Chemistry matches frozenobserver: canonical unmodified except explicitCAMonallC. One distinct original parent sequence from suppliedaccession and same-study deposited alternatives; retain all occurrences. All-source peptide/accession/parent graph includes excluded bridges and bothDCalgorithms before fixed60/20/20hashsplit. Group>=3peptides; targets centeredlog10area/area fractions withinparent/sample. Conditional feature signal, not molarity or complete freepeptidepool.
+- **Support:**2,472admitted feature measurements from32,995sourcecells. Human34/14/12components,36/14/14parentgroups,459/135/74features train/validation/test. DCdatabase36/1/6 andDClibrary32/3/11components fail predeclared20/5/5support; noDCfit, testmetrics or dumps. Algorithms reuse acquisitions; human oneexportedchannel has unresolveddonor/pooling. No source/split/gate relaxation.
+- **Training/output:** length rank2 and sequence rank56ridge, alpha.001/.01/.1/1selected byvalidation (both1), training-onlystandardization/centering/SVD; zero, frozen1702MSridgealpha.1and train-calibratedscalar controls. Four physicalMSEarms: uniform/adjacent-residue sequence cuts × no/fixedMS. Unitparentinflux/commonremoval1, all1..Llatentproducts, exactqueriedspan amounts/occurrencesum withoutO(L²)materialization.1or39parameters, allgradient-supported/changed.500fullbatchAdamstepslr.02,betas.9/.999,eps1e-8, .01mean(residue²),norhopenalty,nostepsselection/restarts. Assayarea→centeredlogscore/distribution; noIC50/bounds/binderthreshold/TCR/MHCaffinity/stability/species/KOauxiliarytraining.
+- **Matched RL contract:** sequence+fixedMS exactreverseKL(q||observedfractions) vs freshREINFORCE64withleave-one-outrewardbaseline,seeds42/43/44,same500updates/model/initialization/penalty. Genuine discrete candidate-identity sampling conditionalonobservedset, not completeprocessingtrajectory simulation or priorconditional-agehybrid. Allcandidate scorescomputedbotharms; no clipping/std/reuse/referenceKL/pretrainedprocessing. Exactseedsintentionallyidentical; seedSDnotbiologicaluncertainty.
+
+| Fixed model | Validation RMSE | Test RMSE | Test reverseKL | Test R² | Test Spearman |
+|---|---:|---:|---:|---:|---:|
+| Uniform observed composition |.56074|.48566|.54365|0|undefined|
+| Selected length ridge |.57622|.47813|.52164|.03077|.36789|
+| Selected sequence ridge |.63085|.46704|.51001|.07520|.28195|
+| Frozen measuredMS |.59776|.48296|.53494|.01107|.25317|
+| Train-calibratedMS (coefficient.23353) |.56271|.47913|.52722|.02670|.25317|
+| Sequence processing only |.53267|.49952|.60151|−.05790|.23842|
+| **Primary sequence processing+MS** |**.56201**|**.48463**|**.54260**|**.00424**|**.25793**|
+| Matched exactreverseKL |.58684|.54705|.70626|−.26880|.27147|
+| MatchedREINFORCE64 (3seedmean) |.58540|.54493|.71020|−.25906|.26918|
+
+- **Decision:** primaryfails5%gatesagainstsequence/calibratedMS; fixedMStransferfailsagainstlengthonbothheldouts. Primarytestgainvssequence−3.77%, paired12componentbootstrap95%[−18.39%,+10.56%]; versuscalibratedMS−1.15%,[−16.37%,+12.21%]. OutputSD.27949vs target.48566isnotconstant. Exact/RLbothlose touniform; RLtestRMSESD.00481/reverseKLSD.01514. No modelpromoted; no test-selected replacement. ExistingHAP1sequence-responseevidence remainsstronger. Keep exact as practicalreference, investigate processing/observationtransfer ratherthan optimizerelaboration; preserve inspectedtests.
+- **Verification:** independentoriginal-cell/origin/featureselection/NetworkXdependency/split/targetreplaypasses. Fiveexistingsteady-state tests; realfinitedifferenceerror2.90e-10, exactscore-gradientidentity1.59e-15.256×64samplingprobe relative meanerror.01342, absolute.00209,relativeRMS.27666passes. Allcheckpoints/testcovariatepredictionssealed beforetestlabelread. IndependentNumPyfeatures,ridgecoefficients,observer,scalarparentformulas,dumps and63split-modelmetricrecords reproduce14,028predictions max9.58e-13;coefficients2.22e-16. Adamtrajectoriesretained,notindependentlyreplayed. Initialverifierweight-variable shadowingfailure/code/logpreserved; verifier-onlyfix changesno model/metric/tolerance.
+- **Resources:** admission7.02s/.813GiB; independentdata1.95s/.505GiB; qualification.95s/.302GiB; all21fits12.77s/.395GiB; eval.56s/.296GiB; independentpredictionreplay.77s/.116GiB. Exact1.47s/fitvsREINFORCE1.71s(~16%slower),334,668candidatescores each,1,152,000sampledraws perRLfit. Orderedlocalprocess,notreplicatedhardwarebenchmark. Allcaps pass. Hitlistformat/lint/3,477fulltests and19focusedtests pass; sourcePyPIrelease40126246020andrecipeCIremainseparatependingwork.
+- **Transfer/metadata limits:** post-evaluationcovariateauditfinds1testpeptide previouslyinobservertrain and1inobservervalidation;5/74testfeatures exceed anactiveobservertrainingfeaturerange. No exclusions/refitfollow. Detectorresponse,sourcefeaturegrain,extracellularkinetics,selectionandunmeasuredoriginsremainconfounded; thesechecksdo notdiagnosethecause. [Hitlist817 follow-up](https://github.com/pirl-unc/hitlist/issues/817#issuecomment-6388815228) retainsquantityaggregation,originalFASTA andspecimen/precursorrequests. FullAPCconcentration/availabilitygoalactiveandunachieved.
+
+## 2026-10-24_2018_codex_hap1-context-ablation — Parent context fails the incremental prediction gate
+
+- **Date / agent / reproduction:** October 24, 2026; Codex / GPT-6, Presto d96f958 with recorded unrelated task dirt and frozen additions. [Report, predictions and reproduction](2026-10-24_2018_codex_hap1-context-ablation/README.md). Prospective nine-arm specification, exact launch/env/source hashes, full/fold checkpoints and independent closure retained. Local float64 CPU / one numerical thread, no Modal/GPU/environment changes.
+- **Data / curation:** unchanged Shapiro 2025 PXD056426 HAP1 source 88cad10d… / recipe a1eec392…; only original complete-precursor outer-training rows: 87,260 observations / 6,317 peptides / 1,798 components / ten known KO conditions. Positive replicate log10 KO/WT MHC-elution responses; original WT support, B2M exclusion, precursor ambiguity and missingness policies preserved. No imputation, generated negatives, synthetic biological targets or censoring. Other assay families and nM/500 nM metrics inapplicable.
+- **Training / output:** original calibrated precursor coefficient and condition offsets; separate per-condition ridge effects, fixed penalty 0.1 × sum(beta²), fitting-only weighted scaling/centering. Nine arms × full/five component folds = 54 fits. Length, P2/C, P1/P2/C, original 61 sequence features, and geometry/flank/both/shuffled-context additions. All 6,499 occurrences in 2,077 parents retained with equal-parent then equal-occurrence weights. No pretraining or optimizer; no other Presto heads train. One continuous log10 elution-response output.
+- **Evaluation scope:** reused original five training folds; full-population hierarchical weights for pooled CV, within-fold fitting weights. Outer validation/test intentionally remain closed after prior 1503 evaluation, so no new test predictions/metrics. This is development evidence, not independent validation, unseen-KO transfer or concentration calibration. No new exact/RL comparison; the diagnostic addresses representation after both gradient approaches failed biologically.
+
+| Fixed arm | Train RMSE | Inner-CV RMSE | CV R² |
+|---|---:|---:|---:|
+| calibrated_precursor | 0.637901 | 0.638745 | 0.0591 |
+| length | 0.632084 | 0.633505 | 0.0745 |
+| position_p2_c | 0.591769 | 0.604202 | 0.1582 |
+| position_p1_p2_c | 0.582525 | 0.602395 | 0.1632 |
+| sequence | 0.554784 | 0.574832 | 0.2380 |
+| sequence_geometry | 0.546492 | 0.568473 | 0.2548 |
+| sequence_flanks | 0.541846 | 0.577124 | 0.2319 |
+| sequence_context | 0.537528 | 0.573501 | 0.2415 |
+| sequence_shuffled_context | 0.547377 | 0.584759 | 0.2115 |
+
+- **Decision:** primary context gain 0.232% versus sequence (required 2%), 1.925% versus shuffle (required 1%), three of five folds improve (required four): **FAIL**. Geometry-only descriptive gain 1.106%; flanks worsen CV despite better training error. Position-only controls underperform composition-containing sequence; this does not exclude MHC selection. Retain existing held-out sequence reference, stop this feature/penalty family, qualify explicit selection covariates and independent biology before a further mechanistic comparison.
+- **Verification / resources:** reference replay ≤4.00e-14, independent context ≤1.78e-15 and all canonical occurrence sets agree. 54 fits 60.62 s, total 62.72 s, peak 2.627 GiB. Independent SVD reconstructs 540 condition systems / 1,570,680 predictions, max 1.57e-13, coefficients 2.34e-14; archived metrics ≤2.78e-15, 225 strata ≤1.23e-15. Verification 77.04 s / 2.136 GiB. Lint/format pass; figure visually reviewed. Single-process timings are not replicated hardware benchmarks.
+- **Preserved verification failure:** raw cross-implementation Spearman differed 2.50e-8 / 1.25e-8 for geometry train/CV because identical inputs acquired 3.3–4.4e-16 numerical differences. Failed verifier/log retained; exact-input tie qualification gives identical rank metrics. Revised check separates unchanged-tolerance prediction/SVD agreement, metrics of archived bytes and continuous replay metrics; original raw-rank equality check explicitly replaced, no fitted result, biological gate or tolerance altered. Raw/tie-qualified scores and predictions retained.
+- **Upstream / limits:** primary source names MixMHCpred 2.2; nine inspected text-export headers expose no binding-score field, not an exhaustive data-absence claim. [Hitlist #726 follow-up](https://github.com/pirl-unc/hitlist/issues/726#issuecomment-6389204773) owns request for original per-allele score/assignment provenance, kept distinct from measured restriction. Lymph source 2.0.27 PyPI bytes verified; recipe #819 merged c7abcced, tested release 40129209653 still running. Full APC availability goal active and unachieved.
+
+## 2026-10-24_2041_codex_hap1-affinity-control — Frozen MHC scores add modest development signal
+
+- **Date / agent / reproduction:** October 24, 2026; Codex / GPT-6, Presto e85deef with recorded task dirt and frozen additions. [Report, score/member outputs, checkpoints and predictions](2026-10-24_2041_codex_hap1-affinity-control/README.md). Prospective six-arm plan, exact qualification/fit/closure commands, source/model/data hashes and runtime environment retained. Local CPU / one Torch-BLAS thread, no Modal/GPU/installations.
+- **Data / endpoint:** unchanged Shapiro2025 PXD056426 source88cad10d… / Hitlist recipea1eec392…; original complete-precursor outer-training87,260positive KO/WT response cells,6,317peptides,1,798components,ten known conditions. Original WT/B2M/precursor/origin policies; no eligibility change, imputation, generated HAP1 labels or inferred bounds. Assay→one continuous log10 elution-response output; other assay/binder metrics inapplicable. Original five component folds reused; old outer validation/test remain closed and no new test predictions/metrics are produced.
+- **Frozen representation / overlap:** installed clean MHCflurry2.3.14 sourcecd141c8 / 2.3.0 affinity component, eleven selected networks, three supplied HAP1 alleles, all18,951predicted nM scores log10-transformed. No best-allele assignment, processing/presentation score, percentile or neural update. Training includes affinity, reassigned MS, synthetic negatives and teacher pretraining; scores are empirical covariates, not measured Kd/occupancy. Bundled811,134training rows (239,021affinity/572,113MS);4,925HAP1peptides occur in it. No searched HAP1 source marker found, but complete teacher/selection/study/specimen lineage is unavailable. No independent or pure-affinity claim.
+- **Training / objective:**36closed-form fits, six arms × full/five folds, original fitting-only precursor gamma/condition offsets, weighted standardization/condition centering, condition-normalized MSE+0.1sum(beta²). Original61features, length+three scores, sequence+scores, triplet-shuffled scores and secondary four-geometry extension. Primary64columns/610supported nonzero condition-feature coefficients; other Presto heads untrained. No new stochastic optimizer/RL comparison; this establishes a stronger observation-related control before further matched physical training.
+
+| Fixed arm | Training RMSE | Inner-CV RMSE | CV R² |
+|---|---:|---:|---:|
+| calibrated_precursor | 0.637901 | 0.638745 | 0.0591 |
+| length_affinity | 0.598078 | 0.600516 | 0.1684 |
+| sequence | 0.554784 | 0.574832 | 0.2380 |
+| sequence_affinity | 0.542454 | 0.562644 | 0.2700 |
+| sequence_affinity_geometry | 0.536652 | 0.558574 | 0.2805 |
+| sequence_shuffled_affinity | 0.553179 | 0.575043 | 0.2374 |
+
+- **Decision:** primary development gate **PASS**:2.120%CV improvement versus sequence (required2%),2.156%versus shuffle (required1%),all five folds improve (requiredfour). Nine of ten condition strata improve. Score-only does not replace composition features; secondary geometry adds0.723%descriptively. Use sequence+scores as a development control; preserve earlier held-out reference and do not promote an independent biological/availability claim.
+- **Exposure strata:** listed peptides70,963cells:RMSE.565804→.554473 (2.003%gain);1,392peptides not found in bundled table16,297cells:.610611→.595117 (2.537%). The latter is not certified absent from teacher/selection training. Strata retain and renormalize original weights. No independent-study confidence interval or test reuse.
+- **Verification / resources:** all member geometric means agree≤2.22e-15log10, reversed/rebatched probes≤1.28e-7 against1e-5gate, model/source hashes unchanged. Scores3.80s; qualification13.59s/1.182GiB. Fit pipeline49.42s/1.448GiB; reference replay≤4.00e-14. Independent training-exposure and SVD replay:360condition systems/1,047,120predictions max1.48e-13, coefficients1.75e-14, archived metrics4.00e-15 and174strata1.78e-15;39.29s/1.764GiB. Prespecified identical-input-tie audit resolves raw Spearman differences≤4.18e-8 without a failed gate or result change. Default isolated Ruff/100-column format and visual review pass; expanded E/F/I reports seven preserved style findings (`results/code-review.json`); local single-run timing, not hardware ranking.
+- **Next / limits:** qualify stage-appropriate processing/transport and selection separately, retain this frozen development control, require a new biological population for generalization. Original study prediction provenance remains under Hitlist726. Intracellular APC concentrations, direct kinetics and independent observation calibration remain unvalidated; full goal active. Recipe2.0.28 release40129209653 succeeded; published wheel/sdist bytes match tested artifacts (tasks/modular_model/lymph-composition-publication.json).
+
+## 2026-10-24_2106_codex_hap1-tap-route — Shared delivery-response model misses matched feature control
+
+- **Date / agent / reproduction:** October24,2026; Codex/GPT-6, Presto59a8db6 with recorded unrelated task dirt and frozen experiment additions. [Full report, plan, checkpoints and predictions](2026-10-24_2106_codex_hap1-tap-route/README.md). Exact launch/closure commands, source/model/data hashes and environment retained. Local CPU, float64, one Torch/BLAS thread; no Modal/GPU/installations.
+- **Data / endpoint:** unchanged Shapiro2025 PXD056426 source88cad10d… / canonical recipea1eec392…; original complete-precursor outer-training rows restricted prospectively to supplied TAP1/TAP2 KO.9,168positive response cells/3,110peptides/1,248components; TAP1 7,006cells/3,071peptides, TAP2 2,162/949. All support gates pass. Original source/background/WT/parent/precursor policies; no imputation, score filtering, new negative or synthetic biological label. Assay→log10 positive KO/WT elution response; IC50/500nM/other assay families inapplicable. Original five component folds reused with equal-condition/component/peptide/replicate weights. Outer validation/test remain closed; no new test predictions/metrics, because those sets were inspected in1503.
+- **Representation / pretraining:** shared route receives105raw length/composition/P1/P2/P3/C/all-parent geometry inputs; MHC scores enter only a separate condition-specific observation term. Reuse2041 frozen MHCflurry scores for all3alleles, no new neural inference/training.2,474peptides occur in bundled predictor training table;636notfound does not imply teacher/sample independence. Affinity/MS/teacher mixed supervision remains explicit. No other Presto branches trained.
+- **Model / loss:** rho=sigmoid(shared linear sequence/geometry), epsilon=sigmoid(per-KO eta), two path weights1-rho and rho*epsilon, relative deliveryR=sum. Outputgamma*precursor+profiledKOoffset+log10R+optional3score covariates. Gamma fitting-only calibrated precursor. Fixed weightedMSE +0.01(sum(theta²)+mean((eta-logit(.05))²))+0.1mean_KO(sum(beta²));250Adamsteps/lr.03/seed42, theta/beta0 andepsilon.05. Two direct regressions use original fixed0.1ridge; expanded ridge has identical105+3features. Five arms×full/five folds=30fits.
+- **Sampling contract:** exact-forward conditional-score hybrid with64fresh posterior-route samples/row/update; analytic observation/penalty gradients.11.46million binomial count variates represent733.44million conditional Bernoulli draws without materializing each path. No clipping, group scaling, reuse or referenceKL. This is not simulator-onlyREINFORCE/GRPO or full cleavage trajectories; one seed is not an optimizer-variance study.
+
+| Fixed arm | Train RMSE | Inner-CV RMSE | CV R² | CV Spearman | Full+5fold seconds |
+|---|---:|---:|---:|---:|---:|
+| Original sequence+scores |0.686770|0.720640|0.3030|0.5424|0.145|
+| Expanded matched-feature ridge |0.650475|0.707492|0.3282|0.5637|0.166|
+| Shared route alone, exact |0.709329|0.740153|0.2648|0.4893|3.527|
+| Shared route+scores, exact |0.681972|0.711942|0.3198|0.5462|2.927|
+| Shared route+scores, sampled |0.681925|0.712170|0.3193|0.5457|4.011|
+
+- **Decision:** primary biological development gate **FAIL**:1.207%gain over original (required2%),-0.629%versus expanded (required1%),2/5folds improve (required4). Expanded ridge improves1.824%over original for this subgroup; retain as development comparator, no held-out promotion. Exact/sample RMSE differ0.032%; sampled1.37×runtime. Both exact/expanded beat original inTAP2, but expanded is better inTAP1. For636unlistedpeptides, all new arms worsen original; preserve this adverse stratum. Stop this bounded family instead of tuning.
+- **Training / verification:** all109score-augmented trainable coordinates receive gradients; profiled Jacobian rank104/109, exact finalgradient5.71e-7 and last50stepobjective change1.86e-10relative. No global-optimum claim. Predictions vary (CVSD.464vs target.863). Qualification1.85s/.599GiB; fullfamily12.81s/.796GiB. Independent source/feature/SVD/analytic replay checks30fits/91,680final predictions (max6.23e-14),825,120history predictions via continuous metrics, latent outputs, offsets, all65strata and analytic gradients (8.05e-16);2.52s/.543GiB. Default isolated Ruff/100-column formatting and visual figure review pass. Single local timings, not hardware benchmarks.
+- **Qualification coverage correction:** original epsilon=1/monotonicity checks evaluated only reference algebra, though finite-grid production checks passed before fits. Post-fit frozen amendment calls production boundary and sampled-forward functions; passes<=5.56e-17. Original qualifier/logs retained; not retrospectively labeled a complete prospective boundary gate. Model, outcomes and decisions unchanged.
+- **Full-goal implication:** arbitrary peptide-specific baseline amount cancels from this ratio endpoint. Effective shared-route parameters neither identify baseline production nor establish concentrations; TAP also has loading-complex effects. Preserve same-study/positive-selection/precursor/provenance limits. Next work must constrain baseline quantities and selection/observation separately and qualify prospective biology. Full APC availability goal remains active and unachieved.
+
+
+## 2026-10-24_2130_codex_mapp2025-source — Recover baseline MAPP quantities and expose source-selection/identity limits
+
+- **Date / agent / reproduction:** October24,2026; Codex / GPT-6, registered at35a2b972 with recorded unrelated task dirt. [Full source audit and exact reproduction](2026-10-24_2130_codex_mapp2025-source/README.md). Original/final executed scripts, recovery notes, source hashes, read-only workbook/XML checks and local CPU resource metrics retained. No cloud/GPU/environment changes.
+- **Source / curation:** Goldberg2025 DOI10.1038/s41586-025-08615-w/PXD052314. Official publisher48,110,489byte supplement with10members; original deposition table/community SDRF; PRIDE41file inventory; original356,132,312byte MAPP processed archive. No RAW spectra, no activity-ranked selection or pathogen-response model. Basal captured MAPP, whole-cell proteome, proteasome-associated proteins and extracellular secretome remain separate endpoints. Numeric zeros are not negatives; full reference/material precision is unresolved.
+- **Quantity coverage:** Table5 has21,082unique MAPP peptides,12intensity columns;6control columns have79,025positive cells/17,282peptides with any signal/8,025positive in all6. Positive baseline lengths7–40;48,885MS/MS and30,140matching observations. Whole-cell5,387protein-group rows have29,037positive control LFQ cells; no exact aliquot pairing is asserted. Secretome963rows/16columns/2,087positive cells is extracellular. Table3's199,281rows contain3,095,695numbers embedded in Treatment strings (1,773,019positive),141labels/33ordered patterns;197,785rows repeat labels. Numerical existence does not establish run identity or quantity semantics. Preserve202date-styled gene cells without repair. Initial header-only commentary was corrected before admission.
+- **Original-source reconciliation / adverse findings:** all21,082publisher IDs/sequences match deposited30,364rows. Ten exact-name columns/210,820cells, including all126,492baseline cells, agree exactly; two nonbaseline replicate suffixes disagree and remain unresolved. Publisher omits9,282rows, including6,817without reverse/contaminant flags. Source-header organism assertions identify6,633omitted unflagged human-only rows (4,862with baseline signal) and130published nonhuman-only rows (113with baseline signal); mixed/unresolved rows retained. Search parameters name a human-plus-bacterial FASTA absent from archive, conflicting with human-only project description. Two truncated taxonomy tokens remain unresolved. This is source-assertion auditing, not independently validated organism classification or a supervised eligibility policy.
+- **Metadata:** original deposition table matches all36RAW files/three assay groups. Community SDRF calls all assays tryptic shotgun, gives biological-repeat1/4 and replaces actual5566with nonexistent5582. Preserve conflicting assertions and distinguish biological-repeat labels from exact specimen/aliquot pairing. Older MAPP/PBMC work remains owned by Hitlist820–823.
+- **Training / evaluation:** no model, pretraining, optimizer, synthetic biological labels, loss or assay-output mapping. No validation/test split/prediction dumps because source qualification precedes modeling. Regression/binder metrics inapplicable; no old outcomes reopened or model promoted.
+- **Verification / runtime:** independent OOXML agrees on3,822,731populated cells; split/regex decoding agrees on all embedded numeric tokens. Workbook24.52s/.165GiB, XML22.38s/.682GiB, archive reconciliation6.68s/.389GiB; metadata/supplement97.26s and processed archive539.59s retrieval. Original failures retained: sandbox DNS, datetime serialization, secondary metadata mismatch, two archive headers, CSVfield ceiling and truncated taxonomy assertions. Corrected parser bounds/serialization preserve source quantities. Current entrypoint lint/100-column format pass; final executed snapshots precede publication-only style changes. Reviewed log archives and exact artifact manifests retained.
+- **Decision / next:** source quantity availability passes; a clean human-only supervised cohort is not yet admitted. [Hitlist825](https://github.com/pirl-unc/hitlist/issues/825) requests canonical original-source quantities/dispositions, search-reference/selection recovery, scoped material links and pooled-table identities. Use the reconciled supplement as a view, not an assumed complete curated cohort. Next admit the shared source and freeze grouped baseline-quantity exact/sampled comparisons. No predictive improvement; APC availability/concentration objective remains active and unachieved.
+
+
+## 2026-10-24_2210_codex_mapp2025-canonical-admission — Original baseline MAPP and candidate decisions independently verify
+
+- **Date/agent/reproducibility:** October24,2026; Codex/GPT-6. [Full report, source/recipe manifests and exact launch/replay](2026-10-24_2210_codex_mapp2025-canonical-admission/README.md). Presto a8d5ff0 with unrelated task dirt; isolated Hitlist9583aeb plus frozen source/candidate implementations, candidate2.0.30. All original assets reused without download. Local CPU/one numerical thread; no Modal/GPU/installations.
+- **Source contract:** six pinned Goldberg2025/PXD052314 original assets. Source schema25/catalog31;16typed relations retain30,364peptides/32,636forms/294,756identification rows and1,113,756separate intensity cells. Original acquisition/arm/project contexts use the common material graph; no specimen/aliquot pair is invented. Original/community assertions, source taxonomy ambiguity, matching/confidence/flags, zero/missing values, all parents/contributors and distinct assay pools remain queryable.3,851,119literal publisher cells and3,095,695ordered pooled slots retain unresolved identity/units and202date styles. Publisher exact-run/aggregate reconciliation231,902cells;42,164cells have unresolved column names, not guessed aliases.
+- **Candidate contract:** original control acquisition/captured-peptide scope; positive finite canonical sequence, explicitly blank flags, human-only source header annotations. No publisher-selection filter, numerical biological imputation, new FDR guarantee or missing-negative label.394,732original peptide-cell decisions:182,184baseline,94,034review candidates,88,150excluded baseline,212,548outside scope.19,058candidate cells are omitted from the publisher view. Confidence remains separate:50,921direct-MS/MS and20,919matching cells havepeptidePEP<.01;22,194candidates havePEP>=.01. Full-reference support/physical precursor pairing/confidence policy/processing eligibility remain explicit independent axes. No split or fitting.
+- **Verification:** pinned-byte replay reproduces every typed relation; independent readers check23,721,081original TSV fields, allsearch quantities/publisher cells/pooled slots, material precision and all394,732candidate decisions. Source build+internal replay190.29s/1.80GiB; independent source41.91s/1.93GiB; candidates+source/recipe replay120.78s plus3.83sindependent audit/2.32GiB. Combined source/candidate/audit1,385,928,868logical bytes; all6GiB/20minute/10GiB gates pass. These are single-run observations, not hardware comparisons.
+- **Software checks/failures:**9focused importer/recipe tests,26earlier source/context/query tests, format/lint and3,489non-integration tests pass. Initial undeclared catalogfield and empty-versus-absent XML fixture expectation fixed before compilation. Seven old globalcatalog30assertions updated to31after the first full-suite failure; no weaker gate. Sandbox memory-probe refusal preserved; host script retains the guard. Full-corpus integration/release remain pending. Executed source snapshots and reviewed log archives remain unchanged; canonical launcher publication-only style correction is disclosed.
+- **Training/evaluation:** no model, pretraining, synthetic biological outcome, optimizer, loss or assay-head output. No validation/test split or predictions because this is source/candidate qualification. Existing biological held-outs remain closed; no baseline promotion or predictive improvement claimed. nM/binder metrics inapplicable.
+- **Decision/next:** shared source/candidate interfaces now work locally. [Hitlist827](https://github.com/pirl-unc/hitlist/pull/827) is a published draft at176a62e; CI, merge and verified release remain pending. [Hitlist825](https://github.com/pirl-unc/hitlist/issues/825) remains open for source reference/selection/material/pooled-run recovery. [Next prospective comparison](agents/codex/plans/mapp2025-baseline-prediction.md) tests simple sequence versus length/uniform captured-composition prediction, then matched exact/REINFORCE with fixed features/objective. Full APC availability/concentration goal remains active and unachieved.
+
+
+## 2026-10-24_2244_codex_mapp2025-baseline-prediction — Modest original MAPP signal; exact and RL beat uniform
+
+- **Date/agent/reproduction:** October24,2026; Codex/GPT-6, Presto98d0ac8 with recorded task dirt and new frozen code. [Full report, exact launch, all predictions/checkpoints/metrics](2026-10-24_2244_codex_mapp2025-baseline-prediction/README.md). Isolated Hitlist2.0.31 development on176a62e; source827merged5a8b1aa. Local float64CPU/one numerical thread; no Modal/GPU/installations.
+- **Data:** original Goldberg2025/PXD052314 six A549 baseline control acquisitions, canonical sourcecb1bbc22… and shared `goldberg2025_observed_baseline_composition_v1`. Positive finite canonical unflagged source-human-only, PEP[0,.01), direct-MS/MS, one supplied accession, >=3distinct observed peptides/group. All-source peptide/accession graph includes excluded bridges before fixed60/20/20hashsplit.40,701measurements; train/val/test274/74/110components,1330/372/649groups,19593/8649/12459cells. Original394,732decisions retained; no publisher filter, imputation, synthetic biological labels, missing negatives or censor/binder interpretation. Conditional observed captured signal, not complete free pool/molarity.
+- **Training/output:** peptide61features→training-only weighted scaling/group centering/SVD→58supported coordinates→scalarlog10signal; group softmax gives fractions. Equal component/group/peptide errors. Length rank1andsequence ridgealpha.001/.01/.1/1selected onlybyvalidation (.001/1). Exact reverseKL(q||p)+.01mean(beta²),500full-batch Adamstepslr.02,betas.9/.999,eps1e-8,zeroinit/finalcheckpoint. Matched genuine discreteREINFORCE64fresh observed-identity draws/LOO rewards,seeds42/43/44,same objective/budget; no clip/std/reuse/referenceKL/pretraining. All58coordinates train/change; no other Presto assay/processing/MHC/TCR/species/KO/detector branches train.
+
+| Fixed model | Validation RMSE | Test RMSE | Validation reverse KL | Test reverse KL | Test R² | Test Spearman |
+|---|---:|---:|---:|---:|---:|---:|
+| uniform | 0.419737 | 0.439892 | 0.431589 | 0.477545 | 0.00000 | undefined |
+| length_ridge_0.001 | 0.410127 | 0.434413 | 0.410675 | 0.464617 | 0.02476 | 0.12796 |
+| sequence_ridge_1 | 0.388039 | 0.415585 | 0.378544 | 0.424381 | 0.10746 | 0.29551 |
+| exact | 0.388470 | 0.415095 | 0.376448 | 0.422502 | 0.10956 | 0.29363 |
+| reinforce_42 | 0.387946 | 0.415376 | 0.375926 | 0.422539 | 0.10836 | 0.28992 |
+| reinforce_43 | 0.389502 | 0.416381 | 0.378255 | 0.425052 | 0.10404 | 0.28877 |
+| reinforce_44 | 0.388821 | 0.414296 | 0.376133 | 0.421299 | 0.11299 | 0.29057 |
+
+- **Decision:** primarysequence-versus-lengthFAIL:5.386%validation/4.334%testRMSE gain, required5%both; testpaired110componentbootstrap95%[2.288%,6.643%]. Both exact and allRLseeds passdistribution-versus-uniform onbothheldouts. ExacttestreverseKL.422502vsuniform.477545;RLmean.422963±.001912. ExacttestRMSEgainvsuniform5.637%,95%[3.220%,8.118%]. Modest nonconstant signal; no clearRLadvantage, noAPCconcentration/fullavailabilityclaim, no test-selected promotion or refit. Exact remains practical bounded distribution reference.
+- **Verification:** allsourcebaseline decisions match prior independently verified generation; independentNetworkXgraph/targets/weights max3.55e-15. Three actual-cohort probes: analytic/autograd3.11e-15,finite differences2.08e-9;samplegradientmeanrelative.00326–.00370/max2.79SE. Allcheckpoints/covariatepredictionssealed beforeonce-onlytest. Independent58-coordinateSVD/ridge/forward replay529,113predictions(max1.18e-14),39overallmetricrecords(max1.22e-15),6,188strata/ranks andbootstrap(max2.16e-16). Optimizertrajectoriesretained,notindependentlyreplayed. AllpredictionspublishedlosslesslyasParquet;rawgzipCSV/localinputpathsandhashesretained.
+- **Runtime/software:** admission146.22s/2.185GiB;dataaudit5.01s;qualification7.78s;allfits19.31s/.846GiB;eval19.08s;replay11.26s. Exact3.08s/fitvsRL4.30–4.34s(~1.41×);19,593,000candidate scores/fitincludinglogging,42,560,000draws/RLfit. No score-saving claim;single-runlocaltimings.13focusedtests/format/lintpass;firstfullsuite16disk-reservefailures/3477passesduringtemporarysourcebuild,unchangedguardedrerunpasses3493tests/392warnings/314.19s. RecipePR829published5d648602afterrebaseonmergedsource/PBMCmain;fourruntimechangedfilesbyte-identical,post-rebaselocal3481passes/15setupdisk-guarderrorsat~.84GiBfreevs1GiBreserve(309.60s),unresolved;hostedCI40140838953passes all unit/integration/lint/docs/coverage checks; recipe829merged58f67cd. Source2.0.30PyPI wheel/sdist byte-match successful clean-main40140479531; recipe2.0.31release40143097533pending. Canonicaladmit/launcherpublicationimportorderingonly;executedsnapshotsunchanged.
+- **Limits/next:** samecohort/runs and unknownphysical/homologyindependence; totalsmayaggregateforms;capture/detection/processingconfounded. Postfitprovenanceauditfinds3/2/2testpeptidesinpriorMAPP/HAP1/lymphDC; no previousoutcomesorweightsused. Literalaccessionformatdiffers;directfieldextractionfinds134testaccessionsinHAP1referenceinventory,notprovenpriortrainingmembership. Testclosed. Qualify independent baseline biology and observation/processing constraints; Hitlist825remainsopen. Fullgoalactive/unachieved.
+
+
+## 2026-10-24_2315_codex_pbmc-frozen-transfer — PBMC support fails before frozen-model scoring
+
+- **Date / agent / reproduction:** October 24, 2026; Codex / GPT-6, Presto c7fa668 with recorded task dirt. [Report, original-source audit, all cohort decisions and exact launch](2026-10-24_2315_codex_pbmc-frozen-transfer/README.md). Prospective source/model/curation contract, frozen adapter and recipe runtime, local CPU / one numerical thread; no cloud/GPU/environment changes.
+- **Source / endpoint:** original PXD009438 seven pinned assets and verified search archive, 985 peptide rows / 8,851 evidence rows / 14 acquisitions / 13,790 reported intensity cells. Source generation63752e02; shared `pxd009438_observed_baseline_composition_v1`, candidate Hitlist2.0.32 on5d648602. Positive finite canonical explicitly unflagged, peptide PEP[0,.01), per-run By MS/MS, positive direct evidence, complete linked intensities, one supplied parent; exclude every ambiguous duplicate and require three sequences per group. All-source sequence/parent graph includes excluded bridges. CTRL/LUPUS separately weighted equal component/group/peptide. Targets are centered log10 captured intensity and positive observed-set fractions; no synthetic labels, missing negatives, imputation, censoring or binding metrics.
+
+| Source cohort | Components | Accession/run groups | Measurements | Unique peptides | Required support |
+|---|---:|---:|---:|---:|---|
+| CTRL primary | 6 | 27 | 234 | 82 | **Fail** |
+| LUPUS secondary | 7 | 20 | 161 | 66 | **Fail** |
+
+- **Decision:** both fail the prospectively fixed20component/20group/100measurement gate. No prediction or fitting follows; no weakened threshold, regrouping or test adaptation. This is a qualification failure, not measured model-transfer performance. The existing A549 gain remains within-study evidence. Components are dependence groups, not verified independent specimens.
+- **Training / evaluation contract:** no new pretraining, updates, optimizer/loss execution or model selection. Seven predeclared A549-frozen uniform/length/sequence/exact/REINFORCE predictors and their hashes remain unchanged. External-test-only intended; no train/validation split and no prediction dump because neither cohort passes support. Other Presto branches untrained; predictive regression/ranking/binder metrics are inapplicable to this unscored family.
+- **Verification / resources:** original CSV independently verifies692,452fields; NetworkX/source/evidence replay verifies all13,790decisions,1,756nodes and395targets/weights(max1.78e-15). Source rounding discrepancy6.50e-5retained; all14literal aliases and label projections independently agree. Source62.66s/.897GiB; admission17.16s/.720GiB; audit.83s/.258GiB; closure.35s/.079GiB. All resource caps pass; source uses verified CoW, no new multi-GB physical copy.28focusedtests/format/lint pass; fixture reciprocal-ID and two lint corrections precede admission. Full local suite deferred below2GiBfree-space gate; [Recipe PR830](https://github.com/pirl-unc/hitlist/pull/830) published1619c37 with identical frozen runtime; CI/merge/release remain unfinished. Source2.0.30 PyPI bytes match successful clean-main build40140479531.
+- **Limits / next:** project human scope does not establish per-parent origin; original full FASTA absent. Publication PBMC versus repository serum conflict, mixed-cell context, specimen/aliquot/precursor uncertainty, molecular-form aggregation and capture/detection remain explicit. No clinical inference or APC concentration claim. [Shared material-context follow-up820](https://github.com/pirl-unc/hitlist/issues/820#issuecomment-6390908317) records gaps; source822 stays legitimately closed. Require a prospectively qualified independent cohort before scoring transfer. Full availability goal active/unachieved.
+
+
+## 2026-10-24_2338_codex_intact-degradomics-source — Original kinetic quantities reconcile with source exceptions
+
+- **Date / agent / reproduction:** October 24, 2026; Codex / GPT-6, Presto1de0a12 with preexisting task dirt. [Full report, frozen commands/source, cell/quantity audits and receipts](2026-10-24_2338_codex_intact-degradomics-source/README.md). Local CPU, one numerical thread; no cloud/GPU/installations.
+- **Source / curation:** PXD058121 / DOI10.1073/pnas.2419607122: human alpha-synuclein degraded by mouse-organ-derived purified20S. All organs are from one animal; three reported replicates have unresolved biological independence. Complete105-file PRIDE inventory, three processed and five supplementary XLSX, SI PDF/XML/metadata. No RAW spectra, imputed biology, absent-negative labels, molar conversion or model-based assignment choice. Source qualification is not a supervised recipe.
+- **Quantitative coverage:** Eight workbooks /133sheets /325,718 populated cells. KineticS4:1,289 positive rows/237sequences/21labels, lengths5–140; organS5:2,138/313/44, lengths4–140. Intact substrate included. All3,427rows resolve to original identities;3,426intensities match exactly. Search workbooks contain17,862input masses/8,138assignment rows before duplicate views. All nine commonF1/F2sheets agree and must not count twice.
+- **Exceptions / context:** Extra unlabeled H field shifts F2,40minuteR1 assignments; F3brain-zeroR2input IDs are absent despite its header. Explicit layout interpretation restores source-span/value agreement without modifying originals. Spleen30minuteR3is absent from both processed and RAW inventory. One S4/deposit mass/error/intensity disagreement, one reused absent input ID and three assignment/input intensity mismatches remain. Numeric machinery densitometry/material links not found. Nominalzero already contains products; raw deconvoluted sums differ from TIC/normalized plots. All source confidence/ambiguity/recurrence and unknown MS-response scales remain separate.
+- **Verification / runtime:** Independent OOXML/openpyxl replay verifies every populated cell and2,991stored formula caches; source hashes, CRCs and advertised sizes agree. Final positional discrepancies zero. Retrieval4,718,213bytes/44.07active seconds including failed bundle timeout; cell audit9.11s/84.94MiB, final quantity audit1.17s/64.88MiB, closure.013s/53.41MiB. All1GiBfree-disk/3GiBRSS/20minute/256MiBdownload gates pass. Original wrong-route empty response, formula-reader failure, abbreviated header and superseded header-driven findings retained; final scripts pass isolated lint/format. SI figures/captions visually inspected; no plot digitization or RAW reprocessing.
+- **Training / evaluation:** none: no pretraining, optimizer, loss, synthetic biological targets, assay-head mapping, validation/test partition or prediction dumps. Source qualification precedes shared admission; regression/binder metrics inapplicable. Prior biological held-outs remain closed and no predictive baseline changes.
+- **Decision / next:** original kinetic quantities are available with explicit exceptions. [Hitlist831](https://github.com/pirl-unc/hitlist/issues/831) owns homogeneous source ingestion, conflicts, missing acquisition/replicate/material and machinery values. Admit/replay through shared APIs before a separately registered matched exact/sampled generation-destruction comparison. One substrate/purified preparation does not establish APC concentrations or new-protein transfer; full goal remains active and unachieved.
+
+
+## 2026-10-25_0021_codex_intact-canonical
+
+**Date/agent/model:** October25,2026; Codex/GPT-6.
+**Directory:** [canonical intact-degradomics admission](2026-10-25_0021_codex_intact-canonical/).
+**Status:** source build, independent public-query replay and prospective support
+census complete; no biological fit or prediction. Shared source[Hitlist832](https://github.com/pirl-unc/hitlist/pull/832)
+is draft at7ece0885; full hosted gates/release pending.
+
+**Data/curation:** original PXD058121 human alpha-synuclein/mouse-organ purified20S;
+14pinned assets/eight workbooks. Source schema26/catalog32; standalone manifest
+fd91bb6ff3178a2246b760f6b0f99bc3824d83815a65719c34587816f3459974.
+All410,349XML cells/325,718populated values,2,991formulas,17,862input-mass rows,
+8,138assignments and44,457quantities are retained. Independent original OOXML,
+openpyxl and public joined-query checks pass. Publisher3,427links retain one
+quantity conflict; nine repeated views remain non-independent. Unknown molarity,
+initial product pool, physical specimen/replicate identity and mass-match
+confidence are not imputed or promoted to negative/censor labels.
+
+**Training/pretraining/synthetic/loss/output contract:** none; source qualification
+only. Software fixtures are synthetic tests, not training labels. No affinity,
+stability, MHC/TCR or other assay family trains. No validation/test split or
+prediction dump exists because a separate kinetic model contract must precede
+fitting. Binding/500nM metrics are inapplicable. Local CPU/one numerical thread;
+no Modal/GPU/installations. Exact git state, runtime snapshots, invocation/env and
+resource caps are in `reproduce/launch.json`, scripts and copied plan.
+
+| Condition | Wall seconds | Peak polled RSS | Outcome |
+|---|---:|---:|---|
+| Build with deterministic producer replay |13.37|659.4MiB|Pass|
+| Initial independent source replay |12.14|943.2MiB|Verifier omitted substrate-only control grammar; preserved failure|
+| Explicit control-grammar amendment |12.25|946.7MiB|Pass; canonical bytes unchanged|
+| Prospective kinetic support census |8.12|748.5MiB|1,278candidate cells/237sequences; intact parent in all21acquisitions|
+
+**Decision:** source package can support a separately qualified kinetic recipe.
+No winning predictive model. Unlike the MAPP/lymph composition targets, these
+measurements include ordered substrate/product time courses and short products;
+they remain purified-mixture signal, not APC concentrations.80sequences recur at
+at least two early and one late time, enabling a prospective temporal forecast.
+The next frozen plan compares direct controls with exact expected fragmentation
+and conditional trajectory score gradients. Artifacts include every candidate
+disposition, source/build/replay summaries, resource receipts and failed audit.
+The full APC availability goal remains active and unachieved.
+
+## 2026-10-25_0046_codex_intact-kinetic-forecast — Fragmentation loses to direct temporal regression
+
+- **Date / agent / reproduction:** October 25, 2026; Codex / GPT-6, Presto `3ab625edce9ceb6aed9d94ee104306dcf84e248c` with recorded preexisting task dirt and new experiment code. [Complete report, frozen plans/commands/runtime, checkpoints and predictions](2026-10-25_0046_codex_intact-kinetic-forecast/README.md). Local macOS arm64 CPU, float64, one numerical thread; no Modal/GPU, pretraining or installations. Exact interpreter and `PYTHONPATH`/thread overrides are in `reproduce/launch.json`; every executed stage/import is frozen.
+- **Dataset / curation:** PXD058121 F2 human alpha-synuclein/mouse-liver purified 20S kinetics, one animal and unresolved replicate independence. Canonical source manifest `fd91bb6f…`; shared Hitlist `pxd058121_product_substrate_forecast_v1`, recipe manifest `fb04bd48…`, development 2.0.34 on `97d3311a`. Original positive finite, explicitly unmodified, unambiguous assignment/span with <=10 ppm mass error, reconciled input intensity, no ambiguous duplicate mass, unique same-acquisition intact denominator. Product requires two fitting times; no late-presence selection. All 8,138 dispositions retained. Training 0–80 minutes: 626 observations/96 peptides; validation 100 minutes: 181/75; test 120 minutes: 186/74. Equal peptide/time/replicate weights. Same-peptide temporal forecast, not new-substrate or specimen transfer.
+- **Assay / output:** measured `log10(product intensity / intact intensity)`. Missing values stay missing; no synthetic biological targets, imputation, generated negatives or inferred censoring. No affinity/stability/TCR/MHC/species/APC-perturbation head trains; IC50 and 500 nM metrics are inapplicable. Fixed peptide response is absorbed by 96 training-only nuisance offsets, so predictions are anchored to previously observed peptides rather than calibrated absolute abundance.
+- **Models / training:** parent sequence, query span and time → independent-bond fragment expectation → product/parent log ratio + profiled peptide offset. Uniform rate+pre-exposure (2 coordinates) or residue-before-bond rates+pre-exposure (18); all receive gradients/change. All 9,870 latent spans represented mathematically; queried spans evaluated directly. Fourteen fits: exact for both models, plus conditional-score 16/64 draws × seeds42/43/44 for both. Fixed 800 Adam updates, lr0.03, betas(.9,.999), eps1e-8; weighted MSE plus .01 mean squared centered log rates for residue. Exact-forward conditional REINFORCE gradients use Binomial sufficient statistics, not simulator-only RL/GRPO; no clip/std/reuse/reference KL. Seven controls: peptide mean, last, shared linear slope, and slopes shrunk toward shared slope at .001/.01/.1/1. Validation-only selection; no test refit.
+
+| Condition | Validation RMSE | Test RMSE | Test raw-ratio R² | Test raw-ratio Spearman |
+|---|---:|---:|---:|---:|
+| Last fitting-time mean | 0.229625 | 0.364187 | 0.503660 | 0.908959 |
+| **Selected direct slopes, shrinkage .1** | **0.206085** | **0.228184** | **0.805149** | **0.909977** |
+| Uniform fragmentation, exact | 0.304794 | 0.359391 | 0.516646 | 0.810736 |
+| **Selected residue fragmentation, exact** | **0.304593** | **0.359038** | **0.517596** | **0.810438** |
+
+- **Decision:** primary gate fails: physical validation/test RMSE is 47.80%/57.35% worse than selected direct regression, rather than the required >=5% improvement. Paired peptide bootstrap gain intervals [-62.29%,-34.70%] / [-86.69%,-34.34%] do not measure independent-specimen uncertainty. Positive raw-ratio correlations/variation pass but are insufficient: test change-from-last Spearman is .23071 for direct and -.13886 for physical; change R² is -.07353/-1.65781. Direct shrunk regression is the provisional comparator for this narrow contract, not an APC concentration predictor.
+- **Sampled comparison / runtime:** uniform16/64 test RMSE .359376±.000074 / .359391±.000045; residue16/64 .358994±.000025 / .359020±.000027 (three training seeds, not biological uncertainty). Exact core fits2.49/2.50s; sampled4.52–6.36s,1.82–2.55× slower with no predictive advantage. All20pre-closure stages total137.53s; max polled RSS823,705,600B. Closure0.49s. No resource guard changed.
+- **Verification / artifacts:** independent source admission verifies993targets(max8.88e-16), eligibility and weights. Production numerical gates pass. Independent NumPy/SciPy reconstruction verifies13,902physical predictions+sevencontrols(max1.38e-13), all126overall metrics(max1.34e-15), every optimizer recurrence, and all800exact gradients per exact fit. Stochastic draws are not independently replayed. Closure reconstructs selection/bootstrap. All801checkpoints per fit, RNG/optimizer states, per-example validation/test dumps, strata, complete-span dumps for exact fits, plots and artifact manifest remain.32focusedsharedrecipe tests pass; full local suite deferred below2GiBfree-space prerequisite. Source/recipe release and publication remain separate unfinished work.
+- **Context / next:** sequence baselines on HAP1/MS and modest MAPP observed-set gains do not establish processing dynamics or unobserved peptide mass. This biological test finds no mechanistic advantage despite correct tested gradients. Independent-bond assumptions, initial mixture and MS response remain candidate limitations, not diagnosed causes. Preserve inspected100/120-minute outcomes; require a fresh prospective evaluation for new model selection. Full APC availability goal remains active and unachieved.
+
+## 2026-10-25_0116_codex_intact-shape-diagnostic — Optimization and curve shape explain little of the training miss
+
+- **Date / agent / reproduction:** October25,2026, Codex/GPT-6, Presto3ab625e with recorded task/report dirt and new experiment-local code. [Complete report, frozen specification/inputs/invocation, all training predictions and checks](2026-10-25_0116_codex_intact-shape-diagnostic/README.md). Local macOS arm64 float64CPU/one numerical thread, no Modal/GPU/installations.
+- **Data / curation / output:** unchanged0046 canonical PXD058121 training626measurements/96peptides, times0–80min, humanalphaSyn/mouseliverpurified20S. Same positive unambiguous source/intact-normalizer policy and equal peptide/time/replicate weights. Only measured log10product/intact intensity ratios train. No new source curation, synthetic biology, imputation, negative/censor labels or molarity. Affinity/stability/TCR/MHC/species/APC/MS heads and500nM metrics inapplicable. No pretraining. Validation/test files are intentionally unread: this is diagnosis after0046outer outcomes were inspected, not a new predictive evaluation. Per-example training dumps replace held-out dumps for this explicitly limited scope.
+- **Hypotheses / conditions:** production independent-bond log ratios must increase concavely; fit descriptive free/increasing/increasing-concave curves per peptide by exact small active-set weighted quadratic programming. Separately reoptimize unchanged uniform2-coordinate/residue18-coordinate objectives from three frozen starts each (archivedAdam,original,lowrate). L-BFGS-B maxiter1500/maxfun3000/maxls40,gtol1e-9/ftol1e-13,rawbounds[-30,30]; original positive rate/tau parameterization and96profiledtrainingoffsets preserved. WeightedMSE plus.01mean centeredlograte² forresidue, no uniform penalty. No new RL run or held-out scoring; all conditions retained.
+
+| Descriptive / physical training condition | Weighted MSE | Interpretation |
+|---|---:|---|
+| Free timepoint means |0.009991|Within-time replicate dispersion, not pure noise|
+| Increasing curves |0.012096|Per-peptide shape bound|
+| Increasing concave curves |0.013600|Per-peptide physical-shape bound, greater flexibility than shared model|
+| Original uniform/residue Adam |0.045230 /0.045186|Unchanged0046reference|
+| Reoptimized uniform, all3starts |0.044194775|2.2893%training gain|
+| Reoptimized residue, all3starts |0.044136468–0.044136469|2.3219%training gain|
+
+- **Decisions:** both optimizer gains miss fixed5%materiality threshold; stop optimizer extensions on this cohort. Shape penalty is7.98–7.99%of originalphysicalMSE, below fixed10%threshold.47/208adjacent empirical changes and16/96slopes are negative, without causal interpretation. All optimized tau approach120min upper bound, not evidence for actual pre-exposure. Shared-rate coupling/features/regularization are the next representation hypotheses; separate flexible curves are not generalizing biological models. No baseline promotion or APC concentration success.
+- **Verification / runtime:** actual production analytic/autograd shape derivatives and constant/increase/decrease/peak solverfixtures pass. Independent PAVA/SLSQP predictionagreement6.67e-16; convexKKTresidual9.72e-17. IndependentNumPy reconstructs3,756optimized predictions(max3.55e-15), all246functionobjectives(max1.71e-13), finalfinite-differencegradients(max6.22e-11), shapeMSE anddecisionthresholds. All allocated optimizercoordinates change withnonzerocumulativegradients; L-BFGSinternalupdatesnotindependentlyreplayed. Sixcorefits0.052–0.099s/25–48iterations; fullstage2.04s/344,981,504BpeakpolledRSS;replay0.87s/139,100,160B;closure0.049s. All resourcecaps pass. Every evaluation/acceptediterate/gradient, trainingprediction, summary, logs andhashmanifestretained.
+- **Next / full scope:** quantify sequence representation and shared-rate coupling on training development before a fresh prospective biological evaluation. Do not relabel inspected100/120min asblind or invent MS/initial-pool calibration. Prior exact-versus-sampled biological failure stands; full precursor-relative APC availability/concentration goal remains active/unachieved.
+
+## 2026-10-25_0143_codex_intact-temporal-representation — Sequence slopes improve development predictions; penalty removal does not
+
+- **Date / agent / reproduction:** October 25, 2026; Codex / GPT-6. [Report, frozen plan, invocation, all predictions and independent replay](2026-10-25_0143_codex_intact-temporal-representation/README.md). Registered at `d67fb48488960882481627c6f3a8bdaeb6e58bd3`; actually executed at `3bb3d62e96bd2e989f33a3d4cfc382068101c1e6` with recorded task/cleanup dirt. Per-stage receipts record actual git/package/environment state; every executed source is frozen. Local macOS arm64 float64 CPU, one numerical thread; no Modal/GPU, environment changes or pretraining. OMP/OPENBLAS/MKL thread overrides are 1. The previous prepare preflight refusal remains; execution began only after verified cleanup restored the original reserve.
+- **Dataset / curation / output:** only the 0046 original training cohort, 626 positive unambiguous product/intact measurements from 96 peptides at 0–80 minutes; PXD058121 F2, human alpha-synuclein with purified mouse-liver 20S, one animal and unknown replicate independence. Same canonical `pxd058121_product_substrate_forecast_v1` recipe, manifest `fb04bd482f5902d776bcd853d5280d86df7fd8b74424574c1bf793e3d2332f0c`; source/input hashes fixed. First-time replicate means become supplied baseline measurements, yielding 463 later log10-ratio changes. Baseline IDs/values/shared-noise dependencies are retained. Equal peptide/time/replicate weights, recomputed per split. No imputation, generated negatives, censoring or synthetic biological labels; no affinity/stability/TCR/MHC/APC/detector heads train. IC50/nM/binder metrics are inapplicable.
+- **Evaluation:** five deterministic peptide folds and three inner folds meet fixed support thresholds. Original 100/120-minute outcomes are unread. This is nested development CV on previously inspected training, with overlapping peptides from one parent; no new blind test or independent-protein/specimen transfer. Test absence is deliberate. Preserve all 16,205 outer training/validation predictions, 14,816 inner predictions and all physical-start training predictions.
+- **Models / losses:** seven arms below. Direct slopes use elapsed time/80 times a shared intercept plus training-only projected features: log length; or length plus 20 residue fractions and 20 indicators at each terminus. Constant/null directions are removed at the preregistered covariance cutoff. Balanced change MSE plus alpha times mean squared nonintercept coefficients; inner peptide CV selects .001/.01/.1/1. All 120 inner fits, ten selected fits and five shared slopes retained; every selected alpha is 1, with sequence ranks 42–46. No identity or fitted prior slope feature. Physical changes subtract baseline-time from later-time independent-bond product/parent predictions; uniform two parameters or residue 18, with centered log-rate penalty .01 or 0. Three data-free starts per fold/arm, 45 total; fixed L-BFGS-B settings/bounds and lowest-training-objective selection. No new sampled arm: this isolates representation after the matched 0046 exact/conditional-score comparison failed similarly.
+
+| Condition | Pooled development RMSE | R² | Pearson | Spearman | Prediction SD |
+|---|---:|---:|---:|---:|---:|
+| Persistence / zero change | 0.470580 | -0.693432 | undefined | undefined | 0 |
+| Shared elapsed-time slope | 0.379389 | -0.100703 | 0.014003 | -0.006312 | 0.127201 |
+| Length-conditioned slope | 0.379042 | -0.098690 | 0.008941 | -0.004936 | 0.128035 |
+| **Sequence-conditioned slope** | **0.345792** | **0.085610** | **0.599177** | **0.599769** | **0.304500** |
+| Uniform physical model | 0.386543 | -0.142609 | -0.012099 | -0.030995 | 0.149976 |
+| Residue physical, penalty .01 | 0.386013 | -0.139474 | -0.008486 | -0.030941 | 0.152184 |
+| Residue physical, no penalty | 0.380755 | -0.108643 | 0.045984 | 0.007165 | 0.165161 |
+
+- **Decision / uncertainty:** sequence beats length by 8.772%, passes the >=5%/positive-correlation/nonconstant screen and improves four of five folds. Target SD is .361618. The 1,000-resample paired peptide bootstrap gain interval is **[-4.259%,20.109%]**, so this is a promising development comparator, not an established transfer benefit. Removing the physical penalty improves only 1.362% (interval [-1.465%,4.198%]), failing its 5% gate. All 15 selected physical fits converge and approach the 120-minute effective-pre-exposure upper bound; this is not evidence of literal pre-exposure or a diagnosed biological mechanism. No grid extension, test reuse or model promotion follows these observations.
+- **Verification / runtime:** prepare 1.89s, qualify 3.42s, fit 13.69s (peak polled RSS 475,496,448B), evaluate 2.56s, independent replay 19.49s, closure .23s. All resource limits pass unchanged: 3GiB RSS, 20min/stage, 32MiB artifacts, 1GiB free plus32MiB startup margin. Independent SVD/augmented least squares and NumPy physical formulas replay 135 direct records/45 physical starts, objectives, final gradients, selection, all 749 overall/stratified metric records, bootstrap and gates. Prediction errors <=3.02e-14; objective error <=4.66e-9; final gradient error <=3.08e-10. L-BFGS internal updates are not independently replayed. All 231 manifest entries (14,464,690 logical bytes) verify after closure.
+- **Context / next:** there is sequence-associated temporal signal that the tested shared kinetics do not recover, but one-substrate CV does not identify the missing mechanism. Keep the parsimonious direct comparator and unchanged physical/exact/sampled references; qualify broader measured substrates and fresh prospective transfer before changing biological scope. Any future exact/discrete comparison must share representation, objective, conditioning and observation model. The full precursor-relative intracellular/APC availability goal remains active and unachieved.
+
+## 2026-10-25_0344_codex_proteasome-quantity-source — Recover native intracellular machinery-perturbation quantities
+
+- **Date / agent / reproduction:** October25,2026; Codex/GPT-6, registered at Presto `8454ef9c40913c89d56bca5cd02f923701af91f6` with task dirt. [Complete report, source plan, exact commands, asset hashes and independent replay](2026-10-25_0344_codex_proteasome-quantity-source/README.md). Local Python3.12.6/openpyxl3.1.5/numpy2.5.4; no installation changes, Modal or GPU. Source-only qualification; no pretraining, optimization, loss, synthetic biological labels, validation/test split, model prediction dumps or regression/binder metrics. Test absence is deliberate before canonical admission and predictive registration.
+- **Primary data:** Sahu2021 DOI10.1038/s41467-021-26427-0, PMC8548400, native intracellular Hi20S panel in PXD018722. Dataset7 (`41467_2021_26427_MOESM10_ESM.xlsx`, SHA256`f29811e0…`) has10,647distinct peptide sequences,35columns,6,202literal parent-accession tokens and six intensity columns. Human HEK293T control versus inducible PSMD2/Rpn1 knockdown, with primary-study intracellular extraction; not MHC elution, a professional APC, or the separate proteasome-trapped panel. No canonical training rows admitted yet.
+
+| Source acquisition label | Positive intensity cells | Source zeros |
+|---|---:|---:|
+| Cont1 |3,866|6,781|
+| Cont2 |4,181|6,466|
+| Cont3 |4,043|6,604|
+| KD1 |7,418|3,229|
+| KD2 |6,968|3,679|
+| KD3 |7,560|3,087|
+
+- **Quantity/curation contract:**34,036positive cells/29,846source zeros retained without imputation or negative/censor interpretation. No amount/effect summary or condition-selected eligibility. Source sequence-level `Intensity` is not certified LFQ, unmodified-form quantity, precursor-normalized availability or molarity. All alternatives, PEP, decoy/contaminant flags and per-acquisition identification types remain. Label numbers do not prove biological replicate independence or control/KD pairing. No matched precursor/recovery calibration admitted.
+- **Metadata:**48unique PRIDE file records and empty nextpage; six source labels independently match deposited design and MaxQuant configuration to RAW identifiers. The156-byte design and22,385-byte config match official SHA1/size. Search lengths8–25 conflict with article-level minimum7; retain both and do not label unsearched shorter products negative. Matching-between-runs is enabled with its FDR option false; PEP, reported1%FDR and matching provenance remain distinct. Original33,003,906-byte reference is identified but not retrieved under this family's20MiBasset cap. No RAW/large search archives downloaded.
+- **Verification and failures:**293,009populated cells in two recovered XLSX files independently reconcile, including13date-shaped gene annotations verified as original Excel serial/style/date representations without recovering gene names. Original failed inventory remains. Dataset6 adds34branched peptide-spectrum rows with identification/localization evidence, not an abundance endpoint. Publisher/client-challenge and Dryad403/401 responses are preserved. The20MiB-limited EuropePMC ZIP contains12complete members before a truncated Source Data workbook; only two complete XLSX were extracted. An independently rebuilt index plus standard ZIP reader verifies original descriptors/CRC/bytes and inner workbook CRCs. The incomplete outer directory/later members are explicitly unverified. Two metadata requests hit the unchanged shared-disk reserve; a fresh retry succeeds after recovery. Failed retrievals now return nonzero status; both executed helper versions remain frozen.
+- **Complementary source:** official Dryad10.5061/dryad.nk453 metadata identifies a61,018-byte workbook for three fluorogenic substrate kinetics across mouse and human standard/immunoproteasomes. Numeric download is unresolved (public403/API401); no data are admitted or access controls bypassed. Fluorophore release is a separate kinetic constraint, not a natural fragment distribution.
+- **Runtime/artifacts:** complete-cell inventory35.03s/315,588,608BpeakRSS; member recovery.047s; independent recovery.059s; support inventory2.03s/55,705,600B; closure.89s/69,926,912B. Single local observations, not benchmark comparisons. Every source has a pinned path/hash/receipt; raw/failed bytes and literal-cell dump exist once under shared `data/`. No source-copy proliferation into per-fit directories.
+- **Decision / next:** proceed with [Hitlist837](https://github.com/pirl-unc/hitlist/issues/837) native-panel admission and exact reference/quantity-aggregation checks. [Next specification](agents/codex/plans/native-psmd2-canonical-and-contrast.md) tests same-parent control/KD relative-product contrasts, which can cancel shared precursor/run scale and static peptide response under explicit assumptions. Keep unknown extraction, clearance, missing products and baseline calibration separate. A qualified direct comparator precedes a matched exact/discrete generative comparison. This is new biological source evidence, not a new predictive result or completion of the APC availability goal.
+
+## 2026-10-25_0424_codex_native-psmd2-source — Resolve original quantity grain and complete parent ambiguity
+
+- **Date / agent / reproduction:** October 25, 2026; Codex/GPT-6; Presto `8454ef9c40913c89d56bca5cd02f923701af91f6` with documented source/report work. [Report, exact invocations, frozen code, original asset hashes and independent closure](2026-10-25_0424_codex_native-psmd2-source/README.md). Local Python 3.12.6, CPU only, no installs, Modal or GPU; `PYTHONDONTWRITEBYTECODE=1`. Source qualification has no pretraining, model optimization, synthetic labels, assay loss/head mapping, validation/test split, regression/binder metrics or model prediction dumps. Their absence is intentional: no biological fit or condition-effect calculation ran.
+- **Exact data/curation:** Sahu2021/PXD018722 native Hi20S control/PSMD2-knockdown panel, reusing 0344's verified Dataset7/workbook, design/mqpar, inventory and article. The exact deposited FASTA is 33,003,906 bytes with SHA1 `ebfe21f8f804ceb7679d4c41c001fde25cea2a96`. Selected original processed tables contain 10,647 peptide rows/80 fields, 40,679 evidence rows and 10,935 modification-specific rows. Preserve source-zero versus missing, matching evidence, modification/form grain, raw versus LFQ, all candidate parents and unknown biological replicate/material identity. No MHC-bound, proteasome-trapped, fluorescence or other assay is substituted for native intracellular quantities.
+- **Quantity evidence:** all 74,529 publisher intensity cells exactly match original text; all feature/form ID links and six run identities reconcile. Raw and LFQ differ in 30,170 cells. Some 5,765 positive sequence/acquisition cells contain positive modified-feature evidence. Feature/form sums match 60,520/63,243 of 63,882 cells exactly; maximum relative residuals are 8.05122e-5/7.54988e-5, retained rather than repaired. Small export discrepancies do not prove a rounding algorithm or molar calibration. Original text directly recovers 13 date-corrupted gene annotations; 19,635 mass/PEP/score representation differences remain explicit under the prespecified 2e-15 comparison.
+- **Reference evidence:** 73,113 reference records, 72,855 distinct sequences, 24,735,594 residues. One engineered reporter has a human taxonomy tag. Across the complete reference, 38,641 peptide spans include 403 I/L-only alternatives; 6,809 peptides have multiple distinct parent sequences, 582 have candidate accessions absent from the declared list, 53 have reporter origins and 159 lack a reference match. Twenty-four declared absent accession tokens are contaminant-prefixed. Every source-declared and discovered alternative participates in dependency grouping before descriptive selection.
+
+| Descriptive strict-origin support | Parents with at least two peptides | Peptides | Dependency components | Possible reference contrasts |
+|---|---:|---:|---:|---:|
+| At least one positive acquisition per condition | 138 | 603 | 131 | 465 |
+| At least two positive acquisitions per condition | 113 | 462 | 109 | 349 |
+| All three acquisitions per condition positive | 82 | 310 | 81 | 228 |
+
+- **Interpretation / preferred next condition:** these are feasibility strata, not competing fitted conditions or a selected winner. The strict-origin definition also excludes source reverse/contaminant flags, PEP >0.01, multiple complete parents, reporter possibilities and I/L-only spans. It does not turn excluded rows into negatives. No reference peptide, split, numerical contrast or model was selected. Numbered acquisitions are not established biological replicates. The source supports a small prospective same-parent contrast comparison after canonical admission; full distribution, precursor-normalized concentrations and APC transfer remain unproven.
+- **Resources / verification:** four bounded requests retrieve 40,969,817 bytes in 43.48 s, including only 7,965,911 bytes of the 167,389,796-byte processed ZIP. Five members pass original headers/CRCs and independent ZIP replay; full archive SHA1 is not verified. All new source files/receipts total 68,369,865 bytes. Cell/quantity reconciliation takes 2.36 s/306.4 MiB RSS; reference mapping plus independent all-query search 106.05 s/252.4 MiB; independent quantity/date/run replay 2.20 s/274.6 MiB; support 0.30 s/187.3 MiB; closure 0.77 s/241.3 MiB. Closure independently reparses every FASTA record, checks all spans, replays all 10,647 dependency assignments with a different graph algorithm and verifies all support strata. Resource guards remain unchanged. An initial verifier-only EmptyCell failure and its source/log are preserved; the narrow recovery passes. All eight current scripts pass isolated E9/F and syntax checks.
+- **Artifacts / next:** original inputs remain once under `data/native_psmd2_sources/2026-10-25_0424_codex_native-psmd2-source/`; large local derived indices have explicit paths/hashes in `results/large-local-artifacts.json`, avoiding Git duplication. Published residuals, compressed origins, dependency assignments, summaries and reproduction files support replay. [Hitlist #837](https://github.com/pirl-unc/hitlist/issues/837) remains open. A durable isolated Hitlist branch based on current main has a precise source/query implementation specification; canonical adapter, tests, release and the subsequent biological fit remain unfinished. No new RL advantage or APC concentration success is claimed.
+
+
+## 2026-10-25_0519_codex_native-source-canonical — original native source through the canonical store
+
+- **Date / agent / model:** 2026-10-25; Codex / GPT-6. [Experiment directory](2026-10-25_0519_codex_native-source-canonical/README.md).
+- **Data and curation:** 15 pinned original PXD018722 Hi20S assets; native intracellular HEK293T control/PSMD2 knockdown. All source rows/views retained, no supervised selection, no censor/negative-label imputation. Raw and LFQ, sequence/form/feature signal, matching records, unresolved parents and material identities remain distinct. Reporter origins are exclusion/provenance evidence. Not APC or molar concentration data.
+- **Training/pretraining, synthetic data, losses and output mapping:** none; source/query fidelity audit only. No validation/test splits or predictions because no predictor is fit or evaluated, and no held-out outcomes are accessed. No requested/observed Modal GPU; local CPU. Pinned dirty Presto/Hitlist states, complete Hitlist overlay, source hashes, commands and environment are in `reproduce/`.
+- **Conditions / metrics:** public build plus source replay passes in 40.49 s / 809.4 MiB observed process-tree RSS; independent reconciliation passes in 29.31 s / 1926.3 MiB. All 255,635 quantities, 73,113 full references, 38,641 candidate spans, 292,449 literal workbook cells and 228,749 source-parent alternatives reconcile. All 16 primary keys and 28 relationships pass. Independent graph traversal retains 1,689 components, with zero merges from extra form/feature/publisher views relative to 0424. All 13 date-gene defects remain queryable with original text annotations.
+- **Failed attempts:** initial monitor denied process enumeration; later authoritative inspection found no remaining child/package. A wrong-working-directory recovery failed before mutation. Initial independent verifier incorrectly split 19 arrow-bearing FASTA headers; production was correct. The narrow verifier fix retains its original failure/source/log and changes no data, criterion or tolerance. All successful stages meet unchanged resource guards.
+- **Winner / takeaway:** no fitted winner or improved predictive metric. The qualified original native source now survives canonical ingestion and independent replay; publication/release and a model-facing recipe remain pending. Study-scoped triplicate/independence descriptions are preserved without inventing per-run pairing. This advances the prerequisites for the planned same-parent contrast, not the complete APC concentration goal.
+- **Artifacts / next:** exact package manifest and verification/runtime JSON are in the experiment; the package and original assets stay once in repo-level `data/`, referenced by absolute paths and hashes. [Hitlist PR839](https://github.com/pirl-unc/hitlist/pull/839) publishes the source adapter; format, lint and all 3,533 default non-integration tests pass. Hosted gates and tested release precede the biological fit. [Hitlist #837](https://github.com/pirl-unc/hitlist/issues/837) remains open.
+
+
+## 2026-10-25_0612_codex_native-contrast-admission — native same-parent contrasts qualify for the prospective screen
+
+- **Date / agent / model:** 2026-10-25, Codex / GPT-6. [Report and reproduction bundle](2026-10-25_0612_codex_native-contrast-admission/README.md). Presto base a23bc160, Hitlist base bfbaa67f, both dirty with executable Hitlist overlay and exact launch/input hashes frozen. Local CPU only; no Modal/GPU or shared-environment changes.
+- **Dataset / curation:** original PXD018722 Hi20S HEK293T control/PSMD2-knockdown source0519. Fixed 8–25 residue, PEP<=0.01, no flags, literal human nonengineered unique complete parent, resolved agreeing declared parents, all six raw sequence signals positive, >=2 eligible peptides per parent. No LFQ substitution, imputation, censor/negative labels or molarity. All excluded source dependencies and modifications/matching annotations remain. Numbered runs are not established paired or independent subjects.
+- **Training/pretraining / synthetic contract / losses / output mapping:** none; source recipe admission only. Prospective component splits and one within-parent log10 ratio-change target per peptide/reference pair are created, but no predictor, validation/test score, effect summary or prediction dump applies. 500 nM metrics are inapplicable. All six run ratios and twelve source contributions survive. Hash-only reference and split rules precede target computation; component/parent/contrast weights sum to one per split.
+
+| Fixed partition | Components | Parents | Contrasts | Support gate |
+|---|---:|---:|---:|---|
+| Train |55|56|158|Pass|
+| Validation |8|8|38|Pass, at minimum component support|
+| Test |18|18|32|Pass|
+
+- **Conditions / verification / runtime:** public materialization plus deterministic replay passes29.36s/2,483.3MiB observed process-tree RSS; independent original-value/FASTA/origin eligibility, target,2,736contribution,annotation and weight replay passes4.04s/1,866.1MiB. All10,647decisions and original1,689component memberships retained;82references/228contrasts/10,337excluded. Source graph/claims reuse fully reconciled0519 evidence. All stages under20min/3GiBRSS/1GiBdisk+32MiBstartup caps. Format/lint,36focusedtests and3,544defaulttests pass; initial unchanged-memory-guard refusal is preserved, subsequent suite starts only after actual free/speculative capacity recovered.
+- **Winner / decision:** no fitted winner. Strict cohort passes the prospective support threshold without changing seed, reference or eligibility, enabling the fixed three-model screen after source/recipe tested releases. Eight validation components limit precision. This is conditional native-signal response, not APC transfer, absolute concentration or a complete latent-pool distribution. Exact versus RL and the full availability goal remain open.
+- **Artifacts:** experiment-local manifests, original-source verifier, software logs, runtime receipts and frozen invocation/overlay; large recipe/source packages remain once under data paths pinned in launch.json. No biological held-out numerical summaries were inspected.
+
+- **Current-main amendment:** concurrent PR840 added MAPP context/catalog changes. Recipe [PR841](https://github.com/pirl-unc/hitlist/pull/841) rebased to90a7a62 with unchanged six executable recipe files. Format/lint and3,547default tests pass; registered final public replay accepts the exact original package unchanged in5.06s/1,702.9MiB. Original source release40167325306 succeeded and artifacts verified, retained unuploaded after same-version main advancement; current-main source release40168710669 and recipeTests40168839728 remain live, recipeDocs40168839820pass. All original admissions, failed preflight and the post-admission amendment are preserved; no fit or held-out effect summary.
+
+
+## 2026-10-25_0630_codex_native-contrast-screen — sequence response shrinks to zero and fails the biological signal gate
+
+- **Date / agent / model:** October 25, 2026; Codex / GPT-6. [Report, exact invocation, code, models and predictions](2026-10-25_0630_codex_native-contrast-screen/README.md). Presto base84b1e59, dirty with unrelated todo changes preserved. Local CPU, one BLAS thread; no requested/observed GPU or Modal. Environment snapshot timing is explicitly post-run; no environment installation/modification by this agent.
+- **Data / curation:** unchanged PXD018722 Hi20S native HEK293T control/PSMD2-knockdown recipe0612, manifest5f1f3888. 228 conditional observed-signal contrasts, 82 parents/81 original dependency components; train158/55, validation38/8, test32/18 contrasts/components. Frozen literal human nonengineered unique-parent, PEP/flag/search and six-positive-raw-signal policy; all original exclusions/dependencies/modified/matching annotations retained. Missing/zero signals are not negatives or censor bounds; no molarity or established specimen pairing/independence.
+- **Model / training / loss mapping:** three conditions: zero; log-length contrast; 61-feature log-length/composition/termini sequence contrast. Prediction is g(peptide)-g(reference), no intercept or centering. Component/parent/contrast-weighted MSE plus alpha coefficient L2 norm, weights sum one. Three hash-defined inner training-component folds choose alpha from[.01,.1,1,10,100], exact ties favor larger alpha; training-only weighted RMS. No pretraining or synthetic biological training. Twenty-four synthetic rows qualify the software only. Affinity/stability/MHC/TCR/species/detection heads and500nM metrics do not apply.
+
+| Partition / condition | Weighted RMSE | Weighted Pearson | Weighted Spearman | Predicted / target SD |
+|---|---:|---:|---:|---:|
+| Validation zero |0.317216|undefined|undefined|0|
+| Validation length |0.320797|-0.15830|-0.07819|0.06024|
+| Validation sequence |0.317328|-0.03282|-0.02504|0.00949|
+| Test zero |0.424407|undefined|undefined|0|
+| Test length |0.427436|-0.09886|0.07456|0.06025|
+| Test sequence |0.423308|0.27454|0.09036|0.00888|
+
+- **Selection / mechanism:** length alpha1, sequence alpha100. Sequence mean inner MSE falls0.75394→0.18891 as penalty increases across the frozen grid; lower regularization already generalizes worse within training groups. 59/61 sequence coordinates are solved, rank56; N-Cys/C-His differences have zero training RMS and are omitted. All59 active coefficients are nonzero, with maximum stationarity residual6.94e-17. This screen's near-constant output is selected shrinkage, not a missing-gradient or unfinished-optimizer explanation. It does not resolve the prior IC50 failure or establish absence of all biological sequence signal.
+- **Decision / uncertainty / preferred reference:** validation sequence is0.036% worse than zero; test gain0.259% with2,000-component-bootstrap95% interval[-0.247%,0.449%]. Both comparison gains and spread fail the fixed5%/25% gate. No trained model is promoted; retain zero. The numerical test winner has no demonstrated material advantage. Do not tune the inspected outer splits or advance RL on this evidence. Next: the separately specified training-only acquisition-sensitivity diagnosis; revised representations require fresh independent biological confirmation.
+- **Verification / runtime:** independent augmented-SVD replay verifies32 coefficient sets,1,580 inner predictions, all684 training/validation/test predictions, all metrics and4,000 bootstrap draws. Maximum prediction discrepancy3.30e-17. Prepare1.175s/227.2MiB OS peak, fit1.022s/170.2MiB, evaluate0.936s/169.5MiB, replay1.114s/175.3MiB; core model selection/fits0.0260s length/0.0428s sequence. Unchanged20min/3GiB/1GiBdisk+32MiBstartup limits pass. Qualification1.013s has no reliable peak estimate from its original coarse poll; the prospective execution amendment adds50ms polling and OS peak accounting before fitting.
+- **Execution amendments / publication:** the original release-first launcher is preserved. Before any biological fit, an explicit engineering-order amendment allowed exact merged/full-CI source and recipe code while serialized PyPI builds finish; no scientific criterion changed. Merged d02ca1a tree matches tested90a7a62; eight test jobs and docs build pass, PR docs deployment is intentionally skipped. Source2.0.37 is now published with exact tested bytes verified; recipe2.0.38 release40169827556 remains live. A monitor-template registration assertion failed before any stage and was repaired without running data/model code. All actual stages passed without retry. Hitlist work is not called complete before publication.
+- **Artifacts:** validation/test Parquet dumps, training/inner predictions, all scales/coefficients/selection records, JSON/CSV metrics, per-component errors, bootstrap arrays, visualized scatter/CV curves, raw logs, amendments and frozen source. Large input package remains once under data/. The full precursor-relative APC availability and exact-versus-RL goal remains active and unachieved.
+
+
+## 2026-10-25 — Native acquisition sensitivity (0711)
+
+- **Agent/model:** Codex / GPT-6 (system identity).
+- **Directory:** [2026-10-25_0711_codex_native-acquisition-sensitivity](2026-10-25_0711_codex_native-acquisition-sensitivity/README.md).
+- **Question:** did unstable acquisitions cause the nearly constant sequence predictions in the failed native screen0630?
+- **Dataset/curation:** PXD018722 native HEK293T control/PSMD2, original recipe0612, only158training contrasts/56complete human parents/55dependency components. Six positive raw-intensity acquisitions per endpoint, PEP<=.01, no reverse/contaminants,8–25residues, literal unique complete-parent sequence with all declared parents resolved. Original hash reference, split and component/parent/contrast weights unchanged. Acquisitions have unresolved physical replication/pairing.
+- **Assay/output:** same-parent peptide/reference log10 intensity ratio, KD arm mean minus control arm mean. Raw non-MHC native sequence intensities only; LFQ, affinity/stability/TCR/MHC-elution excluded. No missing-value imputation/censor substitution. Conditional relative response, not concentration or APC calibration.
+- **Training/pretraining/loss:** none; no fitted parameters. Synthetic qualification checks software identities only. Six omissions and nine complementary views are dependent diagnostics, never extra labels.
+- **Provenance:** basec728d6179075569a82cac70649460cbf34b1bd2d, dirty with preserved unrelated work. Manifest5f1f388876e2b5b3f65d254ff4939d2559077c2e6af1dffe603b05a1283b836a; five executed sources/invocations frozen before launch. No duplicated shared raw input.
+- **Hardware:** local CPU, oneBLASthread, noModalGPU.20min/3GiB/1GiBreserve+32MiBstartup limits unchanged;50ms RSSpoll andOSpeak. Stage-start environment recorded; no installs. Qualification/diagnose/replay0.631/0.981/0.582s; OSpeak97.6/175.1/422.0MiB. Sandbox process-monitoring preflight refused before any numerical child; original attempt preserved, unchanged command passed with monitoring permission.
+- **Held-out validation/test:** intentionally absent; training-only diagnosis after outer screen. No outer rows materialized, model fitting, predictive test score or500nMclassification.
+
+| Condition/diagnostic | Fixed result | Interpretation |
+|---|---:|---|
+| Original mean response | WeightedRMS0.431604;SD0.429782 | Reference response scale |
+| Within-arm residuals | RMS0.129776 (control0.106151,KD0.149718) | 30.07%of responseRMS; not biological noise variance |
+| Six leave-one-acquisition responses | ChangeRMS0.044737–0.091215;73.207%retain sign under all omissions | Moderate sensitivity; all cases preserved |
+| Nine complementary acquisition comparisons | Pearson0.7669–0.8700;median0.838178;Spearman0.7184–0.8318 | All positive; dependent views, no replicate pooling |
+| Component contributions | Top1/top5:22.03%/49.50%of squared response | Pattern partly concentrated; no group exclusion |
+
+- **Verification:** independent scalar original-cell replay imports no productioncore, checks1,896contributors/1,284quantitycells,8,520numeric values and all decisions;maxdifference3.33e-15within frozen2e-12absolute/2e-13relative tolerance. Per-contrast Parquet, complete component/partition/omissionJSON/CSV, plot andruntime retained.
+- **Preferred next step:** fixed positive-correlation branch selects separately preregistered training-only parent-boundary-context comparison versus61features. No new model winner or exact/RL advantage.
+- **Takeaway:** acquisition instability is a weaker explanation for screen0630's collapse than it was before this diagnostic. Concordance can reflect shared-reference/observer effects; it neither validates biological replication nor resolves earlier full-model IC50underfit. Preserve inspected outer failures and require independent confirmation for any new representation.
+- **Shared data release:** Hitlist2.0.38 tested release40169827556passed, exact artifacts published and independently byte-verified; receipt in family results. Full APC availability/concentration goal remains active.
+
+
+## 2026-10-25 — Native parent-boundary context (0726)
+
+- **Agent/model:** Codex / GPT-6 (system identity).
+- **Directory:** [2026-10-25_0726_codex_native-boundary-context](2026-10-25_0726_codex_native-boundary-context/README.md).
+- **Question:** does immediate external parent context resolve the failed native response predictor after training acquisitions showed concordance?
+- **Dataset/curation:** fixed recipe0612, only158training contrasts/214endpoints/56human parents/55dependency components. PXD018722 nativeHEK293T control/PSMD2; six positive raw intensities perendpoint, PEP<=.01, no reverse/contaminants,8–25residues, all declared parents resolved to one literal nonengineered complete sequence. Same reference, graph, weights and acquisitions; no outlier/reliability filtering. Unresolved physical replication remains explicit.
+- **Assays and target:** raw non-MHC native sequence intensity only; meanKD-minus-control log10(peptide/reference ratio). No LFQ, MHC-elution, affinity/stability orTCRlabels, imputation/censor substitution. This is a conditional response, not APC concentration or full-pool abundance.
+- **Representations:** fixed zero, ln(length),61peptide features,149features including four external parent residues with20AA+OTHER+BOUNDARY. All exact overlapping occurrences averaged; all214actual endpoints have a single occurrence, independently reconciled to source spans.
+- **Training/pretraining:** no pretraining; qualification-only60synthetic known-context examples. Weighted ridge, no intercept/centering, training-only RMS, exact-zero coordinate removal, alpha[.01,.1,1,10,100], equal component/parent/contrast weight. Five fixed component development folds and three inner selection folds, with all scaling nested. Loss weightedMSE+alpha||beta||², no rank normalization. All surviving coefficients solved; no untrained encoder/head.
+- **Provenance:** base`0de1ef166c93eb3e9f92cd2e7e2eb82e17c49f4b`, dirty with unrelated work preserved. Shared manifest`5f1f388876e2b5b3f65d254ff4939d2559077c2e6af1dffe603b05a1283b836a`; ten numerical/launcher sources and exact invocation frozen before execution. Original61feature function byte-identical to0630. Raw input retained once underdata/.
+- **Hardware/runtime:** localCPU/oneBLASthread; noModalGPU/install. Qualification/prepare/fit/evaluate/replay0.678/1.032/1.187/1.003/0.810s; highest OSchildRSS207.6MiB. All first numerical attempts pass unchanged20minute/3GiB/1GiBreserve+32MiBstartup limits;50ms polling plusOSpeak, stage-start environment captured.
+- **Held-out validation/test:** intentionally not used; original inspected outer groups stay closed. Training-only nested developmentOOF predictions are retained, not relabeled a blind test. No IC50/500nMmetrics apply.
+
+| Condition | Weighted OOF RMSE | Pearson | Spearman | Prediction SD / target SD |
+|---|---:|---:|---:|---:|
+| zero | 0.431604 | undefined | undefined | 0.000% |
+| length | 0.429931 | 0.0900 | 0.1660 | 9.497% |
+| sequence | 0.432811 | -0.0961 | -0.0747 | 2.607% |
+| boundary | 0.431426 | 0.0475 | 0.0326 | 1.386% |
+
+- **Model support:** boundary alpha100 in every fold;130–137active/solved/nonzero coefficients, rank108–129. Largest inner stationarity residual2.78e-16. SVD replay verifies all240fits,9,480inner and632OOF predictions,2,000component-bootstrap draws and fixed decision;149,250numerical checks,maxdifference8.32e-14. Complete scales/coefficients/dropped coordinates, contexts and all metrics preserved.
+- **Uncertainty/decision:** boundary gain versus61features0.3201%, paired95%interval[-0.0373%,0.7336%]; versuslength-0.3476%. Only3of5folds improve. Every fixed gate fails (>=5%over allcontrols,>=25%spread,4of5folds,positive interval lowerbound). Bootstrap has overlapping development fit sets; not prospective transfer confidence.
+- **Winner/preferred condition:** length has lowest developmentRMSE, but no model qualifies. Do not promote boundary or extend the alpha grid.
+- **Takeaway:** immediate boundary context does not resolve the nearly constant predictor; acquisition repeatability is not evidence of sequence-generalizable response. This does not diagnose older neuralIC50underfit. Next is the separately fixed reference-invariant all-pairs objective/support comparison with the same feature maps and original models retained as controls. If that fails, stop expanding this response-only cohort and address baseline quantities/observation support before another generative comparison. Full precursor-relative APC availability remains unachieved.
+
+
+## 2026-10-25 — Native reference-invariant objective (0747)
+
+- **Agent/model:** Codex / GPT-6 (system identity). [Report and frozen reproduction](2026-10-25_0747_codex_native-reference-invariant/README.md).
+- **Hypothesis:** an arbitrary reference endpoint could overweight reference-specific responses. Change the objective only; preserve all feature maps, endpoints and original controls. No new representation or optimizer search.
+- **Data/curation:** PXD018722 native HEK293T control/PSMD2, recipe0612 manifest `5f1f388876e2b5b3f65d254ff4939d2559077c2e6af1dffe603b05a1283b836a`. Original158training contrasts,214endpoints,56complete human parents,55dependency components. Six positive raw signals, PEP<=.01, no reverse/contaminants,8–25residues, all declared alternatives resolved to one literal nonengineered parent. No eligibility or acquisition changes, imputation, censor substitution or outlier filtering. Physical replication/pairing remains unknown.
+- **Support/objective:**449unordered pairs have158within-parent response degrees, not449independent samples. Parents with2/3/4+endpoints:24/6/26; parentweight42.73%/10.00%/47.27%. Two-endpoint objectives coincide. All-pair mean squared residual equals `2n/(n-1)*Var(residual)`; both quadratic and gradient identities verified before fitting, with no nfactor discarded. Target is the KD-minus-control mean log10 raw intensity ratio for lexicographically ordered endpoints, independently reconciled to original reference differences.
+- **Assay/output mapping:** native non-MHC raw sequence signal to conditional relative-response prediction. LFQ, affinity/stability, MHC-elution andTCRlabels excluded. No molarity, full-pool availability or500nMclassification applies.
+- **Training/loss:** zero, length,61peptide features,149peptide+external-boundary features; original20reference-objective final controls reused by hash. New all-pair models use equal component/parent/pair weightedMSE + alpha||beta||², nointercept/centering/rankdivision, training-only RMS with exactlyzero coordinates removed. Same five component development folds, threeinnerfolds, alpha[.01,.1,1,10,100], largeralphaexactties.240new fits; all active coefficients solved, no untrained encoder/head. No pretraining or synthetic biological training; synthetic algebra/software qualification only.
+- **Provenance/runtime:** base`68218543c1dd54082b66f8097ab52882354e560e`, dirty with preserved unrelated work.13executed sources/config/commands frozen before qualification. LocalCPU, oneBLASthread, noModal/GPU/install. Qualification/support/prepare/fit/evaluate/replay0.682/0.953/1.311/1.495/1.056/1.575s; highestOSchildRSS492.7MiB. All six first numerical attempts pass20min/3GiB/1GiBdisk+32MiBstartup limits,50ms polling plusOSpeak andstage-start environment records.
+- **Held-out scope:** original validation/test groups intentionally closed. These are nested developmentOOF predictions inside the original55training components, not a new blind test. Both evaluation spaces retained; compare objectives only within the same space. The primary all-pair results follow.
+
+| Training objective / representation | Weighted RMSE | Pearson | Spearman | Prediction SD / target SD |
+|---|---:|---:|---:|---:|
+| reference:zero | 0.477414 | undefined | undefined | 0.000% |
+| reference:length | 0.475752 | 0.081912 | 0.160943 | 7.802% |
+| reference:sequence | 0.478641 | -0.084976 | -0.048864 | 2.531% |
+| reference:boundary | 0.477484 | -0.006321 | -0.003702 | 1.281% |
+| all_pairs:zero | 0.477414 | undefined | undefined | 0.000% |
+| all_pairs:length | 0.477146 | 0.033762 | 0.154727 | 4.734% |
+| all_pairs:sequence | 0.477845 | -0.103462 | -0.034165 | 0.820% |
+| all_pairs:boundary | 0.477868 | -0.061598 | -0.050317 | 1.367% |
+
+- **Decision/uncertainty:** all-pair boundary is0.0804%worse than matched reference-boundary; paired95%gain interval[-0.1980%,0.0561%]. Only1of5folds improves; spread1.367%. All four gates fail (>=5%overthreeowncontrolsandreferenceboundary,>=25%spread,>=4folds,positiveCIlowerbound). Sequence/boundary selectalpha100everyfold. Original-reference secondary RMSE for newboundary0.431887 versus originalboundary0.431426; different target spaces must not be pooled.
+- **Verification:** independent raw-cell/literal-feature/augmented-SVD/manual-rank/per-drawRNG replay verifies1,284raw cells,240new fits,26,940inner predictions,4,856OOF predictions,2,000componentbootstrapdrawsperspace andthedecision.354,449numeric checks,maxdifference7.79e-14; no productioncoreimport ororiginalmodelfitting. All632original controlpredictions reproduced exactly. Complete model/scales/coefficient/support/metric/bootstrap/runtime artifacts andperexampleParquetdumps retained; shared inputs remain once underdata/.
+- **Preferred condition/takeaway:** no predictor qualifies; reference-length has lowest primary developmentRMSE, but no biological success is promoted. **Stop response-only feature/optimizer expansion on this cohort.** Next is native baseline amount/observation admission under [the new detailed plan](agents/codex/plans/native-baseline-observation-admission.md), followed by a registered direct baseline before matched exact/discrete modeling. This is no RL advantage, no diagnosis of older neuralIC50underfit, and no completion of the full APC concentration goal.
+
+
+## 2026-10-25 — PXD024809 nominal-dose observation source (0813)
+
+- **Agent/model/date:** Codex / GPT-6; October 25, 2026. [Report, sources and reproduction](2026-10-25_0813_codex_dilution-observer-admission/README.md). Base `869b2acfffb6a15ac914b9a335dfef66f8ad507e`, dirty with unrelated work preserved. Local CPU; no Modal/GPU or environment installation.
+- **Question and context:** after native all-pair family0747 triggered its stopping rule, qualify an independent observation-response source before interpreting native baseline intensity as availability. This family audits source support; it does not fit a biological or calibration model.
+- **Exact dataset/curation:** public PXD024809 inventory/project metadata, article XML and the complete `Dilute_peptide_quantities.csv` (actually TSV; 13,073,500 bytes, SHA256 `646f8054ca9f60d9ebad46722a994c507c0b30c0c897a75df356586f0bfcccb8`). All 64,070 rows/14 columns retained, 6,407 precursor × 10 run slots, 6,406 sequence/peptide IDs and two charges. No confidence filter, imputation, censor substitution, form collapse or biological partition. Inputs remain once under `data/dilution_observer_sources/2026-10-25_0813_codex_dilution-observer-admission`, pinned in the input manifest.
+- **Assay/label mapping:** post-isolation isotope standards and HLA-selected matrix remain separate material roles. Nominal solution concentration is not on-column amount or endogenous precursor-relative concentration. Aligned DIA intensity is the source endpoint; affinity/stability/TCR/native intracellular labels are not supplied. All raw quantity/confidence/missingness states survive.
+- **Training/pretraining/synthetic/losses:** none. No encoder, parameter update, direct/exact/RL comparison or learned output is evaluated. Validation/test predictions and 500 nM metrics are intentionally inapplicable; original native outer partitions remain closed.
+
+| Source condition | Query slots | Positive intensity | Literal zero | Literal NA | Missing m_score |
+|---|---:|---:|---:|---:|---:|
+| Complete aligned export | 64,070 | 58,063 | 5,743 | 264 | 10,939 |
+| Nine observed nominal standards | 90 | 88 | 2 | 0 | 3 |
+| Tenth intended standard | absent | not supplied | not supplied | not supplied | not supplied |
+
+- **Original context/conflicts:** all ten run labels join to deposited RAW names after explicit filename normalization, without asserting physical specimen independence. Table1/project protocol support five nominal twofold levels; Results says1:10. Keep both assertions. Standards preserve heavy-leucine positions in protocol/UniMod695/group-label forms. Injection volume, purity certification, aliquot lineage and study-specific parameters are not yet qualified. Source HLA context describes the matrix, not restriction of synthetic standards.
+- **Processing mechanism:** exact nf-core/diaproteomics1.2.2 Git blobs show DIAlignR execution followed by renaming its TSV to the quantity CSV. This establishes an aligned export, not the exact original parameter values or a direct-identification interpretation for every row. Existing per-run scored TSVs/master library are the next provenance assets; no new raw search is needed for the initial reconciliation.
+- **Independent verification/runtime:** csv/ElementTree and pandas/DOM/literal-protocol readers reconcile all896,980string cells, quantity states, IDs, standard rows/forms, five dose values and68inventory files. Audit0.882s/47.6MiB, independent replay1.191s/159.5MiB OSpeak, unchanged20min/3GiB/1GiBreserve+32MiBstartup limits,50ms process monitoring plusOSpeak. Post-audit closure checks source hashes, standard counts/forms and both Git blobs. No scientific data were rewritten.
+- **Preserved failures:** generic files route returned emptyHTTP200; corrected project route passed in1.282s. The processed download's exact size/hash passed but its comma-header guard failed on the original TSV. First audit stopped before table scanning on a Unicode thin-space unit separator (0.126s). Corrected stages use new names and preserve all failed code/config/log/receipts. Initial retrieval2.123s/32.8MiB; processed retrieval20.361s/73.3MiB. No download/model retry was used to select a favorable result.
+- **Winner/decision:** shared source materialization is supported; calibration training remains unadmitted pending scored/aligned semantics, query eligibility and protocol reconciliation. Nine standards cannot establish broad sequence or native-MS1 transfer. [Hitlist#845](https://github.com/pirl-unc/hitlist/issues/845) records the concrete source/metadata work, linked to#762. Continue through shared APIs and a registered direct baseline; do not restart response-only optimizer expansion. Full APC availability/concentration and biological exact-versus-RL goals remain active and unachieved.
+
+## 2026-10-25 — PXD024809 scored/aligned feature and library lineage (0844)
+
+- **Agent/model:** Codex / GPT-6; [report and frozen reproduction](2026-10-25_0844_codex_dilution-scoring-lineage/README.md). Base `e232719fa0d0cf7e574bb2d558ebcac74edec0e1`, dirty with unrelated work preserved. Local CPU only; no Modal/GPU/install. Source audit after0813, not a new model search.
+- **Exact source/curation contract:** all ten deposited scored DIA TSVs and the master library selected by role before complete scanning, 389,468,698 bytes; prior full64,070-row aligned TSV and protocol panel reused by hash. Sources remain once underdata/. Preserve all1,031,853rows/29,039,248literalcells, original IDs/forms/charges, target/decoy states, zeros/NA/absent slots. No confidence filter, imputation, censor substitution or source-ID floating conversion.
+- **Training/assay/loss mapping:** no pretraining, synthetic biological training, encoder, parameters, optimizer or loss. Source aligned/scored MS values map to provenance/disposition records. No native availability, affinity/stability orTCR target supplied. Validation/test splits and predictive/500nMmetrics are intentionally inapplicable; original native outer partitions remain closed. No predictive winner orRLadvantage.
+
+| Source condition | Rows / slots | Verified interpretation |
+|---|---:|---|
+| Exact scored/aligned feature-ID, form, charge, precursor and target match | 49,646 | Identical decimal intensity, RT and rank; boundaries/scores equal or within fixed comparison tolerance |
+| Aligned ID absent from deposited score exports | 3,485 | Positive intensity/score; reason unresolved |
+| Missing feature ID, positive intensity | 4,932 | Missing score; no inferred confidence/censor status |
+| Missing feature ID, literal zero | 5,743 | Missing score; zero remains a source state |
+| Missing feature ID, literal NA intensity | 264 | Missing score; no imputation |
+| Nine standards | 90 | 87 exact feature matches; three missing-ID slots (one positive, two zero) |
+| Tenth intended standard | absent | No library/scored/aligned form, not a negative |
+
+- **Namespace hypothesis and amendment:** equating library TransitionGroupId with scored/aligned precursor IDs failed (only20rows agree in each comparison). Preserve this failed audit unchanged. Prospectively amended exact full-form/charge/target-state membership matches all76,561scored rows and64,070aligned forms with no ambiguity.64,060aligned labels agree literally; ten have empty versusNAgroup labels for the same form/charge. Both ID namespaces remain in13,337mapping entries. Nine heavy standards each have84targettransitions;195scoredstandardcandidates are distinct from90alignedslots.
+- **Source interpretation:** pinned nf-core1.2.2export uses parameterized peakgroup/global q-value filters; no exported ID does not prove no internal candidate existed. Actual overrides and zero/missing integration reasons remain unqualified. Keep cross-dilution library selection, twofold-versus1:10protocol conflict, nominal solution concentration versus injected/certified amount, and post-isolation standards versus HLA matrix/native peptide roles.
+- **Verification/runtime:** independent pandas literal parser and Fraction arithmetic replay all29,039,248cells,12,851library memberships,76,561scored rows,64,070aligned links,297,876numeric comparisons and90standard slots, including failed and amended namespace predicates. Allfive stages pass first execution: retrieval251.608s/35.0MiB, inventory13.520s/229.2MiB, lineage4.272s/268.2MiB, membership1.685s/59.4MiB, independent replay49.529s/783.2MiB OSchildpeak. Original20min/3GiB/1GiBdisk+32MiBstartup/50msmonitor limits unchanged. Per-stage configs, exact code, inputs, logs, receipts, compressed all-slot comparison dump and explicit exceptions retained.
+- **Decision:** source lineage is sufficiently qualified for canonical Hitlist ingestion under[#845](https://github.com/pirl-unc/hitlist/issues/845); implementation/tested publication and a separately registered nominal-dose likelihood/selection contract remain pending. No calibration training admitted and no general sequence/native-MS1 transfer established. Do not restart stopped native response-only fitting. Full precursor-relative APC availability and matched differentiable/discrete biological modeling remain active and unachieved.
+
+## 2026-10-25 — Canonical nominal-dose source: full local tests and independent replay pass
+
+- **Agent/model:** Codex / GPT-6; [family0959 and frozen reproduction](2026-10-25_0959_codex_dilution-canonical/README.md).
+- **Source contract:** 17 pinned PXD024809 originals, 402,761,771 bytes. Preserve
+  distinct library/scored namespaces, all missingness, the ten-standard panel,
+  nominal-dose conflict, matrix/standard roles and nonexchangeable DIA methods.
+  No filtering, imputation or quantitative training labels.
+- **Reproduction/code:** Execution at Presto d92606a with unrelated task edits
+  preserved; Hitlist candidate 2.0.40 / 1b3ad56, [PR846](https://github.com/pirl-unc/hitlist/pull/846).
+  Exact per-attempt invocation, source hashes and independent checker snapshots
+  remain frozen. No shared installation or code/resource-policy changes.
+- **Training/evaluation:** None: this is source conservation, with no model,
+  pretraining, assay loss/weights, output mapping or train/validation/test split.
+  Software fixtures are synthetic tests only. No prediction dumps or predictive
+  metrics apply; original native outer partitions remain closed.
+
+| Condition | Outcome | Runtime / scope |
+| --- | --- | --- |
+| Catalog/source software fixtures | 48 pass; correction 26 pass (overlap) | 1.63 s / 1.68 s |
+| Checker/launcher boundaries | 13 pass | 0.13 s; synthetic software fixtures |
+| Full default local suite | 3,571 pass | 379.80 s pytest / 388.38 s wrapper; 901,644,288-byte maximum RSS |
+| Build attempt 1 | Preflight refusal; no child | 69.88 MiB free+speculative versus 3 GiB floor |
+| Build attempt 2 | Preflight refusal; no child | 774.23 MiB free+speculative versus 3 GiB floor |
+| Build attempt 3 | Pass; all 15 tables materialized | 80.89 s; 1.70 GiB OS peak RSS |
+| Independent source replay attempt 1 | Pass | 83.24 s; 2.23 GiB OS peak RSS |
+
+- **Reconciliation:** All 17 originals/snapshots, 1,031,853 tabular rows,
+  29,039,248 literal cells, 297,876 numeric comparisons and metadata/material
+  relationships pass. Feature-link dispositions remain 49,646 exact matches,
+  10,939 missing IDs and 3,485 IDs absent from deposited score exports. Public
+  queries pass after independent replay; missing observations are not negatives.
+- **Resources:** Local CPU only, no Modal/GPU/cloud training; 20 minutes/stage,
+  3 GiB process-tree RSS, 1 GiB disk reserve plus 32 MiB startup margin, 50 ms
+  monitoring and OS child peak. Inactive memory remains excluded. The successful
+  stages passed every unchanged guard; previous refusals stay archived.
+- **Software scope:** Format/lint and the full default non-integration local suite
+  pass on the exact source commit. Hosted workflow40183613623 separately passes
+  unit/lint/integration/coverage; docs build40183613700 passes.
+- **Decision:** No model winner or new biological result. Source conservation is
+  complete. Hitlist PR846 merged as d76c225; release workflow40197014151 passed.
+  Both PyPI2.0.40 distributions independently match the tested artifacts byte-for-byte;
+  receipt: family0959/results/release-2.0.40.json. No shared installation changed.
+  The prospective conditional-dose plan is registered; its numerical execution has
+  not started. Nine selected standards do not
+  establish general response transfer, native MS1 calibration or APC concentrations.
+- **Evidence:** Full README, build.json, verification.json, summary.json, all runtime
+  receipts, stage logs and byte-restorable full local test log. The current closure
+  manifest is reproduce/closure-released.json; source replay at d614b8c and the
+  earlier preparation closure remain historical. No executable/configuration
+  snapshot was rewritten.
+
+## 2026-10-25 — Conditional nominal-dose diagnostic: proportional response beats constant
+
+- **Agent/model:** Codex / GPT-6; [family1423 and complete reproduction](2026-10-25_1423_codex_dilution-dose-diagnostic/README.md).
+- **Source/curation:** PXD024809, released Hitlist2.0.40/d76c225 and canonical
+  family0959; generic shared recipe admits 87 positive exact-linked standard
+  signals from 90 slots across nine standards, five nominal levels and two
+  distinct DIA methods. Preserve one unmatched positive, two zeros and the absent
+  tenth intended standard. Nominal solution amounts, filename-derived joins and
+  twofold-versus-1:10 conflict remain qualified; no imputation or inferred LOD.
+- **Representation/output:** Standard/form/charge/method intercepts plus supplied
+  log relative nominal dose; target log10 aligned arbitrary signal. No sequence
+  encoder, auxiliary/species/APC/TCR/affinity or availability parameters allocated.
+- **Training:** Equal-group weighted least squares; 18/18/19/20 fitted coefficients
+  for constant/unit/shared/method-slope arms. No pretraining, regularization,
+  hyperparameter search or biological synthetic training; only software fixtures.
+- **Evaluation:** Five leave-level-out development folds hold both methods at each
+  dose together; 20 fold fits and four descriptive full fits. No independent test:
+  selected outcomes previously inspected, no independent preparation/biological
+  replication. Original native outer data remain closed. Binding metrics do not
+  apply. All development and descriptive per-example predictions are retained.
+
+| Arm | Fitted coefficients | Equal-group RMSE | Pooled RMSE | Pearson | Spearman | Centered prediction / target SD |
+| --- | --- | --- | --- | --- | --- | --- |
+| Per-group constant | 18 | 0.665914 | 0.653779 | 0.5316 | 0.5038 | 0.2757 |
+| Fixed unit dose slope | 18 | 0.334620 | 0.321510 | 0.9028 | 0.9400 | 0.8022 |
+| Learned shared slope | 19 | 0.340878 | 0.330683 | 0.9003 | 0.9348 | 0.9226 |
+| Learned slope per DIA method | 20 | 0.343272 | 0.332993 | 0.8989 | 0.9366 | 0.9237 |
+
+- **Fixed gates:** Shared slope improves macro RMSE48.81%, all five slopes positive
+  (1.01096–1.23128), centered prediction SD92.26% of observed, both methods improve;
+  all four gates pass. No outcome-driven exclusions or further fitting occurred.
+- **Preferred condition:** Fixed unit slope, RMSE0.334620 versus constant0.665914
+  (49.75% gain). Full-data shared slope1.098346 and method slopes1.139477/1.055775
+  provide descriptive checks; added slopes do not improve held-level error.
+- **Verification:** Six software tests; independent pre-fit replay of12canonical
+  tables,4,936metadata cells,90slots and261transforms. All24fits and696predictions
+  independently reconstruct;4,075numerical checks differ by at most2.66e-14.
+  Copied-source-field and CSV bookkeeping passes; frozen source/plan unchanged.
+- **Runtime/reproduction:** Exact invocations and code snapshots in family1423;
+  execution from ca12f5d with complete new code snapshots and unrelated task edits
+  preserved. Local CPU, one BLAS thread, no GPU/Modal/shared install. All five
+  stages pass first attempts in41.01s total. Fits take1.02s/139.41MiB; largest
+  stage peak is1,854.28MiB. Unchanged20min/3GiB/1GiB guards pass.
+- **Decision/limits:** Rough proportional signal-to-dose behavior is supported for
+  this selected panel/protocol. The observer cannot infer unseen-peptide offsets
+  or native/APC amounts. Stop expansion on this panel; qualify broader independent
+  amount/response anchors and protocol transfer for the next availability model.
+  No new RL advantage or complete biological concentration model is claimed.
+
+
+## 2026-10-25 — Broader MRM source audit: stock metadata verified, raw-area access pending
+
+- **Agent/model:** Codex / GPT-6; [family1451 and reproduction](2026-10-25_1451_codex_mrm-anchor-admission/README.md).
+- **Source/curation:** dirty Presto22241241daaae1b223d4ed6e0543f8fa1afcad9a; fixed Michaud2018/PASS01163/PASS01200 primary and Sobsey2025/PASS05890 fallback. Official public article/supplement inventories; raw inputs once under data/mrm_anchor_sources. All source files, requests, amendments and attempts are hashed; unrelated work preserved.
+- **Training/pretraining:** none. No synthetic data, loss terms/weights, assay-to-model output mapping, learned parameters or model winner. All assays excluded from raw-response training because separate isotope-area/known-load joins are unverified. No validation/test split, predictions or binding metrics; native outer partitions remain closed.
+- **Primary condition:** eight workbooks/ten sheets plus descriptions;60,825 stored-cell positions independently replay.500 unique stock standards with AAA concentrations/CZE purity;498 stock corrections agree at1e-12, two differences match three-decimal rounding. These are stock concentrations, not injected doses. The table labeled raw data reports inferred plasma concentrations.
+- **Fallback condition:** two workbooks/five sheets;14,507 cell positions independently replay. Two PDF parsers and visual review agree on48 assay/peptide links versus53 in the title; membership remains unresolved. Method/characterization tables lack separate raw isotope signals.
+- **Access result:** both exact Panorama routes require login. PASS05890 publicly lists a7.8M CPTAC_Exp1_Curves_CS.sky response-curve document; its content remains uninspected. Public FTP requires TLS; verified FTPS fails hostname validation. Zero Skyline bytes downloaded, no disabled TLS checks. Current anonymous PMC S3 works; retired OA lookup, partial ZIP and legacy-encoding failures preserved.
+- **Resources:** local CPU only, one BLAS thread, no Modal/GPU or environment changes.22 bounded stages,14 passed/8 failed;111.49s combined measured stage time,112.19MiB maximum child RSS.20 metadata plus15 processed HTTP requests,2,481,660 bytes including failed payloads. Source/conservation audits pass.
+- **Decision:** admit supporting metadata only, not calibration training. [Hitlist#762 update](https://github.com/pirl-unc/hitlist/issues/762#issuecomment-6399609459) records the exact small processed asset, available fields and remaining joins/access requirements. Obtain a verifiable repository-supported route, qualify actual Skyline quantities, then implement a shared recipe and preregister response/transfer tests before the native exact/RL comparison. Full APC concentration/availability goal remains unachieved.
+
+
+## 2026-10-25_1548_codex_skyline-response-qualification — listed Skyline file still inaccessible
+
+- Date: 2026-10-25. Agent/model: Codex / GPT-6.
+- [Experiment, exact reproduction bundle and results](2026-10-25_1548_codex_skyline-response-qualification/README.md).
+- Contract: fixed PASS05890 response-curve Skyline candidate; public HTTPS upload
+  inventory, no scientific file retrieval, no vendor spectra or private access.
+  Starting d40f51d, dirty task edits preserved. One guarded 26,747-byte request.
+- HTTPS returns 15 plain-text file entries, including the 7.8M target, with no
+  target download link. Independent HTML parsers agree. Earlier no-login FTPS
+  diagnosis confirms hostname mismatch **and expiry**. Official documentation
+  browsing yielded no supported alternative; this is not global absence proof.
+- Both guarded fetch/replay stages pass: 9.584 / 0.193 seconds, maximum43.30MiB.
+  Local CPU/one BLAS thread; no Modal hardware. Browser discovery was outside the
+  fetch guard and exceeded the six-operation ceiling under an inclusive count;
+  the exact protocol deviation is preserved, not described as full guard compliance.
+- Training/pretraining, synthetic data, loss weights, assay-label/output mapping,
+  qualifiers/censoring and held-out validation/test metrics: not applicable, source
+  access only. No model dataset, predictions or new native outer exposure.
+- Winner: none. Decision: stop these unchanged access retries; existing Hitlist762
+  needs a supported raw-response download. Ratios/LLOQ summaries do not calibrate
+  absolute MS response. Full APC availability and biological exact/RL goal remain
+  active and unachieved.
+
+
+## 2026-10-25_1628_codex_esp-response-source — original ESP article verified; calibration remains unadmitted
+
+- Date2026-10-25; Codex/GPT-6; [report/reproduction](2026-10-25_1628_codex_esp-response-source/README.md). Startinge176f7d with preserved task dirt.
+- Fixed source: DOI10.1038/nbt.1524 / PMC2753399; article-only qualification, no numerical supplements or raw MS. Digest-response training and selected MRM validation remain distinct; no raw known-amount signal pairs admitted.
+- Six discovery operations across tools; public EuropePMC failsHTTP500. Official PMC article111,323bytes passesMD5 and82-paragraph independent XML-parser agreement. Original TDM article remains local.
+- Five guarded stages: one failed HTTP request, four passes; 2.242s total,44.81MiB peak. LocalCPU/one thread, no Modal/GPU. Browser discovery has no local byte/time receipts.
+- Training/pretraining, synthetic labels, loss weights, assay-label/output mapping, qualifiers/censoring, validation/test predictions and metrics: not applicable to source screen. No model fit or reopened native outer outcomes.
+- Winner:none. Decision: ESP response scores are not independent concentration targets; seek actual calibrated observations. No global claim that its supplements lack usable data. Existing Hitlist762 request is unchanged. Full APC availability, machinery/short-product modeling and biological exact/RL validation remain unachieved.
+
+
+## 2026-10-25 — Frozen organ transfer stopped at source admission
+
+- **Experiment:** `2026-10-25_1655_codex_intact-organ-transfer`; Codex/GPT-6.
+  [Report and reproduction](2026-10-25_1655_codex_intact-organ-transfer/README.md).
+- **Dataset/curation:** original PXD058121 F3 mouse-organ 20S time courses,
+  human alpha-synuclein, one source animal, 44 acquisitions. Explicit-unmodified,
+  unambiguous <=10ppm source-linked positive measurements and a unique intact
+  normalizer; no imputation/censor inference. Primary30/60 and descriptive90/120
+  relative log-ratio changes from supplied zero-time baselines. Not APC concentrations.
+- **Training contract:** none newly run; 31 frozen input files for21 preselected
+  direct/physical/exact-forward–REINFORCE-gradient comparators. No new synthetic
+  training labels, pretraining, updates, organ adaptation or old F2 held-out access.
+  Planned loss: organ/peptide/time/replicate-balanced squared log-ratio-change error.
+- **Results:** metadata gate passed; quantitative support was0sequences/0cells in
+  each organ. Every4,198F3 assignment has null Unlocalized Mod. Independent source
+  replay agrees on8,138decisions; independent original OOXML finds all4,198Kcells
+  absent. Header names are correct; this is faithful missingness, not a parser bug.
+- **Validation/test metrics:** none, because support failed before all model
+  scoring. No prediction dumps or bootstrap; no winner. No separate validation
+  selection split was planned for these fixed models. IC50/500nM metrics inapplicable.
+- **Runtime:** five successful localCPU stages19.561s total,745.73MiB maximum child
+  RSS. One prior import-bootstrap failure and one memory-floor refusal are preserved;
+  neither opened the dataset. No Modal/GPU or shared-environment modification.
+- **Shared implementation:** Hitlist7c427e3 (2.0.41unreleased), draftPR848/issue847.
+  Format/lint,17focused checks including unchanged-F2 parity, and3,582default-suite
+  tests passed. Exact environment/commands and failed fixture attempts are recorded.
+- **Decision:** close this family at its fixed gate. Qualify original blank-field
+  semantics or obtain explicit annotations before separately registering another
+  cohort. This neither validates the frozen models nor completes APC availability.
+
+
+## 2026-10-25_1735_codex_intact-search-contract — Methods support unmodified search assignments
+
+- **Agent/model:** Codex/GPT-6; [report and reproduction](2026-10-25_1735_codex_intact-search-contract/README.md). Starting b8150780 with unrelated task dirt preserved.
+- **Source/curation:** original PMC11874349 Methods/s15 explicitly declares no additional ClipsMS search modifications. Two XML parsers agree. Official ClipsMS commit8ad829b (2022-07-22) and CSV/AST/Git-blob checks support the zero-mass None convention. Raw F3 nulls remain unchanged; biochemical purity, exact study version and blank-export conversion are not established.
+- **Conditions/resources:** original article plus four pinned software/documentation assets;8 inclusive discovery operations, 710,944bytes downloaded. Two guarded localCPU stages passed, 1.266s total/96.30MiB peak; one numerical thread, no Modal/GPU. Browser operations have no local timing/byte guard. External code was never executed.
+- **Training/evaluation:** source-only; no fits/pretraining, synthetic labels, loss terms/weights, assay-label mapping, model predictions, validation/test split or metrics. No F3 quantitative outcomes queried. No model winner.
+- **Decision:** qualify a separately named method-supported policy with typed provenance; keep strict family1655 closed. New family1747 freezes the same21comparators and support/quality gates before changed-cohort admission. Full APC availability and concentration calibration remain unachieved.
+
+
+## 2026-10-25_1747_codex_intact-method-transfer — Frozen predictors fail organ transfer
+
+- **Agent/model:** Codex/GPT-6; [report, full comparison table and reproduction](2026-10-25_1747_codex_intact-method-transfer/README.md). Starting Presto b8150780 with unrelated task dirt preserved; Hitlist5a5a416, source generation unchanged.
+- **Dataset/curation:** original PXD058121 F3, one human alpha-synuclein substrate and purified mouse20S from one source animal; not APCs/new proteins/independent animals. Forty-four acquisitions; no recorded F2 reuse. Separately registered method-supported unmodified-search policy retains raw nulls and a typed original-Methods assertion. Original mass/span/link/duplicate/positive-quantity/normalizer/baseline gates stay fixed. No imputation or inferred censoring.
+- **Endpoint:** change in log10(product/intact) from supplied organ/peptide zero-time mean. Primary30/60min:236cells (Brain20sequences/92cells, Liver23/79, Spleen21/65); later90/120min:189cells. All organs pass20sequence/40cell minimum.155baseline cells; every8,138source disposition independently replayed. Weights balance organ/curve/time/replicate. Shared run-gain and fixed MS-response cancellation assumed; no concentration interpretation.
+- **Training/pretraining:** none newly run.31files freeze21arms: zero; shared/length/sequence five-fold0143ensembles; three0143physical ensembles; fourteen0046exact or exact-forward/REINFORCE-gradient checkpoints. Saved transforms/selection/parameters fixed; no F3 fitting, organ adaptation, new synthetic labels, observation/MHC/TCR/machinery heads or old F2 held-out outcome access. Evaluation loss is weighted squared log-ratio change error. Original physical penalties/optimizers remain documented in the report.
+- **Validation/test:** no new validation split or target-cohort selection. Full425-cell transfer prediction dumps contain8,925rows.252stratum metric records include weightedMSE/RMSE/MAE/R²/SD and unweighted Pearson/Spearman. Binding/IC50 cutoff metrics are inapplicable. All model algebra/zero-time checks, prediction joins, rank ties,1,000bootstrap draws and12exact/score pairs independently replay.
+
+| Fixed condition | Primary RMSE | Later-time RMSE | Primary Pearson | Primary Spearman |
+|---|---:|---:|---:|---:|
+| No change |0.216691|0.356673|undefined|undefined|
+| Sequence + time |0.288802|0.418738|0.071599|0.119131|
+| Length + time |0.348240|0.799320|−0.012281|0.081901|
+| Shared time slope |0.347949|see full table|−0.027582|0.041167|
+| Physical uniform ensemble |0.388405|see full table|0.009522|0.102252|
+| Physical residue, penalty.01 |0.391007|see full table|0.009155|0.098203|
+| Physical residue, no penalty |0.405819|see full table|−0.027621|0.070708|
+| Original exact/score checkpoints,14arms |0.416352–0.417609|see full table|near zero|~0.104|
+
+- **Gate/uncertainty:** sequence beats length17.07% but is33.28% worse than no change. PredictionSD0.208033 versus targetSD0.208481 rules out constant-output collapse on this endpoint. Positive pooled correlations and all organ-versus-length gates pass; the no-change gate fails. Peptide-bootstrap95% gain intervals:−70.50% to−5.62% versus zero,−1.35% to33.25% versus length; no invalid draws. Not animal-level uncertainty. Secondary times cannot rescue failure.
+- **Winner/preferred condition:** no change is the best fixed primary comparator; no learned model promoted. Exact/conditional-score checkpoints differ by at most0.000646primaryRMSE with mixed seed direction; no demonstrated RL advantage.
+- **Resources:** seven successful guarded localCPU/float64 stages, 17.844s total/738.36MiB peak; one numerical thread, no Modal/GPU or shared environment changes. First figure title clipped; sources/both renders retained and corrected v2 visually checked. Training costs were not rerun.
+- **Decision:** close F3 evaluation without refitting or feature/optimizer expansion.0143development gain does not transfer; observation/calibration and processing-context assumptions need qualified broader data. [Hitlist831 clarification](https://github.com/pirl-unc/hitlist/issues/831#issuecomment-6401211175), [PR848](https://github.com/pirl-unc/hitlist/pull/848) record source and software work; new CI/release pending. Full precursor-relative APC availability remains active and unachieved.
+
+
+## 2026-10-25_1816_codex_nontryptic-calibration-screen — Broader nominal-dose signals found; metadata admission incomplete
+
+- **Date/agent/model:** 2026-10-25, Codex/GPT-6; [report and frozen reproduction](2026-10-25_1816_codex_nontryptic-calibration-screen/README.md). Starting a9ae724b with unrelated task dirt preserved.
+- **Dataset/curation:** Stopfer2021, DOI10.1073/pnas.2111173118, PMC8449407/PXD024917. Eighteen selected human tumor-antigen sequences, predicted HLA-A*02:01 panel; nominal standard doses and summed targeted fragment-ion signals. Original S1/S3/S6/S7, article and methods are hash-pinned. Free post-purification 1H spikes and embedded pre-IP 2H hipMHC spikes remain distinct. Original blanks/omitted row retained; no zero imputation or inferred censoring. Predicted affinities and transition counts are not assay-intensity labels.
+- **Source result:** S3A has18 sequences/71 dose rows/213 positive signal cells; S3B has9 sequences/45 dose rows/126 positives and9 blank slots. All18 S3A sequences satisfy the unchanged >=3-dose support rule (minimum12 sequences). Original GLFDQHFRL[+7] has no0.1-fmol row. All348 actual slots independently match raw OOXML;18,911 stored cells across8 sheets/four workbooks independently replay, mostly including S1 formatting blanks.
+- **Identity/protocol limits:** C/D/E have no proven acquisition join. S6A valine4.007-Da assignment conflicts with S3/S6B nominal+6;54 of72 isotope records disagree with the S6A sum,17 agree, one lacks an S6A methionine entry (S6B does report M). Raw assertions are retained, no canonical identity chosen. Reported AAA/HPLC and ELISA assignments are not independently certified. Trigger/method and quantified transitions need exact deposited exports. Neither route directly measures native free peptides/APC concentrations or proves MS1 transfer.
+- **Training/pretraining:** none. No synthetic labels, fitted loss/weights, assay-label/model-output mapping or model comparison. No validation/test split or prediction dumps because this is a source screen, not predictive evaluation. No IC50/binding-cutoff metrics or promoted winner.
+- **Conditions/resources:** two source spike designs inspected without fitting. Twelve inclusive discovery operations exhausted (two searches, two failed article opens, eight validated official payloads). Ten guarded CPU stages:7 pass/3 preserved failures,6.443s aggregate,215.34MiB maximum child RSS. One numerical thread; no Modal/GPU/shared-environment changes. Browser timing/bytes are not locally guarded. Import, overstrict dose-grid and absent-S6A-residue failures and sequential recoveries are preserved.
+- **Decision:** nominal dose/signal support qualifies for shared source curation, not training admission. [Hitlist849](https://github.com/pirl-unc/hitlist/issues/849) requests the exact raw transition exports, isotope conflict handling and homogeneous quantity/protocol/lineage schema, extending24 and preserving436. Exact issue-body readback verified. Next is shared ingestion and a separately registered peptide-held-out empirical response test. No F3/F2/native held-outs reopened; full precursor-relative APC availability and matched exact/discrete biological validation remain active and unachieved.
+
+- **Related software closure:** Hitlist848 is merged; exact2.0.41 release40220737944 passes, and both distributions independently match clean main and the successful artifact. Public PyPI upload was rejected by automatic approval review before execution; explicit user approval is pending. Presto a9ae724 PR/push CI passed. No new model validation is implied.
+
+
+## 2026-10-25_1857_codex_nontryptic-transition-lineage — Original source replay passes; signal lineage remains partial
+
+- **Date/agent/model:** 2026-10-25–26, Codex/GPT-6; [source family and reproduction](2026-10-25_1857_codex_nontryptic-transition-lineage/README.md). Starting 717ed59; unrelated task work retained.
+- **Dataset/curation:** same PXD024917 selected tumor-antigen panel and two S7-named Iso18 transition exports; no broader study discovery. Both official workbooks retrieved, byte counts and SHA256 receipts verified. Inventory checksums match computed SHA1, but the API does not declare the algorithm. S7 hipMHCspiikein and deposited hipMHCspikein spellings remain distinct claims. Four of eight network operations used.
+- **Source verification:** all 42,941 stored cells independently replay. DirectSpike: 2,592 transition rows/432 groups/18 peptides; hipMHC: 1,092 rows/252 groups/9 peptides. Groups preserve peptide, reported form and explicit replicate label. No duplicate transition identity keys. DirectSpike has 1,296 missing Concat values, zero nonempty contradictions. No missing-to-zero conversion or inferred acquisition IDs.
+- **Fixed diagnostics:** product-only and all-transition sums compared to original S3 measurements without fitting. S3A ordinal candidate correspondence is unproven; relative 1e-6 agreement 144/213, exact 0/213, conditional integer-rounding agreement 125/213. Some mismatches greatly exceed rounding. Initial S3B comparison mistakenly required bare source labels to equal modified forms; its 135 no-candidate cells are an audit defect, not evidence of absent data. Registered follow-up uses source-declared S6B positions/nominal shifts, preserving atom conflicts and acquisition uncertainty.
+- **Training/pretraining:** none; no synthetic biological labels, fitted loss/weights or model outputs. No predictive split/prediction dumps/validation-test metrics because this is source qualification. No old biological held-outs accessed. No model promoted.
+- **Resources:** local CPU/one thread; unchanged 3 GiB startup and RSS, 20 min, 1 GiB disk reserve plus 32 MiB startup margin. Fetch4 passes in 1.939s/46,383,104 bytes peak; inspect1 in 0.975s/107,790,336 bytes; verify2 in 1.222s/105,496,576 bytes. Prior fetch2/3 and verify1 startup refusals retained. Mapping-audit1 also refuses before child at 1,667,219,456 bytes. The proposed 1 GiB amendment remains inactive. No Modal or shared-environment changes.
+- **Software:** pinned reader in [Hitlist draft PR850](https://github.com/pirl-unc/hitlist/pull/850), head0263dc6, passes original-source replay. Hosted Tests40226053061 passed all five Python versions, lint, coverage and 96 integration tests; Python3.11 reports 3,621 passed/two optional skips, reader99% line coverage. This does not validate biological prediction. Shared source package and consumer recipe remain pending.
+- **Decision:** finish source correspondence and preserve unresolved signal/identity claims before calibration training. [Hitlist849](https://github.com/pirl-unc/hitlist/issues/849) owns these gaps. Full precursor-relative APC availability and matched exact/discrete biological validation remain unachieved. No public PyPI upload was retried.
+
+- **Mapping-audit closure (2026-10-26):** corrected source lookup passes. All 54 export forms uniquely match S6B sequence/explicit-label-position/nominal-shift assertions; all 684 aggregate groups independently replay. S3B has 135 form/dose-supported slots, but only 117 observed ordinal candidates: the 100-fmol export labels are 1/3, whereas the source has values in C/D and blank E. No acquisition identity is inferred. Product-only relative agreement is 105/117 (maximum relative discrepancy 0.5494%); precursor-inclusive agreement is 1/117 (maximum 11,230%). S3A remains 144/213, maximum discrepancy 46.63%. These are source-reconstruction diagnostics, not predictive metrics. Mapping-audit2: 1.189s, 103,596,032 bytes peak RSS, original guards. Shared source schema is now supportable with explicit ambiguities; typed ingestion and training recipe remain next. No model fit or atom-level resolution.
+
+
+## 2026-10-26_0236_codex_nontryptic-source-package — Shared source replay passes
+
+- **Date/agent/model:**2026-10-26,Codex/GPT-6; [family,source contract and reproduction](2026-10-26_0236_codex_nontryptic-source-package/README.md). Starting Presto155f719 and Hitlist0263dc6 plus frozen dirty implementation; both attempted source snapshots preserved.
+- **Data/curation:** ten original PXD024917/article assets from1816/1857; zero new retrievals. Shared package schema29/catalog38 exposes19relations,348measurement slots (339positive/9missing),116nominal-dose rows,108transition-count cells,3,684transitions/684groups and18scoped protocol assertions. All61,852stored cells,54form links and1,368sums independently replay. No absent-row/zero manufacture or inferred acquisitions; S6 isotope conflicts retained. Free-postpurification and embedded-preIP protocols remain distinct.
+- **Informative failure:** initial compiler aborts on source S1 E19 reporting length9 for a10-residue sequence. Two-reader diagnosis confirms the conflict. Corrected compiler preserves reported/calculated length and status instead of discarding the peptide. Original failed package/request/code remain immutable; companion verifier independently checks all18length claims.
+- **Training/evaluation:** no model fit/pretraining,loss,synthetic biological labels or model outputs. No predictive split/prediction dumps or validation/test metrics because this is source-integrity qualification. Software fixtures are not biological evidence; no old held-outs accessed. No winner/model promotion.
+- **Resources:** local CPU/one thread,Python3.12.6; unchanged3GiB startup/RSS,20min,1GiB reserve+32MiB margin. verify1 fails2.427s/274,776,064bytes; inspect1 passes0.569s/133,562,368bytes; verify_v2-1 passes6.169s/493,617,152bytes. No resource violations,Modal or environment changes.
+- **Software/status:** 63 focused tests and all 3,649 default-suite tests pass (329.69s, 909,312,000 bytes peak RSS), plus format/lint. Shared code published in Hitlist PR850 at ac3e048; frozen inputs independently match committed bytes. Hosted CI/integration pending; source qualification closed. Source package succeeds through public writer/open/query; [Hitlist849](https://github.com/pirl-unc/hitlist/issues/849) remains open for recipe and unresolved metadata. Next is a separately registered precursor-grouped empirical response test. Full APC availability and matched exact/discrete biological validation remain unachieved.
+
+
+## 2026-10-26_0308_codex_nontryptic-sequence-response — Sequence response fails; dose explains most variation
+
+- **Date/agent/model:**2026-10-26,Codex/GPT-6; [report and reproduction](2026-10-26_0308_codex_nontryptic-sequence-response/README.md). Starting Presto964ffd3/Hitlistac3e048; frozen code and144input hashes. Exact-head Hitlist hosted Tests40262015632 and Docs40262015747 pass.
+- **Data/curation:** PXD024917 S3A,18selected free1H standards after purification,13reported precursor genes,71dose rows,213positive MS2 signal slots. Shared schema1 recipe retains348decisions, including135embedded2H exclusions/9missing slots. No imputed zeros/censor bounds, no substituted transition sums; source isotope/length/acquisition uncertainty retained. This is nominal protocol-specific signal, not MS1 or APC concentration.
+- **Training/loss:** weighted least squares with equal peptide/dose weights; unit-dose,shared-dose-slope, and sequence-ridge arms. Sequence inputs are20AA frequencies+length, train-only scaling, zero-variance columns removed; alpha[.1,1,10,100] selected only by inner gene-held-out MSE. Penalize sequence coefficients only. No pretraining or synthetic biological data; software fixtures test correctness/leakage. Assay mapping: log10(nominalfmol)+sequence→log10(source positive summed product-ion signal).
+- **Evaluation:**13outer precursor-gene folds with nested inner gene validation; no independent biological test because the small selected panel was already inspected and physical replication is unresolved. All10,224inner and639outer predictions,663models/scalers/training memberships and per-group metrics preserved. All prior biological held-outs remain closed.
+
+| Fixed arm | Equal-peptide outer RMSE | Pooled RMSE | Overall Spearman | Fixed1fmol prediction SD |
+| --- | ---: | ---: | ---: | ---: |
+| Unit dose slope |0.746749|0.729532|0.819991|0.042592|
+| Shared learned dose slope |0.677664|0.651651|0.818594|0.040573|
+| Dose + sequence ridge |0.682183|0.655344|0.817899|0.043784|
+
+- **Decision:** sequence ridge is0.667%worse than shared slope; >=10%improvement gate fails.12of13folds select alpha100. At fixed1fmol, observed SD0.478409 versus sequence predictionSD0.043784: only9.15%of observed variation. Overall correlation is dose-driven. Preserve the original passing slope/variance gates but disclose that subtracting logdose leaves variation from a nonunit slope; it does not establish sequence sensitivity. The fixed-dose diagnostic is posthoc/no-refit. No general observer, biological predictor or RL improvement is promoted; stop tuning this panel.
+- **Verification/resources:** source decisions independently replay before fit; augmented-lstsq replays all663fits/10,863predictions (maxerrors3.56e-14/1.13e-13), all metrics/selection/gates verified. Local CPU/one thread; fit2.610s/157,597,696bytes peakRSS, verification6.566s/173,146,112bytes; all stages pass unchanged3GiB startup/RSS,20min,1GiB reserve+32MiB margin. No Modal/GPU, retrieval or environment installation. Exact runtimes, compact tables, PNG/PDF and lossless prediction archives are in the report.
+- **Next:** independent diverse amount/response anchors and source-matched observation compatibility under the broader native-baseline plan; retain explicit identifiability limits. Full precursor-relative APC availability, short/unobserved products, machinery effects and matched exact/discrete biological transfer remain unachieved.
+
+## 2026-10-26_0344_codex_diverse-quantity-anchors — Broader libraries do not qualify the response endpoint
+
+- **Date/agent/model:**2026-10-26,Codex/GPT-6; [report/reproduction](2026-10-26_0344_codex_diverse-quantity-anchors/README.md). Starting19a45c8 with unrelated tasks/todo.md edits. Frozen plan, requests, response hashes and evidence decisions retained.
+- **Data/curation:** primary-document metadata for two candidate libraries, selected after0308's failed sequence-response transfer. Advancement requires broad nontryptic support, independent peptide amounts and separate raw response. Neither is admitted; exact reasoning/unknowns and source links are in evidence.json. No source assay table downloaded, original biological held-out reopened, inferred zero or calibrated amount manufactured.
+- **Conditions/decision:** Bohrer2010 excluded for tryptic-like terminal design; Jagannadham2021/PXD017992 lacks verified broad nontryptic and amount/response support within this screen. This is not evidence that the latter deposit lacks usable files or that no suitable source exists. No preferred model or changed baseline.
+- **Training/evaluation:** none; no pretraining, synthetic labels, loss terms, assay-output mapping, validation/test split, predictions or predictive metrics. This is a source admission decision, not an evaluation experiment. Published aggregate article results were encountered; sources are not labeled wholly uninspected.
+- **Resources/reproduction:**5 search queries+7 opens exhaust the12-operation prospective budget. Exact tool receipts total116,567 bytes retained locally under data/diverse_quantity_anchor_sources/2026-10-26_0344_codex_diverse-quantity-anchors; these are saved response sizes, not network-transfer measurements. Browser time/memory/bytes are unmeasured. No numerical stage, GPU/Modal, install or raw-MS transfer. Offline standard-library replay checks requests, budget, decisions and artifact hashes.
+- **Next:** audit the existing APC-derived endolysosomal source lead for original quantitative assets and matched measurement scale, rather than automatically launch another generic calibration search. Within-peptide changes can help constrain processing if response/run scaling are controlled; baseline concentration, yield, clearance and APC transfer still require independent evidence. The full exact-versus-RL availability goal remains active and unachieved.
+
+## 2026-10-26_1610_codex_ic50-convergence — active; controls independently verified
+
+- Date/agent/model: 2026-10-26; Codex / GPT-6.
+- [Family](2026-10-26_1610_codex_ic50-convergence/README.md), [frozen plan](agents/codex/plans/2026-10-26_ic50-convergence.md).
+- Complete previously qualified exact-IC50 training cohort: 21,636 train,
+  2,925 validation, 2,803 test; original source pins, raw bounds and historical
+  partition exposure preserved. Shared studies; no independent-donor claim.
+- Direct log10(nM) IC50, train-only scaling, squared standardized error; no
+  auxiliary pretraining/replay or other assay families. Mean/ridge controls,
+  seeds 42/43/44 and within-class permuted-label seed 42 fixed prospectively.
+- Local CPU/four numerical threads/one interop; no GPU/Modal. Full-epoch AdamW
+  3e-4, weight decay 1e-4, dropout .1, batch 64, max 100 epochs, patience 15/min 10.
+- Validation selects checkpoints; held-out validation/test predictions, exact
+  regression, censoring and 500 nM metrics will be preserved for every condition.
+- Controls: all54,728 saved prediction/source joins and metrics independently
+  verify; ridge refit differs by at most3.35e-10. The frozen neural comparison
+  is active. No completed neural result, winner, promotion or PR merge.
+- Reporting support flags and sandbox-compatible continuation are documented in
+  the family README, with both original attempts retained. The user confirms the
+  TCRvdb release is not yet available; no full-model completion is claimed.
+
+<!-- ic50-convergence-status:begin -->
+### IC50 convergence saved-output status
+
+As of 2026-10-26T16:30:23.559768+00:00.
+
+| Condition | State | Selected / completed epochs | Validation RMSE | Test RMSE |
+| --- | --- | --- | --- | --- |
+| mean | verified | n/a | 1.360611 | 1.342001 |
+| ridge | verified | n/a | 1.223458 | 1.229134 |
+| seed42 | starting | pending | pending | pending |
+| seed43 | not_started | pending | pending | pending |
+| seed44 | not_started | pending | pending | pending |
+| permuted42 | not_started | pending | pending | pending |
+
+All fixed conditions verified: **False**. IC50 comparison screen passes: **False**.
+No best-seed selection, test-based retuning, or full-model promotion. All class-specific, 500 nM, censoring, allele/study and paired-bootstrap details remain in `results/`.
+TCRvdb is not yet available (confirmed by the user October 26). Auxiliary, censor-training, APC/MS transfer and serving gates remain open. PR 131 stays draft.
+
+Status: fixed comparison active. Next Step: finish and verify the remaining declared arms. Open Questions: authorized TCRvdb input and the separately scoped biological milestones.
+<!-- ic50-convergence-status:end -->
+
+## 2026-10-26_1642_codex_endolysosomal-source-audit — originals inspected; quantitative peptide table unavailable
+
+- Date/agent/model:2026-10-26,Codex/GPT-6;
+  [family](2026-10-26_1642_codex_endolysosomal-source-audit/README.md),
+  [plan](agents/codex/plans/2026-10-26_endolysosomal-source-audit.md).
+- Scope: original public Öztemiz2026 article/supplements and explicitly linked
+  deposits; measured peptide time-course/context admission. Exclude synthetic
+  software examples; isolated preparation is not native APC concentration.
+- Source-only: no training/pretraining, losses, synthetic supervision, predictive
+  splits or predictions; no cohort is admitted, so validation/test metrics do not
+  apply. Earlier biological held-outs remain closed. Local CPU, no GPU/Modal,
+  package changes or author outreach.
+- Data: original article plus all5 publisher-listed version1 PDFs. Independent
+  pypdf/Poppler replay verifies5 single pages/no embedded files,8 protein-level
+  aggregate cells and both9-time peptide-map label sets. Rendered pages were
+  inspected. No original individual peptide intensities/sample lineage; no graph
+  digitization, color-to-label conversion or inferred zeros. Protein degradation
+  summaries are not pMHC dissociation labels. Zero peptide-quantity rows admitted.
+- Reproduction/resources: starting7e0c8e9 with registered planning notes;1db2705
+  registration. Original12-call budget explicitly amended to15 after9 calls,
+  before the exact API plus5 downloads. No source expansion;10min/byte limits
+  unchanged. Local HTTP18,347,804bytes; final asset at424.420s; browser bytes/time
+  unmeasured. Independent replay2.006s/116,047,872bytes parent peak and33,816,576bytes
+  maximum child RSS. Initial pypdf form-limit warning and unmeasured preliminary
+  extraction are disclosed. Source pins, code, ledger and offline replay retained.
+- Decision/next: scoped negative admission; await original intensity tables with
+  acquisition/replicate links before shared ingestion. This does not establish
+  absence elsewhere. Continue qualified IC50 work. Full APC availability,
+  calibrated observation and biological transfer remain unachieved.
+
+<!-- mhc-species-evaluation-20261026:start -->
+## MHC reference species evaluation — 2026-10-26_1720_codex
+
+Date: 2026-10-26. Agent/model: Codex / GPT-6.
+
+Incomplete; fixed controls independently verified; neural conditions unfinished.
+
+Experiment directory: `experiments/2026-10-26_1720_codex_mhc-species-evaluation/`.
+Exact contract and reproducibility bundle: `reproduce/plan.md`, `reproduce/launch.json`,
+`reproduce/launch.sh`, `reproduce/verify-v2.sh` and frozen `reproduce/source/`.
+Initial executed commit: `e4d2969ce86f7097652e551653dd91f1cb8bd29e`; exact dirty state is in the receipt.
+Original data/runtime remain unchanged; generated audit files were untracked.
+
+Data: 13,218 four-species single-domain reference annotations (6,092/694/6,432
+train/validation/test), original aliases and fixed exact-domain/reference-chain
+components. Human/mouse/rat/rhesus macaque map to the shared mhc_species head
+through their actually observed mhc1 or mhc2 input. No pairing/class labels,
+synthetic data, assays, bounds or censoring. Regression/500 nM metrics do not apply.
+No affinity pretraining/transfer is evaluated. Prior and length/composition/slot
+softmax controls fit only training data; softmax uses summed CE plus L2 alpha1,
+unpenalized intercept and training-only standardization. Neural seeds42/43/44
+use d128/two layers/four heads, dropout0.1, AdamW3e-4, decay1e-4, CE weight1,
+batch64, max50/min10 epochs, patience10, minimum validation CE selection and
+one selected-checkpoint test evaluation. Neural conditions run after IC50 serially.
+
+Local CPU only; no GPU/Modal requested or observed. Existing Python3.12.6;
+read-only pinned dependency overlay, one control/verifier thread or four neural
+threads, interop one. Exact environment and hardware are in each receipt.
+Fixed-control elapsed time: 5.523s; peak process RSS: 368852992 bytes.
+
+| Condition | Train CE | Validation CE | Validation balanced accuracy | Validation component CE | Test CE | Test balanced accuracy | Test component CE |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| composition | 0.308779 | 0.557641 | 0.607901 | 0.486352 | 1.024366 | 0.452151 | 0.448776 |
+| prior | 0.644654 | 1.060291 | 0.250000 | 0.736348 | 0.320825 | 0.250000 | 0.698657 |
+
+Full per-species/slot discrimination, confusion, Brier, calibration, probability
+variation and component metrics are in `results/comparison.json`; the concise
+table is `results/comparison.csv`. Every split's predictions are preserved in
+`results/baselines/*-predictions.jsonl.gz` and, as completed, each neural result
+directory. Raw checkpoints and native dumps: `/Users/iskander/code/presto/artifacts/2026-10-26_1720_codex_mhc-species-evaluation`.
+
+Independent verification checks all original source fields plus precisely the
+manifest evidence-policy normalization, all metrics and control probabilities,
+training-only feature scaling and the analytic convex-objective gradient.
+The original raw-row equality checker rejected that known loader-added field;
+its source, failed receipt and log are retained. The v2 correction and exact
+source/prediction hashes are in `reproduce/verification-amendment.md` and
+`reproduce/verification-v2-contract.json`. No control was refit and no test rescored.
+
+Interpretation: the composition control improves validation discrimination over
+the prior but remains below the prespecified neural screen. Test observation CE
+favors the prior while equal-component CE favors composition: the existing
+5,664-row human component dominates the observation-weighted result. Neither
+statistic establishes homology-independent or population-level generalization.
+There is no qualified neural winner until all three fixed seeds pass. Even a
+passing species screen would leave affinity transfer, class/pairing inference,
+APC/MS/TCR science and the PR merge criteria open.
+
+Status: active; not scientifically complete.
+Next step: finish serial neural fits, independent replay and closure.
+Open questions: reference generalization and useful affinity transfer.
+<!-- mhc-species-evaluation-20261026:end -->
+
+
+## Direct-assay source inventory — 2026-10-26_1734_codex
+
+Experiment directory: [2026-10-26_1734_codex_direct-assay-inventory](2026-10-26_1734_codex_direct-assay-inventory/README.md).
+
+
+**Closed: both independent scans agree on all840,805 source rows and384 joint cells.**
+Registered and executed2026-10-26 by Codex / GPT-6. Zero rows admitted for fitting.
+
+Frozen source: Hitlist ci-corpus-v4, the existing2026-10-16 export; this is not
+a latest-release claim. The original binding.parquet (814,268 rows) and
+other_assays.parquet (26,537 rows) are hash-verified against the pinned
+[source contract](2026-10-26_1734_codex_direct-assay-inventory/reproduce/plan.md), under the existing local release path
+`/Users/iskander/.hitlist/corrected-corpus/public-downloads/v4/bundles/2026-10-16T07-20-43Z/`.
+
+The census preserves literal response, method, unit, qualifier, source, class,
+PTM and binding/MS flags, including null separately from empty strings.
+Numeric state is only missing/nonfinite/nonpositive/positive finite. No
+qualifier interpretation, unit conversion, target mapping, sequence/groove
+resolution, deduplication, split assignment or biological admission occurred.
+
+| Literal source response | Unit | Raw rows | Positive finite | Purified metadata candidates |
+| --- | --- | ---: | ---: | ---: |
+| MHC binding | (empty) | 468,548 | 0 | 0 |
+| qualitative binding | (empty) | 89,787 | 6,231 | 5,388 |
+| dissociation constant KD (~IC50) | nM | 88,645 | 88,633 | 88,418 |
+| half maximal inhibitory concentration (IC50) | nM | 74,267 | 74,027 | 65,420 |
+| dissociation constant KD (~EC50) | nM | 57,523 | 57,523 | 57,518 |
+| ligand presentation | (empty) | 24,977 | 0 | 0 |
+| dissociation constant KD | nM | 21,023 | 21,018 | 20,344 |
+| half life | min | 11,358 | 10,611 | 10,052 |
+| half maximal effective concentration (EC50) | nM | 1,854 | 1,795 | 683 |
+| 3D structure | angstroms | 1,554 | 1,537 | 0 |
+| 50% dissociation temperature | °C | 1,152 | 1,140 | 1,043 |
+| off rate | 1/s | 71 | 69 | 49 |
+| on rate | nM^-1s^-1 | 36 | 36 | 30 |
+| 3D structure | (empty) | 6 | 0 | 0 |
+| association constant KA | 1/M | 4 | 4 | 0 |
+
+The last column is a metadata-only screen: positive finite value,
+has_ptm=False, IEDB/CEDAR, classI/II and a literal method beginning
+`purified MHC/`. It does **not** check sequence chemistry, human restriction,
+explicit class-II partners, catalog agreement, raw numeric/bound text, original
+assay lineage, duplicates or leakage. Counts cannot be called training support.
+
+Decision: qualify the literal **dissociation constant KD** source next, then
+assess incremental retained-IC50 performance only after the fixed affinity
+comparison is reviewed. Preserve `KD (~IC50)` and `KD (~EC50)` as separate
+proxy families. Likewise, `50% dissociation temperature` requires assay-level
+qualification before any melting-temperature mapping; neither qualitative
+binding values nor off/on rates are silently reassigned to another endpoint.
+
+Verification uses a second scan with Arrow vector predicates/group-by and2048
+row batches, independent of the first Python row-wise4096-batch aggregation.
+All joint counts, null/empty counts, distinct nonempty assay/reference ID
+cardinalities, parquet totals and source hashes agree. The full source schema
+and per-source summaries are in [census.json](2026-10-26_1734_codex_direct-assay-inventory/results/census.json); every cell
+is in [joint-counts.csv](2026-10-26_1734_codex_direct-assay-inventory/results/joint-counts.csv), with JSON-encoded field
+values distinguish null/empty/false. [Replay](2026-10-26_1734_codex_direct-assay-inventory/results/independent-verification.json).
+
+Execution commit: `4008ae1573ad4afe480db42dfac3ffeb6b25d66c`; exact dirty state, invocation,
+environment and package versions are recorded in [launch.json](2026-10-26_1734_codex_direct-assay-inventory/reproduce/launch.json).
+Only independent experiment artifacts were untracked; existing model/runtime
+code stayed unchanged. Reproduction uses [launch.sh](2026-10-26_1734_codex_direct-assay-inventory/reproduce/launch.sh)
+at the executed code commit in a fresh checkout with the same pinned source
+files. Existing results are protected from overwrite. Code snapshots and the
+saved-output report source are under `reproduce/source/`.
+
+Local CPU, one Arrow/BLAS thread; existing Python3.12.6, no installs, network,
+cloud or GPU. No model, pretraining, optimizer, loss weights, synthetic data,
+assay-output mapping or selected condition exists. Predictive metrics and
+validation/test dumps are inapplicable because no cohort/splits or model were
+created. This source inventory does not qualify any scientific endpoint.
+
+| Operation | Elapsed seconds | Peak RSS bytes | Status |
+| --- | ---: | ---: | --- |
+| inventory | 3.428574 | 217,513,984 | completed |
+| independent-replay | 1.128621 | 262,078,464 | completed |
+
+Both scans stayed within the registered300s/3GiB process ceilings and
+available-RAM/disk floors. The raw sources remain at the pinned original
+paths; no new large cohort was materialized alongside IC50 training.
+
+Status: closed source inventory. Next step: strict direct-KD admission.
+Open questions: original-assay interpretation, deduplication, explicit partner
+coverage, leakage control and useful retained-task fitting. PR131 remains draft.
+
+## 2026-10-26 18:03 — MHC-II literal coverage and lost MAPTAC DM conditions
+
+Agent/model: Codex / GPT-6. [Experiment directory](2026-10-26_1803_codex_mhc2-source-context-audit/README.md).
+Presto `ddfd7a1` plus frozen audit sources; exact git dirt/input hashes in the
+reproducibility bundle. Read the existing Oct16 publicv4 binding, observation and
+other-assay Parquets. Current Hitlist2.0.42 source was separately pinned at
+`13b91424295e01286db46e8e9818fcc2fe816834`; no claim of regenerating v4 with it.
+
+Literal `mhc_class == II`, all species/assay labels/qualifiers/units/PTMs retained;
+no training admission, deduplication, censor reinterpretation or generated negatives.
+Binding includes46,551explicitIC50/nM rows among mostly other/qualitative labels.
+No model/pretraining/loss/output mapping, synthetic data or GPU applies. No held-out
+metrics or prediction dumps exist because this is metadata inventory, not an eval.
+
+| Condition/partition | Class-II rows | Distinct peptides | Known PMIDs |
+|---|---:|---:|---:|
+| Binding export |590,479|109,636|863|
+| MS observation export |1,444,135|576,894|178|
+| Other assays |832|689|156|
+
+Independent row/Arrow aggregation reconciles5,327,796total rows/177joint cells;
+additional Arrow kernels verify29nonzero coverage counts and peptide/PMID counts.
+Inventory88.42s/504.9MBpeakRSS; follow-up3.85s/445.2MB, local single-thread CPU.
+The first categorical-label serializer truncated scalar strings; preserve that
+failure and use the separately corrected, verified `inventory-corrected.json`.
+Original joint and coverage counts were unaffected. All source hashes preserved.
+
+Current MAPTAC import has43,503rows but no DM/sample discriminator;11,184rows use
+restrictions with both curated DM arms. Independent CSV/Arrow counts support
+[Hitlist #853](https://github.com/pirl-unc/hitlist/issues/853), filed and read back.
+The original workbook fetch returned403, so original arm sizes were not recovered.
+Seven of eight declared primary-source operations used, including failures;
+source/current-issue receipts and exact commands are retained. #817 remains the
+Nanaware source owner; no duplicate ticket or author outreach.
+
+Preferred direction: qualify actual class-II pair/parent/context joins and freeze
+binding/MS comparisons. Stražar is substantial single-context ligand evidence;
+MAPTAC DM-response learning needs source repair. Nonempty fields and candidate
+sets do not prove real flanks, full pairs or per-row conditions. No predictive
+improvement is claimed and the full three-track MHC-II goal remains active.
+
+## 2026-10-26 18:25 — Corrected human MHC-II MS source acquisition
+
+Agent/model: Codex / GPT-6. [Experiment directory](2026-10-26_1825_codex_mhc2-ms-admission/README.md).
+Status: source bytes and positive-evidence admission verified; predictive
+partitioning, source-policy review and training remain open.
+Execution commit `2ff983d667c28ad644cbe0ad4a1665db8ddc450d`, with the concurrent
+context extension and new experiment files recorded in the verification receipt.
+
+Downloaded Hitlist's `human-cohort-corrected-v1` training table, manifest,
+qualification report and checksums. This is the Oct16 export produced by
+Hitlist1.78.0, not the separately inspected current2.0.42 source. All three content
+files match published SHA256SUMS:188,213,823bytes,4,071,463rows/161columns.
+The Parquet SHA256 is `f902341e90c1c57defc93f4bc540ffcbea1b41061afb4492ddd8aaa7642c65bd`.
+Raw files remain at `/private/tmp/presto-mhc2-20261026/ms-source/`; exact commands,
+hashes, schema and source snapshot are under the experiment's `reproduce/`.
+
+| Stage | Result | Training rows admitted |
+|---|---|---:|
+| Published-content verification | All three checksums match |0|
+| Molecular pairing and context qualification |98,220positive evidence rows verified; no training split|0|
+
+Upstream qualification limits peptides to8–25residues and leaves donor, specimen
+and acquisition identity unresolved. It supplies no real parent flanks. Selected
+source-row inspection retains exact Stražar condition IDs and added-DM annotation,
+while MAPTAC DM arms remain unresolved. `matched_sample_count` counts curated
+study samples; it must not be interpreted as row-specific arm ambiguity.
+Neither missing peptides nor unknown conditions become negative/control labels.
+
+This stage creates no model, splits, pretraining, loss, synthetic data, assay-output
+mapping or selected condition. Held-out metrics and prediction dumps do not apply
+to byte verification. Local CPU, existing Python environment, no cloud/GPU or
+installation. Acquisition stayed below256MiB; elapsed download/hash times were
+not instrumented and no performance claim is made. Next: independently qualify
+explicit candidate pairs and source-scoped context before a separately registered
+binding/MS predictive comparison. Full MHC-II improvement remains unproven.
+
+### Admission closure at19:10UTC
+
+Execution base `7560af3` plus the new frozen adapter and experiment sources;
+exact dirty state, source/module hashes, argv and environment are in the
+experiment's `reproduce/admission-launch-attempt01.json`. The unchanged human
+catalog is pinned by SHA256 `ddc3493c64f4328de174a6c2cda1f007ec2f93a1ef649add25d2ef9c1720add1`.
+All eligible aliases must agree on complete grooves; no alpha-chain default,
+best-binder assignment or silently dropped candidate is permitted.
+
+The explicit source contract requires human class-II positive MS, known
+unmodified canonical peptide, indexed source identity, complete supported
+candidate sets and retained raw source/condition evidence. Predicted
+restrictions, unresolved candidate scope, unknown chemistry and partial chains
+remain dispositions. Condition claims require resolved annotated context; only
+literal `none` establishes absent factors within the study's declared vocabulary.
+No processing route or enzyme activity is inferred from an intervention.
+
+| Disposition / evidence family | Observations |
+|---|---:|
+| Admitted positive MS, complete candidates |98,220|
+| Deferred unresolved candidate scope |618,756|
+| Deferred unspecified peptidoform |293,282|
+| Deferred missing explicit MHC partner |209,466|
+| Deferred predicted restriction |78,744|
+| Excluded modified peptidoform |40,937|
+| Excluded unsupported peptide |268|
+| All class-II MS source rows |1,339,673|
+
+Retained evidence has56,853distinct peptide sequences,20displayed studies and
+84candidate sets:63,730DP,28,508DQ and5,982DR observations. The exact cached parent
+contributor file matches the native release input hash; all196,304links for
+98,220retained provenance IDs are independently conserved, with no unresolved
+overlap flag or unknown contributor PMID among those retained links. That does
+not establish donor/specimen/parent-protein or homology independence. No evidence
+row is treated as an independent replicate merely because it has an ID.
+
+CIITA transduction supplies4,612present and208explicitly absent observations
+across HROG02, HROG17 and RA in PMID33592498. This enables a future real condition
+ablation; observed counts alone are not treatment effects or negative labels.
+No processing-pathway factor is activated. TAX1BP1 and drug/cytokine contrasts in
+the broader source fail this full-pair admission, so their rows are not guessed.
+
+The independent checker imports neither production adapter nor catalog resolver.
+It verifies all4,071,463source rows/1,339,673MS dispositions, every retained source
+record/groove/context and all196,304contributor links. All group and categorical
+profile counts also replay. Two initial verifier failures are preserved: empty
+Arrow indices had a null type, and numeric native PMIDs were compared with text
+profile keys. Reader-only repairs pass without changing admitted data or criteria.
+
+| Operation | Seconds | Peak RSS bytes |
+|---|---:|---:|
+| Profile |3.902|209,338,368|
+| Admission and links |132.528|981,123,072|
+| Final independent replay |132.118|668,254,208|
+
+The existing local CPU environment uses one numerical thread; no GPU/cloud or
+installation.85focused software tests, repository lint and strict docs pass.
+No model, optimizer, pretraining,
+loss, selected condition or generated training labels apply. The sole endpoint
+mapping is recorded positive MS to `elution_observation=1`; all rows remain
+unpartitioned `predict` evidence. No held-out prediction dump or predictive metric
+exists because this is admission, not evaluation. Large JSONL/Parquet artifacts
+remain under `/private/tmp/presto-mhc2-20261026/ms-admitted/attempt01/`, with hashes
+and complete summary tables in the experiment directory.
+
+A separate artificial fixture reproduces supplied PTM-field loss in current
+Hitlist2.0.42; [#854](https://github.com/pirl-unc/hitlist/issues/854) is filed and
+its body read back exactly. Unknown chemistry is not filled with False.
+Next: source-aware predictive partitioning and actual binding/MS/context controls,
+including the CIITA contrast. This is concrete data/adapter progress, not an
+MHC-II accuracy improvement or full-goal completion.
+
+## 2026-10-26_1929_codex_mhc2-censor-refinement — Prospective fixed-update affinity comparison
+
+- **Date / agent / status:** October26,2026; Codex / GPT-6. [Family and reproduction](2026-10-26_1929_codex_mhc2-censor-refinement/README.md), [prospective plan](agents/codex/plans/2026-10-26_mhc2-censor-refinement.md). Software checks pass; preparation/fits pending. No predictive winner or new performance claim.
+- **Dataset / curation:** unchanged human direct IC50 observations, complete explicit MHC pairs and canonical unmodified peptides; exact train21,636 versus exact plus1,919source bounds, same validation2,925/test2,803. Preserve physical nM values, inequalities, provenance and original peptide-disjoint partitions. Shared studies and previously inspected outcomes make these development comparisons. No MS/receptor/proxy-affinity labels or synthetic data.
+- **Pretraining / training / mapping:** common verified seed42 selected epoch26 parent, inherited target scale, all parameters trainable. Native IC50 head predicts log10(nM); standardized exact squared error and one-sided squared bound loss. Seed101, AdamW1e-4/weight decay1e-4, batch64, dropout.1, identity loss0. Exactly1,476updates for each condition; fixed final checkpoint primary, canonical validation-selected checkpoint secondary. Exact-label exposures differ and will be reported.
+- **Conditions / evaluation:** `exact_continuation` versus `censor_refinement`. Require class-II exact and bound improvement with retained class-I performance on both original holdouts, with paired exact-peptide bootstrap intervals. All validation/test loss, exact regression/binding metrics and per-example predictions remain pending; no claim that fixture tests establish prediction quality.
+- **Resources / reproducibility:** local CPU2threads/interop1, no Modal/GPU/installations; older4thread family may coexist. StartRAM13GiB/floor10GiB, RSS4GiB, disk15GiB/floor10GiB, per-action2h. Runtime/source hashes, parent tensors/scalers, exact invocation/environment and git state will be frozen before fitting. Raw artifacts at `/private/tmp/presto-mhc2-20261026/censor-refinement/`; portable results and frozen sources under the family.
+- **Verification / next:**46focused tests pass; pinned lint/format and shell syntax pass. Preserve two failures from an existing inference-mode equality test, now corrected without numerical tolerance changes or model edits. Execute the real comparison, independently replay source joins/losses/metrics/checkpoint probes, and report all outcomes before any replication decision. Full MHC-II binding/MS/pathway goal remains active.
+
+Preparation completed from clean37edb56 in13.695seconds/265,420,800bytes peakRSS.
+Both source manifests/counts, shared holdout hashes,33initializer tensors and the
+inherited21,636-example scaler are pinned in `reproduce/launch.json` and pass
+preflight. The serial controller started exact-only fitting at19:48:46UTC, with
+censor refinement and independent scoring/verification queued. Metrics remain
+pending; no model or scientific milestone is promoted.
+
+
+## 2026-10-26 19:54 — MHC-II MS source and transfer dependencies
+
+Codex / GPT-6. [Experiment](2026-10-26_1954_codex_mhc2-ms-transfer-cohort/README.md);
+[reproducibility](2026-10-26_1954_codex_mhc2-ms-transfer-cohort/reproduce/launch.json).
+Registered at aa5eb5ed41e2916b8f94c9e4a30e9d069bf3a5fc with recorded task/experiment dirt.
+The98,220 earlier admitted native class-II positive MS rows contain56,853 peptides,
+20 contributor studies and213 joint policy groups. All196,304 original contributor
+links and400 directed study-overlap entries independently verify. Input sources
+remain Hitlist1.78.0 exports; current2.0.42 curation is a separate pinned reference.
+Only reported unmodified detections with explicit complete candidate pairs enter;
+no synthetic outcome, other assay family, loss or model training occurs here.
+
+| Reviewed source | Admitted rows | Decision |
+|---|---:|---|
+| DP35251023 |39,293| Initial training candidate; preserve engineered-arm qualification |
+| Atlas33858848 |24,399| Named associations need computational-provenance joins |
+| DQ25502872 |17,105| Full Methods unresolved within this retrieval budget |
+| DO30573663 |5,164| Full Methods/quantitative qualification still open |
+| CIITA33592498 |4,820| Background and40 ambiguous old arm assignments preserved |
+| DQ834433824 |4,659| External-study candidate with pair/origin qualification |
+
+DP/DQ8 share182 exact peptides;1,114 DQ8 peptides share a nine-residue segment
+with DP. DP also has297/61/25 source rows sharing such segments with initializer
+train/validation/test inputs; DQ8 has119/70/29. Overlapping counts cannot be added.
+Absence of these dependencies does not prove donor, parent, homology or search
+independence. The next predictive recipe must freeze exclusions before fitting.
+
+Current Hitlist replay still classifies all24,399 Atlas rows as unknown restriction.
+Primary Methods distinguish detected peptides from predicted allele associations;
+Hitlist855 requests exact source joins/provenance, without blanket study relabeling.
+Hitlist856 requests defined engineered DP/K562 arms currently collapsed to one
+generic arm. Existing Atlas primary loader702 and DO quantity issue816 remain
+separate. All208 parental CIITA rows already preserve probable-background notes.
+
+Inventory6.772s/390,758,400bytesRSS; independent replay8.717s/452,820,992bytes;
+current-classifier replay3.350s/172,195,840bytes. LocalCPU/one thread; no Modal/GPU.
+Two earlier replay failures and failed primary retrievals are preserved. Primary
+retrieval stopped at24 logical operations under a prospective amendment.
+
+No training/validation/test predictive loss, binding metrics or prediction dumps
+apply because this family audits sources without fitting or defining a predictive
+split. No predictive winner is selected. Preferred next source is DP, with qualified
+DQ8 transfer testing; actual detection-enrichment fitting remains required.
+Full binding/MS/pathway goal active.
+
+### 1929 censor-refinement interruption update
+
+Exact continuation completed and was scored. Censor fitting stopped on the original
+10GiB available-RAM floor. Recovery02 failed the exact environment contract before
+updates;03 restored it but again hit the RAM floor. All attempts and the100-step
+snapshot are preserved. No retries or guard reductions; paired comparison and
+independent outcome closure remain pending better resource headroom. See the
+[updated family README](2026-10-26_1929_codex_mhc2-censor-refinement/README.md).
+
+
+## 2026-10-26 20:30 — MS permutation-background preparation stopped
+
+Codex / GPT-6. [Family](2026-10-26_2030_codex_mhc2-ms-prediction/README.md).
+Frozen qualified DP/DQ8 positive sources and component partitions passed count gates,
+but a length15 homopolymer permits no distinct exact-composition permutation.
+The registered control generator stopped after1,000 attempts without dropping
+the positive. Runtime8.395s/863,846,400bytesRSS, localCPU/one thread; no Modal/GPU.
+Source/curation/initializer/code/git hashes and exact invocation/failure are in
+the reproducibility bundle. No model training, loss, validation/test scores or
+prediction dumps exist; this is failed preparation, not a predictive comparison.
+No winner or scientific improvement is claimed. A new2036 family prospectively
+changes only the background distribution and retains all positive partitions.
+
+
+## 2026-10-26 20:36 — Qualified DP/DQ8 MS prediction, running
+
+Codex / GPT-6. [Family](2026-10-26_2036_codex_mhc2-ms-length-background/README.md).
+Qualified native human DP35251023/DQ834433824 positive MS observations, collapsed
+by study/peptide/complete pair, with exact source lineage and nine-residue
+component/initializer exclusions. The new background changes the failed2030
+permutation policy before predictions: fixed-length draws from DP training-only
+residue frequencies; controls are generated, not measured nondetections.
+
+| Partition | Positive/control examples | Peptides | Components |
+|---|---:|---:|---:|
+| DP train |27,648/27,648|18,906|5,986|
+| DP validation |5,520/5,520|3,853|1,303|
+| DP test |5,904/5,904|4,062|1,317|
+| DQ8 external |3,453/3,453|3,453|1,189|
+
+All85,050examples independently verify against original sources, graph-component
+reconstruction and inverse-CDF control replay. Preparation14.509s/874,315,776bytes;
+verification14.810s/858,882,048bytes; ten boundary tests pass. LocalCPU, no Modal/GPU.
+Native-manifest preflight used the fit guard/two threads rather than the stricter
+one-thread preparation guard; actual55.881s/307,363,840bytes stayed within its
+stricter time/RSS limits. Deviation disclosed in the family README.
+
+Original seed42 IC50 parent/dependency tensors/scaler are frozen; new native MS
+logit trains by BCE for3epochs/2,592updates, batch64, AdamW3e-4,weight decay1e-4,
+dropout.1,identity loss0. Two true-label seeds101/102 plus one paired training-label
+permutation diagnostic. Fixed-final native ensemble is primary. Binding-only,
+sequence and combined logistic controls are frozen and queued after native fits.
+Full provenance, data/code/runtime hashes, git status and invocation are in the
+reproducibility bundle. No outcome/predictive winner is available yet.
+
+Validation/test losses, classification scores, per-example dumps, independent
+comparison and confidence intervals remain pending; binding-regression metrics
+are inapplicable to MS labels. Generated-background enrichment and transfer
+across these studies cannot isolate processing, detector or donor mechanisms.
+Full goal remains active.
+
+
+## 2026-10-27 — MS serializer recovery and first fixed native result
+
+Codex / GPT-6. [2036family](2026-10-26_2036_codex_mhc2-ms-length-background/README.md).
+Qualified human DP35251023train/validation/test and DQ834433824external, original
+complete source-paired molecules, unchanged nine-residue component and IC50
+initializer exclusions. Balanced positives versus frozen length-matched
+training-composition backgrounds remain artificial labels, not nondetections.
+No assay censoring, identity task or condition/pathway assertion is added.
+
+Original native101 completed3epochs/2592updates before4GiB RSS failure in training
+evaluation JSON serialization. The isolated2ed1bd8-based recovery changes only
+streaming JSON persistence/hashing, with byte/hash identity and unchanged strict
+resume contracts.50focused tests and2666full-suite tests pass (4skipped). Runtime
+transition, original checkpoint hashes, failures and invocation are frozen in
+`reproduce/serialization-transition.json`/`streaming-recovery-launch.json`.
+
+Fixed-final native101 recovery added zero optimizer updates:213.045s/
+2188427264bytesRSS. All32IC50dependency tensors/scaler match the original seed42
+parent;20fresh prediction probes have zero error. Selected/final tensors agree.
+Training contract unchanged: batch64, AdamW3e-4,weight decay1e-4,dropout.1,identity0;
+MS1/0 maps to joint elution logit with BCE. Component scores remain unidentified.
+
+| Partition | n | BCE | AUROC | AUPRC | Balanced accuracy | Recall | F1 |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| DP validation |11040|.567887|.774720|.773374|.699728|.739855|.711312|
+| DP test |11808|.567756|.775586|.772586|.701558|.748645|.714979|
+| DQ8 external |6906|.699868|.633184|.649963|.593976|.448016|.524585|
+
+All train/validation/test/external per-example dumps are retained. These are
+canonical first-seed metrics pending independent all-arm replay. DQ8transfer is
+weaker; its BCE exceeds log(2). No native advantage or winner is established.
+Native102's first preflight stopped on the10GiB RAM floor before training; all
+files preserved. Remaining native102/null and binding/sequence/combined logistic
+controls have a new explicit controller with sustained20GiB/60second admission.
+Original action limits and all scientific gates remain unchanged. Nine artificial
+independent comparison/bootstrap tests pass; complete ensemble/bootstrap closure
+is still pending. LocalCPU, no Modal/GPU/install. Full goal remains active.
+
+
+## 2026-10-27 01:07 — Human MHC-II condition-source qualification
+
+Codex / GPT-6. [Family](2026-10-27_0107_codex_mhc2-human-cell-contrast/README.md).
+Sarango2022/PMID36215666human endogenous immunopeptidome; corrected-v4 export
+SHA256a665f37c... separately pinned from current2.0.42curation13b9142. Primary
+XML, PRIDE PXD024417 inventory, community SDRF and current-curation readback are
+archived by source/hash. Current Sarango curation lines agree exactly; terminal
+newline omission is a connector representation difference, separately recorded.
+
+Independent projected-source/count/row-position replay finds14903observations:
+3028classI,11875classII/distinct peptides. All class-II rows retain class-only
+restriction, empty candidate allele sets and no quantitative values.5980have one
+literal condition;5895have shared condition memberships. No invented alpha chain,
+independent observation expansion or missing-as-negative policy is applied.
+
+PRIDE inventory:40raw,40MSF,one community SDRF; all40SDRF filenames join, with
+eight source/capture groups and five technical runs each. Original biological
+replicate mapping, per-run quantities/scales and primary provenance for extended
+SDRF typing remain unqualified. Broad class-II capture and computational DR
+affinity estimates are separate evidence types. Source cannot yet supply the
+requested paired-MHC condition fit. [Hitlist858](https://github.com/pirl-unc/hitlist/issues/858)
+requests primary measurement import and explicit sample/replicate qualification;
+creation/body readback verified. Existing control/engineering fixes are preserved.
+
+Audit6.770s/386514944bytesRSS, localCPU/one thread; no Modal/GPU. Wrong-export hash
+and terminal-newline assertion failures are preserved with source-specific
+corrections. Discovery closed at13/16operations; direct payloads465357bytes, tool
+network bytes unmeasured. No training/pretraining, loss, synthetic controls,
+validation/test partition, metrics or prediction dumps apply to this source-only
+audit. No predictive winner; full binding/MS/fitted-pathway goal remains active.
+
+
+## 2026-10-27 — Verified MHC-II MS controls and first-seed transfer gap
+
+Codex / GPT-6. [2036 family](2026-10-26_2036_codex_mhc2-ms-length-background/README.md).
+Same human DP35251023 train/validation/test and DQ834433824 external complete-pair
+source contract, nine-residue component/initializer exclusions and 85,050 balanced
+positive/synthetic-background examples. Controls use DP training-only composition
+and fixed lengths; generated controls are not measured nondetections. No condition
+or pathway labels, censor targets, identity loss or changed acquisition policy.
+
+The failed all-arm controller launched nothing before its 1,802.965-second admission
+deadline. A separately frozen comparator-only schedule used original 13/10 GiB
+startup/runtime RAM limits, two threads/one interop and 4 GiB/2 h caps. Features
+completed in 190.526 s / 1,644,609,536 bytes RSS; fits in 6.380 s / 950,861,824 bytes.
+One-thread independent verification took 15.081 s / 1,315,536,896 bytes. Local CPU;
+no Modal/GPU or package changes. Reproduction: comparator-only-launch.json/.sh,
+comparator-verification-launch.json, verify-comparators.sh and frozen sources in
+that family's reproduce directory. Git e04dfcf plus recorded metadata/task dirt.
+
+Frozen IC50 parent, training-only scaling and mean BCE + .01 squared slope norm;
+unpenalized intercept, float64 L-BFGS-B max300/ftol1e-12/gtol1e-8. Binding-only,
+61 sequence features and their 62-feature combination map MS1/0 to logistic
+probability. All 85,050 source rows and 255,150 control predictions independently
+replayed, 80 fresh parent probes checked, independent Newton objectives agree to
+5.44e-15. Native101 metrics are independently reduced; full native model replay,
+second seed, permutation, fixed ensemble and bootstrap remain pending.
+
+| Condition | DP validation BCE / AUROC | DP test BCE / AUROC | DQ8 external BCE / AUROC |
+|---|---:|---:|---:|
+| Binding logistic | .671782 / .617169 | .674997 / .606370 | .661982 / .726061 |
+| Sequence logistic | .647567 / .670653 | .654715 / .656213 | .679688 / .609729 |
+| Combined logistic | .624406 / .708389 | .630023 / .700584 | .593876 / .794303 |
+| Native101 diagnostic | .567887 / .774720 | .567756 / .775586 | .699868 / .633184 |
+
+The combined control is strongest among the three controls on both test sets.
+Native101 beats it on DP test but transfers worse to DQ8; no overall native win
+or completed comparison is claimed. Full train/validation/test/external metrics,
+source-linked prediction dumps, features and coefficients are retained under
+results/logistic-controls. IC50 regression metrics do not apply to these MS labels.
+The inspected DQ8 cohort is development evidence for later revisions, requiring
+fresh qualification data. Native-only continuation retains 20 GiB/60-second/30-minute
+admission and original action guards; old failed state is preserved. No causal
+processing or condition-effect qualification follows. Full goal remains active.
+
+## 2026-10-27 — Three independently verified IC50 replications
+
+Codex / GPT-6. [1610 family](2026-10-26_1610_codex_ic50-convergence/README.md).
+Frozen runtime 4d4c029; all 21,636 exact IC50 training observations, 2,925 validation
+and 2,803 test observations, including original held-out bounds. Same historically
+inspected peptide-disjoint partitions/shared studies. Direct log10(nM) IC50;
+training-only standardization; no pretraining or auxiliary/MS/APC/TCR losses.
+Seeds42/43/44 use AdamW3e-4, weight decay1e-4, dropout.1, batch64, max100epochs,
+validation patience15 after minimum10; validation-selected checkpoint, test once.
+No synthetic labels in these true arms; permuted42 remains a separate synthetic
+label diagnostic and is still running. All three true seeds pass the prespecified
+independent screen, with 27,364 source-linked predictions checked per seed.
+
+| Seed | Selected / completed epochs | II validation RMSE | II test RMSE | II test Spearman | II test AUROC | II test recall |
+|---|---:|---:|---:|---:|---:|---:|
+| seed42 | 26 / 41 | 0.797476 | 0.731948 | 0.619303 | 0.824459 | 0.460784 |
+| seed43 | 23 / 38 | 0.762530 | 0.734982 | 0.621880 | 0.823476 | 0.495098 |
+| seed44 | 29 / 44 | 0.771376 | 0.740212 | 0.620564 | 0.836483 | 0.470588 |
+
+
+Exact class-II n=758 validation/842 test; RMSE in log10(nM), binding threshold500nM.
+All losses, Pearson, classification metrics, censor satisfaction and allele/study
+support remain in the per-seed summaries/strata. Class-I exact test n=1,758;
+RMSE for seeds42/43/44 is1.092928/1.138833/1.131756 and AUROC
+.807057/.785056/.783803. Runtime7,746.178/6,062.245/8,327.909seconds, localCPU,
+four threads/one interop; no Modal/GPU. Original launch/runtime/guard contracts
+remain frozen in reproduce; immutable evidence copy receipt lists33files and
+28,448,826bytes verified against source before/after copy. The live runner is
+unchanged. Each seed's full train/validation/test predictions are retained.
+
+Replicated class-II rank/RMSE signal is present, with test binder recall below50%.
+No best-seed selection, test retuning or full-model promotion. Permutation,
+censored training, independent-study transfer, fitted condition/pathway effects
+and broader scientific gates remain open; PR131 stays draft. Full goal active.
+
+## 2026-10-27_1835_codex_cross-class-flank-benchmark — CPU reference closed; remaining fits migrated
+
+October27,2026; Codex / GPT-6. [Family, exact launch/source pins and failure receipts](2026-10-27_1835_codex_cross-class-flank-benchmark/README.md).
+One shared-v4 I-only seed42 fit completed; remaining nine CPU fits superseded by
+the user's approved matched H100 family below. Three training-only profiles completed.
+Shared commit0659b43; frozen v3f24f7df/v29dd7134, all full hashes/dirty status in pins.
+Local macOS arm64CPU,Python3.12.6,Torch2.14.1,four threads/one interop; no Modal GPU.
+
+Original purified human direct IC50 manifest914e0930283a9e5f7a41024576976f3e92e280f0719feda261ffcf48bf01d7be;
+train21636exact(I14375/II7261),val2925,test2803. Lossless I-only training filter;
+physical unclipped log10(nM), source-train mean/scale and squared error weight1,
+original one-sided heldout bounds. Missing qualifier follows retained source exact
+policy. No KD/MS/TCR proxies, pretraining, synthetic biology or identity loss.
+1000updates,batch64,AdamW3e-4,weight decay1e-4,dropout.1; source validation selects
+epoch5; target-class diagnostic strict-loads every unchanged tensor after selection.
+
+| Scope | Validation Spearman | Test Spearman | Test RMSE log10(nM) |
+|---|---:|---:|---:|
+| I in-class |.572624|.503549|1.205548|
+| II zero-shot |.346956|.235506|1.105225|
+
+CPU fit1106.911s. II source-mean testRMSE1.253872. Profiles median seconds/update:
+v2 2.896772,v3 3.410,v4 2.013634;parameters455041/482689/449153.
+All per-example val/test predictions and independent loss/Pearson/Spearman/RMSE,
+500nM classification metrics, subgroup metrics and raw paths are retained.
+Admission/wait/cap revisions and deliberate workerexit75/parentexit1 remain explicit;
+no remaining CPU fit launched. Preferred runtime for requested comparison is H100.
+Takeaway: modest positive transfer in a separate CPU reference, no biological promotion.
+
+## 2026-10-27_1930_codex_modal-cross-class — ten H100 fits complete; transfer is modest
+
+October27,2026; Codex / GPT-6. [Full report, exact launch, source bundle, figures and all predictions](2026-10-27_1930_codex_modal-cross-class/README.md).
+User explicitly approved requiredsource/data upload and10runs with at most2H100s.
+RequestedPRESTO_MODAL_GPU=H100!; actualNVIDIAH100 80GBHBM3,81559MiB nvidia-smi,
+85009367040CUDA-visible bytes. Python3.12.1,torch2.14.1+cu130,numpy2.5.4;
+4CPU/16GiBhost,threads4/interop1,noAMP/compile/TF32,retries0. Shared0659b43 with
+recorded task/experiment dirt; fullf24f7df and three-aa9dd7134 clean, immutable hashes.
+Raw/source/input artifacts persist on Modalvolume presto-checkpoints and in local
+artifacts/2026-10-27_1930_codex_modal-cross-class; compressed val/test dumps are in
+the experiment results. Launch.sh/.json and source pins preserve exact invocation.
+
+Same direct purified human IEDB IC50 cohort/hash as CPU family, exact train21636,
+val2925,test2803; exact metrics1968/1758I and758/842II val/test. Original peptide/
+measurement components, shared studies and previously inspected development holdouts.
+MHC groove sequences verified through mhcseqs2.6.13; no assumed missing partner.
+Original missing-qualifier exact policy retained, bound labels remain in holdouts.
+No proxy assays, pretraining, synthetic labels, identity or other endpoint loss.
+IC50 maps to standardized physical log10(nM) readout; squared error weight1 and
+one-sided original censor loss. AdamW3e-4,wd1e-4,dropout.1,batch64,1000updates,
+min/maxepochs100,patience100. Source-only validation selects before target-class
+validation/test; expanded routing preserves all tensors and adds no target labels.
+
+Five conditions × seeds42/43: common candidate/readout v4 trained I-only, II-only
+or jointly; frozen full-context-v3 joint; frozen three-residue-v2 joint. ClassI one
+whole-peptide candidate, classII every9mer. V4 removes class/flank-specific scoring
+paths and shares endpoint scoring before normalized logsumexp statistical pooling.
+Equal updates are not equal per-class exposure; architectural versions differ in
+more than flanks. New production training stays on one model/manifest interface.
+
+| Condition | I val ρ / RMSE | I test ρ / RMSE | II val ρ / RMSE | II test ρ / RMSE |
+|---|---:|---:|---:|---:|
+| shared-I | 0.5756 / 1.1441 | 0.4905 / 1.2114 | 0.2611 / 1.1608 † | 0.1871 / 1.2151 † |
+| shared-II | 0.2282 / 1.5849 † | 0.1652 / 1.6483 † | 0.6414 / 0.7916 | 0.6050 / 0.7416 |
+| shared-joint | 0.5355 / 1.1905 | 0.4477 / 1.2553 | 0.5032 / 0.8784 | 0.3948 / 0.8605 |
+| full-joint | 0.5380 / 1.1873 | 0.4557 / 1.2406 | 0.5258 / 0.8538 | 0.4517 / 0.8400 |
+| three-aa-joint | 0.5411 / 1.1853 | 0.4443 / 1.2547 | 0.4941 / 0.8770 | 0.4127 / 0.8547 |
+
+Values are two-seed means; †zero target-class training labels; RMSElog10(nM).
+Source-only shared fits win in their own class at this budget. Preferred joint
+predictive reference here is full-context-v3; shared-v4 has no demonstrated accuracy
+win. Test shared-v4 minus full-v3 Spearman delta I−.00793[−.02053,.00343],
+II−.05693[−.10080,−.01087], paired2000peptide-clusterbootstrap,seed4272026.
+These intervals capture heldout peptide sampling, not two-seed population uncertainty;
+no multiplicity adjustment or fresh scientific qualification. Historical converged
+v2joint≈.603I/.621II used38–44epochs, a different budget.
+
+Sequence-only prespecified strata:85.0%II test rows share some9mer with IItraining;
+these are not assigned cores. II-only no-seen9mer exact subset(n130)rho.4811/.4808;
+shared-joint.0199/−.0340. Cross-class transfer persists on no-overlap subsets but is
+modest and poorly calibrated; per-MHC metrics are retained and weaker than pooled
+scores in several conditions. All requested regression/loss/500nM classification
+metrics, baselines, confidence intervals and per-example predictions are preserved.
+
+Fit118.4–179.3s; whole worker161.5–227.8s, excluding build/queue/archive/download.
+SampledRSS4.80–5.01GiB; GPU allocatedpeak.277–1.195GiB/reserved.643–2.729GiB.
+All original-source row/target/hash and independent metric checks pass. FreshH100
+replays exactly reproduce640training probes from all10checkpoints. Strict CPU
+replay failed by9.0077e-5 on2/64probes; disabledCUDAtransformerfastpath agrees with
+CPU within5.12e-7. Original tolerance/failures preserved, no result recalculation.
+272model/trainer tests,4launcher fixtures,5analysis tests,wheel smoke and lint pass.
+Failed first container import executedzero updates; failed source/receipts retained.
+
+Takeaway: sharing improves structural consistency but has not delivered strong
+cross-class affinity transfer or a joint-accuracy gain. Prefer a matched-exposure
+control, shared residue interactions and contact/boundary supervision next.
+These are IC50 fits; same-protein MS ligand ranking remains unmeasured, and earlier
+synthetic-background MS enrichment does not answer it. Scientific PR131 gates remain
+open. The two apps are finished; this family is closed, with future work recorded.
+
+## 2026-10-27_2100_codex_transfer-improvements — shared residue interactions improve fixed-budget joint affinity
+
+October27,2026; Codex / GPT-6. [Complete report, frozen launch/source, metrics and predictions](2026-10-27_2100_codex_transfer-improvements/README.md).
+Clean launch653bbfb96965551b49e53a6a854bd438952b00cc, base4615573.
+Reproducibility bundle: experiment reproduce/launch.sh/.json/source; raw artifacts
+artifacts/2026-10-27_2100_codex_transfer-improvements, Modalvolume presto-checkpoints.
+RequestedH100!, actualNVIDIAH100 80GBHBM3/85009367040bytes; max2workers,4CPU,16GiBhost,
+threads4/interop1. Python3.12.1,Torch2.14.1+cu130,NumPy2.5.4; noAMP/compile/TF32.
+Analysis thread/env overrides and every dependency pin are frozen in reproduce.
+
+Purified human direct IEDB IC50, manifest914e0930283a9e5f7a41024576976f3e92e280f0719feda261ffcf48bf01d7be;
+train21636exact(I14375/II7261),val2925,test2803; exactval1968I/758II,test1758I/842II.
+Original peptide/measurement-component partitions, shared studies, previously
+inspected development holdouts. Verified mhcseqs paired grooves; no guessed partner.
+Missing exported qualifier exact policy retained; bounds retained in holdouts.
+NoKD/MS/TCR/processing proxies, pretraining, synthetic biology labels or identity loss.
+IC50→unclipped log10(nM), train-only standardization, squared lossweight1, one-sided
+heldout censor loss. AdamW3e-4,wd1e-4,batch64,dropout.1,min/maxepochs100,patience100.
+Joint2000/source-only1000updates; seeds42/43, validation-only checkpoint selection.
+
+Four joint conditions cross pooled-v4 versus common residue-interaction-v5 with
+natural versus balanced class sampling; two v5 source-only conditions evaluate
+unchanged source weights on the opposite class. Same core/full-context token encoder,
+candidate endpoint scorer and normalized pooling; no class-specific heads. Balancing
+changes exposure/epoch length and checkpoint cadence; attention adds normalization
+and parameters, so mechanisms are not isolated.
+
+| Condition | I val ρ / RMSE | I test ρ / RMSE | II val ρ / RMSE | II test ρ / RMSE |
+|---|---:|---:|---:|---:|
+| pooled-natural-joint | 0.5859 / 1.1362 | 0.5070 / 1.2030 | 0.5222 / 0.8657 | 0.4893 / 0.8092 |
+| pooled-balanced-joint | 0.5733 / 1.1614 | 0.4998 / 1.2282 | 0.5813 / 0.8295 | 0.5524 / 0.7778 |
+| interaction-natural-joint | 0.6115 / 1.1122 | 0.5248 / 1.1899 | 0.5832 / 0.8288 | 0.5039 / 0.8059 |
+| interaction-balanced-joint | 0.5908 / 1.1475 | 0.5196 / 1.2067 | 0.6045 / 0.8157 | 0.5591 / 0.7823 |
+| interaction-I | 0.5896 / 1.1357 | 0.5068 / 1.2112 | 0.2260 / 1.2226 † | 0.2010 / 1.2717 † |
+| interaction-II | 0.2388 / 1.6104 † | 0.1702 / 1.6822 † | 0.6496 / 0.7793 | 0.6037 / 0.7352 |
+
+
+Preferred **interaction-natural-joint**; sealed validation gates and source-only guard
+pass. Natural sampling remains default; balancing alone fails allowed class-I drop.
+The ordering clarification after partial validation is disclosed in the report;
+new tests did not select the winner. MHC-I test ρ delta +0.0178, 95% peptide-bootstrap interval [+0.0026, +0.0329]. MHC-II test ρ delta +0.0146, 95% peptide-bootstrap interval [-0.0108, +0.0381].
+I→II test ρ 0.1871→0.2010 (delta +0.0139, interval [-0.0311, +0.0628]). II→I test ρ 0.1652→0.1702 (delta +0.0050, interval [-0.0166, +0.0272]).
+
+| Condition | Fit seconds | Whole worker seconds | Parameters |
+|---|---:|---:|---:|
+| pooled-natural-joint | 377.0 / 383.3 | 442.5 / 448.1 | 449153 |
+| pooled-balanced-joint | 383.5 / 395.8 | 447.6 / 457.0 | 449153 |
+| interaction-natural-joint | 573.8 / 554.3 | 637.1 / 615.9 | 515457 |
+| interaction-balanced-joint | 556.7 / 577.2 | 620.1 / 643.7 | 515457 |
+| interaction-I | 258.3 / 237.0 | 320.0 / 306.0 | 515457 |
+| interaction-II | 311.5 / 309.7 | 348.0 / 345.9 | 515457 |
+
+
+Fit/workerseconds are seed42/43, excludingqueue/build/upload/archive/download.
+Memory, all regression/500nM metrics, exposures, per-example val/test predictions,
+subgroups and bootstrap comparisons are retained. Two-seed means are not ensembles;
+peptide-bootstrap intervals are not training-seed population uncertainty. More
+exposure helps the old joint model but does not isolate the residue-interaction gain.
+Historical converged models have different budgets; no independent qualification.
+
+All12independent source/loss/metric checks and768fresh-H100training probes pass;
+279preclosure software checks,6analysis fixtures and final integration/wheel/docs
+evidence retained. Apply winning v5 to the single common training path; archive
+v4 for inference. No new labels admitted from exploratory nested-peptide audit.
+Takeaway: a useful fixed-budget joint-affinity architecture gain, without a strong
+zero-shot-transfer claim. Scientific PR131 and same-protein MS/TCR gates remain open.
+
+## 2026-10-27_2235_codex_shared-support-audit — parameter evidence, calibration failures and six-output source expansion
+
+October27,2026; Codex / GPT-6. [Report, reproducibility bundle and audit tables](2026-10-27_2235_codex_shared-support-audit/README.md).
+Baseline2f5705184f6997d50883639f5d38f6c133b81995; common implementation fixes0c4c984b.
+Local CPU analysis, Python3.12.6/Torch2.14.1/NumPy2.5.4, threads1; no GPU requested,
+new predictive fitting or new heldout inference. Six existing v5 checkpoints:
+joint2000updates and source-only1000updates, seeds42/43, natural sampling,
+AdamW3e-4/decay1e-4/batch64/dropout.1, no pretraining/synthetic labels/identity loss.
+Original fits requestedH100! and observedH100 80GBHBM3; see their pinned runtime.
+Reproduction: experiment reproduce/launch.sh,launch.json,source; raw checkpoints
+artifacts/2026-10-27_2100_codex_transfer-improvements/runs. Original per-example
+validation/test dumps remain in that completed family; exact paths/hashes are
+recorded in this audit's failure files. Gradient probes use64TRAIN rows, eval mode,
+no optimizer step; these do not reconstruct historical elementwise gradients.
+
+Audited dataset: original27,364-row purified human directIC50 cohort,
+train21,636exact/val2,925/test2,803. IC50 maps to unclipped log10(nM), train-only
+standardization, squared lossweight1 and one-sided censor loss; bounds excluded
+from original training. Shared-study, previously inspected development holdouts.
+
+| Existing condition, two-seed means | I val rho / RMSE | I test rho / RMSE | II val rho / RMSE | II test rho / RMSE |
+|---|---:|---:|---:|---:|
+| interaction-natural-joint |.6115/1.1122|.5248/1.1899|.5832/.8288|.5039/.8059|
+| interaction-I |.5896/1.1357|.5068/1.2112|.2260/1.2226 zero-shot|.2010/1.2717 zero-shot|
+| interaction-II |.2388/1.6104 zero-shot|.1702/1.6822 zero-shot|.6496/.7793|.6037/.7352|
+
+All six515,457-parameter models had no uncovered tensors;128unchanged coordinates
+are fixed padding.384attention K-bias coordinates are structurally redundant under
+softmax despite numerical gradient/update evidence. Constant human-species inputs
+are updated but confounded with the fusion intercept. New software requires gradient
+and movement on the same coordinate and checkpoints cumulative masks; old element
+history stays unknown. Width/depth/head/FF dimensions now configure every common
+route, and fixed-step validation preserves partial-epoch data and exact resume.
+296focused tests pass, including pending-validation recovery and scaled route checks.
+
+The joint models satisfy only3/87 and1/87 class-I test bounds,13/116 and12/116
+class-II bounds. Prediction/target SD ratios are.63–.65I/.59–.66II. Within-groove
+macro test rho for groups>=20exact values is.332/.311I and.528/.503II. Strong and
+weak binders regress toward the middle; per-groove, length,9mer novelty, study,
+register-count and qualifier diagnostics are preserved. No causal explanation or
+new biological qualification is claimed.
+
+Source extension scanned840,805 pinned Hitlistv4 binding/other-assay rows, preserving
+the original IC50 files byte-for-byte. Added140,846 qualified outcomes; total168,210,
+31,011peptides,147verified groove pairs. Literal IC50, KD, EC50, KD(~IC50), KD(~EC50),
+half-life and off-rate remain distinct outputs with physical units and original
+qualifiers. No source-missing partner was guessed:55,371missing-partner and1,832
+unresolved-catalog rows are deferred. All raw-record fingerprints, target/unit
+mappings, catalog assignments, original identities and cross-endpoint partitions
+were independently checked: no peptide/assay leaks or duplicate original outcomes.
+Source admission719.2s; hashes and exact curation/disposition contract are in the
+report/cohort manifest. Original ordinals are one-based, new ordinals zero-based;
+verification accounts for both without rewriting original data.2,172independent
+same-input disagreement groups remain; unmatched assay conditions preclude treating
+them as an irreducible-noise estimate.
+
+Preferred architecture remains shared-v5. Follow-up compares original bounds,
+six measured outputs and shared capacity. Off-rate's10training-only rows are
+excluded from that predictive family. No cellular/MS/TCR capability is newly
+qualified, and no absent module is claimed trained. This audit is closed; the
+separate prospective eight-fit comparison owns new validation/test results.
+
+Register-diagnostic closure addendum: joint class-II normalized register entropy
+was0.990/0.989 across958multi-register test rows, median maximum weight0.182/0.185
+and top-start agreement63.3% between seeds. No weights exceeded0.5. These saved
+statistical weights do not identify validated physical binding cores; no measured
+register truth or new inference was added. The audit retains per-example diagnostics.
+
+Software integration closure atceebfb80:2,767unique tests passed across the full
+run plus targeted reruns; four skips. Three initial failures were sparse-checkout
+omissions of historical source files, resolved by restoring tracked files. Full
+pinned lint/format, strict docs and isolated wheel checks pass;209shippedPython
+files match source. Checkpoint priority is now explicit and endpoint-agnostic.
+These post-freeze software changes did not change the eight active predictive fits.
+
+## 2026-10-27_2255_codex_shared-multi-assay-scale — six outputs scale, but joint IC50 keeps exact supervision
+
+October27–28,2026; Codex / GPT-6. [Complete report, tables, source and predictions](2026-10-27_2255_codex_shared-multi-assay-scale/README.md).
+**Closed:** eight6,000-update fits, independent metric/source checks, all full
+training dumps and512fresh-H100 public-serving/evaluation probes passed. Preferred
+recipe remains exact IC50/natural sampling with the common v5 interaction model;
+extend its bounded development recipe to6,000updates. Six-output small/wide
+manifests remain experimental through the same trainer, without class sidecars.
+
+Predictive runtime0c4c984b2628fecf54ef29e756fdfc0a74963dc4; launchGitdirty from the new
+experiment bundle. All launcher/runtime bytes and hashes are frozen in
+`reproduce/source/`, `source-pins.json`, `launch.json` and `launch.sh`. Exact command:
+`PRESTO_MODAL_GPU='H100!' /Users/iskander/code/shared-virtual-env/bin/modal run --detach experiments/2026-10-27_2255_codex_shared-multi-assay-scale/code/launch.py`.
+RequestedH100!, max2workers,4CPU,32GiBhost; actualNVIDIAH100 80GBHBM3,81,559MiB by
+nvidia-smi/85,009,367,040bytes byTorch, driver610.57.04. Python3.12.1,
+Torch2.14.1+cu130,NumPy2.5.4; threads4/interop1, noAMP/TF32/compile. Local analysis
+Python3.12.6, singleBLAS/Torchthread, MPLCONFIGDIR in `/private/tmp`; all overrides
+and recovery commands are retained in the reproduction bundle.
+
+Pinned Hitlistv4 binding/other-assay original numeric text, source qualifiers/units,
+canonical unmodified peptides, purified human MHC and complete source-named partners
+resolved through pinned mhcseqs. No guessed DRA. All840,805source rows audited;
+168,210admitted, including10off-rate train-only rows excluded from fitting.
+Six-output cohort **134,561train/17,503validation/16,136test**,24,792training peptides,
+146training groove pairs. Original27,364-row IC50 cohort remains byte-identical:
+21,636exacttrain/2,925validation/2,803test, with exactval1,968I/758II and
+test1,758I/842II. Bounds arm has23,512training rows. Cross-endpoint peptide and
+original-assay components inherit historical partitions; conflicts deferred,
+original measured outcomes counted once. Independent raw fingerprints, identities,
+units, catalog and split checks pass. Independent replicate disagreements retained.
+Shared studies/sequence families and previously inspected development holdouts;
+this is not an external or unseen-groove qualification cohort.
+
+Literal `ic50`, `kd`, `ec50`, `kd_via_ic50`, `kd_via_ec50` map separately to
+log10(nM); `half_life` to log10(minutes). Off-rate excluded. Train-only exact mean/
+populationSD per endpoint; standardized squared residual for exact rows, one-sided
+loss for source bounds. Each endpoint weight1, mean per observed row. No label
+equivalence constraint, cap, synthetic data, pseudo-negatives, identity loss or
+pretraining. AdamW3e-4/decay1e-4/batch64/dropout.1; natural no-replacement shuffle,
+6,000updates, validation every500/final, checkpoint every100, no early stop.
+All use the common peptide/full-context encoder, paired groove interaction and
+direction-aware register pooling. I has one whole-peptide candidate, II all9mers.
+Capacity128/2/4/512 or192/3/6/768; parameters515,457/516,102/1,599,942.
+
+Checkpoint selected by pooled exact IC50 validationRMSE. Condition decision sealed
+before test inspection, using original IC50validationIDs: macro class rank gain
+>=.01, no class rank drop>.005 or RMSE worsening>2%, both seed macro gains positive,
+each class improves in some seed. No added-data condition passed all gates.
+
+| Condition, seeds42/43 mean | I val ρ / RMSE | I test ρ / RMSE | II val ρ / RMSE | II test ρ / RMSE |
+|---|---:|---:|---:|---:|
+| IC50 exact | .6487/1.0516 | .6025/1.1100 | .6511/.7878 | .5893/.7618 |
+| IC50 plus bounds | .6586/1.0455 | .6022/1.1048 | .6500/.8142 | .6023/.7677 |
+| Six outputs,128wide | .6555/1.0430 | .6129/1.0978 | .5750/.8560 | .5448/.8122 |
+| Six outputs,192wide | .6800/1.0094 | .6407/1.0702 | .5966/.8456 | .5679/.7824 |
+
+Means are individual-model metrics, not ensembles. Wider-model test rank effects
+vs exact control: I+.0382, paired peptide-bootstrap95%interval[.0125,.0638];
+II−.0215,[−.0635,.0168]. Conditional on existing splits/two seeds, not independent
+study or new-training-seed uncertainty. Earlier2,000-update v5 test rank.5248/.5039
+is improved by the new practical recipe, but budget and validation cadence changed
+together. No isolated mechanism or new zero-shot-transfer claim.
+
+Added-output highlights for192wide: half-lifeI val/testρ.7404/.6995,RMSE.8049/.8256
+log10minutes (testmeanbaseline1.1847); KD(~IC50)I val/testρ.7063/.6999,
+RMSE1.0342/1.0345. DirectKDI val/testρ.5815/.5586 but testRMSE1.3477 loses to
+mean1.2753. KD(~IC50)II val/testρ.5912/.2772 exposes a holdout drop. EC50II
+19train/3val/0testexact; half-lifeII12/0/2; these strata remain unqualified.
+All six outputs/classes, overall heldout losses, Pearson/RMSE, applicable500nM
+accuracy/balancedaccuracy/precision/recall/F1/AUROC/AUPRC, bounds and baselines are
+preserved in independent112-row tables and per-example val/test dumps. Proxy/EC50
+threshold classification is not calibrated binding probability.
+
+The scale-up changes exposure:82.1%I training vs66.4%original; IC50 is17.5% of
+six-output rows. Seed42II IC50 label exposures23,546vs128,524control; widerII
+trainingρ.5805vscontrol.6883. Auxiliary competition and exposure dilution are
+plausible, not isolated causes. IC50↔KD(~IC50) exact training overlap6,676I
+contexts(correlation.963) but only2II, with unmatched assay conditions. Inputs gain
+peptide/groove diversity, not new TCR,MS,cellular,nonhuman or nonclassical evidence.
+
+All selected-checkpoint non-padding coordinates have same-coordinate gradient and
+movement evidence; only128/192fixed padding coordinates remain untouched.384/768
+attentionK-bias coordinates are structurally redundant despite numerical movement;
+constant human-species columns confound with an intercept. Historical absent masks
+remain unknown. Six outputs add only645parameters at fixed width. Control test
+boundsatisfaction6.9%I/17.2%II, versus27.0%/33.6% with bounds, still poor. Exact
+extremes shrink toward the middle. Control within-groove macroρ.430/.442I and
+.568/.566II; register entropy.979/.983 and top-start agreement51.4%, with no
+measured-core truth. Full subgroup/support/calibration tables preserve the limits.
+
+Workerwall1,287.8–2,279.8s, excludingqueue/build/archive/download; sampledRSS4.96–6.06GiB,
+CUDAallocatedpeak.67–1.42GiB. All6,000updatescomplete; selected5,000–6,000.
+All8heldout/full-training checks pass;512savedtraining examples reproduce exactly
+through evaluation and guarded public predictor on freshH100. First replay failed
+before inference because training bundle omitted inference; separate fullsamecommit
+package preserves all207frozenfilehashes. Failed evidence/recovery kept; no refit,
+newheldout inference or tolerance change. Software full/targeted2,767unique tests,
+4skips, lint/format/docs/wheel and hostedCIbad9f4c1 pass.
+
+Raw archives/checkpoints: `artifacts/2026-10-27_2255_codex_shared-multi-assay-scale/{downloads,runs}`;
+Modalvolume`presto-checkpoints`, family directory. Canonical heldout predictions,
+tables, figures, selection and verification receipts live in experiment`results/`;
+fulltrainingdumps remain in checksummed rawarchives. Source/data hashes, raw-record
+pins and exact env are in`reproduce/`. Post-freeze generic selection/coverage software
+does not change these fitted predictions. Takeaway: common architecture scales
+mechanically and improves some outputs, but natural mixed-assay sampling is not a
+joint-affinity win. Retain the tested exactIC50 recipe and pursue matched exposure
+and source-qualified auxiliary evidence prospectively. PR131 scientific gates remain open.
+
+
+## 2026-10-28 — Auxiliary-assay transfer mechanisms (complete)
+
+**Agent/model:** Codex / GPT-6. **Experiment:**
+[2026-10-28_0250_codex_assay-transfer-mechanisms](2026-10-28_0250_codex_assay-transfer-mechanisms/README.md).
+Source package `89d3360a307b5485cdc3e3f37abcac1dfa9cf979`, launcher `fe9ca8b8`;
+exact invocation/env, hashes, dirty receipts and 12 call IDs in `reproduce/`.
+All 210 frozen package files independently match the committed git blobs.
+Requested `H100!`, maximum two concurrent workers; observed NVIDIA H100 80GB
+HBM3, 81,559 MiB, driver 610.57.04. `PRESTO_MODAL_GPU=H100!`; Python 3.12.1,
+Torch 2.14.1 / NumPy 2.5.4; full dependency pins in the launch bundle.
+
+The earlier 134,561 TRAIN observations are 110,520 MHC-I / 24,041 MHC-II,
+all human purified pMHC concentration binding assays plus half-life stability.
+No MS, processing, cell, TCR, nonhuman or nonclassical targets. Six separate
+outputs: IC50, KD, EC50, KD-via-IC50 and KD-via-EC50 use log10(nM); half-life
+uses log10(minutes). Exact values and one-sided bounds are retained without
+clipping. The source funnel is 840,805 scanned →168,210 admitted →168,200
+predictive rows (10 unsupported off-rate rows excluded); 33,639 old holdouts
+were never admitted to these new fits. New peptide/measurement/group-connected
+components of prior TRAIN yield 107,132 train /13,425 validation /14,004 test.
+No old fitted weights or old heldout predictions are reused. This is newly
+held-out development data, not untouched external biological qualification.
+
+Frozen conditions, seeds 42/43, 6,000 updates each: small IC50, wide IC50,
+wide six-output natural, wide six-output class-balanced, wide six-output
+IC50-exposure-matched, and its auxiliary-label-permuted control. Small architecture
+128/2/4/512; wide 192/3/6/768. Same shared-v5 model and common trainer, no
+pretraining or identity replay; dropout .1, AdamW3e-4/decay1e-4, mean standardized
+one-sided squared loss, all loss weights1. Training-only exact-value scales.
+Batch64, except exposure-matched/permuted128 with50% IC50. Validation every500;
+checkpoint by pooled exact IC50 validation RMSE. Same-width/seed initial common
+weights and IC50 head match. All12 fixed fit budgets completed.
+
+Synthetic control: permute auxiliary TRAIN targets within endpoint/class/groove/
+qualifier, seed73028; 59,943 of88,155 values change. Original targets/donors are
+preserved; heldout labels remain measured. Synthetic arm cannot be promoted.
+Tests were withheld from inspection until the validation-only decision was sealed.
+**Preferred reference: wide-ic50; no real six-output arm passes every promotion gate.**
+The exposure-matched arm passes macro gain, both-seed macro gains and RMSE gates,
+but loses II validation rank in both seeds; its mean II deficit is0.0175, exceeding
+allowed0.005. Test results do not reverse this decision. The prior full-cohort
+IC50 default remains unchanged. These are two-seed means, not ensembles; RMSE is
+log10(nM). Exact validation counts I/II=1433/623, test1476/683.
+
+| Condition | I validation ρ / RMSE | II validation ρ / RMSE | I test ρ / RMSE | II test ρ / RMSE | Mean worker min |
+|---|---:|---:|---:|---:|---:|
+| Small IC50-only | 0.6453 / 1.0945 | 0.6163 / 0.8367 | 0.6552 / 1.1279 | 0.6454 / 0.7757 | 22.0 |
+| Wide IC50-only | 0.6725 / 1.0681 | 0.6461 / 0.8079 | 0.6853 / 1.1096 | 0.6330 / 0.7894 | 23.1 |
+| Six outputs, natural | 0.6877 / 1.0292 | 0.5135 / 0.8791 | 0.7310 / 1.0177 | 0.6006 / 0.7889 | 33.9 |
+| Six outputs, class-balanced | 0.6397 / 1.0904 | 0.5824 / 0.8616 | 0.6798 / 1.0954 | 0.6498 / 0.7807 | 36.8 |
+| Six outputs, IC50-matched | 0.7158 / 0.9937 | 0.6286 / 0.8173 | 0.7253 / 1.0171 | 0.6491 / 0.7859 | 54.2 |
+| Matched, shuffled auxiliary values | 0.6907 / 1.0194 | 0.6266 / 0.8058 | 0.6956 / 1.0611 | 0.6340 / 0.7831 | 51.5 |
+
+Capacity improves I validation/test Spearman by0.0272/0.0301, but II's validation
+gain does not repeat on test. Natural six-output sampling dilutes primary exposure:
+seed42 sees24,359 II IC50 labels over6000updates versus137,183 in wide IC50.
+Matching restores137,189, improving II over natural by0.1151 validation/0.0485test;
+paired peptide-cluster95% intervals[.0669,.1648]/[.0143,.0797]. Matching changes
+batch/compute/mean-loss normalization too; primary gradients are not exactly matched.
+II TRAIN Spearman moves.7656→.5862→.7289 for wide/natural/matched, supporting
+primary underfitting. Real versus shuffled auxiliary values add I rho.0251/.0297
+(validation/test; intervals excludezero), whereas II.0020/.0151 intervals includezero.
+Class balancing recovers II at I's expense. The II loss concentrates in DQ; only
+eight test exactIC50 DR rows exist. A posthoc equal-class-RMSE history audit does
+not change natural/wide/matched selections; no alternate checkpoint is tested.
+
+All12 heldout/source/loss/scale/initialization/exposure/coordinate checks pass;
+208 metric rows preserve loss, Spearman/Pearson/RMSE and500nM classification
+accuracy/balancedaccuracy/precision/recall/F1/AUROC/AUPRC where defined.
+932,964 full-training predictions independently verified;768 saved training probes
+replay with zero error in evaluation and guarded serving on a fresh H100.
+Every nonpadding coordinate has same-coordinate gradient/update evidence, while
+redundant key biases and constant human input remain unidentifiable effects.
+II EC50 has17/0/2train/val/test rows; half-life11/1/0. Register test entropy stays
+.972–.990, without measured core truth. Nearly all test rows share study with
+training;573/683 II rows share a9mer. No external, MS/processing or zero-shot claim.
+
+Total worker wall time7.384H100-hours excludesqueue/build/packaging/transport;
+not a billing estimate. PeakRSS4.92–5.82GiB, CUDAallocated.79–2.51GiB. The complete
+report preserves source attrition, exposures, failure strata, bootstrap and plots.
+All12 original archives passed hashes; transport failures and guarded recovery are
+preserved, with no refit, new heldout inference or relaxed numerical tolerance.
+
+
+Material inventory findings: 24,792 unique peptides,117,834 pMHC contexts,
+146 groove-sequence pairs; 29.3% bounds. Natural sampling was not allele-balanced.
+IC50-class-II data is98.6% DP/DQ, while its dominant KD-via-EC50 auxiliary is61.7%
+DR. Class-I IC50 contains only A/B, no C. On new TRAIN, IC50/KD-via-IC50 exact
+labels overlap5,345 class-I pMHC contexts (rho .9568) but only2 class-II contexts;
+assay conditions are unmatched. These observations motivate the fixed controls,
+not a causal claim. Source/allele/endpoint/length/qualifier tables and exclusions
+are preserved in the experiment. Full local software2778passed/4skipped, two
+analysis fixtures, lint/docs/wheel and hosted source-head CI40626989848 pass.
+
+Raw artifacts: `artifacts/2026-10-28_0250_codex_assay-transfer-mechanisms/{upload,downloads,runs}`;
+Modal volume `presto-checkpoints` under the family ID. Canonical summaries,
+heldout prediction dumps and verification receipts are complete under `results/`.
+Full TRAIN dumps remain in the raw archives. PR131 scientific gates remain open.
+
+A metadata-only audit of deferred restrictions finds all55,371 missing-partner rows
+are reported classII:33,165IC50 and20,654KD-via-IC50, mostlyDR. This is a major
+curation opportunity, not automatic admission: partner/construct identities,
+mutant/serotype labels and other criteria still require verification. No peptide
+or quantitative outcome columns were read; no frozen training membership changed.
+The common manifest trainer now supports explicit stratum weights with verified
+unweighted compatibility and exact resume. No task-specific trainer or unqualified
+six-output default was introduced. PR131 remains draft until130/132 qualify.
+
+## 2026-10-28 — Expanded multi-output model with temporal and assay-study holdouts (complete)
+
+- **Agent/model:** Codex / GPT-6; [experiment/reproduction](2026-10-28_1540_codex_temporal-multi-output/README.md).
+- **Status:** both 51,099-update fits completed; per-example validation/test target, loss and metric verification passed. [Final report](2026-10-28_1540_codex_temporal-multi-output/results/summary.md). All 3,493,132 TRAIN rows exposed; selected checkpoints were earlier at 7,000 / 32,000 updates.
+- **Source:** fresh canonical Hitlist2.0.40 IEDB/CEDAR full exports,19.255GB total,
+  exact hashes in the acquisition receipt. Human catalog-resolved MHC, strict
+  peptidoform/candidate scope, declared ordinary-DR DRA*01:01 reference; host,
+  antigen organism and molecular MHC species remain separate.
+- **Material inventory finding:**45distinct2026papers verified against PubMed;
+  no direct IC50/KD/EC50 values in the2026exports. User approved additional older
+  whole-assay-study holdouts. Prespecified2026test PMIDs41534530/42069060/42048449;
+  all three retained; final partitions and peptide embargo verified. Whole-paper aliases and exact peptide
+  embargoes are part of the prospective contract, not a random row split.
+- **Architecture/training:** shared-v5 wide192/3/6/768, seeds42/43, no pretraining,
+  batch128, AdamW3e-4/decay1e-4, dropout.1. 51,099updates per seed, one6,540,642-example weighted epoch; validate every1000, equal-endpoint selection loss. Frequencies
+  60%EL/20%IC50/15%other physical/5%qualitative, square-root endpoint/class allocation
+  within families. Full held-out evaluation, capped TRAIN diagnostic dumps only.
+- **Assay mapping/loss:** distinct IC50/KD/EC50/KDproxy outputs, half-life/koff/kon/td50;
+  allocate supported heads only. Exact-TRAIN scales, unclipped target-space squared
+  error with one-sided censor residuals. Reported qualitative binding and elution
+  use binary cross-entropy. No component effect is identified from a summed EL label.
+- **Synthetic-data contract:** length-matched unobserved backgrounds, seed20261028,
+  TRAIN1:1/eval5:1, with replacement; known-positive and cross-split exclusion.
+  Same-protein and fallback human-Ensembl112 populations scored separately, including
+  length-only control. Source-reported MS nondetections receive separate study AUCs.
+- **Hardware:** requested two concurrent `H100!` workers; both report NVIDIA H100 80GB HBM3,85,009,367,040 device bytes. Wall times 35,615 / 47,121 s; optimizer 24,587 / 32,180 s. Peak allocated 3.72 / 3.85 GB, reserved 14.63 / 15.77 GB.
+  CPU source attempt2 failed at16GiB provenance scratch; attempt4 uses128GiB scratch
+  and512GiB requested disk. Downloads and failed attempts are preserved.
+- **Validation-selected condition:** seed 42 (equal-endpoint loss .64036 versus .70710).
+  Literal IC50 validation Spearman I .4995 / .5344, II .4248 / .4580 (seeds 42 / 43).
+  Older-study IC50 test Spearman I .2392 / .2629 (100 exact), II .5199 / .6034
+  (267 exact). Test log10(nM) RMSE I 1.0231 / 1.0778, II 1.0122 / .9658.
+  2026 KD-via-IC50 test Spearman I .4648 / .7250 (592 exact).
+  2026 same-protein ligand test AUROC I .9625 / .9687, II .8061 / .8188;
+  AUPRC I .9043 / .9236, II .5412 / .6312. Source-reported older MS outcomes
+  remain a major failure: I AUROC .1012 / .2119. These are different populations.
+  Full Pearson, 500 nM classification, loss, support and uncertainty tables are
+  preserved. Missing assay/class holdouts are not qualified; no broad promotion.
+- **Interpretation:** complete exposure does not remove weak affinity transfer or
+  measured-nondetection failure. Data curation and label-quality retraining is
+  registered separately; these inspected holdouts remain fixed development evidence.
+- **Software:** common source at c8f032a7, complete211-file runtime pinned. Shared
+  2805tests/4skips on the current source;79and89focused source checks also pass.
+  Thirty-two family fixtures passed before launch, including three exact checkpoint
+  interruption/recovery fixtures. Independent actual cohort audit passed. A later
+  transport-stream regression check raises controller coverage from7to8tests.
+- **Recovery:** attempt5's measured306MSrows/s would exceed its four-hour deadline.
+  A committed consistent SQLite backup preserves406,381retained rows. Attempt6
+  replays source admission on worker-local disk through the same frozen adapters;
+  all snapshot rows match byte-for-byte. Counters/dispositions are regenerated,
+  with saved-call retries for local DNS failures. Recent rate approximately1460rows/s.
+- **Artifacts:** timestamped experiment `reproduce/` and `results/`; large inputs/raw
+  fits on Modal `presto-checkpoints` under the family ID and local `artifacts/`.
+  Final predictive closure, independent verification and serving replay remain open.
+
+- **Final cohort:**1,875,420original TRAIN/6,534validation/14,906test observations;
+  generated comparators1,617,732/12,050/59,250respectively.127,096original rows
+  excluded by exact-peptide embargo. TRAIN direct IC50 I/II18,531/36,205;11outputs.
+  koff22 andkon6TRAIN labels have no held-out support and remain unvalidated.
+- **Stopped original calls:** `fc-01M62SMM6TFPHZKNMQJ45MP221` (seed42),
+  `fc-01M62SMM9W381JKPPKCKJP0SDK` (seed43), app`ap-Du3wtmTBI9AvARUgRQ9w3v`.
+  Preparation survived automatic CPU preemption retry; final source/target/group/
+  background/scaler audit passed before both GPU submissions. The complete
+  materialization backup and atomic observer/common-checkpoint recovery are recorded.
+
+- **Source review, October 29:** stopped both original H100 calls during preflight
+  before any optimizer update or held-out prediction. Quarantine 20 kinetic labels
+  by exact original assay identity (six on-rates, fourteen off-rates), preserving
+  primary references and raw outcomes. An earlier half-life exclusion was withdrawn:
+  assay 1820987 already carries the correct lower-bound qualifier. The shared adapter
+  and wheel include the review registry; focused checks pass 112 tests, and the
+  preceding full suite passes 2,855 tests/four skips. Runtime aa2b3f7a changes only
+  admission, with unchanged model/trainer files. CPU revision `kinetic-review-v2`
+  is active; original artifacts are archived under `attempts/source-as-exported`.
+  No predictive metrics or promotion yet.
+
+- **Reviewed cohort launched:** CPU call `fc-01M62X7863ZWMTQ4SC3KAQMGAG`
+  completed in 350.6 seconds on CPU8/64GiB (explicit nonpreemptible, 3x CPU/RAM
+  billing; no GPU). Exact 20-row removal, retained bytes/order, unchanged holdouts/
+  backgrounds, independent TRAIN scales and complete composition reconciliation
+  passed. Revised TRAIN 1,875,400 originals plus 1,617,732 comparators; validation
+  and test unchanged. Ten outputs; koff I/II support 6/2, kon unallocated.
+  Weighted epoch 6,540,643 labels, 51,099 updates per seed. Replacement H100! app
+  `ap-vGJZSwosZm8VkhOcNJPonj`, calls `fc-01M62XMCM816XJJJT29A62VV67` and
+  `fc-01M62XMCQ63CRJ69VFR96TX0MW`; full common trainer preflight remains mandatory.
+  Revised durable artifacts live under `revisions/kinetic-review-v2/` on the same
+  volume. No held-out predictive score has been produced yet.
+
+- **Final revision software verification:** 2,854 tests pass, four optional skips,
+  327.09 seconds; isolated unpacked-wheel registry lookup passes. Both replacement
+  workers report H100 80GB HBM3 and 85,009,367,040 device bytes while admitting the
+  frozen manifests. Canonical preflight and predictive results are still pending.
+
+- **Reporting review:** the live table now shows the reviewed TRAIN originals and
+  generated comparators separately; JavaScript syntax and DOM smoke checks pass.
+  Source-concentration tables reconcile all 51 original split/output/class cells.
+  IC50 test support is one class-I study and three class-II studies; intervals and
+  pooled scores must retain that limit. Four reporting fixtures pass. Both hosted
+  CI runs for 7202c09c pass (40816663407 and 40816681382). Predictive fits continue
+  through canonical preflight; no model/trainer or frozen input changes.
+
+- **Optimization started:** both corrected workers passed complete common preflight
+  (1,824.5 / 1,990.1 seconds), with identical expected TRAIN scales and verified
+  manifest hashes. Both wrote initial checkpoints and started optimizer updates.
+  The long startup includes repeated CPU corpus/dependency/sampler scans; no
+  held-out predictive scores are available at this status update. Current source
+  `dc307af6` passes both hosted CI runs 40821271664/40821252677; active runtime stays
+  frozen at `aa2b3f7a`. The post-collection report now generates a readable
+  `results/summary.md` from verified tables, including both seeds and absent
+  support. Fifteen reporting/metric/uncertainty fixtures and a cross-seed rendering
+  smoke check pass. Final fit/verification/interpretation closure remains open.
+
+- **First predictive checkpoint, provisional:** both seeds reached 1,000 updates
+  and full validation. Direct IC50 Spearman I/II is 0.3731/0.3651 (seed42) and
+  0.3926/0.3640 (seed43); RMSE log10(nM) 1.6523/0.8536 and 1.8519/0.9600,
+  on 141/1,129 exact measurements. Same-protein ligand AUROC I/II is
+  0.9326/0.7592 and 0.9422/0.7597; AUPRC 0.6748/0.4329 and 0.7538/0.4046.
+  Those populations include 10,116/4,152 rows at five unobserved generated
+  comparators per positive. Seed42 source-reported-negative study AUCs remain
+  only 0.5982/0.5619 on 53/52 class-I rows. Exact class-I IC50 validation contains
+  only <=500nM binders, so threshold AUROC is undefined. Full early worker
+  snapshots and a source-hashed comparison table are retained. These intermediate
+  results are not independently verified final prediction metrics; no test score,
+  winner or promotion is claimed. Both full 51,099-update fits remain active.
+  Exact staged manifest bytes are now captured and match their frozen hashes.
+  Seed42 at 2,000 updates improves validation IC50 Spearman to 0.4350/0.4196
+  and same-protein AUROC to 0.9368/0.7746; RMSE remains 1.6785/0.8626.
+  Ranking gains precede calibration gains. Both hosted report-source CI runs
+  at `22860793` pass (40823270821 and 40823252321).
+
+## 2026-10-29_0438_codex_shared-input-iteration
+
+- Date: 2026-10-29; agent/model: Codex / GPT-6.
+- [Experiment](2026-10-29_0438_codex_shared-input-iteration/README.md), registered before benchmarking.
+- Shared reader throughput and integrity only; TRAIN-only source slices, no GPU,
+  model training, pretraining, assay loss, validation/test prediction or accuracy claim.
+- Original indexed iteration versus sequential file-handle reuse, preserving source
+  mutation checks and full normalization. Results and decision pending.
+- Existing temporal H100 fits stay on their frozen runtime.
+
+- **Completed reader comparison:** first 5,000 TRAIN rows from each corrected
+  physical, native-MS and background source (15,000 rows, 104,398,183 bytes),
+  preserved byte-for-byte with archive/prefix hashes. No held-out data, synthetic
+  generation, training, pretraining, loss, output allocation or predictive metrics.
+- **Hardware/conditions:** local Apple M1 Pro / Python 3.12.6; no GPU; warm caches.
+  Three paired, alternating repeats for indexed versus sequential iteration.
+  Initial median speedup 1.2812x. A replay with the frozen-baseline launcher gives
+  1.17945s indexed versus 0.92915s sequential, **1.2694x throughput**. All six replay
+  timing rows and the initial comparison are preserved; no full-H100 speed claim.
+- **Verification/decision:** 15,000 complete normalized observations match;
+  28 mutation/order/closure/exact-training/resume tests and the full 2,860-test suite
+  (four skips) pass. Retain the common iterator change; source stats are checked
+  per row and all normalization remains. 212 other runtime files, including model
+  and trainer, match the frozen runtime. No side training path or preflight cache.
+- **Reproduction/artifacts:** frozen source and invocation under the linked
+  experiment's `reproduce/`; prefix data under repository `artifacts/` with explicit
+  paths/hashes. Three failed capture attempts and the SDK PIPE-drain recovery are
+  documented. Validation/test metrics and prediction dumps are inapplicable to
+  this reader-only study. The temporal H100 fits continue on their original pins.
+
+## 2026-10-29_1318_codex_affinity-objectives-geometry
+
+- Date: 2026-10-29; agent/model: Codex / GPT-6.
+- [Experiment](2026-10-29_1318_codex_affinity-objectives-geometry/README.md) and
+  prospective spec registered before audit/training.
+- Initial stage: TRAIN-only source/measurement audit of corrected temporal inputs;
+  literal IC50/KD/EC50/proxy outputs retained separately, exact log10(nM) agreement
+  on hashed identical pMHCs, within-/across-study aggregation without Cartesian
+  replicate inflation. Bounds counted separately; no synthetic generation.
+- No model training/pretraining, loss or GPU in this stage. Validation/test metrics
+  and prediction dumps are inapplicable to descriptive source agreement; those
+  splits remain unused. Predictive ranking/geometry controls will be frozen later.
+- **Phase A completed and verified:** 234,337 physical TRAIN rows; 184,637 are
+  concentration observations (136,233 exact; 48,404 bounds). Literal IC50: 54,736;
+  KD: 17,832; EC50: 212; KD(~IC50): 72,925; KD(~EC50): 38,932. Other outputs are excluded
+  from concentration agreement. No generated labels, pretraining, loss or fitting.
+- **Assay-label mapping:** IC50 and KD(~IC50) are competitive radioactivity or
+  fluorescence; EC50 and KD(~EC50) are direct fluorescence. Almost all literal
+  KD rows are also tagged competitive. The latter two approximate-KD labels mean
+  IC50/EC50-based KD estimates, not measurements derived from directly measured KD.
+- **Conditions/results:** pooled exact pMHC agreement after median-within-study
+  aggregation versus same-study and disjoint-study scopes; 60 cells preserved.
+  IC50/KD(~IC50) Spearman I .97088 (8,310), II .99154 (1,101); IC50/KD I .47420
+  (53), II .42857 (6); IC50/KD(~EC50) I .40063 (103), II .94286 (6).
+  Small overlaps remain inconclusive. Full ten-pair tables, Pearson, log RMSE/
+  offsets, overlap counts and repeated-measurement spreads are in the experiment.
+- **Lineage sensitivity:** one IC50 component accounts for 90.5%/93.0% of I/II
+  overlap. Removing it yields .77721 (787) / .86147 (77). Publication/submission
+  links and near-identical values preclude treating large rho as independent
+  replication. Remaining values are not certified independent either.
+- **Hardware/runtime:** CPU only, no requested/observed GPU; 4 requested CPUs,
+  16 GiB audit / 8 GiB lineage; source scans 25.75s/22.53s. Python 3.12.1,
+  NumPy 2.5.4, SciPy 1.18.1. Git 0d96d801 plus frozen dirty source snapshots.
+  Exact argv/env/hashes and Modal apps/calls are recorded in the linked README.
+- **Verification/artifacts:** five aggregation tests pass; all 60 metric cells and
+  40,252 aggregate sides independently recompute from preserved pairs/original
+  overlap rows. Checksummed archives on Modal and local artifacts; summaries,
+  pair dumps, provenance census, PNG/PDF plots under the experiment results.
+  Validation/test deliberately unused; no predictive metrics apply to this audit.
+- **Decision:** keep source labels and actual methods; qualify lineage weighting
+  and shared affinity/calibration experiments before collapsing outputs. No model
+  winner or promotion in Phase A. Ranking/geometry/schedule phases remain pending.
+
+## 2026-10-29_1428_codex_assay-methods-censoring — methods, hidden bounds and source attribution
+
+- Date/agent/model: 2026-10-29, Codex / GPT-6;
+  [complete contract and artifacts](2026-10-29_1428_codex_assay-methods-censoring/README.md).
+  Starting commit c4b797b9, dirty state and exact commands/source frozen in reproduce/.
+- Frozen corrected physical TRAIN: 234,337 rows, 184,637 concentration labels;
+  original IC50/KD/EC50/KD(~IC50)/KD(~EC50) distinct, explicit inequalities retained,
+  missing inequality currently maps exact. Method comparisons use study-balanced
+  medians on exact-labeled same-pMHC values. No qualifier changes.
+- No training/pretraining, loss terms, synthetic labels, output mapping changes,
+  GPU or predictive evaluation. Validation/test labels and predictions unused;
+  held-out metrics/dumps inapplicable to this descriptive source audit. Main CPU4/
+  16GiB, physical scan30.080s; ledger CPU4/8GiB,263.975s. Source/attempt hashes,
+  pinned dependencies and initial import failure retained in family.
+- Original method tags count117,655 purified competitive radioactivity,
+  27,837 purified competitive fluorescence,39,144 direct fluorescence,1 direct
+  radioactivity. Source comments in20components cite a refolding ELISA despite
+  16,319 of their rows being tagged competitive fluorescence/KD. These tags are
+  not fully verified protocols; use preparation/mechanism/detector/quantity axes.
+
+| Original-tag comparison | I Spearman (n) | II Spearman (n) |
+|---|---:|---:|
+| Competitive fluorescence/radioactivity, IC50 only | .62549 (125) | .30613 (42) |
+| Same pair, pooled concentration labels | .61403 (287) | .19190 (48) |
+| Competitive/direct fluorescence, pooled | .69467 (179) | .80000 (9) |
+| Competitive radioactivity/direct fluorescence, pooled | .34374 (291) | unavailable |
+
+- All IC50 comparison pairs are cross-study; method/lab/study/allele mixture are
+  confounded. No causal detector ranking or model winner follows.
+- Current exact136,233 includes100,544 missing raw inequalities; explicit bounds
+ 48,404. Exact20k/25k/50k counts282/77/88. Prespecified study/MHC/method/endpoint
+ heap screen flags142cells/2,556exactrows;840rows have stronger right-limit review
+ evidence. None are confirmed or automatically relabeled.
+- Full IEDB and CEDAR MHC-ligand exports downloaded2026-10-28 through Hitlist2.0.40;
+  CEDAR added zero unique index assays after assay-IRI deduplication. All original
+  physical/MS training winners are IEDB. mhcseqs2.6.13 supplies groove sequences;
+  Ensembl112 protein context/backgrounds are not measured negatives.
+- Export ledger:4,904,983 IEDB +535,026 supplement MS rows; every supplement row
+  has unknown PTM status, none admitted. Recovery is tracked in Hitlist#854.
+  Already downloaded unused candidates include468,548 multiplexed binding rows,
+  23,384 human cellular rows with specified non-MS methods (7,087 concentration-
+  labeled); these require their own readout/context interpretation, not blanket
+  affinity relabeling. Counts are not additional independent training examples.
+- Six tests pass; independently verified72metriccells/100thresholdcells,
+  989pairrecords/1,978aggregatesides,142heapcells and source-ledger totals.
+  No numerical held-out information entered this audit. Takeaway: prioritize
+  source-reviewed assay categorization, suspected-limit review and existing-data
+  recovery through the shared observation path. Current frozen fits unchanged.
+
+## 2026-10-29_1653_codex_measurement-curation-recovery — source curation and qualified recovery
+
+- Codex/GPT-6, 2026-10-29; [family and reproduction](2026-10-29_1653_codex_measurement-curation-recovery/README.md).
+  Source commit `858f5383` plus frozen dirty source; stage-specific commands and hashes preserved.
+- Common observation admission now preserves reported/effective qualifiers, literal
+  quantity, method tags and source-scoped censor decisions. Within-study/MHC/method/
+  quantity screen inferred 506 bounds (482 ceilings / 24 floors), withheld 618
+  unresolved TRAIN rows: 234,337 to 233,719 physical observations. Numerical values
+  and original source records unchanged. Inferred limits are not verified protocols.
+- Shared thresholds require stricter independent-source and verified-protocol
+  evidence; none approved or transferred. [All 71 panels and counts](2026-10-29_1653_codex_measurement-curation-recovery/results/thresholds.md).
+- Hitlist issue 871 records conflicting competitive-fluorescence/KD method tags.
+  PR 872 preserves peptidoform fields and chemistry-aware deduplication; merged
+  as `ff5247f` (2.1.3), clean-main release gate 40948383762 passed and both
+  public PyPI artifacts independently matched tested bytes. The actual
+  source admission remains pinned to its tested development wheel/hash.
+- Source-backed Stražar recovery: 14,187 unmodified pMHC observations; 289 shorter
+  than the current nine-residue MHC-II minimum (184 sequences), 348 heldout peptide
+  exclusions, 13,550 candidate TRAIN observations. Follow-on background audit adds
+  one embargo, retaining 13,549 for the new fit. No blanket unknown-PTM fill.
+- Twelve reference/training/atlas archives acquired and hashed; downloaded rows
+  are not assumed independent or admissible. Initially 11/132 PSM files were
+  retrieved; a later bounded retry obtained nine more then stopped at HTTP 429.
+  The separate later batch has 33,683 verified unmodified pMHCs (+19,496).
+  Original CSV/count replay and independent collected-evidence checks pass;
+  CPU 4/16 GiB, 10.94 s. Hitlist 2.1.3/common admission retains 32,628 candidate
+  rows after 448 short-peptide exclusions and 607 held-out embargoes; CPU 4/16 GiB,
+  61.60 s. Independent candidate/background audit passed (CPU 4/8 GiB, 206.52 s):
+  all 13,549 current recovered positives retained, 19,079 additional candidates,
+  zero heldout-peptide leakage. It identifies 33 current generated TRAIN rows to
+  remove in a subsequent cohort and four suspect TEST rows (three previously
+  identified plus one additional); original sensitivity/comparison stays fixed.
+  Future combination still needs a newly frozen, corrected background cohort.
+  Current fits retain the earlier frozen cohort; failed metadata-only admission
+  and successful immutable retry are preserved.
+- CPU only, no pretraining/fit/losses/synthetic training labels; predictive
+  validation/test metrics and dumps inapplicable. Curation CPU 4/16 GiB, 141.75 s;
+  recovery admission CPU 4/16 GiB, 49.97 s. 146 source/admission tests pass plus
+  independent row/qualifier/source-evidence verification. Artifacts on Modal
+  `presto-checkpoints` and local family artifact path are linked in the README.
+- Decision: apply the reviewed data changes through the unchanged shared trainer
+  in the separately registered retrain; retain unresolved and unreviewed sources.
+
+## 2026-10-29_1956_codex_curated-data-retrain — completed, independently verified
+
+- Codex/GPT-6, 2026-10-29; [family/reproduction](2026-10-29_1956_codex_curated-data-retrain/README.md),
+  [prospective plan/amendment](agents/codex/plans/2026-10-29_curated-data-retrain.md).
+- TRAIN changes: 506 source-scoped inferred bounds, 618 unresolved rows withheld,
+  13,549 verified source-backed ligands plus matched unobserved comparisons,
+  35 old generated comparisons removed for newly known positive sequences.
+  Blacklist expanded by 292 sequences. Three suspect generated TEST labels stay
+  fixed and receive a separate exclusion sensitivity analysis; one extra recovered
+  observation embargoed. All heldout bytes unchanged and previously inspected.
+- Shared-v5 wide ten-output model, no pretraining or new losses; exact/inequality
+  regression and binary cross-entropy unchanged. Batch 128, AdamW 3e-4/decay 1e-4,
+  constant LR, seeds 42/43, family sampling 60%EL/20%IC50/15%other/5%qualitative.
+  3,519,577 TRAIN observations; 6,588,275 weighted exposures; 51,471 updates/seed.
+  Minimum equal-endpoint validation selection; no test-based selection.
+- Frozen source `858f5383` plus pinned dirty snapshot; model/trainer identical to
+  parent, shared reader speedup and curation changes explicit. 172 focused tests
+  pass; corrected hosted source has 2,879 passes / three skips. Independent
+  preparation 246.44 s on CPU 8/64 GiB; independent census and both worker
+  preflights passed (1,679.08 / 1,723.61 s), with verified scaler/manifest identity.
+  Failed blacklist assumption preserved before fit.
+- Requested two H100! workers maximum, CPU 8/64 GiB and 512 GiB scratch each.
+  Both report H100 80GB HBM3 and 85,009,367,040 device bytes.
+  Actual hardware, runtime, validation selection and held-out metrics are recorded
+  below after all verification/reporting gates passed. No automatic model promotion.
+
+### Verified retrain results
+
+Both complete weighted-epoch fits, independent target/loss verification, cohort census, serving replay and paired held-out observation checks passed.
+Validation-selected condition: `curated-multi-s43` (minimum equal-endpoint validation loss).
+Selection scores: curated-multi-s42 = 0.680632; curated-multi-s43 = 0.654264.
+All results remain repeated fixed-holdout development evidence; no model is automatically promoted and no mechanistic qualification follows.
+
+| Condition | Split / era | Output / class / population | n (exact for IC50) | Spearman | RMSE log10(nM) | AUROC | AUPRC |
+|---|---|---|---:|---:|---:|---:|---:|
+| curated-multi-s42 | test / 2026 | elution_observation / I / source_reported_outcomes / pmid:42069060 | 5169 | — | — | — | 1.0000 |
+| curated-multi-s42 | test / 2026 | elution_observation / I / synthetic_same_protein | 31002 | — | — | 0.9726 | 0.9319 |
+| curated-multi-s42 | test / 2026 | elution_observation / II / source_reported_outcomes / pmid:41534530 | 6611 | — | — | — | 1.0000 |
+| curated-multi-s42 | test / 2026 | elution_observation / II / synthetic_same_protein | 39108 | — | — | 0.8282 | 0.6677 |
+| curated-multi-s42 | test / older_or_mixed | elution_observation / I / source_reported_outcomes / pmid:29308320 | 136 | — | — | 0.2428 | 0.4741 |
+| curated-multi-s42 | test / older_or_mixed | elution_observation / I / synthetic_same_protein | 432 | — | — | 0.9959 | 0.9740 |
+| curated-multi-s42 | test / older_or_mixed | ic50 / I / reported_measurements | 100 | 0.3758 | 1.0880 | — | — |
+| curated-multi-s42 | test / older_or_mixed | ic50 / II / reported_measurements | 267 | 0.5837 | 0.9823 | — | — |
+| curated-multi-s42 | validation / older_or_mixed | elution_observation / I / source_reported_outcomes / pmid:35474673 | 53 | — | — | 0.7639 | 0.8525 |
+| curated-multi-s42 | validation / older_or_mixed | elution_observation / I / source_reported_outcomes / pmid:35561310 | 1643 | — | — | — | 1.0000 |
+| curated-multi-s42 | validation / older_or_mixed | elution_observation / I / source_reported_outcomes / pmid:40138458 | 52 | — | — | 0.4381 | 0.7894 |
+| curated-multi-s42 | validation / older_or_mixed | elution_observation / I / synthetic_same_protein | 10116 | — | — | 0.9945 | 0.9716 |
+| curated-multi-s42 | validation / older_or_mixed | elution_observation / II / source_reported_outcomes / pmid:35561310 | 694 | — | — | — | 1.0000 |
+| curated-multi-s42 | validation / older_or_mixed | elution_observation / II / synthetic_same_protein | 4152 | — | — | 0.8675 | 0.6543 |
+| curated-multi-s42 | validation / older_or_mixed | ic50 / I / reported_measurements | 141 | 0.5707 | 1.1341 | — | — |
+| curated-multi-s42 | validation / older_or_mixed | ic50 / II / reported_measurements | 1129 | 0.5306 | 0.8551 | — | — |
+| curated-multi-s43 | test / 2026 | elution_observation / I / source_reported_outcomes / pmid:42069060 | 5169 | — | — | — | 1.0000 |
+| curated-multi-s43 | test / 2026 | elution_observation / I / synthetic_same_protein | 31002 | — | — | 0.9712 | 0.9293 |
+| curated-multi-s43 | test / 2026 | elution_observation / II / source_reported_outcomes / pmid:41534530 | 6611 | — | — | — | 1.0000 |
+| curated-multi-s43 | test / 2026 | elution_observation / II / synthetic_same_protein | 39108 | — | — | 0.8337 | 0.6738 |
+| curated-multi-s43 | test / older_or_mixed | elution_observation / I / source_reported_outcomes / pmid:29308320 | 136 | — | — | 0.1012 | 0.4159 |
+| curated-multi-s43 | test / older_or_mixed | elution_observation / I / synthetic_same_protein | 432 | — | — | 0.9966 | 0.9805 |
+| curated-multi-s43 | test / older_or_mixed | ic50 / I / reported_measurements | 100 | 0.3023 | 1.0443 | — | — |
+| curated-multi-s43 | test / older_or_mixed | ic50 / II / reported_measurements | 267 | 0.5662 | 1.0001 | — | — |
+| curated-multi-s43 | validation / older_or_mixed | elution_observation / I / source_reported_outcomes / pmid:35474673 | 53 | — | — | 0.7610 | 0.8564 |
+| curated-multi-s43 | validation / older_or_mixed | elution_observation / I / source_reported_outcomes / pmid:35561310 | 1643 | — | — | — | 1.0000 |
+| curated-multi-s43 | validation / older_or_mixed | elution_observation / I / source_reported_outcomes / pmid:40138458 | 52 | — | — | 0.4381 | 0.7894 |
+| curated-multi-s43 | validation / older_or_mixed | elution_observation / I / synthetic_same_protein | 10116 | — | — | 0.9929 | 0.9658 |
+| curated-multi-s43 | validation / older_or_mixed | elution_observation / II / source_reported_outcomes / pmid:35561310 | 694 | — | — | — | 1.0000 |
+| curated-multi-s43 | validation / older_or_mixed | elution_observation / II / synthetic_same_protein | 4152 | — | — | 0.8638 | 0.6575 |
+| curated-multi-s43 | validation / older_or_mixed | ic50 / I / reported_measurements | 141 | 0.5491 | 1.2805 | — | — |
+| curated-multi-s43 | validation / older_or_mixed | ic50 / II / reported_measurements | 1129 | 0.4928 | 0.8342 | — | — |
+
+Missing metrics indicate unsupported or single-label evaluation cells.
+
+- `curated-multi-s42`: selected step 51,471; completed 51,471 updates and exposed 3,519,577 unique TRAIN rows. Requested H100!, observed NVIDIA H100 80GB HBM3 (85,009,367,040 device bytes); wall 41898.4 s, optimizer 29539.3 s, peak allocated/reserved 3.77 / 12.01 GB.
+- `curated-multi-s43`: selected step 51,471; completed 51,471 updates and exposed 3,519,577 unique TRAIN rows. Requested H100!, observed NVIDIA H100 80GB HBM3 (85,009,367,040 device bytes); wall 55496.4 s, optimizer 32625.5 s, peak allocated/reserved 3.81 / 13.30 GB.
+
+The full report preserves every output/class/era/study, exact and bounded loss, Pearson, 500 nM classification, uncertainty, source-reported outcomes, parameter/feature coverage and register diagnostics. The paired comparison checks identical held-out observations and separately excludes the three source-identified suspect generated test labels for both model generations.
+
+[Complete report](2026-10-29_1956_codex_curated-data-retrain/results/summary.md) · [Paired parent comparison](2026-10-29_1956_codex_curated-data-retrain/results/parent-comparison.md).
+
+## 2026-10-29 — Shared assay measurement layer: registered matched comparison
+
+- **Agent/model:** Codex / GPT-6. [Experiment and contract](2026-10-29_2303_codex_assay-measurement-layer/README.md).
+- **Implementation:** shared-v6 biological core retains v5 residue/register logic;
+  fixed joint assay tracks add pooled, scalar-calibration or factorized residual
+  decoding. Quantity units, explicit/reviewed inferred bounds and source conflicts
+  retain their common contracts. Historical v5 inference is frozen. Full regression
+  suite: 2,891 passed / four skipped; 14 focused checks pass, including a later
+  common-manifest end-to-end fit. No predictive gain follows from these checks.
+- **Dataset:** parent curated source-review-v2, starting from 3,519,577 TRAIN rows;
+  all ten endpoints retained. Four metadata-selected fluorescence study components
+  become retrospective validation/test holdouts with cross-output peptide embargo.
+  Original inspected holdouts are retained. Exact final counts are preparation-gated.
+  Cellular binding/stabilization/functional measurements remain outside purified IC50.
+- **Training:** fresh seeds42/43 × pooled/calibration/factorized IC50 tracks;
+  width192/layers3/heads6/FF768,dropout.1,batch128,4,000 updates,AdamW3e-4 constant,
+  decay1e-4,validation1,000. Same parent endpoint/class exposure weights:60%EL,
+  20%literalIC50,15%other physical,5%qualitative. No pretraining or added synthetics;
+  parent generated ligand comparisons retain their source contract. Native target
+  transformations, squared/one-sided regression and binary BCE are unchanged.
+  Quantity labels map separately to IC50,KD,EC50,KDviaIC50,KDviaEC50,half-life,koff,
+  td50,qualitative,elution. Rank8 residual scale.1; no ranking/consistency loss.
+- **Hardware:** requested H100!, at most two concurrent GPUs; durable coordinator
+  waits for saved parent GPU calls. Actual hardware and runtime pending launch.
+- **Reproduction:** experiment-local reproduce/launch.sh and launch.json freeze
+  invocation, git state, source hashes and pinned runtime before upload. Per-example
+  validation/test predictions and matched assay/class/study metrics are mandatory;
+  receipt-verified local collection independently checks core metrics.
+- **Validation/test:** pending for all six conditions. No winner or promotion yet.
+  The focal registry varies detector within purified competition; preparation and
+  mechanism effects are not independently identified by this contrast.
+
+## 2026-10-30 — Direct factorized affinity decoder (running)
+
+Codex / GPT-6. [2026-10-30_1154_codex_direct-factorized-affinity](2026-10-30_1154_codex_direct-factorized-affinity/README.md).
+User-selected shared-v7 uses one nonlinear head over biology plus separate quantity,
+preparation, mechanism and detector vectors, shared across five concentration
+quantities and both MHC classes. Same 3,518,242 TRAIN rows and inspected study
+holdouts as the shared-v6 assay comparison; source bytes/censors/ligand-generated
+comparisons remain unchanged. Fresh seeds42/43, 4,000 updates, width192/3layers,
+batch128, AdamW3e-4, unchanged endpoint/class exposures and losses. Nine usable
+TRAIN assay combinations are expected; complete registry audit is in preparation.
+H100! requested, max two concurrent; actual hardware, runtime and held-out
+validation/test metrics pending. No measured winner or scientific qualification.
+Exact source, invocation, mappings, synthetic-label inheritance and artifact
+contracts are recorded in the linked README and reproduce bundle.
+
+Direct decoder launch update: frozen revision 7083bd89, Modal app
+`ap-3BRMaO8FDAZyvk1gaz3JYs`, two 4,000-update fits. All 2,896 tests pass (four skips),
+lint/docs pass, real v6 checkpoint predictions reproduce exactly. Startup hardware
+confirms H100 80GB (85,009,367,040 bytes); actual source staging is 30.25GB. The
+remaining old comparison queue was stopped and recorded, preserving both verified
+pooled controls. Real-data held-out results/runtime/winner remain pending.
+
+
+## 2026-10-30_1725_codex_preparation-throughput — reuse admitted metadata
+
+- **Date / agent / model:** 2026-10-30, Codex / GPT-6.
+- **Directory:** [runtime record](2026-10-30_1725_codex_preparation-throughput/README.md).
+- **Reproducibility:** `reproduce/launch.json`, `launch.sh`, frozen before/after
+  source snapshots and software-parity script; baseline ed9b1b9b, candidate dirty
+  five-file change with exact hashes. Raw artifacts on Modal volume
+  `presto-checkpoints:/2026-10-30_1725_codex_preparation-throughput/` and local
+  artifact paths in the README. OMP/OpenBLAS/MKL threads=4 for runtime comparison.
+- **Dataset / curation:** first 5,000 TRAIN rows each from the active physical-assay,
+  native-MS and generated-background sources: 15,000 rows, 116,307,079 bytes.
+  Byte-identical values/provenance/qualifiers and source-scoped inferred bounds;
+  no additional data admission. Registry restricted to endpoints/classes/methods
+  present in the slice. Parent sampling weights retained for observed strata.
+- **Training / assays / outputs / synthetic contract:** CPU preparation only,
+  no pretraining, optimizer steps or predictive evaluation on these source rows.
+  IC50, KD-derived proxies, half-life, qualitative binding and ligand observations
+  use the existing shared-v7 mapping; 5,000 previously generated background rows
+  are included solely for runtime measurement. No new generated biological data.
+  Exact TRAIN values alone fit target scales; inequalities do not fit moments.
+  A separate fourteen-row artificial software fixture runs eight AdamW updates
+  with IC50/KD and identity replay, weighted sampling and dropout solely to check
+  old/new trajectory equality. Its checkpoints/evaluations remain linked.
+- **Hardware:** Modal eight CPU cores / 65,536 MiB requested, **no GPU**. gVisor
+  masks CPU model; Python 3.12.1, torch 2.14.1+cu130. Visible host counts are not
+  allocation measurements. Existing two H100! fits continue unchanged.
+- **Validation/test metrics:** not applicable to this runtime study; no held-out
+  biological predictions are produced. Exact software-fixture validation/test
+  metrics and cached predictions are preserved in raw artifacts, not interpreted
+  as accuracy evidence.
+
+| Condition / phase | Baseline median seconds | Candidate median seconds | Speedup |
+|---|---:|---:|---:|
+| Hash + full admission | 3.402 | 3.481 | 0.98× |
+| Preflight | 11.803 | 4.261 | 2.77× |
+| Trainable-row selection | 10.043 | 0.135 | 74.62× |
+| Weighted epoch order | 4.326 | 0.186 | 23.19× |
+| Combined measured preparation | 29.813 | 7.986 | **3.73×** |
+
+**Preferred condition:** candidate common metadata/streaming implementation.
+Three alternating paired repeats; 90,000→30,000 decoded observations, 60 KB
+metadata-code array. All scalers, admission reports, partitions, trainable rows,
+full orders and RNG states match exactly. Independent eight-update old/new
+software fits have identical model/optimizer/coverage tensors and evaluation
+metrics. All integrity checks remain active. This does not measure cold startup,
+staging, first GPU update or a full-cohort speedup; current frozen fits are not
+restarted. Detailed timings, RSS and independent verification are in `results/`.
+
+Software verification: clean full suite **2,929 passed, four skipped**; lint and
+strict docs pass. Initial six Hitlist fixture errors were a transient scratch
+capacity shortage, resolved without changing code or lowering storage reserves.
+Exact software-fixture per-example predictions also match across all splits.
+
+<!-- closed-2026-10-30_1154_codex_direct-factorized-affinity -->
+## 2026-10-30 — Direct factorized affinity: verified results
+
+Codex / GPT-6. [Full contract and results](2026-10-30_1154_codex_direct-factorized-affinity/README.md).
+
+<!-- verified-assay-closeout -->
+
+## Verified matched results
+
+| Condition | Split | Class | Detector | Exact n | Spearman | RMSE log10(nM) |
+|---|---|---|---|---:|---:|---:|
+| direct-s43 | validation | I | radioactivity | 141 | 0.5001 | 1.2860 |
+| direct-s43 | validation | I | fluorescence | 28 | 0.5835 | 1.2440 |
+| direct-s43 | validation | II | radioactivity | 1129 | 0.4040 | 0.8757 |
+| direct-s43 | validation | II | fluorescence | 41 | 0.8170 | 0.5175 |
+| direct-s43 | test | I | radioactivity | 100 | 0.2990 | 1.0062 |
+| direct-s43 | test | I | fluorescence | 157 | 0.3146 | 1.1589 |
+| direct-s43 | test | II | radioactivity | 123 | 0.2285 | 0.7609 |
+| direct-s43 | test | II | fluorescence | 634 | 0.0997 | 1.6655 |
+| direct-s42 | validation | I | radioactivity | 141 | 0.4551 | 1.4393 |
+| direct-s42 | validation | I | fluorescence | 28 | 0.5315 | 0.8277 |
+| direct-s42 | validation | II | radioactivity | 1129 | 0.3534 | 0.9118 |
+| direct-s42 | validation | II | fluorescence | 41 | 0.8450 | 0.5654 |
+| direct-s42 | test | I | radioactivity | 100 | 0.2067 | 1.0212 |
+| direct-s42 | test | I | fluorescence | 157 | 0.2344 | 1.0796 |
+| direct-s42 | test | II | radioactivity | 123 | 0.1888 | 0.8897 |
+| direct-s42 | test | II | fluorescence | 634 | 0.1256 | 1.5856 |
+
+Both validation/test populations and serialized observations match.
+Scipy independently reproduces IC50 correlations; scikit-learn independently
+reproduces available ligand-background AUROC/AUPRC. Full endpoint/study and
+ligand metrics, parameter coverage and actual hardware are in each results/
+condition report; collection.json records every prediction dump and hash.
+Winner/promotion remains pending scientific review and study-aware uncertainty.
+
+
+## 2026-10-30 — Stability and data-count audit of direct factorized fits
+
+Codex / GPT-6. Existing experiment [2026-10-30_1154_codex_direct-factorized-affinity](2026-10-30_1154_codex_direct-factorized-affinity/README.md#stability-and-training-population-audit-2026-10-30); no new training or relabeling. Independently recomputed stability metrics from hash-verified per-example validation/test dumps. Test half-life Spearman: I .0648/.3160 (n=62), II -.0726/-.1806 (n=148); validation I .4139/.4451 (n=71), no II validation. Test I td50 .3163/.3824 (n=140); validation .1960/.4390 (n=145). Endpoint heads share biology but do not yet use the categorical concentration decoder. MHC-II TRAIN contains 306,303 observed ligands, 306,302 generated backgrounds and 61,143 concentration labels; published NetMHCIIpan-4.3 counts use a different full-development-corpus contract. Stability is not qualified; all original experiment contracts and promotion limitations remain. Counts, Pearson, RMSE, exact target-space definitions and input hashes: `results/stability-and-data-audit.json`.

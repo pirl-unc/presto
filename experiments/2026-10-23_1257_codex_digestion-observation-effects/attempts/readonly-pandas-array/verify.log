@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/private/tmp/presto-modular-model/experiments/2026-10-23_1257_codex_digestion-observation-effects/code/verify.py", line 141, in <module>
+    if __name__ == "__main__": main()
+                               ^^^^^^
+  File "/private/tmp/presto-modular-model/experiments/2026-10-23_1257_codex_digestion-observation-effects/code/verify.py", line 121, in main
+    y = sub.target.to_numpy(); p = sub[stored["predictor"]].to_numpy(); w = sub.weight.to_numpy(); w /= w.sum()
+                                                                                                   ^^^^^^^^^^^^
+ValueError: output array is read-only

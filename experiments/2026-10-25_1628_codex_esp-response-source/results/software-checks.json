@@ -1,0 +1,30 @@
+{
+  "new_verifier_checks": [
+    {
+      "argv": [
+        "check",
+        "--isolated",
+        "--stdin-filename",
+        "verify.py",
+        "-"
+      ],
+      "returncode": 0,
+      "output": "All checks passed!\n"
+    },
+    {
+      "argv": [
+        "format",
+        "--check",
+        "--isolated",
+        "--stdin-filename",
+        "verify.py",
+        "-"
+      ],
+      "returncode": 0,
+      "output": ""
+    }
+  ],
+  "all_six_python_files_compile": true,
+  "frozen_configuration_hashes_match": true,
+  "production_code_changed": false
+}

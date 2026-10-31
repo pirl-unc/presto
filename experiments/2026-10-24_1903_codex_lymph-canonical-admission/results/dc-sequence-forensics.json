@@ -1,0 +1,29 @@
+{
+  "status": "completed_annotation_hypothesis_check",
+  "blocks": {
+    "dc_dia_database": {
+      "n_source_rows": 1581,
+      "literal_mass_match": 1581,
+      "minus_first_mass_match": 0,
+      "literal_length_match": 0,
+      "minus_first_length_match": 1581,
+      "literal_found_in_deposit": 729,
+      "minus_first_found_in_deposit": 363
+    },
+    "dc_dia_library": {
+      "n_source_rows": 1020,
+      "literal_mass_match": 1020,
+      "minus_first_mass_match": 0,
+      "literal_length_match": 0,
+      "minus_first_length_match": 1020,
+      "literal_found_in_deposit": 1008,
+      "minus_first_found_in_deposit": 479
+    }
+  },
+  "mass_tolerance_Da": 0.1,
+  "independent_calculator_tolerance_Da": 0.002,
+  "source_correction_or_training_admission": false,
+  "model_training_or_predictions": false,
+  "seconds": 0.13462608301779255,
+  "peak_rss_gib": 0.231842041015625
+}

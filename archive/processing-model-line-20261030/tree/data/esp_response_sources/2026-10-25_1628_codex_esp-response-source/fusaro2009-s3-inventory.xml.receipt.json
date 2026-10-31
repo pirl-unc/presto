@@ -1,0 +1,22 @@
+{
+  "bytes": 1186,
+  "content_length": null,
+  "content_type": "application/xml",
+  "elapsed_seconds": 0.3238476249971427,
+  "final_url": "https://pmc-oa-opendata.s3.amazonaws.com/?list-type=2&prefix=PMC2753399.&max-keys=100",
+  "http_status": 200,
+  "phase": "metadata",
+  "redirects": [],
+  "request": {
+    "discovery_provenance": "PMC2753399 from primary bibliography; current PMC S3 ListObjectsV2 interface documented at https://pmc.ncbi.nlm.nih.gov/tools/pmcaws/ and used/archived by family1451.",
+    "expected_kind": "xml",
+    "name": "fusaro2009-s3-inventory.xml",
+    "url": "https://pmc-oa-opendata.s3.amazonaws.com/?list-type=2&prefix=PMC2753399.&max-keys=100"
+  },
+  "request_set": "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1628_codex_esp-response-source/reproduce/requests/metadata-5.json",
+  "sha256": "2dbe40392b0f31bdd22b8b81c6e5d7a1a98b80538f4e9c51d0c3e08c5f28cc2e",
+  "started_utc": "2026-10-25T16:29:07.969304+00:00",
+  "status": "retrieved_validated_payload",
+  "text_decoding": "utf-8",
+  "xml_root": "{http://s3.amazonaws.com/doc/2006-03-01/}ListBucketResult"
+}

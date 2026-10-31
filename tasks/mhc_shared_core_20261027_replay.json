@@ -1,0 +1,49 @@
+{
+  "base_commit": "c0358852f85f42d7d91d41a0af02327d9a6f2981",
+  "catalog_dispositions": {
+    "catalog_functional_flags": 439,
+    "catalog_groove_flags": 7743,
+    "catalog_outside_human_imgt": 30180,
+    "eligible_alias": 18078
+  },
+  "catalog_sha256": "ddc3493c64f4328de174a6c2cda1f007ec2f93a1ef649add25d2ef9c1720add1",
+  "closure_sha256": "815cade2f21c1214ee7f2e8953ea9a4294b1771557239e8b993769ee88c73220",
+  "eligible_alias_counts": {
+    "HLA-DRA*01:01": 1,
+    "HLA-DRB1*04:01": 1
+  },
+  "exact_grooves_preserved": true,
+  "family": "/private/tmp/presto-mhc2-evaluation-20261027/presto/experiments/2026-10-27_1250_codex_do-dm-native-memory-fit",
+  "frozen_files_verified": 168,
+  "molecular_assumption_sha256": "2eb1b9656bd9c1e8a275928f02e45694a2eef67992519161c7d8032e122030b5",
+  "replay_script_sha256": "dbc70b7ff19f59c749954a8b4f6be83467da73bb5b5933d6575e088783e81b0d",
+  "resolved_mhc": {
+    "class_override": null,
+    "groove1": "IKEEHVIIQAEFYLNPDQSGEFMFDFDGDEIFHVDMAKKETVWRLEEFGRFASFEAQGALANIAVDKANLEIMTKRSNYTPIT",
+    "groove2": "GDTRPRFLEQVKHECHFFNGTERVRFLDRYFYHQEEYVRFDSDVGEYRAVTELGRPDAEYWNSQKDLLEQKRAAVDTYCRHNYGVGESFTVQR",
+    "mhc_class": "II",
+    "provenance": {
+      "assumed_alleles": [
+        "HLA-DRA*01:01"
+      ],
+      "catalog_alleles": [
+        "HLA-DRA*01:01",
+        "HLA-DRB1*04:01"
+      ],
+      "partner_imputation": true,
+      "reference_assumption": {
+        "reason": "explicit reference alpha; source identity unresolved",
+        "reference": "sha256:2eb1b9656bd9c1e8a275928f02e45694a2eef67992519161c7d8032e122030b5",
+        "restriction": "HLA-DRA*01:01/HLA-DRB1*04:01"
+      },
+      "reported_restriction": "HLA-DRB1*04:01"
+    },
+    "species1": "human",
+    "species2": "human"
+  },
+  "resolver_sha256": "481b3215ac04f6e26397c6be69f2c4977ac3d46c6e653d9ef6c612b4e4c653b5",
+  "scope": "input-only integration; no biological fit, evaluation or qualification",
+  "source_alpha_identity": null,
+  "status": "passed",
+  "strict_missing_alpha_rejected": true
+}

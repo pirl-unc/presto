@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/private/tmp/presto-modular-model/experiments/2026-10-23_1202_codex_biological-cut-rates/code/probe.py", line 258, in <module>
+    main()
+  File "/private/tmp/presto-modular-model/experiments/2026-10-23_1202_codex_biological-cut-rates/code/probe.py", line 192, in main
+    gradient, work = estimate(prepared, count, generator)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/presto-modular-model/experiments/2026-10-23_1202_codex_biological-cut-rates/code/probe.py", line 118, in estimate
+    assert refs.unique().numel() == 1
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

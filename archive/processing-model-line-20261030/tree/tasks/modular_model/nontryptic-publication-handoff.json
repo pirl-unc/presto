@@ -1,0 +1,49 @@
+{
+  "goal_turn_classification": "progress",
+  "presto_head": "717ed59e0938b10f3bedc2c5fad760ce65d65613",
+  "presto_pr": "https://github.com/pirl-unc/presto/pull/131",
+  "draft": true,
+  "pr_body_exactly_verified": true,
+  "required_artifacts_verified_in_index_and_committed_tree": 109,
+  "unrelated_work_preserved": "Primary checkout fingerprints unchanged; modular worktree task diff remains 346 additions/4 deletions",
+  "source_family": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen",
+  "source_screen_status": "closed; nominal dose/signal support qualifies but full training admission incomplete",
+  "source_issue": "https://github.com/pirl-unc/hitlist/issues/849",
+  "next_scientific_action": "Implement shared Hitlist849 source ingestion with original form conflicts, missingness and ordinal acquisition slots retained; register a peptide-grouped empirical-response test only after a supported admission recipe. Do not reopen F3/F2/native held-outs.",
+  "live_pretested_ci": [
+    {
+      "id": 40223280643,
+      "event": "pull_request",
+      "state": "in_progress"
+    },
+    {
+      "id": 40223267837,
+      "event": "push",
+      "state": "in_progress"
+    }
+  ],
+  "previous_ci": "a9ae724 PR/push both passed",
+  "hitlist_release": {
+    "version": "2.0.41",
+    "source_commit": "85ff2c81cc7160444a701917fc4c09c419a876a1",
+    "run_id": 40220737944,
+    "status": "completed_success",
+    "artifact_id": 12610450520,
+    "canonical_verifier": "passed",
+    "twine_check": "both passed",
+    "local_artifacts": "data/tested_releases/hitlist-2.0.41-85ff2c8",
+    "upload_executed": false,
+    "upload_blocker": "Automatic approval review rejected public publication without explicit user authorization",
+    "user_approval": "pending async question; do not retry until answered; do not bypass"
+  },
+  "terminal_local_stages": true,
+  "full_goal_complete": false,
+  "resources_last_verified": {
+    "disk_free_approx_gib": 4.2,
+    "ram_free_plus_speculative_approx_gib": 5.04,
+    "swap_used_mib": 4601.81,
+    "presto_git_storage_gib": 2.1,
+    "disk_drop_cause": "unresolved; swap and Git storage essentially unchanged",
+    "constraint": "keep existing guards; no large source downloads before capacity review"
+  }
+}

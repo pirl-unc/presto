@@ -1,0 +1,23 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "argv": [
+    "experiments/2026-10-22_2212_codex_shared-mapp-import/code/launch.py"
+  ],
+  "device": "local CPU",
+  "environment_overrides": {
+    "PYTHONPATH": "/private/tmp/hitlist-mapp-source"
+  },
+  "executable": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "hitlist_commit": "ca0c729b631d86cb6a00eb94f5e7f1f139487d74",
+  "hitlist_dirty": " M hitlist/external_evidence.py\n M hitlist/version.py\n M tasks/todo.md\n?? hitlist/data/evidence_revisions/mapp_assets.json\n?? hitlist/data/evidence_revisions/mapp_contract.json\n?? hitlist/mapp_evidence.py\n?? tasks/mapp-source-plan.md\n?? tests/test_mapp_evidence.py\n",
+  "model": null,
+  "no_predictive_metrics_reason": "source importer verification; no model fit or split",
+  "output": "/private/tmp/hitlist-v2-mapp-external-first",
+  "parent": "/private/tmp/hitlist-v2-supporting-18221-audited",
+  "parent_manifest_sha256": "70f1cdb2124aea18f1ec4051dfecb58c73c34324dd06cb8d0b225b2b6a9fdb9c",
+  "presto_commit": "80d5f9c9bbba532799fcbd2ffabf123716a6c7a4",
+  "pretraining": null,
+  "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "source_receipt_sha256": "70956e64c898963d48de904a96d1baee549eb9056bc013d55492a530ea3139f6",
+  "training": null
+}

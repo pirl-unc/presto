@@ -1,0 +1,99 @@
+{
+  "catalog_schema_version": 13,
+  "coverage": {
+    "base_run_coverage": {
+      "examples_by_project": {
+        "PXD007263": 12203,
+        "PXD009508": 9404
+      },
+      "examples_by_split": {
+        "test": 2673,
+        "train": 14862,
+        "val": 4072
+      },
+      "n_components": 1488,
+      "n_examples": 21607,
+      "n_excluded_results": 125225,
+      "n_source_peptides": 9206,
+      "n_source_results": 146832,
+      "reason_counts": {
+        "no_positive_evidence_sum": 110408,
+        "no_reported_positive_quantity": 110408,
+        "not_one_source_group": 18528,
+        "peptide_PEP_unreported_or_above_0.01": 51600,
+        "source_contaminant": 522,
+        "source_reverse": 2964
+      }
+    },
+    "components_by_split": {
+      "test": 9,
+      "train": 40,
+      "val": 5
+    },
+    "examples_by_split": {
+      "test": 14,
+      "train": 59,
+      "val": 14
+    },
+    "n_contributing_runs": 522,
+    "n_examples": 87,
+    "n_excluded_peptides": 9119,
+    "n_source_peptides": 9206,
+    "reason_counts": {
+      "fewer_than_three_positive_runs_epoxo": 5746,
+      "fewer_than_three_positive_runs_ut": 4599,
+      "no_direct_msms_epoxo": 5412,
+      "no_direct_msms_ut": 3089,
+      "outside_inhibitor_project": 3146
+    }
+  },
+  "files": {
+    "components.json": {
+      "sha256": "6a2696f8c604a2e12512bae786612e6ca62ef7e92d946f53c5b1ebb90981b29d",
+      "size_bytes": 1521784
+    },
+    "dispositions.json": {
+      "sha256": "d3865fc5bd2fe55d4dfac923c37731f7ea3b824536c1e698ecdea482bd4537f6",
+      "size_bytes": 3521031
+    },
+    "examples.json": {
+      "sha256": "c5995ecd47e61f52ddcdcdca2c91ae2a748cc5ba685f5b26494e88258243b14e",
+      "size_bytes": 97744
+    },
+    "recipe.json": {
+      "sha256": "043303f76d0af48bdd5a3f787cf27b8b4c91fbbcb88beebb7e9db8047c7ae279",
+      "size_bytes": 1634
+    },
+    "run_dispositions.json": {
+      "sha256": "9f33400be2e1f6913819cd4bdfbaf59378e6e99024d2c6228ad2fbfcba780ee8",
+      "size_bytes": 93491532
+    },
+    "run_examples.json": {
+      "sha256": "96417319304aae1c2b85bec57cd9274d2f4fea7fd2dbb73d79b02e07afcb5eb7",
+      "size_bytes": 47769463
+    },
+    "source_manifest.json": {
+      "sha256": "3b14b05532c6ed24132c37ef7f297eaf0047325e3c822d4293344a44a92cec30",
+      "size_bytes": 49287
+    },
+    "source_tables.json": {
+      "sha256": "e6fe4dcb3e303a6cc4a4333fb022a8a35ac151ecb837dfd358190bc4e2752335",
+      "size_bytes": 479550307
+    },
+    "summary.json": {
+      "sha256": "bdef852faad42b9c8c18abc8a160e1c885ac2c886d53d9b330e6ae2cd36fbc62",
+      "size_bytes": 1121
+    }
+  },
+  "hitlist_version": "2.0.6",
+  "output_kind": "registered_processing_contrast",
+  "recipe": {
+    "name": "mapp_controlled_complete_alpha6_response_v1",
+    "registered_recipe": "mapp_controlled_complete_alpha6_response_v1",
+    "schema_version": 1
+  },
+  "recipe_sha256": "cdf754594eda7865723628854d8ea898906ee5a8c0f31cf7b3716db8ed04bb06",
+  "schema_version": 1,
+  "source_package_manifest_sha256": "3b14b05532c6ed24132c37ef7f297eaf0047325e3c822d4293344a44a92cec30",
+  "source_package_schema_version": 9
+}

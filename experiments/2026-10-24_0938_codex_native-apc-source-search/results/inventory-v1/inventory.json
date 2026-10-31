@@ -1,0 +1,263 @@
+{
+  "stage": "metadata_only_no_training_admission",
+  "n_projects": 151,
+  "n_sample_rows": 3992,
+  "n_unique_raw_file_names": 3983,
+  "project_categories": {
+    "MHC-II immunopeptidomics": 14,
+    "Peptidomics": 40,
+    "MHC-I immunopeptidomics; MHC-II immunopeptidomics": 15,
+    "Extracellular peptidomics": 3,
+    "MHC-I immunopeptidomics": 60,
+    "Neuropeptidomics": 11,
+    "Intracellular peptidomics; Extracellular peptidomics": 1,
+    "MHC-I immunopeptidomics; Extracellular peptidomics; Intracellular peptidomics": 1,
+    "Host-Pathogen peptidomics": 3,
+    "MHC-II immunopeptidomics; MHC-I immunopeptidomics": 1,
+    "Peptidomics; Extracellular peptidomics": 1,
+    "MHC-I immunopeptidomics; MHC-II immunopeptidomics; Host-Pathogen peptidomics": 1
+  },
+  "sample_categories": {
+    "MHC-II immunopeptidomics": 826,
+    "Peptidomics": 1120,
+    "MHC-I immunopeptidomics": 1624,
+    "Extracellular peptidomics": 54,
+    "Neuropeptidomics": 201,
+    "Intracellular peptidomics": 20,
+    "MHC-I immunopeptidomics; Extracellular peptidomics": 1,
+    "MHC-I immunopeptidomics; Intracellular peptidomics": 1,
+    "Host-Pathogen peptidomics": 68,
+    "MHC-I immunopeptidomics; Host-Pathogen peptidomics": 39,
+    "MHC-II immunopeptidomics; Host-Pathogen peptidomics": 38
+  },
+  "n_immune_term_candidate_projects": 29,
+  "n_human_mouse_non_mhc_label_projects": 35,
+  "project_sample_count_discrepancies": [],
+  "search_regex": "macrophag|dendritic|monocyt|THP[- ]?1|RAW\\s?264|J774|\\bBMDC|\\bBMDM|\\bPBMC|\\bRaji\\b|\\bB[- ]cells?\\b|lymphoblast",
+  "assets": [
+    {
+      "path": "data/native_apc_source_search/2026-10-24_0938_peptidomicsdb/project-download.xlsx",
+      "receipt": {
+        "url": "http://www.inbirg.com/ppd_static/exports/project-download.xlsx",
+        "resolved_url": "http://www.inbirg.com/ppd_static/exports/project-download.xlsx",
+        "status": 200,
+        "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "bytes": 103364,
+        "sha256": "c777722f9a6bbfa9f39a8525821e7c621ad1e55d920dde81edc66574cef261cc",
+        "utc": "2026-10-24T13:38:34.519994+00:00",
+        "argv": [
+          "experiments/2026-10-24_0938_codex_native-apc-source-search/code/retrieve.py",
+          "--url",
+          "http://www.inbirg.com/ppd_static/exports/project-download.xlsx",
+          "--out",
+          "data/native_apc_source_search/2026-10-24_0938_peptidomicsdb/project-download.xlsx"
+        ],
+        "elapsed_seconds": 0.9027140829712152
+      },
+      "sheets": [
+        {
+          "name": "Sheet1",
+          "n_rows_including_headers": 152,
+          "n_columns": 17,
+          "first_two_rows": [
+            [
+              "PeptidomicsDB project ID",
+              "Original project accession",
+              "Title",
+              "Description",
+              "Reference",
+              "No. of biological samples",
+              "Species",
+              "Tissue",
+              "Diseases/status",
+              "Peptidomics category",
+              "Instrument",
+              "Acquisition mode",
+              "Quantification type",
+              "Enzyme",
+              "Fragment",
+              "Precursor mass tolerance",
+              "Fragment mass tolerance"
+            ],
+            [
+              "PPD001",
+              "PXD048298",
+              "MAGE-A4 TCR-like antibody immunoprecipitation in A375 and A375 MAGE-A4 KO xenograft tissue",
+              "To demonstrate the on-target binding of the MAGE-A4 antibody to the target HLAp GVYDGREHTV, we developed a reverse immunopeptidomics strategy that uses the HLAp-targeting antibody as a bait to enrich interacting HLAp from A375 xenografts. For this purpose, we immobilized the IgG-format of the MAGE-A4 TCR-like antibody on Protein A beads by cross-linking, and exposed the molecule to the solubilized proteome, including membrane bound HLAp, of the A375 xenografts. We subsequently eluted the interacting HLAp bound to the MAGE-A4 antibody and purified the HLA-associated peptides through a 5 kDa molecular weight filter before liquid chromatography tandem mass spectrometry analysis for sequence determination.",
+              "PubMed: 38627373",
+              12,
+              "Homo sapiens",
+              "A375 xenograft tissue",
+              "",
+              "MHC-II immunopeptidomics",
+              "Q Exactive HF-X",
+              "DDA",
+              "Label-free",
+              "None",
+              "HCD",
+              "5 ppm",
+              "0.03 Da"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "path": "data/native_apc_source_search/2026-10-24_0938_peptidomicsdb/sample-download.xlsx",
+      "receipt": {
+        "url": "http://www.inbirg.com/ppd_static/exports/sample-download.xlsx",
+        "resolved_url": "http://www.inbirg.com/ppd_static/exports/sample-download.xlsx",
+        "status": 200,
+        "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "bytes": 322696,
+        "sha256": "739fd96bf13f90988cc00548b0250d640a0f97bbf25ecb737b7d89fc165b1f39",
+        "utc": "2026-10-24T13:38:35.167408+00:00",
+        "argv": [
+          "experiments/2026-10-24_0938_codex_native-apc-source-search/code/retrieve.py",
+          "--url",
+          "http://www.inbirg.com/ppd_static/exports/sample-download.xlsx",
+          "--out",
+          "data/native_apc_source_search/2026-10-24_0938_peptidomicsdb/sample-download.xlsx"
+        ],
+        "elapsed_seconds": 0.6052514579496346
+      },
+      "sheets": [
+        {
+          "name": "Sheet1",
+          "n_rows_including_headers": 3993,
+          "n_columns": 16,
+          "first_two_rows": [
+            [
+              "PeptidomicsDB project ID",
+              "PeptidomicsDB sample ID",
+              "Raw file",
+              "Condition",
+              "Species",
+              "Tissue",
+              "Diseases/status",
+              "Peptidomics category",
+              "Instrument_PEAKS",
+              "Acquisition",
+              "Quantification type",
+              "Enzyme",
+              "Fragment",
+              "Precursor mass tolerance",
+              "Fragment mass tolerance",
+              "Fixed PTMs"
+            ],
+            [
+              "PPD001",
+              "PPD0010001",
+              "HFX0109b_IPP222_ROCHE_A375_CAS9_MAGE4_a.raw",
+              "MAGE-A4 TCR-like antibody IP",
+              "Homo sapiens",
+              "A375 xenograft tissue",
+              "",
+              "MHC-II immunopeptidomics",
+              "Orbitrap (Orbi-Orbi)",
+              "DDA",
+              "Label-free",
+              "None",
+              "HCD",
+              "5 ppm",
+              "0.03 Da",
+              ""
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "path": "data/native_apc_source_search/2026-10-24_0938_peptidomicsdb/datasets-download.xlsx",
+      "receipt": {
+        "url": "http://www.inbirg.com/ppd_static/exports/datasets-download.xlsx",
+        "resolved_url": "http://www.inbirg.com/ppd_static/exports/datasets-download.xlsx",
+        "status": 200,
+        "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "bytes": 42613,
+        "sha256": "a06849f77df39c424580ffbd2a3f20fd462fee8d57dc4b5ee6850b2a31d0b327",
+        "utc": "2026-10-24T13:38:35.572953+00:00",
+        "argv": [
+          "experiments/2026-10-24_0938_codex_native-apc-source-search/code/retrieve.py",
+          "--url",
+          "http://www.inbirg.com/ppd_static/exports/datasets-download.xlsx",
+          "--out",
+          "data/native_apc_source_search/2026-10-24_0938_peptidomicsdb/datasets-download.xlsx"
+        ],
+        "elapsed_seconds": 0.36240149999503046
+      },
+      "sheets": [
+        {
+          "name": "Pairwise datasets",
+          "n_rows_including_headers": 251,
+          "n_columns": 12,
+          "first_two_rows": [
+            [
+              "PeptidomicsDB project ID",
+              "PeptidomicsDB dataset ID",
+              "Experimental group",
+              null,
+              null,
+              "Control group",
+              null,
+              null,
+              "Species",
+              "Tissue",
+              "Disease/status",
+              "Peptidomics category"
+            ],
+            [
+              null,
+              null,
+              "Sample IDs",
+              "No. of biological samples",
+              "Condition_exp",
+              "Sample IDs",
+              "No. of biological samples",
+              "Condition_ctrl",
+              null,
+              null,
+              null,
+              null
+            ]
+          ]
+        },
+        {
+          "name": "Context-specific datasets",
+          "n_rows_including_headers": 15,
+          "n_columns": 8,
+          "first_two_rows": [
+            [
+              "PeptidomicsDB dataset ID",
+              "PeptidomicsDB project ID",
+              "No. of biological samples",
+              "Condition",
+              "Context",
+              "Species",
+              "Disease/status",
+              "Peptidomics category"
+            ],
+            [
+              "PPD008-panel-1",
+              "PPD008",
+              24,
+              "Context specificity",
+              "Dendritic Cells; GD149 cell line; PD42 cell line; PBMCs; CM647 cell line; RA957 cell line; MD155 cell line",
+              null,
+              "Context specificity",
+              "MHC-I immunopeptidomics"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "elapsed_seconds": 0.25528016698081046,
+  "peak_rss_bytes": 54198272,
+  "limitations": [
+    "Metadata labels are source assertions, not independently verified assay identities",
+    "Immune-cell term matches can occur in background text; they do not prove sample eligibility",
+    "Enzyme=None can be a search setting and does not prove native peptide extraction",
+    "Sample rows/raw-file names do not establish independent biological specimens"
+  ]
+}

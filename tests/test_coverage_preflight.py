@@ -12,8 +12,8 @@ import pytest
 from presto.cli.main import create_parser
 from presto.data.collate import PrestoCollator
 from presto.data.mhc_sequence_resolver import ExactMHCInput
-from presto.models.presto import Presto
-from presto.scripts import train_iedb
+from presto.legacy.presto import Presto
+from presto.legacy.scripts import train_iedb
 from presto.training.coverage_preflight import audit_training_coverage
 from presto.training.output_contract import OutputConfiguration, build_output_contract
 from presto.training.output_coverage import OutputCoverageCensus
@@ -112,17 +112,19 @@ def test_changed_curation_or_model_configuration_cannot_reuse_a_manifest(tmp_pat
         )
 
 
-def test_both_cli_entrypoints_and_config_merge_keep_the_same_coverage_flags(tmp_path, monkeypatch):
+def test_historical_coverage_config_is_preserved_and_new_cli_rejects_old_flags(
+    tmp_path, monkeypatch
+):
     argv = ["--supported-output-manifest", "claims.json", "--track-output-updates"]
-    parsed = create_parser().parse_args(["train", "unified", *argv])
+    with pytest.raises(SystemExit, match="2"):
+        create_parser().parse_args(["train", "--manifest", "fixture.json", *argv])
     captured = []
     monkeypatch.setattr(train_iedb, "run", lambda args: captured.append(args))
     train_iedb.main(argv)
-    assert (
-        parsed.supported_output_manifest == captured[0].supported_output_manifest == "claims.json"
-    )
-    assert parsed.track_output_updates is captured[0].track_output_updates is True
-    defaults = create_parser().parse_args(["train", "unified"])
+    assert captured[0].supported_output_manifest == "claims.json"
+    assert captured[0].track_output_updates is True
+    train_iedb.main([])
+    defaults = captured[1]
     for name in ("supported_output_manifest", "track_output_updates"):
         assert getattr(defaults, name) == train_iedb.IEDB_DEFAULTS[name]
     config = tmp_path / "train.json"

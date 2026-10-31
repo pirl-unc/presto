@@ -1,0 +1,9 @@
+{
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "processor": "Apple M1 Pro",
+  "logical_cpus": 10,
+  "gpu_requested": null,
+  "gpu_used": false,
+  "contract": "local CPU, warm file caches, no model computation; existing remote fits are independent",
+  "processor_evidence": "sysctl -n machdep.cpu.brand_string"
+}

@@ -1,0 +1,65 @@
+{
+  "status": "source_quantities_available_with_explicit_exceptions_not_training_admitted",
+  "hitlist_issue": "https://github.com/pirl-unc/hitlist/issues/831",
+  "source_file_count": 105,
+  "source_file_categories": {
+    "RAW": 102,
+    "SEARCH": 3
+  },
+  "downloaded_bytes": 4718213,
+  "retrieval_seconds": 44.07256570609752,
+  "sheets": 133,
+  "nonempty_cells": 325718,
+  "formulas": 2991,
+  "formulas_without_cache": 0,
+  "published_tables": [
+    {
+      "file": "pnas.2419607122.sd04.xlsx",
+      "sheet": "Kinetics",
+      "rows": 1289,
+      "counts": {
+        "unique_source_identity": 1289,
+        "quantity_equal": 1288,
+        "positive_finite_intensity": 1289,
+        "single_reported_assignment": 1289
+      },
+      "unique_sequences": 237,
+      "length_min": 5,
+      "length_max": 140,
+      "sequences_at_multiple_samples": 157
+    },
+    {
+      "file": "pnas.2419607122.sd05.xlsx",
+      "sheet": "Organs",
+      "rows": 2138,
+      "counts": {
+        "unique_source_identity": 2138,
+        "quantity_equal": 2138,
+        "positive_finite_intensity": 2138,
+        "single_reported_assignment": 2138
+      },
+      "unique_sequences": 313,
+      "length_min": 4,
+      "length_max": 140,
+      "sequences_at_multiple_samples": 200
+    }
+  ],
+  "reused_F1_F2_sheets": 9,
+  "raw_cell_dump": "/private/tmp/presto-modular-model/data/intact_degradomics_source/2026-10-24_2338_codex_intact-degradomics-source/independent-original-cells-shared-formula.jsonl.gz",
+  "raw_cell_dump_sha256": "299c4c66d4e07aab2029c73fd8354c6daec17d8b73f06157a2f7c71588c30ec4",
+  "training": null,
+  "predictions": null,
+  "validation_or_test": null,
+  "reason_no_split": "Original-source qualification precedes shared cohort admission",
+  "limits": [
+    "one substrate and one animal; unresolved replicate independence",
+    "nominal zero already contains products",
+    "unknown peptide-specific MS response and run scaling",
+    "source mass-match identities are not all MS/MS verified",
+    "missing products have unknown cause; no zero or negative labels",
+    "not an APC concentration or complete peptide-pool measurement"
+  ],
+  "next": "shared Hitlist source admission and independent replay before kinetic fitting",
+  "seconds": 0.012912457983475178,
+  "peak_rss_bytes": 56000512
+}

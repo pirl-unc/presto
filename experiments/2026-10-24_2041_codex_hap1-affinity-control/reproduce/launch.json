@@ -1,0 +1,52 @@
+{
+  "argv": [
+    "experiments/2026-10-24_2041_codex_hap1-affinity-control/code/launch.py"
+  ],
+  "environment": {
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1"
+  },
+  "git_commit": "e85deef4f97d5a7dbc1e5b6dda42784e3fa3b3c1",
+  "git_dirty": " M experiments/agents/codex/todo.md\n M tasks/todo.md\n",
+  "outer_validation_test_scored": false,
+  "predictor_qualification": {
+    "errors": {
+      "HLA-A*02:01": {
+        "member_aggregation_log10_error": 1.7763568394002505e-15,
+        "rebatched_log10_error": 7.638557431022264e-08
+      },
+      "HLA-B*40:01": {
+        "member_aggregation_log10_error": 1.7763568394002505e-15,
+        "rebatched_log10_error": 1.2730928955484444e-07
+      },
+      "HLA-C*03:04": {
+        "member_aggregation_log10_error": 2.220446049250313e-15,
+        "rebatched_log10_error": 7.638557453226724e-08
+      }
+    },
+    "model_hashes_unchanged": true,
+    "n_peptides": 6317,
+    "n_scores": 18951,
+    "no_neural_training": true,
+    "outer_validation_test_scored": false,
+    "peak_gib": 1.1817626953125,
+    "scores_sha256": "9becb5432c2d8962d58e47654bbf2f61afe7cf37f0007888400c1f0491e5396c",
+    "scoring_seconds": 3.8005211660056375,
+    "status": "passed",
+    "total_seconds": 13.586503083002754
+  },
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "reference_dependencies": {
+    "code/core.py": {
+      "bytes": 6796,
+      "sha256": "b3e5e21b8f56f2cb649eb4fd64f5d73da81ce02daf805413b8d775aa7f78ba89"
+    },
+    "results/fits/context-features.npz": {
+      "bytes": 593118,
+      "sha256": "1da53c6ffcaec4d0f0b3c23c1246c912c481d194365d4af7e98871286bb25f91"
+    }
+  },
+  "source_sha256": "404aae65f036fe8e9d02519a6034c5b0454210af3fe1ab123934f718e6fffc1c"
+}

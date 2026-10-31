@@ -1,0 +1,11 @@
+{
+  "phase": "metadata",
+  "requests": [
+    {
+      "name": "PMC8449407-inventory.xml",
+      "url": "https://pmc-oa-opendata.s3.amazonaws.com/?list-type=2&prefix=PMC8449407.&max-keys=100",
+      "expected_kind": "xml",
+      "discovery_provenance": "Known official anonymous PMC OA S3 inventory route, previously qualified in ESP1628; source PMC identifier from primary research search metadata. No guessed asset-version path."
+    }
+  ]
+}

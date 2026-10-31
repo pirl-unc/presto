@@ -1,0 +1,104 @@
+{
+  "accession" : "PXD056426",
+  "title" : "Deleterious knock-outs in the HLA class I antigen processing and presentation machinery induce distinct changes in the immunopeptidome",
+  "additionalAttributes" : [ ],
+  "projectDescription" : "The human leukocyte antigen (HLA) processing and presentation machinery (APPM) is altered in various diseases and in response to drug treatments. Defects in the machinery may change presentation levels or alter the repertoire of presented peptides, globally or in an HLA allele restricted manner, with direct implications for adaptive immunity. In this study, we investigated the immunopeptidome landscape across a panel of isogenic HAP1 cell line clones each with a knock-out of a single gene encoding a key protein in the APPM, including B2M, TAP1, TAP2, TAPBP, IRF2, PDIA3, ERAP2, GANAB, SPPL3, CANX, and CALR. We applied immunopeptidomics and proteomics methods to assess the successful gene knock-outs on the protein level, to understand how these proteins participate in antigen presentation, and to contextualize protein expression and antigen presentation. The knocked-out proteins were clearly absent in the respective samples. We find that knocking-out an APPM component leads to the presentation of a subset of peptides that are normally presented on the control wild type cells. We assessed the immunopeptidomes qualitatively and quantitatively, considering factors like peptide diversity, peptide length distribution, and binding affinity to the endogenously expressed HLA alleles in HAP1 cells. We demonstrated a prominent HLA allele-specific alterations in several knock-out conditions. For CALR, CANX, and TAP1, HLA allele-related significant change in presentation level was found for A*02:01 and as well as B*40:01. Overall, this work represents a first systematic analysis of the effect of a panel of single APPM knock-out clones from a single cell line in a controlled environment. This approach could facilitate the creation of predictive tools capable of prioritizing HLA-bound peptides likely to be presented when presentation defects occur, such as in cancer and viral infections.",
+  "sampleProcessingProtocol" : "Immunoprecipitation of HLA-I complexes was conducted as described in [9]. Briefly, we harvested W6/32 antibodies from HB95 hybridoma cells and cross-linked them to Protein A/G coated Sepharose beads. After non-denaturing lysis of 108 cells per biological replicate, the cross-linked antibody-covered beads were used to isolate HLA-I complexes using the plate format and the positive pressure manifold. Following washing and elution of beads, eluates were desalted with C18 columns and immunopeptides were eluted with 28% ACN and 0.1% FA, vacuum dried, and stored at -80°C. Immunopeptidomics – mass spectrometry measurement Vacuum dried peptides were resuspended in 2% ACN and 0.1%FA, and spike with iRT peptides according to the instruction of the supplier. Per sample, we measured four injections, two in DDA and two in DIA. The platform for sample injection, chromatographic separation, and spectral acquisition were an Easy-nLC 1200 coupled to a Q Exactive HF-X (ThermoFisher scientific, Germany). The analytical column used was 450mm long, (8 μm tip, 75 μm ID), and packed with C18 beads. Peptides were separated at a flow-rate of 250nL/min with a gradient of 120 minutes as described in [9] for HLA-I peptides. For DDA measurements, cycles consisted of an MS1 scan (scan range = 300-1650Th, R = 60,000, AGC target = 3e6, maximum IT = 80ms), followed by MS2 scans (R = 30,000, AGC target = 2e5, maximum IT = 120ms, NCE = 27, isol. Window = 1.2Th) of isolated precursors according to “Top20” rules, with dynamic exclusion enabled and set to 20s. For DIA measurements, cycles consisted of an MS1 scan (scan range = 300-1650Th, R = 120,000, AGC target = 3e6, maximum IT = 60ms) and 22 MS scans (window widths = [37, 30, 24, 24, 22, 23, 21, 24, 21, 24, 24, 25, 27, 27,30, 35, 38 ,43 ,53, 72, 103, 594]Th, window overlap = 1Th, R = 30,000, AGC target = 3e6, maximum IT = auto, NCE = stepped(25.5, 27, 30)). Proteomics – sample preparation for shotgun proteomics Samples preparation followed the same procedure as described in [18]. Briefly, 500*103 cells per sample were lysed and denatured in 8M Urea, 50mM ABC, reduced with 5mM DTT, alkylated with 15mM IAA, and digested with T/LC mix. Peptides were then desalted in C18 spin columns, dissociated and stored at -80°C. Proteomics – mass spectrometry measurement Vacuum dried peptides were resuspended in 2% acetonitrile, 0.1% formic acid, and spiked with iRT peptides according to the instruction of the supplier. Per sample, we measured one DDA injection. The platform for sample injection, chromatographic separation, and spectral acquisition were an Easy-nLC 1200 coupled to a Q Exactive HF-X (ThermoFisher scientific, Germany). The analytical column used was 450mm long, (8 μm tip, 75 μm ID), and packed with C18 beads. Peptides were separated at a flow-rate of 250nL/min with gradients and acquisition parameters as described in [18].",
+  "dataProcessingProtocol" : "Immunopeptidomics – spectral matching and peptide quantification For library generation from DDA files as well as for searching DIA files with the library the FragPipe environment (v22.0) was used, with MSFragger and DIA-NN, respectively. The FASTA used was the canonical human proteome without isoforms as curated by SwissProt on February 24, 2024, concatenated with iRT peptide entries as well as the list of common contaminants provided by the FragPipe software. Search space settings included peptides between length 8-14, with methionine oxidation (UniMod accession #: 35), N-terminal acetylation (UniMod accession #: 1), as well as cysteine carbamidomethylation (UniMod accession #: 4) as variable modifications, and no fixed modifications. Protein sequence digestion was set to “unspecific”. The permissible peptide mass range was kept between 200-3,000. FDRs applied were all set to 0.01 except for the protein FDR that was set to 1. All other settings were set to default. For library-searching the DIA files with the generated library we used the DIA-NN module provided in the FragPipe GUI, with the FDR set to 0.01. Proteomics – spectral matching and peptide quantification DDA files were searched with MSfragger in the FragPipe environment (v22.0). The FASTA used was the canonical human proteome without isoforms as curated by SwissProt on February 24, 2024, concatenated with iRT peptide entries as well as the list of common contaminants provided by the FragPipe software. All settings were kept as provided with by “Default” workflow, including MS1-based quantification with help of the IonQuant module.",
+  "projectTags" : [ "Human immuno-peptidome project (hupo-hipp) (b/d-hpp)", "Biology/disease-driven human proteome project (b/d-hpp)", "Human proteome project" ],
+  "keywords" : [ "Immunopeptidomics", "Antigen presentation" ],
+  "doi" : "",
+  "submissionType" : "PARTIAL",
+  "license" : "Creative Commons Public Domain (CC0)",
+  "submissionDate" : "2024-10-01",
+  "publicationDate" : "2025-04-04",
+  "submitters" : [ {
+    "title" : "Dr",
+    "firstName" : "Michal",
+    "lastName" : "Bassani-Sternberg",
+    "identifier" : "45090176",
+    "affiliation" : "UNIL/CHUV",
+    "email" : "michal.bassani@chuv.ch",
+    "country" : "Switzerland",
+    "orcid" : "0000-0002-1934-954X",
+    "name" : "Michal Bassani-Sternberg",
+    "id" : "45090176"
+  } ],
+  "labPIs" : [ {
+    "title" : "Dr",
+    "firstName" : "Michal",
+    "lastName" : "Bassani-Sternberg",
+    "identifier" : "3011147",
+    "affiliation" : "Department of oncology UNIL CHUV Ludwig Institute for Cancer Research Lausanne Office B25A/04/94 Rue du Bugnon 25a, CH-1005 Lausanne",
+    "email" : "michal.bassani@chuv.ch",
+    "country" : "",
+    "orcid" : "",
+    "name" : "Michal Bassani-Sternberg",
+    "id" : "3011147"
+  } ],
+  "instruments" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "MS",
+    "accession" : "MS:1002523",
+    "name" : "Q Exactive HF"
+  } ],
+  "softwares" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "MS",
+    "accession" : "MS:1003429",
+    "name" : "FragPipe"
+  }, {
+    "@type" : "CvParam",
+    "cvLabel" : "MS",
+    "accession" : "MS:1003253",
+    "name" : "DIA-NN"
+  } ],
+  "experimentTypes" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "PRIDE",
+    "accession" : "PRIDE:0000428",
+    "name" : "Bottom-up proteomics"
+  }, {
+    "@type" : "CvParam",
+    "cvLabel" : "PRIDE",
+    "accession" : "PRIDE:0000649",
+    "name" : "Immunopeptidomics"
+  } ],
+  "quantificationMethods" : [ ],
+  "countries" : [ "Switzerland" ],
+  "sampleAttributes" : [ {
+    "@type" : "Tuple",
+    "key" : {
+      "cvLabel" : "EFO",
+      "accession" : "OBI:0100026",
+      "name" : "organism"
+    },
+    "value" : [ {
+      "cvLabel" : "NEWT",
+      "accession" : "NEWT:9606",
+      "name" : "Homo sapiens (Human)"
+    } ]
+  } ],
+  "organisms" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "NEWT",
+    "accession" : "NEWT:9606",
+    "name" : "Homo sapiens (human)"
+  } ],
+  "organismParts" : [ ],
+  "diseases" : [ ],
+  "references" : [ {
+    "pubmedID" : 0,
+    "doi" : "10.1016/J.MCPRO.2025.100951"
+  } ],
+  "identifiedPTMStrings" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "MOD",
+    "accession" : "MOD:00425",
+    "name" : "monohydroxylated residue"
+  } ],
+  "totalFileDownloads" : 5971,
+  "botCount" : 988,
+  "hubCount" : 4780,
+  "organicCount" : 203
+}

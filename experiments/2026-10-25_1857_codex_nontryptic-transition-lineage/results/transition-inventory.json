@@ -1,0 +1,869 @@
+{
+  "status": "literal_cells_verified_semantics_pending",
+  "n_workbooks": 2,
+  "n_sheets": 2,
+  "n_source_cells_verified": 42941,
+  "worksheets": [
+    {
+      "source_file": "Iso18_DirectSpike_TransitionResults.xlsx",
+      "sheet": "Sheet1",
+      "dimensions": "A1:N2593",
+      "source_cell_count": 29825,
+      "cell_types": {
+        "s": 11681,
+        "n": 18144
+      },
+      "literal_cells_sha256": "9b215fb4d7599019c1a6af58492646d59fc2763cce0152ef256687d084d993f1",
+      "source_sha256": "d359bf7b8afd0ade9df9539d941c0f7931b8c39657a444d3bf8025e54ff1d995",
+      "source_bytes": 151291,
+      "opaque_inventory_checksum": "181646b46636be4abaab2eb498df7226dd7f753f",
+      "matches_computed_sha1": true,
+      "checksum_algorithm_declared_by_inventory": null,
+      "merged_cells": "",
+      "formulas": [],
+      "first_nonempty_rows": [
+        [
+          {
+            "cell": "A1",
+            "value": "Peptide"
+          },
+          {
+            "cell": "B1",
+            "value": "Modified Sequence"
+          },
+          {
+            "cell": "C1",
+            "value": "Replicate"
+          },
+          {
+            "cell": "D1",
+            "value": "Precursor Mz"
+          },
+          {
+            "cell": "E1",
+            "value": "Precursor Charge"
+          },
+          {
+            "cell": "F1",
+            "value": "Product Mz"
+          },
+          {
+            "cell": "G1",
+            "value": "Product Charge"
+          },
+          {
+            "cell": "H1",
+            "value": "Fragment Ion"
+          },
+          {
+            "cell": "I1",
+            "value": "Retention Time"
+          },
+          {
+            "cell": "J1",
+            "value": "Area"
+          },
+          {
+            "cell": "K1",
+            "value": "Peak Rank"
+          },
+          {
+            "cell": "L1",
+            "value": "Concat"
+          },
+          {
+            "cell": "N1",
+            "value": "Replicate "
+          }
+        ],
+        [
+          {
+            "cell": "A2",
+            "value": "ALDGGNKHFL"
+          },
+          {
+            "cell": "B2",
+            "value": "ALDGGNKHFL[+7]"
+          },
+          {
+            "cell": "C2",
+            "value": "0.1_1"
+          },
+          {
+            "cell": "D2",
+            "value": 360.196628
+          },
+          {
+            "cell": "E2",
+            "value": 3
+          },
+          {
+            "cell": "F2",
+            "value": 779.427213
+          },
+          {
+            "cell": "G2",
+            "value": 1
+          },
+          {
+            "cell": "H2",
+            "value": "y7"
+          },
+          {
+            "cell": "I2",
+            "value": 35.67
+          },
+          {
+            "cell": "J2",
+            "value": 3330
+          },
+          {
+            "cell": "K2",
+            "value": 5
+          },
+          {
+            "cell": "L2",
+            "value": "y7_1"
+          },
+          {
+            "cell": "N2",
+            "value": "0.1 = 100 amol"
+          }
+        ],
+        [
+          {
+            "cell": "A3",
+            "value": "ALDGGNKHFL"
+          },
+          {
+            "cell": "B3",
+            "value": "ALDGGNKHFL[+7]"
+          },
+          {
+            "cell": "C3",
+            "value": "0.1_2"
+          },
+          {
+            "cell": "D3",
+            "value": 360.196628
+          },
+          {
+            "cell": "E3",
+            "value": 3
+          },
+          {
+            "cell": "F3",
+            "value": 779.427213
+          },
+          {
+            "cell": "G3",
+            "value": 1
+          },
+          {
+            "cell": "H3",
+            "value": "y7"
+          },
+          {
+            "cell": "I3",
+            "value": 35.46
+          },
+          {
+            "cell": "J3",
+            "value": 3770
+          },
+          {
+            "cell": "K3",
+            "value": 5
+          },
+          {
+            "cell": "L3",
+            "value": "y7_1"
+          },
+          {
+            "cell": "N3",
+            "value": "1 = 1 fmol"
+          }
+        ],
+        [
+          {
+            "cell": "A4",
+            "value": "ALDGGNKHFL"
+          },
+          {
+            "cell": "B4",
+            "value": "ALDGGNKHFL[+7]"
+          },
+          {
+            "cell": "C4",
+            "value": "0.1_3"
+          },
+          {
+            "cell": "D4",
+            "value": 360.196628
+          },
+          {
+            "cell": "E4",
+            "value": 3
+          },
+          {
+            "cell": "F4",
+            "value": 779.427213
+          },
+          {
+            "cell": "G4",
+            "value": 1
+          },
+          {
+            "cell": "H4",
+            "value": "y7"
+          },
+          {
+            "cell": "I4",
+            "value": 35.3
+          },
+          {
+            "cell": "J4",
+            "value": 2234
+          },
+          {
+            "cell": "K4",
+            "value": 4
+          },
+          {
+            "cell": "L4",
+            "value": "y7_1"
+          },
+          {
+            "cell": "N4",
+            "value": "10 = 10 fmol"
+          }
+        ],
+        [
+          {
+            "cell": "A5",
+            "value": "ALDGGNKHFL"
+          },
+          {
+            "cell": "B5",
+            "value": "ALDGGNKHFL[+7]"
+          },
+          {
+            "cell": "C5",
+            "value": "1_1"
+          },
+          {
+            "cell": "D5",
+            "value": 360.196628
+          },
+          {
+            "cell": "E5",
+            "value": 3
+          },
+          {
+            "cell": "F5",
+            "value": 779.427213
+          },
+          {
+            "cell": "G5",
+            "value": 1
+          },
+          {
+            "cell": "H5",
+            "value": "y7"
+          },
+          {
+            "cell": "I5",
+            "value": 35.21
+          },
+          {
+            "cell": "J5",
+            "value": 57224
+          },
+          {
+            "cell": "K5",
+            "value": 5
+          },
+          {
+            "cell": "L5",
+            "value": "y7_1"
+          },
+          {
+            "cell": "N5",
+            "value": "100 = 100 fmol"
+          }
+        ],
+        [
+          {
+            "cell": "A6",
+            "value": "ALDGGNKHFL"
+          },
+          {
+            "cell": "B6",
+            "value": "ALDGGNKHFL[+7]"
+          },
+          {
+            "cell": "C6",
+            "value": "1_2"
+          },
+          {
+            "cell": "D6",
+            "value": 360.196628
+          },
+          {
+            "cell": "E6",
+            "value": 3
+          },
+          {
+            "cell": "F6",
+            "value": 779.427213
+          },
+          {
+            "cell": "G6",
+            "value": 1
+          },
+          {
+            "cell": "H6",
+            "value": "y7"
+          },
+          {
+            "cell": "I6",
+            "value": 35.22
+          },
+          {
+            "cell": "J6",
+            "value": 60944
+          },
+          {
+            "cell": "K6",
+            "value": 5
+          },
+          {
+            "cell": "L6",
+            "value": "y7_1"
+          }
+        ],
+        [
+          {
+            "cell": "A7",
+            "value": "ALDGGNKHFL"
+          },
+          {
+            "cell": "B7",
+            "value": "ALDGGNKHFL[+7]"
+          },
+          {
+            "cell": "C7",
+            "value": "1_3"
+          },
+          {
+            "cell": "D7",
+            "value": 360.196628
+          },
+          {
+            "cell": "E7",
+            "value": 3
+          },
+          {
+            "cell": "F7",
+            "value": 779.427213
+          },
+          {
+            "cell": "G7",
+            "value": 1
+          },
+          {
+            "cell": "H7",
+            "value": "y7"
+          },
+          {
+            "cell": "I7",
+            "value": 35.14
+          },
+          {
+            "cell": "J7",
+            "value": 55976
+          },
+          {
+            "cell": "K7",
+            "value": 5
+          },
+          {
+            "cell": "L7",
+            "value": "y7_1"
+          }
+        ],
+        [
+          {
+            "cell": "A8",
+            "value": "ALDGGNKHFL"
+          },
+          {
+            "cell": "B8",
+            "value": "ALDGGNKHFL[+7]"
+          },
+          {
+            "cell": "C8",
+            "value": "10_1"
+          },
+          {
+            "cell": "D8",
+            "value": 360.196628
+          },
+          {
+            "cell": "E8",
+            "value": 3
+          },
+          {
+            "cell": "F8",
+            "value": 779.427213
+          },
+          {
+            "cell": "G8",
+            "value": 1
+          },
+          {
+            "cell": "H8",
+            "value": "y7"
+          },
+          {
+            "cell": "I8",
+            "value": 35.25
+          },
+          {
+            "cell": "J8",
+            "value": 6526631
+          },
+          {
+            "cell": "K8",
+            "value": 5
+          },
+          {
+            "cell": "L8",
+            "value": "y7_1"
+          }
+        ]
+      ]
+    },
+    {
+      "source_file": "Iso18_hipMHCspikein_TransitionResults.xlsx",
+      "sheet": "Sheet1",
+      "dimensions": "A1:L1093",
+      "source_cell_count": 13116,
+      "cell_types": {
+        "s": 5472,
+        "n": 7644
+      },
+      "literal_cells_sha256": "382d80cabc1ddd7e1e67e37f3fc174418be9f99e9428ccb377594b348e604fe9",
+      "source_sha256": "8426f43364ea1d84244403811956f501664abf8001e7043ec8fc1ae546175308",
+      "source_bytes": 69651,
+      "opaque_inventory_checksum": "25ca44773268c0d4229de2f25da4b64d6d5269cb",
+      "matches_computed_sha1": true,
+      "checksum_algorithm_declared_by_inventory": null,
+      "merged_cells": "",
+      "formulas": [],
+      "first_nonempty_rows": [
+        [
+          {
+            "cell": "A1",
+            "value": "Peptide"
+          },
+          {
+            "cell": "B1",
+            "value": "Modified Sequence"
+          },
+          {
+            "cell": "C1",
+            "value": "Replicate"
+          },
+          {
+            "cell": "D1",
+            "value": "Precursor Mz"
+          },
+          {
+            "cell": "E1",
+            "value": "Precursor Charge"
+          },
+          {
+            "cell": "F1",
+            "value": "Product Mz"
+          },
+          {
+            "cell": "G1",
+            "value": "Product Charge"
+          },
+          {
+            "cell": "H1",
+            "value": "Fragment Ion"
+          },
+          {
+            "cell": "I1",
+            "value": "Retention Time"
+          },
+          {
+            "cell": "J1",
+            "value": "Area"
+          },
+          {
+            "cell": "K1",
+            "value": "Peak Rank"
+          },
+          {
+            "cell": "L1",
+            "value": "Concat"
+          }
+        ],
+        [
+          {
+            "cell": "A2",
+            "value": "SLDDYNHLV"
+          },
+          {
+            "cell": "B2",
+            "value": "SLDDYNHL[+7]V[+6]"
+          },
+          {
+            "cell": "C2",
+            "value": "100amol_1"
+          },
+          {
+            "cell": "D2",
+            "value": 544.771857
+          },
+          {
+            "cell": "E2",
+            "value": 2
+          },
+          {
+            "cell": "F2",
+            "value": 544.771857
+          },
+          {
+            "cell": "G2",
+            "value": 2
+          },
+          {
+            "cell": "H2",
+            "value": "precursor"
+          },
+          {
+            "cell": "I2",
+            "value": 62.87
+          },
+          {
+            "cell": "J2",
+            "value": 9531781
+          },
+          {
+            "cell": "K2",
+            "value": 1
+          },
+          {
+            "cell": "L2",
+            "value": "precursor_2"
+          }
+        ],
+        [
+          {
+            "cell": "A3",
+            "value": "SLDDYNHLV"
+          },
+          {
+            "cell": "B3",
+            "value": "SLDDYNHL[+7]V[+6]"
+          },
+          {
+            "cell": "C3",
+            "value": "100amol_2"
+          },
+          {
+            "cell": "D3",
+            "value": 544.771857
+          },
+          {
+            "cell": "E3",
+            "value": 2
+          },
+          {
+            "cell": "F3",
+            "value": 544.771857
+          },
+          {
+            "cell": "G3",
+            "value": 2
+          },
+          {
+            "cell": "H3",
+            "value": "precursor"
+          },
+          {
+            "cell": "I3",
+            "value": 63.02
+          },
+          {
+            "cell": "J3",
+            "value": 10379064
+          },
+          {
+            "cell": "K3",
+            "value": 1
+          },
+          {
+            "cell": "L3",
+            "value": "precursor_2"
+          }
+        ],
+        [
+          {
+            "cell": "A4",
+            "value": "SLDDYNHLV"
+          },
+          {
+            "cell": "B4",
+            "value": "SLDDYNHL[+7]V[+6]"
+          },
+          {
+            "cell": "C4",
+            "value": "100amol_3"
+          },
+          {
+            "cell": "D4",
+            "value": 544.771857
+          },
+          {
+            "cell": "E4",
+            "value": 2
+          },
+          {
+            "cell": "F4",
+            "value": 544.771857
+          },
+          {
+            "cell": "G4",
+            "value": 2
+          },
+          {
+            "cell": "H4",
+            "value": "precursor"
+          },
+          {
+            "cell": "I4",
+            "value": 63.08
+          },
+          {
+            "cell": "J4",
+            "value": 9923181
+          },
+          {
+            "cell": "K4",
+            "value": 1
+          },
+          {
+            "cell": "L4",
+            "value": "precursor_2"
+          }
+        ],
+        [
+          {
+            "cell": "A5",
+            "value": "SLDDYNHLV"
+          },
+          {
+            "cell": "B5",
+            "value": "SLDDYNHL[+7]V[+6]"
+          },
+          {
+            "cell": "C5",
+            "value": "1fmol_2"
+          },
+          {
+            "cell": "D5",
+            "value": 544.771857
+          },
+          {
+            "cell": "E5",
+            "value": 2
+          },
+          {
+            "cell": "F5",
+            "value": 544.771857
+          },
+          {
+            "cell": "G5",
+            "value": 2
+          },
+          {
+            "cell": "H5",
+            "value": "precursor"
+          },
+          {
+            "cell": "I5",
+            "value": 63.16
+          },
+          {
+            "cell": "J5",
+            "value": 10091644
+          },
+          {
+            "cell": "K5",
+            "value": 1
+          },
+          {
+            "cell": "L5",
+            "value": "precursor_2"
+          }
+        ],
+        [
+          {
+            "cell": "A6",
+            "value": "SLDDYNHLV"
+          },
+          {
+            "cell": "B6",
+            "value": "SLDDYNHL[+7]V[+6]"
+          },
+          {
+            "cell": "C6",
+            "value": "1fmol_3"
+          },
+          {
+            "cell": "D6",
+            "value": 544.771857
+          },
+          {
+            "cell": "E6",
+            "value": 2
+          },
+          {
+            "cell": "F6",
+            "value": 544.771857
+          },
+          {
+            "cell": "G6",
+            "value": 2
+          },
+          {
+            "cell": "H6",
+            "value": "precursor"
+          },
+          {
+            "cell": "I6",
+            "value": 63.31
+          },
+          {
+            "cell": "J6",
+            "value": 11224932
+          },
+          {
+            "cell": "K6",
+            "value": 1
+          },
+          {
+            "cell": "L6",
+            "value": "precursor_2"
+          }
+        ],
+        [
+          {
+            "cell": "A7",
+            "value": "SLDDYNHLV"
+          },
+          {
+            "cell": "B7",
+            "value": "SLDDYNHL[+7]V[+6]"
+          },
+          {
+            "cell": "C7",
+            "value": "1fmol_1"
+          },
+          {
+            "cell": "D7",
+            "value": 544.771857
+          },
+          {
+            "cell": "E7",
+            "value": 2
+          },
+          {
+            "cell": "F7",
+            "value": 544.771857
+          },
+          {
+            "cell": "G7",
+            "value": 2
+          },
+          {
+            "cell": "H7",
+            "value": "precursor"
+          },
+          {
+            "cell": "I7",
+            "value": 63.3
+          },
+          {
+            "cell": "J7",
+            "value": 13214728
+          },
+          {
+            "cell": "K7",
+            "value": 1
+          },
+          {
+            "cell": "L7",
+            "value": "precursor_2"
+          }
+        ],
+        [
+          {
+            "cell": "A8",
+            "value": "SLDDYNHLV"
+          },
+          {
+            "cell": "B8",
+            "value": "SLDDYNHL[+7]V[+6]"
+          },
+          {
+            "cell": "C8",
+            "value": "10fmol_1"
+          },
+          {
+            "cell": "D8",
+            "value": 544.771857
+          },
+          {
+            "cell": "E8",
+            "value": 2
+          },
+          {
+            "cell": "F8",
+            "value": 544.771857
+          },
+          {
+            "cell": "G8",
+            "value": 2
+          },
+          {
+            "cell": "H8",
+            "value": "precursor"
+          },
+          {
+            "cell": "I8",
+            "value": 62.75
+          },
+          {
+            "cell": "J8",
+            "value": 29982886
+          },
+          {
+            "cell": "K8",
+            "value": 1
+          },
+          {
+            "cell": "L8",
+            "value": "precursor_2"
+          }
+        ]
+      ]
+    }
+  ],
+  "model_fits": 0
+}

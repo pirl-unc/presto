@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "synthetic_software_rows": 24,
+  "biological_rows_read": 0,
+  "tests": [
+    "original feature definition",
+    "un-centered training RMS",
+    "reference reversal",
+    "weighted duplicate invariance",
+    "zero-coordinate removal and no intercept",
+    "held-out row rejection",
+    "component-only inner selection",
+    "constant metrics",
+    "nonconstant predictions on an identifiable synthetic signal",
+    "stationarity",
+    "component bootstrap duplicate invariance and independent RNG replay"
+  ],
+  "max_stationarity_residual": 1.942890293094024e-16,
+  "n_inner_predictions": 120
+}

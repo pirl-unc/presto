@@ -1,0 +1,22 @@
+{
+  "stage": "fit",
+  "started_epoch": 1792899180.484652,
+  "argv": [
+    "/private/tmp/presto-modular-model/experiments/2026-10-25_0143_codex_intact-temporal-representation/code/launch.py",
+    "fit"
+  ],
+  "git_commit": "3bb3d62e96bd2e989f33a3d4cfc382068101c1e6",
+  "tracked_dirty_status": " M tasks/lessons.md\n M tasks/todo.md\n",
+  "packages": {
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "torch": "2.14.1",
+    "pyarrow": "26.0.0",
+    "psutil": "7.2.2"
+  },
+  "environment_overrides": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  }
+}

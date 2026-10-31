@@ -1,0 +1,15 @@
+{
+  "purpose": "saved-prediction verification and training-only checkpoint replay; zero optimizer steps and no holdout inference",
+  "source_hashes": {
+    "analysis/replay_modal.py": "d1a923ad4ec3ea92462e085855cad43056ae22f1599aae0181974830f14d97e2",
+    "analysis/replay_remote.py": "b76a044d1a6f6ee3d3edec44f1cac2e68184b8d093b2e605df8020754d2c3948",
+    "analysis/replay.py": "3425b3fac283fbfa2f790db6c425d3d12081cc389c5d92624d095cca13a18089",
+    "analysis/verify.py": "dbb6e1333c18ed0809532c95cfd7e78310fa585fb19b8cba01501f9ff09902a4",
+    "analysis/compare.py": "8af3d2b2348b1c69259f72fdee8e7f196f7da0a7634cb8ed911c2b7b85b86d9e",
+    "analysis/test_analysis.py": "6885bb911cd4290f78b0b12ac7fc96a6d15556436cbc37616f0baf5319cf80ca"
+  },
+  "requested_gpu": "H100!",
+  "maximum_concurrent_verification_gpus": 1,
+  "launch_after_all_ten_fits": true,
+  "frozen_unix": 1793131196.3560178
+}

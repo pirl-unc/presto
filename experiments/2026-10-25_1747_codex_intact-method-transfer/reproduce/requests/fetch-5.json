@@ -1,0 +1,14 @@
+{
+  "action": "visualize_verified_primary_transfer",
+  "task_source": "analysis/plot.py",
+  "source_sha256": {
+    "analysis/plot.py": "8894639314c571f3c9f1b99c15969e70398faca18d6e0321e14d6dfcf6b67640",
+    "reproduce/source/plot.py": "8894639314c571f3c9f1b99c15969e70398faca18d6e0321e14d6dfcf6b67640"
+  },
+  "input_sha256": {
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1747_codex_intact-method-transfer/results/predictions.parquet": "a32d56cd676544a2e33d706aefa8c86adfe82d8263fd59e07fc4e00cfa60bde9",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1747_codex_intact-method-transfer/results/metrics.json": "e4cbc090aa230a41f90f7d8ad7bd8f44f8a600c0f15f403ac67fc895b042c22e",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1747_codex_intact-method-transfer/results/score-summary.json": "11027ca4909af623b1cdc3fda3b15b90f80228f2f1f9bdebd94aedbfed6178b0",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1747_codex_intact-method-transfer/results/score-independent-replay.json": "79e4fcac843a72037eb0dca7934b26a02b444514a3f47e17e255bf1f9cf45803"
+  }
+}

@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-27_2235_codex_shared-support-audit/analysis/verify_admission.py", line 72, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-27_2235_codex_shared-support-audit/analysis/verify_admission.py", line 30, in main
+    if key in expected:assert expected[key]==fingerprint
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

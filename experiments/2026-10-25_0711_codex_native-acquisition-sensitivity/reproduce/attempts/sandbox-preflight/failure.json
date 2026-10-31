@@ -1,0 +1,8 @@
+{
+  "recorded_utc": "2026-10-25T07:15:49.185214+00:00",
+  "stage": "qualify",
+  "numerical_child_launched": false,
+  "error": "PermissionError: [Errno 1] Operation not permitted (originated from sysctl() malloc 1/3)",
+  "location": "process_probe.children(recursive=True), before subprocess.Popen",
+  "resolution": "Same frozen command and guards, executed with permission for process-tree monitoring; no code change or biological diagnostics"
+}

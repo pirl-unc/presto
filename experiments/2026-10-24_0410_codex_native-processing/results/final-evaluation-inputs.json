@@ -1,0 +1,83 @@
+{
+  "checkpoints": {
+    "results/arms/sequence_exact/fit.npz": "5ca4e2b0d7b04bb9ccff872a7e2f7b7a7f2565aa7ee20ec57354f644ba5baa96",
+    "results/arms/sequence_hybrid/fit.npz": "4980704ddf69870f2a3d25516c0ccee6cb895c02e17e0d399b36da9a11f7d1a0",
+    "results/arms/uniform_exact/fit.npz": "6febddfbd3c46abc1ef2cdcd766eb98c544891ba4fb0668d27faf29884128249",
+    "results/arms/uniform_hybrid/fit.npz": "35eca037f0e18134837a9368ec5ca557023ca1cad8f4d26db4dc4c5a1b37025e",
+    "results/baselines/condition.npz": "1605b18b47ee8a2de474e5aa3a0f58d9fdeecf22a0199c4aaa9b586d534eff05",
+    "results/baselines/sequence_compound.npz": "f15083de96784edfd8a5dd10547bca40dd354283556eefde6a94b15c78330a57",
+    "results/baselines/sequence_shared.npz": "f69f0f5fa482619b1e8ace5a63a7cefae5365004fd9a38bdb7885df8c8f55fc8"
+  },
+  "attempts": [
+    {
+      "arm": "uniform_exact",
+      "status": "completed",
+      "steps": 200,
+      "n_parameters": 57,
+      "n_parameters_changed": 57,
+      "training_data_loss": 0.1292606806123116,
+      "training_objective": 0.13093115862118904,
+      "final_exact_gradient_inf": 8.358485043067645e-06,
+      "seconds": 5.402692665986251,
+      "runtime_projection_after_20_steps": null,
+      "peak_rss_bytes": 445169664,
+      "n_conditional_age_samples": 0,
+      "n_score_evaluations": 0,
+      "fit_sha256": "6febddfbd3c46abc1ef2cdcd766eb98c544891ba4fb0668d27faf29884128249",
+      "test_evaluated": false
+    },
+    {
+      "arm": "uniform_hybrid",
+      "status": "completed",
+      "steps": 200,
+      "n_parameters": 57,
+      "n_parameters_changed": 57,
+      "training_data_loss": 0.12928713712081014,
+      "training_objective": 0.13096990553749444,
+      "final_exact_gradient_inf": 0.008090122018533855,
+      "seconds": 146.608606166963,
+      "runtime_projection_after_20_steps": 136.75000082992483,
+      "peak_rss_bytes": 707739648,
+      "n_conditional_age_samples": 379904000,
+      "n_score_evaluations": 379904000,
+      "fit_sha256": "35eca037f0e18134837a9368ec5ca557023ca1cad8f4d26db4dc4c5a1b37025e",
+      "test_evaluated": false
+    },
+    {
+      "arm": "sequence_exact",
+      "status": "completed",
+      "steps": 200,
+      "n_parameters": 95,
+      "n_parameters_changed": 95,
+      "training_data_loss": 0.12451047996968365,
+      "training_objective": 0.1297362252781379,
+      "final_exact_gradient_inf": 3.459289707189773e-05,
+      "seconds": 5.552038500027265,
+      "runtime_projection_after_20_steps": null,
+      "peak_rss_bytes": 442761216,
+      "n_conditional_age_samples": 0,
+      "n_score_evaluations": 0,
+      "fit_sha256": "5ca4e2b0d7b04bb9ccff872a7e2f7b7a7f2565aa7ee20ec57354f644ba5baa96",
+      "test_evaluated": false
+    },
+    {
+      "arm": "sequence_hybrid",
+      "status": "completed",
+      "steps": 200,
+      "n_parameters": 95,
+      "n_parameters_changed": 95,
+      "training_data_loss": 0.12456647179860754,
+      "training_objective": 0.12977615721546293,
+      "final_exact_gradient_inf": 0.007337230530685796,
+      "seconds": 138.7426979590091,
+      "runtime_projection_after_20_steps": 135.4782991699176,
+      "peak_rss_bytes": 706625536,
+      "n_conditional_age_samples": 379904000,
+      "n_score_evaluations": 379904000,
+      "fit_sha256": "4980704ddf69870f2a3d25516c0ccee6cb895c02e17e0d399b36da9a11f7d1a0",
+      "test_evaluated": false
+    }
+  ],
+  "source_receipt_sha256": "58a316621da6e6532acb24ee355a135773078ecb5da0c1e1db7d262c5b16cf5d",
+  "test_policy": "separate final command after all training attempts terminate; evaluate all completed fixed models"
+}

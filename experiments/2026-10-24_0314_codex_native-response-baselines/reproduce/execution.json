@@ -1,0 +1,15 @@
+{
+  "registered_at": "2026-10-24T03:16:09.421650-04:00",
+  "launcher_sha256": "12445fe48c4fc716286889d286a16e0732e99a88241fe1cd7442ff5cf98d2c65",
+  "admission_receipt_sha256": "780fa1544833e61e1508ce8ee9234d58f416aee81f10040c897e86bcfb4aafdd",
+  "python": "3.12.6",
+  "numpy": "2.5.4",
+  "scipy": "1.18.1",
+  "system": "macOS-26.5-arm64-arm-64bit",
+  "local_lint": "ruff 0.17.2 --isolated explicit experiment file; no environment modification",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  }
+}

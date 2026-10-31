@@ -1,0 +1,25 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "utc": "2026-10-26T19:19:05.106798+00:00",
+  "base_commit": "7560af31510f2af5fe45eb7e1a28560dc5caba9f",
+  "tests": {
+    "passed": 85,
+    "elapsed_seconds": 3.49,
+    "command": "python -m pytest -q -o addopts='' tests/test_modular_hitlist_ms.py tests/test_modular_hitlist.py tests/test_modular_context_assertions.py tests/test_modular_cell_context.py tests/test_modular_training.py"
+  },
+  "repository_lint": "passed",
+  "strict_docs": "passed",
+  "source_data_verification": "passed; results/admission-attempt01/independent-verification.json",
+  "predictive_improvement_demonstrated": false,
+  "files": {
+    "data/modular_hitlist_ms.py": "7369f1afd59b2c1d6e3f4815f2897eb2b5ba1e80b6b22d3ac99e84ff0033b0f4",
+    "tests/test_modular_hitlist_ms.py": "0df203c77462dfff464f842e4b2771721ee5a34a74b3bdccd75f1541f46ae6fa",
+    "docs/modular_model.md": "fefbe1dd7f416f3d41cba9a7cfdb5d2bef474e473234517ccaf6c745fb253181"
+  },
+  "logs": {
+    "ms-admission-tests-missing-path.log": "f6dd0b3fbcfde861b42aba5c98b98c660ba3e9afc57461237911528d47181842",
+    "ms-admission-docs.log": "c419ead221c3c04b0433b28743f8328533a17af2bd49b5f2edb7360c3040f56a",
+    "ms-admission-lint.log": "a8f099fdb5a88fe3adc15f9b33690ac74ad20a168c057337836067545cbc3011",
+    "ms-admission-tests.log": "549aa03f0f8714149c6464435343c4d39a58bbed378cfcb6364d0700ef0d36a7"
+  }
+}

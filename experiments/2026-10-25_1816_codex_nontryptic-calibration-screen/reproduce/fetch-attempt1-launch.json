@@ -1,0 +1,84 @@
+{
+  "argv": [
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/code/launch.py",
+    "fetch",
+    "--attempt",
+    "1",
+    "--requests",
+    "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/requests/metadata-1.json"
+  ],
+  "configuration": {
+    "experiment_id": "2026-10-25_1816_codex_nontryptic-calibration-screen",
+    "agent_model": "Codex/GPT-6",
+    "created_utc": "2026-10-25T18:16:37.585640+00:00",
+    "presto_commit": "a9ae724b026ae3f278ef11e11b31e3f26ef9e11d",
+    "dirty_tracked": true,
+    "dirty_scope": "preserved unrelated task notes; no model changes",
+    "source_scope": "metadata-only prospective known-dose nontryptic response candidate search",
+    "discovery_operation_limit": 12,
+    "n_initial_queries_max": 2,
+    "n_primary_candidates_max": 2,
+    "n_model_fits": 0,
+    "new_numeric_data_admitted": false,
+    "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+    "plan_sha256": "7ad517e8c7cd74c2453e7bc916cfbdc0263fc2f325c5eae4ff6ecec4584cae2c",
+    "validation_test_split": null,
+    "reason_no_predictions": "source qualification only; no model dataset admitted",
+    "local_inspection_limits": {
+      "stage_seconds": 1200,
+      "rss_bytes": 3221225472,
+      "startup_memory_bytes": 3221225472,
+      "disk_floor_bytes": 1073741824,
+      "start_margin_bytes": 33554432
+    },
+    "limits": {
+      "stage_seconds": 1200,
+      "rss_bytes": 3221225472,
+      "startup_memory_bytes": 3221225472,
+      "disk_floor_bytes": 1073741824,
+      "start_margin_bytes": 33554432
+    },
+    "environment_overrides": {
+      "PYTHONSAFEPATH": "1",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUNBUFFERED": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    },
+    "network_limits": {
+      "metadata_requests": 8,
+      "metadata_bytes_each": 16777216,
+      "processed_bytes_each": 16777216,
+      "total_bytes": 33554432,
+      "connect_seconds": 10,
+      "read_seconds": 30,
+      "request_wall_seconds": 120
+    },
+    "public_hosts": [
+      "pmc-oa-opendata.s3.amazonaws.com"
+    ],
+    "data_directory": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/nontryptic_calibration_sources/2026-10-25_1816_codex_nontryptic-calibration-screen",
+    "frozen_code_sha256": {
+      "code/launch.py": "337b0957f12bced683299134c33465d6b26145fbaa4d9bc1e233832b437a9e27",
+      "code/fetch.py": "1bda902de950a889bab3a23487ca45cb430713afb42f7dc5b4a577dd37578dbb",
+      "reproduce/source/launch.py": "337b0957f12bced683299134c33465d6b26145fbaa4d9bc1e233832b437a9e27",
+      "reproduce/source/fetch.py": "1bda902de950a889bab3a23487ca45cb430713afb42f7dc5b4a577dd37578dbb",
+      "reproduce/launch.sh": "b44ae41c582274953b5c1c92f22f989feabeb541cc1578dab2d3c85637f6c471"
+    }
+  },
+  "request_set": {
+    "phase": "metadata",
+    "requests": [
+      {
+        "name": "PMC8449407-inventory.xml",
+        "url": "https://pmc-oa-opendata.s3.amazonaws.com/?list-type=2&prefix=PMC8449407.&max-keys=100",
+        "expected_kind": "xml",
+        "discovery_provenance": "Known official anonymous PMC OA S3 inventory route, previously qualified in ESP1628; source PMC identifier from primary research search metadata. No guessed asset-version path."
+      }
+    ]
+  },
+  "request_set_sha256": "bf8db4db418a888492ed7421c5773707dfca665e48f5b9819bf25c7cbc957094"
+}

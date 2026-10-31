@@ -1,0 +1,27 @@
+{
+  "recorded_at": "2026-10-24T00:48:49.371034+00:00",
+  "exec_session_id": 44779,
+  "completed": 84,
+  "passed": 84,
+  "total_cases": 84,
+  "status": "numerically_closed_pending_publication",
+  "previous_goal_turn": "progress",
+  "current_goal_turn": "progress",
+  "ci_previous_head": {
+    "commit": "6347987636c2de32a4f20001c356fb1d24febbc7",
+    "run": 40044771065,
+    "conclusion": "success"
+  },
+  "next_actions": [
+    "Re-poll existing exec session44779; do not restart on timeout.",
+    "After all84 workers terminate, run reproduce/verify.sh, then reproduce/report.sh; inspect plot.",
+    "If verification needs correction, preserve failed receipt and rerun only corrected closure, not experiment outputs.",
+    "Run code/package.py and reproduce/unpack.py to byte-verify all84 raw arrays; copy closure sources and create closure hashes.",
+    "Update canonical experiment_log.md and owned tasks/todo tail; stage only owned tail after Fragment-state length effect qualification marker.",
+    "Commit and push authorized draft PR131; preserve unrelated dirt; body-only update after fresh expected-body/head/state check and exact readback.",
+    "Only if all cases admitted, qualify companion fragment-minibatch-objective.md before freezing biological fit settings."
+  ],
+  "pending_no_biological_fit": true,
+  "closed_at": "2026-10-24T01:01:39.709029+00:00",
+  "exec_session_terminal": true
+}

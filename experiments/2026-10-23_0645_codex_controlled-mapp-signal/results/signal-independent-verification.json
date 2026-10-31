@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "method": "Scalar leave-run-out calculations and independent resampled per-comparison errors; no producer imports",
+  "checks": {
+    "raw_signal": {
+      "predictions": 531,
+      "bootstrap_draws": 1000,
+      "metrics_recomputed": true
+    },
+    "fixed_support_composition": {
+      "predictions": 531,
+      "bootstrap_draws": 1000,
+      "metrics_recomputed": true
+    }
+  },
+  "normalization_note": "The average MSE improvement is invariant to within-run global offsets when specific predictions are centered against their common mean; composition is not independent confirmation.",
+  "source_dump_sha256": "50607db10401bba1add1395a66bb0738525cdafcd8792e2192fd0a1c90d60802"
+}

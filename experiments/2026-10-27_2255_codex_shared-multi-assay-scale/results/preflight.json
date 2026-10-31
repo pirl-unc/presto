@@ -1,0 +1,410 @@
+{
+  "status": "passed",
+  "conditions": {
+    "ic50-exact": {
+      "parameters": 515457,
+      "admission": {
+        "census": {
+          "train:ic50:=": 21636,
+          "validation:ic50:=": 2726,
+          "validation:ic50:>": 177,
+          "validation:ic50:>=": 22,
+          "test:ic50:=": 2600,
+          "test:ic50:>": 188,
+          "test:ic50:>=": 15
+        },
+        "training_labels": {
+          "ic50": 21636
+        },
+        "component_states": {},
+        "manifest_sha256": "aaec81f3c10aa63890ff7e2b0a7708793ecb48b8cff21584d2656247b7e846b8",
+        "module_pruning": [],
+        "source_label_values": {},
+        "cell_types": [],
+        "ordinal_levels": {},
+        "cytokine_states": {},
+        "cytokine_numeric": {},
+        "context_assertion_states": {
+          "pathway": {},
+          "intervention": {}
+        },
+        "observed_numeric_features": {
+          "acquisition": [],
+          "observation": [],
+          "preparation": []
+        },
+        "frozen_targets": [],
+        "frozen_parameters": [],
+        "inherited_scalers": []
+      },
+      "scales": {
+        "ic50": {
+          "mean": 2.768232837778882,
+          "scale": 1.3434766242663534,
+          "exact_count": 21636,
+          "floor": 0.001
+        }
+      },
+      "training": {
+        "balance_by": [],
+        "seed": 42,
+        "batch_size": 64,
+        "max_epochs": 10000,
+        "max_steps": 6000,
+        "learning_rate": 0.0003,
+        "weight_decay": 0.0001,
+        "identity_weight": 0,
+        "patience": 10000,
+        "min_epochs": 10000,
+        "identity_batch_size": 64,
+        "test_policy": "evaluate_selected_once",
+        "no_test_reason": null,
+        "coverage_policy": "required",
+        "coverage_exception_reason": null,
+        "checkpoint_every_steps": 100,
+        "validation_every_steps": 500
+      },
+      "partitions": {
+        "train:assay": 21636,
+        "validation:assay": 2925,
+        "test:assay": 2803
+      }
+    },
+    "ic50-bounds": {
+      "parameters": 515457,
+      "admission": {
+        "census": {
+          "train:ic50:=": 21636,
+          "validation:ic50:=": 2726,
+          "validation:ic50:>": 195,
+          "validation:ic50:>=": 25,
+          "test:ic50:=": 2600,
+          "test:ic50:>": 208,
+          "test:ic50:>=": 17,
+          "train:ic50:>": 1741,
+          "train:ic50:>=": 135
+        },
+        "training_labels": {
+          "ic50": 23512
+        },
+        "component_states": {},
+        "manifest_sha256": "e302f3bd259f372b2692f2e3103f1b4b06417c1d9fd99bbb2a155af49d810943",
+        "module_pruning": [],
+        "source_label_values": {},
+        "cell_types": [],
+        "ordinal_levels": {},
+        "cytokine_states": {},
+        "cytokine_numeric": {},
+        "context_assertion_states": {
+          "pathway": {},
+          "intervention": {}
+        },
+        "observed_numeric_features": {
+          "acquisition": [],
+          "observation": [],
+          "preparation": []
+        },
+        "frozen_targets": [],
+        "frozen_parameters": [],
+        "inherited_scalers": []
+      },
+      "scales": {
+        "ic50": {
+          "mean": 2.768232837778882,
+          "scale": 1.3434766242663534,
+          "exact_count": 21636,
+          "floor": 0.001
+        }
+      },
+      "training": {
+        "balance_by": [],
+        "seed": 42,
+        "batch_size": 64,
+        "max_epochs": 10000,
+        "max_steps": 6000,
+        "learning_rate": 0.0003,
+        "weight_decay": 0.0001,
+        "identity_weight": 0,
+        "patience": 10000,
+        "min_epochs": 10000,
+        "identity_batch_size": 64,
+        "test_policy": "evaluate_selected_once",
+        "no_test_reason": null,
+        "coverage_policy": "required",
+        "coverage_exception_reason": null,
+        "checkpoint_every_steps": 100,
+        "validation_every_steps": 500
+      },
+      "partitions": {
+        "train:assay": 23512,
+        "validation:assay": 2946,
+        "test:assay": 2825
+      }
+    },
+    "multi-assay": {
+      "parameters": 516102,
+      "admission": {
+        "census": {
+          "train:ic50:=": 21636,
+          "validation:ic50:=": 2726,
+          "validation:ic50:>": 195,
+          "validation:ic50:>=": 25,
+          "test:ic50:=": 2600,
+          "test:ic50:>": 208,
+          "test:ic50:>=": 17,
+          "train:ec50:=": 307,
+          "train:half_life:=": 7662,
+          "validation:ec50:=": 34,
+          "validation:half_life:=": 968,
+          "test:ec50:=": 47,
+          "test:half_life:=": 936,
+          "train:kd_via_ec50:=": 20420,
+          "train:kd_via_ec50:>": 24426,
+          "train:kd_via_ic50:=": 40721,
+          "train:kd_via_ic50:>": 2319,
+          "train:kd_via_ic50:>=": 4,
+          "train:kd:=": 4447,
+          "train:kd:>": 10734,
+          "train:half_life:>": 9,
+          "validation:kd_via_ec50:=": 2704,
+          "validation:kd_via_ec50:>": 3251,
+          "validation:kd_via_ic50:=": 5365,
+          "validation:kd_via_ic50:>": 301,
+          "test:kd_via_ec50:=": 2385,
+          "test:kd_via_ec50:>": 3004,
+          "test:kd_via_ic50:=": 4931,
+          "test:kd_via_ic50:>": 306,
+          "train:ic50:>": 1741,
+          "train:ic50:>=": 135,
+          "test:kd:>": 1059,
+          "test:kd:=": 643,
+          "validation:kd:=": 599,
+          "validation:kd:>": 1335
+        },
+        "training_labels": {
+          "ic50": 23512,
+          "ec50": 307,
+          "half_life": 7671,
+          "kd_via_ec50": 44846,
+          "kd_via_ic50": 43044,
+          "kd": 15181
+        },
+        "component_states": {},
+        "manifest_sha256": "bc2f368253e67f8ad40ed4c577036181561c7efa8c0794a4f54b7fa08fa21387",
+        "module_pruning": [],
+        "source_label_values": {},
+        "cell_types": [],
+        "ordinal_levels": {},
+        "cytokine_states": {},
+        "cytokine_numeric": {},
+        "context_assertion_states": {
+          "pathway": {},
+          "intervention": {}
+        },
+        "observed_numeric_features": {
+          "acquisition": [],
+          "observation": [],
+          "preparation": []
+        },
+        "frozen_targets": [],
+        "frozen_parameters": [],
+        "inherited_scalers": []
+      },
+      "scales": {
+        "ec50": {
+          "mean": 2.930938559963711,
+          "scale": 1.191499378091058,
+          "exact_count": 307,
+          "floor": 0.001
+        },
+        "half_life": {
+          "mean": 1.518467852578532,
+          "scale": 1.2137568923820146,
+          "exact_count": 7662,
+          "floor": 0.001
+        },
+        "ic50": {
+          "mean": 2.768232837778882,
+          "scale": 1.3434766242663534,
+          "exact_count": 21636,
+          "floor": 0.001
+        },
+        "kd": {
+          "mean": 1.8951630861943234,
+          "scale": 1.308855946710753,
+          "exact_count": 4447,
+          "floor": 0.001
+        },
+        "kd_via_ec50": {
+          "mean": 2.3225514744481237,
+          "scale": 1.0396661710227353,
+          "exact_count": 20420,
+          "floor": 0.001
+        },
+        "kd_via_ic50": {
+          "mean": 2.8040396340930025,
+          "scale": 1.4139555027197765,
+          "exact_count": 40721,
+          "floor": 0.001
+        }
+      },
+      "training": {
+        "balance_by": [],
+        "seed": 42,
+        "batch_size": 64,
+        "max_epochs": 10000,
+        "max_steps": 6000,
+        "learning_rate": 0.0003,
+        "weight_decay": 0.0001,
+        "identity_weight": 0,
+        "patience": 10000,
+        "min_epochs": 10000,
+        "identity_batch_size": 64,
+        "test_policy": "evaluate_selected_once",
+        "no_test_reason": null,
+        "coverage_policy": "required",
+        "coverage_exception_reason": null,
+        "checkpoint_every_steps": 100,
+        "validation_every_steps": 500
+      },
+      "partitions": {
+        "train:assay": 134561,
+        "validation:assay": 17503,
+        "test:assay": 16136
+      }
+    },
+    "multi-assay-wide": {
+      "parameters": 1599942,
+      "admission": {
+        "census": {
+          "train:ic50:=": 21636,
+          "validation:ic50:=": 2726,
+          "validation:ic50:>": 195,
+          "validation:ic50:>=": 25,
+          "test:ic50:=": 2600,
+          "test:ic50:>": 208,
+          "test:ic50:>=": 17,
+          "train:ec50:=": 307,
+          "train:half_life:=": 7662,
+          "validation:ec50:=": 34,
+          "validation:half_life:=": 968,
+          "test:ec50:=": 47,
+          "test:half_life:=": 936,
+          "train:kd_via_ec50:=": 20420,
+          "train:kd_via_ec50:>": 24426,
+          "train:kd_via_ic50:=": 40721,
+          "train:kd_via_ic50:>": 2319,
+          "train:kd_via_ic50:>=": 4,
+          "train:kd:=": 4447,
+          "train:kd:>": 10734,
+          "train:half_life:>": 9,
+          "validation:kd_via_ec50:=": 2704,
+          "validation:kd_via_ec50:>": 3251,
+          "validation:kd_via_ic50:=": 5365,
+          "validation:kd_via_ic50:>": 301,
+          "test:kd_via_ec50:=": 2385,
+          "test:kd_via_ec50:>": 3004,
+          "test:kd_via_ic50:=": 4931,
+          "test:kd_via_ic50:>": 306,
+          "train:ic50:>": 1741,
+          "train:ic50:>=": 135,
+          "test:kd:>": 1059,
+          "test:kd:=": 643,
+          "validation:kd:=": 599,
+          "validation:kd:>": 1335
+        },
+        "training_labels": {
+          "ic50": 23512,
+          "ec50": 307,
+          "half_life": 7671,
+          "kd_via_ec50": 44846,
+          "kd_via_ic50": 43044,
+          "kd": 15181
+        },
+        "component_states": {},
+        "manifest_sha256": "b7dfa1427143eddb873a74606834a68d14f32ee82ac7e7dc42714ad76a50e5fb",
+        "module_pruning": [],
+        "source_label_values": {},
+        "cell_types": [],
+        "ordinal_levels": {},
+        "cytokine_states": {},
+        "cytokine_numeric": {},
+        "context_assertion_states": {
+          "pathway": {},
+          "intervention": {}
+        },
+        "observed_numeric_features": {
+          "acquisition": [],
+          "observation": [],
+          "preparation": []
+        },
+        "frozen_targets": [],
+        "frozen_parameters": [],
+        "inherited_scalers": []
+      },
+      "scales": {
+        "ec50": {
+          "mean": 2.930938559963711,
+          "scale": 1.191499378091058,
+          "exact_count": 307,
+          "floor": 0.001
+        },
+        "half_life": {
+          "mean": 1.518467852578532,
+          "scale": 1.2137568923820146,
+          "exact_count": 7662,
+          "floor": 0.001
+        },
+        "ic50": {
+          "mean": 2.768232837778882,
+          "scale": 1.3434766242663534,
+          "exact_count": 21636,
+          "floor": 0.001
+        },
+        "kd": {
+          "mean": 1.8951630861943234,
+          "scale": 1.308855946710753,
+          "exact_count": 4447,
+          "floor": 0.001
+        },
+        "kd_via_ec50": {
+          "mean": 2.3225514744481237,
+          "scale": 1.0396661710227353,
+          "exact_count": 20420,
+          "floor": 0.001
+        },
+        "kd_via_ic50": {
+          "mean": 2.8040396340930025,
+          "scale": 1.4139555027197765,
+          "exact_count": 40721,
+          "floor": 0.001
+        }
+      },
+      "training": {
+        "balance_by": [],
+        "seed": 42,
+        "batch_size": 64,
+        "max_epochs": 10000,
+        "max_steps": 6000,
+        "learning_rate": 0.0003,
+        "weight_decay": 0.0001,
+        "identity_weight": 0,
+        "patience": 10000,
+        "min_epochs": 10000,
+        "identity_batch_size": 64,
+        "test_policy": "evaluate_selected_once",
+        "no_test_reason": null,
+        "coverage_policy": "required",
+        "coverage_exception_reason": null,
+        "checkpoint_every_steps": 100,
+        "validation_every_steps": 500
+      },
+      "partitions": {
+        "train:assay": 134561,
+        "validation:assay": 17503,
+        "test:assay": 16136
+      }
+    }
+  },
+  "seconds": 335.07675137500337
+}

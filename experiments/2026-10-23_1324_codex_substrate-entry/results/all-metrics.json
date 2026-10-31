@@ -1,0 +1,322 @@
+{
+  "entry_constant": {
+    "train": {
+      "by_parent": {
+        "soh2024_digestion:construct:50d8b307581e0a39b20cd381c16a12dfbf6642e27d4df233f9b0f26f46bd82b5": {
+          "n": 4404,
+          "rmse": 0.8227023058272832
+        },
+        "soh2024_digestion:construct:5c44f6a3ee6e96b468205cf19c495bb0fd42bfae7f025a9744f6c09386070ba7": {
+          "n": 11508,
+          "rmse": 0.9338632204708014
+        },
+        "soh2024_digestion:construct:7fa7636cad66d6fbc4e373829ee78bb9ab66adb141e99f051d21cad9084a6bea": {
+          "n": 30514,
+          "rmse": 1.242517050823577
+        },
+        "soh2024_digestion:construct:af62ea1fde21fcc684bef6605aeee01ac2b3e3c59796d64c34c624f0f272aeec": {
+          "n": 4150,
+          "rmse": 0.8783346545932451
+        },
+        "soh2024_digestion:construct:e7599d914ddf8ec9d8cdc94c7497b3a247e94d7396c93a8b7aaba6041628384b": {
+          "n": 13640,
+          "rmse": 1.2034959413381963
+        },
+        "soh2024_digestion:construct:f3df12ae52a6c6fc2cd28a85b9081abbf0ecc3e0da0265e151972558abf931d7": {
+          "n": 3360,
+          "rmse": 0.756079273308107
+        }
+      },
+      "mse": 0.9807197223253343,
+      "n_parents": 6,
+      "n_predictions": 67576,
+      "pearson": 0.1542734836898671,
+      "pooled_rmse": 1.1050527551860065,
+      "prediction_sd": 0.4978377639150252,
+      "rmse": 0.9903129416125664,
+      "spearman": 0.1324549330356099,
+      "target_sd": 1.017549226945896
+    },
+    "val": {
+      "by_parent": {
+        "soh2024_digestion:construct:1cca82978a55647fbda9420ad7989fceed0efa699ef0f05c464cab9ef38a740d": {
+          "n": 1848,
+          "rmse": 1.321558403692381
+        },
+        "soh2024_digestion:construct:cef4bb8fb7b8677076cb40c5dcd728f3d037cfeef3f6b90276cc4509ac6da407": {
+          "n": 4568,
+          "rmse": 1.3622513944711578
+        },
+        "soh2024_digestion:construct:fe305e5ce18517fc9f3aad74401a2f0317725a1cfca4248eca63d8d89eccb8fe": {
+          "n": 4574,
+          "rmse": 0.7647224686232422
+        }
+      },
+      "mse": 1.3956819767085984,
+      "n_parents": 3,
+      "n_predictions": 10990,
+      "pearson": 0.3147807537000077,
+      "pooled_rmse": 1.122773812235379,
+      "prediction_sd": 0.4634477024316293,
+      "rmse": 1.181389849587594,
+      "spearman": 0.2886143200041736,
+      "target_sd": 1.0386269059630522
+    }
+  },
+  "entry_sampled": {
+    "train": {
+      "by_parent": {
+        "soh2024_digestion:construct:50d8b307581e0a39b20cd381c16a12dfbf6642e27d4df233f9b0f26f46bd82b5": {
+          "n": 4404,
+          "rmse": 0.7736725157275545
+        },
+        "soh2024_digestion:construct:5c44f6a3ee6e96b468205cf19c495bb0fd42bfae7f025a9744f6c09386070ba7": {
+          "n": 11508,
+          "rmse": 0.8992347798584611
+        },
+        "soh2024_digestion:construct:7fa7636cad66d6fbc4e373829ee78bb9ab66adb141e99f051d21cad9084a6bea": {
+          "n": 30514,
+          "rmse": 1.1722363818060062
+        },
+        "soh2024_digestion:construct:af62ea1fde21fcc684bef6605aeee01ac2b3e3c59796d64c34c624f0f272aeec": {
+          "n": 4150,
+          "rmse": 0.8119570934561252
+        },
+        "soh2024_digestion:construct:e7599d914ddf8ec9d8cdc94c7497b3a247e94d7396c93a8b7aaba6041628384b": {
+          "n": 13640,
+          "rmse": 1.1729100500430578
+        },
+        "soh2024_digestion:construct:f3df12ae52a6c6fc2cd28a85b9081abbf0ecc3e0da0265e151972558abf931d7": {
+          "n": 3360,
+          "rmse": 0.7694857846607096
+        }
+      },
+      "mse": 0.901405194271595,
+      "n_parents": 6,
+      "n_predictions": 67576,
+      "pearson": 0.2763471839985147,
+      "pooled_rmse": 1.0535212994213046,
+      "prediction_sd": 0.5956325584363968,
+      "rmse": 0.949423611604217,
+      "spearman": 0.20665599798430698,
+      "target_sd": 1.017549226945896
+    },
+    "val": {
+      "by_parent": {
+        "soh2024_digestion:construct:1cca82978a55647fbda9420ad7989fceed0efa699ef0f05c464cab9ef38a740d": {
+          "n": 1848,
+          "rmse": 1.2547145224830292
+        },
+        "soh2024_digestion:construct:cef4bb8fb7b8677076cb40c5dcd728f3d037cfeef3f6b90276cc4509ac6da407": {
+          "n": 4568,
+          "rmse": 1.273046600496212
+        },
+        "soh2024_digestion:construct:fe305e5ce18517fc9f3aad74401a2f0317725a1cfca4248eca63d8d89eccb8fe": {
+          "n": 4574,
+          "rmse": 0.7254973432566233
+        }
+      },
+      "mse": 1.2404341916790658,
+      "n_parents": 3,
+      "n_predictions": 10990,
+      "pearson": 0.40369152324539326,
+      "pooled_rmse": 1.0533573545172086,
+      "prediction_sd": 0.4439871497536009,
+      "rmse": 1.1137478133217886,
+      "spearman": 0.34696669611169423,
+      "target_sd": 1.0386269059630522
+    }
+  },
+  "entry_sequence": {
+    "train": {
+      "by_parent": {
+        "soh2024_digestion:construct:50d8b307581e0a39b20cd381c16a12dfbf6642e27d4df233f9b0f26f46bd82b5": {
+          "n": 4404,
+          "rmse": 0.7874773107795331
+        },
+        "soh2024_digestion:construct:5c44f6a3ee6e96b468205cf19c495bb0fd42bfae7f025a9744f6c09386070ba7": {
+          "n": 11508,
+          "rmse": 0.9050145094650155
+        },
+        "soh2024_digestion:construct:7fa7636cad66d6fbc4e373829ee78bb9ab66adb141e99f051d21cad9084a6bea": {
+          "n": 30514,
+          "rmse": 1.1143517743624343
+        },
+        "soh2024_digestion:construct:af62ea1fde21fcc684bef6605aeee01ac2b3e3c59796d64c34c624f0f272aeec": {
+          "n": 4150,
+          "rmse": 0.7756639118733386
+        },
+        "soh2024_digestion:construct:e7599d914ddf8ec9d8cdc94c7497b3a247e94d7396c93a8b7aaba6041628384b": {
+          "n": 13640,
+          "rmse": 1.0422366146457864
+        },
+        "soh2024_digestion:construct:f3df12ae52a6c6fc2cd28a85b9081abbf0ecc3e0da0265e151972558abf931d7": {
+          "n": 3360,
+          "rmse": 0.722385221087012
+        }
+      },
+      "mse": 0.8151172878492274,
+      "n_parents": 6,
+      "n_predictions": 67576,
+      "pearson": 0.3780000520022274,
+      "pooled_rmse": 0.9941110709364909,
+      "prediction_sd": 0.5680462170760748,
+      "rmse": 0.9028384616581349,
+      "spearman": 0.2661027831687967,
+      "target_sd": 1.017549226945896
+    },
+    "val": {
+      "by_parent": {
+        "soh2024_digestion:construct:1cca82978a55647fbda9420ad7989fceed0efa699ef0f05c464cab9ef38a740d": {
+          "n": 1848,
+          "rmse": 1.2546471143141056
+        },
+        "soh2024_digestion:construct:cef4bb8fb7b8677076cb40c5dcd728f3d037cfeef3f6b90276cc4509ac6da407": {
+          "n": 4568,
+          "rmse": 1.2390950528374869
+        },
+        "soh2024_digestion:construct:fe305e5ce18517fc9f3aad74401a2f0317725a1cfca4248eca63d8d89eccb8fe": {
+          "n": 4574,
+          "rmse": 0.7017675787816576
+        }
+      },
+      "mse": 1.200657888684039,
+      "n_parents": 3,
+      "n_predictions": 10990,
+      "pearson": 0.42881386894085005,
+      "pooled_rmse": 1.0293125562092102,
+      "prediction_sd": 0.4540792732295945,
+      "rmse": 1.0957453575918261,
+      "spearman": 0.36161956261220346,
+      "target_sd": 1.0386269059630522
+    }
+  },
+  "immediate_constant": {
+    "train": {
+      "by_parent": {
+        "soh2024_digestion:construct:50d8b307581e0a39b20cd381c16a12dfbf6642e27d4df233f9b0f26f46bd82b5": {
+          "n": 4404,
+          "rmse": 0.8222704689194591
+        },
+        "soh2024_digestion:construct:5c44f6a3ee6e96b468205cf19c495bb0fd42bfae7f025a9744f6c09386070ba7": {
+          "n": 11508,
+          "rmse": 0.9334962185667435
+        },
+        "soh2024_digestion:construct:7fa7636cad66d6fbc4e373829ee78bb9ab66adb141e99f051d21cad9084a6bea": {
+          "n": 30514,
+          "rmse": 1.2422396618377018
+        },
+        "soh2024_digestion:construct:af62ea1fde21fcc684bef6605aeee01ac2b3e3c59796d64c34c624f0f272aeec": {
+          "n": 4150,
+          "rmse": 0.87804378209477
+        },
+        "soh2024_digestion:construct:e7599d914ddf8ec9d8cdc94c7497b3a247e94d7396c93a8b7aaba6041628384b": {
+          "n": 13640,
+          "rmse": 1.2033331573055246
+        },
+        "soh2024_digestion:construct:f3df12ae52a6c6fc2cd28a85b9081abbf0ecc3e0da0265e151972558abf931d7": {
+          "n": 3360,
+          "rmse": 0.7556590471201667
+        }
+      },
+      "mse": 0.9801159096364688,
+      "n_parents": 6,
+      "n_predictions": 67576,
+      "pearson": 0.15429838319559303,
+      "pooled_rmse": 1.1047847457398434,
+      "prediction_sd": 0.4974864409531547,
+      "rmse": 0.9900080351373259,
+      "spearman": 0.13269680395484826,
+      "target_sd": 1.017549226945896
+    },
+    "val": {
+      "by_parent": {
+        "soh2024_digestion:construct:1cca82978a55647fbda9420ad7989fceed0efa699ef0f05c464cab9ef38a740d": {
+          "n": 1848,
+          "rmse": 1.321381570157954
+        },
+        "soh2024_digestion:construct:cef4bb8fb7b8677076cb40c5dcd728f3d037cfeef3f6b90276cc4509ac6da407": {
+          "n": 4568,
+          "rmse": 1.3619067359032972
+        },
+        "soh2024_digestion:construct:fe305e5ce18517fc9f3aad74401a2f0317725a1cfca4248eca63d8d89eccb8fe": {
+          "n": 4574,
+          "rmse": 0.7644639141605498
+        }
+      },
+      "mse": 1.3950814291018474,
+      "n_parents": 3,
+      "n_predictions": 10990,
+      "pearson": 0.3146939074853456,
+      "pooled_rmse": 1.1224969463778487,
+      "prediction_sd": 0.46324848595083945,
+      "rmse": 1.181135652286327,
+      "spearman": 0.2886865554160635,
+      "target_sd": 1.0386269059630522
+    }
+  },
+  "immediate_sequence": {
+    "train": {
+      "by_parent": {
+        "soh2024_digestion:construct:50d8b307581e0a39b20cd381c16a12dfbf6642e27d4df233f9b0f26f46bd82b5": {
+          "n": 4404,
+          "rmse": 0.7870523921660426
+        },
+        "soh2024_digestion:construct:5c44f6a3ee6e96b468205cf19c495bb0fd42bfae7f025a9744f6c09386070ba7": {
+          "n": 11508,
+          "rmse": 0.9046795315562092
+        },
+        "soh2024_digestion:construct:7fa7636cad66d6fbc4e373829ee78bb9ab66adb141e99f051d21cad9084a6bea": {
+          "n": 30514,
+          "rmse": 1.1141015436524484
+        },
+        "soh2024_digestion:construct:af62ea1fde21fcc684bef6605aeee01ac2b3e3c59796d64c34c624f0f272aeec": {
+          "n": 4150,
+          "rmse": 0.7753789681441272
+        },
+        "soh2024_digestion:construct:e7599d914ddf8ec9d8cdc94c7497b3a247e94d7396c93a8b7aaba6041628384b": {
+          "n": 13640,
+          "rmse": 1.0421698360707836
+        },
+        "soh2024_digestion:construct:f3df12ae52a6c6fc2cd28a85b9081abbf0ecc3e0da0265e151972558abf931d7": {
+          "n": 3360,
+          "rmse": 0.7220107225861238
+        }
+      },
+      "mse": 0.8146247945642021,
+      "n_parents": 6,
+      "n_predictions": 67576,
+      "pearson": 0.3780535429419226,
+      "pooled_rmse": 0.9938785071538747,
+      "prediction_sd": 0.5676723953990281,
+      "rmse": 0.9025656732693761,
+      "spearman": 0.2662091725577476,
+      "target_sd": 1.017549226945896
+    },
+    "val": {
+      "by_parent": {
+        "soh2024_digestion:construct:1cca82978a55647fbda9420ad7989fceed0efa699ef0f05c464cab9ef38a740d": {
+          "n": 1848,
+          "rmse": 1.2545512319806993
+        },
+        "soh2024_digestion:construct:cef4bb8fb7b8677076cb40c5dcd728f3d037cfeef3f6b90276cc4509ac6da407": {
+          "n": 4568,
+          "rmse": 1.2388025653109433
+        },
+        "soh2024_digestion:construct:fe305e5ce18517fc9f3aad74401a2f0317725a1cfca4248eca63d8d89eccb8fe": {
+          "n": 4574,
+          "rmse": 0.701584522268842
+        }
+      },
+      "mse": 1.200250477124155,
+      "n_parents": 3,
+      "n_predictions": 10990,
+      "pearson": 0.42876988677824435,
+      "pooled_rmse": 1.029101063657058,
+      "prediction_sd": 0.4538387809594361,
+      "rmse": 1.0955594356876102,
+      "spearman": 0.3616509983273072,
+      "target_sd": 1.0386269059630522
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "stage": "fetch",
+  "attempt": 8,
+  "started_utc": "2026-10-25T15:07:23.552622+00:00",
+  "status": "failed",
+  "child_launched": true,
+  "exit_code": 1,
+  "resource_violation": null,
+  "memory_admission": {
+    "metric": "macos_free_plus_speculative",
+    "bytes": 7392985088
+  },
+  "disk_free_before_bytes": 19462152192,
+  "request_set_sha256": "c8b5fa7e91ccc51a7741f3a1dc9b0a402e2adc3cf029a487f7104ab70b041821",
+  "request_set": {
+    "phase": "metadata",
+    "scope": "Inspect public upload-area directory inventory and official NCBI OA package metadata; do not download raw spectra.",
+    "requests": [
+      {
+        "name": "pass01163-upload-index.html",
+        "url": "https://db.systemsbiology.net/sbeams/cgi/PeptideAtlas/PASS_View?identifier=PASS01163&browseArea=upload&path=/",
+        "encoding": "latin-1",
+        "expected_kind": "html",
+        "discovery_provenance": "Exact Browse FTP upload area public href in pass01163-sbeams.html and pass01163-experiment2.html. No credentials supplied."
+      },
+      {
+        "name": "michaud2018-oa.xml",
+        "url": "https://www.ncbi.nlm.nih.gov/pmc/utils/oa/oa.fcgi?id=PMC6123701",
+        "expected_kind": "xml",
+        "discovery_provenance": "Official NCBI OA Web Service per-article package lookup, documented at https://pmc.ncbi.nlm.nih.gov/tools/oa-service/; primary study PMCID6123701 already verified."
+      }
+    ]
+  },
+  "environment": {
+    "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "versions": {
+      "requests": "2.34.2",
+      "psutil": "7.2.2"
+    },
+    "overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUNBUFFERED": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    }
+  },
+  "child_pid": 97670,
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "-B",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1451_codex_mrm-anchor-admission/code/fetch_v2.py",
+    "--requests",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1451_codex_mrm-anchor-admission/reproduce/requests/metadata-6.json"
+  ],
+  "elapsed_seconds": 12.601519707997795,
+  "peak_observed_process_tree_rss_bytes": 46252032,
+  "peak_child_process_rss_bytes": 46366720,
+  "rss_poll_interval_seconds": 0.05,
+  "disk_free_after_bytes": 19459809280
+}

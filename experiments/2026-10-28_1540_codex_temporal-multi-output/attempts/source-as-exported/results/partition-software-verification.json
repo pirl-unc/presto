@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "test_file": "analysis/test_partition_contract.py",
+  "result": "7 passed, 2 warnings in 3.11s",
+  "warnings": [
+    "upstream pandas infer_string deprecation",
+    "artificial FASTA cache write outside sandbox refused; in-memory canonical proteome completed"
+  ],
+  "scope": "artificial fixtures through real ObservationIndex and preflight, independent source conservation/background audit, and separate reported/generated ligand metrics; not predictive performance",
+  "preserved_failed_attempt": "results/partition-auditor-import-failure.log; sibling analysis module import fixed"
+}

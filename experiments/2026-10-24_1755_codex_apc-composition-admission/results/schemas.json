@@ -1,0 +1,161 @@
+{
+  "channels": {
+    "fields": [
+      "channel_id",
+      "table_number",
+      "channel_column",
+      "channel_label_raw",
+      "sample_label_raw",
+      "channel_label_cell",
+      "sample_label_cell",
+      "is_control_for_table",
+      "measured_population",
+      "partner_population",
+      "partner_loss_status",
+      "material_link_precision",
+      "intensity_total_over_retained_rows",
+      "normalization_policy"
+    ],
+    "n_rows": 53,
+    "sha256": "7334b27f8decd2b094e851776e4c056364499c8ce97887332ecd588f5bae217d"
+  },
+  "peptide_rows": {
+    "fields": [
+      "peptide_row_id",
+      "table_number",
+      "row_1based",
+      "asset_path",
+      "sequence_cell",
+      "sequence_raw",
+      "parent_label_cell",
+      "parent_label_raw",
+      "parent_mapping_status",
+      "measured_pool",
+      "measured_population",
+      "partner_population",
+      "material_link_precision",
+      "selection_scope"
+    ],
+    "n_rows": 35772,
+    "sha256": "3803b4b1929961cbebfbe0ef5f4841a2d2ac734df1f7f21d8c54c728fee4bdcb"
+  },
+  "quantity_measurements": {
+    "fields": [
+      "measurement_id",
+      "result_id",
+      "contrast_id",
+      "representation",
+      "reported_value",
+      "recomputed_value",
+      "absolute_replay_error",
+      "unit",
+      "quantity_scale",
+      "value_status",
+      "source_cell",
+      "normalization_policy"
+    ],
+    "n_rows": 509850,
+    "sha256": "e6d7d347463cd376428efe94a5c0c45c6d322fed8098bec61c9ac0ab8dedcecd"
+  },
+  "quantity_results": {
+    "fields": [
+      "result_id",
+      "peptide_row_id",
+      "channel_id",
+      "table_number",
+      "source_intensity_cell",
+      "measured_pool",
+      "endpoint",
+      "material_link_precision"
+    ],
+    "n_rows": 309126,
+    "sha256": "2a021ae59117fc30c7b7777ff6c3061ed6126975727760647b377ced5d8c6ece"
+  },
+  "reference_occurrences": {
+    "fields": [
+      "sequence_id",
+      "peptide_sequence",
+      "component",
+      "accession",
+      "start1",
+      "end1",
+      "left",
+      "right",
+      "parent_sequence_sha256"
+    ],
+    "n_rows": 52277,
+    "sha256": "1788308d418ebac613bb31aa7b66a6dad45a12bdb88503983844110f6d41f2f0"
+  },
+  "reference_parents": {
+    "fields": [
+      "accession",
+      "entry",
+      "length",
+      "sequence_sha256",
+      "sequence",
+      "taxonomy",
+      "aliases",
+      "reference_status"
+    ],
+    "n_rows": 25758,
+    "sha256": "18c9f49e1a0611a803ee1c12a3c0b6d0ad9a4c56ca2e0a90034238e6b098af37"
+  },
+  "reference_source_mappings": {
+    "fields": [
+      "peptide_row_id",
+      "sequence_id",
+      "sequence_raw",
+      "component",
+      "table_number",
+      "row_1based",
+      "asset_path",
+      "sequence_cell",
+      "parent_label_cell",
+      "parent_label_raw",
+      "parent_mapping_status",
+      "source_parent_status",
+      "source_parent_positions_start1",
+      "additional_parent_identities",
+      "reference_identity_count",
+      "reference_full_sequence_count",
+      "reference_occurrence_count",
+      "measured_pool",
+      "measured_population",
+      "partner_population",
+      "material_link_precision",
+      "selection_scope"
+    ],
+    "n_rows": 35772,
+    "sha256": "00793224eb5830e65057ee9077b4b09ade4a1fadba9c7a5e9ecd46213b430770"
+  },
+  "source_assertions": {
+    "fields": [
+      "assertion_id",
+      "subject_id",
+      "predicate",
+      "value_raw",
+      "normalized_value",
+      "assertion_status",
+      "source_locator",
+      "scope"
+    ],
+    "n_rows": 37,
+    "sha256": "ce274a11cfc5eed32302c836dcc5c3acdda8f756329b575f2380df3480393742"
+  },
+  "source_cells": {
+    "fields": [
+      "cell_id",
+      "asset_path",
+      "sheet_name",
+      "row_1based",
+      "column_1based",
+      "cell_ref",
+      "excel_type",
+      "value_text",
+      "value_number",
+      "source_role"
+    ],
+    "n_rows": 851830,
+    "sha256": "24e2f21d06724aaa255214794cba902cf564e4a310309f63df7025e10e9c5fee"
+  }
+}

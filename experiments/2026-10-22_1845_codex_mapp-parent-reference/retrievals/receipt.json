@@ -1,0 +1,15 @@
+{
+  "curl_completion_log_path": "launch_logs/retrieve.log.gz",
+  "download_sha256": "8c4459cc1e190caad54150511e5a0b5779863557f88387e5a86647a48d19a9d4",
+  "download_size": 29338408,
+  "http_status": 200,
+  "release": "2026_03",
+  "release_date": "2026-09-02",
+  "request_command": "curl --fail --location --connect-timeout 20 --max-time 180 --retry 1 --dump-header /private/tmp/presto-human-reviewed-isoforms.headers --output /private/tmp/presto-human-reviewed-isoforms.fasta 'https://rest.uniprot.org/uniprotkb/stream?query=%28organism_id%3A9606%29%20AND%20%28reviewed%3Atrue%29&format=fasta&includeIsoform=true'",
+  "response_date": "2026-10-22T18:43:18Z",
+  "response_headers_path": "retrievals/uniprot-response.headers.gz",
+  "response_headers_sha256": "959d799a3dca4ceba2fb826f557ab3a3b6bd4cfa123a369e633731cbce26a857",
+  "response_headers_sha256_applies_to": "decompressed original HTTP response bytes",
+  "transport_exit_status": "not preserved by prior tool observation; complete curl log, HTTP200 and full-format independent parsing required",
+  "url": "https://rest.uniprot.org/uniprotkb/stream?query=%28organism_id%3A9606%29%20AND%20%28reviewed%3Atrue%29&format=fasta&includeIsoform=true"
+}

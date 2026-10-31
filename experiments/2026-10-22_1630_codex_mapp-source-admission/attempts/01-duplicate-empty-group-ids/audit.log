@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/private/tmp/presto-modular-model/experiments/2026-10-22_1630_codex_mapp-source-admission/reproduce/source/audit.py", line 254, in <module>
+    main()
+  File "/private/tmp/presto-modular-model/experiments/2026-10-22_1630_codex_mapp-source-admission/reproduce/source/audit.py", line 130, in main
+    assert len(groups) == next(r["n_rows"] for r in inventory if r["member"] == "txt/proteinGroups.txt")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

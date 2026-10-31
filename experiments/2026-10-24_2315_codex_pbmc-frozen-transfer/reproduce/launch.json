@@ -1,0 +1,56 @@
+{
+  "registered_utc": "2026-10-24T23:15:40.590230+00:00",
+  "agent": "Codex",
+  "model": "GPT-6",
+  "presto_head": "c7fa66826883dc953bc5e3e0deabe261177f07ef",
+  "presto_dirty": true,
+  "hitlist_base": "5d648602326412cbad79bc47b1ea70fc3bb1c45d",
+  "hitlist_checkout": "/private/tmp/hitlist-pbmc-composition-20261024",
+  "source_root": "/private/tmp/hitlist-pxd009438-source-20261024/assets",
+  "archive": "/private/tmp/hitlist-pxd009438-source-20261024/SLE-search.tar.gz",
+  "predecessor": "/private/tmp/hitlist-v2-reference-200-final",
+  "package": "/private/tmp/presto-modular-model/data/pbmc_transfer/2026-10-24_2315_source",
+  "recipe_package": "/private/tmp/presto-modular-model/data/pbmc_transfer/2026-10-24_2315_composition",
+  "predictor_directory": "/private/tmp/presto-modular-model/experiments/2026-10-24_2244_codex_mapp2025-baseline-prediction",
+  "predictor_hashes": {
+    "results/models.json": "aa3787133c3ffddbeab9c918589667eac964a897e887f59936ebc8cc76bcf596",
+    "results/prediction-seal.json": "407831f3cbb1c6eabfed20db9308e4bfafccd08c16cd6755c93a7fdb813879f3",
+    "results/input-seal.json": "b3c7769fdc9390f25f973ea83453f35810250547592ab310d6d044944da1d5b8"
+  },
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "environment_overrides": {
+    "PYTHONPATH": "/private/tmp/hitlist-pbmc-composition-20261024",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1"
+  },
+  "source_receipt_sha256": "665fefc523c1305426c7873c06d1b2604717fb6413b8d4e25bf84cf974cdad2a",
+  "predecessor_manifest_sha256": "d99f67e625c6c33a2054a56dea4f98fb8248ca5f717cc98af3662f228655fa6a",
+  "limits": {
+    "rss_bytes": 4294967296,
+    "stage_seconds": 1200,
+    "family_seconds": 3600,
+    "new_physical_bytes": 134217728,
+    "free_disk_floor_bytes": 1073741824
+  },
+  "models": [
+    "uniform",
+    "length_ridge_0.001",
+    "sequence_ridge_1",
+    "exact",
+    "reinforce_42",
+    "reinforce_43",
+    "reinforce_44"
+  ],
+  "optimization": "none; frozen external test only",
+  "metadata_policy": "PBMC/serum conflict retained; project human scope not verified per-parent species; no physical specimen identities",
+  "source_implementation_sha256": {
+    "hitlist/external_successor.py": "96fc501408d74bdf4dbf9fc907e04405e19b9e3f87243806ce2406c0cc9df72c",
+    "hitlist/mapp_pbmc_evidence.py": "b044696e1c30de08a52917f526321f2ecbb0e8a677c34da10ea5cbc820fc4a62",
+    "hitlist/evidence_snapshot.py": "2945129a0f48375e90082066ce8336ebfff2d55d2809d91f7cde751fb585e71c",
+    "hitlist/data/evidence_revisions/mapp_pbmc_assets.json": "665fefc523c1305426c7873c06d1b2604717fb6413b8d4e25bf84cf974cdad2a",
+    "hitlist/data/evidence_revisions/mapp_pbmc_contract.json": "3b59d7d3d6b1f22ccd13d328dfd0cd54c3dbcd74f24fba750bd5046cc7389f3e"
+  }
+}

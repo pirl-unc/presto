@@ -1,0 +1,61 @@
+{
+  "schema": "presto.source-acquisition.v1",
+  "sources": [
+    {
+      "id": "mhcflurry-data_mass_spec_annotated",
+      "url": "https://github.com/openvax/mhcflurry/releases/download/1.6.0/data_mass_spec_annotated.20191226.tar.bz2",
+      "kind": "published_measurement_archive",
+      "catalog": "https://github.com/openvax/mhcflurry/blob/master/mhcflurry/downloads.yml",
+      "training_eligibility": "requires original-source, qualifier, generated-label and overlap review"
+    },
+    {
+      "id": "mhcflurry-data_references",
+      "url": "https://github.com/openvax/mhcflurry/releases/download/pre-1.4.0/data_references.20190927.tar.bz2",
+      "kind": "published_measurement_archive",
+      "catalog": "https://github.com/openvax/mhcflurry/blob/master/mhcflurry/downloads.yml",
+      "training_eligibility": "requires original-source, qualifier, generated-label and overlap review"
+    },
+    {
+      "id": "mhcflurry-data_iedb",
+      "url": "https://github.com/openvax/mhcflurry/releases/download/pre-2.1/data_iedb.20231019.tar.bz2",
+      "kind": "published_measurement_archive",
+      "catalog": "https://github.com/openvax/mhcflurry/blob/master/mhcflurry/downloads.yml",
+      "training_eligibility": "requires original-source, qualifier, generated-label and overlap review"
+    },
+    {
+      "id": "mhcflurry-data_systemhcatlas",
+      "url": "https://github.com/openvax/mhcflurry/releases/download/pan-dev1/data_systemhcatlas.20190506.tar.bz2",
+      "kind": "published_measurement_archive",
+      "catalog": "https://github.com/openvax/mhcflurry/blob/master/mhcflurry/downloads.yml",
+      "training_eligibility": "requires original-source, qualifier, generated-label and overlap review"
+    },
+    {
+      "id": "mhcflurry-data_published",
+      "url": "https://github.com/openvax/mhcflurry/releases/download/pre-1.7.0/data_published.20200501.tar.bz2",
+      "kind": "published_measurement_archive",
+      "catalog": "https://github.com/openvax/mhcflurry/blob/master/mhcflurry/downloads.yml",
+      "training_eligibility": "requires original-source, qualifier, generated-label and overlap review"
+    },
+    {
+      "id": "mhcflurry-data_curated",
+      "url": "https://github.com/openvax/mhcflurry/releases/download/pre-2.1/data_curated.20231023.tar.bz2",
+      "kind": "published_measurement_archive",
+      "catalog": "https://github.com/openvax/mhcflurry/blob/master/mhcflurry/downloads.yml",
+      "training_eligibility": "requires original-source, qualifier, generated-label and overlap review"
+    },
+    {
+      "id": "netmhciipan-4.3-training",
+      "url": "https://services.healthtech.dtu.dk/services/NetMHCIIpan-4.3/training_data/NetMHCIIpan_train.tar.gz",
+      "kind": "published_training_archive",
+      "catalog": "https://services.healthtech.dtu.dk/services/NetMHCIIpan-4.3/",
+      "training_eligibility": "BA transformed/censored and EL backgrounds require typed interpretation; preserve source lineage"
+    },
+    {
+      "id": "abelin-2019-original-s1b",
+      "url": "https://ars.els-cdn.com/content/image/1-s2.0-S1074761319303632-mmc2.xlsx",
+      "kind": "original_study_supplement",
+      "catalog": "https://doi.org/10.1016/j.immuni.2019.08.012",
+      "training_eligibility": "source peptidoform and sample identity review"
+    }
+  ]
+}

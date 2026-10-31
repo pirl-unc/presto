@@ -1,0 +1,33 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "utc": "2026-10-26T18:48:19.235745+00:00",
+  "git_commit": "7560af31510f2af5fe45eb7e1a28560dc5caba9f",
+  "dirty_status": " M experiments/agents/codex/plans/2026-10-26_mhc2-ms-admission.md\n?? experiments/2026-10-26_1825_codex_mhc2-ms-admission/code/profile_inputs.py\n",
+  "argv": [
+    "experiments/2026-10-26_1825_codex_mhc2-ms-admission/code/profile_inputs.py"
+  ],
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "pyarrow": "26.0.0",
+  "script_sha256": "986c08ba625c297789b3f2bba48314315cce77be3076076523bc34cfbc36358b",
+  "training": {
+    "path": "/private/tmp/presto-mhc2-20261026/ms-source/training.parquet",
+    "sha256": "f902341e90c1c57defc93f4bc540ffcbea1b41061afb4492ddd8aaa7642c65bd"
+  },
+  "manifest_sha256": "b180eba804532f633a6d61bb350584dbe24f8df4b4b96f02c6ec492c60144372",
+  "contributors": {
+    "path": "/Users/iskander/.hitlist/corrected-corpus/public-downloads/v4/bundles/2026-10-16T07-20-43Z/observation_contributors.parquet",
+    "file": "observation_contributors.parquet",
+    "sha256": "41ff93e08bc6ea4af692fee16044726af26c4e20ec650ec6c7cd851974b71db1",
+    "size_bytes": 628447260
+  },
+  "limits": {
+    "threads": 1,
+    "seconds": 300,
+    "rss_bytes": 3221225472
+  },
+  "environment_overrides": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "python",
+    "-m",
+    "modal",
+    "run",
+    "--detach",
+    "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/curate.py"
+  ],
+  "git_commit": "858f5383094ad1a8e840ddb1b4df8233b189b2df",
+  "git_dirty": " M data/modular_hitlist.py\n M experiments/2026-10-28_1540_codex_temporal-multi-output/analysis/verify_predictions.py\n M experiments/agents/codex/ideas.md\n M experiments/experiment_log.md\n M tasks/lessons.md\n M tasks/todo.md\n M tests/test_modular_hitlist.py\n?? data/measurement_curation.py\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/prediction-verification.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/stratified-metrics.csv\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/stratified-metrics.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/validation-decision.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/wide-multi-s42-receipt.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/wide-multi-s42/\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/wide-multi-s43-receipt.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/wide-multi-s43/\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/\n?? experiments/agents/codex/plans/2026-10-29_measurement-curation-recovery.md\n?? tests/test_measurement_curation.py\n",
+  "agent_model": "Codex / GPT-6",
+  "source_hashes": {
+    "curate.py": "a19f7d06bcaac82f76ae3036977e5679fa7aa8da22efcab9b9c0832b8cd8017c",
+    "modular.py": "eac93c31b8a536becf7ee13dca4eeef71dfb4b92043a28a07f64ec072ca7d942",
+    "modular_quantitative.py": "751a66c8aa68fd697d395ec3fc63951e262278a0fb6c3f26c185e8963f7d148d",
+    "modular_ordinal.py": "530667626cca2ba535585e1bd5aa0b1dbf5c77b8be0540b1da911e27be1b9520",
+    "assay_reviews.py": "9172bb5223e684bd76fde2e821e2d15355c64f2ad9f6d03fdb5985a9fa469c39",
+    "assay_measurement_reviews.json": "d1d1ae11d51314da292e9b37b41f9e8241d34bc50555d33ac6b3a243070cd829",
+    "modular_hitlist.py": "1f4c51b0ab7d0555827f3bbf971bb53e7364dde9753cb96985f50938c2256339",
+    "measurement_curation.py": "0bfce8329f9f59cdb35b4eaa1044b5e61a210a9dae3878b5f74ef89f41c12eda"
+  },
+  "started_unix": 1793296657.9851708,
+  "requested_gpu": null
+}

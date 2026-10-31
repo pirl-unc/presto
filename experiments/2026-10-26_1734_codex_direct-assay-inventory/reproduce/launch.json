@@ -1,0 +1,52 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "argv": [
+    "/private/tmp/presto-pr-completion-20261026/pr131/presto/experiments/2026-10-26_1734_codex_direct-assay-inventory/code/launch.py"
+  ],
+  "code_hashes": {
+    "code/common.py": "e7bc9c928688d9aada8ebebef3749efc6fac549ba34d7f30135029131bd37a96",
+    "code/launch.py": "a5c45e5443e1821db72c4e1ae4b73ba570763d8235fa0626a4dcd3049f3aae48",
+    "code/verify.py": "cd95bf95cb08b302f923801426f1d733198bac89cf8591fdec218bb8a181c2f3"
+  },
+  "cwd": "/private/tmp/presto-pr-completion-20261026/pr131/presto",
+  "device": "cpu",
+  "environment": {
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PYTHONPATH": null
+  },
+  "executable": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "git_commit": "4008ae1573ad4afe480db42dfac3ffeb6b25d66c",
+  "git_status": "?? data/endolysosomal_source_audit/\n?? experiments/2026-10-26_1720_codex_mhc-species-evaluation/reproduce/continuation-state.json\n",
+  "limits": {
+    "disk_floor_bytes": 10737418240,
+    "ram_floor_bytes": 5368709120,
+    "rss_bytes": 3221225472,
+    "seconds": 300,
+    "startup_disk_bytes": 16106127360,
+    "startup_ram_bytes": 10737418240
+  },
+  "observed_gpu": null,
+  "packages": {
+    "psutil": "7.2.2",
+    "pyarrow": "26.0.0"
+  },
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "requested_gpu": null,
+  "source_pins": {
+    "binding.parquet": {
+      "rows": 814268,
+      "sha256": "2b3f6ea2dd647e7fc54d214eef420feaebc4e81fab97ffc0565a2de1f8695ba0"
+    },
+    "other_assays.parquet": {
+      "rows": 26537,
+      "sha256": "c40f5227ded408830885ecba8336dbdd701172df9573b0d32e5e8a5f8fc947c2"
+    }
+  },
+  "startup_disk_bytes": 92085329920,
+  "startup_ram_bytes": 15676440576,
+  "status": "running",
+  "utc": "2026-10-26T17:36:17.910940+00:00"
+}

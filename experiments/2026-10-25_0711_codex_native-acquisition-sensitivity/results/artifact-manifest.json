@@ -1,0 +1,187 @@
+{
+  "files": {
+    "README.md": {
+      "size": 9522,
+      "sha256": "431dc3382778f1b947d76813ecce0f359b8e3ceaebdabd475d45d7922158f8ad"
+    },
+    "analysis/report.py": {
+      "size": 14297,
+      "sha256": "f6f2fddb6513da72b93766beacd744a011e30db293ac9a6c82ab359aaeed2b4d"
+    },
+    "code/core.py": {
+      "size": 4219,
+      "sha256": "d55e9e870e1ecff36734b29e566f23f7d32b4e0c904c146809786b4f6626bb9d"
+    },
+    "code/diagnose.py": {
+      "size": 4993,
+      "sha256": "6cf64f48d27b718801f982f49aabd137cab7b19f87bae6f5d57d3e5f64c8d633"
+    },
+    "code/launch.py": {
+      "size": 4491,
+      "sha256": "c03ceb77551827463b561197873da77dcb2994375ec854f4e538f7e960de1999"
+    },
+    "code/qualify.py": {
+      "size": 2419,
+      "sha256": "f0099a1032a156faf07c6db330c89f15e9a45f656fcede1c5eb6cfc34ba7c2f3"
+    },
+    "code/replay.py": {
+      "size": 9854,
+      "sha256": "2a108dab3635041e8af37b2947a0ce9ef903a301b349fd9062493d23b4f5902e"
+    },
+    "launch_logs/diagnose.log": {
+      "size": 7816,
+      "sha256": "ebb7e63ed5af23294f99951370e99c7f0f3544ad097f290d8f5b60e8d19c2e00"
+    },
+    "launch_logs/qualify.log": {
+      "size": 43,
+      "sha256": "b4b59c860ea72baad593a3785cf02409d89fab7a4685f9e4906be4b14d3bce22"
+    },
+    "launch_logs/replay.log": {
+      "size": 291,
+      "sha256": "2e6ecd6254a5d3915cfb8c055578b0c2f1d0db22d3b64b1ee748e2b8572704ce"
+    },
+    "reproduce/attempts/sandbox-preflight/failure.json": {
+      "size": 446,
+      "sha256": "1cd6a6e783115aed165637c6e03eb88d49ef3e269006a8e6ca61d85e8c00c581"
+    },
+    "reproduce/attempts/sandbox-preflight/qualify-environment.json": {
+      "size": 555,
+      "sha256": "a9b6cc63a48e5f7f08d7555fe283b851fa14160471df5d77f223c3eae2c3cc41"
+    },
+    "reproduce/code-sha256.json": {
+      "size": 419,
+      "sha256": "63acb118c0b6d0acbd3f3fc8d63d31ba2536d282f814781f79acda820392d498"
+    },
+    "reproduce/frozen-before-launch.json": {
+      "size": 557,
+      "sha256": "7931220b7c0deaff1962f30c4bb463551afd21fbd1e0b84e9e2e9374cc47e059"
+    },
+    "reproduce/launch.json": {
+      "size": 2074,
+      "sha256": "4a08a45c90c392bb74308594b70b14e5f5e5398befdf38523631bc82d7c6570f"
+    },
+    "reproduce/launch.sh": {
+      "size": 421,
+      "sha256": "5b5439087445c4ea07e03ca18655e4af0937c4179a612983a158dd1029f3c163"
+    },
+    "reproduce/plan.md": {
+      "size": 4674,
+      "sha256": "83fa166478d274d379d4415aababa521df216c9a29409eeca8acc87d8d783107"
+    },
+    "reproduce/report.sh": {
+      "size": 286,
+      "sha256": "af0d5488bfb133ef5a5155cd16dfba3726bd52e6436c10a03d918b72544aaa2e"
+    },
+    "reproduce/source/core.py": {
+      "size": 4219,
+      "sha256": "d55e9e870e1ecff36734b29e566f23f7d32b4e0c904c146809786b4f6626bb9d"
+    },
+    "reproduce/source/diagnose.py": {
+      "size": 4993,
+      "sha256": "6cf64f48d27b718801f982f49aabd137cab7b19f87bae6f5d57d3e5f64c8d633"
+    },
+    "reproduce/source/launch.py": {
+      "size": 4491,
+      "sha256": "c03ceb77551827463b561197873da77dcb2994375ec854f4e538f7e960de1999"
+    },
+    "reproduce/source/qualify.py": {
+      "size": 2419,
+      "sha256": "f0099a1032a156faf07c6db330c89f15e9a45f656fcede1c5eb6cfc34ba7c2f3"
+    },
+    "reproduce/source/replay.py": {
+      "size": 9854,
+      "sha256": "2a108dab3635041e8af37b2947a0ce9ef903a301b349fd9062493d23b4f5902e"
+    },
+    "reproduce/source/report.py": {
+      "size": 14297,
+      "sha256": "f6f2fddb6513da72b93766beacd744a011e30db293ac9a6c82ab359aaeed2b4d"
+    },
+    "results/acquisition-sensitivity.png": {
+      "size": 136411,
+      "sha256": "8206d6f62a5738d0d49766fd1a930feb181c7233a4913b95ad10b8e396ce963f"
+    },
+    "results/acquisition-sensitivity.svg": {
+      "size": 84250,
+      "sha256": "b74cbc0c69f28d5044c57f58775a02c93d78868587df557ec0cd92325b2d7919"
+    },
+    "results/components.json": {
+      "size": 21473,
+      "sha256": "6e2cb7bed2a46ba546fb914e47458840fc449656577278f68b8fa4e49a187ee4"
+    },
+    "results/concentration.json": {
+      "size": 248,
+      "sha256": "571d5488f77ccbf985a17de2f36ab265de5f0e33ba1e42c77c1e4641739b3dbc"
+    },
+    "results/diagnose-environment.json": {
+      "size": 555,
+      "sha256": "44cf8b4c1b93e240b0ae2caa27e1325ba418af62021f14cfa49b889edd4263f0"
+    },
+    "results/diagnose-process.json": {
+      "size": 233,
+      "sha256": "914fc2f2295306b73693dfdf1a5cc14cc63ca81ac4ae3168a23c72c2ab0197e6"
+    },
+    "results/diagnose-runtime.json": {
+      "size": 518,
+      "sha256": "92b3a01382f8abeeb054780b027817c6c4871f8b5cb924e091ec823581cf8351"
+    },
+    "results/omissions.csv": {
+      "size": 505,
+      "sha256": "904bf36b0c99e8e283a42f98e60c29a487db620a0d9fb57f82a9fcf51c3a471d"
+    },
+    "results/partitions.csv": {
+      "size": 1015,
+      "sha256": "e7cefa656ce8ba167a3eadebbfa2325c443bea772e5073991c7da4cfa12748a9"
+    },
+    "results/qualification.json": {
+      "size": 271,
+      "sha256": "5cc9fcb1a334b58934609a0d1a6e03a4b46111525ebb0b3d03e81c6c4d359a2a"
+    },
+    "results/qualify-environment.json": {
+      "size": 555,
+      "sha256": "672e4a897eb3fd63e918592acedda238f618db854632f5b014d73246bc3a3d73"
+    },
+    "results/qualify-process.json": {
+      "size": 232,
+      "sha256": "4499ae130b13782ca19e2ce425bc5f2d741f0cf4ee5131221b38098155f7983a"
+    },
+    "results/qualify-runtime.json": {
+      "size": 515,
+      "sha256": "50dd926d29acaf7bd4422b7aeb5202e021f5904b4da9157e48672fa4cee50145"
+    },
+    "results/read-scope.json": {
+      "size": 13218,
+      "sha256": "46844b3eba19addc13e0acbb699bc81b16d22d5ca1bd295b5f3a12ec5530922f"
+    },
+    "results/recipe-release.json": {
+      "size": 796,
+      "sha256": "bb6f6036b2343ae04a35302b56b6e376e45ac3214092b160cf5c08b1ba10a1d8"
+    },
+    "results/replay-environment.json": {
+      "size": 555,
+      "sha256": "d8b398d1e5c6f4fa32991880eeaea70c8ddfeadbb0b3055ee44a3c9044e75fe7"
+    },
+    "results/replay-process.json": {
+      "size": 231,
+      "sha256": "935719ef5d0c56f814183eaa99832ff3c82829c4ae5ba293462f6c7cf8b8c717"
+    },
+    "results/replay-runtime.json": {
+      "size": 514,
+      "sha256": "0de22588e03724f21a54cd6c839bdbeec2cc2d6b2b2934104c44f8ee550cbf21"
+    },
+    "results/replay.json": {
+      "size": 315,
+      "sha256": "e16d402e06433e14af04e77b3a2924501ee3f1aa66d3742af99f3a2d5b3c822b"
+    },
+    "results/summary.json": {
+      "size": 10356,
+      "sha256": "e2594c49c3732532e07b801fc5838056cafd485b94aa679411fc6aea0bc3b092"
+    },
+    "results/training-diagnostics.parquet": {
+      "size": 96363,
+      "sha256": "71ed4805a1fdfa33ee11b7aebed3e6210d344a7eb8218a7ef2be15227fd78009"
+    }
+  },
+  "n_files": 45,
+  "figure_visually_reviewed": true,
+  "outer_prediction_dumps": "Not applicable: registered training-only diagnostic; original outer splits are inspected and closed."
+}

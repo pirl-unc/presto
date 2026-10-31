@@ -1,0 +1,12 @@
+{
+  "required_inputs_and_frozen_sources": "all request source_sha256/input_sha256 values verified",
+  "independent_source_and_cell_evidence": "results/source-inventory.json, isotope-inventory.json, semantic-independent-audit.json",
+  "tracked_python_lint": "passed: ruff check; 290 files format check",
+  "new_model_code_changed": false,
+  "reason_no_new_full_suite": "source-only scripts and reports; original biological implementation unchanged; a9ae724 PR/push hosted CI passed",
+  "diff_whitespace_check": "passed",
+  "primary_checkout_work_diff_sha256": "34a115710ae7eca05c32db477d66e3a792b30e779f9cafd8854d2ee9566eeacc",
+  "primary_checkout_index_diff_sha256": "665f7a34c98623fa3c4f074a78ea2c22c2af2786efa34b243dd1ba0104b0c501",
+  "hitlist_release_upload": "not executed; automatic approval rejection; user authorization pending",
+  "goal_complete": false
+}

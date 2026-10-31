@@ -1,0 +1,372 @@
+[
+  {
+    "assertion_id": "pxd057588:project:claim:0",
+    "assertion_status": "source_reported",
+    "normalized_value": "Orbitrap Exploris 480",
+    "predicate": "instrument",
+    "scope": "project_not_individual_run",
+    "source_locator": "PXD057588/project.json::instruments/0/name",
+    "subject_id": "pxd057588:project",
+    "value_raw": "Orbitrap Exploris 480"
+  },
+  {
+    "assertion_id": "pxd057588:project:claim:1",
+    "assertion_status": "source_reported_method_not_row_q_value",
+    "normalized_value": "q_le_0.05_study_method",
+    "predicate": "search_q_value_policy",
+    "scope": "study_method",
+    "source_locator": "Cui et al. 2025 / Materials and methods / MS data processing",
+    "subject_id": "pxd057588:project",
+    "value_raw": "q <= 0.05"
+  },
+  {
+    "assertion_id": "pxd057588:t7:claim:2",
+    "assertion_status": "curated_from_source_title_and_method",
+    "normalized_value": "mhc_bound",
+    "predicate": "measured_pool",
+    "scope": "assay_table",
+    "source_locator": "PXD057588/table7.xlsx!A1",
+    "subject_id": "pxd057588:t7",
+    "value_raw": "Supplememtary Table 7 Peptide quantification in TMT labeled pro-flammatory macrophages and na\u00efve macrophage"
+  },
+  {
+    "assertion_id": "pxd057588:t7:claim:3",
+    "assertion_status": "curated_from_source_title_and_method",
+    "normalized_value": "macrophage",
+    "predicate": "measured_population",
+    "scope": "assay_table",
+    "source_locator": "PXD057588/table7.xlsx!A1",
+    "subject_id": "pxd057588:t7",
+    "value_raw": "Supplememtary Table 7 Peptide quantification in TMT labeled pro-flammatory macrophages and na\u00efve macrophage"
+  },
+  {
+    "assertion_id": "pxd057588:t7:claim:4",
+    "assertion_status": "curated_from_source_title_and_method",
+    "normalized_value": "polarized_M1_vs_untreated",
+    "predicate": "condition_class",
+    "scope": "assay_table",
+    "source_locator": "PXD057588/table7.xlsx!A1",
+    "subject_id": "pxd057588:t7",
+    "value_raw": "Supplememtary Table 7 Peptide quantification in TMT labeled pro-flammatory macrophages and na\u00efve macrophage"
+  },
+  {
+    "assertion_id": "pxd057588:t7:claim:5",
+    "assertion_status": "source_reported",
+    "normalized_value": "retained_complete_case_rows_only",
+    "predicate": "selection_scope",
+    "scope": "assay_table",
+    "source_locator": "PXD057588/table7.xlsx!A2",
+    "subject_id": "pxd057588:t7",
+    "value_raw": "Result filtered with peptide sequences with no empty values in any samples. \"U\" denotes untreated samples, M1 denotes pro-inflammatory macrophages."
+  },
+  {
+    "assertion_id": "pxd057588:t8:claim:6",
+    "assertion_status": "curated_from_source_title_and_method",
+    "normalized_value": "mhc_bound",
+    "predicate": "measured_pool",
+    "scope": "assay_table",
+    "source_locator": "PXD057588/table8.xlsx!C1",
+    "subject_id": "pxd057588:t8",
+    "value_raw": "Supplementary Table 8 Peptide quantification in TMT labeled anti-flammatory macrophages and na\u00efve macrophage"
+  },
+  {
+    "assertion_id": "pxd057588:t8:claim:7",
+    "assertion_status": "curated_from_source_title_and_method",
+    "normalized_value": "macrophage",
+    "predicate": "measured_population",
+    "scope": "assay_table",
+    "source_locator": "PXD057588/table8.xlsx!C1",
+    "subject_id": "pxd057588:t8",
+    "value_raw": "Supplementary Table 8 Peptide quantification in TMT labeled anti-flammatory macrophages and na\u00efve macrophage"
+  },
+  {
+    "assertion_id": "pxd057588:t8:claim:8",
+    "assertion_status": "curated_from_source_title_and_method",
+    "normalized_value": "polarized_M2_vs_untreated",
+    "predicate": "condition_class",
+    "scope": "assay_table",
+    "source_locator": "PXD057588/table8.xlsx!C1",
+    "subject_id": "pxd057588:t8",
+    "value_raw": "Supplementary Table 8 Peptide quantification in TMT labeled anti-flammatory macrophages and na\u00efve macrophage"
+  },
+  {
+    "assertion_id": "pxd057588:t8:claim:9",
+    "assertion_status": "source_reported",
+    "normalized_value": "retained_complete_case_rows_only",
+    "predicate": "selection_scope",
+    "scope": "assay_table",
+    "source_locator": "PXD057588/table8.xlsx!A2",
+    "subject_id": "pxd057588:t8",
+    "value_raw": "Result filtered with peptide sequences with no empty values in any samples. \"U\" denotes untreated samples, M2 denotes pro-inflammatory macrophages."
+  },
+  {
+    "assertion_id": "pxd057588:t9:claim:10",
+    "assertion_status": "curated_from_source_title_and_method",
+    "normalized_value": "mhc_bound",
+    "predicate": "measured_pool",
+    "scope": "assay_table",
+    "source_locator": "PXD057588/table9.xlsx!A1",
+    "subject_id": "pxd057588:t9",
+    "value_raw": "Supplementary Table 9 Peptide quantification in TMT labeled GL261 or CT2A co-cultured macrophages and na\u00efve macrophage"
+  },
+  {
+    "assertion_id": "pxd057588:t9:claim:11",
+    "assertion_status": "curated_from_source_title_and_method",
+    "normalized_value": "macrophage",
+    "predicate": "measured_population",
+    "scope": "assay_table",
+    "source_locator": "PXD057588/table9.xlsx!A1",
+    "subject_id": "pxd057588:t9",
+    "value_raw": "Supplementary Table 9 Peptide quantification in TMT labeled GL261 or CT2A co-cultured macrophages and na\u00efve macrophage"
+  },
+  {
+    "assertion_id": "pxd057588:t9:claim:12",
+    "assertion_status": "curated_from_source_title_and_method",
+    "normalized_value": "coculture_vs_untreated",
+    "predicate": "condition_class",
+    "scope": "assay_table",
+    "source_locator": "PXD057588/table9.xlsx!A1",
+    "subject_id": "pxd057588:t9",
+    "value_raw": "Supplementary Table 9 Peptide quantification in TMT labeled GL261 or CT2A co-cultured macrophages and na\u00efve macrophage"
+  },
+  {
+    "assertion_id": "pxd057588:t9:claim:13",
+    "assertion_status": "curated_from_source_title_and_method",
+    "normalized_value": "tumor_cell",
+    "predicate": "partner_population",
+    "scope": "assay_table",
+    "source_locator": "PXD057588/table9.xlsx!A2",
+    "subject_id": "pxd057588:t9",
+    "value_raw": "Result filtered with peptide sequences with no empty values in any samples. \"R_ctrl\" denotes untreated macrophages, G+ denotes macrophages post co-culture with GL261 and C+ denotes macrophages post-co-culture with CT2A"
+  },
+  {
+    "assertion_id": "pxd057588:t9:claim:14",
+    "assertion_status": "source_reported",
+    "normalized_value": "retained_complete_case_rows_only",
+    "predicate": "selection_scope",
+    "scope": "assay_table",
+    "source_locator": "PXD057588/table9.xlsx!A2",
+    "subject_id": "pxd057588:t9",
+    "value_raw": "Result filtered with peptide sequences with no empty values in any samples. \"R_ctrl\" denotes untreated macrophages, G+ denotes macrophages post co-culture with GL261 and C+ denotes macrophages post-co-culture with CT2A"
+  },
+  {
+    "assertion_id": "pxd057588:t10:claim:15",
+    "assertion_status": "curated_from_source_title_and_method",
+    "normalized_value": "mhc_bound",
+    "predicate": "measured_pool",
+    "scope": "assay_table",
+    "source_locator": "PXD057588/table10.xlsx!E1",
+    "subject_id": "pxd057588:t10",
+    "value_raw": "Supplementary Table 10 Peptide quantification in TMT labeled GL261 or CT2A KO co-cultured macrophages and na\u00efve macrophage"
+  },
+  {
+    "assertion_id": "pxd057588:t10:claim:16",
+    "assertion_status": "curated_from_source_title_and_method",
+    "normalized_value": "macrophage",
+    "predicate": "measured_population",
+    "scope": "assay_table",
+    "source_locator": "PXD057588/table10.xlsx!E1",
+    "subject_id": "pxd057588:t10",
+    "value_raw": "Supplementary Table 10 Peptide quantification in TMT labeled GL261 or CT2A KO co-cultured macrophages and na\u00efve macrophage"
+  },
+  {
+    "assertion_id": "pxd057588:t10:claim:17",
+    "assertion_status": "curated_from_source_title_and_method",
+    "normalized_value": "coculture_vs_untreated",
+    "predicate": "condition_class",
+    "scope": "assay_table",
+    "source_locator": "PXD057588/table10.xlsx!E1",
+    "subject_id": "pxd057588:t10",
+    "value_raw": "Supplementary Table 10 Peptide quantification in TMT labeled GL261 or CT2A KO co-cultured macrophages and na\u00efve macrophage"
+  },
+  {
+    "assertion_id": "pxd057588:t10:claim:18",
+    "assertion_status": "curated_from_source_title_and_method",
+    "normalized_value": "mhc_i_loss_tumor_cell",
+    "predicate": "partner_population",
+    "scope": "assay_table",
+    "source_locator": "PXD057588/table10.xlsx!A2",
+    "subject_id": "pxd057588:t10",
+    "value_raw": "Result filtered with peptide sequences with no empty values in any samples. \"U\" denotes untreated macrophages, G denotes macrophages post co-culture with GL261-KO and C denotes macrophages post-co-culture with CT2A-KO"
+  },
+  {
+    "assertion_id": "pxd057588:t10:claim:19",
+    "assertion_status": "source_reported",
+    "normalized_value": "retained_complete_case_rows_only",
+    "predicate": "selection_scope",
+    "scope": "assay_table",
+    "source_locator": "PXD057588/table10.xlsx!A2",
+    "subject_id": "pxd057588:t10",
+    "value_raw": "Result filtered with peptide sequences with no empty values in any samples. \"U\" denotes untreated macrophages, G denotes macrophages post co-culture with GL261-KO and C denotes macrophages post-co-culture with CT2A-KO"
+  },
+  {
+    "assertion_id": "pxd057588:t11:claim:20",
+    "assertion_status": "curated_from_source_title_and_method",
+    "normalized_value": "bulk_digest_peptide",
+    "predicate": "measured_pool",
+    "scope": "assay_table",
+    "source_locator": "PXD057588/table11.xlsx!A1",
+    "subject_id": "pxd057588:t11",
+    "value_raw": "Supplementary Table 11 Protein expression quantification in TMT labeled GL261 or CT2A co-cultured macrophages and na\u00efve macrophage"
+  },
+  {
+    "assertion_id": "pxd057588:t11:claim:21",
+    "assertion_status": "curated_from_source_title_and_method",
+    "normalized_value": "macrophage",
+    "predicate": "measured_population",
+    "scope": "assay_table",
+    "source_locator": "PXD057588/table11.xlsx!A1",
+    "subject_id": "pxd057588:t11",
+    "value_raw": "Supplementary Table 11 Protein expression quantification in TMT labeled GL261 or CT2A co-cultured macrophages and na\u00efve macrophage"
+  },
+  {
+    "assertion_id": "pxd057588:t11:claim:22",
+    "assertion_status": "curated_from_source_title_and_method",
+    "normalized_value": "coculture_vs_untreated",
+    "predicate": "condition_class",
+    "scope": "assay_table",
+    "source_locator": "PXD057588/table11.xlsx!A1",
+    "subject_id": "pxd057588:t11",
+    "value_raw": "Supplementary Table 11 Protein expression quantification in TMT labeled GL261 or CT2A co-cultured macrophages and na\u00efve macrophage"
+  },
+  {
+    "assertion_id": "pxd057588:t11:claim:23",
+    "assertion_status": "curated_from_source_title_and_method",
+    "normalized_value": "tumor_cell",
+    "predicate": "partner_population",
+    "scope": "assay_table",
+    "source_locator": "PXD057588/table11.xlsx!A2",
+    "subject_id": "pxd057588:t11",
+    "value_raw": "Result filtered with peptide sequences with no empty values in any samples. \"R_ctrl\" denotes untreated macrophages, G+ denotes macrophages post co-culture with GL261 and C+ denotes macrophages post-co-culture with CT2A"
+  },
+  {
+    "assertion_id": "pxd057588:t11:claim:24",
+    "assertion_status": "source_reported",
+    "normalized_value": "retained_complete_case_rows_only",
+    "predicate": "selection_scope",
+    "scope": "assay_table",
+    "source_locator": "PXD057588/table11.xlsx!A2",
+    "subject_id": "pxd057588:t11",
+    "value_raw": "Result filtered with peptide sequences with no empty values in any samples. \"R_ctrl\" denotes untreated macrophages, G+ denotes macrophages post co-culture with GL261 and C+ denotes macrophages post-co-culture with CT2A"
+  },
+  {
+    "assertion_id": "pxd057588:t12:claim:25",
+    "assertion_status": "curated_from_source_title_and_method",
+    "normalized_value": "mhc_bound",
+    "predicate": "measured_pool",
+    "scope": "assay_table",
+    "source_locator": "PXD057588/table12.xlsx!A1",
+    "subject_id": "pxd057588:t12",
+    "value_raw": "Supplementary Table 12 Peptide quantification in TMT labeled GL261 or CT2A before and after co-culture"
+  },
+  {
+    "assertion_id": "pxd057588:t12:claim:26",
+    "assertion_status": "curated_from_source_title_and_method",
+    "normalized_value": "tumor_cell",
+    "predicate": "measured_population",
+    "scope": "assay_table",
+    "source_locator": "PXD057588/table12.xlsx!A1",
+    "subject_id": "pxd057588:t12",
+    "value_raw": "Supplementary Table 12 Peptide quantification in TMT labeled GL261 or CT2A before and after co-culture"
+  },
+  {
+    "assertion_id": "pxd057588:t12:claim:27",
+    "assertion_status": "curated_from_source_title_and_method",
+    "normalized_value": "coculture_vs_untreated",
+    "predicate": "condition_class",
+    "scope": "assay_table",
+    "source_locator": "PXD057588/table12.xlsx!A1",
+    "subject_id": "pxd057588:t12",
+    "value_raw": "Supplementary Table 12 Peptide quantification in TMT labeled GL261 or CT2A before and after co-culture"
+  },
+  {
+    "assertion_id": "pxd057588:t12:claim:28",
+    "assertion_status": "curated_from_source_title_and_method",
+    "normalized_value": "macrophage",
+    "predicate": "partner_population",
+    "scope": "assay_table",
+    "source_locator": "PXD057588/table12.xlsx!A2",
+    "subject_id": "pxd057588:t12",
+    "value_raw": "Result filtered with peptide sequences with no empty values in any samples. \"G_ctrl\" denotes untreated GL261, G- denotes GL261 post co-culture, \"C_ctrl\" denotes untreated CT2A, C- denotes CT2A post-coculture"
+  },
+  {
+    "assertion_id": "pxd057588:t12:claim:29",
+    "assertion_status": "source_reported",
+    "normalized_value": "retained_complete_case_rows_only",
+    "predicate": "selection_scope",
+    "scope": "assay_table",
+    "source_locator": "PXD057588/table12.xlsx!A2",
+    "subject_id": "pxd057588:t12",
+    "value_raw": "Result filtered with peptide sequences with no empty values in any samples. \"G_ctrl\" denotes untreated GL261, G- denotes GL261 post co-culture, \"C_ctrl\" denotes untreated CT2A, C- denotes CT2A post-coculture"
+  },
+  {
+    "assertion_id": "pxd057588:t8:claim:30",
+    "assertion_status": "conflicting_source_assertion",
+    "normalized_value": "anti_inflammatory",
+    "predicate": "polarization_class",
+    "scope": "assay_table",
+    "source_locator": "PXD057588/table8.xlsx!C1",
+    "subject_id": "pxd057588:t8",
+    "value_raw": "Supplementary Table 8 Peptide quantification in TMT labeled anti-flammatory macrophages and na\u00efve macrophage"
+  },
+  {
+    "assertion_id": "pxd057588:t8:claim:31",
+    "assertion_status": "conflicting_source_assertion",
+    "normalized_value": "pro_inflammatory",
+    "predicate": "polarization_class",
+    "scope": "assay_table",
+    "source_locator": "PXD057588/table8.xlsx!A2",
+    "subject_id": "pxd057588:t8",
+    "value_raw": "Result filtered with peptide sequences with no empty values in any samples. \"U\" denotes untreated samples, M2 denotes pro-inflammatory macrophages."
+  },
+  {
+    "assertion_id": "pxd057588:t10:claim:32",
+    "assertion_status": "conflicting_source_assertion",
+    "normalized_value": "reported_n_3",
+    "predicate": "replication_description",
+    "scope": "assay_table",
+    "source_locator": "PXD057588/table10.xlsx!A3",
+    "subject_id": "pxd057588:t10",
+    "value_raw": "Raw TMT intensities of untreated, MHC-I knock-out GL261 co-cultured and MHC-I knock-out CT2A co-cultured macrophages (n=3)"
+  },
+  {
+    "assertion_id": "pxd057588:t10:claim:33",
+    "assertion_status": "conflicting_source_assertion",
+    "normalized_value": "four_labeled_channels_per_partner_arm_not_donor_count",
+    "predicate": "replication_description",
+    "scope": "assay_table",
+    "source_locator": "PXD057588/table10.xlsx!B5:L5",
+    "subject_id": "pxd057588:t10",
+    "value_raw": "G1-G4 and C1-C4 channel labels"
+  },
+  {
+    "assertion_id": "pxd057588:t10:claim:34",
+    "assertion_status": "source_reported",
+    "normalized_value": "tumor_partner_not_measured_macrophage",
+    "predicate": "mhc_i_loss_target_population",
+    "scope": "partner_population",
+    "source_locator": "Cui et al. 2025 / Table 10 and Materials and methods",
+    "subject_id": "pxd057588:t10",
+    "value_raw": "tumor-cell MHC-I loss"
+  },
+  {
+    "assertion_id": "pxd057588:t11:claim:35",
+    "assertion_status": "source_reported_method",
+    "normalized_value": "same_workflow_no_exact_aliquot_id",
+    "predicate": "source_material_workflow",
+    "scope": "assay_table",
+    "source_locator": "Cui et al. 2025 / Materials and methods / Global proteome data",
+    "subject_id": "pxd057588:t11",
+    "value_raw": "post-IP lysate global proteomics"
+  },
+  {
+    "assertion_id": "pxd057588:sdrf:claim:36",
+    "assertion_status": "source_reported_missingness",
+    "normalized_value": "unreported",
+    "predicate": "treatment",
+    "scope": "six_annotated_tumor_raw_files_only",
+    "source_locator": "PXD057588/community.sdrf.tsv::column/8",
+    "subject_id": "pxd057588:sdrf",
+    "value_raw": "not available"
+  }
+]

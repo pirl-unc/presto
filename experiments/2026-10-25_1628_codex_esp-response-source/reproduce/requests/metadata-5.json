@@ -1,0 +1,12 @@
+{
+  "phase": "metadata",
+  "scope": "Operation5 of6, official current PMC distribution object inventory, no numerical supplements.",
+  "requests": [
+    {
+      "name": "fusaro2009-s3-inventory.xml",
+      "url": "https://pmc-oa-opendata.s3.amazonaws.com/?list-type=2&prefix=PMC2753399.&max-keys=100",
+      "expected_kind": "xml",
+      "discovery_provenance": "PMC2753399 from primary bibliography; current PMC S3 ListObjectsV2 interface documented at https://pmc.ncbi.nlm.nih.gov/tools/pmcaws/ and used/archived by family1451."
+    }
+  ]
+}

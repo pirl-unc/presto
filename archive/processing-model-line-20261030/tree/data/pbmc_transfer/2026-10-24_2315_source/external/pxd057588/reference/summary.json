@@ -1,0 +1,174 @@
+{
+  "elapsed_seconds": 7.5905440419737715,
+  "exact_position_alternatives": 52277,
+  "interpretation": "reference-scoped sequence and observed parent support; no specimen pairing, training admission or concentration claim",
+  "mhc_digest_support": {
+    "all_reference_full_sequences": {
+      "distinct_digest_rows_multi": 2128,
+      "distinct_digest_rows_shared": 6594,
+      "distinct_ligand_rows_multi": 277,
+      "distinct_ligand_rows_shared": 875,
+      "multiple_ligand_and_digest_keys": 236,
+      "shared_parent_keys": 1134
+    },
+    "all_reference_identities": {
+      "distinct_digest_rows_multi": 2128,
+      "distinct_digest_rows_shared": 6594,
+      "distinct_ligand_rows_multi": 277,
+      "distinct_ligand_rows_shared": 875,
+      "multiple_ligand_and_digest_keys": 236,
+      "shared_parent_keys": 1136
+    },
+    "literal_label": {
+      "distinct_digest_rows_multi": 1919,
+      "distinct_digest_rows_shared": 6063,
+      "distinct_ligand_rows_multi": 258,
+      "distinct_ligand_rows_shared": 830,
+      "multiple_ligand_and_digest_keys": 110,
+      "shared_parent_keys": 663
+    },
+    "verified_source_label": {
+      "distinct_digest_rows_multi": 1919,
+      "distinct_digest_rows_shared": 6057,
+      "distinct_ligand_rows_multi": 258,
+      "distinct_ligand_rows_shared": 827,
+      "multiple_ligand_and_digest_keys": 110,
+      "shared_parent_keys": 661
+    }
+  },
+  "reference_distinct_full_sequences": 25737,
+  "reference_entries": 25758,
+  "reference_residues": 15203685,
+  "source_rows": 35772,
+  "status": "complete_scan_verification_pending",
+  "strata": [
+    {
+      "additional_parent_rows": 11770,
+      "components": 5374,
+      "distinct_sequences": 30587,
+      "exact_reference_matched_rows": 35771,
+      "largest_component_sequences": 862,
+      "matched_full_parent_sequences": 10483,
+      "matched_parent_identities": 10497,
+      "multiple_full_parent_sequence_rows": 11725,
+      "single_full_parent_sequence_rows": 24046,
+      "single_parent_identity_rows": 24019,
+      "source_parent_status": {
+        "exact_sequence_match": 35747,
+        "missing_id": 24,
+        "resolved_id_peptide_absent": 1
+      },
+      "source_rows": 35772,
+      "table": "all"
+    },
+    {
+      "additional_parent_rows": 1025,
+      "components": 1956,
+      "distinct_sequences": 2824,
+      "exact_reference_matched_rows": 2824,
+      "largest_component_sequences": 60,
+      "matched_full_parent_sequences": 3463,
+      "matched_parent_identities": 3467,
+      "multiple_full_parent_sequence_rows": 1014,
+      "single_full_parent_sequence_rows": 1810,
+      "single_parent_identity_rows": 1802,
+      "source_parent_status": {
+        "exact_sequence_match": 2819,
+        "missing_id": 5
+      },
+      "source_rows": 2824,
+      "table": 7
+    },
+    {
+      "additional_parent_rows": 1258,
+      "components": 2325,
+      "distinct_sequences": 3554,
+      "exact_reference_matched_rows": 3554,
+      "largest_component_sequences": 51,
+      "matched_full_parent_sequences": 4174,
+      "matched_parent_identities": 4178,
+      "multiple_full_parent_sequence_rows": 1250,
+      "single_full_parent_sequence_rows": 2304,
+      "single_parent_identity_rows": 2300,
+      "source_parent_status": {
+        "exact_sequence_match": 3548,
+        "missing_id": 6
+      },
+      "source_rows": 3554,
+      "table": 8
+    },
+    {
+      "additional_parent_rows": 467,
+      "components": 1019,
+      "distinct_sequences": 1309,
+      "exact_reference_matched_rows": 1309,
+      "largest_component_sequences": 24,
+      "matched_full_parent_sequences": 1780,
+      "matched_parent_identities": 1782,
+      "multiple_full_parent_sequence_rows": 463,
+      "single_full_parent_sequence_rows": 846,
+      "single_parent_identity_rows": 844,
+      "source_parent_status": {
+        "exact_sequence_match": 1306,
+        "missing_id": 3
+      },
+      "source_rows": 1309,
+      "table": 9
+    },
+    {
+      "additional_parent_rows": 958,
+      "components": 1825,
+      "distinct_sequences": 2613,
+      "exact_reference_matched_rows": 2613,
+      "largest_component_sequences": 45,
+      "matched_full_parent_sequences": 3295,
+      "matched_parent_identities": 3297,
+      "multiple_full_parent_sequence_rows": 952,
+      "single_full_parent_sequence_rows": 1661,
+      "single_parent_identity_rows": 1658,
+      "source_parent_status": {
+        "exact_sequence_match": 2609,
+        "missing_id": 4
+      },
+      "source_rows": 2613,
+      "table": 10
+    },
+    {
+      "additional_parent_rows": 7942,
+      "components": 3681,
+      "distinct_sequences": 25110,
+      "exact_reference_matched_rows": 25109,
+      "largest_component_sequences": 775,
+      "matched_full_parent_sequences": 7645,
+      "matched_parent_identities": 7659,
+      "multiple_full_parent_sequence_rows": 7926,
+      "single_full_parent_sequence_rows": 17183,
+      "single_parent_identity_rows": 17173,
+      "source_parent_status": {
+        "exact_sequence_match": 25103,
+        "missing_id": 6,
+        "resolved_id_peptide_absent": 1
+      },
+      "source_rows": 25110,
+      "table": 11
+    },
+    {
+      "additional_parent_rows": 120,
+      "components": 341,
+      "distinct_sequences": 362,
+      "exact_reference_matched_rows": 362,
+      "largest_component_sequences": 5,
+      "matched_full_parent_sequences": 554,
+      "matched_parent_identities": 554,
+      "multiple_full_parent_sequence_rows": 120,
+      "single_full_parent_sequence_rows": 242,
+      "single_parent_identity_rows": 242,
+      "source_parent_status": {
+        "exact_sequence_match": 362
+      },
+      "source_rows": 362,
+      "table": 12
+    }
+  ],
+  "unique_source_sequences": 30587
+}

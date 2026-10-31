@@ -1,0 +1,21 @@
+{
+  "verifier_sha256": "4dd77e02fe91632d92d28bdb9224a0105521521f02d9e5bc5f7604bd49a46e31",
+  "frozen_source": "reproduce/source/verify.py",
+  "baseline_prediction_records_verified": 54728,
+  "runtime_source_commit": "4d4c029777af357c35eea47762ce07a9f66f488a",
+  "bootstrap": {
+    "unit": "exact peptide with all repeated observations",
+    "resamples": 2000,
+    "numpy_seed": 20261021
+  },
+  "loss_replay_tolerance": {
+    "rtol": 0.0001,
+    "atol": 2e-06
+  },
+  "exact_metric_tolerance": {
+    "rtol": 1e-08,
+    "atol": 1e-09
+  },
+  "fresh_training_replay_max_error": 1e-06,
+  "test_rescore": false
+}

@@ -1,0 +1,81 @@
+"""Restore missing tracked bytes only; never overwrite a surviving path."""
+
+import hashlib
+import json
+import os
+import shutil
+import subprocess
+import time
+import uuid
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+PRIMARY = Path('/Users/iskander/code/presto')
+HERE = Path(__file__).resolve().parent
+plan = json.loads((HERE / 'missing-tracked-files.json').read_text())
+entries = plan['restore'] + plan['defer']
+assert subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip() == plan['head']
+assert not subprocess.check_output(['git', 'diff', '--cached', '--name-only'], cwd=ROOT, text=True).strip()
+assert shutil.disk_usage(ROOT).free >= sum(x['size_bytes'] for x in entries) + 1024**3 + 32 * 1024**2
+assert not (HERE / 'restore-journal.jsonl').exists()
+
+
+def blob_id(path):
+    size = path.stat().st_size
+    h = hashlib.sha1(f'blob {size}\0'.encode())
+    with path.open('rb') as stream:
+        while chunk := stream.read(1024**2):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+started = time.monotonic()
+cloned = streamed = 0
+with (HERE / 'restore-journal.jsonl').open('x') as journal:
+    for entry in entries:
+        dest = ROOT / entry['path']
+        assert not os.path.lexists(dest), entry['path']
+        assert entry['mode'] in ('100644', '100755')
+        assert shutil.disk_usage(ROOT).free >= entry['size_bytes'] + 1024**3 + 32 * 1024**2
+        assert dest.parent.resolve().is_relative_to(ROOT)
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        temporary = dest.parent / ('.presto-restore-' + uuid.uuid4().hex)
+        source = PRIMARY / entry['path']
+        candidate = source.is_file() and not source.is_symlink() and source.stat().st_size == entry['size_bytes']
+        method = 'git_blob'
+        if candidate and blob_id(source) == entry['oid']:
+            cp = subprocess.run(['/bin/cp', '-c', str(source), str(temporary)], capture_output=True)
+            if cp.returncode == 0:
+                assert temporary.stat().st_ino != source.stat().st_ino
+                method = 'independent_apfs_clone'
+            else:
+                if temporary.exists():
+                    temporary.unlink()
+                journal.write(json.dumps({'path': entry['path'], 'clone_failed': cp.stderr.decode(errors='replace')}) + '\n')
+        if method == 'git_blob':
+            with temporary.open('xb') as output:
+                process = subprocess.Popen(['git', 'cat-file', 'blob', entry['oid']], cwd=ROOT,
+                                           stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                assert process.stdout is not None
+                while chunk := process.stdout.read(1024**2):
+                    assert shutil.disk_usage(ROOT).free >= len(chunk) + 1024**3 + 32 * 1024**2
+                    output.write(chunk)
+                error = process.communicate()[1]
+                assert process.returncode == 0, error
+        assert temporary.stat().st_size == entry['size_bytes']
+        assert blob_id(temporary) == entry['oid']
+        os.chmod(temporary, 0o755 if entry['mode'] == '100755' else 0o644)
+        # Atomic no-clobber publication of our own temporary inode. No two
+        # retained files share an inode after the temporary name is removed.
+        os.link(temporary, dest)
+        temporary.unlink()
+        assert dest.stat().st_nlink == 1
+        cloned += method == 'independent_apfs_clone'
+        streamed += method == 'git_blob'
+        journal.write(json.dumps({**entry, 'method': method, 'restored_inode': dest.stat().st_ino}) + '\n')
+        journal.flush()
+result = {'restored': cloned + streamed, 'independent_clones': cloned, 'git_blob_writes': streamed,
+          'logical_bytes': sum(x['size_bytes'] for x in entries), 'seconds': time.monotonic() - started,
+          'free_bytes': shutil.disk_usage(ROOT).free, 'existing_files_overwritten': 0}
+(HERE / 'restore-result.json').write_text(json.dumps(result, indent=2) + '\n')
+print(json.dumps(result))

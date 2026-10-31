@@ -1,0 +1,28 @@
+{
+  "registered_utc": "2026-10-25T03:44:08.002482+00:00",
+  "agent": "Codex",
+  "model": "GPT-6",
+  "git_commit": "8454ef9c40913c89d56bca5cd02f923701af91f6",
+  "tracked_dirty_status": " M tasks/todo.md\n",
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "python_version": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "raw_directory": "/private/tmp/presto-modular-model/data/proteasome_quantity_sources/2026-10-25_0344_codex_proteasome-quantity-source",
+  "limits": {
+    "disk_floor_bytes": 1073741824,
+    "asset_bytes": 20971520,
+    "total_raw_bytes": 67108864,
+    "acquisition_seconds": 600
+  },
+  "scope": "source_admission_only_no_predictive_outcomes",
+  "sources": [
+    "https://www.nature.com/articles/s41467-021-26427-0",
+    "https://elifesciences.org/articles/07545",
+    "https://datadryad.org/dataset/doi:10.5061/dryad.nk453"
+  ],
+  "source_plan_sha256": "e8462c9df226ea13160cbdd90efaa9372058e93522a1a7e2b00e3d919b0bca91",
+  "pretraining": null,
+  "training": null,
+  "split": null,
+  "predictions_absence": "Source qualification before canonical data admission and model registration."
+}

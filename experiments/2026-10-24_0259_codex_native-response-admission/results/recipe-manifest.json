@@ -1,0 +1,103 @@
+{
+  "catalog_schema_version": 22,
+  "coverage": {
+    "absolute_concentration_claim": false,
+    "defer_reason_counts": {
+      "deferred_conflicting_possible_reuse_context": 1100,
+      "deferred_control_or_derived_average": 30954,
+      "deferred_nonquantifiable": 2399,
+      "deferred_tentative": 135,
+      "deferred_unidentified": 15798,
+      "deferred_unresolved_annotation": 27
+    },
+    "groups_by_split": {
+      "test": 631,
+      "train": 1861,
+      "val": 245
+    },
+    "n_admitted_source_slots": 11495,
+    "n_components": 4843,
+    "n_conflicting_reuse_groups": 412,
+    "n_control_proxies_crossing_splits": 33,
+    "n_deferred_source_slots": 50413,
+    "n_effective_observations": 10114,
+    "n_full_parent_supported_groups": 2731,
+    "n_reference_occurrences": 1155,
+    "n_reference_proteins": 42562,
+    "n_response_groups": 2737,
+    "n_source_measurement_slots": 61908,
+    "n_source_rows": 10564,
+    "n_source_sequences": 571,
+    "n_used_reference_proteins": 345,
+    "observations_by_censoring_status": {
+      "exact": 6083,
+      "source_declared_bound": 4031
+    },
+    "specimen_independence": "unresolved"
+  },
+  "files": {
+    "assertions.json.gz": {
+      "sha256": "fa405356d7981263d93e338f3119592646d857ba7924b70798905e8de82114b4",
+      "size_bytes": 357491
+    },
+    "components.json.gz": {
+      "sha256": "fbb3fec8cda3bedbcb2d03a789d48f2a917bf1006d7d59494b5f8ff77337e94b",
+      "size_bytes": 422409
+    },
+    "contract.json": {
+      "sha256": "defac052e1418e97e94b20de13888344e2bf69d9aaf437159a803ad8500bcd17",
+      "size_bytes": 1330
+    },
+    "dispositions.json.gz": {
+      "sha256": "28ec5bde2f01ed9948e994431d6eb5876ba2434d6e4a914e4a3b6bc64c228eb1",
+      "size_bytes": 4823155
+    },
+    "examples.json.gz": {
+      "sha256": "6ead1de69dc3bf8c8d81652ecf0272a83e7c968c3948145e7afb3fe8fddd2aad",
+      "size_bytes": 947801
+    },
+    "model_reference.fasta": {
+      "sha256": "8c4459cc1e190caad54150511e5a0b5779863557f88387e5a86647a48d19a9d4",
+      "size_bytes": 29338408
+    },
+    "occurrences.json.gz": {
+      "sha256": "afee2558b816cd3513daf2857a14717c4f1839085813090f4bd099464cce7473",
+      "size_bytes": 38330
+    },
+    "parents.json.gz": {
+      "sha256": "57d99a60cf8ae6c97176179df67a1757c8185569dcfee58739a8cd3ca24ac342",
+      "size_bytes": 81694
+    },
+    "source_manifest.json": {
+      "sha256": "7f80844bc39748bb4fbd06e5747bac0769e06d1f7a1038f82daeae29b41b406f",
+      "size_bytes": 4373
+    },
+    "source_tables.json.gz": {
+      "sha256": "f48958d77bce8202e3543f6fac522cb38e807ce2e30b00f10a4858b2a735cd80",
+      "size_bytes": 6448904
+    },
+    "summary.json.gz": {
+      "sha256": "f75ffadc81bb87a7f4a4dfac44e1b02f5645b45641462f8f65919864808d56c9",
+      "size_bytes": 489
+    }
+  },
+  "hitlist_version": "2.0.17",
+  "output_kind": "registered_native_response",
+  "recipe": {
+    "name": "native-response-admission",
+    "reference": {
+      "generation_label": "UniProt_2026_03_reviewed_human_isoform_inclusive",
+      "license": "CC BY 4.0",
+      "path": "/private/tmp/hitlist-v2-mapp-reference-second/external/pxd009092/assets/references/human-reviewed-2026_03-isoforms.fasta",
+      "role": "model_reference_not_original_search",
+      "sha256": "8c4459cc1e190caad54150511e5a0b5779863557f88387e5a86647a48d19a9d4",
+      "source_url": "https://rest.uniprot.org/uniprotkb/stream?query=%28organism_id%3A9606%29%20AND%20%28reviewed%3Atrue%29&format=fasta&includeIsoform=true"
+    },
+    "registered_recipe": "tmab_native_response_v1",
+    "schema_version": 1
+  },
+  "recipe_sha256": "37430647293810e353e758940a40a395601e654a53cf0e9b70958156464297a7",
+  "schema_version": 1,
+  "source_package_manifest_sha256": "7f80844bc39748bb4fbd06e5747bac0769e06d1f7a1038f82daeae29b41b406f",
+  "source_package_schema_version": 17
+}

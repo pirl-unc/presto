@@ -1,0 +1,71 @@
+{
+  "candidates": 26619,
+  "conflicting_input_groups": 841,
+  "conflicting_original_assays": 0,
+  "consistent_unique_inputs": 24146,
+  "excluded": {
+    "historical held-out peptide": 895,
+    "missing explicit chain restriction": 28618,
+    "missing finite positive outcome or original assay ID": 156,
+    "modified peptide": 947,
+    "not a purified-MHC assay": 5579,
+    "not an exact nM observation": 8698,
+    "not an explicit human HLA restriction": 2269,
+    "outside canonical peptide/class/length scope": 453,
+    "outside direct IEDB IC50 scope": 740007,
+    "unresolved exact catalog allele": 27
+  },
+  "historical_heldout_peptides_excluded": 1187,
+  "manifest_path": "/private/tmp/presto-modular-model/data/modular_cohorts/2026-10-21-memorization-control/manifest.json",
+  "manifest_sha256": "74f6ff7e208a239bb5d83c295bcb950e07effd999f571d7a615ff1410a2f94ee",
+  "raw_rows": 814268,
+  "selected": 32,
+  "selected_ids": [
+    "ic50:http://www.iedb.org/assay/1877088",
+    "ic50:http://www.iedb.org/assay/1869611",
+    "ic50:http://www.iedb.org/assay/1875704",
+    "ic50:http://www.iedb.org/assay/1625098",
+    "ic50:http://www.iedb.org/assay/22554635",
+    "ic50:http://www.iedb.org/assay/1625080",
+    "ic50:http://www.iedb.org/assay/1877525",
+    "ic50:http://www.iedb.org/assay/1623520",
+    "ic50:http://www.iedb.org/assay/1624239",
+    "ic50:http://www.iedb.org/assay/22554329",
+    "ic50:http://www.iedb.org/assay/1623177",
+    "ic50:http://www.iedb.org/assay/3351786",
+    "ic50:http://www.iedb.org/assay/1878207",
+    "ic50:http://www.iedb.org/assay/1869680",
+    "ic50:http://www.iedb.org/assay/1868410",
+    "ic50:http://www.iedb.org/assay/22554370",
+    "ic50:http://www.iedb.org/assay/2430367",
+    "ic50:http://www.iedb.org/assay/2426037",
+    "ic50:http://www.iedb.org/assay/2423950",
+    "ic50:http://www.iedb.org/assay/7330770",
+    "ic50:http://www.iedb.org/assay/1915906",
+    "ic50:http://www.iedb.org/assay/2431143",
+    "ic50:http://www.iedb.org/assay/2425227",
+    "ic50:http://www.iedb.org/assay/2428830",
+    "ic50:http://www.iedb.org/assay/2440323",
+    "ic50:http://www.iedb.org/assay/2432603",
+    "ic50:http://www.iedb.org/assay/2433461",
+    "ic50:http://www.iedb.org/assay/2424420",
+    "ic50:http://www.iedb.org/assay/2434824",
+    "ic50:http://www.iedb.org/assay/1915043",
+    "ic50:http://www.iedb.org/assay/2437664",
+    "ic50:http://www.iedb.org/assay/2441569"
+  ],
+  "source_pins": {
+    "binding": {
+      "path": "/Users/iskander/.hitlist/corrected-corpus/public-downloads/v4/bundles/2026-10-16T07-20-43Z/binding.parquet",
+      "sha256": "2b3f6ea2dd647e7fc54d214eef420feaebc4e81fab97ffc0565a2de1f8695ba0"
+    },
+    "catalog": {
+      "path": "/Users/iskander/.cache/mhcseqs/mhc-full-seqs.csv",
+      "sha256": "ddc3493c64f4328de174a6c2cda1f007ec2f93a1ef649add25d2ef9c1720add1"
+    },
+    "historical_membership": {
+      "path": "/Users/iskander/.hitlist/presto-corrected-human-qualification/public-downloads/v1/bundles/2026-10-16T08-32-18Z/membership.tsv",
+      "sha256": "8959e60c0d9b8049aec25095b9c354d456b48f97ba8fb31d7b786e2861113e99"
+    }
+  }
+}

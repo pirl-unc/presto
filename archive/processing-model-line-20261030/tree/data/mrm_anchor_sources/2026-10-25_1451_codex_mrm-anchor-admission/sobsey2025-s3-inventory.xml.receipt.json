@@ -1,0 +1,22 @@
+{
+  "bytes": 6219,
+  "content_length": null,
+  "content_type": "application/xml",
+  "elapsed_seconds": 0.28095200000097975,
+  "final_url": "https://pmc-oa-opendata.s3.amazonaws.com/?list-type=2&prefix=PMC11812018.&max-keys=100",
+  "http_status": 200,
+  "phase": "metadata",
+  "redirects": [],
+  "request": {
+    "discovery_provenance": "Same current official per-article ListObjectsV2 route qualified for the primary study; fixed fallback PMCID, no whole-bucket scan.",
+    "expected_kind": "xml",
+    "name": "sobsey2025-s3-inventory.xml",
+    "url": "https://pmc-oa-opendata.s3.amazonaws.com/?list-type=2&prefix=PMC11812018.&max-keys=100"
+  },
+  "request_set": "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1451_codex_mrm-anchor-admission/reproduce/requests/metadata-9.json",
+  "sha256": "8c597258761dbbec1ef935b67cb8748da2bbf1d39d465420bf54e9cc3146373d",
+  "started_utc": "2026-10-25T15:13:08.166016+00:00",
+  "status": "retrieved_validated_payload",
+  "text_decoding": "utf-8",
+  "xml_root": "{http://s3.amazonaws.com/doc/2006-03-01/}ListBucketResult"
+}

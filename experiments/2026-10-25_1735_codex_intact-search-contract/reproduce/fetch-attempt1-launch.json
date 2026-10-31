@@ -1,0 +1,100 @@
+{
+  "argv": [
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1735_codex_intact-search-contract/code/launch.py",
+    "fetch",
+    "--attempt",
+    "1",
+    "--requests",
+    "experiments/2026-10-25_1735_codex_intact-search-contract/reproduce/requests/fetch-1.json"
+  ],
+  "configuration": {
+    "agent_model": "Codex/GPT-6",
+    "created_utc": "2026-10-25T17:35:30.636039+00:00",
+    "experiment_id": "2026-10-25_1735_codex_intact-search-contract",
+    "presto_commit": "b8150780ede2272908cde3fac828e35bab240973",
+    "dirty_tracked": true,
+    "dirty_scope": "pre-existing task notes plus current plan checklist; no model edits",
+    "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+    "data_directory": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/intact_search_contract_sources/2026-10-25_1735_codex_intact-search-contract",
+    "frozen_code_sha256": {
+      "code/launch.py": "337b0957f12bced683299134c33465d6b26145fbaa4d9bc1e233832b437a9e27",
+      "code/fetch.py": "1bda902de950a889bab3a23487ca45cb430713afb42f7dc5b4a577dd37578dbb",
+      "reproduce/source/launch.py": "337b0957f12bced683299134c33465d6b26145fbaa4d9bc1e233832b437a9e27",
+      "reproduce/source/fetch.py": "1bda902de950a889bab3a23487ca45cb430713afb42f7dc5b4a577dd37578dbb",
+      "reproduce/launch.sh": "f8281d1fdc0666fd57140839a818993482b04b4f22e3d6d718a61f4de5ffc70c"
+    },
+    "plan_sha256": "9054363983e0d87eea00ffa7c7f19a5a0cda06b3603e350566d6e1945880d9b1",
+    "limits": {
+      "stage_seconds": 1200,
+      "rss_bytes": 3221225472,
+      "startup_memory_bytes": 3221225472,
+      "disk_floor_bytes": 1073741824,
+      "start_margin_bytes": 33554432
+    },
+    "environment_overrides": {
+      "PYTHONSAFEPATH": "1",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUNBUFFERED": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    },
+    "network_limits": {
+      "metadata_requests": 8,
+      "metadata_bytes_each": 16777216,
+      "processed_bytes_each": 16777216,
+      "total_bytes": 33554432,
+      "connect_seconds": 10,
+      "read_seconds": 30,
+      "request_wall_seconds": 120
+    },
+    "public_hosts": [
+      "raw.githubusercontent.com"
+    ],
+    "discovery_operations_limit_including_asset_requests": 8,
+    "candidate": "PXD058121 no-additional-modification method declaration and official ClipsMS export semantics",
+    "external_code_execution_authorized": false
+  },
+  "request_set": {
+    "phase": "processed",
+    "requests": [
+      {
+        "name": "ClipsMS_v2.0.1.py",
+        "url": "https://raw.githubusercontent.com/loolab2020/ClipsMS/8ad829bdb5d2b644a290551442a8728b3b8ac5b5/ClipsMS_v2.0.1.py",
+        "expected_kind": "text",
+        "discovery_provenance": "Official repository root file inventory and pinned source commit 8ad829bdb5d2b644a290551442a8728b3b8ac5b5",
+        "encoding": "utf-8"
+      },
+      {
+        "name": "No_Unlocalized_Modifications.csv",
+        "url": "https://raw.githubusercontent.com/loolab2020/ClipsMS/8ad829bdb5d2b644a290551442a8728b3b8ac5b5/No_Unlocalized_Modifications.csv",
+        "expected_kind": "text",
+        "discovery_provenance": "Official repository root file inventory and pinned source commit 8ad829bdb5d2b644a290551442a8728b3b8ac5b5",
+        "encoding": "utf-8"
+      },
+      {
+        "name": "README.md",
+        "url": "https://raw.githubusercontent.com/loolab2020/ClipsMS/8ad829bdb5d2b644a290551442a8728b3b8ac5b5/README.md",
+        "expected_kind": "text",
+        "discovery_provenance": "Official repository root file inventory and pinned source commit 8ad829bdb5d2b644a290551442a8728b3b8ac5b5",
+        "encoding": "utf-8"
+      },
+      {
+        "name": "LICENSE",
+        "url": "https://raw.githubusercontent.com/loolab2020/ClipsMS/8ad829bdb5d2b644a290551442a8728b3b8ac5b5/LICENSE",
+        "expected_kind": "text",
+        "discovery_provenance": "Official repository root file inventory and pinned source commit 8ad829bdb5d2b644a290551442a8728b3b8ac5b5",
+        "encoding": "utf-8"
+      }
+    ],
+    "source_sha256": {
+      "code/fetch.py": "1bda902de950a889bab3a23487ca45cb430713afb42f7dc5b4a577dd37578dbb"
+    },
+    "input_sha256": {
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1735_codex_intact-search-contract/results/clipsms-source-commit.json": "8a9b5b7271ea88cbe84e2cce753fe612f2133219b2a70878be38752ee9bb7cc6"
+    }
+  },
+  "request_set_sha256": "a051ed151dbf0f2d922902a4fe9c81f2c716700dce325123a599dc0a0d6e0351"
+}

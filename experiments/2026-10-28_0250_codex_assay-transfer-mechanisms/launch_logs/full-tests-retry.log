@@ -1,0 +1,62 @@
+........................................................................ [  2%]
+........................................................................ [  5%]
+........................................................................ [  7%]
+........................................................................ [ 10%]
+........................................................................ [ 12%]
+........................................................................ [ 15%]
+........................................................................ [ 18%]
+........................s............................................... [ 20%]
+........................................................................ [ 23%]
+........................................................................ [ 25%]
+........................ss.............................................. [ 28%]
+........................................................................ [ 31%]
+........................................................................ [ 33%]
+........................................................................ [ 36%]
+........................................................................ [ 38%]
+........................................................................ [ 41%]
+........................................................................ [ 43%]
+........................................................................ [ 46%]
+........................................................................ [ 49%]
+........................................................................ [ 51%]
+........................................................................ [ 54%]
+........................................................................ [ 56%]
+........................................................................ [ 59%]
+........................................................................ [ 62%]
+........................................................................ [ 64%]
+........................................................................ [ 67%]
+........................................................................ [ 69%]
+........................................................................ [ 72%]
+........................................................................ [ 75%]
+........................................................................ [ 77%]
+........................................................................ [ 80%]
+........................................................................ [ 82%]
+..............................s......................................... [ 85%]
+........................................................................ [ 87%]
+........................................................................ [ 90%]
+........................................................................ [ 93%]
+........................................................................ [ 95%]
+........................................................................ [ 98%]
+..............................................                           [100%]
+=============================== warnings summary ===============================
+tests/test_assay_ablation.py::TestForwardPass::test_all_variants_forward[a1]
+  /Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/torch/nn/modules/transformer.py:533: UserWarning: The PyTorch API of nested tensors is in prototype stage and will change in the near future. We recommend specifying layout=torch.jagged when constructing a nested tensor, as this layout receives active development, has better operator coverage, and works with torch.compile. (Triggered internally at /Users/runner/work/pytorch/pytorch/aten/src/ATen/NestedTensorImpl.cpp:181.)
+    output = torch._nested_tensor_from_mask(
+
+tests/test_coverage_preflight.py::test_selected_sources_reach_census_with_competing_inputs[False-merged_tsv-relative_deficit_v2-three_peptides]
+  /Users/iskander/code/hitlist-release-2.0.40/hitlist/__init__.py:48: Pandas4Warning: The 'future.infer_string' option is deprecated and will be removed in pandas 4.0. Inferring str dtype for string data has been the default since pandas 3.0, and it will no longer be possible to disable it.
+    _pd.options.future.infer_string = True
+
+tests/test_coverage_preflight.py: 6 warnings
+tests/test_frozen_hitlist.py: 13 warnings
+tests/test_frozen_partitions.py: 11 warnings
+  /Users/iskander/code/hitlist-release-2.0.40/hitlist/export.py:2820: Pandas4Warning: The inplace keyword in DataFrame.drop is deprecated and will be removed in a future version (PDEP-8).
+  See https://pandas.pydata.org/docs/dev/whatsnew/v3.1.0.html#deprecation-inplace for more details.
+    obs.drop(columns=["_pmid_int", "_mhc_class_norm"], inplace=True)
+
+tests/test_curriculum_and_init.py::TestDeliberateInitSurvives::test_zero_init_embeddings_are_not_clobbered
+  /Users/iskander/code/presto/.worktrees/shared-training/presto/tests/test_curriculum_and_init.py:102: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+  Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:821.)
+    assert float(model.excision_head.length_preference.weight.abs().sum()) == 0.0
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+2778 passed, 4 skipped, 33 warnings in 293.65s (0:04:53)

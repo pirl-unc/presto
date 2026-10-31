@@ -1,0 +1,14 @@
+{
+  "checks": [
+    "known_slope",
+    "unit_slope",
+    "equal_peptide_dose_weight",
+    "duplicate_slot_invariance",
+    "finite_ridge_and_active_columns",
+    "invalid_quantity_rejection",
+    "full_runner_outer_target_mutation_invariance",
+    "inner_and_outer_gene_exclusion"
+  ],
+  "fixture": "synthetic_software_only_no_biological_source_access",
+  "status": "passed"
+}

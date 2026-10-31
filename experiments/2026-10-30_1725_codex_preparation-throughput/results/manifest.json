@@ -1,0 +1,171 @@
+{
+  "schema": "presto.modular.manifest.v1",
+  "sources": [
+    {
+      "path": "/study/hitlist-v4-iedb-train.jsonl",
+      "sha256": "e374b4bd33c3242311a44be3762bfa7098f7ed5bbadab2fe9cec292eeb747367",
+      "source": "hitlist-v4-iedb",
+      "population": "Human catalog-resolved MHC; public IEDB/CEDAR canonical Hitlist admission; host and antigen species retained separately",
+      "label_policy": "reported literal assay endpoints and qualifiers; declared reference DRA only; generated unobserved ligands explicitly marked; source-scoped inferred bounds with raw provenance; unresolved heaps withheld",
+      "split_policy": "whole study components; metadata-only greedy coverage; exact peptide embargo test > validation > train; no pretrained weights; additional fluorescence study holdouts and cross-output peptide embargo"
+    },
+    {
+      "path": "/study/hitlist_ligand_background-train.jsonl",
+      "sha256": "ef052e23f2606468da4dba18b6d3f1f61f96ae904c05bb1be83541ea1bcbb536",
+      "source": "hitlist_ligand_background",
+      "population": "Human catalog-resolved MHC; public IEDB/CEDAR canonical Hitlist admission; host and antigen species retained separately",
+      "label_policy": "reported literal assay endpoints and qualifiers; declared reference DRA only; generated unobserved ligands explicitly marked; 35 newly source-verified positive sequences excluded",
+      "split_policy": "whole study components; metadata-only greedy coverage; exact peptide embargo test > validation > train; no pretrained weights; additional fluorescence study holdouts and cross-output peptide embargo"
+    },
+    {
+      "path": "/study/hitlist_native_ms-train.jsonl",
+      "sha256": "399c12751d0b034f1a25c300f0e52b8b1ab81a02fc05677c098d37d73ee607e0",
+      "source": "hitlist_native_ms",
+      "population": "Human catalog-resolved MHC; public IEDB/CEDAR canonical Hitlist admission; host and antigen species retained separately",
+      "label_policy": "reported literal assay endpoints and qualifiers; declared reference DRA only; generated unobserved ligands explicitly marked",
+      "split_policy": "whole study components; metadata-only greedy coverage; exact peptide embargo test > validation > train; no pretrained weights; additional fluorescence study holdouts and cross-output peptide embargo"
+    }
+  ],
+  "model": {
+    "endpoints": [
+      "elution_observation",
+      "half_life",
+      "ic50",
+      "kd_via_ec50",
+      "kd_via_ic50",
+      "qualitative_binding"
+    ],
+    "mhc_classes": [
+      "I",
+      "II"
+    ],
+    "d_model": 192,
+    "n_layers": 3,
+    "n_heads": 6,
+    "d_ff": 768,
+    "dropout": 0.1,
+    "source_context": false,
+    "assay_mode": "factorized",
+    "assay_tracks": [
+      {
+        "endpoint": "ic50",
+        "preparation": "purified",
+        "mechanism": "competitive",
+        "detector": "fluorescence"
+      },
+      {
+        "endpoint": "ic50",
+        "preparation": "purified",
+        "mechanism": "competitive",
+        "detector": "radioactivity"
+      },
+      {
+        "endpoint": "kd_via_ec50",
+        "preparation": "purified",
+        "mechanism": "direct",
+        "detector": "fluorescence"
+      },
+      {
+        "endpoint": "kd_via_ic50",
+        "preparation": "purified",
+        "mechanism": "competitive",
+        "detector": "radioactivity"
+      }
+    ]
+  },
+  "training": {
+    "seed": 43,
+    "batch_size": 128,
+    "max_epochs": 1,
+    "max_steps": 4000,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "identity_weight": 0.0,
+    "patience": 100000,
+    "min_epochs": 100000,
+    "checkpoint_every_steps": 500,
+    "validation_every_steps": 1000,
+    "selection_reduction": "endpoint_mean",
+    "train_evaluation_max_rows": 2048,
+    "balance_by": [
+      "endpoint",
+      "mhc_class"
+    ],
+    "stratum_weights": [
+      {
+        "values": [
+          "elution_observation",
+          "I"
+        ],
+        "weight": 0.405759758149557
+      },
+      {
+        "values": [
+          "half_life",
+          "I"
+        ],
+        "weight": 0.014893636502691937
+      },
+      {
+        "values": [
+          "half_life",
+          "II"
+        ],
+        "weight": 0.0018806756412264463
+      },
+      {
+        "values": [
+          "ic50",
+          "I"
+        ],
+        "weight": 0.08341713438658015
+      },
+      {
+        "values": [
+          "ic50",
+          "II"
+        ],
+        "weight": 0.11658286561341988
+      },
+      {
+        "values": [
+          "kd_via_ec50",
+          "I"
+        ],
+        "weight": 0.03051974227137438
+      },
+      {
+        "values": [
+          "kd_via_ic50",
+          "I"
+        ],
+        "weight": 0.03634000020633274
+      },
+      {
+        "values": [
+          "kd_via_ic50",
+          "II"
+        ],
+        "weight": 0.02353848967202306
+      },
+      {
+        "values": [
+          "qualitative_binding",
+          "I"
+        ],
+        "weight": 0.02620832779969901
+      },
+      {
+        "values": [
+          "qualitative_binding",
+          "II"
+        ],
+        "weight": 0.02379167220030099
+      }
+    ],
+    "test_policy": "no_test_training_diagnostic",
+    "no_test_reason": "CPU preparation benchmark only; no optimization or prediction",
+    "coverage_policy": "diagnostic",
+    "coverage_exception_reason": "CPU preparation benchmark; no optimization"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "question": "Does sequence-level raw intensity equal aggregation of evidence across charge/modification forms, and how are matching-only contributions represented? Explicit LFQ columns remain separate; their algorithm is not inferred from a name.",
+  "reason": "Original peptides table links Evidence IDs and Mod. peptide IDs and adds six LFQ columns omitted from the publisher workbook. Existing selected assets do not expose underlying forms/features.",
+  "range_start": 93940793,
+  "range_end": 100163300,
+  "n_bytes": 6222508,
+  "members": [
+    "Hi20S_txt/evidence.txt",
+    "Hi20S_txt/modificationSpecificPeptides.txt"
+  ],
+  "uncompressed_limits_unchanged": true,
+  "model_outcomes_computed": false
+}

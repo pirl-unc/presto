@@ -1,0 +1,37 @@
+{
+  "status": "passed",
+  "admitted_rows": 233719,
+  "withheld_review_rows": 618,
+  "inferred_bounds": {
+    "ceiling": 482,
+    "floor": 24
+  },
+  "by_endpoint_status": {
+    "kd_via_ec50:unspecified_assumed_exact": 436,
+    "kd_via_ic50:unspecified_assumed_exact": 65958,
+    "kd_via_ec50:reported": 38177,
+    "kd_via_ic50:reported": 6285,
+    "ic50:reported": 21554,
+    "ic50:unspecified_assumed_exact": 33078,
+    "half_life:unspecified_assumed_exact": 3329,
+    "kd_via_ic50:inferred_panel_limit": 370,
+    "td50:unspecified_assumed_exact": 400,
+    "ic50:inferred_panel_limit": 80,
+    "kd:reported": 17790,
+    "td50:reported": 103,
+    "half_life:reported": 5400,
+    "koff:unspecified_assumed_exact": 6,
+    "kd_via_ec50:inferred_panel_limit": 56,
+    "ec50:reported": 42,
+    "ec50:unspecified_assumed_exact": 170,
+    "kd:unspecified_assumed_exact": 23,
+    "koff:reported": 2
+  },
+  "method_context": {
+    "source_tag_unreviewed": 176959,
+    "protocol_citation_conflict": 16300
+  },
+  "archive_sha256": "cd3e8394e87db793138d9931f42db6e1a2ea50c437a57df52cc845b9c8cba5a2",
+  "source_values_and_raw_records_preserved": true,
+  "validation_test_untouched": true
+}

@@ -1,0 +1,37 @@
+{
+  "bytes": 614,
+  "content_length": "614",
+  "content_type": "binary/octet-stream",
+  "elapsed_seconds": 0.2068051669630222,
+  "final_url": "https://pmc-oa-opendata.s3.amazonaws.com/PMC2753399.1/PMC2753399.1.json",
+  "http_status": 200,
+  "json_top_keys": [
+    "pmcid",
+    "version",
+    "pmid",
+    "doi",
+    "mid",
+    "title",
+    "citation",
+    "is_pmc_openaccess",
+    "is_manuscript",
+    "is_historical_ocr",
+    "is_retracted",
+    "license_code",
+    "xml_url",
+    "text_url"
+  ],
+  "phase": "metadata",
+  "redirects": [],
+  "request": {
+    "discovery_provenance": "Exact key and declared size in validated fusaro2009-s3-inventory.xml;614-byte metadata or111323-byte original article.",
+    "expected_kind": "json",
+    "name": "fusaro2009-s3.json",
+    "url": "https://pmc-oa-opendata.s3.amazonaws.com/PMC2753399.1/PMC2753399.1.json"
+  },
+  "request_set": "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1628_codex_esp-response-source/reproduce/requests/metadata-6.json",
+  "sha256": "78aeec5850be83954b3e26db9942584c5366fb6df4aa0775a383d16d5d3b777f",
+  "started_utc": "2026-10-25T16:29:49.677352+00:00",
+  "status": "retrieved_validated_payload",
+  "text_decoding": "utf-8"
+}

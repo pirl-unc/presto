@@ -1,0 +1,61 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "commit": "12dc30e575189a2590c10f156adbd2a3ac1aa92a",
+  "dataset": "noise-free synthetic 6-residue substrate, known five bond rates, all21 contiguous products, unit response",
+  "device": "local CPU float64, one torch thread",
+  "dirty": " M tasks/todo.md\n?? data/availability_recipes/\n?? experiments/2026-10-23_1018_codex_shared-digestion-source/\n?? experiments/2026-10-23_1021_codex_independent-cut-qualification/\n?? experiments/agents/codex/plans/full-ic50-fitting.md\n?? experiments/agents/codex/plans/independent-cut-qualification.md\n?? experiments/agents/codex/plans/shared-digestion-admission.md\n?? tasks/modular_model/trajectory-sampling-issue.md\n",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1"
+  },
+  "learning_rate": 0.03,
+  "objective": "MSE of linear expected copies; two-group unbiased score gradient with leave-one-out baseline",
+  "prediction_contract": "temporal interpolation/extrapolation for same synthetic substrate, no biological generalization",
+  "pretraining": "none",
+  "rates": [
+    0.08,
+    0.18,
+    0.45,
+    0.9,
+    1.4
+  ],
+  "registered_at": "2026-10-23T10:24:33.480261-04:00",
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "source_hashes": {
+    "process.py": "5ff7987734b321827e44fca8812b94f9bdd98dcd9c71258fb9ea4595685fcfcf",
+    "run.py": "17d285a6828a904d402ddae27dae6f55a15ca6205c0372f2de36153d4104f973"
+  },
+  "times": {
+    "test": [
+      0.1,
+      0.6,
+      2,
+      6,
+      20
+    ],
+    "train": [
+      0.2,
+      0.7,
+      1.5,
+      4,
+      12
+    ],
+    "validation": [
+      0.4,
+      1,
+      2.5,
+      8
+    ]
+  },
+  "updates": 1000,
+  "variants": [
+    "exact",
+    "sampled32",
+    "sampled128",
+    "constant-rate exact control"
+  ]
+}

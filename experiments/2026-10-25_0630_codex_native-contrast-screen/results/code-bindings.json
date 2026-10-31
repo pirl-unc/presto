@@ -1,0 +1,80 @@
+{
+  "evidence": {
+    "repository": "pirl-unc/hitlist",
+    "tested_head": "90a7a62a5f1e052d87e797d86bac6d59cf3b0700",
+    "merged_commit": "d02ca1aefc0e2753843bff842cfb773273226f03",
+    "pr": 841,
+    "tests_run": 40168839728,
+    "docs_run": 40168839820,
+    "tests": [
+      {
+        "id": 121095409783,
+        "name": "lint",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 121095409867,
+        "name": "integration",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 121095409873,
+        "name": "unit (3.14)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 121095409943,
+        "name": "unit (3.10)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 121095409966,
+        "name": "unit (3.11)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 121095410008,
+        "name": "unit (3.12)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 121095410029,
+        "name": "unit (3.13)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 121097452306,
+        "name": "coverage",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ],
+    "docs": [
+      {
+        "id": 121095364233,
+        "name": "build",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 121095454552,
+        "name": "deploy",
+        "status": "completed",
+        "conclusion": "skipped"
+      }
+    ],
+    "docs_deploy_skip_reason": "docs.yml deploy condition requires push to main; this is a PR workflow",
+    "full_CI_passed": true,
+    "publication_still_required": true
+  },
+  "evidence_sha256": "5c3c510ed93b7c0a3bd4603db2ad8effc240beac339ca322f82507d768957a14",
+  "identical_tree": "ee6ac376f2f7667fe3dc6909de12bd22b4700ab9",
+  "publication_still_required": true
+}

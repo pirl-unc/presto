@@ -1,0 +1,57 @@
+condition,endpoint,mhc_class,train_rows,exact_train_rows,optimizer_label_exposures,validation_rows,validation_exact,test_rows,test_exact,scope
+ic50-exact-s42,ic50,I,14375,14375,254456,2051,1968,1845,1758,development holdout only
+ic50-exact-s42,ic50,II,7261,7261,128524,874,758,958,842,development holdout only
+ic50-exact-s43,ic50,I,14375,14375,254392,2051,1968,1845,1758,development holdout only
+ic50-exact-s43,ic50,II,7261,7261,128588,874,758,958,842,development holdout only
+ic50-bounds-s42,ic50,I,15246,14375,248625,2060,1968,1856,1758,development holdout only
+ic50-bounds-s42,ic50,II,8266,7261,134735,886,758,969,842,development holdout only
+ic50-bounds-s43,ic50,I,15246,14375,248627,2060,1968,1856,1758,development holdout only
+ic50-bounds-s43,ic50,II,8266,7261,134733,886,758,969,842,development holdout only
+multi-assay-s42,ec50,I,288,288,813,31,31,47,47,sparse validation (<100 exact)
+multi-assay-s42,ec50,II,19,19,53,3,3,0,0,sparse validation (<100 exact)
+multi-assay-s42,half_life,I,7659,7650,21867,968,968,934,934,development holdout only
+multi-assay-s42,half_life,II,12,12,34,0,0,2,2,missing validation
+multi-assay-s42,ic50,I,15246,14375,43487,2060,1968,1856,1758,development holdout only
+multi-assay-s42,ic50,II,8266,7261,23546,886,758,969,842,development holdout only
+multi-assay-s42,kd,I,14759,4097,42238,1898,567,1606,561,development holdout only
+multi-assay-s42,kd,II,422,350,1207,36,32,96,82,sparse validation (<100 exact)
+multi-assay-s42,kd_via_ec50,I,30628,9113,87350,4020,1175,3819,1154,development holdout only
+multi-assay-s42,kd_via_ec50,II,14218,11307,40554,1935,1529,1570,1231,development holdout only
+multi-assay-s42,kd_via_ic50,I,41940,39835,119644,5459,5182,5069,4808,development holdout only
+multi-assay-s42,kd_via_ic50,II,1104,886,3145,207,183,168,123,development holdout only
+multi-assay-s43,ec50,I,288,288,833,31,31,47,47,sparse validation (<100 exact)
+multi-assay-s43,ec50,II,19,19,55,3,3,0,0,sparse validation (<100 exact)
+multi-assay-s43,half_life,I,7659,7650,21825,968,968,934,934,development holdout only
+multi-assay-s43,half_life,II,12,12,35,0,0,2,2,missing validation
+multi-assay-s43,ic50,I,15246,14375,43575,2060,1968,1856,1758,development holdout only
+multi-assay-s43,ic50,II,8266,7261,23566,886,758,969,842,development holdout only
+multi-assay-s43,kd,I,14759,4097,42109,1898,567,1606,561,development holdout only
+multi-assay-s43,kd,II,422,350,1204,36,32,96,82,sparse validation (<100 exact)
+multi-assay-s43,kd_via_ec50,I,30628,9113,87366,4020,1175,3819,1154,development holdout only
+multi-assay-s43,kd_via_ec50,II,14218,11307,40477,1935,1529,1570,1231,development holdout only
+multi-assay-s43,kd_via_ic50,I,41940,39835,119746,5459,5182,5069,4808,development holdout only
+multi-assay-s43,kd_via_ic50,II,1104,886,3147,207,183,168,123,development holdout only
+multi-assay-wide-s42,ec50,I,288,288,813,31,31,47,47,sparse validation (<100 exact)
+multi-assay-wide-s42,ec50,II,19,19,53,3,3,0,0,sparse validation (<100 exact)
+multi-assay-wide-s42,half_life,I,7659,7650,21867,968,968,934,934,development holdout only
+multi-assay-wide-s42,half_life,II,12,12,34,0,0,2,2,missing validation
+multi-assay-wide-s42,ic50,I,15246,14375,43487,2060,1968,1856,1758,development holdout only
+multi-assay-wide-s42,ic50,II,8266,7261,23546,886,758,969,842,development holdout only
+multi-assay-wide-s42,kd,I,14759,4097,42238,1898,567,1606,561,development holdout only
+multi-assay-wide-s42,kd,II,422,350,1207,36,32,96,82,sparse validation (<100 exact)
+multi-assay-wide-s42,kd_via_ec50,I,30628,9113,87350,4020,1175,3819,1154,development holdout only
+multi-assay-wide-s42,kd_via_ec50,II,14218,11307,40554,1935,1529,1570,1231,development holdout only
+multi-assay-wide-s42,kd_via_ic50,I,41940,39835,119644,5459,5182,5069,4808,development holdout only
+multi-assay-wide-s42,kd_via_ic50,II,1104,886,3145,207,183,168,123,development holdout only
+multi-assay-wide-s43,ec50,I,288,288,833,31,31,47,47,sparse validation (<100 exact)
+multi-assay-wide-s43,ec50,II,19,19,55,3,3,0,0,sparse validation (<100 exact)
+multi-assay-wide-s43,half_life,I,7659,7650,21825,968,968,934,934,development holdout only
+multi-assay-wide-s43,half_life,II,12,12,35,0,0,2,2,missing validation
+multi-assay-wide-s43,ic50,I,15246,14375,43575,2060,1968,1856,1758,development holdout only
+multi-assay-wide-s43,ic50,II,8266,7261,23566,886,758,969,842,development holdout only
+multi-assay-wide-s43,kd,I,14759,4097,42109,1898,567,1606,561,development holdout only
+multi-assay-wide-s43,kd,II,422,350,1204,36,32,96,82,sparse validation (<100 exact)
+multi-assay-wide-s43,kd_via_ec50,I,30628,9113,87366,4020,1175,3819,1154,development holdout only
+multi-assay-wide-s43,kd_via_ec50,II,14218,11307,40477,1935,1529,1570,1231,development holdout only
+multi-assay-wide-s43,kd_via_ic50,I,41940,39835,119746,5459,5182,5069,4808,development holdout only
+multi-assay-wide-s43,kd_via_ic50,II,1104,886,3147,207,183,168,123,development holdout only

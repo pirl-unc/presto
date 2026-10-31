@@ -1,0 +1,4 @@
+  File "<string>", line 1
+    import torch,pytest;torch.set_num_threads(1);raise SystemExit(pytest.main([".","--confcutdir=.","--import-mode=importlib","-p","no:cacheprovider","-o","addopts=","-q"])))
+                                                                                                                                                                             ^
+SyntaxError: unmatched ')'

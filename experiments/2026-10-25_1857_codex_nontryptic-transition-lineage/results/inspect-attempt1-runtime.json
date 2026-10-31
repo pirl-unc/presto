@@ -1,0 +1,82 @@
+{
+  "stage": "inspect",
+  "attempt": 1,
+  "started_utc": "2026-10-26T01:36:16.167831+00:00",
+  "status": "passed",
+  "child_launched": true,
+  "exit_code": 0,
+  "resource_violation": null,
+  "memory_admission": {
+    "metric": "macos_free_plus_speculative",
+    "bytes": 17450713088
+  },
+  "disk_free_before_bytes": 7166881792,
+  "request_set_sha256": "116a9bb1604975c994253e5416541eda34aeba1d237a6bbcfb7d6686c12cea26",
+  "request_set": {
+    "scope": "Literal-cell/schema inventory of two original transition exports only",
+    "registered_before_numeric_export_access": true,
+    "files": [
+      "Iso18_DirectSpike_TransitionResults.xlsx",
+      "Iso18_hipMHCspikein_TransitionResults.xlsx"
+    ],
+    "checks": [
+      "official byte counts and fetched SHA256",
+      "record opaque inventory checksum and compare with computed SHA1 without asserting a declared algorithm",
+      "independent OOXML/openpyxl agreement on all stored cells",
+      "preserve original headers, forms, quantities, blanks, formulas, merged ranges and coordinates"
+    ],
+    "semantic_questions": [
+      "explicit acquisition/dose links",
+      "isotope labels and competing assertions",
+      "raw versus normalized signal",
+      "quantification versus trigger transitions",
+      "aggregation and missingness"
+    ],
+    "no_fitting_or_heldout_access": true,
+    "next_step": "Freeze a specific lineage-replay request after schema inspection; no empirical acquisition identities from similar intensities",
+    "source_sha256": {
+      "code/inspect.py": "83b6a06a285a6d199a8842b303be839ebc699933681207c6139340fef79e0492",
+      "reproduce/source/inspect.py": "83b6a06a285a6d199a8842b303be839ebc699933681207c6139340fef79e0492",
+      "reproduce/requests/inspection-scope-1.json": "2c4f0ba8c3d5a9db19ef081b3cfb7fe23f2f8bac2e2f98658c4487edc3093256"
+    },
+    "input_sha256": {
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/nontryptic_transition_sources/2026-10-25_1857_codex_nontryptic-transition-lineage/files-page0.json": "4c9d293a5eb88b74ddfc807e5c779ad4360cbeb877784c733aa0c2a1bf601da6",
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/nontryptic_transition_sources/2026-10-25_1857_codex_nontryptic-transition-lineage/Iso18_DirectSpike_TransitionResults.xlsx": "d359bf7b8afd0ade9df9539d941c0f7931b8c39657a444d3bf8025e54ff1d995",
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/nontryptic_transition_sources/2026-10-25_1857_codex_nontryptic-transition-lineage/Iso18_DirectSpike_TransitionResults.xlsx.receipt.json": "ecba78194ca94b6b33c8e0ec843d00ad785f37569e52289ed693821fd9af48ad",
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/nontryptic_transition_sources/2026-10-25_1857_codex_nontryptic-transition-lineage/Iso18_hipMHCspikein_TransitionResults.xlsx": "8426f43364ea1d84244403811956f501664abf8001e7043ec8fc1ae546175308",
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/nontryptic_transition_sources/2026-10-25_1857_codex_nontryptic-transition-lineage/Iso18_hipMHCspikein_TransitionResults.xlsx.receipt.json": "ad01ab0b779d8e99efeb4cc09ef989269aab6127b977337cbe97ad78f5d4b708"
+    },
+    "request_note": "Frozen before numeric inspection after successful fetch attempt4; original resource contract unchanged."
+  },
+  "environment": {
+    "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "versions": {
+      "requests": "2.34.2",
+      "psutil": "7.2.2"
+    },
+    "overrides": {
+      "PYTHONSAFEPATH": "1",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUNBUFFERED": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    }
+  },
+  "child_pid": 21452,
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "-B",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1857_codex_nontryptic-transition-lineage/code/inspect.py",
+    "--requests",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1857_codex_nontryptic-transition-lineage/reproduce/requests/inspect-1.json"
+  ],
+  "elapsed_seconds": 0.9753296669805422,
+  "peak_observed_process_tree_rss_bytes": 105660416,
+  "peak_child_process_rss_bytes": 107790336,
+  "rss_poll_interval_seconds": 0.05,
+  "disk_free_after_bytes": 7166730240
+}

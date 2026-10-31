@@ -28,6 +28,8 @@ hitlist = [
 ]
 dev = [
   "pytest>=7.0",
+  # Resource-guarded experiment helpers are exercised by the test suite.
+  "psutil>=5.9",
   # Pinned, not a floor, and matching CI (.github/workflows/ci.yml) and
   # `required-version` in ruff.toml.
   #
@@ -37,7 +39,7 @@ dev = [
   # here claimed the floor was needed because old ruff lacks `extend-exclude`;
   # that is false -- it predates 0.1 -- and a reader who checked would have
   # concluded the pin was cargo-cult and relaxed it.
-  "ruff==0.16.0",
+  "ruff==0.16.10",
   "mkdocs>=1.5.0",
 ]
 
@@ -61,12 +63,16 @@ packages = [
   "presto",
   "presto.cli",
   "presto.data",
+  "presto.evaluation",
   "presto.inference",
   "presto.models",
+  "presto.legacy",
   "presto.training",
   "presto.scripts",
   "presto.scripts.distributional_ba",
-  "presto.scripts.distributional_ba.heads",
+  "presto.legacy.scripts",
+  "presto.legacy.scripts.distributional_ba",
+  "presto.legacy.scripts.distributional_ba.heads",
 ]
 package-dir = { "presto" = "." }
 
@@ -74,7 +80,7 @@ package-dir = { "presto" = "." }
 version = {attr = "presto.__version__"}
 
 [tool.setuptools.package-data]
-"presto.data" = ["b2m_sequences.csv"]
+"presto.data" = ["b2m_sequences.csv", "assay_measurement_reviews.json"]
 
 # Ruff configuration lives in `ruff.toml`, not here.
 #

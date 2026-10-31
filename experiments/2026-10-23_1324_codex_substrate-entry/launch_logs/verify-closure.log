@@ -1,0 +1,11 @@
+{'variant': 'immediate_constant', 'data_mse_error': np.float64(1.1102230246251565e-16), 'max_gradient_error': 2.7755575615628914e-16}
+{'variant': 'immediate_sequence', 'data_mse_error': np.float64(0.0), 'max_gradient_error': 1.6653345369377348e-16}
+{'variant': 'entry_constant', 'data_mse_error': np.float64(0.0), 'max_gradient_error': 5.379811179873073e-16}
+{'variant': 'entry_sequence', 'data_mse_error': np.float64(0.0), 'max_gradient_error': 4.907099032669393e-16}
+{'variant': 'entry_sampled', 'data_mse_error': np.float64(0.0), 'max_gradient_error': 6.070719014289461e-15}
+{'step': 1, 'max_gradient_error': 3.4139358007223564e-15}
+{'step': 100, 'max_gradient_error': 3.982925100842749e-15}
+{'step': 500, 'max_gradient_error': 3.3306690738754696e-16}
+{'step': 1000, 'max_gradient_error': 2.7755575615628914e-16}
+{'step': 2000, 'max_gradient_error': 5.828670879282072e-16}
+{"predictions_verified": 392830, "maximum_prediction_error": 3.1086244689504383e-15, "maximum_metric_error": 1.4432899320127035e-15, "final_objective_gradient_checks": [{"variant": "immediate_constant", "data_mse_error": 1.1102230246251565e-16, "max_gradient_error": 2.7755575615628914e-16}, {"variant": "immediate_sequence", "data_mse_error": 0.0, "max_gradient_error": 1.6653345369377348e-16}, {"variant": "entry_constant", "data_mse_error": 0.0, "max_gradient_error": 5.379811179873073e-16}, {"variant": "entry_sequence", "data_mse_error": 0.0, "max_gradient_error": 4.907099032669393e-16}, {"variant": "entry_sampled", "data_mse_error": 0.0, "max_gradient_error": 6.070719014289461e-15}], "sampled_optimizer_updates": 2000, "maximum_sampled_update_error": 3.552713678800501e-15, "independent_sampled_gradient_replay": [{"step": 1, "max_gradient_error": 3.4139358007223564e-15}, {"step": 100, "max_gradient_error": 3.982925100842749e-15}, {"step": 500, "max_gradient_error": 3.3306690738754696e-16}, {"step": 1000, "max_gradient_error": 2.7755575615628914e-16}, {"step": 2000, "max_gradient_error": 5.828670879282072e-16}], "limitation": "All sampled Adam arithmetic replayed from saved gradients; five real sampled gradients independently rebuilt, not every stochastic draw. Exact entry optimizer trajectory not independently rerun.", "test_not_evaluated": true, "wall_seconds": 9.891630708007142, "peak_rss_bytes": 1806024704}

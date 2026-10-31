@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/private/tmp/presto-modular-model/experiments/2026-10-24_1755_codex_apc-composition-admission/analysis/verify.py", line 262, in <module>
+    main()
+  File "/private/tmp/presto-modular-model/experiments/2026-10-24_1755_codex_apc-composition-admission/analysis/verify.py", line 165, in main
+    str(originals[row["table_number"]][row["channel_label_cell"]])
+AssertionError

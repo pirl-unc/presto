@@ -1,0 +1,56 @@
+{
+  "utc": "2026-10-27T00:57:28.663717+00:00",
+  "agent_model": "Codex / GPT-6",
+  "git_commit": "2ed1bd8cdd36c94236d55c3fdd9927f6f79d4780",
+  "dirty_status": " M experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/fit-native101-1793047384363865000.json\n M experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/logistic-controller-state.json\n M experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/native-controller-state.json\n M tasks/todo.md\n M training/modular_resume.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/continue_streaming.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/logistic_controls_streaming.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/streaming_recovery.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/evaluation-recovery-original.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/serialization-fix/\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/serialization-transition.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/source/continue_streaming.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/source/logistic_controls_streaming.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/source/streaming_recovery.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/results/failure-attempt01/\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/results/software-json/\n?? tasks/mhc2_json_recovery_spec.md\n?? tests/test_modular_json_streaming.py\n",
+  "cwd": "/private/tmp/presto-mhc2-evaluation-20261027/presto",
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "environment": {
+    "PYTHONPATH": "/private/tmp/presto-mhc2-evaluation-20261027:/private/tmp/presto-pr-completion-20261026/dependencies",
+    "OMP_NUM_THREADS": "2",
+    "OPENBLAS_NUM_THREADS": "2",
+    "MKL_NUM_THREADS": "2",
+    "PYTORCH_ENABLE_MPS_FALLBACK": "0"
+  },
+  "code_hashes": {
+    "streaming_recovery.py": "f8aaaee5257ecf1d4a66a1648b172e78b01d64b29fa54d71f2ed34c96bab95e8",
+    "continue_streaming.py": "e50c8d361edbe5d5b468b6772bd1fc8a4220f83f1c2b0a6634bc1bb67bd9ea1a",
+    "logistic_controls_streaming.py": "b396996d13d9dc2cfb48ce5d0a5ae66c4d746371530096d6b1da46aea6b5bb1e"
+  },
+  "transition": {
+    "path": "reproduce/serialization-transition.json",
+    "sha256": "16fb6724fc819ed054384e1cd74b929be483506d76ab7b514291ed4b92fc67ee"
+  },
+  "original_artifacts_pin_sha256": "f48affcccbc219fb6f00cc0237ffc9e886725990fb1e060ecbf84e31aba5d19c",
+  "original_plan": "tasks/mhc2_json_recovery_spec.md",
+  "original_plan_sha256": "017fe7ca741ee5cff677f9e2193331e1761af3463284b31d3bde3e65f9a16097",
+  "full_suite": {
+    "status": "passed",
+    "tests": 2666,
+    "skipped": 4,
+    "warnings": 33,
+    "seconds": 609.05,
+    "log_sha256": "f1e9479251a4cd3cc7797778bbc6957e55741bca2d233658eb474b96b564c7aa"
+  },
+  "focused_suite": "50 passed in 17.32s",
+  "lint": "repository and explicit three recovery scripts pass;414 repo files formatted",
+  "logistic_math_unchanged": true,
+  "runtime_change": "only streaming atomic_json and digest in training/modular_resume.py",
+  "native101_additional_updates": 0,
+  "new_fit_arms": [
+    "native102",
+    "permuted101"
+  ],
+  "action_order": [
+    "score native101",
+    "fit native102",
+    "score native102",
+    "fit permuted101",
+    "score permuted101",
+    "logistic features",
+    "logistic fit"
+  ],
+  "no_automatic_retry": true,
+  "device": "cpu",
+  "modal_gpu": null
+}

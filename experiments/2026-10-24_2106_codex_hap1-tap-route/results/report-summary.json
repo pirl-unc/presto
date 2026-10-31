@@ -1,0 +1,22 @@
+{
+  "counts": {
+    "observations": 9168,
+    "peptides": 3110,
+    "components": 1248,
+    "exposure": {
+      "False": {
+        "observations": 1735,
+        "peptides": 636
+      },
+      "True": {
+        "observations": 7433,
+        "peptides": 2474
+      }
+    }
+  },
+  "sampled_conditional_route_draws": 733440000,
+  "sampled_to_exact_runtime": 1.3703262599640549,
+  "expanded_gain_over_sequence_scores": 0.018244781113021524,
+  "all_route_fits_below_1_percent_last_50_step_improvement": true,
+  "source_scope": "training-only positive HAP1 TAP1/TAP2 KO/WT elution responses"
+}

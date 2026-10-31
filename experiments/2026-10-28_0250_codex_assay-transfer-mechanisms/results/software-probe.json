@@ -1,0 +1,458 @@
+{
+  "split": "train",
+  "updates": 1,
+  "observation_ids": [
+    "measurement:60cce0e6395bc46f87abecb646bcf3aecb5678f054fddd1cf1c6eb78a88ce277",
+    "measurement:38884220f9d8c5662dc86c3d5dbd578a79d19d251f513e36169fff13503ce719",
+    "measurement:8f4261392426109c177e44987f34304e01e7a9badaca0b345cea00bb38ee01b7",
+    "measurement:5f912d4ab8a73f7d98dbd4e2593fc7d3dbe6e834fa9fc4b2e4767d3c837eb97b",
+    "measurement:a1064659c106ee7711104a0c5a82f221ec52e64c8c424be6ef7ca562cb292611",
+    "measurement:2c18db1899d2e66f420cbc644c09f4c73d4120477d43f077155b81aeb6bd5031",
+    "measurement:76cb64dc48e28ac7b46f370af84c8bc8fabaa42a34018082711be95ddd9589a8",
+    "measurement:8e4342b42f4415c2b4bc0ebcb05f51362453e49ea8281cac3fb8a399754670f2",
+    "measurement:0ea299f2ee639640fb0c594b222735af079b4524092ba1c028057e4faedeed58",
+    "measurement:de2bdcd28a5863806637d971b7d803c1af8ee0661d013a188c514260e4b0fd21",
+    "measurement:01d8c580106a61fca25c84b1bf862d67fdf394779347cdb8bd2d2d975881ebea",
+    "measurement:a37283b6c41873d0b300fd561d961b3545835912dcb97fac229ab5985859ae10",
+    "measurement:a3e363bd9fbff9131a472552bacd139a3c0774cfbc3eb221fc496186b62a9595",
+    "measurement:039fb9a616a69b334c2d3e1ae402e914ab66ff33840bb53da40f4858593cf09c",
+    "measurement:004f832e3f23cfc080bffe1b19eac7732e15642f2ef7c7e0ddc669bdfa9dda4f",
+    "measurement:64e0ad9390478592ac11d8d0fbe1f450de47fbaa6fc0e27aa0b0a192bf6ea9fe",
+    "measurement:5cbfa857c7835e62d9ad8845457969df001e6bd10c95d28834fb1d8a8819a744",
+    "measurement:caf17c0fc1ff79f02de2a45ed2043af3d3a755070592927604c7e4d291816f2d",
+    "measurement:e83b1c194eb6a1cc510f702da9524e14f61a9e6d4be23d5ff2c392baa717899f",
+    "measurement:d799c24b66da1f17937c24f9de2da46d56e4240f687b749a11bd106e0f1f0ce9",
+    "measurement:106fdce04289fb21d6c0e2ae3050786d501e22709642dbfd64519752e2d60ee5",
+    "measurement:0e80ffedf6b07480c4f7a88d50129cde92a485f2e72e71e92e6faf52e8bc942f",
+    "measurement:76b485452d3d8c3c99bc74dd9e07825dad120c882262dbb3c8d3f3fcd7a022e0",
+    "measurement:168fc463b9c005549f787c9c3301e569bb51a272d2494e21249bc36d3a077e3a"
+  ],
+  "loss": 0.9429082870483398,
+  "counts": {
+    "ic50": 4,
+    "kd": 4,
+    "ec50": 4,
+    "kd_via_ic50": 4,
+    "kd_via_ec50": 4,
+    "half_life": 4
+  },
+  "coverage": {
+    "parameters": {
+      "encoder.embedding.weight": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.033569686114788055,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.0.self_attn.in_proj_weight": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.30102503299713135,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.0.self_attn.in_proj_bias": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.05093655362725258,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.0.self_attn.out_proj.weight": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.396781861782074,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.0.self_attn.out_proj.bias": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.09134341776371002,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.0.linear1.weight": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.17375007271766663,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.0.linear1.bias": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.02725321240723133,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.0.linear2.weight": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.43822821974754333,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.0.linear2.bias": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.08732613921165466,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.0.norm1.weight": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.014842101372778416,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.0.norm1.bias": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.03882189467549324,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.0.norm2.weight": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.007260375656187534,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.0.norm2.bias": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.015126965939998627,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.1.self_attn.in_proj_weight": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.2660089135169983,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.1.self_attn.in_proj_bias": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.042116258293390274,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.1.self_attn.out_proj.weight": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.3346782326698303,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.1.self_attn.out_proj.bias": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.07503624260425568,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.1.linear1.weight": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.16367262601852417,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.1.linear1.bias": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.023514628410339355,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.1.linear2.weight": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.39241230487823486,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.1.linear2.bias": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.07218027859926224,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.1.norm1.weight": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.014166096225380898,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.1.norm1.bias": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.033304017037153244,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.1.norm2.weight": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.007171711418777704,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.1.norm2.bias": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.013227603398263454,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.2.self_attn.in_proj_weight": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.2692166566848755,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.2.self_attn.in_proj_bias": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.03788205236196518,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.2.self_attn.out_proj.weight": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.3251663148403168,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.2.self_attn.out_proj.bias": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.06765500456094742,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.2.linear1.weight": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.17132236063480377,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.2.linear1.bias": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.022082598879933357,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.2.linear2.weight": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.39340782165527344,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.2.linear2.bias": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.06629158556461334,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.2.norm1.weight": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.015125011093914509,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.2.norm1.bias": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.03050139732658863,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.2.norm2.weight": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.007288350723683834,
+        "trainable_steps": 1
+      },
+      "encoder.transformer.layers.2.norm2.bias": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.012912915088236332,
+        "trainable_steps": 1
+      },
+      "encoder.norm.weight": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.05412450432777405,
+        "trainable_steps": 1
+      },
+      "encoder.norm.bias": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.09858793020248413,
+        "trainable_steps": 1
+      },
+      "residue_interaction.in_proj_weight": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.22122418880462646,
+        "trainable_steps": 1
+      },
+      "residue_interaction.in_proj_bias": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.03006979450583458,
+        "trainable_steps": 1
+      },
+      "residue_interaction.out_proj.weight": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.2944601774215698,
+        "trainable_steps": 1
+      },
+      "residue_interaction.out_proj.bias": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.05513252317905426,
+        "trainable_steps": 1
+      },
+      "interaction_norm.weight": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.036296360194683075,
+        "trainable_steps": 1
+      },
+      "interaction_norm.bias": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.0547507144510746,
+        "trainable_steps": 1
+      },
+      "pmhc_fusion.0.weight": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 2.374061107635498,
+        "trainable_steps": 1
+      },
+      "pmhc_fusion.0.bias": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.17249448597431183,
+        "trainable_steps": 1
+      },
+      "heads.ic50.weight": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.506613552570343,
+        "trainable_steps": 1
+      },
+      "heads.ic50.bias": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.2273484170436859,
+        "trainable_steps": 1
+      },
+      "heads.kd.weight": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.25574928522109985,
+        "trainable_steps": 1
+      },
+      "heads.kd.bias": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.12309972941875458,
+        "trainable_steps": 1
+      },
+      "heads.ec50.weight": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.2928541600704193,
+        "trainable_steps": 1
+      },
+      "heads.ec50.bias": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.11486254632472992,
+        "trainable_steps": 1
+      },
+      "heads.kd_via_ic50.weight": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.6523019075393677,
+        "trainable_steps": 1
+      },
+      "heads.kd_via_ic50.bias": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.2904081344604492,
+        "trainable_steps": 1
+      },
+      "heads.kd_via_ec50.weight": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.23201240599155426,
+        "trainable_steps": 1
+      },
+      "heads.kd_via_ec50.bias": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.11182494461536407,
+        "trainable_steps": 1
+      },
+      "heads.half_life.weight": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.822239339351654,
+        "trainable_steps": 1
+      },
+      "heads.half_life.bias": {
+        "gradient_steps": 1,
+        "update_steps": 1,
+        "gradient_and_update_steps": 1,
+        "max_gradient_norm": 0.3710613250732422,
+        "trainable_steps": 1
+      }
+    },
+    "untrained_parameters": []
+  },
+  "scope": "Software smoke only; no validation/test inference or predictive-quality claim"
+}

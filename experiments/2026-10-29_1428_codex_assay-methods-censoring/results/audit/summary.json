@@ -1,0 +1,2174 @@
+{
+  "status": "completed_train_audit",
+  "counts": {
+    "physical_rows": 234337,
+    "concentration_rows": 184637,
+    "qualifier:=": 136233,
+    "raw_qualifier:missing": 100544,
+    "qualifier:>": 48215,
+    "raw_qualifier:>": 48215,
+    "raw_qualifier:=": 35689,
+    "qualifier:>=": 189,
+    "raw_qualifier:>=": 189
+  },
+  "methods": [
+    {
+      "mhc_class": "I",
+      "endpoint": "ec50",
+      "method": "purified MHC/direct/fluorescence",
+      "qualifier": "=",
+      "n": 115,
+      "preparation": "purified MHC",
+      "mechanism": "direct",
+      "readout": "fluorescence"
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "qualifier": "=",
+      "n": 3617,
+      "preparation": "purified MHC",
+      "mechanism": "competitive",
+      "readout": "fluorescence"
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "qualifier": ">",
+      "n": 562,
+      "preparation": "purified MHC",
+      "mechanism": "competitive",
+      "readout": "fluorescence"
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "qualifier": ">=",
+      "n": 175,
+      "preparation": "purified MHC",
+      "mechanism": "competitive",
+      "readout": "fluorescence"
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "qualifier": "=",
+      "n": 13855,
+      "preparation": "purified MHC",
+      "mechanism": "competitive",
+      "readout": "radioactivity"
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "qualifier": ">",
+      "n": 322,
+      "preparation": "purified MHC",
+      "mechanism": "competitive",
+      "readout": "radioactivity"
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd",
+      "method": "purified MHC/competitive/fluorescence",
+      "qualifier": "=",
+      "n": 4293,
+      "preparation": "purified MHC",
+      "mechanism": "competitive",
+      "readout": "fluorescence"
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd",
+      "method": "purified MHC/competitive/fluorescence",
+      "qualifier": ">",
+      "n": 12056,
+      "preparation": "purified MHC",
+      "mechanism": "competitive",
+      "readout": "fluorescence"
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ec50",
+      "method": "purified MHC/direct/fluorescence",
+      "qualifier": "=",
+      "n": 10632,
+      "preparation": "purified MHC",
+      "mechanism": "direct",
+      "readout": "fluorescence"
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ec50",
+      "method": "purified MHC/direct/fluorescence",
+      "qualifier": ">",
+      "n": 25710,
+      "preparation": "purified MHC",
+      "mechanism": "direct",
+      "readout": "fluorescence"
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "qualifier": "=",
+      "n": 266,
+      "preparation": "purified MHC",
+      "mechanism": "competitive",
+      "readout": "fluorescence"
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "qualifier": ">",
+      "n": 77,
+      "preparation": "purified MHC",
+      "mechanism": "competitive",
+      "readout": "fluorescence"
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "qualifier": "=",
+      "n": 48586,
+      "preparation": "purified MHC",
+      "mechanism": "competitive",
+      "readout": "radioactivity"
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "qualifier": ">",
+      "n": 2506,
+      "preparation": "purified MHC",
+      "mechanism": "competitive",
+      "readout": "radioactivity"
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "qualifier": ">=",
+      "n": 2,
+      "preparation": "purified MHC",
+      "mechanism": "competitive",
+      "readout": "radioactivity"
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ec50",
+      "method": "purified MHC/direct/fluorescence",
+      "qualifier": "=",
+      "n": 84,
+      "preparation": "purified MHC",
+      "mechanism": "direct",
+      "readout": "fluorescence"
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ec50",
+      "method": "purified MHC/direct/fluorescence",
+      "qualifier": ">",
+      "n": 13,
+      "preparation": "purified MHC",
+      "mechanism": "direct",
+      "readout": "fluorescence"
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "qualifier": "=",
+      "n": 4710,
+      "preparation": "purified MHC",
+      "mechanism": "competitive",
+      "readout": "fluorescence"
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "qualifier": ">",
+      "n": 1227,
+      "preparation": "purified MHC",
+      "mechanism": "competitive",
+      "readout": "fluorescence"
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "qualifier": ">=",
+      "n": 3,
+      "preparation": "purified MHC",
+      "mechanism": "competitive",
+      "readout": "fluorescence"
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "qualifier": "=",
+      "n": 27550,
+      "preparation": "purified MHC",
+      "mechanism": "competitive",
+      "readout": "radioactivity"
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "qualifier": ">",
+      "n": 2708,
+      "preparation": "purified MHC",
+      "mechanism": "competitive",
+      "readout": "radioactivity"
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "qualifier": ">=",
+      "n": 7,
+      "preparation": "purified MHC",
+      "mechanism": "competitive",
+      "readout": "radioactivity"
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd",
+      "method": "purified MHC/competitive/fluorescence",
+      "qualifier": "=",
+      "n": 14,
+      "preparation": "purified MHC",
+      "mechanism": "competitive",
+      "readout": "fluorescence"
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd",
+      "method": "purified MHC/competitive/fluorescence",
+      "qualifier": ">",
+      "n": 4,
+      "preparation": "purified MHC",
+      "mechanism": "competitive",
+      "readout": "fluorescence"
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd",
+      "method": "purified MHC/competitive/radioactivity",
+      "qualifier": "=",
+      "n": 1238,
+      "preparation": "purified MHC",
+      "mechanism": "competitive",
+      "readout": "radioactivity"
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd",
+      "method": "purified MHC/competitive/radioactivity",
+      "qualifier": ">",
+      "n": 226,
+      "preparation": "purified MHC",
+      "mechanism": "competitive",
+      "readout": "radioactivity"
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd",
+      "method": "purified MHC/direct/radioactivity",
+      "qualifier": "=",
+      "n": 1,
+      "preparation": "purified MHC",
+      "mechanism": "direct",
+      "readout": "radioactivity"
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd_via_ec50",
+      "method": "purified MHC/direct/fluorescence",
+      "qualifier": "=",
+      "n": 2157,
+      "preparation": "purified MHC",
+      "mechanism": "direct",
+      "readout": "fluorescence"
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd_via_ec50",
+      "method": "purified MHC/direct/fluorescence",
+      "qualifier": ">",
+      "n": 433,
+      "preparation": "purified MHC",
+      "mechanism": "direct",
+      "readout": "fluorescence"
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "qualifier": "=",
+      "n": 688,
+      "preparation": "purified MHC",
+      "mechanism": "competitive",
+      "readout": "fluorescence"
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "qualifier": ">",
+      "n": 145,
+      "preparation": "purified MHC",
+      "mechanism": "competitive",
+      "readout": "fluorescence"
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "qualifier": "=",
+      "n": 18427,
+      "preparation": "purified MHC",
+      "mechanism": "competitive",
+      "readout": "radioactivity"
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "qualifier": ">",
+      "n": 2226,
+      "preparation": "purified MHC",
+      "mechanism": "competitive",
+      "readout": "radioactivity"
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "qualifier": ">=",
+      "n": 2,
+      "preparation": "purified MHC",
+      "mechanism": "competitive",
+      "readout": "radioactivity"
+    }
+  ],
+  "method_correlations": [
+    {
+      "mhc_class": "I",
+      "response_stratum": "all_concentration_labels",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/competitive/radioactivity",
+      "n": 287,
+      "spearman": 0.6140262219486003,
+      "pearson": 0.6084442641523473,
+      "rmse_difference_log10_nM": 1.298126083729252,
+      "median_b_minus_a": -0.0006904528581928027,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "all_concentration_labels",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/direct/fluorescence",
+      "n": 179,
+      "spearman": 0.6946669138683268,
+      "pearson": 0.7458506662326491,
+      "rmse_difference_log10_nM": 1.0165897719121844,
+      "median_b_minus_a": 0.0001122352976663521,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "all_concentration_labels",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "all_concentration_labels",
+      "method_a": "purified MHC/competitive/radioactivity",
+      "method_b": "purified MHC/direct/fluorescence",
+      "n": 291,
+      "spearman": 0.34374115080615114,
+      "pearson": 0.4301238215714443,
+      "rmse_difference_log10_nM": 1.1653370873744493,
+      "median_b_minus_a": 0.33225022276092697,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "all_concentration_labels",
+      "method_a": "purified MHC/competitive/radioactivity",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "all_concentration_labels",
+      "method_a": "purified MHC/direct/fluorescence",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "ic50",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/competitive/radioactivity",
+      "n": 125,
+      "spearman": 0.625488150041808,
+      "pearson": 0.6378770088009276,
+      "rmse_difference_log10_nM": 1.2545845715048614,
+      "median_b_minus_a": -0.21085336531489318,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "ic50",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/direct/fluorescence",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "ic50",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "ic50",
+      "method_a": "purified MHC/competitive/radioactivity",
+      "method_b": "purified MHC/direct/fluorescence",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "ic50",
+      "method_a": "purified MHC/competitive/radioactivity",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "ic50",
+      "method_a": "purified MHC/direct/fluorescence",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "kd",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/competitive/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "kd",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/direct/fluorescence",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "kd",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "kd",
+      "method_a": "purified MHC/competitive/radioactivity",
+      "method_b": "purified MHC/direct/fluorescence",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "kd",
+      "method_a": "purified MHC/competitive/radioactivity",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "kd",
+      "method_a": "purified MHC/direct/fluorescence",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "ec50",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/competitive/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "ec50",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/direct/fluorescence",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "ec50",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "ec50",
+      "method_a": "purified MHC/competitive/radioactivity",
+      "method_b": "purified MHC/direct/fluorescence",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "ec50",
+      "method_a": "purified MHC/competitive/radioactivity",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "ec50",
+      "method_a": "purified MHC/direct/fluorescence",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "kd_via_ic50",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/competitive/radioactivity",
+      "n": 5,
+      "spearman": 0.7,
+      "pearson": 0.9571011432452488,
+      "rmse_difference_log10_nM": 1.054596192417136,
+      "median_b_minus_a": -1.0872133412316147,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "kd_via_ic50",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/direct/fluorescence",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "kd_via_ic50",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "kd_via_ic50",
+      "method_a": "purified MHC/competitive/radioactivity",
+      "method_b": "purified MHC/direct/fluorescence",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "kd_via_ic50",
+      "method_a": "purified MHC/competitive/radioactivity",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "kd_via_ic50",
+      "method_a": "purified MHC/direct/fluorescence",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "kd_via_ec50",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/competitive/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "kd_via_ec50",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/direct/fluorescence",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "kd_via_ec50",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "kd_via_ec50",
+      "method_a": "purified MHC/competitive/radioactivity",
+      "method_b": "purified MHC/direct/fluorescence",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "kd_via_ec50",
+      "method_a": "purified MHC/competitive/radioactivity",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "I",
+      "response_stratum": "kd_via_ec50",
+      "method_a": "purified MHC/direct/fluorescence",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "all_concentration_labels",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/competitive/radioactivity",
+      "n": 48,
+      "spearman": 0.19190055083213167,
+      "pearson": 0.24933347845361536,
+      "rmse_difference_log10_nM": 1.3610639387954035,
+      "median_b_minus_a": 0.12535076440726745,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "all_concentration_labels",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/direct/fluorescence",
+      "n": 9,
+      "spearman": 0.7999999999999999,
+      "pearson": 0.74578468891048,
+      "rmse_difference_log10_nM": 1.0498193042697352,
+      "median_b_minus_a": -0.4934691159637081,
+      "n_with_any_shared_study": 3
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "all_concentration_labels",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "all_concentration_labels",
+      "method_a": "purified MHC/competitive/radioactivity",
+      "method_b": "purified MHC/direct/fluorescence",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "all_concentration_labels",
+      "method_a": "purified MHC/competitive/radioactivity",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 1,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": 0.8519374645445623,
+      "median_b_minus_a": 0.8519374645445623,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "all_concentration_labels",
+      "method_a": "purified MHC/direct/fluorescence",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "ic50",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/competitive/radioactivity",
+      "n": 42,
+      "spearman": 0.3061274202993106,
+      "pearson": 0.3933538664600761,
+      "rmse_difference_log10_nM": 1.258583442149011,
+      "median_b_minus_a": 0.14591385229816223,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "ic50",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/direct/fluorescence",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "ic50",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "ic50",
+      "method_a": "purified MHC/competitive/radioactivity",
+      "method_b": "purified MHC/direct/fluorescence",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "ic50",
+      "method_a": "purified MHC/competitive/radioactivity",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "ic50",
+      "method_a": "purified MHC/direct/fluorescence",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "kd",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/competitive/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "kd",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/direct/fluorescence",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "kd",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "kd",
+      "method_a": "purified MHC/competitive/radioactivity",
+      "method_b": "purified MHC/direct/fluorescence",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "kd",
+      "method_a": "purified MHC/competitive/radioactivity",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "kd",
+      "method_a": "purified MHC/direct/fluorescence",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "ec50",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/competitive/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "ec50",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/direct/fluorescence",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "ec50",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "ec50",
+      "method_a": "purified MHC/competitive/radioactivity",
+      "method_b": "purified MHC/direct/fluorescence",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "ec50",
+      "method_a": "purified MHC/competitive/radioactivity",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "ec50",
+      "method_a": "purified MHC/direct/fluorescence",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "kd_via_ic50",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/competitive/radioactivity",
+      "n": 2,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": 2.980591091672588,
+      "median_b_minus_a": -2.9472060473096278,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "kd_via_ic50",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/direct/fluorescence",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "kd_via_ic50",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "kd_via_ic50",
+      "method_a": "purified MHC/competitive/radioactivity",
+      "method_b": "purified MHC/direct/fluorescence",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "kd_via_ic50",
+      "method_a": "purified MHC/competitive/radioactivity",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "kd_via_ic50",
+      "method_a": "purified MHC/direct/fluorescence",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "kd_via_ec50",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/competitive/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "kd_via_ec50",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/direct/fluorescence",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "kd_via_ec50",
+      "method_a": "purified MHC/competitive/fluorescence",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "kd_via_ec50",
+      "method_a": "purified MHC/competitive/radioactivity",
+      "method_b": "purified MHC/direct/fluorescence",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "kd_via_ec50",
+      "method_a": "purified MHC/competitive/radioactivity",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    },
+    {
+      "mhc_class": "II",
+      "response_stratum": "kd_via_ec50",
+      "method_a": "purified MHC/direct/fluorescence",
+      "method_b": "purified MHC/direct/radioactivity",
+      "n": 0,
+      "spearman": null,
+      "pearson": null,
+      "rmse_difference_log10_nM": null,
+      "median_b_minus_a": null,
+      "n_with_any_shared_study": 0
+    }
+  ],
+  "threshold_values": [
+    {
+      "mhc_class": "I",
+      "endpoint": "ec50",
+      "method": "purified MHC/direct/fluorescence",
+      "value_nM": 5000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 1
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "ec50",
+      "method": "purified MHC/direct/fluorescence",
+      "value_nM": 20000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 1
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "ec50",
+      "method": "purified MHC/direct/fluorescence",
+      "value_nM": 25000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 1
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 5000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 15
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 20000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 1
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 20000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 490
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 50000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 5
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 50000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 9
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 100000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 57
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 100000.0,
+      "qualifier": ">=",
+      "raw_qualifier": ">=",
+      "n": 175
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 5000.0,
+      "qualifier": "=",
+      "raw_qualifier": "=",
+      "n": 2
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 10000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 6
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 10000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 9
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 20000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 80
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 25000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 1
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 50000.0,
+      "qualifier": "=",
+      "raw_qualifier": "=",
+      "n": 1
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 50000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 120
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 100000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 20
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 5000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 1383
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 10000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 3
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 20000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 10593
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ec50",
+      "method": "purified MHC/direct/fluorescence",
+      "value_nM": 5000.0,
+      "qualifier": "=",
+      "raw_qualifier": "=",
+      "n": 12
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ec50",
+      "method": "purified MHC/direct/fluorescence",
+      "value_nM": 5000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 82
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ec50",
+      "method": "purified MHC/direct/fluorescence",
+      "value_nM": 10000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 1
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ec50",
+      "method": "purified MHC/direct/fluorescence",
+      "value_nM": 10000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 78
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ec50",
+      "method": "purified MHC/direct/fluorescence",
+      "value_nM": 20000.0,
+      "qualifier": "=",
+      "raw_qualifier": "=",
+      "n": 149
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ec50",
+      "method": "purified MHC/direct/fluorescence",
+      "value_nM": 20000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 28
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ec50",
+      "method": "purified MHC/direct/fluorescence",
+      "value_nM": 20000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 25395
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ec50",
+      "method": "purified MHC/direct/fluorescence",
+      "value_nM": 25000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 1
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ec50",
+      "method": "purified MHC/direct/fluorescence",
+      "value_nM": 50000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 6
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 5000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 37
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 50000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 14
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 100000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 37
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 5000.0,
+      "qualifier": "=",
+      "raw_qualifier": "=",
+      "n": 2
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 5000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 33
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 5000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 84
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 10000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 52
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 10000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 372
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 20000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 23
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 20000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 1
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 25000.0,
+      "qualifier": "=",
+      "raw_qualifier": "=",
+      "n": 1
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 25000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 30
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 25000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 107
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 25000.0,
+      "qualifier": ">=",
+      "raw_qualifier": ">=",
+      "n": 2
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 50000.0,
+      "qualifier": "=",
+      "raw_qualifier": "=",
+      "n": 2
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 50000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 13
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 50000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 103
+    },
+    {
+      "mhc_class": "I",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 100000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 4
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ec50",
+      "method": "purified MHC/direct/fluorescence",
+      "value_nM": 100000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 13
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 5000.0,
+      "qualifier": "=",
+      "raw_qualifier": "=",
+      "n": 3
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 5000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 27
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 5000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 1
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 10000.0,
+      "qualifier": "=",
+      "raw_qualifier": "=",
+      "n": 12
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 10000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 160
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 10000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 278
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 20000.0,
+      "qualifier": "=",
+      "raw_qualifier": "=",
+      "n": 3
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 20000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 24
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 20000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 2
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 25000.0,
+      "qualifier": "=",
+      "raw_qualifier": "=",
+      "n": 4
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 25000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 12
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 50000.0,
+      "qualifier": "=",
+      "raw_qualifier": "=",
+      "n": 4
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 50000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 14
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 50000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 72
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 100000.0,
+      "qualifier": "=",
+      "raw_qualifier": "=",
+      "n": 1
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 100000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 99
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 100000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 385
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 5000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 21
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 10000.0,
+      "qualifier": "=",
+      "raw_qualifier": "=",
+      "n": 1
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 10000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 49
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 10000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 8
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 10000.0,
+      "qualifier": ">=",
+      "raw_qualifier": ">=",
+      "n": 3
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 20000.0,
+      "qualifier": "=",
+      "raw_qualifier": "=",
+      "n": 2
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 20000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 20
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 20000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 12
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 25000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 19
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 50000.0,
+      "qualifier": "=",
+      "raw_qualifier": "=",
+      "n": 7
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 50000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 26
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 50000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 11
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 100000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 2
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd_via_ec50",
+      "method": "purified MHC/direct/fluorescence",
+      "value_nM": 10000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 428
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 5000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 1
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 10000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 120
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 10000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 7
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 20000.0,
+      "qualifier": "=",
+      "raw_qualifier": "=",
+      "n": 19
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 20000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 1
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 25000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 1
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 50000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 31
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 100000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 102
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/fluorescence",
+      "value_nM": 100000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 102
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 5000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 4
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 5000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 270
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 10000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 14
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 10000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 624
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 20000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 12
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 20000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 196
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 25000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 9
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 25000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 12
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 50000.0,
+      "qualifier": "=",
+      "raw_qualifier": "missing",
+      "n": 2
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 50000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 22
+    },
+    {
+      "mhc_class": "II",
+      "endpoint": "kd_via_ic50",
+      "method": "purified MHC/competitive/radioactivity",
+      "value_nM": 100000.0,
+      "qualifier": ">",
+      "raw_qualifier": ">",
+      "n": 4
+    }
+  ],
+  "heap_candidate_groups": 142,
+  "heaped_exact_rows": 2556,
+  "right_limit_candidate_exact_rows": 840,
+  "raw_source": {
+    "path": "/volume/2026-10-28_1540_codex_temporal-multi-output/revisions/kinetic-review-v2/prepared/hitlist-v4-iedb-train.jsonl",
+    "sha256": "c76aeafbb47c66b7fa904c191502de95f8812d45275cdfe680821838a37200b1"
+  },
+  "seconds": 30.08027464,
+  "changed_qualifiers": 0,
+  "validation_test_used": false,
+  "model_fitted": false,
+  "source_census": {
+    "rows": 848164,
+    "strata": 557,
+    "sources": {
+      "binding.parquet": {
+        "path": "/volume/2026-10-28_1540_codex_temporal-multi-output/source/dataset/bundles/2026-10-28T17-55-53Z/binding.parquet",
+        "size_bytes": 17306340,
+        "sha256": "c5df3057d56ffb6e70d17d78e95f473c8f2bb6e3af684513567e235d08c6879c",
+        "rows": 821470
+      },
+      "other_assays.parquet": {
+        "path": "/volume/2026-10-28_1540_codex_temporal-multi-output/source/dataset/bundles/2026-10-28T17-55-53Z/other_assays.parquet",
+        "size_bytes": 1271725,
+        "sha256": "41ecb0c4eddf0e27a933e513e9d7ffcadb1bc8bb4145b55e117ceb292f0d2085",
+        "rows": 26694
+      }
+    }
+  },
+  "environment": {
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "pyarrow": "26.0.0"
+  },
+  "python": "3.12.1 (main, Jan 11 2024, 10:22:40) [GCC 10.2.1 20210110]",
+  "requested_gpu": null,
+  "cpu": 4,
+  "memory_mib": 16384,
+  "worker_sha256": "923ca2e12789c1d78518ca0d49770e1cb17041f93d36a6dad895c664c20702e4",
+  "build_receipt_sha256": "d58fc0a23f16b54089a2afd813de54e805bbb2f70e9136d867aee11aff70b95e"
+}

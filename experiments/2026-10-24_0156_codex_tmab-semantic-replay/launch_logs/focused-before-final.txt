@@ -1,0 +1,104 @@
+FFFFFFFFFFF.FFF                                                          [100%]
+=================================== FAILURES ===================================
+____________ test_tentative_acetylation_does_not_insert_an_alanine _____________
+hitlist-native-fix/tests/test_tmab_semantics.py:15: in test_tentative_acetylation_does_not_insert_an_alanine
+    assert tmab._parse_sequence("(Ac-AGKQAVSASGK)") == ("AGKQAVSASGK", "N_terminal_acetylation")
+E   AssertionError: assert ('AAGKQAVSASGK', None) == ('AGKQAVSASGK..._acetylation')
+E     
+E     At index 0 diff: 'AAGKQAVSASGK' != 'AGKQAVSASGK'
+E     Use -v to get more diff
+________________ test_oxidation_positions_survive_normalization ________________
+hitlist-native-fix/tests/test_tmab_semantics.py:19: in test_oxidation_positions_survive_normalization
+    assert tmab._parse_sequence("Ac-MoxAGMox") == (
+E   AssertionError: assert ('MAGM', 'N_t..._acetylation') == ('MAGM', 'N_t...;oxidation@4')
+E     
+E     At index 1 diff: 'N_terminal_acetylation' != 'N_terminal_acetylation;oxidation@1;oxidation@4'
+E     Use -v to get more diff
+_ test_unresolved_annotation_does_not_become_a_confident_sequence[APIKVGDAIPAVE -18 (dehydro? - maps to Cterm E)] _
+hitlist-native-fix/tests/test_tmab_semantics.py:35: in test_unresolved_annotation_does_not_become_a_confident_sequence
+    assert tmab._parse_sequence(raw)[0] is None
+E   AssertionError: assert 'APIKVGDAIPAVECE' is None
+_ test_unresolved_annotation_does_not_become_a_confident_sequence[pyroE-AEWDDYVPKLYEQLSGK] _
+hitlist-native-fix/tests/test_tmab_semantics.py:35: in test_unresolved_annotation_does_not_become_a_confident_sequence
+    assert tmab._parse_sequence(raw)[0] is None
+E   AssertionError: assert 'EAEWDDYVPKLYEQLSGK' is None
+_____ test_unresolved_annotation_does_not_become_a_confident_sequence[ABC] _____
+hitlist-native-fix/tests/test_tmab_semantics.py:35: in test_unresolved_annotation_does_not_become_a_confident_sequence
+    assert tmab._parse_sequence(raw)[0] is None
+E   AssertionError: assert 'ABC' is None
+__ test_unresolved_annotation_does_not_become_a_confident_sequence[PEP(TIDE)] __
+hitlist-native-fix/tests/test_tmab_semantics.py:35: in test_unresolved_annotation_does_not_become_a_confident_sequence
+    assert tmab._parse_sequence(raw)[0] is None
+E   AssertionError: assert 'PEPTIDE' is None
+___________________ test_multiword_compounds_remain_distinct ___________________
+hitlist-native-fix/tests/test_tmab_semantics.py:39: in test_multiword_compounds_remain_distinct
+    assert tmab._treatment("Bestatin Methyl Ester 75min 100uM")[1] == "bestatin methyl ester"
+E   AssertionError: assert 'bestatin' == 'bestatin methyl ester'
+E     
+E     - bestatin methyl ester
+E     + bestatin
+___ test_cross_paper_candidates_keep_unique_ids_and_unresolved_independence ____
+hitlist-native-fix/tests/test_tmab_semantics.py:115: in test_cross_paper_candidates_keep_unique_ids_and_unresolved_independence
+    assert len({m["lineage_group_id"] for m in paired}) == 6
+E   AssertionError: assert 12 == 6
+E    +  where 12 = len({'tmab:lineage:0318696bab06dbc266f3f1d7', 'tmab:lineage:0809881163afac2dc5d2f3fc', 'tmab:lineage:0aaf830e7d085993b4941...neage:19e17fc4667520c66e6a7f8a', 'tmab:lineage:329d6f61f76ceebd0285b5e0', 'tmab:lineage:347b33523f030ffced9bf0f7', ...})
+________ test_raw_numeric_exactness_does_not_override_identity_or_role _________
+hitlist-native-fix/tests/test_tmab_semantics.py:131: in test_raw_numeric_exactness_does_not_override_identity_or_role
+    assert row["eligibility_status"].startswith("deferred_")
+E   AssertionError: assert False
+E    +  where False = <built-in method startswith of str object at 0x11b203bb0>('deferred_')
+E    +    where <built-in method startswith of str object at 0x11b203bb0> = 'candidate_exact'.startswith
+_________ test_heatmap_projection_uses_source_specific_sequence_column _________
+hitlist-native-fix/tests/test_tmab_semantics.py:143: in test_heatmap_projection_uses_source_specific_sequence_column
+    assert {r["source_sequence_raw"] for r in heatmap} == {"PEPTIDE"}
+E   AssertionError: assert {'A', 'PEPTIDE'} == {'PEPTIDE'}
+E     
+E     Extra items in the left set:
+E     'A'
+E     Use -v to get more diff
+________________ test_protocol_scope_and_timeline_are_queryable ________________
+hitlist-native-fix/tests/test_tmab_semantics.py:148: in test_protocol_scope_and_timeline_are_queryable
+    contexts = store.query(
+hitlist-native-audit/hitlist/evidence_store.py:637: in query
+    plan = self._prepare_query(evidence_type, select, where, joins, limit)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hitlist-native-audit/hitlist/evidence_store.py:566: in _prepare_query
+    sources[field] = self._field(evidence_type, field)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hitlist-native-audit/hitlist/evidence_store.py:219: in _field
+    raise EvidenceFieldError(f"Unknown field: {evidence_type}.{field}")
+E   hitlist.evidence_store.EvidenceFieldError: Unknown field: tmab_protocol_context.publishing_protocol_instrument
+_______________ test_manifest_keeps_correction_revision_explicit _______________
+hitlist-native-fix/tests/test_tmab_semantics.py:197: in test_manifest_keeps_correction_revision_explicit
+    assert manifest["revision"] == "tmab_native_peptidomics_v2"
+E   AssertionError: assert 'tmab_native_peptidomics_v1' == 'tmab_native_peptidomics_v2'
+E     
+E     - tmab_native_peptidomics_v2
+E     ?                          ^
+E     + tmab_native_peptidomics_v1
+E     ?                          ^
+___ test_numeric_zero_stays_exact_but_is_deferred_from_log_ratio_candidates ____
+hitlist-native-fix/tests/test_tmab_semantics.py:201: in test_numeric_zero_stays_exact_but_is_deferred_from_log_ratio_candidates
+    identity = tmab._sequence_identity("PEPTIDE")
+               ^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'hitlist.tmab_peptidomics' has no attribute '_sequence_identity'
+__ test_unknown_original_acquisition_is_not_filled_from_republishing_protocol __
+hitlist-native-fix/tests/test_tmab_semantics.py:215: in test_unknown_original_acquisition_is_not_filled_from_republishing_protocol
+    assert context["instrument"] is None
+E   AssertionError: assert 'Waters Synapt G1' is None
+=========================== short test summary info ============================
+FAILED hitlist-native-fix/tests/test_tmab_semantics.py::test_tentative_acetylation_does_not_insert_an_alanine
+FAILED hitlist-native-fix/tests/test_tmab_semantics.py::test_oxidation_positions_survive_normalization
+FAILED hitlist-native-fix/tests/test_tmab_semantics.py::test_unresolved_annotation_does_not_become_a_confident_sequence[APIKVGDAIPAVE -18 (dehydro? - maps to Cterm E)]
+FAILED hitlist-native-fix/tests/test_tmab_semantics.py::test_unresolved_annotation_does_not_become_a_confident_sequence[pyroE-AEWDDYVPKLYEQLSGK]
+FAILED hitlist-native-fix/tests/test_tmab_semantics.py::test_unresolved_annotation_does_not_become_a_confident_sequence[ABC]
+FAILED hitlist-native-fix/tests/test_tmab_semantics.py::test_unresolved_annotation_does_not_become_a_confident_sequence[PEP(TIDE)]
+FAILED hitlist-native-fix/tests/test_tmab_semantics.py::test_multiword_compounds_remain_distinct
+FAILED hitlist-native-fix/tests/test_tmab_semantics.py::test_cross_paper_candidates_keep_unique_ids_and_unresolved_independence
+FAILED hitlist-native-fix/tests/test_tmab_semantics.py::test_raw_numeric_exactness_does_not_override_identity_or_role
+FAILED hitlist-native-fix/tests/test_tmab_semantics.py::test_heatmap_projection_uses_source_specific_sequence_column
+FAILED hitlist-native-fix/tests/test_tmab_semantics.py::test_protocol_scope_and_timeline_are_queryable
+FAILED hitlist-native-fix/tests/test_tmab_semantics.py::test_manifest_keeps_correction_revision_explicit
+FAILED hitlist-native-fix/tests/test_tmab_semantics.py::test_numeric_zero_stays_exact_but_is_deferred_from_log_ratio_candidates
+FAILED hitlist-native-fix/tests/test_tmab_semantics.py::test_unknown_original_acquisition_is_not_filled_from_republishing_protocol
+14 failed, 1 passed in 1.42s

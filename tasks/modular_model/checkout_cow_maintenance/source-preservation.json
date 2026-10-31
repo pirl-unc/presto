@@ -1,0 +1,23 @@
+{
+  "files": {
+    "presto-verify-checkout-cow-followup.py": {
+      "original_sha256": "600a3fe8de84dcb8bde4ee456fc41683d915976cee6a0e2f5d3cde6ec62857f4",
+      "executed_copy": "executed-source/presto-verify-checkout-cow-followup.py.txt",
+      "formatted_sha256": "26bef64df0640db5d5c516735ac44f5102211a902cb64dab9eb2501174012fc3",
+      "ast_equal": true
+    },
+    "presto-verify-checkout-cow-initial.py": {
+      "original_sha256": "dab48e5a9a8ab096ddf75b0b895efaf51a8bf9294aa91a69f28234d640c3171a",
+      "executed_copy": "executed-source/presto-verify-checkout-cow-initial.py.txt",
+      "formatted_sha256": "7d0889bb1c306e87150f8a42bfe83bee7085c7b03c65a6ac3e128f28a7155113",
+      "ast_equal": true
+    },
+    "presto-verify-checkout-cow.py": {
+      "original_sha256": "192b209eb33dc7c57db34e634d61162c368592f5076d07bd1cfeec3231f38f42",
+      "executed_copy": "executed-source/presto-verify-checkout-cow.py.txt",
+      "formatted_sha256": "57751f1cc2dd1d582476b6e446f6701b7f1c656afef637d207d6044805c91b19",
+      "ast_equal": true
+    }
+  },
+  "purpose": "Preserve exact executed helpers while formatting equivalent working copies for repository lint."
+}

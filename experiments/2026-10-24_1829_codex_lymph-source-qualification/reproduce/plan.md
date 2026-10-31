@@ -1,0 +1,20 @@
+# Independent lymph/DC source qualification
+
+Codex / GPT-6, October24,2026. Freeze source audit before new quantitative source assets or counts. Follows failed macrophage transfer support (1755) and unrecovered HLA-DO quantitative supplements (1818); no threshold relaxation or reuse of inspected predictive tests.
+
+## Source hypothesis and measurement distinction
+
+Nanaware2024, PMID38848214 / PMC11233987 / DOI10.1016/j.celrep.2024.114311, reports afferent-lymph measurements and a separate dendritic-cell MHC-II endpoint. Candidate deposits: PXD051024 native human lymph peptidome, PXD044801 human lymph proteome, PXD044885 murine control/inflammatory lymph, PXD051618/MSV000094586 cervical/mesenteric mouse proteome, PXD052267/MSV000094761 dendritic-cell I-Ab peptides. These reported labels require primary-source verification; neither matched specimens nor all modalities in every species is assumed.
+
+A useful next model comparison would require original per-peptide quantities and source-parent context, separating extracellular native products, analytical tryptic products and MHC-selected peptides. Native lymph can constrain a supply/observation component, not directly label the intracellular APC pool. Do not conflate human with mouse, healthy with inflammatory samples, extracellular with intracellular compartments, peptidome with digest or same anatomical group with exact specimen pairing. Selection, transport and capture remain explicit. Prefer endogenous host candidates for later processing models; retain original taxonomy/alternatives rather than relabeling exogenous detections. Class-II predicted cores are annotations, not measured binding registers.
+
+## Ordered audit
+
+1. Retrieve official primary XML/metadata using documented current public services, plus source-listed original supplements and complete deposit inventories. Use anonymous public access only; ignore any obsolete reviewer credentials exposed in indexed papers. No author outreach or login. Validate actual payloads as well as HTTP status. Preserve original bytes, hashes, source links, access/license and failures.
+2. Inventory every original processed supplement's sheets/headers, quantity units/grain, precursor/form/charge identities, normalization and missingness. Separate detection/quantification/source-filtering and raw/derived values. Record known specimen/donor/pool/acquisition/technical and biological replicate links; unknown stays unknown. Identify actual independent native peptide and APC quantities, without computing model scores.
+3. Search existing canonical Hitlist owners/source implementations. Build no private Presto training curator. If quantities are supported, define a canonical shared source/recipe and a later prospective model contract, with full-parent/component and study/replicate dependence checks, source leakage/exposure audit, controls, exact and sampled variants sharing observer/objective, and frozen held-outs before fitting. No claims of concentration or causal kinetics from source admission.
+4. Independently verify source hashes, inventory completeness and quantitative schema/content counts using a second decoder. Publish explicit usable/gapped modalities and update/file concrete upstream data/metadata requirements. Original source outcome selection and unresolved material joins must survive.
+
+## Resource and reproducibility contract
+
+Local CPU only, one numerical thread, <=3GiB RSS, <=10minutes per stage. <=512MiB public processed assets total, <=100MiB/asset unless a source-size cap amendment precedes retrieval; keep >=2GiB disk free. No RAW files, cloud compute or shared-environment modifications. Reuse verified public bytes. Store raw inputs at data/lymph_source_qualification/2026-10-24_1829_v1 and exact commands/source/env/git state, receipts, README, summary tables/JSON and independent verification under the experiment. No pretraining/training, optimizer/loss/assay head/synthetic labels or prediction dumps apply at this stage. No model-quality or support thresholds are selected from observed predictive outcomes because none are computed.

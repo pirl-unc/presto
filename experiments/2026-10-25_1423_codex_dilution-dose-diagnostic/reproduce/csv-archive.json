@@ -1,0 +1,11 @@
+{
+  "original_path": "results/comparison.csv",
+  "original_sha256": "cb271139122722ac8fdbf07614602c29aa7a63e15fa2292d7294fe5537d23bb8",
+  "byte_restorable_gzip": "results/comparison.csv.gz",
+  "gzip_sha256": "5bca6e3ee9165d2b643835899ab7c6bd6ec110803c2cd69a236d8652da322177",
+  "lf_derivative": "results/comparison-lf.csv",
+  "lf_sha256": "71466efb9a5a94fd93f02e9c06c41ace3ed730fea0f2d13112f470c20154daeb",
+  "parsed_cells_equal": true,
+  "restore_if_original_absent": "gzip -dk results/comparison.csv.gz",
+  "original_executed_csv_rewritten": false
+}

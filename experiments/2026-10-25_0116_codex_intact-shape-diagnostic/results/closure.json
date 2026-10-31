@@ -1,0 +1,23 @@
+{
+  "passed": true,
+  "n_conditions": 6,
+  "n_hashed_files": 55,
+  "logical_bytes": 1438563,
+  "heldout_metrics": null,
+  "heldout_absence_reason": "training-only diagnosis after original 0046 outer outcomes were inspected",
+  "no_model_promotion": true,
+  "decisions": {
+    "uniform": {
+      "optimizer_material_at_5pct": false,
+      "best_training_mse_gain_percent": 2.2892717900163673,
+      "shape_penalty_fraction_of_original_mse": 0.07980260338295837,
+      "shape_material_at_10pct": false
+    },
+    "residue": {
+      "optimizer_material_at_5pct": false,
+      "best_training_mse_gain_percent": 2.3218930885379296,
+      "shape_penalty_fraction_of_original_mse": 0.07988134908658517,
+      "shape_material_at_10pct": false
+    }
+  }
+}

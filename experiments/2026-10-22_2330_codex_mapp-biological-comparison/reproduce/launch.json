@@ -1,0 +1,22 @@
+{
+  "status": "registered",
+  "agent_model": "Codex / GPT-6",
+  "source_package": "/private/tmp/hitlist-v2-mapp-reference-second",
+  "source_manifest_sha256": "55f7a3d50df5d162e55bf1d66fbcf413a35fc927fd08c266f90d981068a053c2",
+  "recipe": "mapp_captured_composition_v1",
+  "split": "fixed hash of all-source sequence/source-group connected components",
+  "models": [
+    "exact-context",
+    "reinforce64-context",
+    "exact-no-context"
+  ],
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "epochs": 40,
+  "batch_size": 8,
+  "learning_rate": 0.003,
+  "device": "CPU"
+}

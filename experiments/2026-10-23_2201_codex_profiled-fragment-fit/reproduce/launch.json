@@ -1,0 +1,54 @@
+{
+  "registered_at": "2026-10-24T02:02:14.994380+00:00",
+  "agent": "Codex / GPT-6",
+  "git_commit": "a6c655905247bef41459221a1a2c402361c09a75",
+  "git_dirty": true,
+  "previous_family": "/private/tmp/presto-modular-model/experiments/2026-10-23_2108_codex_fragment-biological-fit",
+  "source_hashes": {
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_2029_codex_observation-domain/results/summary.json": "ab6464a3a62b4e2b460854d56ab71a18b613359a544c9dc0aee0e018a72a930e",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_2029_codex_observation-domain/reproduce/training-support.json": "10f1dd0cff572dd80088ab1b8b6354f9fb692714e07435b8c4a5f86fe1db25a8",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_2029_codex_observation-domain/code/rational.py": "dd67d8450d89d8faa04964c322abc79411338ed3785f297768ad7c655a377bb0",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_1501_codex_shared-observation/code/observation.py": "bf612679f2280bee81bdcfaddd02771bada80f1db0978a86925ab48f9b07420f",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_1501_codex_shared-observation/reproduce/launch.json": "cfc71e045b633a9e3b1633903257425d4d9e8329acb0efd1dc8cac1af82b7012",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_1501_codex_shared-observation/results/context-summary.json": "050c284cc04b0e11286b4a10e28573648bc9e8426ae68bbb9da54fa9332a50df",
+    "/private/tmp/hitlist-digestion-209-review-candidate/manifest.json": "5f616170b5514cb4d8f0c7b7843d232959e9514eebbca6483f976e17b0846615",
+    "/private/tmp/hitlist-digestion-209-review-candidate/examples.json": "8b89735c3a0f4fe11d863dd886118e64b2ff1fb8570b4e01f4d209e5078f3d8c",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_1202_codex_biological-cut-rates/results/fits.json": "2400f214141b6ab421cc0b5168ec08b3209507b62b7cf0a590fd719937bd267f",
+    "/private/tmp/presto-modular-model/models/independent_cut.py": "6b6a2afa884ed3d0fa4ba553a1f6c94d884e9299f3ece68d62cd34bcc6f3771f",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_2108_codex_fragment-biological-fit/code/core.py": "bd8f0713a94a0678ff9b160064db40470ba80708723b9542a0c2d2c588964412",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_2108_codex_fragment-biological-fit/code/rational.py": "dd67d8450d89d8faa04964c322abc79411338ed3785f297768ad7c655a377bb0",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_2108_codex_fragment-biological-fit/reproduce/fitting.json": "7590c1fd995ea1cb1b4da29d3f4cc43d153dd41b8f7a96e9394e446f4bb244d9",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_2108_codex_fragment-biological-fit/reproduce/launch.json": "e70758f04e4eea69262be3ab1c5542b2bf1357d7828613e4485729d17e5fd9fb",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_2108_codex_fragment-biological-fit/results/qualification-summary.json": "9262b012212b9477f073c1db730f8bbddea88be419c042b1728be8c2178ad775",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_2108_codex_fragment-biological-fit/results/analytical/independent-verification.json": "3a5626055499616976cdcbdc549229a2856e1290a91e9a3f01f457188cc85a6d",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_2108_codex_fragment-biological-fit/results/fragment/independent-verification.json": "65a540dfd5b5d8672dcec636da658217b07a0e1c931296e7aa4e5a2d257be800"
+  },
+  "admission_family": "/private/tmp/presto-modular-model/experiments/2026-10-23_2029_codex_observation-domain",
+  "observation_family": "/private/tmp/presto-modular-model/experiments/2026-10-23_1501_codex_shared-observation",
+  "stage": "objective_qualification_and_quantity_closed_cost",
+  "optimizer_updates": 0,
+  "biological_fit_allowed": false,
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "PYTHONPATH": "/private/tmp/presto-modular-imports"
+  },
+  "gates": {
+    "atol": 1e-09,
+    "rtol": 1e-08,
+    "required_log_disagreement": 1e-05
+  },
+  "qualification_states": [
+    "original initializer",
+    "fixed sinusoidal perturbation: .04*sin(index+1), no targets used to choose"
+  ],
+  "fragment_parity_block": 0,
+  "cost_condition": "Longest training parent, last sorted time; no target values consulted",
+  "test_policy": "Original test parents excluded; previously inspected development only after fixed final checkpoint",
+  "argv": [
+    "sh",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_2201_codex_profiled-fragment-fit/reproduce/launch.sh"
+  ]
+}

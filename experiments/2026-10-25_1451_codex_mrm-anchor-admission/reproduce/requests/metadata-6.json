@@ -1,0 +1,19 @@
+{
+  "phase": "metadata",
+  "scope": "Inspect public upload-area directory inventory and official NCBI OA package metadata; do not download raw spectra.",
+  "requests": [
+    {
+      "name": "pass01163-upload-index.html",
+      "url": "https://db.systemsbiology.net/sbeams/cgi/PeptideAtlas/PASS_View?identifier=PASS01163&browseArea=upload&path=/",
+      "encoding": "latin-1",
+      "expected_kind": "html",
+      "discovery_provenance": "Exact Browse FTP upload area public href in pass01163-sbeams.html and pass01163-experiment2.html. No credentials supplied."
+    },
+    {
+      "name": "michaud2018-oa.xml",
+      "url": "https://www.ncbi.nlm.nih.gov/pmc/utils/oa/oa.fcgi?id=PMC6123701",
+      "expected_kind": "xml",
+      "discovery_provenance": "Official NCBI OA Web Service per-article package lookup, documented at https://pmc.ncbi.nlm.nih.gov/tools/oa-service/; primary study PMCID6123701 already verified."
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "registered_utc": "2026-10-23T09:14:05.485673+00:00",
+  "asset_root": "/private/tmp/presto-mapp-controlled-assets",
+  "projects": [
+    "PXD009508",
+    "PXD007263"
+  ],
+  "source_sha256": "61a4b53d4203ef59b7ecf83bfae5ee5cfb5c07fb58658a5c7dc36af577b1d561",
+  "purpose": "Replay all reported peptide intensities against explicitly linked original evidence, preserving literal labels and source zeros/missingness. No trained output or eligibility recipe.",
+  "relative_tolerance": 0.0001,
+  "absolute_tolerance": 1,
+  "tolerance_source": "Same declared rounded-source tolerance as earlier MAPP source audit; no adjustment from this panel outcomes.",
+  "label_policy": "Evidence Experiment to Raw file is supplied per row; join Raw file to source summary. Preserve any label disagreement without punctuation-based biological inference.",
+  "missing_policy": "Missing evidence is recorded; numerical empty sum may be zero only for arithmetic comparison, never a negative biological label."
+}

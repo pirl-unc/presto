@@ -1,3925 +1,1385 @@
-"""Presto: Full unified model for pMHC presentation, recognition, and immunogenicity.
+"""The shared observation-based Presto model for all new training.
 
-Canonical forward path:
-- Single token stream encoder over peptide/flanks/groove-half-1/groove-half-2.
-- Segmented latent-query attention DAG produces biologic latent vectors.
-- Assay and task outputs are readouts of those shared latent vectors.
-- Canonical assay prediction never consumes assay-selector metadata as model input.
+Register attention is statistical pooling, not physical occupancy. Component
+scores in an MS mixture are not independently identified by mixture labels.
 """
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
-
+from dataclasses import asdict, dataclass, field
 import math
-import warnings
+from typing import Any, Sequence
+
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
+from torch import nn
 
-from .pmhc import (
-    PROCESSING_SPECIES_BUCKETS,
-    _class_probs_from_input,
-    _species_probs_from_input,
+from ..data.modular import (
+    AA,
+    CORECEPTORS,
+    DELIVERY,
+    EXPOSURE_STATES,
+    ENDPOINTS,
+    IDENTITY_TASKS,
+    ROLES,
+    STATES,
+    Observation,
+    MachineryProfile,
+    identity_vocabulary,
+    has_identity_input,
+    endpoint_spec,
+    is_endpoint,
 )
-from .presto_modules import (
-    AffinityPredictor,
-    ClassPresentationPredictor,
-    ClassProcessingPredictor,
-    PrestoTrunkState,
+from ..data.modular_quantitative import QuantitativeDomain, quantity_domain
+from ..data.modular_ordinal import OrdinalScale
+from ..data.modular_context import (
+    resolve_cell_context,
+    resolve_components,
+    resolve_field,
+    resolve_species,
 )
-from .heads import (
-    TCellAssayHead,
-    ElutionHead,
-    ExcisionHead,
-    EXCISION_SCORING_VERSION,
-    validate_excision_scoring_version,
-)
-from .affinity import (
-    AFFINITY_TARGET_ENCODINGS,
-    DEFAULT_MAX_AFFINITY_NM,
-    DEFAULT_BINDING_MIDPOINT_NM,
-    DEFAULT_BINDING_LOG10_SCALE,
-    max_log10_nM,
-)
-from ..data.allele_resolver import (
-    normalize_processing_species_label,
-)
-from ..data.vocab import (
-    AA_VOCAB,
-    AA_TO_IDX,
-    EXCISION_MACHINERY_VERSION,
-    EXCISION_MACHINERY_TO_IDX,
-    EXCISION_P1_PRIME_BLOCKED,
-    EXCISION_P1_RULES,
-    CELL_LINEAGES,
-    DISEASE_STATES,
-    SAMPLE_ORIGINS,
-    APM_PERTURBATIONS,
-    PEPTIDE_SOURCE_TO_IDX,
-    PROCESSING_STIMULI,
-    PROTEASOME_MIXTURE_COMPONENTS,
-    excision_machinery_index,
-    excision_machinery_vocabulary,
-    N_ORGANISM_CATEGORIES,
-    N_MHC_SPECIES,
-    ORGANISM_TO_IDX,
-    normalize_organism,
-    TCELL_APC_TYPES,
-    TCELL_ASSAY_METHODS,
-    TCELL_ASSAY_READOUTS,
-    TCELL_CULTURE_CONTEXTS,
-    TCELL_PEPTIDE_FORMATS,
-    TCELL_STIM_CONTEXTS,
-)
+from .encoders import SequenceEncoder
+from .modular_support import feature_inputs, feature_layout
+from .modular_dependencies import frozen_output, staged_elution_parameters
+from ..data.assay_measurement import AssayTrack, observation_track, observation_method
+from .assay_measurement import AFFINITY_ENDPOINTS, AssayMeasurementLayer
+
+MODEL_VERSION = "presto.shared.v7"
+ELUTION_STAGINGS = ("legacy_joint", "affinity_downstream")
 
 
-def _species_idx_tensor(
-    species_of_origin: Any,
-    batch_size: int,
-    device: torch.device,
-) -> torch.Tensor:
-    """Convert species-of-origin override to ORGANISM index tensor."""
+@dataclass(frozen=True)
+class PrestoConfig:
+    endpoints: tuple[str, ...] = ("ic50",)
+    assay_tracks: tuple[AssayTrack, ...] = ()
+    assay_mode: str = "factorized"
+    identity_tasks: tuple[str, ...] = ()
+    mhc_classes: tuple[str, ...] = ("I", "II")
+    register_pooling: bool = True
+    species: tuple[str, ...] = ()
+    source_categories: tuple[str, ...] = ()
+    auxiliary_context: tuple[str, ...] = ()
+    components: tuple[str, ...] = ()
+    component_activity_units: dict[str, str] = field(default_factory=dict)
+    machinery_profiles: dict[str, tuple[str, ...]] = field(default_factory=dict)
+    machinery_references: tuple[MachineryProfile, ...] = ()
+    cell_types: tuple[str, ...] = ()
+    cytokines: tuple[str, ...] = ()
+    cytokine_dose_units: dict[str, str] = field(default_factory=dict)
+    cytokine_duration_features: tuple[str, ...] = ()
+    processing_pathways: tuple[str, ...] = ()
+    interventions: tuple[str, ...] = ()
+    ordinal_scales: dict[str, OrdinalScale] = field(default_factory=dict)
+    context_species: tuple[str, ...] = ()
+    enzymes: tuple[str, ...] = ()
+    acquisition_features: tuple[str, ...] = ()
+    observation_features: tuple[str, ...] = ()
+    acquisition_units: dict[str, str] = field(default_factory=dict)
+    observation_units: dict[str, str] = field(default_factory=dict)
+    preparation_features: tuple[str, ...] = ()
+    preparation_units: dict[str, str] = field(default_factory=dict)
+    quantity_domains: dict[str, QuantitativeDomain] = field(default_factory=dict)
+    source_context: bool = False
+    species_defaults: bool = True
+    identity_threshold: float = 0.8
+    dropout: float = 0.1
+    max_length: int = 512
+    d_model: int = 128
+    n_layers: int = 2
+    n_heads: int = 4
+    d_ff: int = 512
+    peptide_context: str = "shared_core_context_v2"
+    # "legacy_joint": elution reads the fused trunk through `cellular_score`.
+    # "affinity_downstream": elution = a*(-pooled affinity score) [+ b*pooled
+    # half-life score] + processing + ms_response + bias; see docs/modular_model.md.
+    # The three staging fields are omitted from `to_dict()` while legacy so frozen
+    # checkpoints and their contract digests are unchanged.
+    elution_staging: str = "legacy_joint"
+    elution_affinity_endpoint: str | None = None
+    elution_detach_affinity: bool = False
 
-    def _idx_from_label(label: Any) -> int:
-        normalized = normalize_organism(str(label)) if label is not None else None
-        if normalized is None:
-            normalized = str(label).strip().lower() if label is not None else ""
-        return ORGANISM_TO_IDX.get(normalized, 0)
-
-    if isinstance(species_of_origin, str):
-        idx = _idx_from_label(species_of_origin)
-        return torch.full((batch_size,), idx, dtype=torch.long, device=device)
-
-    if isinstance(species_of_origin, (list, tuple)):
-        out = torch.zeros(batch_size, dtype=torch.long, device=device)
-        for i in range(batch_size):
-            value = species_of_origin[i] if i < len(species_of_origin) else None
-            out[i] = _idx_from_label(value)
-        return out
-
-    if isinstance(species_of_origin, torch.Tensor):
-        sp = species_of_origin.to(device=device)
-        if sp.ndim == 1:
-            if sp.shape[0] == 1:
-                sp = sp.expand(batch_size)
-            elif sp.shape[0] != batch_size:
-                raise ValueError(
-                    "species_of_origin id tensor batch mismatch: "
-                    f"expected {batch_size}, got {sp.shape[0]}"
-                )
-            return sp.to(dtype=torch.long).clamp(min=0, max=N_ORGANISM_CATEGORIES - 1)
-        if sp.ndim == 2:
-            if sp.shape[0] == 1:
-                sp = sp.expand(batch_size, -1)
-            elif sp.shape[0] != batch_size:
-                raise ValueError(
-                    "species_of_origin probs tensor batch mismatch: "
-                    f"expected {batch_size}, got {sp.shape[0]}"
-                )
-            return (
-                sp.argmax(dim=-1).to(dtype=torch.long).clamp(min=0, max=N_ORGANISM_CATEGORIES - 1)
+    def __post_init__(self):
+        if self.assay_mode != "factorized":
+            raise ValueError(
+                "new training requires factorized assay_mode; v6 controls are historical"
             )
-        raise ValueError(f"unsupported species_of_origin tensor rank {sp.ndim}; expected 1 or 2")
-
-    return torch.zeros(batch_size, dtype=torch.long, device=device)
-
-
-def _processing_species_idx_tensor(
-    species: Any,
-    batch_size: int,
-    device: torch.device,
-) -> torch.Tensor:
-    """Convert explicit processing context to ids; unknown has its own row."""
-    species_map = {name: idx for idx, name in enumerate(PROCESSING_SPECIES_BUCKETS)}
-    unknown_idx = len(PROCESSING_SPECIES_BUCKETS)
-
-    if isinstance(species, str):
-        normalized = normalize_processing_species_label(species, default=None)
-        idx = species_map.get(normalized, unknown_idx)
-        return torch.full((batch_size,), idx, dtype=torch.long, device=device)
-
-    if isinstance(species, (list, tuple)):
-        ids = torch.full((batch_size,), unknown_idx, dtype=torch.long, device=device)
-        for i in range(batch_size):
-            label = normalize_processing_species_label(
-                species[i] if i < len(species) else None,
-                default=None,
-            )
-            ids[i] = species_map.get(label, unknown_idx)
-        return ids
-
-    if isinstance(species, torch.Tensor):
-        sp = species.to(device=device)
-        if sp.ndim == 1:
-            if sp.shape[0] == 1:
-                sp = sp.expand(batch_size)
-            elif sp.shape[0] != batch_size:
+        if any(not isinstance(track, AssayTrack) for track in self.assay_tracks):
+            raise ValueError("normalized assay tracks required")
+        if len({track.key for track in self.assay_tracks}) != len(self.assay_tracks):
+            raise ValueError("duplicate assay tracks")
+        for track in self.assay_tracks:
+            if track.endpoint not in AFFINITY_ENDPOINTS:
+                raise ValueError("assay tracks require a concentration affinity endpoint")
+            spec = endpoint_spec(track.endpoint)
+            if (
+                track.endpoint not in self.endpoints
+                or spec.parts
+                or spec.route not in ("pmhc", "cellular", "tcr", "tcr_cellular")
+            ):
+                raise ValueError("assay track needs an allocated direct measurement output")
+            preparation = "purified" if spec.route in ("pmhc", "tcr") else "cellular"
+            if track.preparation != preparation:
+                raise ValueError("assay preparation conflicts with the biological endpoint route")
+        for name in ("d_model", "n_layers", "n_heads", "d_ff"):
+            if type(getattr(self, name)) is not int or getattr(self, name) <= 0:
+                raise ValueError(f"{name} must be a positive integer")
+        if self.d_model % 2 or self.d_model % self.n_heads:
+            raise ValueError("model width must be even and divisible by attention heads")
+        if self.elution_staging not in ELUTION_STAGINGS:
+            raise ValueError(f"elution_staging must be one of {ELUTION_STAGINGS}")
+        if self.elution_staging == "legacy_joint":
+            if self.elution_affinity_endpoint is not None or self.elution_detach_affinity:
+                raise ValueError("elution affinity options require elution_staging")
+        else:
+            if "elution_observation" not in self.endpoints:
+                raise ValueError("staged elution needs the elution_observation endpoint")
+            if (
+                self.elution_affinity_endpoint not in AFFINITY_ENDPOINTS
+                or self.elution_affinity_endpoint not in self.endpoints
+            ):
                 raise ValueError(
-                    f"species id tensor batch mismatch: expected {batch_size}, got {sp.shape[0]}"
+                    "staged elution needs an allocated concentration affinity endpoint"
                 )
-            return sp.to(dtype=torch.long).clamp(min=0, max=unknown_idx)
-        if sp.ndim == 2:
-            if sp.shape[0] == 1:
-                sp = sp.expand(batch_size, -1)
-            elif sp.shape[0] != batch_size:
-                raise ValueError(
-                    f"species probs tensor batch mismatch: expected {batch_size}, got {sp.shape[0]}"
-                )
-            return (
-                sp.argmax(dim=-1)
-                .to(dtype=torch.long)
-                .clamp(
-                    min=0,
-                    max=unknown_idx,
-                )
+            if type(self.elution_detach_affinity) is not bool:
+                raise ValueError("elution_detach_affinity must be boolean")
+        if self.peptide_context != "shared_core_context_v2":
+            raise ValueError("new training requires the shared core/full ordered context contract")
+        if not self.register_pooling:
+            raise ValueError("new training requires shared candidate register pooling")
+        for name in (
+            "endpoints",
+            "identity_tasks",
+            "mhc_classes",
+            "species",
+            "source_categories",
+            "auxiliary_context",
+            "components",
+            "cell_types",
+            "cytokines",
+            "cytokine_duration_features",
+            "processing_pathways",
+            "interventions",
+            "context_species",
+            "enzymes",
+            "acquisition_features",
+            "observation_features",
+            "preparation_features",
+        ):
+            values = getattr(self, name)
+            if len(values) != len(set(values)):
+                raise ValueError(f"duplicate {name}")
+        if any(not is_endpoint(name) for name in self.endpoints) or set(self.identity_tasks) - set(
+            IDENTITY_TASKS
+        ):
+            raise ValueError("unsupported endpoint or identity task")
+        domains = {quantity_domain(name) for name in self.endpoints} - {None}
+        if domains != set(self.quantity_domains) or any(
+            not isinstance(value, QuantitativeDomain) for value in self.quantity_domains.values()
+        ):
+            raise ValueError(
+                "quantity endpoints require exactly their declared measurement domains"
             )
-        raise ValueError(f"unsupported species tensor rank {sp.ndim}; expected 1 or 2")
+        if "peptide_source" in self.identity_tasks and not self.source_categories:
+            raise ValueError("peptide source prediction requires declared category labels")
+        for name in self.auxiliary_context:
+            if name not in ("mhc_pairing", "tcr_pairing", "tcr_lineage") and not name.startswith(
+                "peptide_source:"
+            ):
+                raise ValueError(f"unsupported auxiliary context slot: {name}")
+            identity_vocabulary(name, self.species, self.source_categories)
+        if not self.endpoints and not self.identity_tasks:
+            raise ValueError("no active supervision")
+        if set(self.mhc_classes) - {"I", "II"} or not self.mhc_classes:
+            raise ValueError("unsupported class vocabulary")
+        if set(self.context_species) - (set(ROLES) - {"mhc1", "mhc2", "antigen"}):
+            raise ValueError("unsupported context species slot")
+        if any(task.endswith("species") for task in self.identity_tasks) and len(self.species) < 2:
+            raise ValueError("species prediction requires a varied, declared vocabulary")
+        if self.context_species and not self.species:
+            raise ValueError("context species needs a vocabulary")
+        for names, units in (
+            (self.acquisition_features, self.acquisition_units),
+            (self.observation_features, self.observation_units),
+            (self.preparation_features, self.preparation_units),
+        ):
+            if set(names) != set(units) or any(not value for value in units.values()):
+                raise ValueError("each numeric feature requires a declared unit/scale")
+        if set(self.component_activity_units) - set(self.components):
+            raise ValueError("activity units refer to inactive components")
+        for species, names in self.machinery_profiles.items():
+            if species not in self.species or set(names) - set(self.components):
+                raise ValueError("reference profile outside declared vocabulary")
+        if any(not name or name == "unknown" for name in (*self.cell_types, *self.cytokines)):
+            raise ValueError("cell/cytokine vocabulary requires nonempty, nonreserved labels")
+        if any(
+            not isinstance(name, str) or not name.strip() or name == "unknown"
+            for name in (*self.processing_pathways, *self.interventions)
+        ):
+            raise ValueError("pathway/intervention vocabulary requires nonempty named claims")
+        if (set(self.cytokine_dose_units) | set(self.cytokine_duration_features)) - set(
+            self.cytokines
+        ):
+            raise ValueError("cytokine numeric features require an allocated exposure")
+        if any(not unit for unit in self.cytokine_dose_units.values()):
+            raise ValueError("cytokine dose features require declared units")
+        profile_ids, profile_scopes = set(), set()
+        for profile in self.machinery_references:
+            if not isinstance(profile, MachineryProfile):
+                raise ValueError("machinery references require typed profiles")
+            scope = (profile.species, profile.cell_type)
+            if profile.profile_id in profile_ids or scope in profile_scopes:
+                raise ValueError("duplicate or ambiguous machinery reference profile")
+            profile_ids.add(profile.profile_id)
+            profile_scopes.add(scope)
+            if (
+                profile.species not in self.species
+                or (profile.cell_type is not None and profile.cell_type not in self.cell_types)
+                or set(profile.components) - set(self.components)
+            ):
+                raise ValueError("machinery reference outside declared vocabulary")
+        if not 0 <= self.dropout < 1 or not 0 < self.identity_threshold <= 1:
+            raise ValueError("invalid dropout or identity threshold")
+        if self.max_length < 9:
+            raise ValueError("max_length must support canonical cores")
+        routes = {endpoint_spec(name).route for name in self.endpoints}
+        cellular = bool(routes & {"cellular", "tcr_cellular"})
+        contextual = bool(routes & {"cellular", "tcr", "tcr_cellular"})
+        if self.components and not cellular:
+            raise ValueError("machinery slots need a cellular outcome")
+        if (self.cell_types or self.cytokines or self.machinery_references) and not cellular:
+            raise ValueError("APC cell/cytokine context requires a cellular outcome")
+        if (self.processing_pathways or self.interventions) and not cellular:
+            raise ValueError("pathway/intervention context requires a cellular outcome")
+        if self.ordinal_scales and not cellular:
+            raise ValueError("ordinal context requires a cellular outcome")
+        if any(
+            not isinstance(name, str)
+            or not name.strip()
+            or name == "unknown"
+            or not isinstance(scale, OrdinalScale)
+            for name, scale in self.ordinal_scales.items()
+        ):
+            raise ValueError("ordinal context requires named typed scales")
+        if self.context_species and not contextual:
+            raise ValueError("context species slots need a contextual outcome")
+        receptor = bool(routes & {"tcr", "tcr_cellular"})
+        for name in self.auxiliary_context:
+            if name == "mhc_pairing" and not routes & {"pmhc", "cellular", "tcr", "tcr_cellular"}:
+                raise ValueError("MHC pairing context requires a pMHC outcome")
+            if name == "tcr_pairing" and not receptor:
+                raise ValueError("TCR pairing context requires a receptor outcome")
+            if (name == "tcr_lineage" or name.startswith("peptide_source:")) and not cellular:
+                raise ValueError("source/lineage priors require a cellular outcome")
+            if name == "tcr_lineage" and "tcr_cellular" not in routes:
+                raise ValueError("TCR lineage context requires a paired cellular outcome")
+        for role in self.context_species:
+            if role in ("apc", "immune") and not cellular:
+                raise ValueError("APC/immune species slots require cellular outcomes")
+            if role in ("tcr_a", "tcr_b", "repertoire") and not receptor:
+                raise ValueError("receptor species slots require receptor outcomes")
+        if self.source_context and not (routes & {"cellular", "tcr_cellular", "digest", "bulk"}):
+            raise ValueError("source context has no active loss path")
+        if self.enzymes and not (routes & {"digest", "bulk"}):
+            raise ValueError("enzyme features have no digest loss path")
+        if self.preparation_features and not routes & {"digest", "bulk"}:
+            raise ValueError("preparation features have no digest loss path")
+        if self.acquisition_features and not any(
+            "ms_response" in endpoint_spec(name).parts for name in self.endpoints
+        ):
+            raise ValueError("acquisition features have no MS loss path")
+        if self.observation_features and not any(
+            endpoint_spec(name).observation_covariates for name in self.endpoints
+        ):
+            raise ValueError("observation covariates have no observation loss path")
 
-    return torch.full((batch_size,), unknown_idx, dtype=torch.long, device=device)
+    def to_dict(self) -> dict[str, Any]:
+        """Serializable contract; legacy elution staging adds no keys."""
+        data = asdict(self)
+        if self.elution_staging == "legacy_joint":
+            for name in ("elution_staging", "elution_affinity_endpoint", "elution_detach_affinity"):
+                del data[name]
+        return data
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> PrestoConfig:
+        data = dict(data)
+        if "assay_tracks" in data:
+            data["assay_tracks"] = tuple(AssayTrack(**track) for track in data["assay_tracks"])
+        for name in (
+            "endpoints",
+            "identity_tasks",
+            "mhc_classes",
+            "species",
+            "source_categories",
+            "auxiliary_context",
+            "components",
+            "cell_types",
+            "cytokines",
+            "cytokine_duration_features",
+            "processing_pathways",
+            "interventions",
+            "context_species",
+            "enzymes",
+            "acquisition_features",
+            "observation_features",
+            "preparation_features",
+        ):
+            if name in data:
+                data[name] = tuple(data[name])
+        if "machinery_profiles" in data:
+            data["machinery_profiles"] = {
+                key: tuple(value) for key, value in data["machinery_profiles"].items()
+            }
+        if "machinery_references" in data:
+            data["machinery_references"] = tuple(
+                MachineryProfile.from_dict(value) for value in data["machinery_references"]
+            )
+        if "quantity_domains" in data:
+            data["quantity_domains"] = {
+                name: QuantitativeDomain(**value)
+                for name, value in data["quantity_domains"].items()
+            }
+        if "ordinal_scales" in data:
+            data["ordinal_scales"] = {
+                name: OrdinalScale.from_dict(value)
+                for name, value in data["ordinal_scales"].items()
+            }
+        return cls(**data)
+
+
+@dataclass
+class Prediction:
+    observation_id: str
+    endpoint: str
+    value: torch.Tensor | None = None
+    identity: dict[str, torch.Tensor] = field(default_factory=dict)
+    diagnostics: dict[str, Any] = field(default_factory=dict)
+    components: dict[str, torch.Tensor] = field(default_factory=dict)
+    assay_values: dict[str, torch.Tensor] = field(default_factory=dict)
+    reference_value: torch.Tensor | None = None
+
+
+def candidates(peptide: str, mhc_class: str) -> list[tuple[int, str, list[float]]]:
+    """Return (start, sequence, flank/peptide lengths); no flank sequence cutoff."""
+    if mhc_class == "I":
+        return [(0, peptide, [0.0, 0.0, math.log1p(len(peptide))])]
+    if mhc_class != "II" or len(peptide) < 9:
+        raise ValueError("canonical class-II prediction requires a peptide of at least 9 residues")
+    result = []
+    for start in range(len(peptide) - 8):
+        left, right = peptide[:start], peptide[start + 9 :]
+        pfr = [math.log1p(length) for length in (len(left), len(right), len(peptide))]
+        result.append((start, peptide[start : start + 9], pfr))
+    return result
+
+
+class ObservationOffset(nn.Module):
+    """One intercept, with optional measured observation covariates."""
+
+    def __init__(self, width: int):
+        super().__init__()
+        self.bias = nn.Parameter(torch.zeros(1))
+        self.covariates = nn.Linear(width, 1, bias=False) if width else None
+
+    def forward(self, values):
+        return self.bias if self.covariates is None else self.bias + self.covariates(values)
 
 
 class Presto(nn.Module):
-    """Presto unified model with single token stream + latent DAG."""
+    """One encoder; construct only modules reachable from the declared tasks."""
 
-    SEG_NFLANK = 0
-    SEG_PEPTIDE = 1
-    SEG_CFLANK = 2
-    SEG_GROOVE_1 = 3
-    SEG_GROOVE_2 = 4
-    # Backward-compatible aliases for the public 2-segment MHC interface.
-    SEG_MHC_A = SEG_GROOVE_1
-    SEG_MHC_B = SEG_GROOVE_2
-
-    LATENT_ORDER = [
-        "processing",
-        "ms_detectability",
-        "species_of_origin",
-        "pmhc_interaction",
-        "recognition",
-    ]
-
-    # Per design S7.5: segment access table
-    # Processing sees peptide + flanks.  Peptide length and terminal
-    # residues are additionally injected as explicit extra tokens so
-    # TAP/ERAP features are available even when flanks are short.
-    LATENT_SEGMENTS = {
-        "processing": ["nflank", "peptide", "cflank"],
-        "ms_detectability": ["peptide"],
-        "species_of_origin": ["peptide"],  # peptide-only cross-attention
-        "pmhc_interaction": ["peptide", "mhc_a", "mhc_b"],
-        "recognition": ["peptide"],
-    }
-
-    # Per design S7.2: DAG dependencies
-    LATENT_DEPS = {
-        "processing": [],
-        "ms_detectability": [],
-        "species_of_origin": [],
-        "pmhc_interaction": [],
-        "recognition": ["foreignness"],
-    }
-
-    # Latents computed via cross-attention.
-    CROSS_ATTN_LATENTS = list(LATENT_ORDER)
-    N_LATENT_LAYERS = 2
-
-    # Binding latent names that use enhanced query path when available
-    BINDING_LATENT_NAMES = {"pmhc_interaction"}
-
-    # ------------------------------------------------------------------
-    # Expanded topology (design.md S7.1/S7.2/S7.5).
-    #
-    # The collapsed tables above fold twelve specified latents into five
-    # cross-attention latents plus projections and MLPs. The expanded tables
-    # give each specified latent its own query, which is what the design doc
-    # describes and what the segment-access table below reproduces exactly.
-    # Selected with ``latent_topology="expanded"``. Immunogenicity stays an
-    # MLP over its dependencies (S7.5: "MLP, no cross-attn").
-    # ------------------------------------------------------------------
-    EXPANDED_LATENT_ORDER = [
-        # Level 0 - parallel, no dependencies
-        "processing_class1",
-        "processing_class2",
-        "species_of_origin",
-        "ms_detectability",
-        # Level 1 - parallel, no dependencies
-        "binding_affinity",
-        "binding_stability",
-        # Level 2 - pure bottlenecks, no token access
-        "presentation_class1",
-        "presentation_class2",
-        # Level 2.5 - peptide + foreignness
-        "recognition_cd8",
-        "recognition_cd4",
-    ]
-
-    EXPANDED_LATENT_SEGMENTS = {
-        "processing_class1": ["nflank", "peptide", "cflank"],
-        "processing_class2": ["nflank", "peptide", "cflank"],
-        "species_of_origin": ["peptide"],
-        "ms_detectability": ["peptide"],
-        "binding_affinity": ["peptide", "mhc_a", "mhc_b"],
-        "binding_stability": ["peptide", "mhc_a", "mhc_b"],
-        # Presentation sees no tokens at all: everything must flow through the
-        # processing/binding bottlenecks, which is what prevents the model
-        # short-cutting around the causal biology.
-        "presentation_class1": [],
-        "presentation_class2": [],
-        "recognition_cd8": ["peptide"],
-        "recognition_cd4": ["peptide"],
-    }
-
-    EXPANDED_LATENT_DEPS = {
-        "processing_class1": [],
-        "processing_class2": [],
-        "species_of_origin": [],
-        "ms_detectability": [],
-        "binding_affinity": [],
-        "binding_stability": [],
-        "presentation_class1": [
-            "processing_class1",
-            "binding_affinity",
-            "binding_stability",
-        ],
-        "presentation_class2": [
-            "processing_class2",
-            "binding_affinity",
-            "binding_stability",
-        ],
-        "recognition_cd8": ["foreignness"],
-        "recognition_cd4": ["foreignness"],
-    }
-
-    EXPANDED_BINDING_LATENT_NAMES = {"binding_affinity", "binding_stability"}
-
-    LATENT_TOPOLOGIES = ("collapsed", "expanded")
-
-    def __init__(
-        self,
-        d_model: int = 256,
-        n_layers: int = 4,
-        n_heads: int = 8,
-        max_affinity_nM: float = DEFAULT_MAX_AFFINITY_NM,
-        affinity_target_encoding: str = "log10",
-        binding_midpoint_nM: float = DEFAULT_BINDING_MIDPOINT_NM,
-        binding_log10_scale: float = DEFAULT_BINDING_LOG10_SCALE,
-        # --- Binding latent architecture flags ---
-        binding_n_latent_layers: int = 2,  # A: depth per binding latent
-        binding_n_queries: int = 8,  # B: multi-token queries
-        binding_use_decoder_layers: bool = False,  # B: self-attn among queries
-        binding_query_pool: str = "mean",  # B: pooling strategy
-        use_pmhc_interaction_block: bool = False,  # C: pMHC interaction block
-        pmhc_interaction_layers: int = 2,  # C: num layers
-        use_groove_prior: bool = True,  # D: groove attention bias
-        peptide_pos_mode: str = "triple",
-        groove_pos_mode: str = "sequential",
-        core_window_lengths: Optional[Sequence[int]] = None,
-        core_refinement_mode: str = "shared",
-        affinity_assay_residual_mode: str = "legacy",
-        kd_grouping_mode: str = "merged_kd",
-        binding_kinetic_input_mode: str = "affinity_vec",
-        binding_direct_segment_mode: str = "off",
-        latent_topology: str = "expanded",
-        excision_machinery_version: int = EXCISION_MACHINERY_VERSION,
-        excision_scoring_version: int = EXCISION_SCORING_VERSION,
-    ):
-        """Initialize Presto."""
+    def __init__(self, config: PrestoConfig):
         super().__init__()
-        # ids of parameters whose deliberate init must survive _init_weights
-        self._preserved_init_params: set[int] = set()
-        self.d_model = d_model
-        self.excision_machinery_vocabulary = excision_machinery_vocabulary(
-            excision_machinery_version
+        self.config = config
+        self.encoder = SequenceEncoder(
+            d_model=config.d_model,
+            n_layers=config.n_layers,
+            n_heads=config.n_heads,
+            d_ff=config.d_ff,
+            vocab_size=21,
+            max_len=config.max_length,
+            dropout=config.dropout,
         )
-        self.excision_machinery_version = excision_machinery_version
-        self.excision_scoring_version = validate_excision_scoring_version(excision_scoring_version)
-        self.max_affinity_nM = float(max_affinity_nM)
-        affinity_target_encoding = str(affinity_target_encoding).strip().lower()
-        if affinity_target_encoding not in AFFINITY_TARGET_ENCODINGS:
-            raise ValueError(f"Unsupported affinity_target_encoding: {affinity_target_encoding!r}")
-        self.affinity_target_encoding = affinity_target_encoding
-        self.max_log10_nM = max_log10_nM(self.max_affinity_nM)
-        self.binding_midpoint_nM = float(binding_midpoint_nM)
-        self.binding_midpoint_log10_nM = math.log10(max(self.binding_midpoint_nM, 1e-12))
-        self.binding_log10_scale = max(float(binding_log10_scale), 1e-6)
-        self.missing_token_idx = int(AA_TO_IDX["<MISSING>"])
-        # Flank alphabet: `X` where the protein boundary is, `?` where the
-        # flank was never determined. See AA_VOCAB.
-        self.boundary_token_idx = int(AA_TO_IDX["X"])
-        self.unknown_flank_token_idx = int(AA_TO_IDX["?"])
-
-        # ------------------------------------------------------------------
-        # Latent topology selection
-        # ------------------------------------------------------------------
-        topology = str(latent_topology).strip().lower()
-        if topology not in self.LATENT_TOPOLOGIES:
-            raise ValueError(
-                f"Unsupported latent_topology: {latent_topology!r}. "
-                f"Expected one of {self.LATENT_TOPOLOGIES}."
-            )
-        self.latent_topology = topology
-        if topology == "expanded":
-            # Instance tables shadow the collapsed class constants, so every
-            # consumer of self.LATENT_* picks up the expanded DAG unchanged.
-            self.LATENT_ORDER = list(self.EXPANDED_LATENT_ORDER)
-            self.LATENT_SEGMENTS = dict(self.EXPANDED_LATENT_SEGMENTS)
-            self.LATENT_DEPS = dict(self.EXPANDED_LATENT_DEPS)
-            self.CROSS_ATTN_LATENTS = list(self.EXPANDED_LATENT_ORDER)
-            self.BINDING_LATENT_NAMES = set(self.EXPANDED_BINDING_LATENT_NAMES)
-
-        # Binding latent architecture config
-        self.binding_n_latent_layers = binding_n_latent_layers
-        self.binding_n_queries = binding_n_queries
-        self.binding_use_decoder_layers = binding_use_decoder_layers
-        self.binding_query_pool = binding_query_pool
-        self.use_pmhc_interaction_block = use_pmhc_interaction_block
-        self.pmhc_interaction_layers = pmhc_interaction_layers
-        self.pmhc_interaction_token_dim = min(64, d_model)
-        self.pmhc_interaction_vec_dim = (
-            max(1, self.binding_n_queries) * self.pmhc_interaction_token_dim
-        )
-        normalized_core_lengths = sorted(
+        routes = {endpoint_spec(name).route for name in config.endpoints}
+        self.has_pmhc = bool(routes & {"pmhc", "cellular", "tcr", "tcr_cellular"})
+        self.has_cellular = bool(routes & {"cellular", "tcr_cellular"})
+        self.has_tcr = bool(routes & {"tcr", "tcr_cellular"})
+        self.staged_elution = config.elution_staging == "affinity_downstream"
+        # Staged elution bypasses context_fusion; other contextual routes still use it.
+        self.has_context = bool(
             {
-                max(1, int(length))
-                for length in (core_window_lengths if core_window_lengths is not None else (9,))
+                endpoint_spec(name).route
+                for name in config.endpoints
+                if not (self.staged_elution and name == "elution_observation")
             }
+            & {"cellular", "tcr", "tcr_cellular"}
         )
-        self.core_window_lengths = tuple(normalized_core_lengths or [9])
-        self.core_window_size = max(self.core_window_lengths)
-        self.max_pfr_length = 50
-        self.pfr_length_dim = 32
-        self.use_groove_prior = use_groove_prior
-        peptide_pos_mode = str(peptide_pos_mode).strip().lower()
-        if peptide_pos_mode not in {
-            "triple",
-            "triple_baseline",
-            "abs_only",
-            "triple_plus_abs",
-            "start_only",
-            "end_only",
-            "start_plus_end",
-            "concat_start_end",
-            "concat_start_end_frac",
-            "mlp_start_end",
-            "mlp_start_end_frac",
-        }:
-            raise ValueError(f"Unsupported peptide_pos_mode: {peptide_pos_mode!r}")
-        self.peptide_pos_mode = peptide_pos_mode
-        groove_pos_mode = str(groove_pos_mode).strip().lower()
-        if groove_pos_mode not in {
-            "sequential",
-            "triple",
-            "triple_baseline",
-            "abs_only",
-            "triple_plus_abs",
-            "start_only",
-            "end_only",
-            "start_plus_end",
-            "concat_start_end",
-            "concat_start_end_frac",
-            "mlp_start_end",
-            "mlp_start_end_frac",
-        }:
-            raise ValueError(f"Unsupported groove_pos_mode: {groove_pos_mode!r}")
-        self.groove_pos_mode = groove_pos_mode
-        core_refinement_mode = str(core_refinement_mode).strip().lower()
-        if core_refinement_mode not in {"shared", "class_specific"}:
-            raise ValueError(f"Unsupported core_refinement_mode: {core_refinement_mode!r}")
-        self.core_refinement_mode = core_refinement_mode
-        affinity_assay_residual_mode = str(affinity_assay_residual_mode).strip().lower()
-        if affinity_assay_residual_mode not in {
-            "legacy",
-            "pooled_single_output",
-            "shared_base_segment_residual",
-            "shared_base_factorized_context_residual",
-            "shared_base_factorized_context_plus_segment_residual",
-            "dag_family",
-            "dag_method_leaf",
-            "dag_prep_readout_leaf",
-        }:
-            raise ValueError(
-                f"Unsupported affinity_assay_residual_mode: {affinity_assay_residual_mode!r}"
+        self.elution_stability = self.staged_elution and "half_life" in config.endpoints
+        self.has_digest = bool(routes & {"bulk", "digest"})
+        self.has_ms = any("ms_response" in endpoint_spec(name).parts for name in config.endpoints)
+        self.has_coreceptor = bool(set(config.endpoints) & {"tcell_response", "tcr_response"})
+        self.identity_heads = nn.ModuleDict()
+        for name in config.identity_tasks:
+            width, classes = {
+                "mhc_class": (2 * config.d_model, 2),
+                "mhc_species": (config.d_model, len(config.species)),
+                "tcr_species": (config.d_model, len(config.species)),
+                "tcr_lineage": (2 * config.d_model, 2),
+                "mhc_pairing": (2 * config.d_model, 2),
+                "tcr_pairing": (2 * config.d_model, 2),
+                "peptide_source": (config.d_model, len(config.source_categories)),
+            }[name]
+            self.identity_heads[name] = nn.Linear(width, classes)
+        if self.has_pmhc:
+            self.residue_interaction = nn.MultiheadAttention(
+                config.d_model, config.n_heads, dropout=config.dropout, batch_first=True
             )
-        self.affinity_assay_residual_mode = affinity_assay_residual_mode
-        kd_grouping_mode = str(kd_grouping_mode).strip().lower()
-        if kd_grouping_mode not in {"merged_kd", "split_kd_proxy"}:
-            raise ValueError(f"Unsupported kd_grouping_mode: {kd_grouping_mode!r}")
-        self.kd_grouping_mode = kd_grouping_mode
-        binding_kinetic_input_mode = str(binding_kinetic_input_mode).strip().lower()
-        if binding_kinetic_input_mode not in {"affinity_vec", "interaction_vec", "fused"}:
-            raise ValueError(
-                f"Unsupported binding_kinetic_input_mode: {binding_kinetic_input_mode!r}"
+            self.interaction_norm = nn.LayerNorm(config.d_model)
+            self.pmhc_fusion = self._fusion(
+                3 * config.d_model
+                + 2 * len(config.species)
+                + 2 * ("mhc_pairing" in config.auxiliary_context)
             )
-        self.binding_kinetic_input_mode = binding_kinetic_input_mode
-        binding_direct_segment_mode = str(binding_direct_segment_mode).strip().lower()
-        if binding_direct_segment_mode not in {
-            "off",
-            "affinity_residual",
-            "affinity_stability_residual",
-            "gated_affinity",
-        }:
-            raise ValueError(
-                f"Unsupported binding_direct_segment_mode: {binding_direct_segment_mode!r}"
+        source_width = (2 * config.d_model + 6) if config.source_context else 0
+        self.context_width = (
+            (3 * config.d_model if self.has_tcr else 0)
+            + (source_width if self.has_cellular else 0)
+            + len(config.context_species) * len(config.species)
+            + sum(
+                5 + (2 if name in config.component_activity_units else 0)
+                for name in config.components
             )
-        self.binding_direct_segment_mode = binding_direct_segment_mode
-        self._has_binding_enhancements = (
-            binding_n_latent_layers != self.N_LATENT_LAYERS
-            or binding_n_queries > 1
-            or use_pmhc_interaction_block
-            or use_groove_prior
+            + (len(config.cell_types) + 1 if config.cell_types else 0)
+            + len(EXPOSURE_STATES) * len(config.cytokines)
+            + 2 * (len(config.cytokine_dose_units) + len(config.cytokine_duration_features))
+            + len(EXPOSURE_STATES) * (len(config.processing_pathways) + len(config.interventions))
+            + sum(len(scale.levels) + 1 for scale in config.ordinal_scales.values())
+            + (len(DELIVERY) if self.has_cellular else 0)
+            + (len(CORECEPTORS) if self.has_coreceptor else 0)
+            + 2 * sum(name != "mhc_pairing" for name in config.auxiliary_context)
         )
-
-        # ------------------------------------------------------------------
-        # Single token stream encoder
-        # ------------------------------------------------------------------
-        self.aa_embedding = nn.Embedding(len(AA_VOCAB), d_model, padding_idx=0)
-        # `X` learns like any other token.
-        #
-        # It used to be pinned to a fixed zero vector, with a gradient hook
-        # zeroing its row on every backward pass, on the reasoning that an
-        # ambiguous residue should contribute nothing. But "unresolved" is not
-        # "neutral": in this corpus X is not scattered sequencing noise at all
-        # -- all 45,992 occurrences sit at `position == len(flank)`, i.e. the
-        # unresolved *initiator* residue of a reference protein. That is a
-        # highly specific context and worth a representation. The same applies
-        # to the flank markers `^`, `$` and `?`: each denotes a distinct state
-        # the model should be able to weigh, not a hole to be zeroed out.
-        self.segment_embedding = nn.Embedding(5, d_model)
-
-        # Segment-specific positional encoding (design S3.2.3)
-        # Peptide: triple-frame encoding
-        self.pep_nterm_pos = nn.Embedding(50, d_model)
-        self.pep_cterm_pos = nn.Embedding(50, d_model)
-        # Allocated only if the active mode consumes them. Allocating all of
-        # them made ~38k trunk parameters (at d_model=32) that were saved in
-        # every checkpoint, evaluated on every forward, and never trained.
-        pep_parts = self.POSITION_MODE_COMPONENTS[self.peptide_pos_mode]
-        self.pep_abs_pos = nn.Embedding(50, d_model) if "abs" in pep_parts else None
-        self.pep_frac_mlp = (
-            nn.Sequential(nn.Linear(1, d_model), nn.GELU(), nn.Linear(d_model, d_model))
-            if "frac_mlp" in pep_parts
-            else None
-        )
-        self.pep_pos_concat_proj = (
-            nn.Linear(2 * d_model, d_model) if "concat_proj" in pep_parts else None
-        )
-        self.pep_pos_concat_frac_proj = (
-            nn.Linear(2 * d_model + 2, d_model) if "concat_frac_proj" in pep_parts else None
-        )
-        self.pep_pos_concat_mlp = (
-            nn.Sequential(
-                nn.Linear(2 * d_model, d_model),
+        if self.has_context:
+            self.context_fusion = self._fusion(config.d_model + self.context_width)
+        if self.staged_elution:
+            # Supply-side term: peptide (+ source/flank when source_context) and APC context.
+            self.elution_processing = nn.Sequential(
+                nn.Linear(config.d_model + self.context_width, config.d_model),
                 nn.GELU(),
-                nn.Linear(d_model, d_model),
+                nn.Linear(config.d_model, 1, bias=False),
             )
-            if "concat_mlp" in pep_parts
-            else None
-        )
-        self.pep_pos_concat_frac_mlp = (
-            nn.Sequential(
-                nn.Linear(2 * d_model + 2, d_model),
-                nn.GELU(),
-                nn.Linear(d_model, d_model),
+            self.elution_affinity_weight = nn.Parameter(torch.tensor(1.0))
+            if self.elution_stability:
+                self.elution_stability_weight = nn.Parameter(torch.tensor(0.5))
+        if self.has_digest:
+            self.digest_fusion = self._fusion(
+                config.d_model
+                + source_width
+                + len(config.enzymes)
+                + 1
+                + 2 * len(config.preparation_features)
             )
-            if "concat_frac_mlp" in pep_parts
-            else None
-        )
-        # Flanks: distance-from-cleavage
-        self.nflank_dist_pos = nn.Embedding(25, d_model)
-        self.cflank_dist_pos = nn.Embedding(25, d_model)
-        # Groove halves: per-segment sequential
-        self.groove_1_pos = nn.Embedding(120, d_model)
-        self.groove_2_pos = nn.Embedding(120, d_model)
-        # Same gating as the peptide family. `sequential` -- the default --
-        # uses only groove_{1,2}_pos, so every other component below was pure
-        # dead weight under the shipped configuration.
-        groove_parts = self.POSITION_MODE_COMPONENTS[self.groove_pos_mode]
-        _groove_needs_ends = "end" in groove_parts
-        self.groove_1_abs_pos = nn.Embedding(120, d_model) if "abs" in groove_parts else None
-        self.groove_2_abs_pos = nn.Embedding(120, d_model) if "abs" in groove_parts else None
-        self.groove_1_end_pos = nn.Embedding(120, d_model) if _groove_needs_ends else None
-        self.groove_2_end_pos = nn.Embedding(120, d_model) if _groove_needs_ends else None
-        self.groove_frac_mlp = (
-            nn.Sequential(nn.Linear(1, d_model), nn.GELU(), nn.Linear(d_model, d_model))
-            if "frac_mlp" in groove_parts
-            else None
-        )
-        self.groove_pos_concat_proj = (
-            nn.Linear(2 * d_model, d_model) if "concat_proj" in groove_parts else None
-        )
-        self.groove_pos_concat_frac_proj = (
-            nn.Linear(2 * d_model + 2, d_model) if "concat_frac_proj" in groove_parts else None
-        )
-        self.groove_pos_concat_mlp = (
-            nn.Sequential(
-                nn.Linear(2 * d_model, d_model),
-                nn.GELU(),
-                nn.Linear(d_model, d_model),
+        if self.has_ms:
+            self.ms_fusion = self._fusion(config.d_model + 2 * len(config.acquisition_features))
+        binary_parts = {
+            part
+            for name in config.endpoints
+            if not endpoint_spec(name).quantitative
+            for part in endpoint_spec(name).parts
+        }
+        if self.staged_elution:
+            binary_parts.discard("cellular")
+        for part in sorted(binary_parts):
+            setattr(
+                self,
+                "ms_score" if part == "ms_response" else f"{part}_score",
+                nn.Linear(config.d_model, 1, bias=False),
             )
-            if "concat_mlp" in groove_parts
-            else None
-        )
-        self.groove_pos_concat_frac_mlp = (
-            nn.Sequential(
-                nn.Linear(2 * d_model + 2, d_model),
-                nn.GELU(),
-                nn.Linear(d_model, d_model),
-            )
-            if "concat_frac_mlp" in groove_parts
-            else None
-        )
-        # Binding-core positions within the candidate window.
-        self.core_position_embed = nn.Embedding(self.core_window_size, d_model)
-        self.pfr_length_embed = nn.Embedding(self.max_pfr_length + 1, self.pfr_length_dim)
-
-        encoder_layer = nn.TransformerEncoderLayer(
-            d_model=d_model,
-            nhead=n_heads,
-            dim_feedforward=d_model * 4,
-            dropout=0.1,
-            activation="gelu",
-            batch_first=True,
-            norm_first=True,
-        )
-        self.stream_encoder = nn.TransformerEncoder(
-            encoder_layer,
-            num_layers=n_layers,
-            enable_nested_tensor=False,
-        )
-        self.stream_norm = nn.LayerNorm(d_model)
-
-        self.pmhc_interaction_token_proj = nn.Linear(d_model, self.pmhc_interaction_token_dim)
-        self.pmhc_interaction_vec_norm = nn.LayerNorm(self.pmhc_interaction_vec_dim)
-        self.binding_affinity_readout_proj = nn.Sequential(
-            nn.Linear(self.pmhc_interaction_vec_dim, d_model),
-            nn.GELU(),
-            nn.Linear(d_model, d_model),
-        )
-        self.binding_stability_readout_proj = nn.Sequential(
-            nn.Linear(self.pmhc_interaction_vec_dim, d_model),
-            nn.GELU(),
-            nn.Linear(d_model, d_model),
-        )
-        # Direct-segment residual paths, selected by binding_direct_segment_mode
-        # (default "off"). The gate is used only by the gated_* modes.
-        _direct = self.binding_direct_segment_mode != "off"
-        _direct_gated = "gated" in self.binding_direct_segment_mode
-        self.binding_direct_segment_affinity_proj = (
-            nn.Sequential(
-                nn.Linear(3 * d_model, d_model),
-                nn.GELU(),
-                nn.Linear(d_model, d_model),
-            )
-            if _direct
-            else None
-        )
-        self.binding_direct_segment_stability_proj = (
-            nn.Sequential(
-                nn.Linear(3 * d_model, d_model),
-                nn.GELU(),
-                nn.Linear(d_model, d_model),
-            )
-            if _direct
-            else None
-        )
-        self.binding_direct_segment_gate = (
-            nn.Sequential(
-                nn.Linear(2 * d_model, d_model // 2),
-                nn.GELU(),
-                nn.Linear(d_model // 2, 1),
-            )
-            if _direct_gated
-            else None
-        )
-        # Class-specific processing projections and presentation MLPs.
-        #
-        # Reached only by the collapsed topology: the expanded topology derives
-        # these vectors from dedicated latents instead. Allocating them under
-        # `expanded` -- which is what the remote launcher runs -- shipped ~22k
-        # untrained parameters in every checkpoint.
-        _collapsed = self.latent_topology != "expanded"
-        self.processing_class1_proj = nn.Linear(d_model, d_model) if _collapsed else None
-        self.processing_class2_proj = nn.Linear(d_model, d_model) if _collapsed else None
-        self.presentation_class1_mlp = (
-            nn.Sequential(
-                nn.Linear(d_model + self.pmhc_interaction_vec_dim, d_model),
-                nn.GELU(),
-                nn.Linear(d_model, d_model),
-            )
-            if _collapsed
-            else None
-        )
-        self.presentation_class2_mlp = (
-            nn.Sequential(
-                nn.Linear(d_model + self.pmhc_interaction_vec_dim, d_model),
-                nn.GELU(),
-                nn.Linear(d_model, d_model),
-            )
-            if _collapsed
-            else None
-        )
-        self.presentation_class1_vec_norm = nn.LayerNorm(d_model)
-        self.presentation_class2_vec_norm = nn.LayerNorm(d_model)
-        # Lineage-specific immunogenicity MLPs.
-        # S7.5 makes immunogenicity depend on {binding_affinity,
-        # binding_stability, recognition_*}. The collapsed topology has only one
-        # binding latent, so it passes that vector once; the expanded topology
-        # passes affinity and stability separately.
-        _immunogenicity_in_dim = (
-            2 * self.pmhc_interaction_vec_dim + d_model
-            if self.latent_topology == "expanded"
-            else self.pmhc_interaction_vec_dim + d_model
-        )
-        self.immunogenicity_cd8_mlp = nn.Sequential(
-            nn.Linear(_immunogenicity_in_dim, d_model),
-            nn.GELU(),
-            nn.Linear(d_model, d_model),
-        )
-        self.immunogenicity_cd4_mlp = nn.Sequential(
-            nn.Linear(_immunogenicity_in_dim, d_model),
-            nn.GELU(),
-            nn.Linear(d_model, d_model),
-        )
-        self.immunogenicity_cd8_vec_norm = nn.LayerNorm(d_model)
-        self.immunogenicity_cd4_vec_norm = nn.LayerNorm(d_model)
-        self.core_window_fuse = nn.Sequential(
-            nn.Linear(
-                self.pmhc_interaction_vec_dim + 2 * d_model + 2 * self.pfr_length_dim,
-                d_model,
-            ),
-            nn.GELU(),
-            nn.Linear(d_model, self.pmhc_interaction_vec_dim),
-        )
-        self.core_window_vec_norm = nn.LayerNorm(self.pmhc_interaction_vec_dim)
-        self.core_window_score = nn.Sequential(
-            nn.Linear(self.pmhc_interaction_vec_dim, d_model),
-            nn.GELU(),
-            nn.Linear(d_model, 1),
-        )
-        # Per-class core-window scorers, used only by
-        # core_refinement_mode="class_specific" (default is "shared").
-        _class_specific_core = self.core_refinement_mode == "class_specific"
-        self.core_window_score_class1 = (
-            nn.Sequential(
-                nn.Linear(self.pmhc_interaction_vec_dim, d_model),
-                nn.GELU(),
-                nn.Linear(d_model, 1),
-            )
-            if _class_specific_core
-            else None
-        )
-        self.core_window_score_class2 = (
-            nn.Sequential(
-                nn.Linear(self.pmhc_interaction_vec_dim, d_model),
-                nn.GELU(),
-                nn.Linear(d_model, 1),
-            )
-            if _class_specific_core
-            else None
-        )
-        # Class II PFR binding modulation — adjusts core window scores based
-        # on the peptide flanking regions that protrude from the open class II
-        # groove.  Gated by class_probs so the adjustment is zero for class I.
-        # Input: [npfr_repr, cpfr_repr, npfr_len_embed, cpfr_len_embed, core_score]
-        pfr_input_dim = 2 * d_model + 2 * self.pfr_length_dim + 1
-        self.class2_pfr_score = nn.Sequential(
-            nn.Linear(pfr_input_dim, d_model),
-            nn.GELU(),
-            nn.Linear(d_model, 1),
-        )
-        # Initialize final layer to zero so PFR adjustment defaults to zero
-        nn.init.zeros_(self.class2_pfr_score[-1].weight)
-        nn.init.zeros_(self.class2_pfr_score[-1].bias)
-
-        # Processing: peptide terminal residue projection and length embedding.
-        # The processing latent no longer sees the full peptide token sequence,
-        # but it needs peptide boundary info for TAP transport (C-terminal
-        # residue), ERAP trimming (N-terminal residue), and length dependence.
-        self.processing_pep_terminal_proj = nn.Linear(2 * d_model, d_model)
-        self.processing_pep_length_embed = nn.Embedding(51, d_model)  # max peptide length 50
-
-        self.core_window_prior = nn.Sequential(
-            nn.Linear(5, d_model // 2),
-            nn.GELU(),
-            nn.Linear(d_model // 2, 1),
-        )
-
-        # ------------------------------------------------------------------
-        # Per-chain MHC inference heads (design S5.1-S5.3)
-        # ------------------------------------------------------------------
-        n_species = N_MHC_SPECIES
-        # Per-chain fine type (5 classes):
-        # {MHC_I, MHC_IIa, MHC_IIb, B2M, unknown}
-        from ..data.vocab import N_MHC_CHAIN_FINE_TYPES
-
-        self.mhc_a_type_head = nn.Linear(d_model, N_MHC_CHAIN_FINE_TYPES)
-        self.mhc_b_type_head = nn.Linear(d_model, N_MHC_CHAIN_FINE_TYPES)
-        # Per-chain species
-        self.mhc_a_species_head = nn.Linear(d_model, n_species)
-        self.mhc_b_species_head = nn.Linear(d_model, n_species)
-        # Chain compatibility (design S5.3)
-        n_fine_types = N_MHC_CHAIN_FINE_TYPES
-        self.chain_compat_head = nn.Sequential(
-            nn.Linear(d_model * 2 + n_fine_types * 2 + n_species * 2, d_model),
-            nn.GELU(),
-            nn.Linear(d_model, 1),
-        )
-
-        # ------------------------------------------------------------------
-        # Latent query DAG (segmented attention per latent, N_LATENT_LAYERS deep)
-        # ------------------------------------------------------------------
-        # Binding latents may use multi-token queries (Variant B)
-        if binding_n_queries > 1:
-            self.latent_queries = nn.ParameterDict(
-                {
-                    name: nn.Parameter(
-                        torch.randn(binding_n_queries, d_model) * 0.02
-                        if name in self.BINDING_LATENT_NAMES
-                        else torch.randn(d_model) * 0.02
-                    )
-                    for name in self.CROSS_ATTN_LATENTS
-                }
-            )
-        else:
-            self.latent_queries = nn.ParameterDict(
-                {
-                    name: nn.Parameter(torch.randn(d_model) * 0.02)
-                    for name in self.CROSS_ATTN_LATENTS
-                }
-            )
-
-        def _n_layers_for(name: str) -> int:
-            if name in self.BINDING_LATENT_NAMES:
-                return binding_n_latent_layers
-            return self.N_LATENT_LAYERS
-
-        self.latent_layers = nn.ModuleDict(
-            {
-                name: nn.ModuleList(
-                    [
-                        nn.ModuleDict(
-                            {
-                                "attn": nn.MultiheadAttention(
-                                    d_model, n_heads, dropout=0.1, batch_first=True
-                                ),
-                                "norm1": nn.LayerNorm(d_model),
-                                "ffn": nn.Sequential(
-                                    nn.Linear(d_model, d_model * 4),
-                                    nn.GELU(),
-                                    nn.Linear(d_model * 4, d_model),
-                                    nn.Dropout(0.1),
-                                ),
-                                "norm2": nn.LayerNorm(d_model),
-                            }
-                        )
-                        for _ in range(_n_layers_for(name))
-                    ]
-                )
-                for name in self.CROSS_ATTN_LATENTS
+        self.quantity_scores = nn.ModuleDict()
+        for domain in config.quantity_domains:
+            parts = {
+                part
+                for name in config.endpoints
+                if quantity_domain(name) == domain
+                for part in endpoint_spec(name).parts
             }
-        )
-
-        # Variant B: self-attention layers among multi-token binding queries
-        if binding_n_queries > 1 and binding_use_decoder_layers:
-            self.binding_query_self_attn = nn.ModuleDict(
-                {
-                    name: nn.ModuleList(
-                        [
-                            nn.ModuleDict(
-                                {
-                                    "self_attn": nn.MultiheadAttention(
-                                        d_model, n_heads, dropout=0.1, batch_first=True
-                                    ),
-                                    "norm": nn.LayerNorm(d_model),
-                                }
-                            )
-                            for _ in range(_n_layers_for(name))
-                        ]
-                    )
-                    for name in self.BINDING_LATENT_NAMES
-                }
+            self.quantity_scores[domain] = nn.ModuleDict(
+                {part: nn.Linear(config.d_model, 1, bias=False) for part in sorted(parts)}
             )
-        # Variant B: pooling projection for multi-token queries
-        if binding_n_queries > 1:
-            if binding_query_pool == "attention":
-                self.binding_pool_attn = nn.Linear(d_model, 1)
-            # mean pooling needs no extra params
-
-        # Variant C: pMHC interaction block
-        if use_pmhc_interaction_block:
-            self.pmhc_interaction = nn.ModuleList(
-                [
-                    nn.ModuleDict(
-                        {
-                            "pep_to_mhc_attn": nn.MultiheadAttention(
-                                d_model, n_heads, dropout=0.1, batch_first=True
-                            ),
-                            "pep_norm1": nn.LayerNorm(d_model),
-                            "pep_ffn": nn.Sequential(
-                                nn.Linear(d_model, d_model * 4),
-                                nn.GELU(),
-                                nn.Linear(d_model * 4, d_model),
-                                nn.Dropout(0.1),
-                            ),
-                            "pep_norm2": nn.LayerNorm(d_model),
-                            "mhc_to_pep_attn": nn.MultiheadAttention(
-                                d_model, n_heads, dropout=0.1, batch_first=True
-                            ),
-                            "mhc_norm1": nn.LayerNorm(d_model),
-                            "mhc_ffn": nn.Sequential(
-                                nn.Linear(d_model, d_model * 4),
-                                nn.GELU(),
-                                nn.Linear(d_model * 4, d_model),
-                                nn.Dropout(0.1),
-                            ),
-                            "mhc_norm2": nn.LayerNorm(d_model),
-                        }
-                    )
-                    for _ in range(pmhc_interaction_layers)
-                ]
-            )
-
-        self.groove_attn = nn.MultiheadAttention(
-            d_model,
-            n_heads,
-            dropout=0.1,
-            batch_first=True,
-        )
-        self.groove_query = nn.Parameter(torch.randn(1, d_model) * 0.02)
-
-        # Context vector MLP (design S5.4): class_probs + a_species + b_species + compat
-        self.context_token_proj = nn.Sequential(
-            nn.Linear(2 + n_species * 2 + 1, d_model),
-            nn.GELU(),
-            nn.Linear(d_model, d_model),
-        )
-
-        # ------------------------------------------------------------------
-        # Readout heads from latent vectors
-        # ------------------------------------------------------------------
-        self.class1_processing_predictor = ClassProcessingPredictor(d_model)
-        self.class2_processing_predictor = ClassProcessingPredictor(d_model)
-        self.affinity_predictor = AffinityPredictor(
-            d_model=d_model,
-            interaction_dim=self.pmhc_interaction_vec_dim,
-            max_log10_nM=self.max_log10_nM,
-            binding_midpoint_nM=self.binding_midpoint_nM,
-            binding_log10_scale=self.binding_log10_scale,
-            binding_kinetic_input_mode=self.binding_kinetic_input_mode,
-            affinity_assay_residual_mode=self.affinity_assay_residual_mode,
-            kd_grouping_mode=self.kd_grouping_mode,
-            affinity_target_encoding=self.affinity_target_encoding,
-            max_affinity_nM=self.max_affinity_nM,
-        )
-        self.class1_presentation_predictor = ClassPresentationPredictor(d_model)
-        self.class2_presentation_predictor = ClassPresentationPredictor(d_model)
-        self.recognition_cd8_head = nn.Linear(d_model, 1)
-        self.recognition_cd4_head = nn.Linear(d_model, 1)
-        self.immunogenicity_cd8_latent_head = nn.Linear(d_model, 1)
-        self.immunogenicity_cd4_latent_head = nn.Linear(d_model, 1)
-
-        # MS detectability readout from latent (design S7.4)
-        self.ms_detectability_head = nn.Linear(d_model, 1)
-
-        # Weight on the in-vivo excision -> class I presentation edge (gap 2).
-        # Softplus: better cleavage can only raise presentation odds. Init to
-        # softplus(-2) ~ 0.13 rather than 0, since a zero weight would starve
-        # everything upstream of it.
-        self.w_invivo_excision_presentation = nn.Parameter(torch.tensor(-2.0))
-
-        # Weight on the recognition -> immunogenicity edge. Recognition is
-        # repertoire precursor frequency (S9.4); immunogenicity is the response
-        # requiring it (S9.5). Same softplus reasoning.
-        self.w_recognition_immunogenicity = nn.Parameter(torch.tensor(-2.0))
-
-        # Sample provenance, as three orthogonal axes. Biological state, so
-        # inputs -- see the causal test in docs/assay_modeling_contract.md.
-        #
-        # Together they answer the two questions the processing path needs:
-        # which source proteins are expressed (lineage, disease state), and
-        # which antigen-processing components are on (lineage, and whether this
-        # is an immortalized line, since lines drift and routinely lose
-        # immunoproteasome subunits, TAP or B2M).
-        #
-        # Three axes rather than one label because the space is a product, not
-        # an enum: a primary AML blast and an AML cell line share a lineage and
-        # a disease state but differ in origin, and that is the difference most
-        # likely to matter.
-        #
-        # Zero-initialized, so an unannotated sample contributes nothing.
-        self.cell_lineage_embed = self._zero_init_embedding(len(CELL_LINEAGES), d_model)
-        self.sample_origin_embed = self._zero_init_embedding(len(SAMPLE_ORIGINS), d_model)
-        self.disease_state_embed = self._zero_init_embedding(len(DISEASE_STATES), d_model)
-        self.processing_species_embed = self._zero_init_embedding(
-            len(PROCESSING_SPECIES_BUCKETS) + 1, d_model
-        )
-
-        # Biological context is permitted downstream, never in residue states.
-        # APM/stimulus categories currently condition the excision head; their
-        # richer role-specific replacement is tracked in issue #46.
-
-        # Machinery-conditioned excision readout. Output-side only: the
-        # machinery indexes this head and never reaches the trunk.
-        self.excision_head = ExcisionHead(
-            scoring_version=self.excision_scoring_version,
-            d_model=d_model,
-            n_machinery=len(self.excision_machinery_vocabulary),
-            n_aa=len(AA_VOCAB),
-            pinned_profiles={
-                EXCISION_MACHINERY_TO_IDX[name]: residues
-                for name, residues in EXCISION_P1_RULES.items()
-                if name in self.excision_machinery_vocabulary
-            },
-            aa_to_idx=AA_TO_IDX,
-            p1_prime_blocked={
-                EXCISION_MACHINERY_TO_IDX[name]: residues
-                for name, residues in EXCISION_P1_PRIME_BLOCKED.items()
-                if name in self.excision_machinery_vocabulary
-            },
-            mixture_target=EXCISION_MACHINERY_TO_IDX["proteasome"],
-            mixture_components=[
-                EXCISION_MACHINERY_TO_IDX[name] for name in PROTEASOME_MIXTURE_COMPONENTS
-            ],
-            n_stimulus=len(PROCESSING_STIMULI),
-            n_apm=len(APM_PERTURBATIONS),
-            protein_source_index=PEPTIDE_SOURCE_TO_IDX["protein"],
-            missing_residue_index=self.missing_token_idx,
-            mhc_source_index=PEPTIDE_SOURCE_TO_IDX["mhc"],
-        )
-
-        # Elution head (S9.3: pres_logit + ms_detect_logit, no pmhc_vec).
-        self.elution_head = ElutionHead()
-        self.tcr_evidence_head = nn.Sequential(
-            nn.Linear(self.pmhc_interaction_vec_dim, d_model // 2),
-            nn.GELU(),
-            nn.Linear(d_model // 2, 1),
-        )
-        self.tcr_evidence_method_head = nn.Linear(self.pmhc_interaction_vec_dim, 3)
-
-        self.tcell_assay_head = TCellAssayHead(
-            d_model=d_model,
-            n_assay_methods=len(TCELL_ASSAY_METHODS),
-            n_assay_readouts=len(TCELL_ASSAY_READOUTS),
-            n_apc_types=len(TCELL_APC_TYPES),
-            n_culture_contexts=len(TCELL_CULTURE_CONTEXTS),
-            n_stim_contexts=len(TCELL_STIM_CONTEXTS),
-            n_peptide_formats=len(TCELL_PEPTIDE_FORMATS),
-        )
-
-        # Species of origin and foreignness heads (replaces old CategoryHead)
-        self.foreignness_proj = nn.Linear(d_model, d_model)
-        self.species_of_origin_head = nn.Linear(d_model, N_ORGANISM_CATEGORIES)
-        self.foreignness_head = nn.Linear(d_model, 1)
-        # No separate embedding for the species override.
-        #
-        # There used to be one: `nn.Embedding(N_ORGANISM_CATEGORIES, d_model)`,
-        # randomly initialized and never trained, because nothing in training
-        # passes `species_of_origin_override` -- it is an inference-time knob.
-        # `species_of_origin` is a documented input (design.md S7.1) and the
-        # Predictor exposes it, so callers were substituting a random vector
-        # for a trained latent and getting a confidently shifted foreignness
-        # score out of noise (0.476 -> 0.532 on an untrained-override probe).
-        #
-        # The override now reuses `species_of_origin_head`, which *is* trained:
-        # its weight row for class k is the direction in latent space that most
-        # evidences class k, which is exactly what "the source organism is k"
-        # should mean. See `_species_override_latent`.
-        self._init_weights()
-
-    def _species_override_latent(
-        self, species_idx: torch.Tensor, inferred: torch.Tensor
-    ) -> torch.Tensor:
-        """Latent standing for a declared source organism.
-
-        Built from `species_of_origin_head`, the trained classifier over the
-        same latent. Row k of its weight is the direction that most evidences
-        organism k, so it is the natural point in latent space to mean "this
-        peptide is from k" -- and unlike a dedicated embedding it is trained by
-        every row carrying a species label.
-
-        Rescaled to the norm of the latent it replaces. A classifier weight row
-        and a cross-attention output are both directions in the same space but
-        need not share a magnitude, and everything downstream
-        (`foreignness_proj`, then recognition) is scale-sensitive. Matching the
-        norm keeps the override a change of direction rather than of both.
-        """
-        direction = self.species_of_origin_head.weight.index_select(0, species_idx.long())
-        direction = direction / direction.norm(dim=-1, keepdim=True).clamp(min=1e-6)
-        scale = inferred.norm(dim=-1, keepdim=True)
-        return direction.to(dtype=inferred.dtype) * scale
-
-    def _zero_init_embedding(self, num_embeddings: int, dim: int) -> nn.Embedding:
-        """A zero-initialized embedding that survives the blanket re-init.
-
-        Creating and registering in one step is the point: `_init_weights`
-        re-initializes every `nn.Embedding` it can reach, so an embedding that
-        merely calls `nn.init.zeros_` is silently randomized. Making the
-        registration inseparable from the construction means a future
-        zero-init embedding cannot forget to opt out.
-        """
-        embedding = nn.Embedding(num_embeddings, dim)
-        nn.init.zeros_(embedding.weight)
-        self._preserved_init_params.add(id(embedding.weight))
-        return embedding
-
-    def _init_weights(self) -> None:
-        """Initialize transformer-style components to a stable working scale."""
-        query_std = 1.0 / math.sqrt(self.d_model)
-
-        for param in self.latent_queries.values():
-            nn.init.normal_(param.data, std=query_std)
-        nn.init.normal_(self.groove_query.data, std=query_std)
-
-        # Blanket re-init of every nn.Embedding, which runs *after* submodules
-        # have constructed themselves. Any module that deliberately chose its
-        # own initialization would be silently overwritten here, so submodules
-        # opt out by listing the parameters they own.
-        deliberately_initialized = set(self._preserved_init_params)
-        deliberately_initialized.update(
-            id(parameter)
-            for module in self.modules()
-            for parameter in getattr(module, "preserve_init_parameters", lambda: [])()
-        )
-        for module in self.modules():
-            if isinstance(module, nn.Embedding):
-                if id(module.weight) in deliberately_initialized:
-                    continue
-                nn.init.normal_(module.weight, std=query_std)
-                if module.padding_idx is not None:
-                    with torch.no_grad():
-                        module.weight[module.padding_idx].zero_()
-            elif isinstance(module, nn.MultiheadAttention):
-                if getattr(module, "in_proj_weight", None) is not None:
-                    nn.init.xavier_uniform_(module.in_proj_weight)
-                if getattr(module, "in_proj_bias", None) is not None:
-                    nn.init.zeros_(module.in_proj_bias)
-                if getattr(module, "q_proj_weight", None) is not None:
-                    nn.init.xavier_uniform_(module.q_proj_weight)
-                if getattr(module, "k_proj_weight", None) is not None:
-                    nn.init.xavier_uniform_(module.k_proj_weight)
-                if getattr(module, "v_proj_weight", None) is not None:
-                    nn.init.xavier_uniform_(module.v_proj_weight)
-                if getattr(module, "out_proj", None) is not None:
-                    nn.init.xavier_uniform_(module.out_proj.weight)
-                    if module.out_proj.bias is not None:
-                        nn.init.zeros_(module.out_proj.bias)
-
-    @property
-    def apc_cell_type_context_proj(self) -> nn.Sequential:
-        """Renamed APC/cell-type context projection module."""
-        return self.context_token_proj
-
-    @property
-    def mhc_a_pos(self) -> nn.Embedding:
-        """Backward-compatible alias for groove-half-1 positional embeddings."""
-        return self.groove_1_pos
-
-    @property
-    def mhc_b_pos(self) -> nn.Embedding:
-        """Backward-compatible alias for groove-half-2 positional embeddings."""
-        return self.groove_2_pos
-
-    @property
-    def processing_class1_head(self) -> nn.Linear:
-        return self.class1_processing_predictor.head
-
-    @property
-    def processing_class2_head(self) -> nn.Linear:
-        return self.class2_processing_predictor.head
-
-    @property
-    def presentation_class1_latent_head(self) -> nn.Linear:
-        return self.class1_presentation_predictor.head
-
-    @property
-    def presentation_class2_latent_head(self) -> nn.Linear:
-        return self.class2_presentation_predictor.head
-
-    @property
-    def binding_affinity_probe(self) -> nn.Module:
-        return self.affinity_predictor.binding_affinity_probe
-
-    @property
-    def binding(self) -> nn.Module:
-        return self.affinity_predictor.binding
-
-    @property
-    def assay_heads(self) -> nn.Module:
-        return self.affinity_predictor.assay_heads
-
-    @property
-    def kd_assay_bias(self) -> nn.Module:
-        return self.affinity_predictor.kd_assay_bias
-
-    @kd_assay_bias.setter
-    def kd_assay_bias(self, module: nn.Module) -> None:
-        self.affinity_predictor.kd_assay_bias = module
-
-    @property
-    def kd_assay_bias_scale(self) -> nn.Parameter:
-        return self.affinity_predictor.kd_assay_bias_scale
-
-    @kd_assay_bias_scale.setter
-    def kd_assay_bias_scale(self, param: nn.Parameter) -> None:
-        self.affinity_predictor.kd_assay_bias_scale = param
-
-    @property
-    def binding_probe_mix_logit(self) -> nn.Parameter:
-        return self.affinity_predictor.binding_probe_mix_logit
-
-    @binding_probe_mix_logit.setter
-    def binding_probe_mix_logit(self, param: nn.Parameter) -> None:
-        self.affinity_predictor.binding_probe_mix_logit = param
-
-    @property
-    def w_binding_class1_calibration(self) -> nn.Parameter:
-        return self.affinity_predictor.w_binding_class1_calibration
-
-    @w_binding_class1_calibration.setter
-    def w_binding_class1_calibration(self, param: nn.Parameter) -> None:
-        self.affinity_predictor.w_binding_class1_calibration = param
-
-    @property
-    def w_binding_class2_calibration(self) -> nn.Parameter:
-        return self.affinity_predictor.w_binding_class2_calibration
-
-    @w_binding_class2_calibration.setter
-    def w_binding_class2_calibration(self, param: nn.Parameter) -> None:
-        self.affinity_predictor.w_binding_class2_calibration = param
-
-    def _load_from_state_dict(
-        self,
-        state_dict: Dict[str, torch.Tensor],
-        prefix: str,
-        local_metadata: Dict[str, Any],
-        strict: bool,
-        missing_keys: List[str],
-        unexpected_keys: List[str],
-        error_msgs: List[str],
-    ) -> None:
-        """Load, then re-zero the unknown-residue embedding.
-
-        This used to carry ~220 lines of checkpoint migration -- module
-        renames, deleted-key drops, embedding row growth, and a tolerance pass
-        for modules the active mode does not allocate. All of it existed to let
-        checkpoints written by older revisions load into newer code.
-
-        That is no longer a goal: the architecture is still moving, and a
-        migration layer that silently reshapes weights across a semantic change
-        is worse than a load error, because it produces a model that loads
-        cleanly and means something different. A checkpoint now loads into the
-        configuration that wrote it, and `strict=True` says so when it does not.
-
-        What remains is not migration. `X` is the unknown-residue token and its
-        embedding is pinned at zero so an unknown residue contributes nothing;
-        a checkpoint carrying a drifted row would otherwise reintroduce it.
-        """
-        super()._load_from_state_dict(
-            state_dict,
-            prefix,
-            local_metadata,
-            strict,
-            missing_keys,
-            unexpected_keys,
-            error_msgs=error_msgs,
-        )
-
-    @staticmethod
-    def _masked_mean(x: torch.Tensor, mask: torch.Tensor) -> torch.Tensor:
-        """Mask-aware mean over sequence dimension."""
-        mask_f = mask.unsqueeze(-1).float()
-        return (x * mask_f).sum(dim=1) / mask_f.sum(dim=1).clamp(min=1.0)
-
-    def _segment_tensor(self, length: int, seg_id: int, device: torch.device) -> torch.Tensor:
-        return torch.full((length,), seg_id, device=device, dtype=torch.long)
-
-    @staticmethod
-    def _first_valid_token(
-        tokens: Optional[torch.Tensor], batch_size: int, device, fallback: int
-    ) -> torch.Tensor:
-        """First non-pad token of each row (segments are right-padded)."""
-        if tokens is None or tokens.numel() == 0:
-            return torch.full((batch_size,), fallback, dtype=torch.long, device=device)
-        valid = tokens != 0
-        present = valid.any(dim=1)
-        first = torch.argmax(valid.long(), dim=1, keepdim=True)
-        picked = tokens.gather(1, first).squeeze(1)
-        return torch.where(present, picked, torch.full_like(picked, fallback)).long()
-
-    @staticmethod
-    def _last_valid_token(
-        tokens: Optional[torch.Tensor], batch_size: int, device, fallback: int
-    ) -> torch.Tensor:
-        """Last non-pad token of each row (segments are right-padded)."""
-        if tokens is None or tokens.numel() == 0:
-            return torch.full((batch_size,), fallback, dtype=torch.long, device=device)
-        valid = tokens != 0
-        present = valid.any(dim=1)
-        lengths = valid.long().sum(dim=1).clamp(min=1)
-        picked = tokens.gather(1, (lengths - 1).unsqueeze(1)).squeeze(1)
-        return torch.where(present, picked, torch.full_like(picked, fallback)).long()
-
-    def _pad_for_side(
-        self,
-        is_terminus: Optional[torch.Tensor],
-        batch_size: int,
-        device,
-        *,
-        boundary_token: Optional[int] = None,
-    ) -> torch.Tensor:
-        """Per-row pad token for one flank side.
-
-        `X` where the protein boundary was reached, `?` where the flank was
-        never determined. A caller passing no flag gets `?` throughout, which
-        is the honest reading of "this caller has no flank information".
-
-        Which boundary was hit -- start or end -- needs no second symbol: the N
-        and C junctions are scored by different tensors, each with its own
-        position axis, so that is already encoded by which parameter is
-        indexed.
-        """
-        base = torch.full(
-            (batch_size,), self.unknown_flank_token_idx, dtype=torch.long, device=device
-        )
-        if is_terminus is None or boundary_token is None:
-            return base
-        flag = is_terminus.reshape(-1).to(device=device, dtype=torch.bool)
-        if flag.shape[0] != batch_size:
-            return base
-        return torch.where(flag, torch.full_like(base, int(boundary_token)), base)
-
-    @staticmethod
-    def _pad_values(fallback, batch_size: int, width: int, device) -> torch.Tensor:
-        """Broadcast a scalar or per-row pad value to ``(batch, width)``.
-
-        `fallback` may be a per-row tensor so that a flank which is short
-        *because the protein ended* pads with <TERMINUS> while one that is
-        short because nothing was mapped pads with <MISSING>. Those are
-        opposite claims -- context that definitively does not exist, versus
-        context that is unknown -- and on the C side the first also means no
-        proteasomal cut was required.
-        """
-        if isinstance(fallback, torch.Tensor):
-            values = fallback.reshape(-1).to(device=device, dtype=torch.long)
-            if values.shape[0] == batch_size:
-                return values.unsqueeze(1).expand(batch_size, width)
-            fallback = int(values.flatten()[0]) if values.numel() else 0
-        return torch.full((batch_size, width), int(fallback), dtype=torch.long, device=device)
-
-    @staticmethod
-    def _last_valid_window(
-        tokens: Optional[torch.Tensor], batch_size: int, device, fallback, width: int
-    ) -> torch.Tensor:
-        """The last ``width`` non-pad tokens, in sequence order.
-
-        The P-side of a junction: for a C-flank junction the peptide's final
-        residues are P{width}..P1, with P1 last. Rows shorter than ``width``
-        are left-padded with ``fallback`` so P1 stays in the final column and
-        every position keeps its subsite meaning regardless of length.
-
-        Segments are right-padded, so the valid span is ``[0, length)``.
-        """
-        out = Presto._pad_values(fallback, batch_size, width, device)
-        if tokens is None or tokens.numel() == 0:
-            return out
-        valid = tokens != 0
-        lengths = valid.long().sum(dim=1)
-        # Column j holds the residue at offset (width - 1 - j) back from P1.
-        offsets = torch.arange(width - 1, -1, -1, device=tokens.device)
-        idx = lengths.unsqueeze(1) - 1 - offsets.unsqueeze(0)
-        in_range = idx >= 0
-        picked = tokens.gather(1, idx.clamp(min=0))
-        picked = torch.where(in_range, picked, out.to(picked.device))
-        return picked.to(device=device, dtype=torch.long)
-
-    @staticmethod
-    def _first_valid_window(
-        tokens: Optional[torch.Tensor], batch_size: int, device, fallback, width: int
-    ) -> torch.Tensor:
-        """The first ``width`` non-pad tokens, in sequence order.
-
-        The P'-side of a junction: P1'..P{width}', with P1' first. Rows shorter
-        than ``width`` are right-padded with ``fallback``, keeping P1' in
-        column 0.
-        """
-        out = Presto._pad_values(fallback, batch_size, width, device)
-        if tokens is None or tokens.numel() == 0:
-            return out
-        valid = tokens != 0
-        lengths = valid.long().sum(dim=1)
-        # argmax, not 0: `_first_valid_token` tolerates leading pads and this
-        # must agree with it.
-        start = torch.argmax(valid.long(), dim=1)
-        offsets = torch.arange(width, device=tokens.device)
-        idx = start.unsqueeze(1) + offsets.unsqueeze(0)
-        in_range = offsets.unsqueeze(0) < lengths.unsqueeze(1)
-        picked = tokens.gather(1, idx.clamp(max=tokens.shape[1] - 1))
-        picked = torch.where(in_range, picked, out.to(picked.device))
-        return picked.to(device=device, dtype=torch.long)
-
-    def _resolve_machinery_idx(self, machinery, class_probs, batch_size, device):
-        """Resolve the excision machinery index for each row.
-
-        Explicit values win. Otherwise fall back to the in-vivo pathway implied
-        by MHC class: class I is degraded by the proteasome, class II by
-        endo/lysosomal cathepsins.
-
-        Note this keys off *predicted* class probabilities, while
-        `data.vocab.default_machinery_for_class` keys off the declared class.
-        The two agree whenever the class head is right. In training and
-        evaluation the collator always populates `machinery_idx`, so this
-        fallback only runs for a direct `forward()` call that omits it -- for
-        example at inference from raw sequence, where no declared class exists
-        and the prediction is the only thing available.
-        """
-        if machinery is not None:
-            if isinstance(machinery, torch.Tensor):
-                values = machinery.to(device=device).reshape(-1)
-                indices = values.long()
-                if not torch.all(values == indices):
-                    raise ValueError("Excision machinery indices must be finite integers")
-            else:
-                names = [machinery] * batch_size if isinstance(machinery, str) else list(machinery)
-                indices = torch.tensor(
-                    [excision_machinery_index(name) for name in names],
-                    dtype=torch.long,
-                    device=device,
+        self.heads = nn.ModuleDict()
+        self.offsets = nn.ModuleDict()
+        self.affinity_endpoints = tuple(sorted(set(config.endpoints) & AFFINITY_ENDPOINTS))
+        for name in config.endpoints:
+            spec = endpoint_spec(name)
+            if spec.parts:
+                self.offsets[name] = ObservationOffset(
+                    2 * len(config.observation_features) if spec.observation_covariates else 0
                 )
-            if torch.any((indices < 0) | (indices >= len(self.excision_machinery_vocabulary))):
-                raise ValueError(
-                    "Excision machinery is unavailable in vocabulary version "
-                    f"{self.excision_machinery_version}; "
-                    f"supported: {self.excision_machinery_vocabulary}"
+            elif name not in self.affinity_endpoints:
+                self.heads[name] = nn.Linear(config.d_model, 1)
+        if self.affinity_endpoints:
+            with torch.random.fork_rng(devices=[]):
+                self.assay_layer = AssayMeasurementLayer(
+                    config.d_model, self.affinity_endpoints, config.assay_tracks
                 )
-            return indices
-        proteasome = EXCISION_MACHINERY_TO_IDX["proteasome"]
-        cathepsin = EXCISION_MACHINERY_TO_IDX["cathepsin"]
-        if class_probs is None:
-            return torch.full((batch_size,), proteasome, dtype=torch.long, device=device)
-        is_class2 = class_probs[:, 1] > 0.5
-        return torch.where(
-            is_class2,
-            torch.full((batch_size,), cathepsin, dtype=torch.long, device=device),
-            torch.full((batch_size,), proteasome, dtype=torch.long, device=device),
-        )
-
-    def _ensure_optional_segment(
-        self,
-        tok: Optional[torch.Tensor],
-        batch_size: int,
-        device: torch.device,
-    ) -> torch.Tensor:
-        """Ensure optional segment is present as at least one non-pad token."""
-        if tok is None:
-            return torch.full(
-                (batch_size, 1),
-                self.missing_token_idx,
-                dtype=torch.long,
-                device=device,
-            )
-        seg = tok.to(device=device, dtype=torch.long)
-        if seg.ndim != 2:
-            raise ValueError(f"Expected 2D token tensor, got shape={tuple(seg.shape)}")
-        if seg.shape[1] == 0:
-            # A zero-width segment carries no tokens at all, so it is the same
-            # statement as `tok is None` and takes the same branch. It became
-            # reachable when groove extraction started refusing chains that
-            # have no groove -- TAP2, HLA-DM, null alleles -- instead of
-            # truncating them into one. Writing the sentinel into column 0
-            # here raised IndexError on a dimension of size 0.
-            return torch.full(
-                (batch_size, 1),
-                self.missing_token_idx,
-                dtype=torch.long,
-                device=device,
-            )
-
-        # For rows that are fully padded, force a sentinel non-pad token.
-        mask = seg != 0
-        empty = ~mask.any(dim=1)
-        if empty.any():
-            seg = seg.clone()
-            seg[empty, 0] = self.missing_token_idx
-        return seg
-
-    def _build_single_stream(
-        self,
-        pep_tok: torch.Tensor,
-        mhc_a_tok: torch.Tensor,
-        mhc_b_tok: torch.Tensor,
-        flank_n_tok: Optional[torch.Tensor] = None,
-        flank_c_tok: Optional[torch.Tensor] = None,
-    ) -> Dict[str, Any]:
-        """Encode residue segments without biological or assay metadata."""
-        device = pep_tok.device
-        batch_size = pep_tok.shape[0]
-
-        pep = self._ensure_optional_segment(pep_tok, batch_size=batch_size, device=device)
-        mhc_a = self._ensure_optional_segment(mhc_a_tok, batch_size=batch_size, device=device)
-        mhc_b = self._ensure_optional_segment(mhc_b_tok, batch_size=batch_size, device=device)
-        nflank = self._ensure_optional_segment(flank_n_tok, batch_size=batch_size, device=device)
-        cflank = self._ensure_optional_segment(flank_c_tok, batch_size=batch_size, device=device)
-
-        parts = [
-            (nflank, "nflank", self.SEG_NFLANK),
-            (pep, "peptide", self.SEG_PEPTIDE),
-            (cflank, "cflank", self.SEG_CFLANK),
-            (mhc_a, "mhc_a", self.SEG_MHC_A),
-            (mhc_b, "mhc_b", self.SEG_MHC_B),
-        ]
-
-        tokens = torch.cat([p[0] for p in parts], dim=1)
-        valid_mask = torch.cat([(p[0] != 0) for p in parts], dim=1)
-
-        seg_ids = torch.cat(
-            [self._segment_tensor(p[0].shape[1], p[2], device=device) for p in parts],
-            dim=0,
-        )
-
-        offsets: Dict[str, slice] = {}
-        start = 0
-        for seg_tok, seg_name, _ in parts:
-            end = start + seg_tok.shape[1]
-            offsets[seg_name] = slice(start, end)
-            start = end
-
-        tok_ids = tokens.clamp(min=0, max=len(AA_VOCAB) - 1)
-
-        # Peptide position encoding.
-        pep_sl = offsets["peptide"]
-        pep_len_per = (tokens[:, pep_sl] != 0).sum(dim=1).clamp(min=1)  # (B,)
-        pep_idx = (
-            torch.arange(pep_sl.stop - pep_sl.start, device=device)
-            .unsqueeze(0)
-            .expand(batch_size, -1)
-        )
-        nterm_idx = pep_idx.clamp(max=self.pep_nterm_pos.num_embeddings - 1)
-        cterm_dist = (pep_len_per.unsqueeze(1) - 1 - pep_idx).clamp(min=0)
-        cterm_idx = cterm_dist.clamp(max=self.pep_cterm_pos.num_embeddings - 1)
-        nterm_frac = pep_idx.float() / (pep_len_per.unsqueeze(1) - 1).clamp(min=1).float()
-        cterm_frac = cterm_dist.float() / (pep_len_per.unsqueeze(1) - 1).clamp(min=1).float()
-        pep_pos_embed = self._compose_position_signal(
-            mode=self.peptide_pos_mode,
-            start_embed=self.pep_nterm_pos(nterm_idx),
-            end_embed=self.pep_cterm_pos(cterm_idx),
-            start_frac=nterm_frac,
-            end_frac=cterm_frac,
-            frac_mlp=self.pep_frac_mlp,
-            abs_embed=(
-                self.pep_abs_pos(pep_idx.clamp(max=self.pep_abs_pos.num_embeddings - 1))
-                if self.pep_abs_pos is not None
-                else None
-            ),
-            concat_proj=self.pep_pos_concat_proj,
-            concat_frac_proj=self.pep_pos_concat_frac_proj,
-            concat_mlp=self.pep_pos_concat_mlp,
-            concat_frac_mlp=self.pep_pos_concat_frac_mlp,
-        )
-
-        # N-flank: distance-from-cleavage (reversed: last position = closest to cleavage)
-        nfl_sl = offsets["nflank"]
-        nfl_len_per = (tokens[:, nfl_sl] != 0).sum(dim=1).clamp(min=1)
-        nfl_idx = (
-            torch.arange(nfl_sl.stop - nfl_sl.start, device=device)
-            .unsqueeze(0)
-            .expand(batch_size, -1)
-        )
-        nfl_dist = (nfl_len_per.unsqueeze(1) - 1 - nfl_idx).clamp(min=0)
-        nfl_pos_embed = self.nflank_dist_pos(
-            nfl_dist.clamp(max=self.nflank_dist_pos.num_embeddings - 1)
-        )
-
-        # C-flank: distance-from-cleavage (first position = closest to cleavage)
-        cfl_sl = offsets["cflank"]
-        cfl_idx = (
-            torch.arange(cfl_sl.stop - cfl_sl.start, device=device)
-            .unsqueeze(0)
-            .expand(batch_size, -1)
-        )
-        cfl_pos_embed = self.cflank_dist_pos(
-            cfl_idx.clamp(max=self.cflank_dist_pos.num_embeddings - 1)
-        )
-
-        # Groove half 1 position encoding.
-        mhc_a_sl = offsets["mhc_a"]
-        mhc_a_idx = (
-            torch.arange(mhc_a_sl.stop - mhc_a_sl.start, device=device)
-            .unsqueeze(0)
-            .expand(batch_size, -1)
-        )
-        if self.groove_pos_mode == "sequential":
-            mhc_a_pos_embed = self.groove_1_pos(
-                mhc_a_idx.clamp(max=self.groove_1_pos.num_embeddings - 1)
-            )
-        else:
-            mhc_a_len_per = (tokens[:, mhc_a_sl] != 0).sum(dim=1).clamp(min=1)
-            mhc_a_start_idx = mhc_a_idx.clamp(max=self.groove_1_pos.num_embeddings - 1)
-            mhc_a_end_dist = (mhc_a_len_per.unsqueeze(1) - 1 - mhc_a_idx).clamp(min=0)
-            mhc_a_end_idx = mhc_a_end_dist.clamp(
-                max=(
-                    self.groove_1_end_pos.num_embeddings - 1
-                    if self.groove_1_end_pos is not None
-                    else 0
-                )
-            )
-            mhc_a_start_frac = (
-                mhc_a_idx.float() / (mhc_a_len_per.unsqueeze(1) - 1).clamp(min=1).float()
-            )
-            mhc_a_end_frac = (
-                mhc_a_end_dist.float() / (mhc_a_len_per.unsqueeze(1) - 1).clamp(min=1).float()
-            )
-            mhc_a_pos_embed = self._compose_position_signal(
-                mode=self.groove_pos_mode,
-                start_embed=self.groove_1_pos(mhc_a_start_idx),
-                end_embed=(
-                    self.groove_1_end_pos(mhc_a_end_idx)
-                    if self.groove_1_end_pos is not None
-                    else torch.zeros_like(self.groove_1_pos(mhc_a_start_idx))
-                ),
-                start_frac=mhc_a_start_frac,
-                end_frac=mhc_a_end_frac,
-                frac_mlp=self.groove_frac_mlp,
-                abs_embed=(
-                    self.groove_1_abs_pos(
-                        mhc_a_idx.clamp(max=self.groove_1_abs_pos.num_embeddings - 1)
-                    )
-                    if self.groove_1_abs_pos is not None
-                    else None
-                ),
-                concat_proj=self.groove_pos_concat_proj,
-                concat_frac_proj=self.groove_pos_concat_frac_proj,
-                concat_mlp=self.groove_pos_concat_mlp,
-                concat_frac_mlp=self.groove_pos_concat_frac_mlp,
-            )
-
-        # Groove half 2 position encoding.
-        mhc_b_sl = offsets["mhc_b"]
-        mhc_b_idx = (
-            torch.arange(mhc_b_sl.stop - mhc_b_sl.start, device=device)
-            .unsqueeze(0)
-            .expand(batch_size, -1)
-        )
-        if self.groove_pos_mode == "sequential":
-            mhc_b_pos_embed = self.groove_2_pos(
-                mhc_b_idx.clamp(max=self.groove_2_pos.num_embeddings - 1)
-            )
-        else:
-            mhc_b_len_per = (tokens[:, mhc_b_sl] != 0).sum(dim=1).clamp(min=1)
-            mhc_b_start_idx = mhc_b_idx.clamp(max=self.groove_2_pos.num_embeddings - 1)
-            mhc_b_end_dist = (mhc_b_len_per.unsqueeze(1) - 1 - mhc_b_idx).clamp(min=0)
-            mhc_b_end_idx = mhc_b_end_dist.clamp(
-                max=(
-                    self.groove_2_end_pos.num_embeddings - 1
-                    if self.groove_2_end_pos is not None
-                    else 0
-                )
-            )
-            mhc_b_start_frac = (
-                mhc_b_idx.float() / (mhc_b_len_per.unsqueeze(1) - 1).clamp(min=1).float()
-            )
-            mhc_b_end_frac = (
-                mhc_b_end_dist.float() / (mhc_b_len_per.unsqueeze(1) - 1).clamp(min=1).float()
-            )
-            mhc_b_pos_embed = self._compose_position_signal(
-                mode=self.groove_pos_mode,
-                start_embed=self.groove_2_pos(mhc_b_start_idx),
-                end_embed=(
-                    self.groove_2_end_pos(mhc_b_end_idx)
-                    if self.groove_2_end_pos is not None
-                    else torch.zeros_like(self.groove_2_pos(mhc_b_start_idx))
-                ),
-                start_frac=mhc_b_start_frac,
-                end_frac=mhc_b_end_frac,
-                frac_mlp=self.groove_frac_mlp,
-                abs_embed=(
-                    self.groove_2_abs_pos(
-                        mhc_b_idx.clamp(max=self.groove_2_abs_pos.num_embeddings - 1)
-                    )
-                    if self.groove_2_abs_pos is not None
-                    else None
-                ),
-                concat_proj=self.groove_pos_concat_proj,
-                concat_frac_proj=self.groove_pos_concat_frac_proj,
-                concat_mlp=self.groove_pos_concat_mlp,
-                concat_frac_mlp=self.groove_pos_concat_frac_mlp,
-            )
-        pos_embed = torch.cat(
-            [
-                nfl_pos_embed,
-                pep_pos_embed,
-                cfl_pos_embed,
-                mhc_a_pos_embed,
-                mhc_b_pos_embed,
-            ],
-            dim=1,
-        )
-
-        x = self.aa_embedding(tok_ids) + self.segment_embedding(seg_ids).unsqueeze(0) + pos_embed
-
-        # Segment-blocked base attention: tokens only self-attend within their segment.
-        seg_block_mask = seg_ids.unsqueeze(0) != seg_ids.unsqueeze(1)
-        key_padding_mask = ~valid_mask
-        all_masked = key_padding_mask.all(dim=1)
-        if all_masked.any():
-            key_padding_mask = key_padding_mask.clone()
-            key_padding_mask[all_masked, 0] = False
-
-        # Manual layer loop to capture early-layer states for aux heads.
-        h = x
-        early_states = None
-        for i, layer in enumerate(self.stream_encoder.layers):
-            h = layer(h, src_mask=seg_block_mask, src_key_padding_mask=key_padding_mask)
-            if i == 0:
-                early_states = h
-        h = self.stream_norm(h)
-
-        segment_masks = {
-            "nflank": (seg_ids == self.SEG_NFLANK).unsqueeze(0).expand(batch_size, -1) & valid_mask,
-            "peptide": (seg_ids == self.SEG_PEPTIDE).unsqueeze(0).expand(batch_size, -1)
-            & valid_mask,
-            "cflank": (seg_ids == self.SEG_CFLANK).unsqueeze(0).expand(batch_size, -1) & valid_mask,
-            "mhc_a": (seg_ids == self.SEG_MHC_A).unsqueeze(0).expand(batch_size, -1) & valid_mask,
-            "mhc_b": (seg_ids == self.SEG_MHC_B).unsqueeze(0).expand(batch_size, -1) & valid_mask,
+        self.assay_support = {track.key: 0 for track in config.assay_tracks}
+        self.trained_elements = {
+            name: torch.zeros_like(p, dtype=torch.bool) for name, p in self.named_parameters()
+        }
+        self.element_history_complete = set(self.trained_elements)
+        self.trained_parameters: set[str] = set()
+        self.frozen_targets: tuple[str, ...] = ()
+        self.frozen_parameters: set[str] = set()
+        self.feature_layout = feature_layout(self)
+        self.trained_features = {name: set() for name in self.feature_layout}
+        self.exposed_features = {name: set() for name in self.feature_layout}
+        self.source_label_support = {name: set() for name in config.source_categories}
+        self.support = {
+            name: {"status": "random/untrained", "observations": 0, "validation": "not_evaluated"}
+            for name in (*config.endpoints, *config.identity_tasks)
         }
 
+    def _fusion(self, width: int) -> nn.Sequential:
+        return nn.Sequential(nn.Linear(width, self.config.d_model), nn.GELU())
+
+    def assay_selection(self, row):
+        if row.endpoint not in self.affinity_endpoints:
+            return None
+        track = observation_track(row)
+        if track is not None and track not in self.config.assay_tracks:
+            raise ValueError(f"assay track outside checkpoint registry: {track.key}")
+        return track
+
+    def assay_capabilities(self):
         return {
-            "tokens": tokens,
-            "states": h,
-            "early_states": early_states,
-            "valid_mask": valid_mask,
-            "segment_ids": seg_ids,
-            "segment_masks": segment_masks,
-            "offsets": offsets,
+            track.key: {
+                "observations": self.assay_support[track.key],
+                "status": "directly_supervised"
+                if self.assay_support[track.key]
+                and self.assay_layer.trained(track, self.trained_elements)
+                else "indirectly_trained"
+                if self.assay_layer.trained(track, self.trained_elements)
+                else "random/untrained",
+                "combination_exposed": bool(self.assay_support[track.key]),
+                "validation": "not_evaluated",
+                "descriptor": asdict(track),
+            }
+            for track in self.config.assay_tracks
         }
 
-    def _latent_query(
-        self,
-        name: str,
-        h: torch.Tensor,
-        allowed_mask: torch.Tensor,
-        latent_store: Dict[str, torch.Tensor],
-        dep_names: List[str],
-        extra_tokens: Optional[List[torch.Tensor]] = None,
-        collect_attn: bool = False,
-    ) -> tuple[torch.Tensor, Optional[List[torch.Tensor]]]:
-        """Compute one latent via N_LATENT_LAYERS of segmented cross-attention."""
-        batch_size = h.shape[0]
-        kv, kv_valid = self._prepare_latent_kv(
-            h=h,
-            allowed_mask=allowed_mask,
-            latent_store=latent_store,
-            dep_names=dep_names,
-            extra_tokens=extra_tokens,
+    def train(self, mode=True):
+        super().train(mode)
+        # Every declared function depends on the shared encoder. Its dropout
+        # must remain disabled for frozen behavior even while sibling heads learn.
+        if self.frozen_parameters:
+            self.encoder.eval()
+            if hasattr(self, "residue_interaction") and any(
+                name.startswith("residue_interaction.") for name in self.frozen_parameters
+            ):
+                self.residue_interaction.eval()
+        return self
+
+    @property
+    def device(self):
+        return self.encoder.embedding.weight.device
+
+    def _tensor(self, values) -> torch.Tensor:
+        return torch.tensor(values, dtype=self.encoder.embedding.weight.dtype, device=self.device)
+
+    def _zero(self, length: int) -> torch.Tensor:
+        return self.encoder.embedding.weight.new_zeros(length)
+
+    def _component_score(self, endpoint, part, features):
+        domain = quantity_domain(endpoint)
+        head = (
+            self.quantity_scores[domain][part]
+            if domain is not None
+            else getattr(self, "ms_score" if part == "ms_response" else f"{part}_score")
         )
+        return head(features).squeeze(-1)
 
-        q = self.latent_queries[name].view(1, 1, -1).expand(batch_size, 1, -1)
-        collected_attn: List[torch.Tensor] = []
-        for layer in self.latent_layers[name]:
-            attn_out, attn_weights = layer["attn"](
-                layer["norm1"](q),
-                kv,
-                kv,
-                key_padding_mask=~kv_valid,
-                need_weights=collect_attn,
-                average_attn_weights=False,
-            )
-            if collect_attn and isinstance(attn_weights, torch.Tensor):
-                collected_attn.append(attn_weights)
-            q = q + attn_out
-            q = q + layer["ffn"](layer["norm2"](q))
-        return q.squeeze(1), (collected_attn if collect_attn else None)
-
-    @staticmethod
-    def _ensure_nonempty_kv_mask(kv_valid: torch.Tensor) -> torch.Tensor:
-        empty = ~kv_valid.any(dim=1)
-        if empty.any():
-            kv_valid = kv_valid.clone()
-            kv_valid[empty, 0] = True
-        return kv_valid
-
-    @staticmethod
-    def _gather_prefix_states(
-        prefix: torch.Tensor,
-        indices: torch.Tensor,
-    ) -> torch.Tensor:
-        batch_idx = torch.arange(prefix.shape[0], device=prefix.device).unsqueeze(1)
-        batch_idx = batch_idx.expand_as(indices)
-        clipped = indices.clamp(min=0, max=prefix.shape[1] - 1)
-        return prefix[batch_idx, clipped]
-
-    @staticmethod
-    def _gather_sequence_positions(
-        seq: torch.Tensor,
-        positions: torch.Tensor,
-    ) -> torch.Tensor:
-        batch_idx = torch.arange(seq.shape[0], device=seq.device).view(-1, 1, 1)
-        batch_idx = batch_idx.expand_as(positions)
-        clipped = positions.clamp(min=0, max=seq.shape[1] - 1)
-        return seq[batch_idx, clipped]
-
-    #: Which positional components each composition mode actually consumes.
-    #:
-    #: Single source of truth for two things that must agree: what
-    #: `_compose_position_signal` reads, and what the constructor allocates.
-    #: Previously every component was allocated for every mode and every one
-    #: was *evaluated* on every forward, with the composer discarding the
-    #: unused results -- so the inactive branches burned compute, shipped in
-    #: every checkpoint, and received no gradient. Roughly 38k parameters in
-    #: the trunk alone at d_model=32.
-    POSITION_MODE_COMPONENTS: Dict[str, frozenset] = {
-        "triple": frozenset({"start", "end", "frac_mlp"}),
-        "triple_baseline": frozenset({"start", "end", "frac_mlp"}),
-        "abs_only": frozenset({"abs"}),
-        "triple_plus_abs": frozenset({"start", "end", "frac_mlp", "abs"}),
-        "start_only": frozenset({"start"}),
-        "end_only": frozenset({"end"}),
-        "start_plus_end": frozenset({"start", "end"}),
-        "concat_start_end": frozenset({"start", "end", "concat_proj"}),
-        "concat_start_end_frac": frozenset({"start", "end", "concat_frac_proj"}),
-        "mlp_start_end": frozenset({"start", "end", "concat_mlp"}),
-        "mlp_start_end_frac": frozenset({"start", "end", "concat_frac_mlp"}),
-        # Groove-only mode; uses its own sequential table, no shared parts.
-        "sequential": frozenset({"sequential"}),
-    }
-
-    @staticmethod
-    def _require_component(component, mode: str, name: str):
-        """Fetch a positional component the mode declares it needs."""
-        if component is None:
-            raise RuntimeError(
-                f"positional mode {mode!r} needs component {name!r}, which was "
-                "not allocated. POSITION_MODE_COMPONENTS and the constructor "
-                "disagree."
-            )
-        return component
-
-    def _compose_position_signal(
-        self,
-        *,
-        mode: str,
-        start_embed: torch.Tensor,
-        end_embed: torch.Tensor,
-        start_frac: torch.Tensor,
-        end_frac: torch.Tensor,
-        frac_mlp: Optional[nn.Module],
-        abs_embed: Optional[torch.Tensor],
-        concat_proj: Optional[nn.Module],
-        concat_frac_proj: Optional[nn.Module],
-        concat_mlp: Optional[nn.Module],
-        concat_frac_mlp: Optional[nn.Module],
-    ) -> torch.Tensor:
-        """Combine positional components according to `mode`.
-
-        Components not named by POSITION_MODE_COMPONENTS[mode] are not
-        allocated, so they arrive as None. Reaching one is a table/constructor
-        disagreement, and `_require_component` turns that into a clear error
-        rather than an AttributeError deep in the trunk.
-        """
-        if mode in {"triple", "triple_baseline"}:
-            return (
-                start_embed
-                + end_embed
-                + self._require_component(frac_mlp, mode, "frac_mlp")(start_frac.unsqueeze(-1))
-            )
-        if mode == "abs_only":
-            if abs_embed is None:
-                raise ValueError("abs_only requires abs_embed")
-            return abs_embed
-        if mode == "triple_plus_abs":
-            if abs_embed is None:
-                raise ValueError("triple_plus_abs requires abs_embed")
-            return (
-                start_embed
-                + end_embed
-                + self._require_component(frac_mlp, mode, "frac_mlp")(start_frac.unsqueeze(-1))
-                + abs_embed
-            )
-        if mode == "start_only":
-            return start_embed
-        if mode == "end_only":
-            return end_embed
-        if mode == "start_plus_end":
-            return start_embed + end_embed
-        if mode == "concat_start_end":
-            return self._require_component(concat_proj, mode, "concat_proj")(
-                torch.cat([start_embed, end_embed], dim=-1)
-            )
-
-        frac_features = torch.cat(
-            [start_frac.unsqueeze(-1), end_frac.unsqueeze(-1)],
-            dim=-1,
-        )
-        if mode == "concat_start_end_frac":
-            return self._require_component(concat_frac_proj, mode, "concat_frac_proj")(
-                torch.cat([start_embed, end_embed, frac_features], dim=-1)
-            )
-        if mode == "mlp_start_end":
-            return self._require_component(concat_mlp, mode, "concat_mlp")(
-                torch.cat([start_embed, end_embed], dim=-1)
-            )
-        if mode == "mlp_start_end_frac":
-            return self._require_component(concat_frac_mlp, mode, "concat_frac_mlp")(
-                torch.cat([start_embed, end_embed, frac_features], dim=-1)
-            )
-        raise ValueError(f"Unsupported positional composition mode: {mode!r}")
-
-    @staticmethod
-    def _repeat_candidates(x: torch.Tensor, n_candidates: int) -> torch.Tensor:
-        return (
-            x.unsqueeze(1)
-            .expand(-1, n_candidates, *x.shape[1:])
-            .reshape(
-                x.shape[0] * n_candidates,
-                *x.shape[1:],
-            )
-        )
-
-    def _prepare_latent_kv(
-        self,
-        h: torch.Tensor,
-        allowed_mask: torch.Tensor,
-        latent_store: Dict[str, torch.Tensor],
-        dep_names: List[str],
-        extra_tokens: Optional[List[torch.Tensor]] = None,
-    ) -> tuple[torch.Tensor, torch.Tensor]:
-        batch_size = h.shape[0]
-        kv = h
-        kv_valid = allowed_mask
-
-        dep_tokens: List[torch.Tensor] = []
-        for dep in dep_names:
-            dep_tensor = latent_store[dep]
-            if dep_tensor.ndim == 2:
-                dep_tokens.append(dep_tensor.unsqueeze(1))
-            elif dep_tensor.ndim == 3:
-                dep_tokens.append(dep_tensor)
-            else:
-                raise ValueError(f"latent dependency {dep} has unsupported rank {dep_tensor.ndim}")
-        if extra_tokens:
-            dep_tokens.extend(extra_tokens)
-
-        if dep_tokens:
-            dep_cat = torch.cat(dep_tokens, dim=1)
-            dep_valid = torch.ones(
-                (batch_size, dep_cat.shape[1]),
-                dtype=torch.bool,
-                device=h.device,
-            )
-            kv = torch.cat([kv, dep_cat], dim=1)
-            kv_valid = torch.cat([kv_valid, dep_valid], dim=1)
-
-        return kv, self._ensure_nonempty_kv_mask(kv_valid)
-
-    def _run_binding_query(
-        self,
-        name: str,
-        kv: torch.Tensor,
-        kv_valid: torch.Tensor,
-        collect_attn: bool = False,
-        attn_mask: Optional[torch.Tensor] = None,
-    ) -> tuple[torch.Tensor, torch.Tensor, Optional[List[torch.Tensor]]]:
-        batch_size = kv.shape[0]
-        kv_valid = self._ensure_nonempty_kv_mask(kv_valid)
-
-        query_param = self.latent_queries[name]
-        if query_param.ndim == 1:
-            q = query_param.view(1, 1, -1).expand(batch_size, 1, -1)
-            n_q = 1
+    def _candidate_mean(self, endpoint, scores):
+        domain = quantity_domain(endpoint)
+        if domain is None:
+            factor = 1.0
         else:
-            q = query_param.unsqueeze(0).expand(batch_size, -1, -1)
-            n_q = query_param.shape[0]
+            transform = self.config.quantity_domains[domain].transform
+            if transform == "identity":
+                return scores.mean()
+            factor = math.log(2) if transform == "log2" else math.log(10)
+        return (torch.logsumexp(scores * factor, 0) - math.log(len(scores))) / factor
 
-        if attn_mask is not None and attn_mask.shape[0] != n_q:
-            attn_mask = attn_mask[:1, :].expand(n_q, -1)
-
-        collected_attn: List[torch.Tensor] = []
-        layers = self.latent_layers[name]
-        has_self_attn = (
-            self.binding_n_queries > 1
-            and self.binding_use_decoder_layers
-            and hasattr(self, "binding_query_self_attn")
-        )
-
-        for layer_idx, layer in enumerate(layers):
-            if has_self_attn:
-                sa_layer = self.binding_query_self_attn[name][layer_idx]
-                sa_out, _ = sa_layer["self_attn"](
-                    sa_layer["norm"](q),
-                    sa_layer["norm"](q),
-                    sa_layer["norm"](q),
-                    need_weights=False,
-                )
-                q = q + sa_out
-
-            key_padding_mask = ~kv_valid
-            if attn_mask is not None:
-                key_padding_mask = key_padding_mask.float().masked_fill(
-                    key_padding_mask,
-                    float("-inf"),
-                )
-            attn_out, attn_weights = layer["attn"](
-                layer["norm1"](q),
-                kv,
-                kv,
-                key_padding_mask=key_padding_mask,
-                attn_mask=attn_mask,
-                need_weights=collect_attn,
-                average_attn_weights=False,
+    def _encode(self, rows: Sequence[Observation]):
+        sequences: dict[str, None] = {}
+        for row in rows:
+            route = endpoint_spec(row.endpoint).route if row.endpoint != "identity" else "identity"
+            receptor = route in ("tcr", "tcr_cellular") or any(
+                name.startswith("tcr") for name in self.config.identity_tasks
             )
-            if collect_attn and isinstance(attn_weights, torch.Tensor):
-                collected_attn.append(attn_weights)
-            q = q + attn_out
-            q = q + layer["ffn"](layer["norm2"](q))
-
-        interaction_tokens = q
-        interaction_vec = self.pmhc_interaction_token_proj(interaction_tokens).reshape(
-            batch_size,
-            -1,
+            for value in (
+                row.peptide,
+                row.tcr_a if receptor else "",
+                row.tcr_b if receptor else "",
+            ):
+                if value:
+                    sequences[value] = None
+            pmhc = route in ("pmhc", "cellular", "tcr", "tcr_cellular", "identity")
+            for mhc in row.mhc if pmhc else ():
+                for value in (mhc.groove1, mhc.groove2):
+                    if value:
+                        sequences[value] = None
+                known = mhc.class_override or mhc.mhc_class
+                if row.peptide and "II" in self.config.mhc_classes and known != "I":
+                    for start in range(max(0, len(row.peptide) - 8)):
+                        sequences[row.peptide[start : start + 9]] = None
+            if self.config.source_context and route in (
+                "cellular",
+                "tcr_cellular",
+                "bulk",
+                "digest",
+            ):
+                for value in (row.context.source_n, row.context.source_c):
+                    if value:
+                        sequences[value] = None
+        names = list(sequences)
+        tokens = torch.zeros(
+            (len(names), max(map(len, names))), dtype=torch.long, device=self.device
         )
-        return interaction_vec, interaction_tokens, (collected_attn if collect_attn else None)
-
-    def _run_pmhc_interaction(
-        self,
-        h: torch.Tensor,
-        seg_masks: Dict[str, torch.Tensor],
-        offsets: Dict[str, slice],
-    ) -> torch.Tensor:
-        """Run bidirectional pMHC interaction block (Variant C).
-
-        Peptide tokens cross-attend to MHC tokens and vice versa.
-        Returns a modified hidden state tensor for binding latents only.
-        Non-peptide/MHC positions are copied from h unchanged.
-        """
-        pep_sl = offsets["peptide"]
-        mhc_a_sl = offsets["mhc_a"]
-        mhc_b_sl = offsets["mhc_b"]
-
-        # Extract and detach from h's graph to build new representations
-        pep_h = h[:, pep_sl, :].clone()
-        mhc_a_h = h[:, mhc_a_sl, :].clone()
-        mhc_b_h = h[:, mhc_b_sl, :].clone()
-        mhc_h = torch.cat([mhc_a_h, mhc_b_h], dim=1)
-
-        pep_mask = seg_masks["peptide"][:, pep_sl]
-        mhc_a_mask = seg_masks["mhc_a"][:, mhc_a_sl]
-        mhc_b_mask = seg_masks["mhc_b"][:, mhc_b_sl]
-        mhc_mask = torch.cat([mhc_a_mask, mhc_b_mask], dim=1)
-
-        # Ensure at least one valid token for each mask to avoid NaN
-        pep_pad = ~pep_mask
-        mhc_pad = ~mhc_mask
-        pep_all_masked = pep_pad.all(dim=1)
-        mhc_all_masked = mhc_pad.all(dim=1)
-        if pep_all_masked.any():
-            pep_pad = pep_pad.clone()
-            pep_pad[pep_all_masked, 0] = False
-        if mhc_all_masked.any():
-            mhc_pad = mhc_pad.clone()
-            mhc_pad[mhc_all_masked, 0] = False
-
-        for layer in self.pmhc_interaction:
-            pep_out, _ = layer["pep_to_mhc_attn"](
-                layer["pep_norm1"](pep_h),
-                mhc_h,
-                mhc_h,
-                key_padding_mask=mhc_pad,
-                need_weights=False,
+        token_ids = {aa: i + 1 for i, aa in enumerate(AA)}
+        for index, value in enumerate(names):
+            tokens[index, : len(value)] = torch.tensor(
+                [token_ids[aa] for aa in value], device=self.device
             )
-            pep_h = pep_h + pep_out
-            pep_h = pep_h + layer["pep_ffn"](layer["pep_norm2"](pep_h))
-
-            # MHC cross-attends to peptide
-            mhc_out, _ = layer["mhc_to_pep_attn"](
-                layer["mhc_norm1"](mhc_h),
-                pep_h,
-                pep_h,
-                key_padding_mask=pep_pad,
-                need_weights=False,
-            )
-            mhc_h = mhc_h + mhc_out
-            mhc_h = mhc_h + layer["mhc_ffn"](layer["mhc_norm2"](mhc_h))
-
-        # Construct new tensor with enriched peptide/MHC, original elsewhere
-        mhc_a_len = mhc_a_sl.stop - mhc_a_sl.start
-        replacements = sorted(
-            [
-                (pep_sl, pep_h),
-                (mhc_a_sl, mhc_h[:, :mhc_a_len, :]),
-                (mhc_b_sl, mhc_h[:, mhc_a_len:, :]),
-            ],
-            key=lambda pair: pair[0].start,
-        )
-        parts = []
-        prev_end = 0
-        for sl, replacement in replacements:
-            if sl.start > prev_end:
-                parts.append(h[:, prev_end : sl.start, :])
-            parts.append(replacement)
-            prev_end = sl.stop
-        if prev_end < h.shape[1]:
-            parts.append(h[:, prev_end:, :])
-        return torch.cat(parts, dim=1)
-
-    def _compute_groove_vec(
-        self,
-        h: torch.Tensor,
-        seg_masks: Dict[str, torch.Tensor],
-        offsets: Dict[str, slice],
-        class_probs: torch.Tensor,
-    ) -> torch.Tensor:
-        """Summarize the allele-specific peptide-binding groove.
-
-        The runtime MHC input is already reduced to two structurally aligned
-        groove halves:
-        - `mhc_a`: alpha1 (class I/II)
-        - `mhc_b`: alpha2 (class I) or beta1 (class II)
-
-        So groove summarization is class-agnostic and no longer needs the old
-        full-chain masking heuristics.
-        """
-        mhc_a_slice = offsets["mhc_a"]
-        mhc_b_slice = offsets["mhc_b"]
-        mhc_a_h = h[:, mhc_a_slice, :]
-        mhc_b_h = h[:, mhc_b_slice, :]
-        mhc_a_mask = seg_masks["mhc_a"][:, mhc_a_slice]
-        mhc_b_mask = seg_masks["mhc_b"][:, mhc_b_slice]
-        mhc_h = torch.cat([mhc_a_h, mhc_b_h], dim=1)
-        groove_mask = torch.cat([mhc_a_mask, mhc_b_mask], dim=1)
-
-        batch_size = h.shape[0]
-        query = self.groove_query.unsqueeze(0).expand(batch_size, -1, -1)
-        groove_mask = self._ensure_nonempty_kv_mask(groove_mask)
-        groove_out, _ = self.groove_attn(
-            query,
-            mhc_h,
-            mhc_h,
-            key_padding_mask=~groove_mask,
-            need_weights=False,
-        )
-        return groove_out.squeeze(1)
-
-    def _binding_latent_query(
-        self,
-        name: str,
-        h: torch.Tensor,
-        seg_masks: Dict[str, torch.Tensor],
-        offsets: Dict[str, slice],
-        latent_store: Dict[str, torch.Tensor],
-        dep_names: List[str],
-        class_probs: torch.Tensor,
-        extra_tokens: Optional[List[torch.Tensor]] = None,
-        collect_attn: bool = False,
-    ) -> tuple[torch.Tensor, torch.Tensor, Dict[str, torch.Tensor]]:
-        """Enumerate peptide core windows, score them, and marginalize binding."""
-        batch_size = h.shape[0]
-        pep_slice = offsets["peptide"]
-        pep_h = h[:, pep_slice, :]
-        pep_valid = seg_masks["peptide"][:, pep_slice]
-        pep_len = pep_valid.sum(dim=1).clamp(min=1)
-
-        configured_core_lengths = {int(length) for length in self.core_window_lengths}
-        min_configured = min(configured_core_lengths)
-        fallback_lengths = {
-            max(1, int(observed_len))
-            for observed_len in pep_len.detach().cpu().tolist()
-            if int(observed_len) < min_configured
+        pooled, states = self.encoder(tokens)
+        return dict(zip(names, pooled, strict=True)), {
+            name: states[index, : len(name)] for index, name in enumerate(names)
         }
-        candidate_lengths = sorted(configured_core_lengths | fallback_lengths)
 
-        pep_max_len = int(pep_len.max().item())
-        starts_list: List[int] = []
-        lens_list: List[int] = []
-        for core_len_i in candidate_lengths:
-            if pep_max_len < core_len_i:
-                continue
-            for start_i in range(pep_max_len - core_len_i + 1):
-                starts_list.append(start_i)
-                lens_list.append(core_len_i)
-        if not starts_list:
-            starts_list = [0]
-            lens_list = [max(1, pep_max_len)]
-
-        starts_1d = torch.tensor(starts_list, device=h.device, dtype=torch.long)
-        core_lens_1d = torch.tensor(lens_list, device=h.device, dtype=torch.long)
-        max_candidates = int(starts_1d.shape[0])
-
-        starts = starts_1d.view(1, max_candidates).expand(batch_size, -1)
-        core_lens = core_lens_1d.view(1, max_candidates).expand(batch_size, -1)
-        ends = starts + core_lens
-        pep_len_expanded = pep_len.unsqueeze(1).expand_as(starts)
-        configured_length_mask = torch.zeros_like(core_lens, dtype=torch.bool)
-        for configured_len in configured_core_lengths:
-            configured_length_mask |= core_lens == int(configured_len)
-        short_peptide_fallback = (pep_len_expanded < int(min_configured)) & (
-            core_lens == pep_len_expanded.clamp(min=1)
-        )
-        length_allowed = configured_length_mask | short_peptide_fallback
-        candidate_mask = length_allowed & (starts < pep_len_expanded) & (ends <= pep_len_expanded)
-
-        core_offsets = torch.arange(self.core_window_size, device=h.device).view(1, 1, -1)
-        core_positions = starts.unsqueeze(-1) + core_offsets
-        core_token_mask = (
-            candidate_mask.unsqueeze(-1)
-            & (core_offsets < core_lens.unsqueeze(-1))
-            & (core_positions < pep_len.view(batch_size, 1, 1))
-        )
-        core_tokens = self._gather_sequence_positions(pep_h, core_positions)
-        core_pos_embed = self.core_position_embed(
-            torch.arange(self.core_window_size, device=h.device)
-        ).view(1, 1, self.core_window_size, -1)
-        core_tokens = (
-            core_tokens + core_pos_embed * core_token_mask.unsqueeze(-1).float()
-        ) * core_token_mask.unsqueeze(-1).float()
-
-        pep_prefix = torch.cat(
+    def _interaction_candidates(self, peptide, mhc, register_candidates, states):
+        """One residue interaction for either class, before any candidate pooling."""
+        queries = torch.stack(
             [
-                pep_h.new_zeros((batch_size, 1, self.d_model)),
-                (pep_h * pep_valid.unsqueeze(-1).float()).cumsum(dim=1),
-            ],
-            dim=1,
+                0.5 * (states[core] + states[peptide][start : start + len(core)])
+                for start, core, _ in register_candidates
+            ]
         )
-        pep_total = self._gather_prefix_states(
-            pep_prefix,
-            pep_len.unsqueeze(1).expand(-1, max_candidates),
-        )
-        npfr_sum = self._gather_prefix_states(pep_prefix, starts)
-        cpfr_sum = pep_total - self._gather_prefix_states(pep_prefix, ends)
-        npfr_len = starts
-        cpfr_len = (pep_len_expanded - ends).clamp(min=0)
-        npfr_repr = npfr_sum / npfr_len.float().unsqueeze(-1).clamp(min=1.0)
-        cpfr_repr = cpfr_sum / cpfr_len.float().unsqueeze(-1).clamp(min=1.0)
-        npfr_repr = npfr_repr * candidate_mask.unsqueeze(-1).float()
-        cpfr_repr = cpfr_repr * candidate_mask.unsqueeze(-1).float()
-
-        npfr_len_embed = self.pfr_length_embed(npfr_len.clamp(max=self.max_pfr_length))
-        cpfr_len_embed = self.pfr_length_embed(cpfr_len.clamp(max=self.max_pfr_length))
-
-        mhc_a_slice = offsets["mhc_a"]
-        mhc_b_slice = offsets["mhc_b"]
-        mhc_a_h = h[:, mhc_a_slice, :]
-        mhc_b_h = h[:, mhc_b_slice, :]
-        mhc_h = torch.cat([mhc_a_h, mhc_b_h], dim=1)
-        mhc_mask = torch.cat(
-            [
-                seg_masks["mhc_a"][:, mhc_a_slice],
-                seg_masks["mhc_b"][:, mhc_b_slice],
-            ],
-            dim=1,
-        )
-
-        core_flat = core_tokens.reshape(
-            batch_size * max_candidates, self.core_window_size, self.d_model
-        )
-        core_mask_flat = core_token_mask.reshape(batch_size * max_candidates, self.core_window_size)
-        mhc_flat = self._repeat_candidates(mhc_h, max_candidates)
-        mhc_mask_flat = self._repeat_candidates(mhc_mask, max_candidates)
-
-        kv_parts = [core_flat, mhc_flat]
-        kv_valid_parts = [core_mask_flat, mhc_mask_flat]
-        dep_token_list: List[torch.Tensor] = []
-        for dep in dep_names:
-            dep_tensor = latent_store[dep]
-            if dep_tensor.ndim == 2:
-                dep_tensor = dep_tensor.unsqueeze(1)
-            elif dep_tensor.ndim != 3:
-                raise ValueError(f"latent dependency {dep} has unsupported rank {dep_tensor.ndim}")
-            dep_token_list.append(dep_tensor)
-        if extra_tokens:
-            dep_token_list.extend(extra_tokens)
-        for token_tensor in dep_token_list:
-            kv_parts.append(self._repeat_candidates(token_tensor, max_candidates))
-            kv_valid_parts.append(
-                torch.ones(
-                    (batch_size * max_candidates, token_tensor.shape[1]),
-                    dtype=torch.bool,
-                    device=h.device,
-                )
-            )
-
-        kv = torch.cat(kv_parts, dim=1)
-        kv_valid = torch.cat(kv_valid_parts, dim=1)
-
-        candidate_interaction_flat, candidate_tokens_flat, attn_layers = self._run_binding_query(
-            name=name,
-            kv=kv,
-            kv_valid=kv_valid,
-            collect_attn=collect_attn,
-            attn_mask=None,
-        )
-
-        # --- Core scoring uses core-only interaction (no PFR context) ---
-        # This ensures the core selector picks windows based purely on
-        # core-groove pocket chemistry, not PFR composition.  PFR context
-        # is fused into candidate_vec AFTER scoring so the downstream
-        # binding module still sees flanking information.
-        core_only_vec = self.core_window_vec_norm(candidate_interaction_flat).reshape(
-            batch_size, max_candidates, -1
-        )
-
-        pep_len_f = pep_len.float().unsqueeze(1).clamp(min=1.0)
-        prior_features = torch.cat(
-            [
-                core_lens.float().unsqueeze(-1) / pep_len_f.unsqueeze(-1),
-                npfr_len.float().unsqueeze(-1) / pep_len_f.unsqueeze(-1),
-                cpfr_len.float().unsqueeze(-1) / pep_len_f.unsqueeze(-1),
-                class_probs.unsqueeze(1).expand(-1, max_candidates, -1),
-            ],
-            dim=-1,
-        )
-        core_window_prior_logit = self.core_window_prior(prior_features).squeeze(-1)
-        if self.core_refinement_mode == "class_specific":
-            class1_score = self.core_window_score_class1(core_only_vec).squeeze(-1)
-            class2_score = self.core_window_score_class2(core_only_vec).squeeze(-1)
-            class1_weight = class_probs[:, :1].expand(-1, max_candidates)
-            class2_weight = class_probs[:, 1:2].expand(-1, max_candidates)
-            core_window_score_logit = class1_weight * class1_score + class2_weight * class2_score
-        else:
-            core_window_score_logit = self.core_window_score(core_only_vec).squeeze(-1)
-
-        # --- Class II PFR binding adjustment ---
-        # PFRs protrude from the open class II groove and modulate binding
-        # kinetics / DM editing.  No class I analog (sealed groove).
-        # Gated by class II probability so the adjustment is zero for class I.
-        class2_weight = class_probs[:, 1:2].expand(-1, max_candidates)
-        if class2_weight.sum() > 0:
-            pfr_score_input = torch.cat(
-                [
-                    npfr_repr.reshape(batch_size * max_candidates, -1),
-                    cpfr_repr.reshape(batch_size * max_candidates, -1),
-                    npfr_len_embed.reshape(batch_size * max_candidates, -1),
-                    cpfr_len_embed.reshape(batch_size * max_candidates, -1),
-                    core_window_score_logit.reshape(batch_size * max_candidates, 1),
-                ],
-                dim=-1,
-            )
-            pfr_adjustment = self.class2_pfr_score(pfr_score_input).reshape(
-                batch_size, max_candidates
-            )
-            core_window_score_logit = core_window_score_logit + class2_weight * pfr_adjustment
-
-        # --- Fuse PFR context into candidate_vec for marginalized output ---
-        candidate_vec = self.core_window_vec_norm(
-            self.core_window_fuse(
-                torch.cat(
-                    [
-                        candidate_interaction_flat,
-                        npfr_repr.reshape(batch_size * max_candidates, -1),
-                        npfr_len_embed.reshape(batch_size * max_candidates, -1),
-                        cpfr_repr.reshape(batch_size * max_candidates, -1),
-                        cpfr_len_embed.reshape(batch_size * max_candidates, -1),
-                    ],
-                    dim=-1,
-                )
-            )
-        ).reshape(batch_size, max_candidates, -1)
-        core_window_logit = core_window_score_logit + core_window_prior_logit
-        core_window_prior_logit = core_window_prior_logit.masked_fill(~candidate_mask, -1e4)
-        core_window_score_logit = core_window_score_logit.masked_fill(~candidate_mask, -1e4)
-        core_window_logit = core_window_logit.masked_fill(~candidate_mask, -1e4)
-
-        core_window_posterior = F.softmax(core_window_logit, dim=1)
-        core_window_posterior = core_window_posterior * candidate_mask.to(
-            dtype=core_window_posterior.dtype
-        )
-        core_window_posterior = core_window_posterior / core_window_posterior.sum(
-            dim=1,
-            keepdim=True,
-        ).clamp(min=1e-8)
-        core_window_posterior = core_window_posterior.to(dtype=candidate_vec.dtype)
-
-        interaction_vec = torch.sum(
-            core_window_posterior.unsqueeze(-1) * candidate_vec,
-            dim=1,
-        )
-        candidate_tokens = candidate_tokens_flat.reshape(
-            batch_size,
-            max_candidates,
-            candidate_tokens_flat.shape[1],
-            candidate_tokens_flat.shape[2],
-        )
-        interaction_tokens = torch.sum(
-            core_window_posterior.unsqueeze(-1).unsqueeze(-1) * candidate_tokens,
-            dim=1,
-        )
-
-        core_start_logit = pep_h.new_full((batch_size, pep_h.shape[1]), -1e4)
-        core_start_prob = pep_h.new_zeros((batch_size, pep_h.shape[1]))
-        batch_idx = torch.arange(batch_size, device=h.device).unsqueeze(1).expand_as(starts)
-        valid_batch_idx = batch_idx[candidate_mask]
-        valid_starts = starts[candidate_mask]
-        core_start_logit[valid_batch_idx, valid_starts] = core_window_logit[candidate_mask].to(
-            dtype=core_start_logit.dtype
-        )
-        core_start_prob[valid_batch_idx, valid_starts] = core_window_posterior[candidate_mask]
-        core_start_logit = core_start_logit.masked_fill(~pep_valid, -1e4)
-
-        core_membership = pep_h.new_zeros((batch_size, pep_h.shape[1]))
-        for offset in range(self.core_window_size):
-            contrib = core_window_posterior * core_token_mask[:, :, offset].to(
-                dtype=core_window_posterior.dtype
-            )
-            pos = core_positions[:, :, offset].clamp(max=pep_h.shape[1] - 1)
-            core_membership.scatter_add_(1, pos, contrib)
-        core_membership = core_membership * pep_valid.to(dtype=core_membership.dtype)
-        core_membership = core_membership / core_membership.sum(dim=1, keepdim=True).clamp(
-            min=1e-8,
-        )
-
-        map_idx = core_window_logit.argmax(dim=1, keepdim=True)
-        map_start = starts.gather(1, map_idx).squeeze(1)
-        pos = torch.arange(pep_h.shape[1], device=h.device).view(1, -1).expand(batch_size, -1)
-        core_relative_position_index = pos - map_start.unsqueeze(1)
-
-        weighted_attn_layers: List[torch.Tensor] = []
-        if collect_attn and attn_layers:
-            mhc_start = self.core_window_size
-            mhc_stop = mhc_start + mhc_h.shape[1]
-            attn_weight = core_window_posterior.view(batch_size, max_candidates, 1, 1, 1)
-            for layer_attn in attn_layers:
-                layer_attn = layer_attn.reshape(
-                    batch_size,
-                    max_candidates,
-                    layer_attn.shape[1],
-                    layer_attn.shape[2],
-                    layer_attn.shape[3],
-                )
-                weighted_attn_layers.append(
-                    (attn_weight * layer_attn[..., mhc_start:mhc_stop]).sum(dim=1)
-                )
-
-        expected_start = torch.sum(
-            core_window_posterior * starts.float(),
-            dim=1,
-            keepdim=True,
-        )
-        expected_core_len = torch.sum(
-            core_window_posterior * core_lens.float(),
-            dim=1,
-            keepdim=True,
-        )
-        expected_cpfr = torch.sum(
-            core_window_posterior * cpfr_len.float(),
-            dim=1,
-            keepdim=True,
-        )
-        map_len = core_lens.gather(1, map_idx).squeeze(1)
-
-        diagnostics: Dict[str, torch.Tensor] = {
-            "core_window_mask": candidate_mask,
-            "core_window_start": starts,
-            "core_window_length": core_lens,
-            "core_window_prior_logit": core_window_prior_logit,
-            "core_window_score_logit": core_window_score_logit,
-            "core_window_logit": core_window_logit,
-            "core_window_posterior_prob": core_window_posterior,
-            "core_start_logit": core_start_logit,
-            "core_start_prob": core_start_prob,
-            "core_start_probs": core_start_prob,
-            "core_membership_prob": core_membership,
-            "core_relative_position_index": core_relative_position_index,
-            "core_length": map_len.unsqueeze(1).expand_as(pos),
-            "npfr_length": pos,
-            "cpfr_length": (pep_len.view(-1, 1) - pos - map_len.view(-1, 1)).clamp(min=0),
-            "core_length_norm": expected_core_len / pep_len.float().unsqueeze(-1),
-            "npfr_length_norm": expected_start / pep_len.float().unsqueeze(-1),
-            "cpfr_length_norm": expected_cpfr / pep_len.float().unsqueeze(-1),
-            "attn_layers": weighted_attn_layers,
-        }
-        return interaction_vec, interaction_tokens, diagnostics
+        groove = torch.cat([states[mhc.groove1], states[mhc.groove2]], 0)
+        groove = groove.unsqueeze(0).expand(len(queries), -1, -1)
+        interaction, _ = self.residue_interaction(queries, groove, groove, need_weights=False)
+        return self.interaction_norm(queries + interaction).mean(1)
 
     @staticmethod
-    def _binding_attention_stats(
-        binding_attn: Mapping[str, Sequence[torch.Tensor]],
-        mhc_mask: torch.Tensor,
-    ) -> Dict[str, torch.Tensor]:
-        """Summarize binding-latent attention concentration over MHC residues."""
-        base_k = int(mhc_mask.shape[-1])
-        attn_per_layer: List[torch.Tensor] = []
-        for layers in binding_attn.values():
-            for layer_attn in layers:
-                if not isinstance(layer_attn, torch.Tensor):
-                    continue
-                # (B, heads, Q=1, K) -> (B, K) averaged across heads and query slot.
-                if layer_attn.ndim != 4:
-                    continue
-                # Latent dependencies/context tokens can extend K beyond the
-                # base stream tokens. Keep only base-stream attention slots so
-                # MHC masking aligns with token positions.
-                k = layer_attn.shape[-1]
-                if k > base_k:
-                    layer_attn = layer_attn[..., :base_k]
-                attn_per_layer.append(layer_attn.mean(dim=(1, 2)))
-        if not attn_per_layer:
-            return {}
+    def _pool_registers(scores, direction):
+        """Normalized smooth extremum in model units, not physical occupancy.
 
-        mean_attn = torch.stack(attn_per_layer, dim=0).mean(dim=0)  # (B, K)
-        mhc_mask_f = mhc_mask.float()
-        mhc_token_count = mhc_mask_f.sum(dim=-1)
-        mhc_weight = mean_attn * mhc_mask_f
-        mhc_mass = mhc_weight.sum(dim=-1)
-        valid = (mhc_token_count > 0.0) & (mhc_mass > 0.0)
-        mhc_prob = mhc_weight / mhc_mass.unsqueeze(-1).clamp(min=1e-8)
-        effective = 1.0 / mhc_prob.pow(2).sum(dim=-1).clamp(min=1e-8)
-        effective = torch.where(valid, effective, torch.zeros_like(effective))
-
-        return {
-            "binding_mhc_attention_effective_residues": effective,
-            "binding_mhc_attention_mass": mhc_mass,
-            "binding_mhc_attention_valid_mask": valid.float(),
-            "binding_mhc_attention_token_count": mhc_token_count,
-        }
-
-    def _trunk_state_from_outputs(self, outputs: Mapping[str, Any]) -> PrestoTrunkState:
-        latent_vecs = outputs["latent_vecs"]
-        return PrestoTrunkState(
-            processing_vec=latent_vecs["processing"],
-            interaction_vec=latent_vecs["pmhc_interaction"],
-            pep_vec=outputs["pep_vec"],
-            mhc_a_vec=outputs["mhc_a_vec"],
-            mhc_b_vec=outputs["mhc_b_vec"],
-            binding_affinity_vec=latent_vecs["binding_affinity"],
-            binding_stability_vec=latent_vecs["binding_stability"],
-            recognition_vec=latent_vecs["recognition"],
-            processing_class1_vec=latent_vecs["processing_class1"],
-            processing_class2_vec=latent_vecs["processing_class2"],
-            presentation_class1_vec=latent_vecs["presentation_class1"],
-            presentation_class2_vec=latent_vecs["presentation_class2"],
-            immunogenicity_cd8_vec=latent_vecs["immunogenicity_cd8"],
-            immunogenicity_cd4_vec=latent_vecs["immunogenicity_cd4"],
-            class_probs=outputs["mhc_class_probs"],
-        )
-
-    def predict_processing_from_trunk(
-        self,
-        trunk_state: PrestoTrunkState,
-    ) -> Dict[str, torch.Tensor]:
-        class1 = self.class1_processing_predictor(trunk_state.processing_class1_vec)
-        class2 = self.class2_processing_predictor(trunk_state.processing_class2_vec)
-        mixed_logit = (
-            trunk_state.class_probs[:, :1] * class1["logit"]
-            + trunk_state.class_probs[:, 1:2] * class2["logit"]
-        )
-        return {
-            "processing_class1_logit": class1["logit"],
-            "processing_class2_logit": class2["logit"],
-            "processing_logit": mixed_logit,
-            "processing_mixed_logit": mixed_logit,
-            "processing_class1_prob": class1["prob"],
-            "processing_class2_prob": class2["prob"],
-            "processing_prob": torch.sigmoid(mixed_logit),
-            "processing_mixed_prob": torch.sigmoid(mixed_logit),
-        }
-
-    def predict_affinity_from_trunk(
-        self,
-        trunk_state: PrestoTrunkState,
-        *,
-        mhc_class: Optional[Any] = None,
-        binding_context: Optional[Dict[str, torch.Tensor]] = None,
-        species_probs: Optional[torch.Tensor] = None,
-    ) -> Dict[str, torch.Tensor]:
-        return self.affinity_predictor(
-            interaction_vec=trunk_state.interaction_vec,
-            binding_affinity_vec=trunk_state.binding_affinity_vec,
-            binding_stability_vec=trunk_state.binding_stability_vec,
-            pep_vec=trunk_state.pep_vec,
-            mhc_a_vec=trunk_state.mhc_a_vec,
-            mhc_b_vec=trunk_state.mhc_b_vec,
-            class_probs=trunk_state.class_probs,
-            species_probs=species_probs,
-            mhc_class=mhc_class,
-            binding_context=binding_context,
-        )
-
-    def predict_presentation_from_trunk(
-        self,
-        trunk_state: PrestoTrunkState,
-    ) -> Dict[str, torch.Tensor]:
-        class1 = self.class1_presentation_predictor(trunk_state.presentation_class1_vec)
-        class2 = self.class2_presentation_predictor(trunk_state.presentation_class2_vec)
-        mixed_logit = (
-            trunk_state.class_probs[:, :1] * class1["logit"]
-            + trunk_state.class_probs[:, 1:2] * class2["logit"]
-        )
-        return {
-            "presentation_class1_logit": class1["logit"],
-            "presentation_class2_logit": class2["logit"],
-            "presentation_logit": mixed_logit,
-            "presentation_mixed_logit": mixed_logit,
-            "presentation_class1_prob": class1["prob"],
-            "presentation_class2_prob": class2["prob"],
-            "presentation_prob": torch.sigmoid(mixed_logit),
-            "presentation_mixed_prob": torch.sigmoid(mixed_logit),
-        }
-
-    # ------------------------------------------------------------------ #
-    #  Core supervision loss (Phase 4 — gold-standard binding core labels)
-    # ------------------------------------------------------------------ #
-
-    @staticmethod
-    def core_supervision_loss(
-        outputs: Dict[str, torch.Tensor],
-        core_start: torch.Tensor,
-        core_length: torch.Tensor,
-        mask: Optional[torch.Tensor] = None,
-        label_smoothing: float = 0.1,
-    ) -> torch.Tensor:
-        """Auxiliary cross-entropy on the core posterior for labeled peptides.
-
-        Args:
-            outputs: Forward pass outputs containing core_window_start,
-                core_window_length, core_window_logit, core_window_mask.
-            core_start: (batch,) known binding core start position per sample.
-            core_length: (batch,) known binding core length per sample.
-            mask: (batch,) bool mask — True for samples with known cores.
-            label_smoothing: Smoothing factor (default 0.1).
-
-        Returns:
-            Scalar loss averaged over labeled samples, or zero if no labels.
+        The reported weights are derivatives of the pooled score with respect to
+        candidate scores. A singleton trains the very same readout as many cores.
         """
-        logits = outputs["core_window_logit"]  # (batch, n_candidates)
-        starts = outputs["core_window_start"]  # (batch, n_candidates)
-        lengths = outputs["core_window_length"]  # (batch, n_candidates)
-        valid = outputs["core_window_mask"]  # (batch, n_candidates)
+        signed = direction * scores
+        weights = signed.softmax(0)
+        if len(scores) == 1:
+            return scores[0], weights
+        value = direction * (torch.logsumexp(signed, 0) - math.log(len(scores)))
+        return value, weights
 
-        if mask is None:
-            mask = torch.ones(logits.shape[0], dtype=torch.bool, device=logits.device)
-        if mask.sum() == 0:
-            return logits.new_zeros(())
-
-        # Find the candidate index matching the known core
-        target_match = (
-            (starts == core_start.unsqueeze(1)) & (lengths == core_length.unsqueeze(1)) & valid
-        )  # (batch, n_candidates)
-
-        # For samples where the known core matches exactly one candidate
-        has_match = target_match.any(dim=1) & mask  # (batch,)
-        if has_match.sum() == 0:
-            return logits.new_zeros(())
-
-        # Target index: argmax of the match (first matching candidate)
-        target_idx = target_match[has_match].float().argmax(dim=1)  # (n_labeled,)
-        labeled_logits = logits[has_match]  # (n_labeled, n_candidates)
-        labeled_valid = valid[has_match]  # (n_labeled, n_candidates)
-
-        # Mask invalid candidates with -inf before cross-entropy
-        labeled_logits = labeled_logits.masked_fill(~labeled_valid, -1e4)
-        return F.cross_entropy(
-            labeled_logits,
-            target_idx,
-            label_smoothing=label_smoothing,
-        )
-
-    # ------------------------------------------------------------------ #
-    #  Training stage parameter groups
-    # ------------------------------------------------------------------ #
-
-    # Stage identifiers for the curriculum.  Each stage trains a larger
-    # subgraph while optionally freezing earlier components.
-    STAGE_BINDING_CLASS1 = "binding_class1"
-    STAGE_BINDING_CLASS2 = "binding_class2"
-    STAGE_PROCESSING_CLASS1 = "processing_class1"
-    STAGE_PROCESSING_CLASS2 = "processing_class2"
-    STAGE_PRESENTATION_MIL = "presentation_mil"
-    STAGE_IMMUNOGENICITY = "immunogenicity"
-
-    def curriculum_param_groups(
-        self,
-        stage: str,
-        lr: float = 3e-4,
-        trunk_lr_mult: float = 0.1,
-        frozen_lr: float = 0.0,
-    ) -> List[Dict[str, Any]]:
-        """Return optimizer param groups for a curriculum training stage.
-
-        Each stage trains a progressively larger subgraph:
-
-        - binding_class1:    Trunk encoder + binding core scorer + groove +
-                             BindingModule + assay heads.  Everything else frozen.
-        - binding_class2:    Above + class II PFR module + class II core scorer.
-                             Trunk at reduced LR.
-        - processing_class1: Above + processing latent + class I processing head.
-        - processing_class2: Above + class II processing head.
-        - presentation_mil:  Above + presentation bottleneck + presentation heads.
-        - immunogenicity:    Above + recognition latent + immunogenicity heads.
-
-        Args:
-            stage: One of the STAGE_* constants.
-            lr: Learning rate for actively-trained parameters.
-            trunk_lr_mult: LR multiplier for trunk encoder (default 0.1x).
-            frozen_lr: LR for frozen parameters (default 0, truly frozen).
-
-        Returns:
-            List of param group dicts suitable for torch.optim.
-        """
-        # Classify every parameter into a component
-        component_map = self._parameter_component_map()
-
-        # Define which components are active (trained) at each stage
-        active_components = {
-            self.STAGE_BINDING_CLASS1: {
-                "trunk",
-                "groove",
-                "binding_query",
-                "binding_core",
-                "binding_module",
-                "assay_heads",
-                "mhc_identity",
-            },
-            self.STAGE_BINDING_CLASS2: {
-                "trunk",
-                "groove",
-                "binding_query",
-                "binding_core",
-                "binding_module",
-                "assay_heads",
-                "pfr_class2",
-                "mhc_identity",
-            },
-            self.STAGE_PROCESSING_CLASS1: {
-                "trunk",
-                "groove",
-                "binding_query",
-                "binding_core",
-                "binding_module",
-                "assay_heads",
-                "pfr_class2",
-                "mhc_identity",
-                "processing",
-                "processing_class1",
-            },
-            self.STAGE_PROCESSING_CLASS2: {
-                "trunk",
-                "groove",
-                "binding_query",
-                "binding_core",
-                "binding_module",
-                "assay_heads",
-                "pfr_class2",
-                "mhc_identity",
-                "processing",
-                "processing_class1",
-                "processing_class2",
-            },
-            self.STAGE_PRESENTATION_MIL: {
-                "trunk",
-                "groove",
-                "binding_query",
-                "binding_core",
-                "binding_module",
-                "assay_heads",
-                "pfr_class2",
-                "mhc_identity",
-                "processing",
-                "processing_class1",
-                "processing_class2",
-                "presentation",
-                "ms_detectability",
-            },
-            self.STAGE_IMMUNOGENICITY: {
-                "trunk",
-                "groove",
-                "binding_query",
-                "binding_core",
-                "binding_module",
-                "assay_heads",
-                "pfr_class2",
-                "mhc_identity",
-                "processing",
-                "processing_class1",
-                "processing_class2",
-                "presentation",
-                "ms_detectability",
-                "recognition",
-                "immunogenicity",
-            },
-        }
-
-        if stage not in active_components:
-            raise ValueError(
-                f"Unknown training stage {stage!r}. Valid: {sorted(active_components)}"
-            )
-
-        active = active_components[stage]
-
-        # Every component a parameter can be classified into must be trainable
-        # at some stage; otherwise it is dead weight that no run ever updates
-        # and nothing reports it. Checked here rather than in a test alone so a
-        # newly added component cannot quietly fall through to "other".
-        reachable = set().union(*active_components.values())
-        unreachable = {
-            component for component in component_map.values() if component not in reachable
-        }
-        # "other" is the documented sink for a parameter no rule matches, and
-        # _classify_parameter's contract says such a parameter is frozen at
-        # every stage -- not that the run aborts. Raising here turned a naming
-        # miss into a crash at optimizer construction, with an error message
-        # ("add them to a stage") that is wrong advice for "other".
-        #
-        # A genuinely unreachable *named* component is still a bug worth
-        # failing on; an unmatched parameter is a gap worth reporting loudly
-        # and continuing past.
-        unmatched = {name for name, comp in component_map.items() if comp == "other"}
-        if unmatched:
-            warnings.warn(
-                "these parameters match no PARAMETER_COMPONENT_RULES row and "
-                "will be frozen at every curriculum stage: "
-                f"{sorted(unmatched)[:8]}"
-                + (f" (+{len(unmatched) - 8} more)" if len(unmatched) > 8 else ""),
-                RuntimeWarning,
-                stacklevel=2,
-            )
-        unreachable = unreachable - {"other"}
-        if unreachable:
-            raise ValueError(
-                "these curriculum components are trained by no stage, so their "
-                f"parameters would never receive an update: {sorted(unreachable)}. "
-                "Add them to a stage in active_components, or fix their "
-                "classification in PARAMETER_COMPONENT_RULES."
-            )
-        # Trunk uses reduced LR; other active components use full LR
-        slow_components = {"trunk"}
-
-        groups: Dict[str, List[torch.nn.Parameter]] = {
-            "active": [],
-            "slow": [],
-            "frozen": [],
-        }
-        for name, param in self.named_parameters():
-            component = component_map.get(name, "other")
-            if component in active:
-                # Explicitly re-enable: stages are meant to be called in
-                # sequence on one model, and an earlier stage froze these.
-                # Without this the model stays pinned at stage 1 forever.
-                param.requires_grad_(True)
-                if component in slow_components:
-                    groups["slow"].append(param)
-                else:
-                    groups["active"].append(param)
-            else:
-                groups["frozen"].append(param)
-
-        result = []
-        if groups["active"]:
-            result.append({"params": groups["active"], "lr": lr})
-        if groups["slow"]:
-            result.append({"params": groups["slow"], "lr": lr * trunk_lr_mult})
-        if groups["frozen"]:
-            for p in groups["frozen"]:
-                p.requires_grad_(False)
-            result.append({"params": groups["frozen"], "lr": frozen_lr})
+    def _identity(self, row, mhc, encoded):
+        result = {}
+        if row.peptide and "peptide_source" in self.identity_heads:
+            logits = self.identity_heads["peptide_source"](encoded[row.peptide])
+            for index, category in enumerate(self.config.source_categories):
+                # Independent sigmoids represented as two logits for the common CE path.
+                result[f"peptide_source:{category}"] = torch.stack(
+                    [logits[index] * 0, logits[index]]
+                )
+        if mhc is not None:
+            if "mhc_class" in self.identity_heads and mhc.groove1 and mhc.groove2:
+                result["mhc_class"] = self.identity_heads["mhc_class"](
+                    torch.cat([encoded[mhc.groove1], encoded[mhc.groove2]])
+                )
+            if "mhc_species" in self.identity_heads:
+                for name, value in (("mhc1", mhc.groove1), ("mhc2", mhc.groove2)):
+                    if value:
+                        result[name] = self.identity_heads["mhc_species"](encoded[value])
+            if "mhc_pairing" in self.identity_heads and mhc.groove1 and mhc.groove2:
+                result["mhc_pairing"] = self.identity_heads["mhc_pairing"](
+                    torch.cat([encoded[mhc.groove1], encoded[mhc.groove2]])
+                )
+        if "tcr_species" in self.identity_heads:
+            for name in ("tcr_a", "tcr_b"):
+                if getattr(row, name):
+                    result[name] = self.identity_heads["tcr_species"](encoded[getattr(row, name)])
+        if row.tcr_a and row.tcr_b:
+            if "tcr_lineage" in self.identity_heads:
+                result["tcr_lineage"] = self.identity_heads["tcr_lineage"](
+                    torch.cat([encoded[row.tcr_a], encoded[row.tcr_b]])
+                )
+            if "tcr_pairing" in self.identity_heads:
+                result["tcr_pairing"] = self.identity_heads["tcr_pairing"](
+                    torch.cat([encoded[row.tcr_a], encoded[row.tcr_b]])
+                )
         return result
 
-    def _parameter_component_map(self) -> Dict[str, str]:
-        """Map each named parameter to its curriculum component."""
-        mapping: Dict[str, str] = {}
-        for name, _ in self.named_parameters():
-            mapping[name] = self._classify_parameter(name)
-        return mapping
-
-    # Curriculum component rules, in priority order. First match wins.
-    #
-    # This was a 55-line if/elif chain of substring tests whose ordering
-    # constraints lived in comments ("checked BEFORE general processing"). As a
-    # table the ordering is data, adding a component is one row, and the whole
-    # mapping can be read at once -- which matters because a name that matches
-    # nothing silently becomes "other" and is frozen at every curriculum stage.
-    #
-    # `excludes` exists for the one genuinely conditional rule: groove
-    # cross-attention parameters are "groove", but the groove *positional*
-    # encodings belong to the trunk.
-    PARAMETER_COMPONENT_RULES: Tuple[Tuple[str, Tuple[str, ...], Tuple[str, ...]], ...] = (
-        # Trunk. Positional encodings and the stream norm belong here; several
-        # families (pep_abs_pos, pep_frac_mlp, pep_pos_concat_*, *_dist_pos,
-        # groove_*_pos) previously matched nothing and were frozen at every
-        # stage without anyone noticing.
-        (
-            "trunk",
-            (
-                "aa_embedding",
-                "segment_embedding",
-                "encoder",
-                "stream_norm",
-                "pep_nterm_pos",
-                "pep_cterm_pos",
-                "pep_abs_pos",
-                "pep_frac_mlp",
-                "pep_pos_concat",
-                "mhc_pos",
-                "groove_pos",
-                "groove_1_pos",
-                "groove_2_pos",
-                "groove_1_abs_pos",
-                "groove_2_abs_pos",
-                "groove_1_end_pos",
-                "groove_2_end_pos",
-                "nflank_dist_pos",
-                "cflank_dist_pos",
-                "context_token_proj",
-            ),
-            (),
-        ),
-        ("groove", ("groove",), ("pos",)),
-        # Binding latents. The expanded topology renames pmhc_interaction to
-        # binding_affinity/binding_stability; before these entries existed those
-        # parameters matched nothing, so every curriculum stage froze the
-        # binding latents it was supposed to be training.
-        (
-            "binding_query",
-            (
-                "pmhc_interaction",
-                "binding_query",
-                "latent_queries.binding_affinity",
-                "latent_layers.binding_affinity",
-                "latent_queries.binding_stability",
-                "latent_layers.binding_stability",
-            ),
-            (),
-        ),
-        ("binding_core", ("core_window", "core_position", "pfr_length_embed"), ()),
-        ("pfr_class2", ("class2_pfr",), ()),
-        (
-            "binding_module",
-            (
-                "binding_module",
-                "affinity_predictor",
-                "binding_affinity_readout_proj",
-                "binding_stability_readout_proj",
-                "binding_direct_segment",
-            ),
-            (),
-        ),
-        ("assay_heads", ("assay_head",), ()),
-        ("processing_class1", ("processing_class1", "class1_processing"), ()),
-        ("processing_class2", ("processing_class2", "class2_processing"), ()),
-        # The excision head is the processing readout, so it trains with
-        # processing rather than being frozen at every stage.
-        # The provenance-axis embeddings are listed explicitly: they feed the
-        # processing latents, so they belong to the processing component, but
-        # their names contain neither "processing" nor "excision_head".
-        (
-            "processing",
-            (
-                "processing",
-                "excision_head",
-                "cell_lineage_embed",
-                "sample_origin_embed",
-                "disease_state_embed",
-            ),
-            (),
-        ),
-        ("presentation", ("presentation", "elution_head"), ()),
-        ("recognition", ("recognition", "foreignness", "species_of_origin"), ()),
-        ("immunogenicity", ("immunogenicity", "tcr_evidence"), ()),
-        ("ms_detectability", ("ms_detectability",), ()),
-        # MHC identity auxiliaries: inferred from sequence, trained throughout.
-        (
-            "mhc_identity",
-            (
-                "mhc_a_species_head",
-                "mhc_b_species_head",
-                "mhc_a_type_head",
-                "mhc_b_type_head",
-                "chain_compat_head",
-            ),
-            (),
-        ),
-    )
-
-    @classmethod
-    def _classify_parameter(cls, name: str) -> str:
-        """Map a parameter name to its curriculum component.
-
-        Returns ``"other"`` when nothing matches, which means the parameter is
-        frozen at every stage -- so an unmatched name is a bug, not a default.
-        """
-        for component, tokens, excludes in cls.PARAMETER_COMPONENT_RULES:
-            if any(token in name for token in tokens) and not any(
-                token in name for token in excludes
-            ):
-                return component
-        return "other"
-
-    def forward_mhc_only(
-        self,
-        mhc_a_tok: torch.Tensor,
-        mhc_b_tok: torch.Tensor,
-    ) -> Dict[str, Any]:
-        """Run only the shared stream + MHC auxiliary heads.
-
-        Used for MHC-only warm-start pretraining. This intentionally avoids the
-        pMHC latent DAG and downstream task heads.
-        """
-        if mhc_a_tok.ndim != 2 or mhc_b_tok.ndim != 2:
-            raise ValueError(
-                f"forward_mhc_only expects 2D token tensors; got "
-                f"{tuple(mhc_a_tok.shape)} and {tuple(mhc_b_tok.shape)}"
-            )
-        device = mhc_a_tok.device
-        batch_size = int(mhc_a_tok.shape[0])
-        if int(mhc_b_tok.shape[0]) != batch_size:
-            raise ValueError(
-                f"mhc_a/mhc_b batch mismatch: {batch_size} vs {int(mhc_b_tok.shape[0])}"
-            )
-
-        dummy_pep = torch.full(
-            (batch_size, 1),
-            self.missing_token_idx,
-            dtype=torch.long,
-            device=device,
-        )
-        stream = self._build_single_stream(
-            pep_tok=dummy_pep,
-            mhc_a_tok=mhc_a_tok,
-            mhc_b_tok=mhc_b_tok,
-            flank_n_tok=None,
-            flank_c_tok=None,
-        )
-        early = stream["early_states"]
-        seg_masks = stream["segment_masks"]
-
-        mhc_a_vec = self._masked_mean(early, seg_masks["mhc_a"])
-        mhc_b_vec = self._masked_mean(early, seg_masks["mhc_b"])
-        mhc_a_type_logits = self.mhc_a_type_head(mhc_a_vec)
-        mhc_b_type_logits = self.mhc_b_type_head(mhc_b_vec)
-        mhc_a_species_logits = self.mhc_a_species_head(mhc_a_vec)
-        mhc_b_species_logits = self.mhc_b_species_head(mhc_b_vec)
-
+    def _auxiliary(self, row, identity):
+        names = set(self.config.auxiliary_context) | {
+            name
+            for name in identity
+            if name in ("mhc_pairing", "tcr_pairing", "tcr_lineage")
+            or name.startswith("peptide_source:")
+        }
         return {
-            "mhc_a_vec": mhc_a_vec,
-            "mhc_b_vec": mhc_b_vec,
-            "mhc_a_type_logits": mhc_a_type_logits,
-            "mhc_b_type_logits": mhc_b_type_logits,
-            "mhc_a_species_logits": mhc_a_species_logits,
-            "mhc_b_species_logits": mhc_b_species_logits,
+            name: resolve_field(
+                identity_vocabulary(name, self.config.species, self.config.source_categories),
+                supplied=row.context.auxiliary_values.get(name),
+                override=row.context.auxiliary_overrides.get(name),
+                prediction=identity[name].detach().softmax(-1).cpu().tolist()
+                if name in identity
+                else (),
+                threshold=self.config.identity_threshold,
+            )
+            for name in sorted(names)
         }
 
-    def forward(
-        self,
-        pep_tok: torch.Tensor,
-        mhc_a_tok: torch.Tensor,
-        mhc_b_tok: torch.Tensor,
-        mhc_class: Optional[Any] = None,
-        species: Optional[Any] = None,
-        mhc_species: Optional[Any] = None,
-        immune_species: Optional[Any] = None,
-        species_of_origin: Optional[Any] = None,
-        flank_n_tok: Optional[torch.Tensor] = None,
-        flank_c_tok: Optional[torch.Tensor] = None,
-        flank_n_is_terminus: Optional[torch.Tensor] = None,
-        flank_c_is_terminus: Optional[torch.Tensor] = None,
-        tcell_context: Optional[Dict[str, torch.Tensor]] = None,
-        return_binding_attention: bool = False,
-        peptide_species: Optional[Any] = None,  # deprecated alias for species_of_origin
-        binding_context: Optional[Dict[str, torch.Tensor]] = None,
-        machinery: Optional[Any] = None,
-        provenance: Optional[Dict[str, torch.Tensor]] = None,
-    ) -> Dict[str, Any]:
-        """Forward pass through full model under the canonical outputs-only assay contract."""
-        outputs: Dict[str, Any] = {}
-
-        immune_species_input = immune_species if immune_species is not None else species
-        # A host's species does not identify the molecular MHC species (e.g.
-        # humanized mice). Only an explicit molecular override may do that.
-        mhc_species_input = mhc_species
-        species_of_origin_override = (
-            species_of_origin if species_of_origin is not None else peptide_species
+    def _resolve(self, row, mhc, identity):
+        # The classifier is supervised only by its own labels, not by assay gradients.
+        probabilities = {
+            name: value.detach().softmax(-1).cpu().tolist() for name, value in identity.items()
+        }
+        species = resolve_species(
+            self.config.species,
+            row.context,
+            mhc,
+            probabilities,
+            defaults=self.config.species_defaults,
+            threshold=self.config.identity_threshold,
         )
-
-        # ------------------------------------------------------------------
-        # 1) Build single token stream and pooled representations
-        # ------------------------------------------------------------------
-        stream = self._build_single_stream(
-            pep_tok=pep_tok,
-            mhc_a_tok=mhc_a_tok,
-            mhc_b_tok=mhc_b_tok,
-            flank_n_tok=flank_n_tok,
-            flank_c_tok=flank_c_tok,
+        class_field = None
+        if mhc is not None and mhc.groove1 and mhc.groove2:
+            class_field = resolve_field(
+                ("I", "II"),
+                supplied=mhc.mhc_class,
+                override=mhc.class_override,
+                prediction=probabilities.get("mhc_class", ()),
+                threshold=self.config.identity_threshold,
+            )
+        cell = resolve_cell_context(
+            row.context,
+            self.config.cell_types,
+            self.config.cytokines,
+            self.config.cytokine_dose_units,
+            self.config.cytokine_duration_features,
+            strict=row.endpoint != "identity"
+            and endpoint_spec(row.endpoint).route in ("cellular", "tcr_cellular"),
+            processing_pathways=self.config.processing_pathways,
+            interventions=self.config.interventions,
+            ordinal_scales=self.config.ordinal_scales,
         )
-        h = stream["states"]
-        early = stream["early_states"]
-        valid_mask = stream["valid_mask"]
-        seg_masks = stream["segment_masks"]
-        offsets = stream["offsets"]
+        components = resolve_components(
+            row.context,
+            species["apc"],
+            self.config.components,
+            self.config.machinery_profiles,
+            cell_type=cell.cell_type.value,
+            reference_profiles=self.config.machinery_references,
+        )
+        return species, class_field, components, cell
 
-        # Aux vectors pooled from early-layer states (type, species, chain compat heads only)
-        pep_vec = self._masked_mean(early, seg_masks["peptide"])
-        mhc_a_vec = self._masked_mean(early, seg_masks["mhc_a"])
-        mhc_b_vec = self._masked_mean(early, seg_masks["mhc_b"])
+    def _source(self, row, encoded):
+        context = row.context
+        values = [
+            encoded.get(context.source_n, self._zero(self.config.d_model)),
+            encoded.get(context.source_c, self._zero(self.config.d_model)),
+        ]
+        flags = [float(context.source_n is not None), float(context.source_c is not None)]
+        for value in (context.n_terminus, context.c_terminus):
+            flags.extend([float(value or False), float(value is not None)])
+        return torch.cat([*values, self._tensor(flags)])
 
-        outputs["pep_vec"] = pep_vec
-        outputs["mhc_a_vec"] = mhc_a_vec
-        outputs["mhc_b_vec"] = mhc_b_vec
-
-        # ------------------------------------------------------------------
-        # 2) Per-chain MHC inference (design S5.1-S5.4)
-        # ------------------------------------------------------------------
-        batch_size = pep_tok.shape[0]
-
-        # Per-chain type classification
-        mhc_a_type_logits = self.mhc_a_type_head(mhc_a_vec)
-        mhc_b_type_logits = self.mhc_b_type_head(mhc_b_vec)
-        mhc_a_type_probs = F.softmax(mhc_a_type_logits, dim=-1)
-        mhc_b_type_probs = F.softmax(mhc_b_type_logits, dim=-1)
-        outputs["mhc_a_type_logits"] = mhc_a_type_logits
-        outputs["mhc_b_type_logits"] = mhc_b_type_logits
-
-        # Per-chain species classification
-        mhc_a_species_logits = self.mhc_a_species_head(mhc_a_vec)
-        mhc_b_species_logits = self.mhc_b_species_head(mhc_b_vec)
-        mhc_a_species_probs = F.softmax(mhc_a_species_logits, dim=-1)
-        mhc_b_species_probs = F.softmax(mhc_b_species_logits, dim=-1)
-        outputs["mhc_a_species_logits"] = mhc_a_species_logits
-        outputs["mhc_b_species_logits"] = mhc_b_species_logits
-
-        # Compositional class probabilities from groove-half identities.
-        # Fine type indices remain:
-        # MHC_I=0, MHC_IIa=1, MHC_IIb=2, B2M=3, unknown=4
-        # But the runtime inputs are now:
-        # - class I:  (alpha1, alpha2)  -> (MHC_I, MHC_I)
-        # - class II: (alpha1, beta1)   -> (MHC_IIa, MHC_IIb)
-        class1_prob_raw = mhc_a_type_probs[:, 0] * mhc_b_type_probs[:, 0]
-        class2_prob_raw = mhc_a_type_probs[:, 1] * mhc_b_type_probs[:, 2]
-        class_sum = (class1_prob_raw + class2_prob_raw).clamp(min=1e-8)
-        inferred_class_probs = torch.stack(
+    def _covariates(self, names, values, units, expected_units):
+        for name in names:
+            if name in values and units.get(name) != expected_units[name]:
+                raise ValueError(f"numeric feature unit/scale mismatch for {name}")
+        return self._tensor(
             [
-                class1_prob_raw / class_sum,
-                class2_prob_raw / class_sum,
-            ],
-            dim=-1,
-        )
-        # Emit 2-column logits for backward compat (from compositional probs)
-        mhc_class_logits = torch.log(inferred_class_probs.clamp(min=1e-8))
-        outputs["mhc_class_logits"] = mhc_class_logits
-        outputs["mhc_class_probs_inferred"] = inferred_class_probs
-        outputs["mhc_class_pred"] = torch.argmax(mhc_class_logits, dim=-1)
-
-        # Emit combined species logits for backward compat (average of per-chain)
-        inferred_species_probs = 0.5 * (mhc_a_species_probs + mhc_b_species_probs)
-        mhc_species_logits = torch.log(inferred_species_probs.clamp(min=1e-8))
-        outputs["mhc_species_logits"] = mhc_species_logits
-        outputs["mhc_species_probs_inferred"] = inferred_species_probs
-        outputs["mhc_species_pred"] = torch.argmax(mhc_species_logits, dim=-1)
-
-        # Chain compatibility (design S5.3)
-        chain_compat_logit = self.chain_compat_head(
-            torch.cat(
-                [
-                    mhc_a_vec,
-                    mhc_b_vec,
-                    mhc_a_type_probs,
-                    mhc_b_type_probs,
-                    mhc_a_species_probs,
-                    mhc_b_species_probs,
-                ],
-                dim=-1,
-            )
-        )
-        chain_compat_prob = torch.sigmoid(chain_compat_logit)
-        outputs["chain_compat_logit"] = chain_compat_logit
-        outputs["chain_compat_prob"] = chain_compat_prob
-
-        # Override with user-provided class/species
-        if isinstance(mhc_class, torch.Tensor):
-            class_probs = _class_probs_from_input(
-                batch_size=batch_size,
-                device=pep_tok.device,
-                class_probs=mhc_class,
-            )
-        elif mhc_class is not None:
-            class_probs = _class_probs_from_input(
-                batch_size=batch_size,
-                device=pep_tok.device,
-                mhc_class=mhc_class,
-            )
-        else:
-            class_probs = inferred_class_probs
-
-        species_override_active = mhc_species_input is not None
-        if isinstance(mhc_species_input, torch.Tensor):
-            species_probs = _species_probs_from_input(
-                batch_size=batch_size,
-                device=pep_tok.device,
-                species_probs=mhc_species_input,
-            )
-        elif mhc_species_input is not None:
-            species_probs = _species_probs_from_input(
-                batch_size=batch_size,
-                device=pep_tok.device,
-                species=mhc_species_input,
-            )
-        else:
-            species_probs = inferred_species_probs
-
-        outputs["mhc_class_probs"] = class_probs
-        outputs["mhc_species_probs"] = species_probs
-        outputs["mhc_is_class1_prob"] = class_probs[:, :1]
-        outputs["mhc_is_class2_prob"] = class_probs[:, 1:2]
-        outputs["species_probs"] = species_probs
-
-        # ------------------------------------------------------------------
-        # 3) Latent query DAG with segmented attention
-        # ------------------------------------------------------------------
-        context_mhc_a_species = species_probs if species_override_active else mhc_a_species_probs
-        context_mhc_b_species = species_probs if species_override_active else mhc_b_species_probs
-        apc_cell_type_context = self.apc_cell_type_context_proj(
-            torch.cat(
-                [class_probs, context_mhc_a_species, context_mhc_b_species, chain_compat_prob],
-                dim=-1,
-            )
-        ).unsqueeze(1)
-        groove_vec = self._compute_groove_vec(
-            h=h,
-            seg_masks=seg_masks,
-            offsets=offsets,
-            class_probs=class_probs,
-        )
-        outputs["apc_cell_type_context_vec"] = apc_cell_type_context.squeeze(1)
-        outputs["groove_vec"] = groove_vec
-
-        # Which latents receive APC context token.
-        if self.latent_topology == "expanded":
-            # S7.5 "Extra tokens" column: context_vec reaches processing,
-            # binding and presentation; the groove summary reaches binding only.
-            _gets_apc_context = {
-                "processing_class1",
-                "processing_class2",
-                "binding_affinity",
-                "binding_stability",
-                "presentation_class1",
-                "presentation_class2",
-            }
-            _gets_groove = {"binding_affinity", "binding_stability"}
-            _gets_processing_extra = {"processing_class1", "processing_class2"}
-        else:
-            _gets_apc_context = {"processing", "pmhc_interaction"}
-            _gets_groove = {"pmhc_interaction"}
-            _gets_processing_extra = {"processing"}
-
-        # One token summing the three provenance axes: they describe the same
-        # sample, so the processing latents see a single combined statement of
-        # cellular context rather than three separate tokens competing for
-        # attention.
-        _prov = provenance or {}
-
-        def _axis(key: str, embed) -> torch.Tensor:
-            idx = _prov.get(key)
-            if idx is None:
-                idx = torch.zeros(batch_size, dtype=torch.long, device=pep_tok.device)
-            return embed(idx.long())
-
-        sample_context_token = (
-            _axis("cell_lineage_idx", self.cell_lineage_embed)
-            + _axis("sample_origin_idx", self.sample_origin_embed)
-            + _axis("disease_state_idx", self.disease_state_embed)
-            + self.processing_species_embed(
-                _processing_species_idx_tensor(immune_species_input, batch_size, pep_tok.device)
-            )
-        ).unsqueeze(1)
-
-        # Processing extra tokens: peptide terminal residues + length.
-        # These give the processing latent TAP/ERAP/cleavage boundary
-        # information without exposing the full peptide interior.
-        pep_slice = offsets["peptide"]
-        pep_h_proc = h[:, pep_slice, :]
-        pep_valid_proc = seg_masks["peptide"][:, pep_slice]
-        pep_len_proc = pep_valid_proc.sum(dim=1).clamp(min=1)
-        # First and last valid peptide tokens
-        pep_first = pep_h_proc[:, 0, :]  # (batch, d_model)
-        last_idx = (pep_len_proc - 1).clamp(min=0).long()
-        pep_last = pep_h_proc[torch.arange(h.shape[0], device=h.device), last_idx]
-        pep_terminal_token = self.processing_pep_terminal_proj(
-            torch.cat([pep_first, pep_last], dim=-1)
-        ).unsqueeze(1)  # (batch, 1, d_model)
-        pep_length_token = self.processing_pep_length_embed(
-            pep_len_proc.clamp(max=50).long()
-        ).unsqueeze(1)  # (batch, 1, d_model)
-        _processing_extra = [pep_terminal_token, pep_length_token]
-
-        # Variant C: pMHC interaction block (enriched representations for pMHC interaction only)
-        if self.use_pmhc_interaction_block:
-            h_binding = self._run_pmhc_interaction(h, seg_masks, offsets)
-        else:
-            h_binding = h
-
-        latent_vals: Dict[str, torch.Tensor] = {}
-        latent_store: Dict[str, torch.Tensor] = {}
-        binding_attention: Dict[str, List[torch.Tensor]] = {}
-        for name in self.CROSS_ATTN_LATENTS:
-            seg_names = self.LATENT_SEGMENTS[name]
-            allowed = torch.zeros_like(valid_mask)
-            for seg_name in seg_names:
-                allowed = allowed | seg_masks[seg_name]
-
-            extra_tokens: List[torch.Tensor] = []
-            if name in _gets_processing_extra:
-                extra_tokens.extend(_processing_extra)
-                extra_tokens.append(sample_context_token)
-                # The cellular-condition token used to be appended here, which
-                # made the processing latent depend on the observed APM state
-                # and stimulus. "stimulation context" is on the forbidden-input
-                # list in docs/assay_modeling_contract.md, and conditioning
-                # here meant a presentation prediction required declaring the
-                # cell's state first.
-                #
-                # The excision head now sweeps those axes instead
-                # (excision_panel_apm / excision_panel_stimulus), so the same
-                # parameters are trained by prediction rather than by
-                # conditioning, and the trunk stays condition-free.
-            if name in _gets_apc_context:
-                extra_tokens.append(apc_cell_type_context)
-            if name in _gets_groove:
-                extra_tokens.append(groove_vec.unsqueeze(1))
-
-            is_binding = name in self.BINDING_LATENT_NAMES
-            collect = bool(return_binding_attention and is_binding)
-            attn_layers = None
-
-            if is_binding:
-                latent_vec, latent_tokens, binding_diag = self._binding_latent_query(
-                    name=name,
-                    h=h_binding,
-                    seg_masks=seg_masks,
-                    offsets=offsets,
-                    latent_store=latent_store,
-                    dep_names=self.LATENT_DEPS[name],
-                    class_probs=class_probs,
-                    extra_tokens=extra_tokens if extra_tokens else None,
-                    collect_attn=collect,
-                )
-                latent_store[name] = latent_tokens
-                outputs.update(
-                    {key: value for key, value in binding_diag.items() if key != "attn_layers"}
-                )
-                if binding_diag.get("attn_layers"):
-                    binding_attention[name] = list(binding_diag["attn_layers"])
-            else:
-                latent_vec, attn_layers = self._latent_query(
-                    name=name,
-                    h=h,
-                    allowed_mask=allowed,
-                    latent_store=latent_store,
-                    dep_names=self.LATENT_DEPS[name],
-                    extra_tokens=extra_tokens if extra_tokens else None,
-                    collect_attn=collect,
-                )
-                latent_store[name] = latent_vec
-            latent_vals[name] = latent_vec
-            if attn_layers:
-                binding_attention[name] = list(attn_layers)
-
-            # After species_of_origin: optional latent override, then foreignness.
-            if name == "species_of_origin":
-                if species_of_origin_override is not None:
-                    species_idx_t = _species_idx_tensor(
-                        species_of_origin_override,
-                        batch_size,
-                        latent_vec.device,
-                    )
-                    latent_vals["species_of_origin"] = self._species_override_latent(
-                        species_idx_t, latent_vals["species_of_origin"]
-                    )
-                    latent_store["species_of_origin"] = latent_vals["species_of_origin"]
-                latent_vals["foreignness"] = self.foreignness_proj(
-                    F.gelu(latent_vals["species_of_origin"])
-                )
-                latent_store["foreignness"] = latent_vals["foreignness"]
-
-        if self.latent_topology == "expanded":
-            # Each specified latent has its own query, so read them directly
-            # rather than projecting out of a shared one.
-            interaction_vec = self.pmhc_interaction_vec_norm(latent_vals["binding_affinity"])
-            stability_interaction_vec = self.pmhc_interaction_vec_norm(
-                latent_vals["binding_stability"]
-            )
-            recognition_cd8_raw = latent_vals["recognition_cd8"]
-            recognition_cd4_raw = latent_vals["recognition_cd4"]
-            processing_vec = latent_vals["processing_class1"]
-            recognition_vec = recognition_cd8_raw
-            # Collapsed-topology aliases, kept so trunk-state reconstruction and
-            # probe code that reads the old latent names keeps working.
-            latent_vals["pmhc_interaction"] = interaction_vec
-            latent_vals["processing"] = processing_vec
-            latent_vals["recognition"] = recognition_vec
-        else:
-            processing_vec = latent_vals["processing"]
-            interaction_vec = self.pmhc_interaction_vec_norm(latent_vals["pmhc_interaction"])
-            latent_vals["pmhc_interaction"] = interaction_vec
-            recognition_vec = latent_vals["recognition"]
-            stability_interaction_vec = interaction_vec
-            recognition_cd8_raw = recognition_vec
-            recognition_cd4_raw = recognition_vec
-
-        # Binding readouts. Collapsed shares one interaction vector across both;
-        # expanded gives stability its own latent.
-        binding_affinity_vec = self.binding_affinity_readout_proj(interaction_vec)
-        binding_stability_vec = self.binding_stability_readout_proj(stability_interaction_vec)
-        # Only computed when a direct-segment mode is active; the projections
-        # are not allocated when the mode is "off".
-        if self.binding_direct_segment_mode != "off":
-            direct_segment_input = torch.cat([pep_vec, mhc_a_vec, mhc_b_vec], dim=-1)
-            direct_affinity_vec = self.binding_direct_segment_affinity_proj(direct_segment_input)
-            direct_stability_vec = self.binding_direct_segment_stability_proj(direct_segment_input)
-        if self.binding_direct_segment_mode == "affinity_residual":
-            binding_affinity_vec = binding_affinity_vec + direct_affinity_vec
-        elif self.binding_direct_segment_mode == "affinity_stability_residual":
-            binding_affinity_vec = binding_affinity_vec + direct_affinity_vec
-            binding_stability_vec = binding_stability_vec + direct_stability_vec
-        elif self.binding_direct_segment_mode == "gated_affinity":
-            gate = torch.sigmoid(
-                self.binding_direct_segment_gate(
-                    torch.cat([binding_affinity_vec, direct_affinity_vec], dim=-1)
-                )
-            )
-            binding_affinity_vec = (1.0 - gate) * binding_affinity_vec + gate * direct_affinity_vec
-            outputs["binding_direct_segment_gate_mean"] = gate.mean()
-        outputs["binding_direct_segment_mode"] = self.binding_direct_segment_mode
-        if self.binding_direct_segment_mode != "off":
-            outputs["binding_direct_affinity_vec"] = direct_affinity_vec
-            outputs["binding_direct_stability_vec"] = direct_stability_vec
-
-        if self.latent_topology == "expanded":
-            processing_class1_vec = latent_vals["processing_class1"]
-            processing_class2_vec = latent_vals["processing_class2"]
-            # Presentation is a pure bottleneck: its latent already cross-attends
-            # to {processing_classX, binding_affinity, binding_stability} and to
-            # no tokens at all, so there is no MLP to apply here.
-            presentation_class1_vec = self.presentation_class1_vec_norm(
-                latent_vals["presentation_class1"]
-            )
-            presentation_class2_vec = self.presentation_class2_vec_norm(
-                latent_vals["presentation_class2"]
-            )
-            immunogenicity_inputs_cd8 = [
-                interaction_vec,
-                stability_interaction_vec,
-                recognition_cd8_raw,
+                item
+                for name in names
+                for item in (float(values.get(name, 0.0)), float(name in values))
             ]
-            immunogenicity_inputs_cd4 = [
-                interaction_vec,
-                stability_interaction_vec,
-                recognition_cd4_raw,
-            ]
-        else:
-            # Class-specific processing projections
-            processing_class1_vec = self.processing_class1_proj(processing_vec)
-            processing_class2_vec = self.processing_class2_proj(processing_vec)
+        )
 
-            # Class-specific presentation MLPs
-            presentation_class1_vec = self.presentation_class1_vec_norm(
-                self.presentation_class1_mlp(
-                    torch.cat([processing_class1_vec, interaction_vec], dim=-1)
+    def _context(self, row, encoded, species, components, auxiliary, cell):
+        route = endpoint_spec(row.endpoint).route
+        cellular = route in ("cellular", "tcr_cellular")
+        receptor = route in ("tcr", "tcr_cellular")
+        values = []
+        if self.has_tcr:
+            values.append(
+                torch.cat([encoded[row.peptide], encoded[row.tcr_a], encoded[row.tcr_b]])
+                if receptor
+                else self._zero(3 * self.config.d_model)
+            )
+        if self.config.source_context and self.has_cellular:
+            values.append(
+                self._source(row, encoded) if cellular else self._zero(2 * self.config.d_model + 6)
+            )
+        allowed_roles = set()
+        if cellular:
+            allowed_roles.update(("apc", "immune"))
+        if receptor:
+            allowed_roles.update(("tcr_a", "tcr_b", "repertoire"))
+        for role in self.config.context_species:
+            values.append(
+                self._tensor(species[role].probabilities)
+                if role in allowed_roles
+                else self._zero(len(self.config.species))
+            )
+        for name in self.config.components:
+            component = components[name]
+            features = [float(component.state == state) for state in STATES]
+            if name in self.config.component_activity_units:
+                if (
+                    component.activity is not None
+                    and component.unit != self.config.component_activity_units[name]
+                ):
+                    raise ValueError(f"activity unit mismatch for {name}")
+                features.extend([component.activity or 0.0, float(component.activity is not None)])
+            values.append(self._tensor(features) if cellular else self._zero(len(features)))
+        if self.config.cell_types:
+            features = [*cell.cell_type.probabilities, float(cell.cell_type.source == "unknown")]
+            values.append(self._tensor(features) if cellular else self._zero(len(features)))
+        for name in self.config.cytokines:
+            exposure = cell.cytokines[name]
+            features = [float(exposure.state == state) for state in EXPOSURE_STATES]
+            if name in self.config.cytokine_dose_units:
+                features.extend([math.log1p(exposure.dose or 0), float(exposure.dose is not None)])
+            if name in self.config.cytokine_duration_features:
+                features.extend(
+                    [
+                        math.log1p(exposure.duration_hours or 0),
+                        float(exposure.duration_hours is not None),
+                    ]
                 )
+            values.append(self._tensor(features) if cellular else self._zero(len(features)))
+        for configured, resolved in (
+            (self.config.processing_pathways, cell.processing_pathways),
+            (self.config.interventions, cell.interventions),
+        ):
+            for name in configured:
+                features = [float(resolved[name].state == state) for state in EXPOSURE_STATES]
+                values.append(self._tensor(features) if cellular else self._zero(len(features)))
+        for name in sorted(self.config.ordinal_scales):
+            scale = self.config.ordinal_scales[name]
+            level = cell.ordinal_values[name].level
+            features = [float(level == label) for label in (*scale.levels, None)]
+            values.append(self._tensor(features) if cellular else self._zero(len(features)))
+        if self.has_cellular:
+            values.append(
+                self._tensor([float(row.context.delivery == value) for value in DELIVERY])
+                if cellular
+                else self._zero(len(DELIVERY))
             )
-            presentation_class2_vec = self.presentation_class2_vec_norm(
-                self.presentation_class2_mlp(
-                    torch.cat([processing_class2_vec, interaction_vec], dim=-1)
-                )
+        if self.has_coreceptor:
+            state = row.context.coreceptor_override or row.context.coreceptor
+            values.append(
+                self._tensor([float(state == value) for value in CORECEPTORS])
+                if row.endpoint in ("tcell_response", "tcr_response")
+                else self._zero(len(CORECEPTORS))
             )
-            immunogenicity_inputs_cd8 = [interaction_vec, recognition_cd8_raw]
-            immunogenicity_inputs_cd4 = [interaction_vec, recognition_cd4_raw]
-
-        # Lineage-specific immunogenicity MLPs
-        immunogenicity_cd8_vec = self.immunogenicity_cd8_vec_norm(
-            self.immunogenicity_cd8_mlp(torch.cat(immunogenicity_inputs_cd8, dim=-1))
-        )
-        immunogenicity_cd4_vec = self.immunogenicity_cd4_vec_norm(
-            self.immunogenicity_cd4_mlp(torch.cat(immunogenicity_inputs_cd4, dim=-1))
-        )
-
-        latent_vals["binding_affinity"] = binding_affinity_vec
-        latent_vals["binding_stability"] = binding_stability_vec
-        latent_vals["processing_class1"] = processing_class1_vec
-        latent_vals["processing_class2"] = processing_class2_vec
-        latent_vals["presentation_class1"] = presentation_class1_vec
-        latent_vals["presentation_class2"] = presentation_class2_vec
-        latent_vals["recognition_cd8"] = recognition_cd8_raw
-        latent_vals["recognition_cd4"] = recognition_cd4_raw
-        latent_vals["immunogenicity_cd8"] = immunogenicity_cd8_vec
-        latent_vals["immunogenicity_cd4"] = immunogenicity_cd4_vec
-        # Compat aliases for training code
-        latent_vals["processing_mixed"] = processing_vec
-        latent_vals["recognition_mixed"] = recognition_vec
-        latent_vals["immunogenicity_mixed"] = immunogenicity_cd8_vec
-        latent_vals["presentation_mixed"] = presentation_class1_vec
-
-        # ------------------------------------------------------------------
-        # Excision: was this peptide cut out of its source protein by this
-        # machinery? Scores both junctions from the residues that flank them.
-        # ------------------------------------------------------------------
-        machinery_idx = self._resolve_machinery_idx(
-            machinery, class_probs, batch_size, pep_tok.device
-        )
-        cathepsin_idx = EXCISION_MACHINERY_TO_IDX["cathepsin"]
-        junction_vec = torch.where(
-            (machinery_idx == cathepsin_idx).unsqueeze(-1),
-            processing_class2_vec,
-            processing_class1_vec,
-        )
-        fallback_token = self.missing_token_idx
-        window = self.excision_head.junction_window
-        n_pad = self._pad_for_side(
-            flank_n_is_terminus,
-            batch_size,
-            pep_tok.device,
-            boundary_token=self.boundary_token_idx,
-        )
-        c_pad = self._pad_for_side(
-            flank_c_is_terminus,
-            batch_size,
-            pep_tok.device,
-            boundary_token=self.boundary_token_idx,
-        )
-        peptide_lengths = (pep_tok != 0).long().sum(dim=1)
-        excision_outputs = self.excision_head(
-            processing_vec=junction_vec,
-            machinery_idx=machinery_idx,
-            # C-terminal junction: peptide's last residue is P1, the first
-            # C-flank residue is P1'.
-            p1_c_idx=self._last_valid_token(pep_tok, batch_size, pep_tok.device, fallback_token),
-            p1_prime_c_idx=self._first_valid_token(
-                flank_c_tok, batch_size, pep_tok.device, fallback_token
-            ),
-            # N-terminal junction: the last N-flank residue is P1, the
-            # peptide's first residue is P1'.
-            p1_n_idx=self._last_valid_token(
-                flank_n_tok, batch_size, pep_tok.device, fallback_token
-            ),
-            p1_prime_n_idx=self._first_valid_token(
-                pep_tok, batch_size, pep_tok.device, fallback_token
-            ),
-            # Subsite windows for the in-vivo branch. The peptide supplies one
-            # side of each junction and is always present; only the flank side
-            # can be absent.
-            #
-            # An absent flank pads with <TERMINUS> where the protein ended and
-            # <MISSING> where the peptide was never mapped. Those are opposite
-            # claims: the first says the context definitively does not exist --
-            # and on the C side, that no proteasomal cut was required, because
-            # the terminus was already there.
-            window_c_idx=torch.cat(
-                [
-                    self._last_valid_window(
-                        pep_tok, batch_size, pep_tok.device, fallback_token, window
-                    ),
-                    self._first_valid_window(
-                        flank_c_tok, batch_size, pep_tok.device, c_pad, window
-                    ),
-                ],
-                dim=1,
-            ),
-            window_n_idx=torch.cat(
-                [
-                    self._last_valid_window(flank_n_tok, batch_size, pep_tok.device, n_pad, window),
-                    self._first_valid_window(
-                        pep_tok, batch_size, pep_tok.device, fallback_token, window
-                    ),
-                ],
-                dim=1,
-            ),
-            peptide_len=peptide_lengths,
-            peptide_tokens=pep_tok,
-            peptide_source_idx=(provenance or {}).get("peptide_source_idx"),
-            processing_stimulus_idx=(provenance or {}).get("processing_stimulus_idx"),
-            apm_perturbation_idx=(provenance or {}).get("apm_perturbation_idx"),
-        )
-        outputs.update(excision_outputs)
-        outputs["excision_prob"] = torch.sigmoid(excision_outputs["excision_logit"])
-        outputs["excision_machinery_idx"] = machinery_idx
-
-        outputs["latent_vecs"] = latent_vals
-        if return_binding_attention and binding_attention:
-            mhc_mask = torch.cat(
-                [
-                    seg_masks["mhc_a"][:, offsets["mhc_a"]],
-                    seg_masks["mhc_b"][:, offsets["mhc_b"]],
-                ],
-                dim=1,
+        for name in self.config.auxiliary_context:
+            if name == "mhc_pairing":
+                continue
+            allowed = (
+                (name == "tcr_pairing" and receptor)
+                or (name == "tcr_lineage" and row.endpoint == "tcr_response")
+                or (name.startswith("peptide_source:") and cellular)
             )
-            outputs.update(self._binding_attention_stats(binding_attention, mhc_mask))
+            values.append(self._tensor(auxiliary[name].probabilities) if allowed else self._zero(2))
+        return torch.cat(values) if values else self._zero(0)
 
-        # Species of origin and foreignness readouts
-        outputs["species_of_origin_logits"] = self.species_of_origin_head(
-            latent_vals["species_of_origin"]
-        )
-        foreignness_logit = self.foreignness_head(latent_vals["foreignness"])
-        outputs["foreignness_logit"] = foreignness_logit
-        outputs["foreignness_prob"] = torch.sigmoid(foreignness_logit)
+    def _staged_elution(self, hidden, processing):
+        """Elution logit with binding/stability entering only via their own scores.
 
-        # pmhc_vec = interaction_vec (backward compat alias)
-        outputs["pmhc_vec"] = interaction_vec
-        outputs["pmhc_interaction_vec"] = interaction_vec
-        trunk_state = self._trunk_state_from_outputs(outputs)
-
-        # ------------------------------------------------------------------
-        # 6) Processing logits (from proc latents)
-        # ------------------------------------------------------------------
-        outputs.update(self.predict_processing_from_trunk(trunk_state))
-
-        # ------------------------------------------------------------------
-        # 7) Binding latents and calibrated binding logit
-        # ------------------------------------------------------------------
-        outputs.update(
-            self.predict_affinity_from_trunk(
-                trunk_state,
-                mhc_class=mhc_class,
-                binding_context=binding_context,
-                species_probs=outputs.get("species_probs"),
-            )
-        )
-        binding_class1_logit = outputs["binding_class1_logit"]
-        binding_class2_logit = outputs["binding_class2_logit"]
-
-        # ------------------------------------------------------------------
-        # 8) Presentation logits from the shared presentation vector
-        # ------------------------------------------------------------------
-        outputs.update(self.predict_presentation_from_trunk(trunk_state))
-        # In-vivo excision -> class I presentation (gap 2).
-        #
-        # The excision head already computes an in-vivo branch for MHC-source
-        # rows, but nothing consumed it: excision *labels* exist only on
-        # shotgun (protein-source) rows, so the in-vivo profiles sat at their
-        # init receiving exactly zero gradient. An eluted peptide's termini are
-        # themselves evidence of in-vivo cleavage, and processing is upstream
-        # of presentation in the documented DAG, so routing the in-vivo logit
-        # into class I presentation supervises those parameters from elution
-        # labels -- which vary with APM state, giving the KO-vs-WT contrast
-        # something to act on.
-        #
-        # Applied to the class I branch because proteasome/ERAP excision is the
-        # class I pathway; class II peptides are cut endosomally by cathepsins.
-        # Note this is a soft assignment, not a hard gate: the term enters
-        # `presentation_class1_logit`, which the class mixture then weights by
-        # `class_probs[:, :1]`. A class II row therefore contributes this term
-        # in proportion to the class head's error rather than exactly zero.
-        # Gated to MHC-source rows so shotgun rows keep their own excision loss
-        # as the only thing training the in-vitro branch.
-        excision_logit = outputs["excision_logit"]
-        peptide_source_idx = (provenance or {}).get("peptide_source_idx")
-        if peptide_source_idx is None:
-            is_mhc_source = torch.zeros_like(excision_logit)
-        else:
-            # Positive test for `mhc`, not "anything that is not protein".
-            # PEPTIDE_SOURCES is ['unknown', 'mhc', 'protein'], so the negated
-            # form also fired on `unknown` -- asserting in-vivo proteasomal
-            # origin for rows whose provenance was simply not recorded.
-            is_mhc_source = (peptide_source_idx.long() == self.excision_head.mhc_source_index).to(
-                excision_logit.dtype
-            )
-        invivo_presentation_term = (
-            F.softplus(self.w_invivo_excision_presentation) * is_mhc_source * excision_logit
-        )
-        class1_pres_logit_base = outputs["presentation_class1_logit"]
-        if class1_pres_logit_base.ndim > invivo_presentation_term.ndim:
-            invivo_presentation_term = invivo_presentation_term.reshape(
-                invivo_presentation_term.shape[0],
-                *([1] * (class1_pres_logit_base.ndim - 1)),
-            )
-        outputs["presentation_class1_logit"] = class1_pres_logit_base + invivo_presentation_term
-        outputs["presentation_invivo_excision_term"] = invivo_presentation_term
-        # Re-mix: the class-weighted presentation logit is what the elution
-        # loss consumes, so without recomputing it the edge above would be
-        # dead weight -- present in the class I readout and absent from every
-        # trained objective.
-        outputs["presentation_class1_prob"] = torch.sigmoid(outputs["presentation_class1_logit"])
-        remixed_logit = (
-            class_probs[:, :1] * outputs["presentation_class1_logit"]
-            + class_probs[:, 1:2] * outputs["presentation_class2_logit"]
-        )
-        outputs["presentation_logit"] = remixed_logit
-        outputs["presentation_mixed_logit"] = remixed_logit
-        outputs["presentation_prob"] = torch.sigmoid(remixed_logit)
-        outputs["presentation_mixed_prob"] = outputs["presentation_prob"]
-        class1_pres_logit = outputs["presentation_class1_logit"]
-        class2_pres_logit = outputs["presentation_class2_logit"]
-        pres_logit = outputs["presentation_logit"]
-
-        # ------------------------------------------------------------------
-        # 9) Presentation-linked observables
-        # ------------------------------------------------------------------
-        ms_detectability_logit = self.ms_detectability_head(latent_vals["ms_detectability"])
-        outputs["ms_detectability_logit"] = ms_detectability_logit
-
-        # Elution logit = f(pres_logit, ms_detectability_logit) — no pmhc_vec (S9.3)
-        elution_logit = self.elution_head(pres_logit, ms_detectability_logit)
-        outputs["elution_logit"] = elution_logit
-        outputs["elution_prob"] = torch.sigmoid(elution_logit)
-        # ms_logit == elution_logit per S9.3 (same tensor, no separate head)
-        outputs["ms_logit"] = elution_logit
-        outputs["ms_prob"] = torch.sigmoid(elution_logit)
-
-        # ------------------------------------------------------------------
-        # 10) Recognition and immunogenicity readouts
-        # ------------------------------------------------------------------
-        recognition_cd8_logit = self.recognition_cd8_head(recognition_cd8_raw)
-        recognition_cd4_logit = self.recognition_cd4_head(recognition_cd4_raw)
-        outputs["recognition_cd8_logit"] = recognition_cd8_logit
-        outputs["recognition_cd4_logit"] = recognition_cd4_logit
-        outputs["recognition_cd8_prob"] = torch.sigmoid(recognition_cd8_logit)
-        outputs["recognition_cd4_prob"] = torch.sigmoid(recognition_cd4_logit)
-
-        # Repertoire logit: class-weighted mixture of cd8/cd4 recognition (S9.4)
-        recognition_repertoire_logit = (
-            class_probs[:, :1] * recognition_cd8_logit + class_probs[:, 1:2] * recognition_cd4_logit
-        )
-        outputs["recognition_repertoire_logit"] = recognition_repertoire_logit
-        outputs["recognition_repertoire_prob"] = torch.sigmoid(recognition_repertoire_logit)
-        outputs["recognition_mixed_logit"] = recognition_repertoire_logit
-        outputs["recognition_mixed_prob"] = outputs["recognition_repertoire_prob"]
-
-        # Immunogenicity readout from lineage-specific latent vecs (design S9.5)
-        immunogenicity_cd8_vec = trunk_state.immunogenicity_cd8_vec
-        immunogenicity_cd4_vec = trunk_state.immunogenicity_cd4_vec
-        immunogenicity_cd8_logit = self.immunogenicity_cd8_latent_head(immunogenicity_cd8_vec)
-        immunogenicity_cd4_logit = self.immunogenicity_cd4_latent_head(immunogenicity_cd4_vec)
-        outputs["immunogenicity_cd8_logit"] = immunogenicity_cd8_logit
-        outputs["immunogenicity_cd4_logit"] = immunogenicity_cd4_logit
-        outputs["immunogenicity_cd8_prob"] = torch.sigmoid(immunogenicity_cd8_logit)
-        outputs["immunogenicity_cd4_prob"] = torch.sigmoid(immunogenicity_cd4_logit)
-
-        # Recognition enters per lineage, before the class mixture: CD8
-        # recognition informs CD8 immunogenicity and CD4 likewise, which is the
-        # pairing the lineage-specific latents already encode.
-        recognition_gain = F.softplus(self.w_recognition_immunogenicity)
-        immunogenicity_cd8_logit = (
-            immunogenicity_cd8_logit + recognition_gain * recognition_cd8_logit
-        )
-        immunogenicity_cd4_logit = (
-            immunogenicity_cd4_logit + recognition_gain * recognition_cd4_logit
-        )
-        outputs["immunogenicity_cd8_logit"] = immunogenicity_cd8_logit
-        outputs["immunogenicity_cd4_logit"] = immunogenicity_cd4_logit
-        outputs["immunogenicity_cd8_prob"] = torch.sigmoid(immunogenicity_cd8_logit)
-        outputs["immunogenicity_cd4_prob"] = torch.sigmoid(immunogenicity_cd4_logit)
-        # Reports the class-weighted mixture of the terms actually added
-        # above, not the repertoire logit. Those differ whenever class_probs
-        # are not degenerate, so subtracting this to recover the
-        # pre-recognition logit previously gave the wrong number.
-        outputs["immunogenicity_recognition_term"] = class_probs[:, :1] * (
-            recognition_gain * recognition_cd8_logit
-        ) + class_probs[:, 1:2] * (recognition_gain * recognition_cd4_logit)
-
-        immunogenicity_mixture_logit = (
-            class_probs[:, :1] * immunogenicity_cd8_logit
-            + class_probs[:, 1:2] * immunogenicity_cd4_logit
-        )
-        outputs["immunogenicity_mixture_logit"] = immunogenicity_mixture_logit
-        outputs["immunogenicity_mixed_logit"] = immunogenicity_mixture_logit
-        outputs["immunogenicity_logit"] = immunogenicity_mixture_logit.squeeze(-1)
-        outputs["immunogenicity_prob"] = torch.sigmoid(outputs["immunogenicity_logit"])
-        outputs["immunogenicity_mixed_prob"] = torch.sigmoid(immunogenicity_mixture_logit)
-
-        # ------------------------------------------------------------------
-        # 11) Fixed T-cell assay tracks. Metadata selects losses, not inputs.
-        # ------------------------------------------------------------------
-        tcell_logit = self.tcell_assay_head(
-            immunogenicity_cd8_vec=immunogenicity_cd8_vec,
-            immunogenicity_cd4_vec=immunogenicity_cd4_vec,
-            presentation_class1_logit=class1_pres_logit,
-            presentation_class2_logit=class2_pres_logit,
-            binding_class1_logit=binding_class1_logit,
-            binding_class2_logit=binding_class2_logit,
-            class_probs=class_probs,
-        )
-        tcell_panel_logits = self.tcell_assay_head.predict_panel(
-            immunogenicity_cd8_vec=immunogenicity_cd8_vec,
-            immunogenicity_cd4_vec=immunogenicity_cd4_vec,
-            presentation_class1_logit=class1_pres_logit,
-            presentation_class2_logit=class2_pres_logit,
-            binding_class1_logit=binding_class1_logit,
-            binding_class2_logit=binding_class2_logit,
-            class_probs=class_probs,
-        )
-        outputs["tcell_logit"] = tcell_logit
-        outputs["tcell_prob"] = torch.sigmoid(tcell_logit)
-        outputs["tcell_context_logits"] = tcell_panel_logits
-        outputs["tcell_panel_logits"] = tcell_panel_logits
-
-        # ------------------------------------------------------------------
-        # 12) pMHC-only receptor-evidence outputs
-        # ------------------------------------------------------------------
-        tcr_evidence_logit = self.tcr_evidence_head(interaction_vec)
-        tcr_evidence_method_logits = self.tcr_evidence_method_head(interaction_vec)
-        outputs["tcr_evidence_logit"] = tcr_evidence_logit
-        outputs["tcr_evidence_prob"] = torch.sigmoid(tcr_evidence_logit)
-        outputs["tcr_evidence_method_logits"] = tcr_evidence_method_logits
-        outputs["tcr_evidence_method_probs"] = torch.sigmoid(tcr_evidence_method_logits)
-
-        return outputs
-
-    def forward_affinity_only(
-        self,
-        pep_tok: torch.Tensor,
-        mhc_a_tok: torch.Tensor,
-        mhc_b_tok: torch.Tensor,
-        mhc_class: Optional[Any] = None,
-        species: Optional[Any] = None,
-        mhc_species: Optional[Any] = None,
-        immune_species: Optional[Any] = None,
-        species_of_origin: Optional[Any] = None,
-        flank_n_tok: Optional[torch.Tensor] = None,
-        flank_c_tok: Optional[torch.Tensor] = None,
-        flank_n_is_terminus: Optional[torch.Tensor] = None,
-        flank_c_is_terminus: Optional[torch.Tensor] = None,
-        peptide_species: Optional[Any] = None,
-        binding_context: Optional[Dict[str, torch.Tensor]] = None,
-    ) -> Dict[str, Any]:
-        """Affinity-only forward under the canonical sequence-only input contract."""
-        del binding_context
-        outputs = self.forward(
-            pep_tok=pep_tok,
-            mhc_a_tok=mhc_a_tok,
-            mhc_b_tok=mhc_b_tok,
-            mhc_class=mhc_class,
-            species=species,
-            mhc_species=mhc_species,
-            immune_species=immune_species,
-            species_of_origin=species_of_origin,
-            flank_n_tok=flank_n_tok,
-            flank_c_tok=flank_c_tok,
-            peptide_species=peptide_species,
-            flank_n_is_terminus=flank_n_is_terminus,
-            flank_c_is_terminus=flank_c_is_terminus,
-            binding_context=None,
-        )
-        affinity_keys = {
-            "pep_vec",
-            "mhc_a_vec",
-            "mhc_b_vec",
-            "groove_vec",
-            "pmhc_vec",
-            "pmhc_interaction_vec",
-            "mhc_class_probs",
-            "mhc_is_class1_prob",
-            "mhc_is_class2_prob",
-            "species_probs",
-            "assays",
-            "binding_latents",
-            "binding_affinity_probe_kd_raw",
-            "binding_affinity_probe_kd",
-            "binding_affinity_score_raw",
-            "binding_affinity_score",
-            "binding_stability_score_raw",
-            "binding_stability_score",
-            "binding_assay_context_vec",
-            "binding_logit_from_core",
-            "binding_kd_bias_raw",
-            "binding_kd_bias",
-            "binding_kd_bias_cap",
-            "binding_probe_mix_weight",
-            "binding_core_kd_log10",
-            "binding_mixed_kd_log10",
-            "binding_base_logit",
-            "binding_class1_logit",
-            "binding_class2_logit",
-            "binding_logit",
-            "binding_mixed_logit",
-            "binding_class1_prob",
-            "binding_class2_prob",
-            "binding_prob",
-            "binding_mixed_prob",
-            "latent_vecs",
-            "core_window_mask",
-            "core_window_start",
-            "core_window_length",
-            "core_window_prior_logit",
-            "core_window_score_logit",
-            "core_window_logit",
-            "core_window_posterior_prob",
-            "core_start_logit",
-            "core_start_prob",
-            "core_start_probs",
-            "core_membership_prob",
-            "core_relative_position_index",
-            "core_length",
-            "npfr_length",
-            "cpfr_length",
-            "core_length_norm",
-            "npfr_length_norm",
-            "cpfr_length_norm",
-            "binding_mhc_attention_effective_residues",
-            "binding_mhc_attention_mass",
-            "binding_mhc_attention_valid_mask",
-            "binding_mhc_attention_token_count",
-        }
-        return {key: value for key, value in outputs.items() if key in affinity_keys}
-
-    def forward_presentation_only(
-        self,
-        pep_tok: torch.Tensor,
-        mhc_a_tok: torch.Tensor,
-        mhc_b_tok: torch.Tensor,
-        mhc_class: Optional[Any] = None,
-        species: Optional[Any] = None,
-        mhc_species: Optional[Any] = None,
-        immune_species: Optional[Any] = None,
-        species_of_origin: Optional[Any] = None,
-        flank_n_tok: Optional[torch.Tensor] = None,
-        flank_c_tok: Optional[torch.Tensor] = None,
-        flank_n_is_terminus: Optional[torch.Tensor] = None,
-        flank_c_is_terminus: Optional[torch.Tensor] = None,
-        peptide_species: Optional[Any] = None,
-    ) -> Dict[str, Any]:
-        outputs = self.forward(
-            pep_tok=pep_tok,
-            mhc_a_tok=mhc_a_tok,
-            mhc_b_tok=mhc_b_tok,
-            mhc_class=mhc_class,
-            species=species,
-            mhc_species=mhc_species,
-            immune_species=immune_species,
-            species_of_origin=species_of_origin,
-            flank_n_tok=flank_n_tok,
-            flank_c_tok=flank_c_tok,
-            peptide_species=peptide_species,
-            flank_n_is_terminus=flank_n_is_terminus,
-            flank_c_is_terminus=flank_c_is_terminus,
-        )
-        presentation_keys = {
-            "pep_vec",
-            "mhc_a_vec",
-            "mhc_b_vec",
-            "groove_vec",
-            "pmhc_vec",
-            "pmhc_interaction_vec",
-            "mhc_class_probs",
-            "mhc_is_class1_prob",
-            "mhc_is_class2_prob",
-            "species_probs",
-            "processing_logit",
-            "processing_class1_logit",
-            "processing_class2_logit",
-            "processing_prob",
-            "presentation_logit",
-            "presentation_class1_logit",
-            "presentation_class2_logit",
-            "presentation_prob",
-            "presentation_mixed_logit",
-            "ms_detectability_logit",
-            "elution_logit",
-            "elution_prob",
-            "ms_logit",
-            "ms_prob",
-            "latent_vecs",
-        }
-        return {key: value for key, value in outputs.items() if key in presentation_keys}
-
-    def encode_pmhc(
-        self,
-        pep_tok: torch.Tensor,
-        mhc_a_tok: torch.Tensor,
-        mhc_b_tok: torch.Tensor,
-        mhc_class: str = "I",
-    ) -> torch.Tensor:
-        """Encode pMHC into a fixed vector representation.
-
-        Returns interaction_vec (pmhc_interaction_vec_dim) from the latent DAG.
+        The affinity score is the reference-track decoder of the configured affinity
+        endpoint, register-pooled with that endpoint's direction (as for the affinity
+        endpoints themselves); higher affinity (lower value) raises the logit.
         """
-        outputs = self.forward(
-            pep_tok=pep_tok,
-            mhc_a_tok=mhc_a_tok,
-            mhc_b_tok=mhc_b_tok,
-            mhc_class=mhc_class,
+        affinity_endpoint = self.config.elution_affinity_endpoint
+        affinity = self.assay_layer.score(hidden, affinity_endpoint)
+        if self.config.elution_detach_affinity:
+            affinity = affinity.detach()
+        pooled, attention = self._pool_registers(
+            affinity, endpoint_spec(affinity_endpoint).register_direction
         )
-        return outputs["pmhc_vec"]
+        binding = -self.elution_affinity_weight * pooled
+        total = binding + processing
+        terms = {"binding": binding, "processing": processing}
+        if self.elution_stability:
+            stability, _ = self._pool_registers(
+                self.heads["half_life"](hidden).squeeze(-1),
+                endpoint_spec("half_life").register_direction,
+            )
+            terms["stability"] = self.elution_stability_weight * stability
+            total = total + terms["stability"]
+        return affinity, total, attention, terms
+
+    def _pmhc(self, row, mhc, encoded, token_states):
+        identity = self._identity(row, mhc, encoded)
+        species, class_field, components, cell = self._resolve(row, mhc, identity)
+        auxiliary = self._auxiliary(row, identity)
+        if class_field.source in ("unknown", "unsupported"):
+            raise ValueError(
+                "MHC class must be supplied or predicted by an allocated identity task"
+            )
+        pooled, register_info = [], []
+        panel = {
+            track.key: [] for track in self.config.assay_tracks if track.endpoint == row.endpoint
+        }
+        contextual = endpoint_spec(row.endpoint).route != "pmhc"
+        context = (
+            self._context(row, encoded, species, components, auxiliary, cell)
+            if contextual
+            else None
+        )
+        staged = self.staged_elution and row.endpoint == "elution_observation"
+        processing = (
+            self.elution_processing(torch.cat([encoded[row.peptide], context])).squeeze(-1)
+            if staged
+            else None
+        )
+        for index, weight in enumerate(class_field.probabilities):
+            if weight == 0:
+                continue
+            mhc_class = ("I", "II")[index]
+            if mhc_class not in self.config.mhc_classes:
+                raise ValueError("effective class is outside this checkpoint's supported branches")
+            register_candidates = candidates(row.peptide, mhc_class)
+            candidate_vectors = self._interaction_candidates(
+                row.peptide, mhc, register_candidates, token_states
+            )
+            features = [
+                torch.cat(
+                    [
+                        candidate_vectors[candidate_index],
+                        encoded[mhc.groove1],
+                        encoded[mhc.groove2],
+                        self._tensor(species["mhc1"].probabilities + species["mhc2"].probabilities),
+                        *(
+                            [self._tensor(auxiliary["mhc_pairing"].probabilities)]
+                            if "mhc_pairing" in self.config.auxiliary_context
+                            else []
+                        ),
+                    ]
+                )
+                for candidate_index in range(len(register_candidates))
+            ]
+            hidden = self.pmhc_fusion(torch.stack(features))
+            if contextual and not staged:
+                hidden = self.context_fusion(
+                    torch.cat([hidden, context.expand(len(hidden), -1)], -1)
+                )
+            spec = endpoint_spec(row.endpoint)
+            terms = None
+            if staged:
+                scores, value, attention, terms = self._staged_elution(hidden, processing)
+            else:
+                scores = (
+                    self._component_score(row.endpoint, "cellular", hidden)
+                    if "cellular" in spec.parts
+                    else self.assay_layer.score(hidden, row.endpoint)
+                    if row.endpoint in self.affinity_endpoints
+                    else self.heads[row.endpoint](hidden).squeeze(-1)
+                )
+                value, attention = self._pool_registers(scores, spec.register_direction)
+            pooled.append(weight * value)
+            if panel:
+                for key, assay_scores in self.assay_layer(hidden, row.endpoint).items():
+                    track_value, _ = self._pool_registers(assay_scores, spec.register_direction)
+                    panel[key].append(weight * track_value)
+            register_info.append(
+                {
+                    "class": mhc_class,
+                    "class_probability": weight,
+                    "flank_representation": self.config.peptide_context,
+                    "starts": [x[0] for x in register_candidates],
+                    "weights": attention,
+                    "candidate_scores": scores,
+                    "pooling": "normalized_logsumexp_model_units",
+                    "direction": spec.register_direction,
+                    "entropy": -(attention * attention.clamp_min(1e-12).log()).sum(),
+                    **({"elution_terms": terms} if terms is not None else {}),
+                }
+            )
+        diagnostics = {
+            "mhc": asdict(mhc),
+            "species": {name: asdict(value) for name, value in species.items()},
+            "class": asdict(class_field),
+            "components": {name: asdict(value) for name, value in components.items()},
+            "cell_context": {
+                **asdict(cell),
+                "applies_to_endpoint": endpoint_spec(row.endpoint).route
+                in ("cellular", "tcr_cellular"),
+            },
+            "registers": register_info,
+            "auxiliary": {name: asdict(value) for name, value in auxiliary.items()},
+        }
+        return (
+            torch.stack(pooled).sum(0),
+            identity,
+            diagnostics,
+            {key: torch.stack(values).sum(0) for key, values in panel.items()},
+        )
+
+    def forward(self, rows: Sequence[Observation]) -> list[Prediction]:
+        if not rows:
+            return []
+        for row in rows:
+            row.validate(self.config.max_length)
+            if row.endpoint != "identity" and row.endpoint not in self.config.endpoints:
+                raise ValueError(f"endpoint not allocated: {row.endpoint}")
+            if row.endpoint != "identity" and endpoint_spec(row.endpoint).quantitative:
+                if (
+                    row.quantity_contract
+                    != self.config.quantity_domains[quantity_domain(row.endpoint)]
+                ):
+                    raise ValueError("quantity measurement contract differs from checkpoint domain")
+        encoded, token_states = self._encode(rows)
+        results = []
+        for row in rows:
+            output = Prediction(row.observation_id, row.endpoint)
+            if row.endpoint == "identity":
+                mhc = row.mhc[0] if row.mhc else None
+                output.identity = self._identity(row, mhc, encoded)
+                species, mhc_class, _, cell = self._resolve(row, mhc, output.identity)
+                output.diagnostics = {
+                    "species": {key: asdict(value) for key, value in species.items()},
+                    "class": asdict(mhc_class) if mhc_class else None,
+                    "cell_context": {**asdict(cell), "applies_to_endpoint": False},
+                    "auxiliary": {
+                        name: asdict(value)
+                        for name, value in self._auxiliary(row, output.identity).items()
+                    },
+                }
+                results.append(output)
+                continue
+            spec = endpoint_spec(row.endpoint)
+            route = spec.route
+            if route in ("bulk", "digest", "detector"):
+                output.identity = self._identity(row, None, encoded)
+                output.diagnostics["auxiliary"] = {
+                    name: asdict(value)
+                    for name, value in self._auxiliary(row, output.identity).items()
+                }
+            if "ms_response" in spec.parts:
+                ms_features = torch.cat(
+                    [
+                        encoded[row.peptide],
+                        self._covariates(
+                            self.config.acquisition_features,
+                            row.context.acquisition,
+                            row.context.acquisition_units,
+                            self.config.acquisition_units,
+                        ),
+                    ]
+                )
+                output.components["ms_response"] = self._component_score(
+                    row.endpoint, "ms_response", self.ms_fusion(ms_features)
+                )
+            if route in ("bulk", "digest"):
+                enzyme = row.context.enzyme
+                if enzyme is not None and enzyme not in self.config.enzymes:
+                    raise ValueError(f"enzyme outside checkpoint vocabulary: {enzyme}")
+                features = [encoded[row.peptide]]
+                if self.config.source_context:
+                    features.append(self._source(row, encoded))
+                features.append(
+                    self._tensor([float(enzyme == name) for name in (*self.config.enzymes, None)])
+                )
+                features.append(
+                    self._covariates(
+                        self.config.preparation_features,
+                        row.context.preparation,
+                        row.context.preparation_units,
+                        self.config.preparation_units,
+                    )
+                )
+                output.components["digest"] = self._component_score(
+                    row.endpoint, "digest", self.digest_fusion(torch.cat(features))
+                )
+            if route in ("pmhc", "cellular", "tcr", "tcr_cellular"):
+                # Provenance differences do not duplicate a biological candidate.
+                unique = {}
+                for mhc in row.mhc:
+                    key = (
+                        mhc.groove1,
+                        mhc.groove2,
+                        mhc.mhc_class,
+                        mhc.class_override,
+                        mhc.species1,
+                        mhc.species2,
+                    )
+                    unique.setdefault(key, mhc)
+                vectors, diagnostics = [], []
+                for mhc in unique.values():
+                    vector, identity, diagnostic, panel = self._pmhc(
+                        row, mhc, encoded, token_states
+                    )
+                    vectors.append(vector)
+                    diagnostics.append(diagnostic)
+                    if len(unique) == 1:
+                        output.identity = identity
+                        output.assay_values = panel
+                output.diagnostics["candidates"] = diagnostics
+                if "cellular" in spec.parts:
+                    scores = torch.stack(vectors)
+                    staged = self.staged_elution and row.endpoint == "elution_observation"
+                    output.components["elution_presentation" if staged else "cellular"] = (
+                        self._candidate_mean(row.endpoint, scores)
+                    )
+                    if staged:
+                        output.diagnostics["elution_staging"] = {
+                            "mode": self.config.elution_staging,
+                            "affinity_endpoint": self.config.elution_affinity_endpoint,
+                            "affinity_detached": self.config.elution_detach_affinity,
+                            "stability_term": self.elution_stability,
+                            "processing_term": (
+                                "processing"
+                                if self.config.source_context
+                                else "processing_peptide_only"
+                            ),
+                            "processing_identified": False,
+                        }
+                else:
+                    output.value = vectors[0]
+            if row.endpoint in self.offsets:
+                if not spec.observation_covariates:
+                    covariates = self._zero(0)
+                else:
+                    covariates = self._covariates(
+                        self.config.observation_features,
+                        row.context.observation,
+                        row.context.observation_units,
+                        self.config.observation_units,
+                    )
+                output.value = sum(output.components.values()) + self.offsets[row.endpoint](
+                    covariates
+                ).squeeze(-1)
+            output.reference_value = output.value
+            selected = self.assay_selection(row)
+            if selected is not None:
+                output.value = output.assay_values[selected.key]
+            if row.endpoint in self.affinity_endpoints:
+                output.diagnostics["measurement"] = {
+                    "selected_track": selected.key if selected else None,
+                    "method": asdict(observation_method(row)),
+                    "mode": self.config.assay_mode,
+                    "reference_interpretation": (
+                        "unknown-method prediction from the shared decoder, "
+                        "not thermodynamic affinity"
+                    ),
+                }
+            results.append(output)
+        return results
+
+    def capabilities(self) -> dict:
+        outputs = {
+            name: self.support.get(
+                name, {"status": "not_allocated", "observations": 0, "validation": "not_evaluated"}
+            )
+            for name in dict.fromkeys((*ENDPOINTS, *self.config.endpoints, *IDENTITY_TASKS))
+        }
+        components = {}
+        for name, anchor, mixtures, allocated in (
+            (
+                "ms_response",
+                "ms_response",
+                ("bulk_observation", "elution_observation"),
+                hasattr(self, "ms_score"),
+            ),
+            ("digest", "digest_observation", ("bulk_observation",), hasattr(self, "digest_score")),
+            (
+                "cellular",
+                None,
+                ("elution_observation",),
+                "elution_observation" in self.config.endpoints,
+            ),
+        ):
+            status = "random/untrained" if allocated else "not_allocated"
+            if anchor and outputs[anchor]["status"] in ("directly_supervised", "pretrained_frozen"):
+                status = outputs[anchor]["status"]
+            elif any(
+                outputs[endpoint]["status"] in ("directly_supervised", "pretrained_frozen")
+                for endpoint in mixtures
+            ):
+                status = "indirectly_trained"
+            components[name] = {
+                "status": status,
+                "validation": "not_evaluated",
+                "identifiable_from_mixture_labels_alone": False,
+                "frozen": allocated and frozen_output(self, f"component:{name}"),
+            }
+        source_membership = {
+            name: {
+                "status": (
+                    "not_allocated"
+                    if "peptide_source" not in self.identity_heads
+                    else "directly_supervised"
+                    if values
+                    else "random/untrained"
+                ),
+                "observed_labels": sorted(values),
+                "validation": self.support.get("peptide_source", {}).get(
+                    "validation", "not_evaluated"
+                ),
+            }
+            for name, values in self.source_label_support.items()
+        }
+        quantity_components = {}
+        for domain, readouts in self.quantity_scores.items():
+            quantity_components[domain] = {}
+            for component in readouts:
+                relevant = [
+                    name
+                    for name in self.config.endpoints
+                    if quantity_domain(name) == domain and component in endpoint_spec(name).parts
+                ]
+                direct = [
+                    name
+                    for name in relevant
+                    if len(endpoint_spec(name).parts) == 1
+                    and outputs[name]["status"] in ("directly_supervised", "pretrained_frozen")
+                ]
+                indirect = [
+                    name
+                    for name in relevant
+                    if outputs[name]["status"] in ("directly_supervised", "pretrained_frozen")
+                ]
+                quantity_components[domain][component] = {
+                    "status": "directly_supervised"
+                    if direct
+                    else "indirectly_trained"
+                    if indirect
+                    else "random/untrained",
+                    "anchor_endpoints": direct,
+                    "validation": "not_evaluated",
+                    "identifiable_from_mixture_labels_alone": False,
+                    "contract": asdict(self.config.quantity_domains[domain]),
+                    "frozen": frozen_output(self, f"component:{component}:{domain}"),
+                }
+        return {
+            "outputs": outputs,
+            "assay_tracks": self.assay_capabilities(),
+            "components": components,
+            "source_membership": source_membership,
+            "quantity_components": quantity_components,
+            "freeze": {
+                "targets": list(self.frozen_targets),
+                "parameters": sorted(self.frozen_parameters),
+            },
+        }
+
+    def predict(self, rows: Sequence[Observation]) -> list[Prediction]:
+        """Inference refuses random requested outputs; qualification stays visible."""
+        track_support = None
+        for row in rows:
+            row.validate(self.config.max_length)
+            selected = self.assay_selection(row)
+            if selected is not None and track_support is None:
+                track_support = self.assay_capabilities()
+            if selected is not None and track_support[selected.key]["status"] == "random/untrained":
+                raise ValueError(f"assay track: no trained support for {selected.key}")
+            relevant_identity = tuple(
+                name for name in self.config.identity_tasks if has_identity_input(row, name)
+            )
+            requested = (
+                relevant_identity
+                if row.endpoint == "identity"
+                else (row.endpoint, *relevant_identity)
+            )
+            if not requested:
+                raise ValueError("no allocated identity capability for these inputs")
+            if "peptide_source" in requested:
+                missing_categories = [
+                    key for key, values in self.source_label_support.items() if not values
+                ]
+                if missing_categories:
+                    raise ValueError(f"untrained peptide source outputs: {missing_categories}")
+            if row.endpoint != "identity" and endpoint_spec(row.endpoint).route in (
+                "cellular",
+                "tcr_cellular",
+            ):
+                unsupported = (
+                    set(row.context.components) | set(row.context.component_overrides)
+                ) - set(self.config.components)
+                if unsupported:
+                    raise ValueError(
+                        "unsupported APC component effects: " + ", ".join(sorted(unsupported))
+                    )
+            for name in requested:
+                if self.support.get(name, {}).get("status", "not_allocated") in (
+                    "not_allocated",
+                    "random/untrained",
+                ):
+                    raise ValueError(f"{name}: no trained output support")
+            if row.endpoint != "identity" and any(
+                not (candidate.class_override or candidate.mhc_class) for candidate in row.mhc
+            ):
+                if self.support.get("mhc_class", {}).get("status") not in (
+                    "directly_supervised",
+                    "pretrained_frozen",
+                ):
+                    raise ValueError("inferred class requires trained identity support")
+        required = {name for name, _ in self.named_parameters() if name.startswith("encoder.")}
+        prefixes = set()
+        for row in rows:
+            prefixes.update(
+                f"identity_heads.{task}."
+                for task in self.config.identity_tasks
+                if has_identity_input(row, task)
+            )
+            if row.endpoint == "identity":
+                continue
+            route = endpoint_spec(row.endpoint).route
+            if route in ("pmhc", "cellular", "tcr", "tcr_cellular"):
+                prefixes.update(("pmhc_fusion.", "residue_interaction.", "interaction_norm."))
+                if len(row.peptide) > 9 and any(
+                    (mhc.class_override or mhc.mhc_class) != "I" for mhc in row.mhc
+                ):
+                    prefixes.add("register_score.")
+            staged_row = self.staged_elution and row.endpoint == "elution_observation"
+            if staged_row:
+                required.update(staged_elution_parameters(self))
+            elif route in ("cellular", "tcr", "tcr_cellular"):
+                prefixes.add("context_fusion.")
+            spec = endpoint_spec(row.endpoint)
+            if "ms_response" in spec.parts:
+                prefixes.add("ms_fusion.")
+            if route in ("bulk", "digest"):
+                prefixes.add("digest_fusion.")
+            domain = quantity_domain(row.endpoint)
+            for part in spec.parts:
+                prefixes.add(
+                    f"quantity_scores.{domain}.{part}."
+                    if domain is not None
+                    else "ms_score."
+                    if part == "ms_response"
+                    else f"{part}_score."
+                )
+            prefixes.update((f"heads.{row.endpoint}.", f"offsets.{row.endpoint}."))
+        required.update(
+            name
+            for name, _ in self.named_parameters()
+            if any(name.startswith(prefix) for prefix in prefixes)
+        )
+        missing = required - self.trained_parameters
+        if missing:
+            raise ValueError(
+                "requested path contains parameters without gradient/update evidence: "
+                + ", ".join(sorted(missing))
+            )
+        was_training = self.training
+        try:
+            self.eval()
+            with torch.no_grad(), feature_inputs(self, enforce=True):
+                result = self(rows)
+                for output in result:
+                    output.diagnostics["support"] = self.capabilities()
+                return result
+        finally:
+            self.train(was_training)

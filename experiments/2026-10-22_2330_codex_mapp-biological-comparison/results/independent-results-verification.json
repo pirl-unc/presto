@@ -1,0 +1,376 @@
+{
+  "artifact_hashes": {
+    "exact-context-seed42/gradient-coverage.pt": "db6d11401c0262a7d3f870dc89d570e193ebb89b9b49fa1799c340c1c3cb2132",
+    "exact-context-seed42/history.json": "150c70683eb1afb210080a0cfef053e9de2309e42f886286e1385bff6613bc67",
+    "exact-context-seed42/initial.pt": "4a6731f44dad51a771bf3305b19f6757839bc4a26589b6e13a34ab2d1afe1377",
+    "exact-context-seed42/last.pt": "4be6068a35ff16699626407781b3c890e3c553723d95d9b95cadab86d6a9befb",
+    "exact-context-seed42/predictions.jsonl.gz": "39d6f49bb2416464c33fb95116f140b5ac1fe543b5d9f74a4849fa4eafa03f8c",
+    "exact-context-seed42/selected.pt": "441980a99c939ffce95a0f2c5b1cb075d6c2f34707bfe6f4977754781e6d43e6",
+    "exact-context-seed42/summary.json": "8368f23280cae6aae0fc007ad0f435ecf61d70924935d6b74dcafd5d042f3a9d",
+    "exact-context-seed43/gradient-coverage.pt": "db6d11401c0262a7d3f870dc89d570e193ebb89b9b49fa1799c340c1c3cb2132",
+    "exact-context-seed43/history.json": "462a3ccbad1ee1d65dec5082f6a72a72296dba9e9cf94783e9207e93a82bdd09",
+    "exact-context-seed43/initial.pt": "1ac5596765b7ce61dab57970183310ba5c02037b838d63c2a3875fb3c1408333",
+    "exact-context-seed43/last.pt": "87897563a4fd91e0f58c5bd7d2b2d52b29f836a66b65dea8f25651e20f0f7c31",
+    "exact-context-seed43/predictions.jsonl.gz": "d87a421c5dd56f1b3f1bb3b699bdec41e362404e5f7f9f099d48538020dfdd8e",
+    "exact-context-seed43/selected.pt": "0c5d4e00ac46b96fd320bba19821fc9e8051f2b262724bf5d6db7239b4908ba6",
+    "exact-context-seed43/summary.json": "b7d02e4478fdf6083636940269451aa8f150484d12206e2a1ac28092e6554d50",
+    "exact-context-seed44/gradient-coverage.pt": "db6d11401c0262a7d3f870dc89d570e193ebb89b9b49fa1799c340c1c3cb2132",
+    "exact-context-seed44/history.json": "eb120d71c66af60cf9e796e5b4102006ac4ac38be0cd2fcd3a1c707bb25bad40",
+    "exact-context-seed44/initial.pt": "985d606621140aad2387e24c0078e14b002d72b976fb83e58f04fb6879f9f0bd",
+    "exact-context-seed44/last.pt": "2469d44172c6d58346063099813b7d81c600d33de962cfd097a7c052cc6244ab",
+    "exact-context-seed44/predictions.jsonl.gz": "8ffbdbc0a84f971051b0ac1b6c266025ca2db02ad3ffba7103fe31e7d491c177",
+    "exact-context-seed44/selected.pt": "07f78cb8e22c9359054be6d9d6b0ec7a41a764d103be251b8fc6a818fae793c9",
+    "exact-context-seed44/summary.json": "8d59a1916cbeb3d691db35f2a6ed55af61079eabd6195ee5cd831a39ea6e0c26",
+    "exact-no-context-seed42/gradient-coverage.pt": "697b6e2aa3b1ef5a540b86dc1574c5da2bdf1745f60e23ecac53f88d4f2182c3",
+    "exact-no-context-seed42/history.json": "1d6ab0443d842ec79cc540682dafcfb87d143ca9d867ffd5a85a8e79a4d8aec3",
+    "exact-no-context-seed42/initial.pt": "abb50f3d28756d74aac4cebb7341aa311353e546a093cef9374987fc90fcb9d0",
+    "exact-no-context-seed42/last.pt": "bcce111351dee233e993ba3447357debd68e685ba3d9f44d6308e04ce22ff17a",
+    "exact-no-context-seed42/predictions.jsonl.gz": "80e2d7509ce1a82e59d4d031593675f6793cfdd194bcae3460f1fbf0c2dd2741",
+    "exact-no-context-seed42/selected.pt": "9fa761ff3c7203c9b4f0835df599a32ce1b1edd55c66c252558990fb84e8f678",
+    "exact-no-context-seed42/summary.json": "79556ee251c9fcfdcdc8b990deba29c875a442b45188e6bd8a1cfe5070b5d130",
+    "exact-no-context-seed43/gradient-coverage.pt": "697b6e2aa3b1ef5a540b86dc1574c5da2bdf1745f60e23ecac53f88d4f2182c3",
+    "exact-no-context-seed43/history.json": "9e85ccd104d035280582dac3647492eaeb93e1362f3aa13eef84166a9bc2d012",
+    "exact-no-context-seed43/initial.pt": "d665e071918bcb034b33775c5e94d728f0636244c16e535dd74184ef555f973c",
+    "exact-no-context-seed43/last.pt": "fbd4dc55da86e32d04be4e932a465fd59e0eecbc1cca907885ff4ac6d47d1d1a",
+    "exact-no-context-seed43/predictions.jsonl.gz": "beaced90f1de4ca0a17695baea6c2e6c3ea515c97c1fc71a4184014a9b20d2a8",
+    "exact-no-context-seed43/selected.pt": "781a119f34d78f908ced3bb38eda47af8cbce42796463476a426420f4530227f",
+    "exact-no-context-seed43/summary.json": "db645607a87e01d0277ad22438a77db4f09f846e4f34f4052f32ea5f1d9c8025",
+    "exact-no-context-seed44/gradient-coverage.pt": "697b6e2aa3b1ef5a540b86dc1574c5da2bdf1745f60e23ecac53f88d4f2182c3",
+    "exact-no-context-seed44/history.json": "a069a6fae4c2007b204b60c11564a6f6e0cff15e8809430fa3ddf9d58586d890",
+    "exact-no-context-seed44/initial.pt": "2f8bbf862f92cecf8443ff16d06645890022f5497675e81a234140021c00ae1a",
+    "exact-no-context-seed44/last.pt": "ef0c1c7b6731d579201119ddebad5916e03ba35f70b881f6da23a077f61f82ad",
+    "exact-no-context-seed44/predictions.jsonl.gz": "cb72947e79abaf219562702d2f41083c5c5133df68d377b96e257eafa038d8de",
+    "exact-no-context-seed44/selected.pt": "11e1fa17a3ea302bf9e8af8caaf288c1ed22b6c2d36bba506123d040fbd3930a",
+    "exact-no-context-seed44/summary.json": "9be35e1f282bd8bffa7356b5f17f08b2addd74e22bc2661894328724e84477cc",
+    "reinforce64-context-seed42/gradient-coverage.pt": "db6d11401c0262a7d3f870dc89d570e193ebb89b9b49fa1799c340c1c3cb2132",
+    "reinforce64-context-seed42/history.json": "80e89747747ec18934dce1a49f8d9a952dc0f8ecf0b6839b740916bf18a9af17",
+    "reinforce64-context-seed42/initial.pt": "e6445d652b8d9034cd410006b3eef792d04654cded13c1bcc1a0475732383556",
+    "reinforce64-context-seed42/last.pt": "4222d0b8f2a481472b0d691fc3188a55019fb4fe1352de6ff1e09a108ddfeffa",
+    "reinforce64-context-seed42/predictions.jsonl.gz": "bfa2b04d613e5f55f2ec1eb5555970b9abda72be40c093c746e606d5c62dc512",
+    "reinforce64-context-seed42/selected.pt": "0a844143d59617ab778429b236765d530177b4cff8f6a66d778fdab085662d6b",
+    "reinforce64-context-seed42/summary.json": "966f701cae5ce4fa69fbea388f5f07be3a75e182d4f37e3da475f3d745933688",
+    "reinforce64-context-seed43/gradient-coverage.pt": "db6d11401c0262a7d3f870dc89d570e193ebb89b9b49fa1799c340c1c3cb2132",
+    "reinforce64-context-seed43/history.json": "3f95bc585d38bab1c21b61e3bc98e8f14be336dbe8313e4ef915c47107990f35",
+    "reinforce64-context-seed43/initial.pt": "d98156637febdbdbae5aeae86a703132086b23c6ef21188bb2f28a701cbfc60c",
+    "reinforce64-context-seed43/last.pt": "7681b6cd6fdb5ed49d9da7e500d5827fadee5077714e2fd0839d1238e9f8c912",
+    "reinforce64-context-seed43/predictions.jsonl.gz": "ae4f4c363ccd3ceea29d88e620ebfcf54255b50bac1e610c2f41eebb7211dede",
+    "reinforce64-context-seed43/selected.pt": "9e193cf41699b85cfd8002f2985cbb850552d456d475304d5c00878b49a1d745",
+    "reinforce64-context-seed43/summary.json": "7cd45228305c6948e058b9d0ae252c95cd8ca8e117267193ed2bc976c9502aec",
+    "reinforce64-context-seed44/gradient-coverage.pt": "db6d11401c0262a7d3f870dc89d570e193ebb89b9b49fa1799c340c1c3cb2132",
+    "reinforce64-context-seed44/history.json": "beda731662f087fb5d10f9b69c20eddcd8ff8f7b1a2d37e6be65cac8e2956b54",
+    "reinforce64-context-seed44/initial.pt": "eee65ab9df4295a8d2c62a8e3b27edd2acd5fdd475e4e21f6dfaa5977446ce7e",
+    "reinforce64-context-seed44/last.pt": "c1609eba8480d4cb6ae411d9575d1f7af2018c2c22f0949515f75920926ef79d",
+    "reinforce64-context-seed44/predictions.jsonl.gz": "f2f9d9b7c26322087f904900cb09d45e96689868c991629dd97c7e15ee329378",
+    "reinforce64-context-seed44/selected.pt": "e443f4cfca347011695f64dabe59083e5c9ce57362c69e98e1e0f9e810268911",
+    "reinforce64-context-seed44/summary.json": "6b6f72e4a18412dca9a1df98360b26fa17a7dcedbf45bab75e5e46f4e41a07af",
+    "uniform-predictions.jsonl.gz": "75e2447d140fa2ea0888869ce0dc9a706c2cd539a128636f83822f05ff4f5717"
+  },
+  "checks": [
+    {
+      "run": "exact-context-seed42",
+      "selected_epoch": 2,
+      "untrained_input_columns": {
+        "length_head.0.weight": [
+          1,
+          20,
+          21,
+          22,
+          43,
+          44,
+          45,
+          53,
+          58,
+          63,
+          64,
+          66,
+          67,
+          89,
+          90,
+          112,
+          113
+        ],
+        "start_head.0.weight": [
+          20,
+          21,
+          43,
+          44,
+          45
+        ]
+      },
+      "updates": 720
+    },
+    {
+      "run": "reinforce64-context-seed42",
+      "selected_epoch": 3,
+      "untrained_input_columns": {
+        "length_head.0.weight": [
+          1,
+          20,
+          21,
+          22,
+          43,
+          44,
+          45,
+          53,
+          58,
+          63,
+          64,
+          66,
+          67,
+          89,
+          90,
+          112,
+          113
+        ],
+        "start_head.0.weight": [
+          20,
+          21,
+          43,
+          44,
+          45
+        ]
+      },
+      "updates": 720
+    },
+    {
+      "run": "exact-no-context-seed42",
+      "selected_epoch": 3,
+      "untrained_input_columns": {
+        "length_head.0.weight": [
+          1,
+          20,
+          21,
+          22,
+          43,
+          44,
+          45,
+          53,
+          58,
+          63,
+          64,
+          66,
+          67,
+          89,
+          90,
+          112,
+          113
+        ],
+        "start_head.0.weight": [
+          20,
+          21,
+          43,
+          44,
+          45
+        ]
+      },
+      "updates": 720
+    },
+    {
+      "run": "exact-context-seed43",
+      "selected_epoch": 3,
+      "untrained_input_columns": {
+        "length_head.0.weight": [
+          1,
+          20,
+          21,
+          22,
+          43,
+          44,
+          45,
+          53,
+          58,
+          63,
+          64,
+          66,
+          67,
+          89,
+          90,
+          112,
+          113
+        ],
+        "start_head.0.weight": [
+          20,
+          21,
+          43,
+          44,
+          45
+        ]
+      },
+      "updates": 720
+    },
+    {
+      "run": "reinforce64-context-seed43",
+      "selected_epoch": 3,
+      "untrained_input_columns": {
+        "length_head.0.weight": [
+          1,
+          20,
+          21,
+          22,
+          43,
+          44,
+          45,
+          53,
+          58,
+          63,
+          64,
+          66,
+          67,
+          89,
+          90,
+          112,
+          113
+        ],
+        "start_head.0.weight": [
+          20,
+          21,
+          43,
+          44,
+          45
+        ]
+      },
+      "updates": 720
+    },
+    {
+      "run": "exact-no-context-seed43",
+      "selected_epoch": 3,
+      "untrained_input_columns": {
+        "length_head.0.weight": [
+          1,
+          20,
+          21,
+          22,
+          43,
+          44,
+          45,
+          53,
+          58,
+          63,
+          64,
+          66,
+          67,
+          89,
+          90,
+          112,
+          113
+        ],
+        "start_head.0.weight": [
+          20,
+          21,
+          43,
+          44,
+          45
+        ]
+      },
+      "updates": 720
+    },
+    {
+      "run": "exact-context-seed44",
+      "selected_epoch": 3,
+      "untrained_input_columns": {
+        "length_head.0.weight": [
+          1,
+          20,
+          21,
+          22,
+          43,
+          44,
+          45,
+          53,
+          58,
+          63,
+          64,
+          66,
+          67,
+          89,
+          90,
+          112,
+          113
+        ],
+        "start_head.0.weight": [
+          20,
+          21,
+          43,
+          44,
+          45
+        ]
+      },
+      "updates": 720
+    },
+    {
+      "run": "reinforce64-context-seed44",
+      "selected_epoch": 3,
+      "untrained_input_columns": {
+        "length_head.0.weight": [
+          1,
+          20,
+          21,
+          22,
+          43,
+          44,
+          45,
+          53,
+          58,
+          63,
+          64,
+          66,
+          67,
+          89,
+          90,
+          112,
+          113
+        ],
+        "start_head.0.weight": [
+          20,
+          21,
+          43,
+          44,
+          45
+        ]
+      },
+      "updates": 720
+    },
+    {
+      "run": "exact-no-context-seed44",
+      "selected_epoch": 3,
+      "untrained_input_columns": {
+        "length_head.0.weight": [
+          1,
+          20,
+          21,
+          22,
+          43,
+          44,
+          45,
+          53,
+          58,
+          63,
+          64,
+          66,
+          67,
+          89,
+          90,
+          112,
+          113
+        ],
+        "start_head.0.weight": [
+          20,
+          21,
+          43,
+          44,
+          45
+        ]
+      },
+      "updates": 720
+    }
+  ],
+  "elapsed_seconds": 1.8571280830074102,
+  "max_numpy_logmass_error": 1.327809197704255e-06,
+  "max_numpy_logq_error": 1.3415266444383178e-06,
+  "n_examples_per_fit": 202,
+  "n_fits": 9,
+  "n_prediction_values": 11088,
+  "passed": true,
+  "scope": "Independent NumPy forward, metrics, work counts, checkpoints, feature coverage and input/source hashes; not biological origin or latent-mass identification",
+  "verifier_sha256": "6cbfb09dd128f800bdbeb67f6974d5508bbd961fc6db49717da4a3a4160de61c"
+}

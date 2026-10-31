@@ -1,0 +1,71 @@
+{
+  "status": "closed_materialization_backed_up",
+  "files": {
+    "endpoint-support.json": {
+      "sha256": "6c37a06782d20e34f9345e57eb639897ab7f9ff6ce9c105c8e0dd7680bf708ac",
+      "bytes": 563
+    },
+    "hitlist-v4-iedb-test.jsonl": {
+      "sha256": "0bfcabe1c2b0765fcf912460d76699ef0196f4c66c866950b613897564304d67",
+      "bytes": 13734097
+    },
+    "hitlist-v4-iedb-train.jsonl": {
+      "sha256": "d87c062bb156af8fb9be730cb28f874ce2cb62e6b457a2a29970552e6827448a",
+      "bytes": 1048994178
+    },
+    "hitlist-v4-iedb-validation.jsonl": {
+      "sha256": "cc93d281fd2138cc7a7af1c262f694dd0a28012da22e91098a76e36bbda27fd5",
+      "bytes": 18814243
+    },
+    "hitlist_ligand_background-test.jsonl": {
+      "sha256": "c1c1cf95caf66903721d2226caa9744d062acabed44cae9052f929b0f08911a9",
+      "bytes": 441280650
+    },
+    "hitlist_ligand_background-train.jsonl": {
+      "sha256": "6c264dcdc771a400fe73a7730fe2149b205984ce24f21638e78faeb4f7e60b1d",
+      "bytes": 13075158576
+    },
+    "hitlist_ligand_background-validation.jsonl": {
+      "sha256": "0f32d0f097e0a691be50b66689deba2a473c629ae73552d7d48ce3dcc8a1795d",
+      "bytes": 121404197
+    },
+    "hitlist_native_ms-test.jsonl": {
+      "sha256": "a1a3507783cc1a258c24f455691837b039d1e03028e364ad57ba3ad2e59e6d05",
+      "bytes": 86049209
+    },
+    "hitlist_native_ms-train.jsonl": {
+      "sha256": "bc709276b36bd456a09451deba140aeb618c9614a79505981e7567d1a0b0e203",
+      "bytes": 12893756833
+    },
+    "hitlist_native_ms-validation.jsonl": {
+      "sha256": "0023355b4b6b695223e12031b7fbe4bee752704be7c0e8184fe10a26800d3923",
+      "bytes": 23930050
+    },
+    "human-ensembl112.pep.fa": {
+      "sha256": "5644731720534cdbe2cad5429e6cf4cc9035e3b52b714eb1c89af29f135415fa",
+      "bytes": 84819518
+    },
+    "membership.jsonl.gz": {
+      "sha256": "d2354a654400e67c55d0be67287da6d908343f917b4bb892a2cdc788c7972ac4",
+      "bytes": 206059379
+    },
+    "partition-dispositions.jsonl.gz": {
+      "sha256": "6119d14370609ba1710bbd4c5c6944c9150a4c84b2b4b076bbb7b90aa372c962",
+      "bytes": 373419
+    },
+    "study-selection.json": {
+      "sha256": "8510be1645ac18a7c915e2aa33a6742a53dde1a428f0f83c8a023246304d3c07",
+      "bytes": 411697
+    },
+    "wide-multi-s42.json": {
+      "sha256": "ae31a0b353313d0a1c6c7d8e4cbd958c72e2952207c448ebf3b16cd503390e16",
+      "bytes": 9764
+    },
+    "wide-multi-s43.json": {
+      "sha256": "d75b643fcf0062ba011069a37f5db4ae220919dc7501d3f94381508b2409daba",
+      "bytes": 9764
+    }
+  },
+  "created_unix": 1793230956.8813744,
+  "scope": "Source rows and frozen membership only; canonical preflight and independent audit must still pass before any fit. No model predictions."
+}

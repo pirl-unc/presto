@@ -1,0 +1,93 @@
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0* Host massive-ftp.ucsd.edu:21 was resolved.
+* IPv6: (none)
+* IPv4: 169.228.32.139
+*   Trying 169.228.32.139:21...
+* Connected to massive-ftp.ucsd.edu (169.228.32.139) port 21
+< 220 SFTPGo_2.7.1
+> AUTH SSL
+< 234 AUTH command ok. Expecting TLS Negotiation.
+* (304) (OUT), TLS handshake, Client hello (1):
+} [307 bytes data]
+*  CAfile: /etc/ssl/cert.pem
+*  CApath: none
+* (304) (IN), TLS handshake, Server hello (2):
+{ [122 bytes data]
+* (304) (IN), TLS handshake, Unknown (8):
+{ [10 bytes data]
+* (304) (IN), TLS handshake, Certificate (11):
+{ [6120 bytes data]
+* (304) (IN), TLS handshake, CERT verify (15):
+{ [264 bytes data]
+* (304) (IN), TLS handshake, Finished (20):
+{ [36 bytes data]
+* (304) (OUT), TLS handshake, Finished (20):
+} [36 bytes data]
+* SSL connection using TLSv1.3 / AEAD-CHACHA20-POLY1305-SHA256 / [blank] / UNDEF
+* Server certificate:
+*  subject: C=US; ST=California; L=La Jolla; O=University of California, San Diego; CN=massive-ftp.ucsd.edu
+*  start date: Oct  6 19:51:29 2026 GMT
+*  expire date: Apr 23 19:51:29 2027 GMT
+*  subjectAltName: host "massive-ftp.ucsd.edu" matched cert's "massive-ftp.ucsd.edu"
+*  issuer: C=US; O=Internet2; CN=InCommon Intermediate CA - OVG2C
+*  SSL certificate verify ok.
+> USER anonymous
+< 331 OK
+> PASS ftp@example.com
+< 230 Password ok, continue
+> PBSZ 0
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0< 200 Whatever
+> PROT P
+< 200 OK
+> PWD
+< 257 "/" is the current directory
+* Entry path is '/'
+> CWD v06
+* ftp_perform ends with SECONDARY: 0
+< 250 CD worked on /v06
+> CWD MSV000092631
+< 250 CD worked on /v06/MSV000092631
+> CWD metadata
+< 250 CD worked on /v06/MSV000092631/metadata
+> EPSV
+* Connect data stream passively
+< 229 Entering Extended Passive Mode (|||54885|)
+* Connecting to 169.228.32.139 (169.228.32.139) port 54885
+*   Trying 169.228.32.139:54885...
+* Connected 2nd connection to 169.228.32.139 port 54885
+* (304) (OUT), TLS handshake, Client hello (1):
+} [307 bytes data]
+> TYPE I
+< 200 Type set to binary
+> SIZE Identifier.xlsx
+  0     0    0     0    0     0      0      0 --:--:--  0:00:01 --:--:--     0< 213 28339
+> RETR Identifier.xlsx
+< 150 Using transfer connection
+* Maxdownload = -1
+* Getting file with size: 28339
+* (304) (IN), TLS handshake, Server hello (2):
+{ [122 bytes data]
+* (304) (IN), TLS handshake, Unknown (8):
+{ [10 bytes data]
+* (304) (IN), TLS handshake, Certificate (11):
+{ [6120 bytes data]
+* (304) (IN), TLS handshake, CERT verify (15):
+{ [264 bytes data]
+* (304) (IN), TLS handshake, Finished (20):
+{ [36 bytes data]
+* (304) (OUT), TLS handshake, Finished (20):
+} [36 bytes data]
+* SSL connection using TLSv1.3 / AEAD-CHACHA20-POLY1305-SHA256 / [blank] / UNDEF
+* Server certificate:
+*  subject: C=US; ST=California; L=La Jolla; O=University of California, San Diego; CN=massive-ftp.ucsd.edu
+*  start date: Oct  6 19:51:29 2026 GMT
+*  expire date: Apr 23 19:51:29 2027 GMT
+*  subjectAltName: host "massive-ftp.ucsd.edu" matched cert's "massive-ftp.ucsd.edu"
+*  issuer: C=US; O=Internet2; CN=InCommon Intermediate CA - OVG2C
+*  SSL certificate verify ok.
+{ [1186 bytes data]
+* Remembering we are in dir "v06/MSV000092631/metadata/"
+< 226 Closing transfer connection
+100 28339  100 28339    0     0  13031      0  0:00:02  0:00:02 --:--:-- 13035
+* Connection #0 to host massive-ftp.ucsd.edu left intact

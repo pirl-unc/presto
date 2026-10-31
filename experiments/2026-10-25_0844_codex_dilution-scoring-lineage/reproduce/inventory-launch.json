@@ -1,0 +1,529 @@
+{
+  "registered_utc": "2026-10-25T08:58:03.679838+00:00",
+  "agent": "Codex",
+  "model": "GPT-6 (system identity)",
+  "git_commit": "e232719fa0d0cf7e574bb2d558ebcac74edec0e1",
+  "dirty": true,
+  "dirty_scope": "Unrelated tasks/todo.md changes and historical evidence preserved; new source family frozen before retrieval.",
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "stages": [
+    "retrieve",
+    "inventory"
+  ],
+  "source_directory": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/dilution_observer_sources/2026-10-25_0844_codex_dilution-scoring-lineage",
+  "prior_source_directory": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/dilution_observer_sources/2026-10-25_0813_codex_dilution-observer-admission",
+  "plan_sha256": "d28412a79857625cb8705424323af9ccf4b4766ae219e84dc1ffae7b6cef8c7f",
+  "input_sha256": {
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/dilution_observer_sources/2026-10-25_0813_codex_dilution-observer-admission/files-project-page0.json": "3e5b9b29f9cd531d7f55d44b16fdb579a79f75664dbbc6e8c4ac6332589837c0",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/dilution_observer_sources/2026-10-25_0844_codex_dilution-scoring-lineage/201207_AM_Demobox_V3_JY19_1_No1_Dilution1_02fmol-ul_DIA_1_400-650mz_msms35.mzML.tsv": "13689e96e502522816f832e7853f4efabc3e324ca9d40a7a240664826a64a6be",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/dilution_observer_sources/2026-10-25_0844_codex_dilution-scoring-lineage/201207_AM_Demobox_V3_JY19_1_No1_Dilution1_02fmol-ul_DIA_2_400-650mz_msms36.mzML.tsv": "6f55698ab15abdd16d5ae9226fd0a66c7b5f8d3620a7e960341fe2043745bead",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/dilution_observer_sources/2026-10-25_0844_codex_dilution-scoring-lineage/201207_AM_Demobox_V3_JY19_1_No2_Dilution1-2_01fmol-ul_DIA_1_400-650mz_msms30.mzML.tsv": "e55ccc773c4b1706a64735643334da97e1eedab6f20fc0d1d89e2577065715f8",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/dilution_observer_sources/2026-10-25_0844_codex_dilution-scoring-lineage/201207_AM_Demobox_V3_JY19_1_No2_Dilution1-2_01fmol-ul_DIA_2_400-650mz_msms31.mzML.tsv": "1ac96af786cd6d235812fc8393be9e92161ccc4fda7c0907d03a84e15c374a8d",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/dilution_observer_sources/2026-10-25_0844_codex_dilution-scoring-lineage/201207_AM_Demobox_V3_JY19_1_No3_Dilution1-4_005fmol-ul_DIA_1_400-650mz_msms25_201209153602.mzML.tsv": "510c0cd43394eaa1a680b250b9194aad0f39ea2669620a01cde48d5340f183fe",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/dilution_observer_sources/2026-10-25_0844_codex_dilution-scoring-lineage/201207_AM_Demobox_V3_JY19_1_No3_Dilution1-4_005fmol-ul_DIA_2_400-650mz_msms26.mzML.tsv": "42f9ef60ef41275b31c4ce7c1215d9df3dfb2d842562e0019aa589ad99d645c9",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/dilution_observer_sources/2026-10-25_0844_codex_dilution-scoring-lineage/201207_AM_Demobox_V3_JY19_1_No4_Dilution1-8_0025fmol-ul_DIA_1_400-650mz_msms20.mzML.tsv": "9d6f180b13ee4d3777b15289df8664a74e6b12e508315d3322de6612f62d71a0",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/dilution_observer_sources/2026-10-25_0844_codex_dilution-scoring-lineage/201207_AM_Demobox_V3_JY19_1_No4_Dilution1-8_0025fmol-ul_DIA_2_400-650mz_msms21.mzML.tsv": "c64dca8dc00af401aecd4fbd93b9611f2e103a0185316787b2f47aa744f4e28d",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/dilution_observer_sources/2026-10-25_0844_codex_dilution-scoring-lineage/201207_AM_Demobox_V3_JY19_1_No5_Dilution1-16_00125fmol-ul_DIA_1_400-650mz_msms15.mzML.tsv": "cf6d2f5a742ac7e025ec84d6a6dfe5a082905e5c948b511f1c1fe02937eb16a7",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/dilution_observer_sources/2026-10-25_0844_codex_dilution-scoring-lineage/201207_AM_Demobox_V3_JY19_1_No5_Dilution1-16_00125fmol-ul_DIA_2_400-650mz_msms16.mzML.tsv": "b5fed0d44bab074ceae4104217d6815f92688ed3bce3784aa017cf2bbf3c2b79",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/dilution_observer_sources/2026-10-25_0844_codex_dilution-scoring-lineage/Dilute_library_merged_decoy.tsv": "ffa5d0753e0ba85f3b52a08f195f548ace8bd7f7a7a7159869be083bdb49abb8",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/dilution_observer_sources/2026-10-25_0813_codex_dilution-observer-admission/Dilute_peptide_quantities.csv": "646f8054ca9f60d9ebad46722a994c507c0b30c0c897a75df356586f0bfcccb8",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0813_codex_dilution-observer-admission/results/source-audit.json": "89374db5444c2e23da2f7922b02210e58f900eb614d082dc5365b77ca481810c",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0844_codex_dilution-scoring-lineage/reproduce/structural-contract.md": "596416b29a05344eeb1df9f0396a4ab3878ff4aa8584d56949254c7e74957e34"
+  },
+  "selected_assets": [
+    {
+      "name": "201207_AM_Demobox_V3_JY19_1_No1_Dilution1_02fmol-ul_DIA_1_400-650mz_msms35.mzML.tsv",
+      "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2025/09/PXD024809/201207_AM_Demobox_V3_JY19_1_No1_Dilution1_02fmol-ul_DIA_1_400-650mz_msms35.mzML.tsv",
+      "expected_bytes": 26860000,
+      "deposit_checksum": "",
+      "role": "per_run_scored_candidates"
+    },
+    {
+      "name": "201207_AM_Demobox_V3_JY19_1_No1_Dilution1_02fmol-ul_DIA_2_400-650mz_msms36.mzML.tsv",
+      "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2025/09/PXD024809/201207_AM_Demobox_V3_JY19_1_No1_Dilution1_02fmol-ul_DIA_2_400-650mz_msms36.mzML.tsv",
+      "expected_bytes": 26891605,
+      "deposit_checksum": "",
+      "role": "per_run_scored_candidates"
+    },
+    {
+      "name": "201207_AM_Demobox_V3_JY19_1_No2_Dilution1-2_01fmol-ul_DIA_1_400-650mz_msms30.mzML.tsv",
+      "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2025/09/PXD024809/201207_AM_Demobox_V3_JY19_1_No2_Dilution1-2_01fmol-ul_DIA_1_400-650mz_msms30.mzML.tsv",
+      "expected_bytes": 26437141,
+      "deposit_checksum": "",
+      "role": "per_run_scored_candidates"
+    },
+    {
+      "name": "201207_AM_Demobox_V3_JY19_1_No2_Dilution1-2_01fmol-ul_DIA_2_400-650mz_msms31.mzML.tsv",
+      "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2025/09/PXD024809/201207_AM_Demobox_V3_JY19_1_No2_Dilution1-2_01fmol-ul_DIA_2_400-650mz_msms31.mzML.tsv",
+      "expected_bytes": 26290105,
+      "deposit_checksum": "",
+      "role": "per_run_scored_candidates"
+    },
+    {
+      "name": "201207_AM_Demobox_V3_JY19_1_No3_Dilution1-4_005fmol-ul_DIA_1_400-650mz_msms25_201209153602.mzML.tsv",
+      "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2025/09/PXD024809/201207_AM_Demobox_V3_JY19_1_No3_Dilution1-4_005fmol-ul_DIA_1_400-650mz_msms25_201209153602.mzML.tsv",
+      "expected_bytes": 22348912,
+      "deposit_checksum": "",
+      "role": "per_run_scored_candidates"
+    },
+    {
+      "name": "201207_AM_Demobox_V3_JY19_1_No3_Dilution1-4_005fmol-ul_DIA_2_400-650mz_msms26.mzML.tsv",
+      "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2025/09/PXD024809/201207_AM_Demobox_V3_JY19_1_No3_Dilution1-4_005fmol-ul_DIA_2_400-650mz_msms26.mzML.tsv",
+      "expected_bytes": 22196869,
+      "deposit_checksum": "",
+      "role": "per_run_scored_candidates"
+    },
+    {
+      "name": "201207_AM_Demobox_V3_JY19_1_No4_Dilution1-8_0025fmol-ul_DIA_1_400-650mz_msms20.mzML.tsv",
+      "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2025/09/PXD024809/201207_AM_Demobox_V3_JY19_1_No4_Dilution1-8_0025fmol-ul_DIA_1_400-650mz_msms20.mzML.tsv",
+      "expected_bytes": 18679990,
+      "deposit_checksum": "",
+      "role": "per_run_scored_candidates"
+    },
+    {
+      "name": "201207_AM_Demobox_V3_JY19_1_No4_Dilution1-8_0025fmol-ul_DIA_2_400-650mz_msms21.mzML.tsv",
+      "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2025/09/PXD024809/201207_AM_Demobox_V3_JY19_1_No4_Dilution1-8_0025fmol-ul_DIA_2_400-650mz_msms21.mzML.tsv",
+      "expected_bytes": 18855037,
+      "deposit_checksum": "",
+      "role": "per_run_scored_candidates"
+    },
+    {
+      "name": "201207_AM_Demobox_V3_JY19_1_No5_Dilution1-16_00125fmol-ul_DIA_1_400-650mz_msms15.mzML.tsv",
+      "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2025/09/PXD024809/201207_AM_Demobox_V3_JY19_1_No5_Dilution1-16_00125fmol-ul_DIA_1_400-650mz_msms15.mzML.tsv",
+      "expected_bytes": 14158089,
+      "deposit_checksum": "",
+      "role": "per_run_scored_candidates"
+    },
+    {
+      "name": "201207_AM_Demobox_V3_JY19_1_No5_Dilution1-16_00125fmol-ul_DIA_2_400-650mz_msms16.mzML.tsv",
+      "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2025/09/PXD024809/201207_AM_Demobox_V3_JY19_1_No5_Dilution1-16_00125fmol-ul_DIA_2_400-650mz_msms16.mzML.tsv",
+      "expected_bytes": 14378443,
+      "deposit_checksum": "",
+      "role": "per_run_scored_candidates"
+    },
+    {
+      "name": "Dilute_library_merged_decoy.tsv",
+      "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2025/09/PXD024809/Dilute_library_merged_decoy.tsv",
+      "expected_bytes": 172372507,
+      "deposit_checksum": "",
+      "role": "master_query_library"
+    }
+  ],
+  "limits": {
+    "stage_seconds": 1200,
+    "rss_bytes": 3221225472,
+    "disk_floor_bytes": 1073741824,
+    "start_margin_bytes": 33554432
+  },
+  "non_default_environment_overrides": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1",
+    "MPLBACKEND": "Agg"
+  },
+  "total_download_cap_bytes": 536870912,
+  "source_role_selected_before_quantities": true,
+  "model_fitting": false,
+  "prior_audit": "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0813_codex_dilution-observer-admission/results/source-audit.json",
+  "membership_fields": [
+    "TransitionGroupId",
+    "ModifiedPeptideSequence",
+    "PeptideSequence",
+    "PrecursorCharge",
+    "Decoy",
+    "PeptideGroupLabel"
+  ],
+  "tabular_assets": [
+    {
+      "path": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/dilution_observer_sources/2026-10-25_0844_codex_dilution-scoring-lineage/201207_AM_Demobox_V3_JY19_1_No1_Dilution1_02fmol-ul_DIA_1_400-650mz_msms35.mzML.tsv",
+      "role": "per_run_scored_candidates",
+      "identities": [
+        "transition_group_id",
+        "id",
+        "run_id",
+        "filename",
+        "Sequence",
+        "FullPeptideName",
+        "Charge",
+        "decoy"
+      ],
+      "numeric": [
+        "RT",
+        "Intensity",
+        "leftWidth",
+        "rightWidth",
+        "peak_group_rank",
+        "m_score",
+        "d_score",
+        "Charge"
+      ],
+      "flags": [
+        "decoy"
+      ],
+      "retain_identity_values": [
+        "run_id",
+        "filename",
+        "Charge",
+        "decoy"
+      ]
+    },
+    {
+      "path": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/dilution_observer_sources/2026-10-25_0844_codex_dilution-scoring-lineage/201207_AM_Demobox_V3_JY19_1_No1_Dilution1_02fmol-ul_DIA_2_400-650mz_msms36.mzML.tsv",
+      "role": "per_run_scored_candidates",
+      "identities": [
+        "transition_group_id",
+        "id",
+        "run_id",
+        "filename",
+        "Sequence",
+        "FullPeptideName",
+        "Charge",
+        "decoy"
+      ],
+      "numeric": [
+        "RT",
+        "Intensity",
+        "leftWidth",
+        "rightWidth",
+        "peak_group_rank",
+        "m_score",
+        "d_score",
+        "Charge"
+      ],
+      "flags": [
+        "decoy"
+      ],
+      "retain_identity_values": [
+        "run_id",
+        "filename",
+        "Charge",
+        "decoy"
+      ]
+    },
+    {
+      "path": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/dilution_observer_sources/2026-10-25_0844_codex_dilution-scoring-lineage/201207_AM_Demobox_V3_JY19_1_No2_Dilution1-2_01fmol-ul_DIA_1_400-650mz_msms30.mzML.tsv",
+      "role": "per_run_scored_candidates",
+      "identities": [
+        "transition_group_id",
+        "id",
+        "run_id",
+        "filename",
+        "Sequence",
+        "FullPeptideName",
+        "Charge",
+        "decoy"
+      ],
+      "numeric": [
+        "RT",
+        "Intensity",
+        "leftWidth",
+        "rightWidth",
+        "peak_group_rank",
+        "m_score",
+        "d_score",
+        "Charge"
+      ],
+      "flags": [
+        "decoy"
+      ],
+      "retain_identity_values": [
+        "run_id",
+        "filename",
+        "Charge",
+        "decoy"
+      ]
+    },
+    {
+      "path": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/dilution_observer_sources/2026-10-25_0844_codex_dilution-scoring-lineage/201207_AM_Demobox_V3_JY19_1_No2_Dilution1-2_01fmol-ul_DIA_2_400-650mz_msms31.mzML.tsv",
+      "role": "per_run_scored_candidates",
+      "identities": [
+        "transition_group_id",
+        "id",
+        "run_id",
+        "filename",
+        "Sequence",
+        "FullPeptideName",
+        "Charge",
+        "decoy"
+      ],
+      "numeric": [
+        "RT",
+        "Intensity",
+        "leftWidth",
+        "rightWidth",
+        "peak_group_rank",
+        "m_score",
+        "d_score",
+        "Charge"
+      ],
+      "flags": [
+        "decoy"
+      ],
+      "retain_identity_values": [
+        "run_id",
+        "filename",
+        "Charge",
+        "decoy"
+      ]
+    },
+    {
+      "path": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/dilution_observer_sources/2026-10-25_0844_codex_dilution-scoring-lineage/201207_AM_Demobox_V3_JY19_1_No3_Dilution1-4_005fmol-ul_DIA_1_400-650mz_msms25_201209153602.mzML.tsv",
+      "role": "per_run_scored_candidates",
+      "identities": [
+        "transition_group_id",
+        "id",
+        "run_id",
+        "filename",
+        "Sequence",
+        "FullPeptideName",
+        "Charge",
+        "decoy"
+      ],
+      "numeric": [
+        "RT",
+        "Intensity",
+        "leftWidth",
+        "rightWidth",
+        "peak_group_rank",
+        "m_score",
+        "d_score",
+        "Charge"
+      ],
+      "flags": [
+        "decoy"
+      ],
+      "retain_identity_values": [
+        "run_id",
+        "filename",
+        "Charge",
+        "decoy"
+      ]
+    },
+    {
+      "path": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/dilution_observer_sources/2026-10-25_0844_codex_dilution-scoring-lineage/201207_AM_Demobox_V3_JY19_1_No3_Dilution1-4_005fmol-ul_DIA_2_400-650mz_msms26.mzML.tsv",
+      "role": "per_run_scored_candidates",
+      "identities": [
+        "transition_group_id",
+        "id",
+        "run_id",
+        "filename",
+        "Sequence",
+        "FullPeptideName",
+        "Charge",
+        "decoy"
+      ],
+      "numeric": [
+        "RT",
+        "Intensity",
+        "leftWidth",
+        "rightWidth",
+        "peak_group_rank",
+        "m_score",
+        "d_score",
+        "Charge"
+      ],
+      "flags": [
+        "decoy"
+      ],
+      "retain_identity_values": [
+        "run_id",
+        "filename",
+        "Charge",
+        "decoy"
+      ]
+    },
+    {
+      "path": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/dilution_observer_sources/2026-10-25_0844_codex_dilution-scoring-lineage/201207_AM_Demobox_V3_JY19_1_No4_Dilution1-8_0025fmol-ul_DIA_1_400-650mz_msms20.mzML.tsv",
+      "role": "per_run_scored_candidates",
+      "identities": [
+        "transition_group_id",
+        "id",
+        "run_id",
+        "filename",
+        "Sequence",
+        "FullPeptideName",
+        "Charge",
+        "decoy"
+      ],
+      "numeric": [
+        "RT",
+        "Intensity",
+        "leftWidth",
+        "rightWidth",
+        "peak_group_rank",
+        "m_score",
+        "d_score",
+        "Charge"
+      ],
+      "flags": [
+        "decoy"
+      ],
+      "retain_identity_values": [
+        "run_id",
+        "filename",
+        "Charge",
+        "decoy"
+      ]
+    },
+    {
+      "path": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/dilution_observer_sources/2026-10-25_0844_codex_dilution-scoring-lineage/201207_AM_Demobox_V3_JY19_1_No4_Dilution1-8_0025fmol-ul_DIA_2_400-650mz_msms21.mzML.tsv",
+      "role": "per_run_scored_candidates",
+      "identities": [
+        "transition_group_id",
+        "id",
+        "run_id",
+        "filename",
+        "Sequence",
+        "FullPeptideName",
+        "Charge",
+        "decoy"
+      ],
+      "numeric": [
+        "RT",
+        "Intensity",
+        "leftWidth",
+        "rightWidth",
+        "peak_group_rank",
+        "m_score",
+        "d_score",
+        "Charge"
+      ],
+      "flags": [
+        "decoy"
+      ],
+      "retain_identity_values": [
+        "run_id",
+        "filename",
+        "Charge",
+        "decoy"
+      ]
+    },
+    {
+      "path": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/dilution_observer_sources/2026-10-25_0844_codex_dilution-scoring-lineage/201207_AM_Demobox_V3_JY19_1_No5_Dilution1-16_00125fmol-ul_DIA_1_400-650mz_msms15.mzML.tsv",
+      "role": "per_run_scored_candidates",
+      "identities": [
+        "transition_group_id",
+        "id",
+        "run_id",
+        "filename",
+        "Sequence",
+        "FullPeptideName",
+        "Charge",
+        "decoy"
+      ],
+      "numeric": [
+        "RT",
+        "Intensity",
+        "leftWidth",
+        "rightWidth",
+        "peak_group_rank",
+        "m_score",
+        "d_score",
+        "Charge"
+      ],
+      "flags": [
+        "decoy"
+      ],
+      "retain_identity_values": [
+        "run_id",
+        "filename",
+        "Charge",
+        "decoy"
+      ]
+    },
+    {
+      "path": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/dilution_observer_sources/2026-10-25_0844_codex_dilution-scoring-lineage/201207_AM_Demobox_V3_JY19_1_No5_Dilution1-16_00125fmol-ul_DIA_2_400-650mz_msms16.mzML.tsv",
+      "role": "per_run_scored_candidates",
+      "identities": [
+        "transition_group_id",
+        "id",
+        "run_id",
+        "filename",
+        "Sequence",
+        "FullPeptideName",
+        "Charge",
+        "decoy"
+      ],
+      "numeric": [
+        "RT",
+        "Intensity",
+        "leftWidth",
+        "rightWidth",
+        "peak_group_rank",
+        "m_score",
+        "d_score",
+        "Charge"
+      ],
+      "flags": [
+        "decoy"
+      ],
+      "retain_identity_values": [
+        "run_id",
+        "filename",
+        "Charge",
+        "decoy"
+      ]
+    },
+    {
+      "path": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/dilution_observer_sources/2026-10-25_0844_codex_dilution-scoring-lineage/Dilute_library_merged_decoy.tsv",
+      "role": "master_query_library",
+      "identities": [
+        "TransitionGroupId",
+        "ModifiedPeptideSequence",
+        "PeptideSequence",
+        "PrecursorCharge",
+        "Decoy",
+        "PeptideGroupLabel",
+        "TransitionId"
+      ],
+      "numeric": [
+        "PrecursorMz",
+        "ProductMz",
+        "PrecursorCharge",
+        "ProductCharge",
+        "LibraryIntensity",
+        "NormalizedRetentionTime"
+      ],
+      "flags": [
+        "Decoy",
+        "DetectingTransition",
+        "IdentifyingTransition",
+        "QuantifyingTransition"
+      ],
+      "retain_identity_values": [
+        "Decoy",
+        "PrecursorCharge"
+      ]
+    },
+    {
+      "path": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/dilution_observer_sources/2026-10-25_0813_codex_dilution-observer-admission/Dilute_peptide_quantities.csv",
+      "role": "aligned_quantities",
+      "identities": [
+        "run",
+        "precursor",
+        "peptide_id",
+        "feature_id",
+        "sequence",
+        "charge",
+        "group_label"
+      ],
+      "numeric": [
+        "RT",
+        "intensity",
+        "leftWidth",
+        "rightWidth",
+        "peak_group_rank",
+        "m_score",
+        "alignment_rank",
+        "charge"
+      ],
+      "flags": [],
+      "retain_identity_values": [
+        "run",
+        "charge"
+      ]
+    }
+  ]
+}

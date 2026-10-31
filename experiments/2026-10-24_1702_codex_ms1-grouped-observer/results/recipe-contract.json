@@ -1,0 +1,22 @@
+{
+  "dependence": "connect_selected_pools_sharing_any_intended_sequence_including_unobserved_products_before_outcome_filtering",
+  "endpoint": "conditional_within_run_centered_log10_MS1_signal",
+  "fold_assignment": "deferred_to_prospective_experiment_no_guarantee_of_independent_group_count",
+  "form_policy": "unique_Unmodified_variable_form_with_explicit_fixed_modifications",
+  "limitations": [
+    "conditional_on_identification_and_positive_signal_not_detection_probability",
+    "crude_synthesis_unknown_individual_purity_and_molar_amount",
+    "estimated_200_or_500_fmol_not_run_resolved",
+    "synthesis_handling_LC_MS_confounding",
+    "unmodified_variable_form_retains_search_fixed_modifications",
+    "library_origin_not_measured_MHC_restriction",
+    "no_absolute_detector_or_intracellular_concentration_calibration"
+  ],
+  "prediction_normalization": "center_predictions_over_the_same_conditional_candidate_set",
+  "quality": "both_sequence_and_form_positive_PEP_in_[0,0.01)_nonreverse_noncontaminant",
+  "recipe_id": "pxd021013_intended_unmodified_ms1_v1",
+  "schema_version": 1,
+  "source_id": "pxd021013",
+  "target_normalization": "subtract_mean_log10_over_admitted_observed_products_in_same_run",
+  "unit": "log10_arbitrary_MS1_signal_relative_to_run_geometric_mean"
+}

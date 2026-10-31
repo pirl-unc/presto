@@ -1,0 +1,68 @@
+{
+  "catalog_schema_version": 13,
+  "coverage": {
+    "examples_by_project": {
+      "PXD007263": 12203,
+      "PXD009508": 9404
+    },
+    "examples_by_split": {
+      "test": 2673,
+      "train": 14862,
+      "val": 4072
+    },
+    "n_components": 1488,
+    "n_examples": 21607,
+    "n_excluded_results": 125225,
+    "n_source_peptides": 9206,
+    "n_source_results": 146832,
+    "reason_counts": {
+      "no_positive_evidence_sum": 110408,
+      "no_reported_positive_quantity": 110408,
+      "not_one_source_group": 18528,
+      "peptide_PEP_unreported_or_above_0.01": 51600,
+      "source_contaminant": 522,
+      "source_reverse": 2964
+    }
+  },
+  "files": {
+    "components.json": {
+      "sha256": "6a2696f8c604a2e12512bae786612e6ca62ef7e92d946f53c5b1ebb90981b29d",
+      "size_bytes": 1521784
+    },
+    "dispositions.json": {
+      "sha256": "9f33400be2e1f6913819cd4bdfbaf59378e6e99024d2c6228ad2fbfcba780ee8",
+      "size_bytes": 93491532
+    },
+    "examples.json": {
+      "sha256": "96417319304aae1c2b85bec57cd9274d2f4fea7fd2dbb73d79b02e07afcb5eb7",
+      "size_bytes": 47769463
+    },
+    "recipe.json": {
+      "sha256": "b53462645af3bc127fa5fdaa4978666a9414b472c9f8110a490b24e664e11b75",
+      "size_bytes": 1294
+    },
+    "source_manifest.json": {
+      "sha256": "3b14b05532c6ed24132c37ef7f297eaf0047325e3c822d4293344a44a92cec30",
+      "size_bytes": 49287
+    },
+    "source_tables.json": {
+      "sha256": "e6fe4dcb3e303a6cc4a4333fb022a8a35ac151ecb837dfd358190bc4e2752335",
+      "size_bytes": 479550307
+    },
+    "summary.json": {
+      "sha256": "4906a39b9afbe4712cff058e54b638f6b33cbb3b483eee293ca50df048454623",
+      "size_bytes": 558
+    }
+  },
+  "hitlist_version": "2.0.6",
+  "output_kind": "registered_processing_runs",
+  "recipe": {
+    "name": "mapp_controlled_run_intensity_v1",
+    "registered_recipe": "mapp_controlled_run_intensity_v1",
+    "schema_version": 1
+  },
+  "recipe_sha256": "f384dba1d49c14dcabaab95ebcc6af50c8163d564e2e9fa00d1b75fbb32aae43",
+  "schema_version": 1,
+  "source_package_manifest_sha256": "3b14b05532c6ed24132c37ef7f297eaf0047325e3c822d4293344a44a92cec30",
+  "source_package_schema_version": 9
+}

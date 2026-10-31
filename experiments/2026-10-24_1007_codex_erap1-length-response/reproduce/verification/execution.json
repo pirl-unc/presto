@@ -1,0 +1,11 @@
+{
+  "utc": "2026-10-24T14:45:07.899893+00:00",
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "source_sha256": {
+    "close.py": "b428870497029a0b8ab10c83862a16fb05f358fd5aa2762dbd453306964f4949",
+    "verify.py": "6947f8cd27a0735e6b524eef797c6ecee34a70bed8b92343d682cb8a3c6a510f",
+    "report.py": "624143e5a7bf6d1d1c9cfc0b0e5d003af43af878d66988c04400d209950b7056"
+  },
+  "command": "OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 /Users/iskander/code/shared-virtual-env/bin/python code/verify.py",
+  "scope": "Independent final source, scalar recurrence, weights/folds/objective and metric verification; optimizer trajectories retained but not replayed."
+}

@@ -1,0 +1,207 @@
+{
+  "coverage_gate": {
+    "exception_reason": null,
+    "exposed_features_without_updates": {},
+    "frozen_dependencies_with_inherited_support": [],
+    "policy": "required",
+    "status": "passed",
+    "untrained_auxiliary_outputs": [],
+    "untrained_parameters": []
+  },
+  "device": "cpu",
+  "elapsed_seconds": 58.82130995899206,
+  "gpu": null,
+  "metrics": {
+    "test": {
+      "peptide_source:archaea": {
+        "accuracy": 0.967,
+        "loss": 0.14324591073207557,
+        "n": 1000
+      },
+      "peptide_source:bacteria": {
+        "accuracy": 0.636,
+        "loss": 0.6354735295921564,
+        "n": 1000
+      },
+      "peptide_source:fungi": {
+        "accuracy": 0.882,
+        "loss": 0.3620337030217052,
+        "n": 1000
+      },
+      "peptide_source:human": {
+        "accuracy": 0.896,
+        "loss": 0.33171288650855424,
+        "n": 1000
+      },
+      "peptide_source:invertebrates": {
+        "accuracy": 0.893,
+        "loss": 0.33342609503492715,
+        "n": 1000
+      },
+      "peptide_source:mammals": {
+        "accuracy": 0.95,
+        "loss": 0.19941793521493673,
+        "n": 1000
+      },
+      "peptide_source:plants": {
+        "accuracy": 0.912,
+        "loss": 0.29396006536483765,
+        "n": 1000
+      },
+      "peptide_source:rodents": {
+        "accuracy": 0.892,
+        "loss": 0.336049862742424,
+        "n": 1000
+      },
+      "peptide_source:vertebrates": {
+        "accuracy": 0.958,
+        "loss": 0.1743511021155864,
+        "n": 1000
+      },
+      "peptide_source:viruses": {
+        "accuracy": 0.946,
+        "loss": 0.210646705057472,
+        "n": 1000
+      }
+    },
+    "train": {
+      "peptide_source:archaea": {
+        "accuracy": 0.9582,
+        "loss": 0.1644654768603854,
+        "n": 5000
+      },
+      "peptide_source:bacteria": {
+        "accuracy": 0.6228,
+        "loss": 0.6428289990156889,
+        "n": 5000
+      },
+      "peptide_source:fungi": {
+        "accuracy": 0.8672,
+        "loss": 0.38794517631307246,
+        "n": 5000
+      },
+      "peptide_source:human": {
+        "accuracy": 0.9082,
+        "loss": 0.29890713466778396,
+        "n": 5000
+      },
+      "peptide_source:invertebrates": {
+        "accuracy": 0.9194,
+        "loss": 0.2711782840333879,
+        "n": 5000
+      },
+      "peptide_source:mammals": {
+        "accuracy": 0.9568,
+        "loss": 0.17410806349627675,
+        "n": 5000
+      },
+      "peptide_source:plants": {
+        "accuracy": 0.893,
+        "loss": 0.33467780204191805,
+        "n": 5000
+      },
+      "peptide_source:rodents": {
+        "accuracy": 0.8954,
+        "loss": 0.32528062703981997,
+        "n": 5000
+      },
+      "peptide_source:vertebrates": {
+        "accuracy": 0.9598,
+        "loss": 0.16704920324347913,
+        "n": 5000
+      },
+      "peptide_source:viruses": {
+        "accuracy": 0.9538,
+        "loss": 0.18557077194452284,
+        "n": 5000
+      }
+    },
+    "validation": {
+      "peptide_source:archaea": {
+        "accuracy": 0.96,
+        "loss": 0.16727218462806195,
+        "n": 1000
+      },
+      "peptide_source:bacteria": {
+        "accuracy": 0.61,
+        "loss": 0.6475908350348473,
+        "n": 1000
+      },
+      "peptide_source:fungi": {
+        "accuracy": 0.889,
+        "loss": 0.34571141882240775,
+        "n": 1000
+      },
+      "peptide_source:human": {
+        "accuracy": 0.907,
+        "loss": 0.3060656904876232,
+        "n": 1000
+      },
+      "peptide_source:invertebrates": {
+        "accuracy": 0.913,
+        "loss": 0.28598547106608746,
+        "n": 1000
+      },
+      "peptide_source:mammals": {
+        "accuracy": 0.962,
+        "loss": 0.15967449058778585,
+        "n": 1000
+      },
+      "peptide_source:plants": {
+        "accuracy": 0.896,
+        "loss": 0.32598535077646373,
+        "n": 1000
+      },
+      "peptide_source:rodents": {
+        "accuracy": 0.913,
+        "loss": 0.2946351337693632,
+        "n": 1000
+      },
+      "peptide_source:vertebrates": {
+        "accuracy": 0.956,
+        "loss": 0.1825799893178046,
+        "n": 1000
+      },
+      "peptide_source:viruses": {
+        "accuracy": 0.968,
+        "loss": 0.1427548919226974,
+        "n": 1000
+      }
+    }
+  },
+  "overall_losses": {
+    "test": {
+      "assay_observation_mean": null,
+      "combined": 0.30203177953846755,
+      "identity_label_mean": 0.30203177953846755
+    },
+    "train": {
+      "assay_observation_mean": null,
+      "combined": 0.29520115386563356,
+      "identity_label_mean": 0.29520115386563356
+    },
+    "validation": {
+      "assay_observation_mean": null,
+      "combined": 0.28582554564131424,
+      "identity_label_mean": 0.28582554564131424
+    }
+  },
+  "qualification": "not_qualified",
+  "selected_epoch": 5,
+  "steps": 790,
+  "support": {
+    "peptide_source": {
+      "observations": 250000,
+      "status": "directly_supervised",
+      "validation": "not_evaluated"
+    }
+  },
+  "test_policy": "evaluate_selected_once",
+  "training_exposures": {
+    "peptide_source": 500000
+  },
+  "unique_training_labels": {
+    "peptide_source": 50000
+  },
+  "untrained_selected_parameters": []
+}

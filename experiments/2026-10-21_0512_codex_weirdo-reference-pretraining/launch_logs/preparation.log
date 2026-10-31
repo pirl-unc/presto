@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/private/tmp/presto-modular-model/experiments/2026-10-21_0512_codex_weirdo-reference-pretraining/code/prepare.py", line 271, in <module>
+    main()
+  File "/private/tmp/presto-modular-model/experiments/2026-10-21_0512_codex_weirdo-reference-pretraining/code/prepare.py", line 118, in main
+    rows = list(
+           ^^^^^
+  File "/private/tmp/presto-modular-imports/presto/data/modular_auxiliary.py", line 56, in weirdo_observations
+    peptides, masks, groups = (
+    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/presto-modular-imports/presto/data/modular_auxiliary.py", line 57, in <genexpr>
+    archive[f"{source_split}_{suffix}"] for suffix in ("kmers", "masks", "groups")
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/numpy/lib/_npyio_impl.py", line 243, in __getitem__
+    raise KeyError(f"{key} is not a file in the archive") from None
+KeyError: 'train_groups is not a file in the archive'

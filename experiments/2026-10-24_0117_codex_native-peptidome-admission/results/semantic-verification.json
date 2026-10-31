@@ -1,0 +1,1466 @@
+{
+  "n_quantitative_parses_verified": 61908,
+  "value_status": {
+    "reported_exact": 34763,
+    "reported_bound": 15753,
+    "missing_source_value": 4113,
+    "reported_overlap": 60,
+    "reported_not_detected": 7217,
+    "reported_nonnumeric": 2
+  },
+  "by_role_and_status": [
+    {
+      "role": "control_vs_control",
+      "status": "missing_source_value",
+      "n_slots": 2
+    },
+    {
+      "role": "control_vs_control",
+      "status": "reported_exact",
+      "n_slots": 13469
+    },
+    {
+      "role": "control_vs_control",
+      "status": "reported_nonnumeric",
+      "n_slots": 2
+    },
+    {
+      "role": "control_vs_control",
+      "status": "reported_not_detected",
+      "n_slots": 7150
+    },
+    {
+      "role": "control_vs_control",
+      "status": "reported_overlap",
+      "n_slots": 13
+    },
+    {
+      "role": "treated_vs_control",
+      "status": "missing_source_value",
+      "n_slots": 4111
+    },
+    {
+      "role": "treated_vs_control",
+      "status": "reported_bound",
+      "n_slots": 11032
+    },
+    {
+      "role": "treated_vs_control",
+      "status": "reported_exact",
+      "n_slots": 15697
+    },
+    {
+      "role": "treated_vs_control",
+      "status": "reported_not_detected",
+      "n_slots": 67
+    },
+    {
+      "role": "treated_vs_control",
+      "status": "reported_overlap",
+      "n_slots": 47
+    },
+    {
+      "role": "treated_vs_control_average",
+      "status": "reported_bound",
+      "n_slots": 4721
+    },
+    {
+      "role": "treated_vs_control_average",
+      "status": "reported_exact",
+      "n_slots": 5597
+    }
+  ],
+  "n_nonpositive_reported_numeric_values": 3,
+  "n_exact_slots_with_no_sequence": 16807,
+  "n_exact_slots_with_outer_parentheses": 213,
+  "n_sequence_projection_mismatches": 173,
+  "sequence_projection_mismatches": [
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 15,
+      "expected": "Ac-AEEGIAAGGVMDVNTALQEVLKT",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 16,
+      "expected": "ADGIVSKNF",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 17,
+      "expected": "KADGIVSKNF",
+      "actual": "K",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 18,
+      "expected": "AKADGIVSKNF",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 19,
+      "expected": "Ac-MQNDAGEFVDLYVPRK",
+      "actual": "M",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 20,
+      "expected": "GESDDSILRLAKADGIVSKNF",
+      "actual": "G",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 21,
+      "expected": "MGESDDSILRLAKADGIVSKNF",
+      "actual": "M",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 22,
+      "expected": "RMGESDDSILRLAKADGIVSKNF",
+      "actual": "R",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 23,
+      "expected": "Ac-MDTSRVQPIKL",
+      "actual": "M",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 24,
+      "expected": "Ac-MDTSRVQPIKLA",
+      "actual": "M",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 25,
+      "expected": "Ac-MDTSRVQPIKLAR",
+      "actual": "M",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 26,
+      "expected": "GDVLTLLESEREARRL",
+      "actual": "G",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 27,
+      "expected": "Ac-MDTSRVQPIKLARVTKV",
+      "actual": "*M",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 28,
+      "expected": "GDVLTLLESEREARRLR",
+      "actual": "G",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 29,
+      "expected": "Ac-MDTSRVQPIKLARVTKVLGR",
+      "actual": "M",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 30,
+      "expected": "KGPVREGDVLTLLESEREARRLR",
+      "actual": "K",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 31,
+      "expected": "AGVNVEPFWPGLFA",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 32,
+      "expected": "GVNVEPFWPGLFAKAL",
+      "actual": "G",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 33,
+      "expected": "AGVNVEPFWPGLFAKAL",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 34,
+      "expected": "GIGKLASV",
+      "actual": "G",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 35,
+      "expected": "GIGKLASVPAGGAVAV",
+      "actual": "G",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 36,
+      "expected": "ALGGNSSPSAKDIKKI",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 37,
+      "expected": "AALGGNSSPSAKDIKKI",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 38,
+      "expected": "LDSVGIEADDDRLNKV",
+      "actual": "L",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 39,
+      "expected": "GIEADDDRLNKVISEL",
+      "actual": "G",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 40,
+      "expected": "LDSVGIEADDDRLNKVISE",
+      "actual": "L",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 41,
+      "expected": "LDSVGIEADDDRLNKVISEL",
+      "actual": "L",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 42,
+      "expected": "ASYLLAALGGNSSPSAKDIKKI",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 43,
+      "expected": "DGKNIEDVIAQGIGKL",
+      "actual": "N",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 44,
+      "expected": "PQEIVDYIADKKDVYE",
+      "actual": "P",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 45,
+      "expected": "MEDEFGFEIPDIDAEKL",
+      "actual": "M",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 46,
+      "expected": "ADRGVDNTFADELVEL",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 47,
+      "expected": "GISTPEELGLDKV",
+      "actual": "G",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 48,
+      "expected": "RPTLNELGISTPEELGLDKV",
+      "actual": "R",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 49,
+      "expected": "LRPTLNELGISTPEELGLDKV",
+      "actual": "L",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 50,
+      "expected": "Ac-AEDMETKIKNY",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 51,
+      "expected": "Ac-AEDMETKIKNYKT",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 52,
+      "expected": "VVRHQLLKT",
+      "actual": "V",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 53,
+      "expected": "IFYPEIEEVQALDDTERGSGGFGSTGKN",
+      "actual": "I",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 54,
+      "expected": "Ac-SHTILLVQPTKR",
+      "actual": "S",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 55,
+      "expected": "Ac-SHTILLVQPTKRPEGRTY",
+      "actual": "S",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 56,
+      "expected": "VRSIQADGL",
+      "actual": "V",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 57,
+      "expected": "MDVAAFNKI",
+      "actual": "M",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 58,
+      "expected": "GFGDLKSPAGLQV",
+      "actual": "G",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 59,
+      "expected": "GFGDLKSPAGLQVL",
+      "actual": "G",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 60,
+      "expected": "GFGDLKSPAGLQVLNDYL",
+      "actual": "G",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 61,
+      "expected": "MTEEAAVAIKAMAK",
+      "actual": "M",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 62,
+      "expected": "SAMTEEAAVAIKAMAK",
+      "actual": "S",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 63,
+      "expected": "AEIITDLLRSV",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 64,
+      "expected": "ARIINDLLQSL",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 65,
+      "expected": "GLVIGRGGENVKAINQQTGAFVEI",
+      "actual": "G",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 66,
+      "expected": "VFDVELL",
+      "actual": "V",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 67,
+      "expected": "VELLKLE",
+      "actual": "V",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 68,
+      "expected": "VFDVELLKLE",
+      "actual": "V",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 69,
+      "expected": "GVQVETISPGDGRTFPKRGQT",
+      "actual": "G",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 70,
+      "expected": "FLPLFDR",
+      "actual": "F",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 71,
+      "expected": "Ac-AGQAFRKF",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 72,
+      "expected": "Ac-AGQAFRKFL",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 73,
+      "expected": "DGDILGKYVD",
+      "actual": "D",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 74,
+      "expected": "LDDKDYFLF",
+      "actual": "L",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 75,
+      "expected": "LPLFDRVLVE",
+      "actual": "L",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 76,
+      "expected": "PLFDRVLVER",
+      "actual": "P",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 77,
+      "expected": "RDGDILGKYVD",
+      "actual": "R",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 78,
+      "expected": "VLDDKDYFLF",
+      "actual": "V",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 79,
+      "expected": "LDDKDYFLFR",
+      "actual": "L",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 80,
+      "expected": "FLPLFDRVLVE",
+      "actual": "F",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 81,
+      "expected": "LPLFDRVLVER",
+      "actual": "L",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 82,
+      "expected": "VLDDKDYFLFR",
+      "actual": "V",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 83,
+      "expected": "RSAAETVTKGGIML",
+      "actual": "R",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 84,
+      "expected": "GGIMLPEKSQGKVL",
+      "actual": "G",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 85,
+      "expected": "GDKVLLPEYGGTKV",
+      "actual": "G",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 86,
+      "expected": "GSGSKGKGGEIQPVSV",
+      "actual": "G",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 87,
+      "expected": "FLPLFDRVLVER",
+      "actual": "F",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 88,
+      "expected": "Ac-AGQAFRKFLPLFD",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 89,
+      "expected": "GDKVLLPEYGGTKVV",
+      "actual": "G",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 90,
+      "expected": "VGSGSKGKGGEIQPVSV",
+      "actual": "V",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 91,
+      "expected": "GGIMLPEKSQGKVLQA",
+      "actual": "G",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 92,
+      "expected": "AVGSGSKGKGGEIQPVSV",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 93,
+      "expected": "Ac-AGQAFRKFLPLFDR",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 94,
+      "expected": "Ac-AGQAFRKFLPLFDRV",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 95,
+      "expected": "TVVAVGSGSKGKGGEIQPVSV",
+      "actual": "T",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 96,
+      "expected": "AAETVTKGGIMLPEKSQGKVLQA",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 97,
+      "expected": "LDDKDYFLFRDGDILGKYVD",
+      "actual": "L",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 98,
+      "expected": "SAAETVTKGGIMLPEKSQGKVLQA",
+      "actual": "S",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 99,
+      "expected": "VLDDKDYFLFRDGDILGKYVD",
+      "actual": "V",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 100,
+      "expected": "Ac-TTTTTFKGVDPNSRNSSR",
+      "actual": "T",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 101,
+      "expected": "GFGFVLFKDA",
+      "actual": "G",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 102,
+      "expected": "GFGFVTF",
+      "actual": "G",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 103,
+      "expected": "Ac-ADEIAKAQVAR",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 104,
+      "expected": "AADLGLNKGYRMV",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 105,
+      "expected": "Ac-ADEIAKAQVARPGGDTIFGKIIRK",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 106,
+      "expected": "Ac-ADEIAKAQVARPGGDTIFGKIIRKEI",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 107,
+      "expected": "VNDIFERI",
+      "actual": "V",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 108,
+      "expected": "VNDIFERIAGEASRL",
+      "actual": "V",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 109,
+      "expected": "AQATGKPPQYIAV",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 110,
+      "expected": "PDGFLSELTQQL",
+      "actual": "P",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 111,
+      "expected": "VPDGFLSELTQQL",
+      "actual": "V",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 112,
+      "expected": "AQATGKPPQYIAVH",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 113,
+      "expected": "PDGFLSELTQQLAQA",
+      "actual": "P",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 114,
+      "expected": "AQATGKPPQYIAVHVV",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 115,
+      "expected": "PRASVPDGFLSELTQQL",
+      "actual": "P",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 116,
+      "expected": "AQATGKPPQYIAVHVVPDQL",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 117,
+      "expected": "AQATGKPPQYIAVHVVPDQLMA",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 118,
+      "expected": "AQATGKPPQYIAVHVVPDQLMAF",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 119,
+      "expected": "PMFIVNTNVPRASVPDGFLSELTQQL",
+      "actual": "P",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 120,
+      "expected": "PSGPSGAPPMPGGPHSY",
+      "actual": "P",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 121,
+      "expected": "PSGPSGAPPMPGGPHSYH",
+      "actual": "P",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 122,
+      "expected": "Ac-SFLKSFPPPGPAEGLLRQQ",
+      "actual": "S",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 123,
+      "expected": "PGIVELPTLEEL",
+      "actual": "P",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 124,
+      "expected": "Ac-GDKPIWEQIGSSFIQH",
+      "actual": "G",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 125,
+      "expected": "KFINYV",
+      "actual": "K",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 126,
+      "expected": "GGSLPKVEA",
+      "actual": "G",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 127,
+      "expected": "ASIEKGGSLPKVEA",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 128,
+      "expected": "GGFEITPPVVLRLK",
+      "actual": "G",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 129,
+      "expected": "TDQEAIQDLWQWRKSL",
+      "actual": "T",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 130,
+      "expected": "Ac-ANLERTFIAIKPDGV",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 131,
+      "expected": "KHTGPGILSM",
+      "actual": "K",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 132,
+      "expected": "VNPTVFFDI",
+      "actual": "V",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 133,
+      "expected": "AVDGEPLGRVSF",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 134,
+      "expected": "DIAVDGEPLGRVSF",
+      "actual": "D",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 135,
+      "expected": "ADKVPKTAENFRAL",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 136,
+      "expected": "AVDGEPLGRVSFELF",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 137,
+      "expected": "ELFADKVPKTAENFR",
+      "actual": "E",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 138,
+      "expected": "EDENFILKHTGPGILSM",
+      "actual": "E",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 139,
+      "expected": "VSFELFADKVPKTAENFRAL",
+      "actual": "V",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 140,
+      "expected": "AVDGEPLGRVSFELFADKVPKTAENFRAL",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 141,
+      "expected": "SLAPNIISQL",
+      "actual": "S",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 142,
+      "expected": "APIKVGDAIPAVEVF",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 143,
+      "expected": "PVDLSKWSGPLSL",
+      "actual": "P",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 144,
+      "expected": "AGAAVDELGKVLTPTQV",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 145,
+      "expected": "EWDDYVPKLYEQLSGK",
+      "actual": "E",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 146,
+      "expected": "AGAAVDELGKVLTPTQVKNR",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 147,
+      "expected": "pyroE-AEWDDYVPKLYEQLSGK",
+      "actual": "Q",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 148,
+      "expected": "PVDLSKWSGPLSLQEVDEQPQHPLHVTY",
+      "actual": "P",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 149,
+      "expected": "AGAAVDELGKVLTPTQVKNRPTSISWDGLDSGKLYTL",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 150,
+      "expected": "Ac-AAPVDLELKKAFTEL",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 151,
+      "expected": "Ac-AAKVFESIGKFGLA",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 152,
+      "expected": "Ac-AAKVFESIGKFGLAL",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 153,
+      "expected": "Ac-AAKVFESIGKFGLALA",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 154,
+      "expected": "Ac-MNARGLGSELKDSIPVTEL",
+      "actual": "M",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 155,
+      "expected": "Ac-ASKRALVIL",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 156,
+      "expected": "Ac-ASKRALVILA",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 157,
+      "expected": "Ac-ASKRALVILAKGAEEMETVIPVDVM",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 158,
+      "expected": "LLGEEDEEALHYL",
+      "actual": "L",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 159,
+      "expected": "LLGEEDEEALHYLT",
+      "actual": "L",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 160,
+      "expected": "LLGEEDEEALHYLTR",
+      "actual": "L",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 161,
+      "expected": "ALLGEEDEEALHYLTR",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 162,
+      "expected": "PQVSALLGEEDEEALHYLTR",
+      "actual": "P",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 163,
+      "expected": "VNHPQVSALLGEEDEEALHYLTR",
+      "actual": "V",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 164,
+      "expected": "VNHPQVSALLGEEDEEALHYLTRV",
+      "actual": "V",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 165,
+      "expected": "Ac-SSEEGKLFVGGLNF",
+      "actual": "S",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 166,
+      "expected": "Ac-SSEEGKLFVGGLNFNTDEQALEDHF",
+      "actual": "S",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 167,
+      "expected": "SIIMLEALERV",
+      "actual": "S",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 168,
+      "expected": "GNSIIMLEALERV",
+      "actual": "G",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 169,
+      "expected": "GAIRDIDL",
+      "actual": "G",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 170,
+      "expected": "GAIRDIDLKNR",
+      "actual": "G",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 171,
+      "expected": "Ac-SYGRPPPDVEGMTSLKVDNL",
+      "actual": "S",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 172,
+      "expected": "Ac-SYGRPPPDVEGMTSLKVDNLTY",
+      "actual": "S",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 173,
+      "expected": "KLEATINELV",
+      "actual": "K",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 174,
+      "expected": "Ac-ADKPDMGEIASFDKAKLKKTETQEKNTLPTKETIEQEKRSEIS",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 175,
+      "expected": "Ac-SDKPDMAEIEKFDKSKLKKTETQEKNPLPSKETIEQEKQAGES",
+      "actual": "S",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 176,
+      "expected": "LDPKIAVA",
+      "actual": "L",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 177,
+      "expected": "SLGELIGTLNA",
+      "actual": "S",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 178,
+      "expected": "LDPKIAVAAQN",
+      "actual": "L",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 179,
+      "expected": "SLGELIGTLNAAKV",
+      "actual": "S",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 180,
+      "expected": "APPTAYIDFARQK",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 181,
+      "expected": "KVIADNVKDWSKVVL",
+      "actual": "K",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 182,
+      "expected": "ASQPDVDGFLVGGASLKPEFVDIINA",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 183,
+      "expected": "ASQPDVDGFLVGGASLKPEFVDIINAKQ",
+      "actual": "A",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 184,
+      "expected": "KELASQPDVDGFLVGGASLKPEFVDIINAKQ",
+      "actual": "K",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 185,
+      "expected": "IIEPSLRQL",
+      "actual": "I",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 186,
+      "expected": "SSVPGVRLL",
+      "actual": "S",
+      "disposition": "deferred_heatmap_republication"
+    },
+    {
+      "source_file": "gelman_s2.xlsx",
+      "sheet": "Sheet1",
+      "row": 187,
+      "expected": "RSSVPGVRLL",
+      "actual": "R",
+      "disposition": "deferred_heatmap_republication"
+    }
+  ],
+  "n_candidate_reuse_groups_with_equal_normalized_experiment_label": 552,
+  "n_candidate_reuse_groups_with_different_experiment_labels": 278,
+  "seconds": 1.0220109579968266
+}
