@@ -329,6 +329,47 @@ def test_training_closure_fails_with_an_untouched_allocated_head(tmp_path, monke
         fit_index(ObservationIndex(path), output, resume=True)
 
 
+def test_registered_run_that_fails_the_coverage_gate_is_still_closed(tmp_path, monkeypatch):
+    from presto.scripts import experiment_registry as registry
+
+    path, rows = fixture_manifest(tmp_path)
+    rows = [
+        replace(row, split="train", endpoint="kd" if i % 2 else "ic50", value=10 ** (i + 1))
+        for i, row in enumerate(rows)
+    ]
+    data_path = tmp_path / "rows.jsonl"
+    data_path.unlink()
+    receipt = write_observations(data_path, rows)
+    manifest = json.loads(path.read_text())
+    manifest["model"]["endpoints"] = ["ic50", "kd"]
+    manifest["training"] = {
+        "max_epochs": 1,
+        "max_steps": 1,
+        "batch_size": 1,
+        "test_policy": "no_test_training_diagnostic",
+        "no_test_reason": "software closure regression",
+    }
+    manifest["sources"][0]["sha256"] = receipt["sha256"]
+    path.write_text(json.dumps(manifest))
+    experiments = tmp_path / "experiments"
+    experiments.mkdir()
+    monkeypatch.setattr(registry, "EXPERIMENTS_ROOT", experiments)
+    monkeypatch.setattr(registry, "REGISTRY_MD", experiments / "experiment_log.md")
+    output = experiments / "2026-10-20_0001_codex_gate-failure"
+    args = SimpleNamespace(
+        observations_manifest=str(path),
+        modular_preflight=False,
+        run_dir=str(output),
+        device="cpu",
+        _explicit_cli_dests=set(),
+    )
+    with pytest.raises(ValueError, match="training coverage gate failed"):
+        run_manifest(args)
+    assert "Coverage gate: `failed`" in (output / "README.md").read_text()
+    assert f"Closure: {output.name}" in (experiments / "experiment_log.md").read_text()
+    assert (output / "failure.json").exists()
+
+
 def test_distinct_export_ids_cannot_duplicate_one_measured_outcome(tmp_path):
     path, rows = fixture_manifest(tmp_path)
     first = replace(rows[0], provenance={"original_measurement_id": "original-assay"})

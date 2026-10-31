@@ -26,6 +26,10 @@ def add_training_source_arguments(parser):
         help="Resume the same frozen run; requires --run-dir",
     )
     parser.add_argument("--run-dir", help="Registered timestamped experiment directory")
+    parser.add_argument(
+        "--agent",
+        help="Who ran this (codex, claude, ...); else $PRESTO_AGENT, else 'unspecified'",
+    )
     parser.add_argument("--device", default="cpu", help="Torch device, e.g. cpu or cuda")
     parser.add_argument(
         "--model-kind",

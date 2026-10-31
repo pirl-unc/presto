@@ -6,6 +6,7 @@ from collections import Counter, defaultdict
 from dataclasses import asdict
 import json
 import math
+import os
 from pathlib import Path
 import random
 import re
@@ -118,6 +119,15 @@ def initialized_model(config, index, *, device="cpu"):
     return model, inherited
 
 
+def check_training_strata(index, training, indices):
+    weights = validate_stratum_weights(training["balance_by"], training["stratum_weights"])
+    if weights is None:
+        return
+    sizes = Counter(index_stratum(index, i, training["balance_by"]) for i in indices)
+    validate_stratum_weights(training["balance_by"], training["stratum_weights"], sizes)
+    weighted_quotas(sizes, weights)
+
+
 def preflight(index: ObservationIndex):
     config = ModularConfig.from_dict(index.manifest["model"])
     supplied = index.manifest.get("training", {})
@@ -125,16 +135,15 @@ def preflight(index: ObservationIndex):
         raise ValueError("unknown modular training option")
     training = {**DEFAULT_TRAINING, **supplied}
     validate_balance_by(training["balance_by"])
-    weights = validate_stratum_weights(training["balance_by"], training["stratum_weights"])
-    if training["balance_by"]:
-        sizes = Counter()
-        for i in index.partitions.get("train:assay", []) or index.partitions.get(
-            "train:identity", []
-        ):
-            sizes[index_stratum(index, i, training["balance_by"])] += 1
-        if weights is not None:
-            validate_stratum_weights(training["balance_by"], training["stratum_weights"], sizes)
-            weighted_quotas(sizes, weights)
+    validate_stratum_weights(training["balance_by"], training["stratum_weights"])
+    # Freezing removes rows from the trained strata, and the frozen set needs the
+    # built model; `_fit_index` repeats this check on the rows it actually trains.
+    if training["balance_by"] and not (index.manifest.get("pretrained") or {}).get("freeze"):
+        check_training_strata(
+            index,
+            training,
+            index.partitions.get("train:assay", []) or index.partitions.get("train:identity", []),
+        )
     for key in (
         "batch_size",
         "max_epochs",
@@ -149,7 +158,7 @@ def preflight(index: ObservationIndex):
     if interval is not None and (type(interval) is not int or interval <= 0):
         raise ValueError("validation_every_steps must be a positive integer or null")
     if training["max_steps"] is not None and (
-        not isinstance(training["max_steps"], int) or training["max_steps"] <= 0
+        type(training["max_steps"]) is not int or training["max_steps"] <= 0
     ):
         raise ValueError("max_steps must be a positive integer")
     limit = training["train_evaluation_max_rows"]
@@ -599,6 +608,8 @@ def _fit_index(index, output_dir, *, device, resume):
     replay_indices = trainable_identity if trainable_assays else []
     if not base_indices:
         raise ValueError("no observations with a trainable supervised loss")
+    if training["balance_by"]:
+        check_training_strata(index, training, base_indices)
     validation = index.partitions.get("validation:assay", []) + index.partitions.get(
         "validation:identity", []
     )
@@ -900,10 +911,16 @@ def _fit_index(index, output_dir, *, device, resume):
     return summary
 
 
+class CoverageGateError(ValueError):
+    """A completed run whose required training-coverage gate failed."""
+
+
 def _check_coverage_result(summary):
     gate = summary["coverage_gate"]
     if gate["status"] == "failed" and gate["policy"] == "required":
-        raise ValueError("training coverage gate failed; inspect summary.json and coverage.json")
+        raise CoverageGateError(
+            "training coverage gate failed; inspect summary.json and coverage.json"
+        )
 
 
 def _metric_table(summary):
@@ -929,6 +946,10 @@ def _metric_table(summary):
     return "\n".join(lines) + "\n"
 
 
+def _agent(args):
+    return getattr(args, "agent", None) or os.environ.get("PRESTO_AGENT") or "unspecified"
+
+
 def _register_run(index, output, args, registry):
     if output.exists():
         raise ValueError("experiment directory already exists; choose a fresh registered run")
@@ -937,7 +958,7 @@ def _register_run(index, output, args, registry):
         slug="modular-model-fit",
         title="Modular directly supervised fit",
         source_script="training/modular_run.py",
-        agent_label="codex",
+        agent_label=_agent(args),
         metadata={
             "dataset_contract": index.manifest["sources"],
             "training": index.manifest.get("training", {}),
@@ -1019,10 +1040,11 @@ def run_manifest(args):
         return admission
     from ..scripts import experiment_registry as registry
 
+    agent = _agent(args)
     output = (
         Path(args.run_dir).resolve()
         if getattr(args, "run_dir", None)
-        else registry.default_experiment_dir(slug="modular-model-fit", agent_label="codex")
+        else registry.default_experiment_dir(slug="modular-model-fit", agent_label=agent)
     )
     root = registry.EXPERIMENTS_ROOT.resolve()
     if output.parent != root or not re.fullmatch(
@@ -1057,6 +1079,7 @@ def run_manifest(args):
     else:
         index = _register_run(index, output, args, registry)
     device = getattr(args, "device", None) or "cpu"
+    gate_error = None
     try:
         summary = fit_index(index, output, device=device, resume=resume)
     except Exception as error:
@@ -1064,10 +1087,14 @@ def run_manifest(args):
         _json(output / "failures" / f"{time.time_ns()}.json", failure)
         if not (output / "failure.json").exists():
             _json(output / "failure.json", failure)
-        raise
+        if not isinstance(error, CoverageGateError):
+            raise
+        # The fit finished and wrote its summary; close it out, then surface the gate.
+        gate_error = error
+        summary = json.loads((output / "summary.json").read_text())
     narrative = (
         "# Modular directly supervised fit\n\n"
-        f"Agent: Codex. Python: `{sys.version.split()[0]}`. Device: `{device}`.\n\n"
+        f"Agent: {agent}. Python: `{sys.version.split()[0]}`. Device: `{device}`.\n\n"
         "## Frozen contract\n\n"
         "See `reproduce/launch.json`, `reproduce/source-manifest.json`, `resolved-config.json` "
         "and `admission.json` for source hashes, splits, units, admitted labels "
@@ -1081,6 +1108,8 @@ def run_manifest(args):
         "All three prediction dumps retain the targets needed to recompute metrics. "
         "This run does not automatically qualify a biological endpoint. Compare the prespecified "
         "baseline, memorization and noninferiority gates before promotion.\n\n"
+        f"Coverage gate: `{summary['coverage_gate']['status']}` "
+        f"(policy `{summary['coverage_gate']['policy']}`). "
         f"Test-use policy: `{summary['test_policy']}`. "
         f"No-test reason: {index.manifest.get('training', {}).get('no_test_reason')}.\n\n"
         "Selected/initial/last checkpoints and optimizer states are local raw artifacts "
@@ -1093,7 +1122,7 @@ def run_manifest(args):
     if heading not in existing:
         closure = (
             f"\n#### Closure: {output.name}\n\n"
-            f"Agent: Codex. Results: [{output.name}/summary.json]({output.name}/summary.json). "
+            f"Agent: {agent}. Results: [{output.name}/summary.json]({output.name}/summary.json). "
             f"Selected epoch {summary['selected_epoch']}; {summary['steps']} updates; "
             f"{summary['elapsed_seconds']:.2f} seconds on {device}. "
             "One tested condition; no comparative winner or biological qualification. "
@@ -1102,4 +1131,6 @@ def run_manifest(args):
             + _metric_table(summary)
         )
         atomic_bytes(registry.REGISTRY_MD, (existing + closure).encode())
+    if gate_error is not None:
+        raise gate_error
     return summary

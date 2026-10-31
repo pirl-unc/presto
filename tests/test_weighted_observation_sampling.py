@@ -10,8 +10,11 @@ import pytest
 from presto.data.modular_sources import ObservationIndex
 from presto.tests.test_modular_resume import manifest_fixture
 from presto.tests.test_unified_training_core import row
-from presto.training.modular_run import preflight
-from presto.training.modular_sampling import epoch_order, validate_stratum_weights
+from presto.training.modular_run import check_training_strata, preflight
+from presto.training.modular_sampling import (
+    epoch_order,
+    validate_stratum_weights,
+)
 
 
 def weights(a=3, b=1):
@@ -66,3 +69,21 @@ def test_manifest_preflight_checks_weighted_training_strata(tmp_path):
     document["training"]["stratum_weights"] = weights()[:1]
     path.write_text(json.dumps(document))
     preflight(ObservationIndex(path))
+
+
+def test_stratum_weights_are_checked_against_the_rows_actually_trained():
+    rows = [row(endpoint="ic50") for _ in range(3)] + [row(endpoint="kd") for _ in range(2)]
+    training = {"balance_by": ["endpoint"], "stratum_weights": weights()[:1]}
+    check_training_strata(rows, training, range(3))
+    with pytest.raises(ValueError, match="every observed training stratum"):
+        check_training_strata(rows, training, range(5))
+
+
+@pytest.mark.parametrize("value", [True, False, 0, 1.5])
+def test_preflight_rejects_non_integer_max_steps(tmp_path, value):
+    path = manifest_fixture(tmp_path, replay=False)
+    document = json.loads(path.read_text())
+    document["training"]["max_steps"] = value
+    path.write_text(json.dumps(document))
+    with pytest.raises(ValueError, match="max_steps"):
+        preflight(ObservationIndex(path))
