@@ -1,0 +1,221 @@
+{
+ "history": [
+  {
+   "epoch": 1,
+   "selected": true,
+   "steps": 3,
+   "training_loss": 1.10199373960495
+  },
+  {
+   "epoch": 2,
+   "selected": false,
+   "steps": 6,
+   "training_loss": 1.077852154771487
+  },
+  {
+   "epoch": 3,
+   "selected": false,
+   "steps": 8,
+   "training_loss": 1.2313960790634155
+  }
+ ],
+ "param_sum": {
+  "assay_layer.decoder.0.bias": 0.19102870614733547,
+  "assay_layer.decoder.0.weight": 0.589885522986151,
+  "assay_layer.decoder.2.bias": 0.024598440155386925,
+  "assay_layer.decoder.2.weight": -0.5543596903298749,
+  "assay_layer.factors.endpoint.ic50": -0.10698680341010913,
+  "encoder.embedding.weight": 10.252107233158313,
+  "encoder.norm.bias": -0.0027368276787456125,
+  "encoder.norm.weight": 127.9984387755394,
+  "encoder.pos_enc.pe": 17346.304069741836,
+  "encoder.transformer.layers.0.linear1.bias": 0.27872837288305163,
+  "encoder.transformer.layers.0.linear1.weight": 6.41976833510671,
+  "encoder.transformer.layers.0.linear2.bias": -0.3286910512360919,
+  "encoder.transformer.layers.0.linear2.weight": 1.199468919840001,
+  "encoder.transformer.layers.0.norm1.bias": 0.0033115625992650166,
+  "encoder.transformer.layers.0.norm1.weight": 128.0055626630783,
+  "encoder.transformer.layers.0.norm2.bias": -0.007765093658235855,
+  "encoder.transformer.layers.0.norm2.weight": 128.00928860902786,
+  "encoder.transformer.layers.0.self_attn.in_proj_bias": -0.004805171753798021,
+  "encoder.transformer.layers.0.self_attn.in_proj_weight": 23.751188539591112,
+  "encoder.transformer.layers.0.self_attn.out_proj.bias": -0.004000173750682734,
+  "encoder.transformer.layers.0.self_attn.out_proj.weight": -2.727608639481332,
+  "encoder.transformer.layers.1.linear1.bias": 0.2897306947852485,
+  "encoder.transformer.layers.1.linear1.weight": 6.453703915196456,
+  "encoder.transformer.layers.1.linear2.bias": -0.3270046501856996,
+  "encoder.transformer.layers.1.linear2.weight": 1.5518701176961258,
+  "encoder.transformer.layers.1.norm1.bias": 0.0068773302336921915,
+  "encoder.transformer.layers.1.norm1.weight": 128.00379925966263,
+  "encoder.transformer.layers.1.norm2.bias": -0.004296584309486207,
+  "encoder.transformer.layers.1.norm2.weight": 128.00143867731094,
+  "encoder.transformer.layers.1.self_attn.in_proj_bias": -0.006468722098865953,
+  "encoder.transformer.layers.1.self_attn.in_proj_weight": 23.732022127427626,
+  "encoder.transformer.layers.1.self_attn.out_proj.bias": -0.003766445428482257,
+  "encoder.transformer.layers.1.self_attn.out_proj.weight": -2.752705058290303,
+  "identity_heads.mhc_class.bias": 0.012393973767757416,
+  "identity_heads.mhc_class.weight": -0.2517858130595414,
+  "interaction_norm.bias": -0.0002734326699282974,
+  "interaction_norm.weight": 127.9936893582344,
+  "pmhc_fusion.0.bias": 0.5057737076858757,
+  "pmhc_fusion.0.weight": -1.2581479429391038,
+  "residue_interaction.in_proj_bias": -0.0009020545478932718,
+  "residue_interaction.in_proj_weight": -20.040960697921037,
+  "residue_interaction.out_proj.bias": -0.0008449726301478222,
+  "residue_interaction.out_proj.weight": -9.219341783500568
+ },
+ "selected_epoch": 1,
+ "trace": [
+  {
+   "identity": [
+    "i2",
+    "i3",
+    "i1"
+   ],
+   "loss": 1.5119929313659668,
+   "parts": {
+    "identity": 0.7608903050422668,
+    "primary": 1.4359039068222046
+   },
+   "rows": [
+    "a3",
+    "a1"
+   ]
+  },
+  {
+   "identity": [
+    "i0",
+    "i2",
+    "i0"
+   ],
+   "loss": 0.9768427014350891,
+   "parts": {
+    "identity": 0.5212242007255554,
+    "primary": 0.924720287322998
+   },
+   "rows": [
+    "a2",
+    "a4"
+   ]
+  },
+  {
+   "identity": [
+    "i1",
+    "i3",
+    "i0"
+   ],
+   "loss": 0.817145586013794,
+   "parts": {
+    "identity": 0.7569349408149719,
+    "primary": 0.7414520978927612
+   },
+   "rows": [
+    "a0",
+    "a5"
+   ]
+  },
+  {
+   "identity": [
+    "i1",
+    "i2",
+    "i3"
+   ],
+   "loss": 2.1001405715942383,
+   "parts": {
+    "identity": 0.7478232383728027,
+    "primary": 2.025358200073242
+   },
+   "rows": [
+    "a3",
+    "a0"
+   ]
+  },
+  {
+   "identity": [
+    "i3",
+    "i1",
+    "i2"
+   ],
+   "loss": 1.0133836269378662,
+   "parts": {
+    "identity": 0.7412962317466736,
+    "primary": 0.9392540454864502
+   },
+   "rows": [
+    "a2",
+    "a4"
+   ]
+  },
+  {
+   "identity": [
+    "i0",
+    "i0",
+    "i1"
+   ],
+   "loss": 0.12003226578235626,
+   "parts": {
+    "identity": 0.6256178021430969,
+    "primary": 0.05747048184275627
+   },
+   "rows": [
+    "a5",
+    "a1"
+   ]
+  },
+  {
+   "identity": [
+    "i3",
+    "i2",
+    "i1"
+   ],
+   "loss": 1.464259147644043,
+   "parts": {
+    "identity": 0.7386875152587891,
+    "primary": 1.390390396118164
+   },
+   "rows": [
+    "a3",
+    "a1"
+   ]
+  },
+  {
+   "identity": [
+    "i2",
+    "i0",
+    "i3"
+   ],
+   "loss": 0.9985330104827881,
+   "parts": {
+    "identity": 0.7016220092773438,
+    "primary": 0.9283708333969116
+   },
+   "rows": [
+    "a2",
+    "a0"
+   ]
+  }
+ ],
+ "training": {
+  "balance_by": [],
+  "batch_size": 2,
+  "checkpoint_every_steps": 2,
+  "coverage_exception_reason": null,
+  "coverage_policy": "required",
+  "identity_batch_size": 3,
+  "identity_weight": 0.1,
+  "learning_rate": 0.0003,
+  "max_epochs": 3,
+  "max_steps": 8,
+  "min_epochs": 10,
+  "no_test_reason": null,
+  "patience": 15,
+  "seed": 42,
+  "selection_endpoint": null,
+  "selection_reduction": "observation_mean",
+  "stratum_weights": [],
+  "test_policy": "evaluate_selected_once",
+  "train_evaluation_max_rows": null,
+  "validation_every_steps": null,
+  "weight_decay": 0.0001
+ }
+}

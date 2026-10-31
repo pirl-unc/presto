@@ -20,6 +20,7 @@ from ..data.modular import (
     identity_vocabulary,
     has_identity_input,
 )
+from .modular_controls import ranking_loss
 from ..models.modular import MODEL_VERSION, ModularConfig, ModularPresto, Prediction
 from ..models.modular_support import feature_inputs, record_feature_updates
 from ..models.modular_dependencies import (
@@ -74,10 +75,14 @@ def batch_loss(
     rows: Sequence[Observation],
     outputs: Sequence[Prediction],
     scales: dict[str, TargetScale],
+    *,
+    normalization: str = "observation_mean",
+    endpoint_weights: dict[str, float] | None = None,
 ) -> tuple[torch.Tensor, dict[str, int]]:
+    """Mean loss per observation, or (per_endpoint) a weighted mean of endpoint means."""
     if len(rows) != len(outputs):
         raise ValueError("prediction/observation alignment mismatch")
-    losses, counts = [], Counter()
+    losses, keys, counts = [], [], Counter()
     for row, output in zip(rows, outputs, strict=True):
         if row.observation_id != output.observation_id or row.endpoint != output.endpoint:
             raise ValueError("prediction identity mismatch")
@@ -90,13 +95,31 @@ def batch_loss(
                     F.cross_entropy(logits[None], torch.tensor([target], device=logits.device))
                 )
                 counts[identity_head(name)] += 1
+                keys.append(identity_head(name))
         else:
             loss = observation_loss(output, row, scales)
             if loss is not None:
                 losses.append(loss)
                 counts[row.endpoint] += 1
+                keys.append(row.endpoint)
     if not losses:
         raise ValueError("batch has no supported measured labels")
+    if normalization == "per_endpoint":
+        weights = endpoint_weights or {}
+        members = {key: [] for key in dict.fromkeys(keys)}
+        for key, loss in zip(keys, losses, strict=True):
+            members[key].append(loss)
+        total = sum(weights.get(key, 1.0) for key in members)
+        return (
+            sum(
+                weights.get(key, 1.0) * torch.stack(values).mean()
+                for key, values in members.items()
+            )
+            / total,
+            dict(counts),
+        )
+    if normalization != "observation_mean":
+        raise ValueError("unsupported loss normalization")
     return torch.stack(losses).mean(), dict(counts)
 
 
@@ -115,6 +138,10 @@ def train_step(
     *,
     identity_rows: Sequence[Observation] = (),
     identity_weight: float = 0.1,
+    normalization: str = "observation_mean",
+    endpoint_weights: dict[str, float] | None = None,
+    ranking: dict[str, Any] | None = None,
+    grad_clip_norm: float | None = None,
 ) -> dict[str, Any]:
     """One measured vote per row/bag; identity replay is a separate mean CE."""
     if type(model) is not ModularPresto:
@@ -136,8 +163,22 @@ def train_step(
     model.train()
     optimizer.zero_grad(set_to_none=True)
     with feature_inputs(model):
-        loss, counts = batch_loss(model, rows, model(rows), scales)
+        outputs = model(rows)
+        loss, counts = batch_loss(
+            model,
+            rows,
+            outputs,
+            scales,
+            normalization=normalization,
+            endpoint_weights=endpoint_weights,
+        )
     loss_parts = {"primary": float(loss.detach())}
+    if ranking is not None:
+        pairwise, pairs = ranking_loss(rows, outputs, ranking["endpoints"])
+        if pairwise is not None:
+            loss = loss + ranking["weight"] * pairwise
+            loss_parts["ranking"] = float(pairwise.detach())
+        loss_parts["ranking_pairs"] = pairs
     if identity_rows and identity_weight > 0:
         with feature_inputs(model):
             identity_loss, identity_counts = batch_loss(
@@ -164,6 +205,14 @@ def train_step(
             "gradient_present": gradient is not None,
             "frozen": name in model.frozen_parameters,
         }
+    grad_norm = None
+    if grad_clip_norm is not None:
+        grad_norm = float(
+            torch.nn.utils.clip_grad_norm_(
+                [parameter for parameter in model.parameters() if parameter.grad is not None],
+                grad_clip_norm,
+            )
+        )
     optimizer.step()
     record_feature_updates(model, before)
     for name, parameter in model.named_parameters():
@@ -235,6 +284,7 @@ def train_step(
     return {
         "loss": float(loss.detach()),
         "loss_parts": loss_parts,
+        **({"grad_norm": grad_norm} if grad_clip_norm is not None else {}),
         "counts": counts,
         "coverage": coverage,
     }

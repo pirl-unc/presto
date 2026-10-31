@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections import Counter, defaultdict
+import contextlib
 from dataclasses import asdict
 import json
 import logging
@@ -36,6 +37,18 @@ from .modular import (
     load_checkpoint,
     save_checkpoint,
     train_step,
+)
+from .modular_controls import (
+    CONTROL_DEFAULTS,
+    EMA,
+    cell_blocks,
+    cell_key,
+    control,
+    learning_rate,
+    segment_for,
+    spearman_score,
+    study_of,
+    validate_controls,
 )
 from .modular_evaluation import evaluate
 from .modular_resume import (
@@ -123,30 +136,29 @@ def initialized_model(config, index, *, device="cpu"):
 
 
 def check_training_strata(index, training, indices):
-    weights = validate_stratum_weights(training["balance_by"], training["stratum_weights"])
-    if weights is None:
-        return
-    sizes = Counter(index_stratum(index, i, training["balance_by"]) for i in indices)
-    validate_stratum_weights(training["balance_by"], training["stratum_weights"], sizes)
-    weighted_quotas(sizes, weights)
+    """Every sampling regime (base weights and each schedule segment) must be realizable."""
+    regimes = [training["stratum_weights"]] + [
+        segment["stratum_weights"] for segment in control(training, "schedule")
+    ]
+    sizes = None
+    for declared in regimes:
+        weights = validate_stratum_weights(training["balance_by"], declared)
+        if weights is None:
+            continue
+        if sizes is None:
+            sizes = Counter(index_stratum(index, i, training["balance_by"]) for i in indices)
+        validate_stratum_weights(training["balance_by"], declared, sizes)
+        weighted_quotas(sizes, weights)
 
 
 def preflight(index: ObservationIndex):
     config = ModularConfig.from_dict(index.manifest["model"])
     supplied = index.manifest.get("training", {})
-    if set(supplied) - DEFAULT_TRAINING.keys():
+    if set(supplied) - DEFAULT_TRAINING.keys() - CONTROL_DEFAULTS.keys():
         raise ValueError("unknown modular training option")
     training = {**DEFAULT_TRAINING, **supplied}
     validate_balance_by(training["balance_by"])
     validate_stratum_weights(training["balance_by"], training["stratum_weights"])
-    # Freezing removes rows from the trained strata, and the frozen set needs the
-    # built model; `_fit_index` repeats this check on the rows it actually trains.
-    if training["balance_by"] and not (index.manifest.get("pretrained") or {}).get("freeze"):
-        check_training_strata(
-            index,
-            training,
-            index.partitions.get("train:assay", []) or index.partitions.get("train:identity", []),
-        )
     for key in (
         "batch_size",
         "max_epochs",
@@ -186,6 +198,15 @@ def preflight(index: ObservationIndex):
         or training["identity_weight"] < 0
     ):
         raise ValueError("invalid optimizer or identity replay weights")
+    validate_controls(training, config, training["balance_by"])
+    # Freezing removes rows from the trained strata, and the frozen set needs the
+    # built model; `_fit_index` repeats this check on the rows it actually trains.
+    if training["balance_by"] and not (index.manifest.get("pretrained") or {}).get("freeze"):
+        check_training_strata(
+            index,
+            training,
+            index.partitions.get("train:assay", []) or index.partitions.get("train:identity", []),
+        )
     if training["test_policy"] not in ("evaluate_selected_once", "no_test_training_diagnostic"):
         raise ValueError("explicit supported test-use policy required")
     if training["coverage_policy"] not in ("required", "diagnostic"):
@@ -222,6 +243,8 @@ def preflight(index: ObservationIndex):
         if not frozen_output(validator, target)
     }
     validation_primary = validation_trainable = False
+    spearman_enabled = control(training, "selection_metric") == "within_study_spearman"
+    spearman_rows = defaultdict(int)
     counts, label_values, feature_states = Counter(), defaultdict(set), defaultdict(set)
     source_label_values = defaultdict(set)
     observed_features = {"acquisition": set(), "observation": set(), "preparation": set()}
@@ -238,6 +261,14 @@ def preflight(index: ObservationIndex):
         if row.split == "validation":
             validation_primary |= row.endpoint == primary
             validation_trainable |= bool(supervised_targets(row) & trainable_targets)
+            if (
+                spearman_enabled
+                and row.endpoint in control(training, "selection_spearman_endpoints")
+                and row.qualifier == "="
+                and row.value is not None
+                and study_of(row.provenance) is not None
+            ):
+                spearman_rows[(row.endpoint, str(study_of(row.provenance)))] += 1
         if row.endpoint == "identity":
             targets = identity_targets(row, validator)
             for name in targets:
@@ -336,6 +367,13 @@ def preflight(index: ObservationIndex):
                             name
                         ) or row.context.components.get(name)
                         feature_states[name].add(component.state if component else "unknown")
+    if spearman_enabled:
+        for name in control(training, "selection_spearman_endpoints"):
+            if frozen_output(validator, name):
+                raise ValueError("selection_spearman_endpoints cannot name a frozen outcome")
+        minimum = control(training, "selection_min_cell_rows")
+        if not any(count >= minimum for count in spearman_rows.values()):
+            raise ValueError("no validation study cell meets selection_min_cell_rows")
     if primary is not None and not validation_primary:
         raise ValueError("selection_endpoint has no validation outcomes")
     scales = {**inherited_scales, **scale_fitter.finish()}
@@ -461,6 +499,22 @@ def preflight(index: ObservationIndex):
             "frozen_targets": list(validator.frozen_targets),
             "frozen_parameters": sorted(validator.frozen_parameters),
             "inherited_scalers": sorted(inherited_scales),
+            **(
+                {
+                    "selection_cells": [
+                        {"endpoint": key[0], "study": key[1], "n": count}
+                        for key, count in sorted(spearman_rows.items())
+                        if count >= control(training, "selection_min_cell_rows")
+                    ],
+                    "selection_cells_skipped": [
+                        {"endpoint": key[0], "study": key[1], "n": count}
+                        for key, count in sorted(spearman_rows.items())
+                        if count < control(training, "selection_min_cell_rows")
+                    ],
+                }
+                if spearman_enabled
+                else {}
+            ),
         },
     )
 
@@ -678,9 +732,30 @@ def _fit_index(index, output_dir, *, device, resume):
         restore_rng(saved["rng"], rng, identity_rng)
         _json(output_dir / "history.json", state["history"])
     elapsed_before = state["elapsed_seconds"]
+    schedule = control(training, "schedule")
+    lr_schedule = control(training, "lr_schedule")
+    batching = control(training, "cell_batching")
+    ranking = control(training, "within_group_ranking_loss")
+    ema = (
+        EMA(model, control(training, "ema_decay"), saved=state.get("ema"))
+        if control(training, "ema_decay") is not None
+        else None
+    )
+    # Deterministic row -> comparison-cell map; reads training rows only, never RNG.
+    cell_keys = {i: cell_key(index[i]) for i in base_indices} if batching else {}
+    extra_step_options = {}
+    if control(training, "loss_normalization") != "observation_mean":
+        extra_step_options["normalization"] = control(training, "loss_normalization")
+        extra_step_options["endpoint_weights"] = control(training, "endpoint_loss_weights")
+    if ranking is not None:
+        extra_step_options["ranking"] = ranking
+    if control(training, "grad_clip_norm") is not None:
+        extra_step_options["grad_clip_norm"] = control(training, "grad_clip_norm")
 
     def snapshot():
         state["elapsed_seconds"] = elapsed_before + time.monotonic() - start_time
+        if ema is not None:
+            state["ema"] = ema.state()
         save_resume(
             snapshot_path,
             model,
@@ -702,15 +777,23 @@ def _fit_index(index, output_dir, *, device, resume):
     while state["phase"] == "training":
         epoch = state["epoch"]
         if not state["order"]:
-            state["order"] = epoch_order(
-                index, base_indices, training["balance_by"], rng, training["stratum_weights"]
-            )
+            weights = training["stratum_weights"]
+            if schedule:
+                state["segment"] = segment_for(schedule, state["steps"])
+                if state["segment"] < len(schedule):
+                    weights = schedule[state["segment"]]["stratum_weights"]
+            state["order"] = epoch_order(index, base_indices, training["balance_by"], rng, weights)
+            if batching:
+                state["order"] = cell_blocks(
+                    state["order"], cell_keys, batching["rows_per_cell"], rng
+                )
         order = state["order"]
         epoch_exposures = Counter(state["epoch_exposures"])
         while (
             not state.get("validation_pending", False)
             and state["position"] < len(order)
             and (training["max_steps"] is None or state["steps"] < training["max_steps"])
+            and segment_for(schedule, state["steps"]) == state.get("segment", 0)
         ):
             selected = order[state["position"] : state["position"] + training["batch_size"]]
             rows = [index[i] for i in selected]
@@ -723,6 +806,12 @@ def _fit_index(index, output_dir, *, device, resume):
                         state["replay_position"] = 0
                     identity_rows.append(index[state["replay_order"][state["replay_position"]]])
                     state["replay_position"] += 1
+            if lr_schedule is not None:
+                rate = learning_rate(
+                    training["learning_rate"], lr_schedule, state["steps"], training["max_steps"]
+                )
+                for group in optimizer.param_groups:
+                    group["lr"] = rate
             step = train_step(
                 model,
                 optimizer,
@@ -730,7 +819,10 @@ def _fit_index(index, output_dir, *, device, resume):
                 scales,
                 identity_rows=identity_rows,
                 identity_weight=training["identity_weight"],
+                **extra_step_options,
             )
+            if ema is not None:
+                ema.update(model)
             _accumulate_coverage(coverage, step)
             exposures.update(step["counts"])
             epoch_exposures.update(step["counts"])
@@ -745,6 +837,17 @@ def _fit_index(index, output_dir, *, device, resume):
                 snapshot()
             if validation_interval and state["steps"] % validation_interval == 0:
                 break
+        if (
+            schedule
+            and not state.get("validation_pending", False)
+            and state["position"] < len(order)
+            and (training["max_steps"] is None or state["steps"] < training["max_steps"])
+            and segment_for(schedule, state["steps"]) != state["segment"]
+        ):
+            # A schedule boundary discards the unconsumed order; it is rebuilt with the
+            # new segment's weights from the restored sampler RNG (not a validation event).
+            state.update(order=[], position=0)
+            continue
         complete_epoch = state["position"] == len(order)
         budget_done = (complete_epoch and epoch == training["max_epochs"]) or (
             training["max_steps"] is not None and state["steps"] >= training["max_steps"]
@@ -753,15 +856,24 @@ def _fit_index(index, output_dir, *, device, resume):
             # Reaching a data epoch is not a validation event in step-cadence mode.
             state.update(epoch=epoch + 1, order=[], position=0)
             continue
-        validation_metrics, _ = evaluate(
-            model, index, validation, scales, batch_size=training["batch_size"]
-        )
-        score = _selection_score(
-            validation_metrics,
-            model,
-            training["selection_endpoint"],
-            training["selection_reduction"],
-        )
+        with ema.swap(model) if ema is not None else contextlib.nullcontext():
+            validation_metrics, validation_records = evaluate(
+                model, index, validation, scales, batch_size=training["batch_size"]
+            )
+        selection_report = None
+        if control(training, "selection_metric") == "within_study_spearman":
+            score, selection_report = spearman_score(
+                validation_records,
+                control(training, "selection_spearman_endpoints"),
+                control(training, "selection_min_cell_rows"),
+            )
+        else:
+            score = _selection_score(
+                validation_metrics,
+                model,
+                training["selection_endpoint"],
+                training["selection_reduction"],
+            )
         if score is None:
             # A declared training-only diagnostic selects its last executed update.
             improved = True
@@ -770,19 +882,22 @@ def _fit_index(index, output_dir, *, device, resume):
         if improved:
             state["best"] = score if score is not None else state["best"]
             state["best_epoch"], state["stale"] = epoch, 0
-            save_checkpoint(
-                output_dir / "selected.pt",
-                model,
-                scales,
-                optimizer=optimizer,
-                metadata={
-                    **initial_metadata,
-                    "epoch": epoch,
-                    "steps": state["steps"],
-                    "coverage": coverage,
-                    "selection_metric": score,
-                },
-            )
+            with ema.swap(model) if ema is not None else contextlib.nullcontext():
+                save_checkpoint(
+                    output_dir / "selected.pt",
+                    model,
+                    scales,
+                    optimizer=optimizer,
+                    metadata={
+                        **initial_metadata,
+                        "epoch": epoch,
+                        "steps": state["steps"],
+                        "coverage": coverage,
+                        "selection_metric": score,
+                        **({"weights": "ema"} if ema is not None else {}),
+                        **({"selection_cells": selection_report} if selection_report else {}),
+                    },
+                )
             state["selected_bytes"] = (output_dir / "selected.pt").read_bytes()
         else:
             state["stale"] += 1
@@ -795,6 +910,12 @@ def _fit_index(index, output_dir, *, device, resume):
                 "selected": improved,
                 "complete_epoch": complete_epoch,
                 "label_exposures": dict(epoch_exposures),
+                **(
+                    {"learning_rate": optimizer.param_groups[0]["lr"]}
+                    if lr_schedule is not None
+                    else {}
+                ),
+                **({"selection": selection_report} if selection_report else {}),
             }
         )
         _json(output_dir / "history.json", history)
@@ -815,18 +936,20 @@ def _fit_index(index, output_dir, *, device, resume):
             if complete_epoch:
                 state.update(epoch=epoch + 1, order=[], position=0)
         snapshot()
-    save_checkpoint(
-        output_dir / "last.pt",
-        model,
-        scales,
-        optimizer=optimizer,
-        metadata={
-            **initial_metadata,
-            "epoch": state["last_epoch"],
-            "steps": state["steps"],
-            "coverage": coverage,
-        },
-    )
+    with ema.swap(model) if ema is not None else contextlib.nullcontext():
+        save_checkpoint(
+            output_dir / "last.pt",
+            model,
+            scales,
+            optimizer=optimizer,
+            metadata={
+                **initial_metadata,
+                "epoch": state["last_epoch"],
+                "steps": state["steps"],
+                "coverage": coverage,
+                **({"weights": "ema"} if ema is not None else {}),
+            },
+        )
     # Recover the selection committed with this snapshot, even if a crash left a newer file.
     if state["selected_bytes"] is None:
         raise ValueError("evaluation phase has no selected checkpoint")
