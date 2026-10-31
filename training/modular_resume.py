@@ -110,8 +110,6 @@ def run_lock(output):
 def execution_contract(index, config, training, scales, device):
     root = Path(__file__).resolve().parent.parent
     backend = {
-        "threads": torch.get_num_threads(),
-        "interop_threads": torch.get_num_interop_threads(),
         "deterministic": torch.are_deterministic_algorithms_enabled(),
         "deterministic_warn_only": torch.is_deterministic_algorithms_warn_only_enabled(),
         "default_dtype": str(torch.get_default_dtype()),
@@ -122,15 +120,6 @@ def execution_contract(index, config, training, scales, device):
         "cuda_tf32": torch.backends.cuda.matmul.allow_tf32,
         "mha_fastpath": torch.backends.mha.get_fastpath_enabled(),
     }
-    gpu = None
-    if torch.device(device).type == "cuda":
-        properties = torch.cuda.get_device_properties(device)
-        gpu = {
-            "name": properties.name,
-            "memory": properties.total_memory,
-            "capability": [properties.major, properties.minor],
-            "visible_count": torch.cuda.device_count(),
-        }
     return {
         "format": RESUME_VERSION,
         "manifest_sha256": index.manifest_sha256,
@@ -141,25 +130,53 @@ def execution_contract(index, config, training, scales, device):
         "implementation": {name: file_sha256(root / name) for name in SOURCE_FILES},
         "python": sys.version,
         "torch": str(torch.__version__),
-        "torch_build": torch.__config__.show(),
         "numpy": str(np.__version__),
+        "device": torch.device(device).type,
+        "backend": backend,
+        "environment": {
+            name: os.environ.get(name)
+            for name in ("CUBLAS_WORKSPACE_CONFIG", "PYTORCH_ENABLE_MPS_FALLBACK")
+        },
+    }
+
+
+# Hardware and scheduling facts. A run preempted onto a different host must
+# resume (as mhcflurry adapts threads, devices and batch size to the machine),
+# so these are recorded for provenance and drift reporting, never enforced.
+HOST_ENVIRONMENT = (
+    "OMP_NUM_THREADS",
+    "OPENBLAS_NUM_THREADS",
+    "MKL_NUM_THREADS",
+    "CUDA_VISIBLE_DEVICES",
+)
+
+
+def host_profile(device):
+    gpu = None
+    if torch.device(device).type == "cuda":
+        properties = torch.cuda.get_device_properties(device)
+        gpu = {
+            "name": properties.name,
+            "memory": properties.total_memory,
+            "capability": [properties.major, properties.minor],
+            "visible_count": torch.cuda.device_count(),
+        }
+    return {
+        "threads": torch.get_num_threads(),
+        "interop_threads": torch.get_num_interop_threads(),
+        "torch_build": torch.__config__.show(),
         "platform": platform.platform(),
         "machine": platform.machine(),
         "device": str(torch.device(device)),
         "gpu": gpu,
-        "backend": backend,
-        "environment": {
-            name: os.environ.get(name)
-            for name in (
-                "OMP_NUM_THREADS",
-                "OPENBLAS_NUM_THREADS",
-                "MKL_NUM_THREADS",
-                "CUBLAS_WORKSPACE_CONFIG",
-                "CUDA_VISIBLE_DEVICES",
-                "PYTORCH_ENABLE_MPS_FALLBACK",
-            )
-        },
+        "environment": {name: os.environ.get(name) for name in HOST_ENVIRONMENT},
     }
+
+
+def host_drift(saved, current):
+    """Names of host facts that differ from the snapshot's; empty for a same-host resume."""
+    saved = saved or {}
+    return sorted(key for key in current if saved.get(key) != current[key])
 
 
 def optimizer_names(model, optimizer):
@@ -195,7 +212,9 @@ def restore_rng(state, sampler, replay):
         torch.mps.set_rng_state(state["mps"].cpu())
 
 
-def save_resume(path, model, scales, optimizer, state, contract, sampler, replay, metadata):
+def save_resume(
+    path, model, scales, optimizer, state, contract, sampler, replay, metadata, host=None
+):
     save_checkpoint(
         path,
         model,
@@ -205,6 +224,7 @@ def save_resume(path, model, scales, optimizer, state, contract, sampler, replay
             **metadata,
             "resume": {
                 "contract": contract,
+                "host": host,
                 "optimizer_names": optimizer_names(model, optimizer),
                 "rng": rng_state(sampler, replay, contract["device"]),
                 "state": state,

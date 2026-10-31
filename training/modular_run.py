@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections import Counter, defaultdict
 from dataclasses import asdict
 import json
+import logging
 import math
 import os
 from pathlib import Path
@@ -47,6 +48,8 @@ from .modular_resume import (
     completed_result,
     digest,
     execution_contract,
+    host_drift,
+    host_profile,
     optimizer_names,
     restore_rng,
     run_lock,
@@ -542,11 +545,19 @@ def trainable_indices(index, model):
     )
 
 
+def _record_host(output_dir, host, drift):
+    """Append where each segment of a run executed; resume stays allowed across hosts."""
+    entry = {"time_ns": time.time_ns(), "drift": drift, "host": host}
+    with (output_dir / "host-history.jsonl").open("a") as stream:
+        stream.write(json.dumps(entry, sort_keys=True) + "\n")
+
+
 def _fit_index(index, output_dir, *, device, resume):
     config, training, scales, admission = preflight(index)
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     contract = execution_contract(index, config, training, scales, device)
+    host = host_profile(device)
     snapshot_path = output_dir / "resume.pt"
     saved = None
     if resume:
@@ -554,6 +565,10 @@ def _fit_index(index, output_dir, *, device, resume):
             raise ValueError("resume requires an existing durable resume.pt snapshot")
         saved_payload = torch.load(snapshot_path, map_location="cpu", weights_only=True)
         saved = check_contract(saved_payload, contract)
+        drift = host_drift(saved.get("host"), host)
+        if drift:
+            logging.warning("resuming on a different host; changed: %s", ", ".join(drift))
+        _record_host(output_dir, host, drift)
         closed = completed_result(output_dir, contract)
         if closed is not None:
             _check_coverage_result(closed)
@@ -574,6 +589,7 @@ def _fit_index(index, output_dir, *, device, resume):
         ):
             raise ValueError("refusing to overwrite a run; use explicit resume")
         _json(output_dir / "admission.json", admission)
+        _record_host(output_dir, host, [])
         _json(
             output_dir / "resolved-config.json",
             {
@@ -675,6 +691,7 @@ def _fit_index(index, output_dir, *, device, resume):
             rng,
             identity_rng,
             initial_metadata,
+            host,
         )
 
     if saved is None:

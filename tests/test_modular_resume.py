@@ -497,3 +497,24 @@ def test_changed_sampler_source_invalidates_resume_before_updates(tmp_path, monk
     monkeypatch.setattr(runner, 'train_step', lambda *a, **k: pytest.fail('unexpected update'))
     with pytest.raises(ValueError, match='contract changed'):
         runner.fit_index(ObservationIndex(path), output, resume=True)
+
+
+def test_resume_survives_a_different_host_and_records_the_drift(tmp_path, monkeypatch):
+    path = manifest_fixture(tmp_path, replay=False)
+    output = tmp_path / "fit"
+    original = runner.train_step
+    interrupt(monkeypatch, before_step=3)
+    with pytest.raises(RuntimeError, match="interruption"):
+        runner.fit_index(ObservationIndex(path), output)
+    payload = torch.load(output / "resume.pt", weights_only=True)
+    host = payload["metadata"]["resume"]["host"]
+    host.update(threads=host["threads"] + 7, machine="other-arch", torch_build="other build")
+    torch.save(payload, output / "resume.pt")
+    monkeypatch.setattr(runner, "train_step", original)
+    summary = runner.fit_index(ObservationIndex(path), output, resume=True)
+    assert summary["steps"] > 0
+    history = [
+        json.loads(line) for line in (output / "host-history.jsonl").read_text().split("\n") if line
+    ]
+    assert history[0]["drift"] == []
+    assert {"threads", "machine", "torch_build"} <= set(history[-1]["drift"])
