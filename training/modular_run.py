@@ -362,44 +362,40 @@ def preflight(index: ObservationIndex):
     ):
         if not index.partitions.get("train:identity") or training["identity_weight"] <= 0:
             raise ValueError("fine-tuning the shared encoder requires explicit identity replay")
+    context_frozen = all(
+        name in validator.frozen_parameters
+        for name in ("context_fusion.0.weight", "elution_processing.0.weight")
+        if name in validator.feature_layout
+    ) and any(
+        name in validator.feature_layout
+        for name in ("context_fusion.0.weight", "elution_processing.0.weight")
+    )
     for name, states in feature_states.items():
-        if (
-            len(states - {"unknown", "reference"}) < 2
-            and "context_fusion.0.weight" not in validator.frozen_parameters
-        ):
+        if len(states - {"unknown", "reference"}) < 2 and not context_frozen:
             raise ValueError(f"component effect lacks contrasted training states: {name}")
     missing_cells = set(config.cell_types) - cell_types
-    if missing_cells and "context_fusion.0.weight" not in validator.frozen_parameters:
+    if missing_cells and not context_frozen:
         raise ValueError(f"cell types have no observed training labels: {sorted(missing_cells)}")
     for name, scale in config.ordinal_scales.items():
         missing = set(scale.levels) - ordinal_levels[name]
-        if missing and "context_fusion.0.weight" not in validator.frozen_parameters:
+        if missing and not context_frozen:
             raise ValueError(f"ordinal levels lack training support: {name}: {sorted(missing)}")
     for name in config.cytokines:
-        if (
-            not {"present", "absent"} <= cytokine_states[name]
-            and "context_fusion.0.weight" not in validator.frozen_parameters
-        ):
+        if not {"present", "absent"} <= cytokine_states[name] and not context_frozen:
             raise ValueError(f"cytokine effect lacks present/absent training contrast: {name}")
     for family, configured in (
         ("pathway", config.processing_pathways),
         ("intervention", config.interventions),
     ):
         for name in configured:
-            if (
-                not {"present", "absent"} <= assertion_states[family][name]
-                and "context_fusion.0.weight" not in validator.frozen_parameters
-            ):
+            if not {"present", "absent"} <= assertion_states[family][name] and not context_frozen:
                 raise ValueError(f"{family} lacks present/absent training contrast: {name}")
     for suffix, names in (
         ("dose", config.cytokine_dose_units),
         ("duration_hours", config.cytokine_duration_features),
     ):
         for name in names:
-            if (
-                len(cytokine_numeric[f"{name}:{suffix}"]) < 2
-                and "context_fusion.0.weight" not in validator.frozen_parameters
-            ):
+            if len(cytokine_numeric[f"{name}:{suffix}"]) < 2 and not context_frozen:
                 raise ValueError(
                     f"cytokine numeric feature lacks varied training values: {name}:{suffix}"
                 )
@@ -593,7 +589,7 @@ def _fit_index(index, output_dir, *, device, resume):
         _json(
             output_dir / "resolved-config.json",
             {
-                "model": asdict(config),
+                "model": config.to_dict(),
                 "training": training,
                 "scales": {key: asdict(value) for key, value in scales.items()},
             },
@@ -605,7 +601,7 @@ def _fit_index(index, output_dir, *, device, resume):
         model, inherited = initialized_model(config, index, device=device)
     else:
         model, restored_scales, saved_payload = load_checkpoint(snapshot_path, device=device)
-        if asdict(model.config) != asdict(config) or restored_scales != scales:
+        if model.config.to_dict() != config.to_dict() or restored_scales != scales:
             raise ValueError("resume model/scalers differ from the frozen execution contract")
     trainable = [parameter for parameter in model.parameters() if parameter.requires_grad]
     if not trainable:

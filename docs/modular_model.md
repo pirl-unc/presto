@@ -450,6 +450,48 @@ indirect training for each domain. These declarations and software checks do not
 establish identification of digestion, availability or MS bias: source curation,
 anchors, held-out predictive evaluation and transfer evidence remain required.
 
+## Staged elution (`elution_staging="affinity_downstream"`)
+
+An eluted ligand is observed when it is presented, and presentation is
+binding x processing/supply x detection. The default (`legacy_joint`) elution
+readout reads the fused pMHC trunk through the cellular score head, so the ligand
+gradient shares the trunk with the affinity endpoints and never reads the
+affinity or stability scalar. The opt-in staged mode (a generalized
+mhcflurry-style presentation model) makes elution strictly downstream:
+
+```
+elution_logit = a * (-pooled_affinity_score)          # elution_affinity_endpoint, register-pooled as for affinity
+              + b * pooled_half_life_score             # only if the model allocates half_life
+              + processing(peptide [+ source/flank] + APC context)
+              + ms_response(peptide, acquisition)      # detection
+              + bias
+```
+
+* `a` (`elution_affinity_weight`, init 1) and `b` (`elution_stability_weight`,
+  init 0.5) are learned scalars, unconstrained in sign. Class I and II share one
+  path; class II uses the same register-pooled affinity score (candidate scores
+  pooled with the affinity endpoint's direction, then negated).
+* The affinity score is the reference-track decoder of the configured
+  `elution_affinity_endpoint` on the pre-context `pmhc_fusion` state, so it is
+  the very score the affinity endpoints use. `elution_detach_affinity=True`
+  detaches it, so elution trains `a` but no affinity parameter. The stability
+  term is not detached and still trains the shared trunk through `half_life`.
+* The cellular score head and `context_fusion` are not used (and not allocated unless
+  another cellular/TCR endpoint needs `context_fusion`). Cell/APC context
+  reaches elution only through `elution_processing`.
+* The processing term is named `processing` when `source_context` supplies
+  flank/source features, otherwise `processing_peptide_only`
+  (`diagnostics["elution_staging"]`). Either way it is a supply-side term
+  absorbing whatever labels reward, and `processing_identified` is always
+  `False`: unobserved processing is not claimed from elution labels.
+* The predicted component is `elution_presentation` (not `cellular`). Per-term
+  values are in each register's `elution_terms`.
+* The three fields appear in `PrestoConfig.to_dict()` (checkpoint config,
+  resolved-config, resume contract) only when staging is on, so frozen v5-v7
+  digests are unchanged. `parameter_dependencies` for `elution_observation` and
+  `component:cellular` include the affinity decoder, half-life head, `a`, `b`,
+  `elution_processing` and the MS score head, and never the cellular score head.
+
 ## Observation and target contract
 
 `presto.data.modular.Observation` is the single train/inference input. JSONL rows

@@ -285,7 +285,7 @@ def save_checkpoint(
     validate_freezing(model)
     payload = {
         "format": MODEL_VERSION,
-        "config": asdict(model.config),
+        "config": model.config.to_dict(),
         "state_dict": model.state_dict(),
         "scales": {key: asdict(value) for key, value in scales.items()},
         "support": model.support,
@@ -510,6 +510,11 @@ def initialize_from_checkpoint(
             and model.config.quantity_domains[domain] != contract
         ):
             raise ValueError(f"incompatible pretrained measurement domain: {domain}")
+    if getattr(previous, "staged_elution", False) or model.staged_elution:
+        shared_contract.update(
+            {"elution_staging", "elution_affinity_endpoint", "elution_detach_affinity"}
+        )
+        old, new = ({"elution_staging": "legacy_joint", **side} for side in (old, new))
     for key in shared_contract:
         if old[key] != new[key]:
             raise ValueError(f"incompatible pretrained feature contract: {key}")
@@ -533,7 +538,7 @@ def initialize_from_checkpoint(
                 raise ValueError(f"incompatible pretrained input feature layout: {name}")
             removed = set(old_labels) - set(new_labels)
             removable_prefixes = []
-            if name == "context_fusion.0.weight":
+            if name in ("context_fusion.0.weight", "elution_processing.0.weight"):
                 if previous.has_tcr and not model.has_tcr:
                     removable_prefixes += ["full_peptide:", "tcr_a:", "tcr_b:"]
                 if previous.has_cellular and not model.has_cellular:

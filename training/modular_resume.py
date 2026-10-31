@@ -124,7 +124,7 @@ def execution_contract(index, config, training, scales, device):
         "format": RESUME_VERSION,
         "manifest_sha256": index.manifest_sha256,
         "source_hashes": {str(path): file_sha256(path) for path in index.source_paths},
-        "config": json.loads(canonical(asdict(config))),
+        "config": json.loads(canonical(config.to_dict())),
         "training": training,
         "scales": {name: asdict(value) for name, value in scales.items()},
         "implementation": {name: file_sha256(root / name) for name in SOURCE_FILES},
