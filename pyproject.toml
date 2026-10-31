@@ -39,7 +39,7 @@ dev = [
   # here claimed the floor was needed because old ruff lacks `extend-exclude`;
   # that is false -- it predates 0.1 -- and a reader who checked would have
   # concluded the pin was cargo-cult and relaxed it.
-  "ruff==0.16.0",
+  "ruff==0.16.10",
   "mkdocs>=1.5.0",
 ]
 
