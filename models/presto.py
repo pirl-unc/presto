@@ -39,11 +39,12 @@ from ..data.modular_context import (
 )
 from .encoders import SequenceEncoder
 from .modular_support import feature_inputs, feature_layout
-from .modular_dependencies import frozen_output
+from .modular_dependencies import frozen_output, staged_elution_parameters
 from ..data.assay_measurement import AssayTrack, observation_track, observation_method
 from .assay_measurement import AFFINITY_ENDPOINTS, AssayMeasurementLayer
 
 MODEL_VERSION = "presto.shared.v7"
+ELUTION_STAGINGS = ("legacy_joint", "affinity_downstream")
 
 
 @dataclass(frozen=True)
@@ -87,6 +88,14 @@ class PrestoConfig:
     n_heads: int = 4
     d_ff: int = 512
     peptide_context: str = "shared_core_context_v2"
+    # "legacy_joint": elution reads the fused trunk through `cellular_score`.
+    # "affinity_downstream": elution = a*(-pooled affinity score) [+ b*pooled
+    # half-life score] + processing + ms_response + bias; see docs/modular_model.md.
+    # The three staging fields are omitted from `to_dict()` while legacy so frozen
+    # checkpoints and their contract digests are unchanged.
+    elution_staging: str = "legacy_joint"
+    elution_affinity_endpoint: str | None = None
+    elution_detach_affinity: bool = False
 
     def __post_init__(self):
         if self.assay_mode != "factorized":
@@ -115,6 +124,23 @@ class PrestoConfig:
                 raise ValueError(f"{name} must be a positive integer")
         if self.d_model % 2 or self.d_model % self.n_heads:
             raise ValueError("model width must be even and divisible by attention heads")
+        if self.elution_staging not in ELUTION_STAGINGS:
+            raise ValueError(f"elution_staging must be one of {ELUTION_STAGINGS}")
+        if self.elution_staging == "legacy_joint":
+            if self.elution_affinity_endpoint is not None or self.elution_detach_affinity:
+                raise ValueError("elution affinity options require elution_staging")
+        else:
+            if "elution_observation" not in self.endpoints:
+                raise ValueError("staged elution needs the elution_observation endpoint")
+            if (
+                self.elution_affinity_endpoint not in AFFINITY_ENDPOINTS
+                or self.elution_affinity_endpoint not in self.endpoints
+            ):
+                raise ValueError(
+                    "staged elution needs an allocated concentration affinity endpoint"
+                )
+            if type(self.elution_detach_affinity) is not bool:
+                raise ValueError("elution_detach_affinity must be boolean")
         if self.peptide_context != "shared_core_context_v2":
             raise ValueError("new training requires the shared core/full ordered context contract")
         if not self.register_pooling:
@@ -265,6 +291,14 @@ class PrestoConfig:
         ):
             raise ValueError("observation covariates have no observation loss path")
 
+    def to_dict(self) -> dict[str, Any]:
+        """Serializable contract; legacy elution staging adds no keys."""
+        data = asdict(self)
+        if self.elution_staging == "legacy_joint":
+            for name in ("elution_staging", "elution_affinity_endpoint", "elution_detach_affinity"):
+                del data[name]
+        return data
+
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> PrestoConfig:
         data = dict(data)
@@ -369,7 +403,17 @@ class Presto(nn.Module):
         self.has_pmhc = bool(routes & {"pmhc", "cellular", "tcr", "tcr_cellular"})
         self.has_cellular = bool(routes & {"cellular", "tcr_cellular"})
         self.has_tcr = bool(routes & {"tcr", "tcr_cellular"})
-        self.has_context = self.has_cellular or self.has_tcr
+        self.staged_elution = config.elution_staging == "affinity_downstream"
+        # Staged elution bypasses context_fusion; other contextual routes still use it.
+        self.has_context = bool(
+            {
+                endpoint_spec(name).route
+                for name in config.endpoints
+                if not (self.staged_elution and name == "elution_observation")
+            }
+            & {"cellular", "tcr", "tcr_cellular"}
+        )
+        self.elution_stability = self.staged_elution and "half_life" in config.endpoints
         self.has_digest = bool(routes & {"bulk", "digest"})
         self.has_ms = any("ms_response" in endpoint_spec(name).parts for name in config.endpoints)
         self.has_coreceptor = bool(set(config.endpoints) & {"tcell_response", "tcr_response"})
@@ -415,6 +459,16 @@ class Presto(nn.Module):
         )
         if self.has_context:
             self.context_fusion = self._fusion(config.d_model + self.context_width)
+        if self.staged_elution:
+            # Supply-side term: peptide (+ source/flank when source_context) and APC context.
+            self.elution_processing = nn.Sequential(
+                nn.Linear(config.d_model + self.context_width, config.d_model),
+                nn.GELU(),
+                nn.Linear(config.d_model, 1, bias=False),
+            )
+            self.elution_affinity_weight = nn.Parameter(torch.tensor(1.0))
+            if self.elution_stability:
+                self.elution_stability_weight = nn.Parameter(torch.tensor(0.5))
         if self.has_digest:
             self.digest_fusion = self._fusion(
                 config.d_model
@@ -431,6 +485,8 @@ class Presto(nn.Module):
             if not endpoint_spec(name).quantitative
             for part in endpoint_spec(name).parts
         }
+        if self.staged_elution:
+            binary_parts.discard("cellular")
         for part in sorted(binary_parts):
             setattr(
                 self,
@@ -837,6 +893,32 @@ class Presto(nn.Module):
             values.append(self._tensor(auxiliary[name].probabilities) if allowed else self._zero(2))
         return torch.cat(values) if values else self._zero(0)
 
+    def _staged_elution(self, hidden, processing):
+        """Elution logit with binding/stability entering only via their own scores.
+
+        The affinity score is the reference-track decoder of the configured affinity
+        endpoint, register-pooled with that endpoint's direction (as for the affinity
+        endpoints themselves); higher affinity (lower value) raises the logit.
+        """
+        affinity_endpoint = self.config.elution_affinity_endpoint
+        affinity = self.assay_layer.score(hidden, affinity_endpoint)
+        if self.config.elution_detach_affinity:
+            affinity = affinity.detach()
+        pooled, attention = self._pool_registers(
+            affinity, endpoint_spec(affinity_endpoint).register_direction
+        )
+        binding = -self.elution_affinity_weight * pooled
+        total = binding + processing
+        terms = {"binding": binding, "processing": processing}
+        if self.elution_stability:
+            stability, _ = self._pool_registers(
+                self.heads["half_life"](hidden).squeeze(-1),
+                endpoint_spec("half_life").register_direction,
+            )
+            terms["stability"] = self.elution_stability_weight * stability
+            total = total + terms["stability"]
+        return affinity, total, attention, terms
+
     def _pmhc(self, row, mhc, encoded, token_states):
         identity = self._identity(row, mhc, encoded)
         species, class_field, components, cell = self._resolve(row, mhc, identity)
@@ -853,6 +935,12 @@ class Presto(nn.Module):
         context = (
             self._context(row, encoded, species, components, auxiliary, cell)
             if contextual
+            else None
+        )
+        staged = self.staged_elution and row.endpoint == "elution_observation"
+        processing = (
+            self.elution_processing(torch.cat([encoded[row.peptide], context])).squeeze(-1)
+            if staged
             else None
         )
         for index, weight in enumerate(class_field.probabilities):
@@ -882,19 +970,23 @@ class Presto(nn.Module):
                 for candidate_index in range(len(register_candidates))
             ]
             hidden = self.pmhc_fusion(torch.stack(features))
-            if contextual:
+            if contextual and not staged:
                 hidden = self.context_fusion(
                     torch.cat([hidden, context.expand(len(hidden), -1)], -1)
                 )
             spec = endpoint_spec(row.endpoint)
-            scores = (
-                self._component_score(row.endpoint, "cellular", hidden)
-                if "cellular" in spec.parts
-                else self.assay_layer.score(hidden, row.endpoint)
-                if row.endpoint in self.affinity_endpoints
-                else self.heads[row.endpoint](hidden).squeeze(-1)
-            )
-            value, attention = self._pool_registers(scores, spec.register_direction)
+            terms = None
+            if staged:
+                scores, value, attention, terms = self._staged_elution(hidden, processing)
+            else:
+                scores = (
+                    self._component_score(row.endpoint, "cellular", hidden)
+                    if "cellular" in spec.parts
+                    else self.assay_layer.score(hidden, row.endpoint)
+                    if row.endpoint in self.affinity_endpoints
+                    else self.heads[row.endpoint](hidden).squeeze(-1)
+                )
+                value, attention = self._pool_registers(scores, spec.register_direction)
             pooled.append(weight * value)
             if panel:
                 for key, assay_scores in self.assay_layer(hidden, row.endpoint).items():
@@ -911,6 +1003,7 @@ class Presto(nn.Module):
                     "pooling": "normalized_logsumexp_model_units",
                     "direction": spec.register_direction,
                     "entropy": -(attention * attention.clamp_min(1e-12).log()).sum(),
+                    **({"elution_terms": terms} if terms is not None else {}),
                 }
             )
         diagnostics = {
@@ -1035,7 +1128,23 @@ class Presto(nn.Module):
                 output.diagnostics["candidates"] = diagnostics
                 if "cellular" in spec.parts:
                     scores = torch.stack(vectors)
-                    output.components["cellular"] = self._candidate_mean(row.endpoint, scores)
+                    staged = self.staged_elution and row.endpoint == "elution_observation"
+                    output.components["elution_presentation" if staged else "cellular"] = (
+                        self._candidate_mean(row.endpoint, scores)
+                    )
+                    if staged:
+                        output.diagnostics["elution_staging"] = {
+                            "mode": self.config.elution_staging,
+                            "affinity_endpoint": self.config.elution_affinity_endpoint,
+                            "affinity_detached": self.config.elution_detach_affinity,
+                            "stability_term": self.elution_stability,
+                            "processing_term": (
+                                "processing"
+                                if self.config.source_context
+                                else "processing_peptide_only"
+                            ),
+                            "processing_identified": False,
+                        }
                 else:
                     output.value = vectors[0]
             if row.endpoint in self.offsets:
@@ -1233,7 +1342,10 @@ class Presto(nn.Module):
                     (mhc.class_override or mhc.mhc_class) != "I" for mhc in row.mhc
                 ):
                     prefixes.add("register_score.")
-            if route in ("cellular", "tcr", "tcr_cellular"):
+            staged_row = self.staged_elution and row.endpoint == "elution_observation"
+            if staged_row:
+                required.update(staged_elution_parameters(self))
+            elif route in ("cellular", "tcr", "tcr_cellular"):
                 prefixes.add("context_fusion.")
             spec = endpoint_spec(row.endpoint)
             if "ms_response" in spec.parts:

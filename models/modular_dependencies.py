@@ -4,6 +4,22 @@ from ..data.modular import endpoint_spec, supervised_targets
 from ..data.modular_quantitative import quantity_domain
 
 
+def staged_elution_parameters(model):
+    """Parameters on the staged elution path: affinity decoder, stability head, processing."""
+    names = {
+        name
+        for name in dict(model.named_parameters())
+        if name.startswith(("elution_processing.", "pmhc_fusion.", "residue_interaction."))
+        or name.startswith("interaction_norm.")
+        or name in ("elution_affinity_weight", "elution_stability_weight")
+        or (model.elution_stability and name.startswith("heads.half_life."))
+    }
+    if hasattr(model, "register_score"):
+        names.update(n for n in dict(model.named_parameters()) if n.startswith("register_score."))
+    names.update(model.assay_layer.dependencies(model.config.elution_affinity_endpoint))
+    return names
+
+
 def parameter_dependencies(model, target):
     """Conservative full input-domain dependency set, not only a scalar head."""
     parameters = dict(model.named_parameters())
@@ -25,9 +41,11 @@ def parameter_dependencies(model, target):
     def component(part, domain=None):
         if domain is None:
             name = "ms_score" if part == "ms_response" else f"{part}_score"
-            if not hasattr(model, name):
+            staged = part == "cellular" and getattr(model, "staged_elution", False)
+            if not staged and not hasattr(model, name):
                 raise ValueError(f"component is not allocated: {part}")
-            prefixes.add(f"{name}.")
+            if not staged:
+                prefixes.add(f"{name}.")
         else:
             if domain not in model.quantity_scores or part not in model.quantity_scores[domain]:
                 raise ValueError(f"quantity component is not allocated: {part}:{domain}")
@@ -38,6 +56,10 @@ def parameter_dependencies(model, target):
             prefixes.add("digest_fusion.")
         elif part == "cellular":
             pmhc(contextual=True)
+            if getattr(model, "staged_elution", False):
+                # Context reaches elution through elution_processing, not context_fusion.
+                exact.update(staged_elution_parameters(model))
+                prefixes.discard("context_fusion.")
         else:
             raise ValueError(f"unsupported component: {part}")
 
@@ -45,8 +67,11 @@ def parameter_dependencies(model, target):
         prefixes.add(f"identity_heads.{target}.")
     elif target in model.config.endpoints:
         spec = endpoint_spec(target)
+        staged = getattr(model, "staged_elution", False) and target == "elution_observation"
         if spec.route in ("pmhc", "cellular", "tcr", "tcr_cellular"):
             pmhc(spec.route != "pmhc", spec.route in ("tcr", "tcr_cellular"))
+            if staged:
+                prefixes.discard("context_fusion.")
         for part in spec.parts:
             component(part, quantity_domain(target))
         prefixes.add(f"offsets.{target}." if spec.parts else f"heads.{target}.")

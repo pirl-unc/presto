@@ -37,8 +37,9 @@ def feature_layout(model):
         if "mhc_pairing" in config.auxiliary_context:
             names += ["auxiliary:mhc_pairing:matched", "auxiliary:mhc_pairing:mismatched"]
         result["pmhc_fusion.0.weight"] = (1, names)
-    if model.has_context:
-        names = vector("pmhc")
+    staged = hasattr(model, "elution_processing")
+    if model.has_context or staged:
+        names = []
         if model.has_tcr:
             names += vector("full_peptide") + vector("tcr_a") + vector("tcr_b")
         if config.source_context and model.has_cellular:
@@ -89,7 +90,10 @@ def feature_layout(model):
                         config.source_categories,
                     )
                 ]
-        result["context_fusion.0.weight"] = (1, names)
+        if model.has_context:
+            result["context_fusion.0.weight"] = (1, vector("pmhc") + names)
+        if staged:
+            result["elution_processing.0.weight"] = (1, vector("peptide") + names)
     if model.has_digest:
         names = vector("peptide") + (source if config.source_context else [])
         names += [f"enzyme:{value}" for value in (*config.enzymes, "unknown")]
