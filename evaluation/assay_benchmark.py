@@ -5,6 +5,7 @@ This module consumes physical-unit predictions and does not choose test cohorts.
 """
 
 from dataclasses import asdict, dataclass
+import hashlib
 import json
 import math
 from pathlib import Path
@@ -30,6 +31,25 @@ CELL = [
     "mhc_key",
 ]
 AFFINITY = {"ic50", "kd", "ec50", "kd_via_ic50", "kd_via_ec50"}
+
+
+def fingerprint_package(directory):
+    """Pin executable/model package bytes, not just a wrapper or version label.
+
+    Experiment drivers call before and after a complete baseline run and require
+    equality. Store the manifest beside raw predictions; do not redistribute the
+    proprietary package itself.
+    """
+    root = Path(directory).resolve(strict=True)
+    files = {
+        str(path.relative_to(root)): sha256_file(path)
+        for path in sorted(root.rglob("*"))
+        if path.is_file()
+    }
+    if not files:
+        raise ValueError("empty predictor package")
+    digest = hashlib.sha256(json.dumps(files, sort_keys=True).encode()).hexdigest()
+    return dict(directory=str(root), sha256=digest, files=files)
 
 
 def affinity_record(record):
@@ -174,8 +194,20 @@ def paired_cells(frame, comparator, *, minimum=20):
                 group.raw_nM.to_numpy(float),
                 group[name].to_numpy(float),
             )
+            constant_prediction = group[name].nunique() == 1
+            if constant_prediction and group.target_log10.nunique() > 1:
+                # A constant predictor must not make a difficult cell disappear
+                # from a paired comparison. Record the explicit zero convention.
+                metrics["spearman"] = metrics["pearson"] = 0.0
             results.append(
-                dict(**cell, method=name, n=len(group), primary_eligible=eligible, **metrics)
+                dict(
+                    **cell,
+                    method=name,
+                    n=len(group),
+                    primary_eligible=eligible,
+                    constant_prediction=constant_prediction,
+                    **metrics,
+                )
             )
     return pd.DataFrame(results)
 
@@ -194,7 +226,9 @@ def paired_study_interval(cells, comparator, metric, *, draws=2000, seed=2026110
     wide = eligible.pivot(index=CELL, columns="method", values=metric)
     if not {"presto", comparator} <= set(wide) or wide[["presto", comparator]].isna().any().any():
         raise ValueError("paired metric missing or undefined")
-    delta = (wide.presto - wide[comparator]).groupby(level=["source", "study"]).mean()
+    # The cohort must supply canonical study identities. Two export sources from
+    # the same publication are not two independent studies.
+    delta = (wide.presto - wide[comparator]).groupby(level="study").mean()
     if not len(delta):
         raise ValueError("no eligible studies")
     rng = np.random.default_rng(seed)

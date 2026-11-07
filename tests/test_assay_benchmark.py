@@ -74,6 +74,10 @@ def test_allele_offsets_do_not_become_within_cell_accuracy():
     assert interval["mean"] == pytest.approx(-2)
     assert interval["ci_low"] == pytest.approx(-2)
     assert interval["studies"] == 3
+    duplicated_source = pd.concat([cells, cells.assign(source="second_export")])
+    assert (
+        benchmark.paired_study_interval(duplicated_source, "netmhcpan", "spearman")["studies"] == 3
+    )
     one = cells[cells.study == "s1"]
     assert (
         benchmark.paired_study_interval(one, "netmhcpan", "spearman")["status"]
@@ -83,6 +87,10 @@ def test_allele_offsets_do_not_become_within_cell_accuracy():
     frame.loc[0, "netmhcpan"] = float("nan")
     with pytest.raises(ValueError, match="identical rows"):
         benchmark.paired_cells(frame, "netmhcpan")
+    constants = pd.DataFrame(rows).assign(presto=2.0)
+    constant_cells = benchmark.paired_cells(constants, "netmhcpan")
+    assert set(constant_cells.loc[constant_cells.method == "presto", "spearman"]) == {0.0}
+    assert constant_cells.loc[constant_cells.method == "presto", "constant_prediction"].all()
 
 
 def test_current_dtu_flags_and_version_are_verified(tmp_path, monkeypatch):
@@ -110,3 +118,14 @@ def test_current_dtu_flags_and_version_are_verified(tmp_path, monkeypatch):
         )
     with pytest.raises(ValueError, match="version"):
         replace(tool, version="4.1b")
+
+
+def test_fingerprint_detects_weight_changes_with_unchanged_version(tmp_path):
+    (tmp_path / "version").write_text("4.2c")
+    weights = tmp_path / "weights"
+    weights.write_text("first")
+    first = benchmark.fingerprint_package(tmp_path)
+    weights.write_text("second")
+    second = benchmark.fingerprint_package(tmp_path)
+    assert first["files"]["version"] == second["files"]["version"]
+    assert first["sha256"] != second["sha256"]
