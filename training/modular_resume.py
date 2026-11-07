@@ -43,6 +43,7 @@ SOURCE_FILES = (
     "training/modular.py",
     "training/modular_run.py",
     "training/modular_sampling.py",
+    "training/modular_controls.py",
     "training/modular_resume.py",
     "training/modular_evaluation.py",
     "cli/training_sources.py",
