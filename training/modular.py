@@ -562,7 +562,11 @@ def initialize_from_checkpoint(
             and model.config.quantity_domains[domain] != contract
         ):
             raise ValueError(f"incompatible pretrained measurement domain: {domain}")
-    if getattr(previous, "staged_elution", False) or model.staged_elution:
+    # A newly added elution output has no learned staging contract to preserve.
+    # Existing presentation outputs still require the identical dependency path.
+    if "elution_observation" in previous.config.endpoints and (
+        getattr(previous, "staged_elution", False) or model.staged_elution
+    ):
         shared_contract.update(
             {"elution_staging", "elution_affinity_endpoint", "elution_detach_affinity"}
         )
