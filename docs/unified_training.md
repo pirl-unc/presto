@@ -284,6 +284,15 @@ their within-study AUCs separately from generated-background comparisons.
 `selection_reduction: "endpoint_mean"` selects checkpoints by the equal-weight mean
 of available validation endpoint losses. The default remains `observation_mean`;
 it cannot be combined with an explicit `selection_endpoint` override.
+`selection_reduction: "study_mean"` instead averages observation losses within
+each canonical `group_id` study component, then gives studies equal weight within
+each endpoint and endpoints equal weight. It can be combined with
+`selection_endpoint` to prioritize one assay. All validation rows remain included;
+frozen tasks and identity labels do not enter this criterion. This mode uses
+observation loss, including censor penalties, rather than exact-value RMSE.
+It requires trainable assay validation outcomes and cannot be combined with a
+Spearman selection metric. Group IDs must represent the frozen study components,
+not individual rows. The selected checkpoint records this reduction explicitly.
 `train_evaluation_max_rows` optionally samples final TRAIN diagnostics uniformly
 with a reproducible seed. It does not limit training membership or validation/test
 evaluation. The summary records available and evaluated row counts.

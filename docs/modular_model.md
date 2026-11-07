@@ -697,6 +697,10 @@ null, selection uses the observation-weighted loss of trainable assay tasks
 Frozen-task metrics are still reported. The test split is
 only evaluated after selection. A training-only diagnostic must explicitly declare
 `no_test_training_diagnostic` and explain why no test split exists.
+For unequal study sizes, opt-in `selection_reduction: "study_mean"` averages
+per-observation losses within canonical study groups, then equally across groups
+and eligible endpoints. It supports a named `selection_endpoint`, retains every
+validation row, and excludes frozen tasks and identity labels from selection.
 
 ## Inference and current limits
 

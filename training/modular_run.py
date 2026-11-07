@@ -182,11 +182,11 @@ def preflight(index: ObservationIndex):
     limit = training["train_evaluation_max_rows"]
     if limit is not None and (type(limit) is not int or limit <= 0):
         raise ValueError("train_evaluation_max_rows must be a positive integer or null")
-    if training["selection_reduction"] not in ("observation_mean", "endpoint_mean"):
+    if training["selection_reduction"] not in ("observation_mean", "endpoint_mean", "study_mean"):
         raise ValueError("unsupported selection_reduction")
     if (
         training["selection_endpoint"] is not None
-        and training["selection_reduction"] != "observation_mean"
+        and training["selection_reduction"] == "endpoint_mean"
     ):
         raise ValueError(
             "selection_endpoint and selection_reduction cannot both override selection"
@@ -245,7 +245,7 @@ def preflight(index: ObservationIndex):
         for target in (*config.endpoints, *config.identity_tasks)
         if not frozen_output(validator, target)
     }
-    validation_primary = validation_trainable = False
+    validation_primary = validation_trainable = validation_assay = False
     strict_spearman = control(training, "selection_metric") == "within_assay_allele_spearman"
     spearman_enabled = (
         strict_spearman or control(training, "selection_metric") == "within_study_spearman"
@@ -268,6 +268,11 @@ def preflight(index: ObservationIndex):
         if row.split == "validation":
             validation_primary |= row.endpoint == primary
             validation_trainable |= bool(supervised_targets(row) & trainable_targets)
+            validation_assay |= (
+                row.endpoint in config.endpoints
+                and row.endpoint in trainable_targets
+                and (primary is None or row.endpoint == primary)
+            )
             if (
                 spearman_enabled
                 and row.endpoint in control(training, "selection_spearman_endpoints")
@@ -405,6 +410,8 @@ def preflight(index: ObservationIndex):
                 )
     if primary is not None and not validation_primary:
         raise ValueError("selection_endpoint has no validation outcomes")
+    if training["selection_reduction"] == "study_mean" and not validation_assay:
+        raise ValueError("study_mean selection requires trainable assay validation outcomes")
     scales = {**inherited_scales, **scale_fitter.finish()}
     for track in config.assay_tracks:
         if not assay_track_counts[track.key] and not frozen_output(validator, track.endpoint):
@@ -544,13 +551,42 @@ def preflight(index: ObservationIndex):
     )
 
 
-def _selection_score(metrics, model=None, primary_endpoint=None, reduction="observation_mean"):
+def _selection_score(
+    metrics, model=None, primary_endpoint=None, reduction="observation_mean", *, records=None
+):
     if model is not None:
         metrics = {
             key: value
             for key, value in metrics.items()
             if not frozen_output(model, key if is_endpoint(key) else identity_head(key))
         }
+    if reduction == "study_mean":
+        eligible = {key for key in metrics if is_endpoint(key)}
+        if primary_endpoint is not None:
+            eligible &= {primary_endpoint}
+        if not eligible or records is None:
+            raise ValueError("study_mean selection requires evaluated assay records")
+        groups = defaultdict(lambda: defaultdict(list))
+        for row in records:
+            if "identity_task" in row or row["endpoint"] not in eligible:
+                continue
+            group, loss = row.get("group_id"), row.get("loss")
+            if not isinstance(group, str) or not group.strip():
+                raise ValueError("study_mean selection requires canonical study group IDs")
+            if not isinstance(loss, (int, float)) or not math.isfinite(loss):
+                raise ValueError("study_mean selection requires finite observation losses")
+            groups[row["endpoint"]][group].append(loss)
+        if set(groups) != eligible:
+            raise ValueError("study_mean selection records do not cover selected endpoints")
+        if any(
+            sum(map(len, groups[endpoint].values())) != metrics[endpoint]["n"]
+            for endpoint in eligible
+        ):
+            raise ValueError("study_mean selection requires every evaluated assay record")
+        return sum(
+            sum(sum(values) / len(values) for values in studies.values()) / len(studies)
+            for studies in groups.values()
+        ) / len(groups)
     if primary_endpoint is not None:
         if primary_endpoint not in metrics:
             raise ValueError("selection_endpoint has no evaluated validation outcomes")
@@ -909,6 +945,11 @@ def _fit_index(index, output_dir, *, device, resume):
                 model,
                 training["selection_endpoint"],
                 training["selection_reduction"],
+                **(
+                    {"records": validation_records}
+                    if training["selection_reduction"] == "study_mean"
+                    else {}
+                ),
             )
         if score is None:
             # A declared training-only diagnostic selects its last executed update.
@@ -930,6 +971,11 @@ def _fit_index(index, output_dir, *, device, resume):
                         "steps": state["steps"],
                         "coverage": coverage,
                         "selection_metric": score,
+                        **(
+                            {"selection_reduction": "study_mean"}
+                            if training["selection_reduction"] == "study_mean"
+                            else {}
+                        ),
                         **({"weights": "ema"} if ema is not None else {}),
                         **({"selection_cells": selection_report} if selection_report else {}),
                     },
