@@ -31,6 +31,7 @@ METRIC_COLUMNS = (
     "task",
     "output_id",
     "split",
+    "estimate_type",
     "method",
     "metric",
     "value",
@@ -206,6 +207,10 @@ def validate_manifest(manifest: dict, manifest_path: Path) -> None:
             "metric",
         ):
             _validate_identifier(metric.get(key), f"{field}.{key}")
+        _require(
+            metric.get("estimate_type") in {"method_value", "paired_difference"},
+            f"{field}.estimate_type",
+        )
         _require(metric["split"] in ROLES - {"train", "calibration"}, f"{field}.split")
         _require(
             isinstance(metric.get("value"), (int, float)) and math.isfinite(metric["value"]),
@@ -246,6 +251,7 @@ def validate_manifest(manifest: dict, manifest_path: Path) -> None:
             metric["output_id"],
             metric["split"],
             metric["metric"],
+            metric["estimate_type"],
         )
         contract = (
             metric["eligible_rows"],
@@ -259,6 +265,8 @@ def validate_manifest(manifest: dict, manifest_path: Path) -> None:
         )
         paired[key] = contract
     for key in paired:
+        if key[-1] == "paired_difference":
+            continue
         methods = {
             metric["method"]
             for metric in metrics
@@ -270,6 +278,7 @@ def validate_manifest(manifest: dict, manifest_path: Path) -> None:
                 metric["output_id"],
                 metric["split"],
                 metric["metric"],
+                metric["estimate_type"],
             )
         }
         _require(len(methods) >= 2, f"comparison {key[0]} must contain at least two methods")

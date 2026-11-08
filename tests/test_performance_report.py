@@ -44,6 +44,7 @@ def _manifest(tmp_path: Path):
                 "task": "mhc_ii_affinity",
                 "output_id": "unspecified_assay_ic50",
                 "split": "development",
+                "estimate_type": "method_value",
                 "method": method,
                 "metric": "spearman",
                 "value": value,
