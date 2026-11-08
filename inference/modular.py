@@ -31,7 +31,9 @@ class ModularPredictor:
     def predict(self, rows: Sequence[Observation]) -> list[dict]:
         outputs = self.model.predict(rows)
         results = []
-        panel_support = self.model.capabilities().get("assay_tracks", {})
+        capabilities = self.model.capabilities()
+        panel_support = capabilities.get("assay_tracks", {})
+        tcell_support = capabilities.get("tcell_tracks", {})
         for row, output in zip(rows, outputs, strict=True):
             result = {
                 "observation_id": row.observation_id,
@@ -61,6 +63,38 @@ class ModularPredictor:
                     "indirect diagnostics unless separately anchored and validated"
                 ),
             }
+            if output.tcell_values:
+                result["tcell_panel"] = {}
+                for key, logit in output.tcell_values.items():
+                    support = tcell_support[key]
+                    ordinal_logits = output.tcell_intensity_values[key]
+                    ordinal_supported = (
+                        support["conditional_ordinal_status"] == "directly_supervised"
+                    )
+                    conditional_intensity = None
+                    if ordinal_supported:
+                        greater = ordinal_logits.sigmoid()
+                        probabilities = torch.stack(
+                            (1 - greater[0], greater[0] - greater[1], greater[1])
+                        )
+                        conditional_intensity = {
+                            "logits": _plain(ordinal_logits),
+                            "probabilities": _plain(probabilities),
+                            "levels": ["low", "intermediate", "high"],
+                            "expected_level": float(
+                                (probabilities * probabilities.new_tensor([0, 1, 2])).sum()
+                            ),
+                        }
+                    result["tcell_panel"][key] = {
+                        **support,
+                        "logit": float(logit),
+                        "score": float(logit.sigmoid()),
+                        "score_interpretation": "uncalibrated measured-outcome score",
+                        "conditional_intensity": conditional_intensity,
+                    }
+                result["selected_tcell_track"] = (
+                    row.tcell_track.key if row.tcell_track is not None else None
+                )
             if output.value is not None:
                 spec = endpoint_spec(row.endpoint)
                 result["assay_panel"] = {}

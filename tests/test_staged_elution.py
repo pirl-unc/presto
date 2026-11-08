@@ -11,6 +11,7 @@ from presto.models.modular_dependencies import freeze_dependencies, parameter_de
 from presto.training.modular import (
     batch_loss,
     coverage_summary,
+    initialize_from_checkpoint,
     load_checkpoint,
     save_checkpoint,
     train_step,
@@ -79,9 +80,12 @@ def test_flag_off_is_identical_to_default_and_contract_is_unchanged():
     for a, b in zip(first, second):
         assert torch.equal(a.value, b.value)
     assert "cellular" in first[1].components
-    # Legacy contract carries no staging keys, so existing digests do not move.
+    # Legacy contract carries no staging or empty T-cell keys, so existing
+    # digests do not move.
     assert default.config.to_dict() == {
-        k: v for k, v in asdict(default.config).items() if not k.startswith("elution_")
+        k: v
+        for k, v in asdict(default.config).items()
+        if not k.startswith("elution_") and k not in ("tcell_tracks", "tcell_ordinal_loss_weight")
     }
     with pytest.raises(ValueError, match="require elution_staging"):
         ModularConfig(endpoints=("ic50", "elution_observation"), elution_detach_affinity=True)
@@ -226,3 +230,86 @@ def test_checkpoint_round_trip_and_contract_hash(tmp_path):
     assert canonical(network.config.to_dict()) != legacy
     detached = replace(network.config, elution_detach_affinity=True)
     assert canonical(detached.to_dict()) != canonical(network.config.to_dict())
+
+
+def test_affinity_checkpoint_can_add_staged_elution_without_changing_affinity(tmp_path):
+    from presto.data.assay_measurement import AssayMethod, AssayTrack
+
+    tracks = tuple(
+        AssayTrack("ic50", "purified", "competitive", detector)
+        for detector in ("radioactivity", "fluorescence")
+    )
+    observed = [
+        row(
+            observation_id=f"{cls}-{track.detector}",
+            mhc=(MHCInput("ACDEFGHIKLM", "NPQRSTVWYAC", cls),),
+            assay_method=AssayMethod(
+                track.preparation, track.mechanism, track.detector, "source_tag_unreviewed"
+            ),
+            value=10 if cls == "I" else 1000,
+        )
+        for cls in ("I", "II")
+        for track in tracks
+    ]
+    prior = build(endpoints=("ic50",), assay_tracks=tracks)
+    scale = {"ic50": scales()["ic50"]}
+    train_step(prior, torch.optim.AdamW(prior.parameters(), lr=1e-3), observed, scale)
+    path = tmp_path / "affinity.pt"
+    save_checkpoint(path, prior, scale)
+    expanded = build(
+        endpoints=("ic50", "elution_observation"),
+        assay_tracks=tracks,
+        source_context=True,
+        elution_detach_affinity=True,
+        **STAGED,
+    )
+    report = initialize_from_checkpoint(expanded, path)
+    assert report["scales"] == scale
+    assert set(report["inherited_parameters"]) == set(prior.state_dict())
+    assert "elution_affinity_weight" not in expanded.trained_parameters
+    assert expanded.assay_support == prior.assay_support
+    with torch.no_grad():
+        expected = prior.eval()(observed)
+
+    def unchanged(model):
+        # Compare the same inference kernel path before/after dependency freezing.
+        with torch.no_grad():
+            actual = model.eval()(observed)
+        for before, after in zip(expected, actual):
+            assert torch.equal(before.value, after.value)
+            assert torch.equal(before.reference_value, after.reference_value)
+            assert before.assay_values.keys() == after.assay_values.keys()
+            for key in before.assay_values:
+                assert torch.equal(before.assay_values[key], after.assay_values[key])
+
+    unchanged(expanded)
+    freeze_dependencies(expanded, ["ic50"])
+    inherited = {name: value.clone() for name, value in prior.state_dict().items()}
+    initial_processing = expanded.elution_processing[0].weight.detach().clone()
+    optimizer = torch.optim.AdamW((p for p in expanded.parameters() if p.requires_grad), lr=1e-2)
+    train_step(expanded, optimizer, [elution()], scale)
+    assert not torch.equal(initial_processing, expanded.elution_processing[0].weight)
+    for name, value in inherited.items():
+        assert torch.equal(value, expanded.state_dict()[name]), name
+    unchanged(expanded)
+    save_checkpoint(tmp_path / "expanded.pt", expanded, scale)
+    restored, retained_scales, _ = load_checkpoint(tmp_path / "expanded.pt")
+    assert retained_scales == scale
+    unchanged(restored)
+
+
+@pytest.mark.parametrize("change", ["mode", "endpoint", "detach"])
+def test_existing_elution_contract_cannot_change_during_transfer(tmp_path, change):
+    common = dict(endpoints=("ic50", "kd", "elution_observation"))
+    prior = build(**common, **STAGED)
+    path = tmp_path / "staged.pt"
+    save_checkpoint(path, prior, {"ic50": scales()["ic50"], "kd": scales()["ic50"]})
+    mode = dict(STAGED)
+    if change == "mode":
+        mode = {}
+    elif change == "endpoint":
+        mode["elution_affinity_endpoint"] = "kd"
+    else:
+        mode["elution_detach_affinity"] = True
+    with pytest.raises(ValueError, match="incompatible pretrained feature contract: elution_"):
+        initialize_from_checkpoint(build(**common, **mode), path)

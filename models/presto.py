@@ -41,7 +41,9 @@ from .encoders import SequenceEncoder
 from .modular_support import feature_inputs, feature_layout
 from .modular_dependencies import frozen_output, staged_elution_parameters
 from ..data.assay_measurement import AssayTrack, observation_track, observation_method
-from .assay_measurement import AFFINITY_ENDPOINTS, AssayMeasurementLayer
+from .assay_measurement import AFFINITY_ENDPOINTS, TRACKED_ENDPOINTS, AssayMeasurementLayer
+from ..data.tcell_assay import TCellTrack
+from .tcell_assay import TCellAssayLayer
 
 MODEL_VERSION = "presto.shared.v7"
 ELUTION_STAGINGS = ("legacy_joint", "affinity_downstream")
@@ -51,6 +53,8 @@ ELUTION_STAGINGS = ("legacy_joint", "affinity_downstream")
 class PrestoConfig:
     endpoints: tuple[str, ...] = ("ic50",)
     assay_tracks: tuple[AssayTrack, ...] = ()
+    tcell_tracks: tuple[TCellTrack, ...] = ()
+    tcell_ordinal_loss_weight: float = 1.0
     assay_mode: str = "factorized"
     identity_tasks: tuple[str, ...] = ()
     mhc_classes: tuple[str, ...] = ("I", "II")
@@ -107,8 +111,8 @@ class PrestoConfig:
         if len({track.key for track in self.assay_tracks}) != len(self.assay_tracks):
             raise ValueError("duplicate assay tracks")
         for track in self.assay_tracks:
-            if track.endpoint not in AFFINITY_ENDPOINTS:
-                raise ValueError("assay tracks require a concentration affinity endpoint")
+            if track.endpoint not in TRACKED_ENDPOINTS:
+                raise ValueError("unsupported factorized assay-track endpoint")
             spec = endpoint_spec(track.endpoint)
             if (
                 track.endpoint not in self.endpoints
@@ -119,6 +123,18 @@ class PrestoConfig:
             preparation = "purified" if spec.route in ("pmhc", "tcr") else "cellular"
             if track.preparation != preparation:
                 raise ValueError("assay preparation conflicts with the biological endpoint route")
+        if any(not isinstance(track, TCellTrack) for track in self.tcell_tracks):
+            raise ValueError("normalized T-cell tracks required")
+        if len({track.key for track in self.tcell_tracks}) != len(self.tcell_tracks):
+            raise ValueError("duplicate T-cell tracks")
+        if self.tcell_tracks and "tcell_response" not in self.endpoints:
+            raise ValueError("T-cell tracks require the T-cell response endpoint")
+        if (
+            type(self.tcell_ordinal_loss_weight) not in (int, float)
+            or not math.isfinite(self.tcell_ordinal_loss_weight)
+            or self.tcell_ordinal_loss_weight < 0
+        ):
+            raise ValueError("T-cell ordinal loss weight must be finite and nonnegative")
         for name in ("d_model", "n_layers", "n_heads", "d_ff"):
             if type(getattr(self, name)) is not int or getattr(self, name) <= 0:
                 raise ValueError(f"{name} must be a positive integer")
@@ -294,6 +310,9 @@ class PrestoConfig:
     def to_dict(self) -> dict[str, Any]:
         """Serializable contract; legacy elution staging adds no keys."""
         data = asdict(self)
+        if not self.tcell_tracks:
+            del data["tcell_tracks"]
+            del data["tcell_ordinal_loss_weight"]
         if self.elution_staging == "legacy_joint":
             for name in ("elution_staging", "elution_affinity_endpoint", "elution_detach_affinity"):
                 del data[name]
@@ -304,6 +323,8 @@ class PrestoConfig:
         data = dict(data)
         if "assay_tracks" in data:
             data["assay_tracks"] = tuple(AssayTrack(**track) for track in data["assay_tracks"])
+        if "tcell_tracks" in data:
+            data["tcell_tracks"] = tuple(TCellTrack(**track) for track in data["tcell_tracks"])
         for name in (
             "endpoints",
             "identity_tasks",
@@ -355,6 +376,9 @@ class Prediction:
     diagnostics: dict[str, Any] = field(default_factory=dict)
     components: dict[str, torch.Tensor] = field(default_factory=dict)
     assay_values: dict[str, torch.Tensor] = field(default_factory=dict)
+    tcell_values: dict[str, torch.Tensor] = field(default_factory=dict)
+    tcell_intensity_values: dict[str, torch.Tensor] = field(default_factory=dict)
+    tcell_intensity_value: torch.Tensor | None = None
     reference_value: torch.Tensor | None = None
 
 
@@ -404,12 +428,14 @@ class Presto(nn.Module):
         self.has_cellular = bool(routes & {"cellular", "tcr_cellular"})
         self.has_tcr = bool(routes & {"tcr", "tcr_cellular"})
         self.staged_elution = config.elution_staging == "affinity_downstream"
+        self.fixed_tcell = bool(config.tcell_tracks)
         # Staged elution bypasses context_fusion; other contextual routes still use it.
         self.has_context = bool(
             {
                 endpoint_spec(name).route
                 for name in config.endpoints
                 if not (self.staged_elution and name == "elution_observation")
+                and not (self.fixed_tcell and name == "tcell_response")
             }
             & {"cellular", "tcr", "tcr_cellular"}
         )
@@ -417,6 +443,9 @@ class Presto(nn.Module):
         self.has_digest = bool(routes & {"bulk", "digest"})
         self.has_ms = any("ms_response" in endpoint_spec(name).parts for name in config.endpoints)
         self.has_coreceptor = bool(set(config.endpoints) & {"tcell_response", "tcr_response"})
+        self.shared_has_coreceptor = self.has_coreceptor and (
+            not self.fixed_tcell or "tcr_response" in config.endpoints
+        )
         self.identity_heads = nn.ModuleDict()
         for name in config.identity_tasks:
             width, classes = {
@@ -454,8 +483,11 @@ class Presto(nn.Module):
             + len(EXPOSURE_STATES) * (len(config.processing_pathways) + len(config.interventions))
             + sum(len(scale.levels) + 1 for scale in config.ordinal_scales.values())
             + (len(DELIVERY) if self.has_cellular else 0)
-            + (len(CORECEPTORS) if self.has_coreceptor else 0)
+            + (len(CORECEPTORS) if self.shared_has_coreceptor else 0)
             + 2 * sum(name != "mhc_pairing" for name in config.auxiliary_context)
+        )
+        self.tcell_context_width = self.context_width + (
+            len(CORECEPTORS) if self.fixed_tcell and not self.shared_has_coreceptor else 0
         )
         if self.has_context:
             self.context_fusion = self._fusion(config.d_model + self.context_width)
@@ -507,20 +539,35 @@ class Presto(nn.Module):
         self.heads = nn.ModuleDict()
         self.offsets = nn.ModuleDict()
         self.affinity_endpoints = tuple(sorted(set(config.endpoints) & AFFINITY_ENDPOINTS))
+        self.assay_endpoints = tuple(
+            sorted(set(self.affinity_endpoints) | {track.endpoint for track in config.assay_tracks})
+        )
         for name in config.endpoints:
             spec = endpoint_spec(name)
             if spec.parts:
                 self.offsets[name] = ObservationOffset(
                     2 * len(config.observation_features) if spec.observation_covariates else 0
                 )
-            elif name not in self.affinity_endpoints:
+            elif name not in self.assay_endpoints and not (
+                name == "tcell_response" and config.tcell_tracks
+            ):
                 self.heads[name] = nn.Linear(config.d_model, 1)
-        if self.affinity_endpoints:
+        if self.assay_endpoints:
             with torch.random.fork_rng(devices=[]):
                 self.assay_layer = AssayMeasurementLayer(
-                    config.d_model, self.affinity_endpoints, config.assay_tracks
+                    config.d_model, self.assay_endpoints, config.assay_tracks
+                )
+        if config.tcell_tracks:
+            with torch.random.fork_rng(devices=[]):
+                self.tcell_assay_layer = TCellAssayLayer(
+                    config.d_model + self.tcell_context_width,
+                    config.tcell_tracks,
+                    hidden_width=config.d_model,
                 )
         self.assay_support = {track.key: 0 for track in config.assay_tracks}
+        self.tcell_support = {
+            track.key: {"binary": 0, "conditional_ordinal": 0} for track in config.tcell_tracks
+        }
         self.trained_elements = {
             name: torch.zeros_like(p, dtype=torch.bool) for name, p in self.named_parameters()
         }
@@ -541,11 +588,21 @@ class Presto(nn.Module):
         return nn.Sequential(nn.Linear(width, self.config.d_model), nn.GELU())
 
     def assay_selection(self, row):
-        if row.endpoint not in self.affinity_endpoints:
+        if row.endpoint not in self.assay_endpoints:
             return None
         track = observation_track(row)
         if track is not None and track not in self.config.assay_tracks:
             raise ValueError(f"assay track outside checkpoint registry: {track.key}")
+        return track
+
+    def tcell_selection(self, row):
+        if row.endpoint != "tcell_response" or not self.config.tcell_tracks:
+            return None
+        track = row.tcell_track
+        if row.value is not None and track is None:
+            raise ValueError("measured T-cell response requires a declared output track")
+        if track is not None and track not in self.config.tcell_tracks:
+            raise ValueError(f"T-cell track outside checkpoint registry: {track.key}")
         return track
 
     def assay_capabilities(self):
@@ -563,6 +620,29 @@ class Presto(nn.Module):
                 "descriptor": asdict(track),
             }
             for track in self.config.assay_tracks
+        }
+
+    def tcell_capabilities(self):
+        if not self.config.tcell_tracks:
+            return {}
+        return {
+            track.key: {
+                "observations": self.tcell_support[track.key]["binary"],
+                "conditional_ordinal_observations": self.tcell_support[track.key][
+                    "conditional_ordinal"
+                ],
+                "status": "directly_supervised"
+                if self.tcell_support[track.key]["binary"]
+                and self.tcell_assay_layer.trained(track, self.trained_elements)
+                else "random/untrained",
+                "conditional_ordinal_status": "directly_supervised"
+                if self.tcell_support[track.key]["conditional_ordinal"]
+                and self.tcell_assay_layer.trained(track, self.trained_elements, ordinal=True)
+                else "random/untrained",
+                "validation": "not_evaluated",
+                "descriptor": asdict(track),
+            }
+            for track in self.config.tcell_tracks
         }
 
     def train(self, mode=True):
@@ -875,7 +955,7 @@ class Presto(nn.Module):
                 if cellular
                 else self._zero(len(DELIVERY))
             )
-        if self.has_coreceptor:
+        if self.shared_has_coreceptor:
             state = row.context.coreceptor_override or row.context.coreceptor
             values.append(
                 self._tensor([float(state == value) for value in CORECEPTORS])
@@ -892,6 +972,15 @@ class Presto(nn.Module):
             )
             values.append(self._tensor(auxiliary[name].probabilities) if allowed else self._zero(2))
         return torch.cat(values) if values else self._zero(0)
+
+    def _tcell_context(self, row, encoded, species, components, auxiliary, cell):
+        context = self._context(row, encoded, species, components, auxiliary, cell)
+        if self.fixed_tcell and not self.shared_has_coreceptor:
+            state = row.context.coreceptor_override or row.context.coreceptor
+            context = torch.cat(
+                [context, self._tensor([float(state == value) for value in CORECEPTORS])]
+            )
+        return context
 
     def _staged_elution(self, hidden, processing):
         """Elution logit with binding/stability entering only via their own scores.
@@ -931,9 +1020,16 @@ class Presto(nn.Module):
         panel = {
             track.key: [] for track in self.config.assay_tracks if track.endpoint == row.endpoint
         }
+        tcell_panel = {
+            track.key: [] for track in self.config.tcell_tracks if row.endpoint == "tcell_response"
+        }
+        tcell_intensity_panel = {key: [] for key in tcell_panel}
+        selected_tcell = self.tcell_selection(row)
         contextual = endpoint_spec(row.endpoint).route != "pmhc"
         context = (
-            self._context(row, encoded, species, components, auxiliary, cell)
+            self._tcell_context(row, encoded, species, components, auxiliary, cell)
+            if tcell_panel
+            else self._context(row, encoded, species, components, auxiliary, cell)
             if contextual
             else None
         )
@@ -970,7 +1066,7 @@ class Presto(nn.Module):
                 for candidate_index in range(len(register_candidates))
             ]
             hidden = self.pmhc_fusion(torch.stack(features))
-            if contextual and not staged:
+            if contextual and not staged and not tcell_panel:
                 hidden = self.context_fusion(
                     torch.cat([hidden, context.expand(len(hidden), -1)], -1)
                 )
@@ -978,16 +1074,40 @@ class Presto(nn.Module):
             terms = None
             if staged:
                 scores, value, attention, terms = self._staged_elution(hidden, processing)
+            elif tcell_panel:
+                tcell_hidden = torch.cat([hidden, context.expand(len(hidden), -1)], -1)
+                track_outputs = self.tcell_assay_layer(tcell_hidden)
+                # Diagnostics use a registry-stable reference track so the observed
+                # output descriptor cannot alter biological computation or attention.
+                diagnostic_key = next(iter(tcell_panel))
+                scores = track_outputs[diagnostic_key]["positivity"]
+                value, attention = self._pool_registers(scores, spec.register_direction)
+                for key, values in track_outputs.items():
+                    positivity, _ = self._pool_registers(
+                        values["positivity"], spec.register_direction
+                    )
+                    ordinal = torch.stack(
+                        [
+                            self._pool_registers(
+                                values["conditional_intensity"][:, level],
+                                spec.register_direction,
+                            )[0]
+                            for level in range(values["conditional_intensity"].shape[-1])
+                        ]
+                    )
+                    tcell_panel[key].append(weight * positivity)
+                    tcell_intensity_panel[key].append(weight * ordinal)
             else:
                 scores = (
                     self._component_score(row.endpoint, "cellular", hidden)
                     if "cellular" in spec.parts
                     else self.assay_layer.score(hidden, row.endpoint)
-                    if row.endpoint in self.affinity_endpoints
+                    if row.endpoint in self.assay_endpoints
                     else self.heads[row.endpoint](hidden).squeeze(-1)
                 )
                 value, attention = self._pool_registers(scores, spec.register_direction)
-            pooled.append(weight * value)
+            if not tcell_panel or selected_tcell is not None:
+                pooled.append(weight * value)
             if panel:
                 for key, assay_scores in self.assay_layer(hidden, row.endpoint).items():
                     track_value, _ = self._pool_registers(assay_scores, spec.register_direction)
@@ -1020,10 +1140,12 @@ class Presto(nn.Module):
             "auxiliary": {name: asdict(value) for name, value in auxiliary.items()},
         }
         return (
-            torch.stack(pooled).sum(0),
+            torch.stack(pooled).sum(0) if pooled else None,
             identity,
             diagnostics,
             {key: torch.stack(values).sum(0) for key, values in panel.items()},
+            {key: torch.stack(values).sum(0) for key, values in tcell_panel.items()},
+            {key: torch.stack(values).sum(0) for key, values in tcell_intensity_panel.items()},
         )
 
     def forward(self, rows: Sequence[Observation]) -> list[Prediction]:
@@ -1117,14 +1239,21 @@ class Presto(nn.Module):
                     unique.setdefault(key, mhc)
                 vectors, diagnostics = [], []
                 for mhc in unique.values():
-                    vector, identity, diagnostic, panel = self._pmhc(
-                        row, mhc, encoded, token_states
-                    )
+                    (
+                        vector,
+                        identity,
+                        diagnostic,
+                        panel,
+                        tcell_panel,
+                        tcell_intensity_panel,
+                    ) = self._pmhc(row, mhc, encoded, token_states)
                     vectors.append(vector)
                     diagnostics.append(diagnostic)
                     if len(unique) == 1:
                         output.identity = identity
                         output.assay_values = panel
+                        output.tcell_values = tcell_panel
+                        output.tcell_intensity_values = tcell_intensity_panel
                 output.diagnostics["candidates"] = diagnostics
                 if "cellular" in spec.parts:
                     scores = torch.stack(vectors)
@@ -1160,11 +1289,19 @@ class Presto(nn.Module):
                 output.value = sum(output.components.values()) + self.offsets[row.endpoint](
                     covariates
                 ).squeeze(-1)
-            output.reference_value = output.value
+            output.reference_value = (
+                None
+                if row.endpoint == "tcell_response" and self.config.tcell_tracks
+                else output.value
+            )
             selected = self.assay_selection(row)
             if selected is not None:
                 output.value = output.assay_values[selected.key]
-            if row.endpoint in self.affinity_endpoints:
+            selected_tcell = self.tcell_selection(row)
+            if selected_tcell is not None:
+                output.value = output.tcell_values[selected_tcell.key]
+                output.tcell_intensity_value = output.tcell_intensity_values[selected_tcell.key]
+            if row.endpoint in self.assay_endpoints:
                 output.diagnostics["measurement"] = {
                     "selected_track": selected.key if selected else None,
                     "method": asdict(observation_method(row)),
@@ -1173,6 +1310,12 @@ class Presto(nn.Module):
                         "unknown-method prediction from the shared decoder, "
                         "not thermodynamic affinity"
                     ),
+                }
+            if row.endpoint == "tcell_response" and self.config.tcell_tracks:
+                output.diagnostics["tcell_measurement"] = {
+                    "selected_track": selected_tcell.key if selected_tcell else None,
+                    "output_descriptor_only": True,
+                    "conditional_intensity_levels": ["low", "intermediate", "high"],
                 }
             results.append(output)
         return results
@@ -1265,6 +1408,7 @@ class Presto(nn.Module):
         return {
             "outputs": outputs,
             "assay_tracks": self.assay_capabilities(),
+            "tcell_tracks": self.tcell_capabilities(),
             "components": components,
             "source_membership": source_membership,
             "quantity_components": quantity_components,
@@ -1277,13 +1421,31 @@ class Presto(nn.Module):
     def predict(self, rows: Sequence[Observation]) -> list[Prediction]:
         """Inference refuses random requested outputs; qualification stays visible."""
         track_support = None
+        tcell_support = None
         for row in rows:
             row.validate(self.config.max_length)
             selected = self.assay_selection(row)
+            self.tcell_selection(row)
             if selected is not None and track_support is None:
                 track_support = self.assay_capabilities()
             if selected is not None and track_support[selected.key]["status"] == "random/untrained":
                 raise ValueError(f"assay track: no trained support for {selected.key}")
+            if row.endpoint == "tcell_response" and self.config.tcell_tracks:
+                if tcell_support is None:
+                    tcell_support = self.tcell_capabilities()
+                unsupported = [
+                    key
+                    for key, value in tcell_support.items()
+                    if value["status"] == "random/untrained"
+                    or (
+                        self.config.tcell_ordinal_loss_weight > 0
+                        and value["conditional_ordinal_status"] == "random/untrained"
+                    )
+                ]
+                if unsupported:
+                    raise ValueError(
+                        "T-cell tracks lack direct trained support: " + ", ".join(unsupported)
+                    )
             relevant_identity = tuple(
                 name for name in self.config.identity_tasks if has_identity_input(row, name)
             )
@@ -1362,6 +1524,12 @@ class Presto(nn.Module):
                     else f"{part}_score."
                 )
             prefixes.update((f"heads.{row.endpoint}.", f"offsets.{row.endpoint}."))
+            if row.endpoint == "tcell_response" and self.config.tcell_tracks:
+                required.update(
+                    self.tcell_assay_layer.dependencies(
+                        ordinal=self.config.tcell_ordinal_loss_weight > 0
+                    )
+                )
         required.update(
             name
             for name, _ in self.named_parameters()

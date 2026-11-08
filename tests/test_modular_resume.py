@@ -480,6 +480,7 @@ def test_changed_sampler_source_invalidates_resume_before_updates(tmp_path, monk
     from presto.training import modular_resume
 
     root = Path(modular_resume.__file__).resolve().parent.parent
+    assert {"data/tcell_assay.py", "models/tcell_assay.py"} <= set(modular_resume.SOURCE_FILES)
     copied = tmp_path / 'frozen-source'
     for relative in modular_resume.SOURCE_FILES:
         destination = copied / relative

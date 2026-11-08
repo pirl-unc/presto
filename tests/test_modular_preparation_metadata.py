@@ -9,6 +9,7 @@ import pytest
 
 from presto.data.modular import MHCInput, TargetScaleFitter, fit_target_scales
 from presto.data.modular_sources import ObservationIndex, ObservationMetadata, file_sha256
+from presto.data.tcell_assay import TCellTrack
 from presto.models.modular_dependencies import freeze_dependencies, row_has_trainable_loss
 from presto.training import modular_run as runner
 from presto.training.modular_sampling import epoch_order, stratum
@@ -65,6 +66,34 @@ def test_class_projection_preserves_override_and_invalid_classes(tmp_path, class
                 stratum(value, ["mhc_class"])
     overridden = replace(row, mhc=(MHCInput("ACDE", "FGHI", "I", class_override="II"),))
     assert stratum(ObservationMetadata.from_observation(overridden), ["mhc_class"]) == ("II",)
+
+
+def test_tcell_track_and_study_projection_matches_rows_and_fails_closed(tmp_path):
+    track = TCellTrack("cytokine_release", "ifng_release", "elispot")
+    observation = replace(
+        split_fixture(tmp_path)[0],
+        endpoint="tcell_response",
+        value=1,
+        unit="binary",
+        group_id="pmid:123",
+        tcell_track=track,
+    )
+    metadata = ObservationMetadata.from_observation(observation)
+    fields = ["tcell_track", "group_id"]
+    assert (
+        stratum(observation, fields)
+        == stratum(metadata, fields)
+        == (
+            track.key,
+            "pmid:123",
+        )
+    )
+    for invalid in (replace(observation, tcell_track=None), replace(metadata, tcell_track=None)):
+        with pytest.raises(ValueError, match="declared T-cell output"):
+            stratum(invalid, fields)
+    for invalid in (replace(observation, group_id=""), replace(metadata, group_id="")):
+        with pytest.raises(ValueError, match="frozen group identity"):
+            stratum(invalid, fields)
 
 
 def test_preflight_scans_rows_once_and_preserves_exact_train_scales(tmp_path, monkeypatch):

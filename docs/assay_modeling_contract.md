@@ -22,12 +22,43 @@ Unsupported requested tracks fail. Actual gradient/update evidence and exposure
 counts distinguish directly supervised combinations, indirectly trained
 combinations whose factors learned elsewhere, and random/untrained factors.
 Known complete methods must be declared in the manifest registry. Source tags
-remain unreviewed unless independently verified; detector categories do not
+remain unreviewed unless independently verified. `database_curated` means the
+literal method, response, and assay ontology identity were reconciled to the
+official database export; it does not mean the primary protocol was reviewed.
+Review evidence is provenance and never a model input. Detector categories do not
 identify the full laboratory protocol.
+
+The shared factorized measurement decoder is concentration-oriented: lower
+continuous output means stronger binding. Its qualitative-binding readout has a
+fixed negative polarity so stronger binding produces a higher binary logit.
+Labels are never inverted, and the polarity changes neither concentration
+outputs nor their inherited checkpoint tensors.
 
 Frozen v5 and v6 inference preserve earlier checkpoints, including v6 pooled,
 scalar-calibration and low-rank residual models. They do not run in new training.
 The new decoder is an architectural decision, not a claim of measured superiority.
+
+Shared-v7 can also allocate a separate fixed T-cell response panel. Each declared
+joint `(family, response, method)` track has named family, response, and method
+vectors. The fixed cellular pMHC representation and resolved biological context
+are concatenated inside the new `Linear -> GELU -> Linear` positivity decoder;
+no inherited fusion tensor changes shape and no assay descriptor enters that
+biological context.
+The same fixed panel emits a conditional ordered-intensity readout for graded
+positive observations. Its two cumulative thresholds are monotonically ordered
+by construction; negatives and ungraded positives never receive fabricated
+intensity labels. The complete panel is computed for every eligible cellular
+pMHC latent, and the row descriptor selects only the supervised output.
+
+The T-cell decoder shares neither parameters nor output descriptors with the
+affinity measurement decoder. It is allocated only when a checkpoint declares
+T-cell tracks, so checkpoints without such tracks retain the same state dict and
+inference. Fixed-parent training leaves only `tcell_assay_layer.*` trainable.
+Per-track binary and conditional-ordinal exposure/update evidence is
+stored separately, and serving rejects an unqualified panel. This is currently a
+software capability: the public checkpoint predictor returns the complete
+qualified positivity and conditional-intensity panel, including descriptor-free
+counterfactual requests. No T-cell fit or PRIME superiority claim is implied.
 
 Cellular binding,
 stabilization and functional response require their own process definitions;

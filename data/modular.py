@@ -13,6 +13,7 @@ from typing import Any, Iterable, Mapping
 from .modular_quantitative import QuantitativeDomain, QUANTITY_PARTS, quantity_domain
 from .modular_ordinal import OrdinalValue
 from .assay_measurement import AssayMethod
+from .tcell_assay import INTENSITY_LEVELS, TCellTrack
 
 SCHEMA = "presto.modular.observation.v1"
 AA = "ACDEFGHIKLMNPQRSTVWY"
@@ -352,10 +353,29 @@ class Observation:
     quantity_contract: QuantitativeDomain | None = None
     value_encoding: str = "linear"
     assay_method: AssayMethod | None = None
+    tcell_track: TCellTrack | None = None
+    tcell_intensity: int | None = None
 
     def validate(self, max_length: int = 512) -> None:
         if self.assay_method is not None and not isinstance(self.assay_method, AssayMethod):
             raise ValueError("assay method requires a normalized descriptor")
+        if self.tcell_track is not None and not isinstance(self.tcell_track, TCellTrack):
+            raise ValueError("T-cell output descriptor requires a typed track")
+        if self.tcell_track is not None and self.endpoint != "tcell_response":
+            raise ValueError("T-cell output descriptors require the T-cell response endpoint")
+        if self.tcell_intensity is not None:
+            if (
+                self.endpoint != "tcell_response"
+                or self.tcell_track is None
+                or type(self.tcell_intensity) is not int
+                or not 0 <= self.tcell_intensity < len(INTENSITY_LEVELS)
+                or self.value != 1
+                or self.unit != "binary"
+                or self.qualifier != "="
+            ):
+                raise ValueError(
+                    "conditional T-cell intensity requires an exact positive track label"
+                )
         if self.schema != SCHEMA or not self.observation_id or not self.source:
             raise ValueError("observation requires versioned schema, source and stable ID")
         if self.split not in ("train", "validation", "test", "predict"):
@@ -409,7 +429,14 @@ class Observation:
             raise ValueError("modified peptidoforms are not supported in schema v1")
 
     def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
+        data = asdict(self)
+        # Preserve byte-for-byte legacy row serialization when no fixed T-cell
+        # output is declared.
+        if self.tcell_track is None:
+            del data["tcell_track"]
+        if self.tcell_intensity is None:
+            del data["tcell_intensity"]
+        return data
 
     @classmethod
     def from_dict(cls, row: Mapping[str, Any]) -> Observation:
@@ -418,6 +445,8 @@ class Observation:
         data = dict(row)
         if data.get("assay_method") is not None:
             data["assay_method"] = AssayMethod(**data["assay_method"])
+        if data.get("tcell_track") is not None:
+            data["tcell_track"] = TCellTrack(**data["tcell_track"])
         data["mhc"] = tuple(MHCInput(**candidate) for candidate in data.get("mhc", ()))
         context = dict(data.get("context", {}))
         for key in ("components", "component_overrides"):

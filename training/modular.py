@@ -20,6 +20,7 @@ from ..data.modular import (
     identity_vocabulary,
     has_identity_input,
 )
+from .modular_controls import ranking_loss
 from ..models.modular import MODEL_VERSION, ModularConfig, ModularPresto, Prediction
 from ..models.modular_support import feature_inputs, record_feature_updates
 from ..models.modular_dependencies import (
@@ -45,8 +46,23 @@ def identity_targets(row: Observation, model: ModularPresto) -> dict[str, int]:
 
 
 def observation_loss(
-    output: Prediction, row: Observation, scales: dict[str, TargetScale]
+    output: Prediction,
+    row: Observation,
+    scales: dict[str, TargetScale],
+    *,
+    tcell_ordinal_weight: float = 1.0,
 ) -> torch.Tensor | None:
+    parts = observation_loss_parts(output, row, scales)
+    if parts is None:
+        return None
+    if tcell_ordinal_weight == 0 or "conditional_ordinal" not in parts:
+        return parts["primary"]
+    return parts["primary"] + tcell_ordinal_weight * parts["conditional_ordinal"]
+
+
+def observation_loss_parts(
+    output: Prediction, row: Observation, scales: dict[str, TargetScale]
+) -> dict[str, torch.Tensor] | None:
     if row.value is None:
         return None
     if output.value is None:
@@ -54,7 +70,22 @@ def observation_loss(
     value = observation_target(row)
     spec = endpoint_spec(row.endpoint)
     if spec.binary:
-        return F.binary_cross_entropy_with_logits(output.value, output.value.new_tensor(value))
+        parts = {
+            "primary": F.binary_cross_entropy_with_logits(
+                output.value, output.value.new_tensor(value)
+            )
+        }
+        if row.tcell_intensity is not None:
+            logits = output.tcell_intensity_value
+            if logits is None or logits.shape != (2,):
+                raise ValueError("missing conditional T-cell intensity prediction")
+            ordinal_targets = logits.new_tensor(
+                [row.tcell_intensity > boundary for boundary in range(2)]
+            )
+            parts["conditional_ordinal"] = F.binary_cross_entropy_with_logits(
+                logits, ordinal_targets
+            )
+        return parts
     if row.endpoint not in scales:
         raise ValueError(f"missing training-only scaler for {row.endpoint}")
     residual = (
@@ -66,7 +97,7 @@ def observation_loss(
         residual = residual.clamp_min(0)
     elif row.qualifier in (">", ">="):
         residual = residual.clamp_max(0)
-    return residual.square()
+    return {"primary": residual.square()}
 
 
 def batch_loss(
@@ -74,10 +105,14 @@ def batch_loss(
     rows: Sequence[Observation],
     outputs: Sequence[Prediction],
     scales: dict[str, TargetScale],
+    *,
+    normalization: str = "observation_mean",
+    endpoint_weights: dict[str, float] | None = None,
 ) -> tuple[torch.Tensor, dict[str, int]]:
+    """Mean loss per observation, or (per_endpoint) a weighted mean of endpoint means."""
     if len(rows) != len(outputs):
         raise ValueError("prediction/observation alignment mismatch")
-    losses, counts = [], Counter()
+    losses, keys, counts = [], [], Counter()
     for row, output in zip(rows, outputs, strict=True):
         if row.observation_id != output.observation_id or row.endpoint != output.endpoint:
             raise ValueError("prediction identity mismatch")
@@ -90,13 +125,36 @@ def batch_loss(
                     F.cross_entropy(logits[None], torch.tensor([target], device=logits.device))
                 )
                 counts[identity_head(name)] += 1
+                keys.append(identity_head(name))
         else:
-            loss = observation_loss(output, row, scales)
+            loss = observation_loss(
+                output,
+                row,
+                scales,
+                tcell_ordinal_weight=getattr(model.config, "tcell_ordinal_loss_weight", 1.0),
+            )
             if loss is not None:
                 losses.append(loss)
                 counts[row.endpoint] += 1
+                keys.append(row.endpoint)
     if not losses:
         raise ValueError("batch has no supported measured labels")
+    if normalization == "per_endpoint":
+        weights = endpoint_weights or {}
+        members = {key: [] for key in dict.fromkeys(keys)}
+        for key, loss in zip(keys, losses, strict=True):
+            members[key].append(loss)
+        total = sum(weights.get(key, 1.0) for key in members)
+        return (
+            sum(
+                weights.get(key, 1.0) * torch.stack(values).mean()
+                for key, values in members.items()
+            )
+            / total,
+            dict(counts),
+        )
+    if normalization != "observation_mean":
+        raise ValueError("unsupported loss normalization")
     return torch.stack(losses).mean(), dict(counts)
 
 
@@ -115,6 +173,10 @@ def train_step(
     *,
     identity_rows: Sequence[Observation] = (),
     identity_weight: float = 0.1,
+    normalization: str = "observation_mean",
+    endpoint_weights: dict[str, float] | None = None,
+    ranking: dict[str, Any] | None = None,
+    grad_clip_norm: float | None = None,
 ) -> dict[str, Any]:
     """One measured vote per row/bag; identity replay is a separate mean CE."""
     if type(model) is not ModularPresto:
@@ -136,8 +198,37 @@ def train_step(
     model.train()
     optimizer.zero_grad(set_to_none=True)
     with feature_inputs(model):
-        loss, counts = batch_loss(model, rows, model(rows), scales)
+        outputs = model(rows)
+        loss, counts = batch_loss(
+            model,
+            rows,
+            outputs,
+            scales,
+            normalization=normalization,
+            endpoint_weights=endpoint_weights,
+        )
     loss_parts = {"primary": float(loss.detach())}
+    tcell_binary, tcell_ordinal = [], []
+    for row, output in zip(rows, outputs, strict=True):
+        if row.endpoint != "tcell_response" or row.value is None:
+            continue
+        parts = observation_loss_parts(output, row, scales)
+        tcell_binary.append(parts["primary"])
+        if "conditional_ordinal" in parts:
+            tcell_ordinal.append(parts["conditional_ordinal"])
+    if tcell_binary:
+        loss_parts["tcell_binary"] = float(torch.stack(tcell_binary).mean().detach())
+    if tcell_ordinal:
+        loss_parts["tcell_conditional_ordinal"] = float(torch.stack(tcell_ordinal).mean().detach())
+        loss_parts["tcell_ordinal_weight"] = model.config.tcell_ordinal_loss_weight
+    if ranking is not None:
+        pairwise, pairs = ranking_loss(
+            rows, outputs, ranking["endpoints"], grouping=ranking.get("grouping", "study")
+        )
+        if pairwise is not None:
+            loss = loss + ranking["weight"] * pairwise
+            loss_parts["ranking"] = float(pairwise.detach())
+        loss_parts["ranking_pairs"] = pairs
     if identity_rows and identity_weight > 0:
         with feature_inputs(model):
             identity_loss, identity_counts = batch_loss(
@@ -164,6 +255,14 @@ def train_step(
             "gradient_present": gradient is not None,
             "frozen": name in model.frozen_parameters,
         }
+    grad_norm = None
+    if grad_clip_norm is not None:
+        grad_norm = float(
+            torch.nn.utils.clip_grad_norm_(
+                [parameter for parameter in model.parameters() if parameter.grad is not None],
+                grad_clip_norm,
+            )
+        )
     optimizer.step()
     record_feature_updates(model, before)
     for name, parameter in model.named_parameters():
@@ -188,6 +287,11 @@ def train_step(
             track = model.assay_selection(row)
             if track is not None:
                 model.assay_support[track.key] += 1
+            tcell_track = model.tcell_selection(row)
+            if tcell_track is not None:
+                model.tcell_support[tcell_track.key]["binary"] += 1
+                if row.tcell_intensity is not None:
+                    model.tcell_support[tcell_track.key]["conditional_ordinal"] += 1
     updated = {name for name, evidence in coverage.items() if evidence["gradient_and_update"]}
     for target, support in model.support.items():
         if parameter_dependencies(model, target) & updated:
@@ -215,26 +319,33 @@ def train_step(
             f"identity_heads.{name}."
             if name in model.config.identity_tasks
             else f"assay_layer.factors.endpoint.{name}"
-            if name in model.affinity_endpoints
+            if name in model.assay_endpoints
             else f"heads.{name}."
             if name in model.heads
             else f"offsets.{name}."
         )
-        if any(
+        trained = any(
             evidence["gradient_and_update"]
             for parameter, evidence in coverage.items()
             if (
                 parameter == prefix
-                if name in model.affinity_endpoints
+                if name in model.assay_endpoints
                 else parameter.startswith(prefix)
             )
-        ):
+        )
+        if name == "tcell_response" and model.config.tcell_tracks:
+            trained = any(
+                coverage[parameter]["gradient_and_update"]
+                for parameter in model.tcell_assay_layer.dependencies(ordinal=False)
+            )
+        if trained:
             model.support[name]["status"] = "directly_supervised"
         if model.support[name]["status"] != "pretrained_frozen":
             model.support[name]["validation"] = "not_evaluated"
     return {
         "loss": float(loss.detach()),
         "loss_parts": loss_parts,
+        **({"grad_norm": grad_norm} if grad_clip_norm is not None else {}),
         "counts": counts,
         "coverage": coverage,
     }
@@ -290,6 +401,7 @@ def save_checkpoint(
         "scales": {key: asdict(value) for key, value in scales.items()},
         "support": model.support,
         "assay_support": model.assay_support,
+        "tcell_support": model.tcell_support,
         "trained_parameters": sorted(model.trained_parameters),
         "element_coverage": {
             "masks": {name: value.cpu() for name, value in model.trained_elements.items()},
@@ -368,6 +480,20 @@ def load_checkpoint(
         ):
             raise ValueError("invalid checkpoint assay support")
         model.assay_support = support
+    if hasattr(model, "tcell_support"):
+        support = payload.get("tcell_support", {})
+        if (
+            not isinstance(support, dict)
+            or set(support) != set(model.tcell_support)
+            or any(
+                not isinstance(value, dict)
+                or set(value) != {"binary", "conditional_ordinal"}
+                or any(type(count) is not int or count < 0 for count in value.values())
+                for value in support.values()
+            )
+        ):
+            raise ValueError("invalid checkpoint T-cell support")
+        model.tcell_support = support
     # v5 already saved coordinate evidence. Changing its reader to historical
     # inference must not erase that evidence or fabricate complete zero masks.
     if hasattr(model, "trained_elements"):
@@ -442,7 +568,6 @@ def initialize_from_checkpoint(
     old, new = asdict(previous.config), asdict(model.config)
     # Endpoint/identity unions may grow; feature slots may not silently change meaning.
     shared_contract = {
-        "assay_tracks",
         "assay_mode",
         "max_length",
         "d_model",
@@ -510,7 +635,11 @@ def initialize_from_checkpoint(
             and model.config.quantity_domains[domain] != contract
         ):
             raise ValueError(f"incompatible pretrained measurement domain: {domain}")
-    if getattr(previous, "staged_elution", False) or model.staged_elution:
+    # A newly added elution output has no learned staging contract to preserve.
+    # Existing presentation outputs still require the identical dependency path.
+    if "elution_observation" in previous.config.endpoints and (
+        getattr(previous, "staged_elution", False) or model.staged_elution
+    ):
         shared_contract.update(
             {"elution_staging", "elution_affinity_endpoint", "elution_detach_affinity"}
         )
@@ -518,6 +647,16 @@ def initialize_from_checkpoint(
     for key in shared_contract:
         if old[key] != new[key]:
             raise ValueError(f"incompatible pretrained feature contract: {key}")
+    old_tracks = set(previous.config.assay_tracks)
+    new_tracks = set(model.config.assay_tracks)
+    removed_tracks = old_tracks - new_tracks
+    if removed_tracks and not allow_task_removal:
+        raise ValueError("pretrained assay-track removal requires an explicit migration")
+    old_tcell_tracks = set(previous.config.tcell_tracks)
+    new_tcell_tracks = set(model.config.tcell_tracks)
+    removed_tcell_tracks = old_tcell_tracks - new_tcell_tracks
+    if removed_tcell_tracks and not allow_task_removal:
+        raise ValueError("pretrained T-cell-track removal requires an explicit migration")
     removed_tasks = (set(previous.config.endpoints) | set(previous.config.identity_tasks)) - (
         set(model.config.endpoints) | set(model.config.identity_tasks)
     )
@@ -578,7 +717,11 @@ def initialize_from_checkpoint(
             current[name] = value
         inherited.append(name)
     model.load_state_dict(current, strict=True)
-    model.assay_support = dict(previous.assay_support)
+    model.assay_support = {key: previous.assay_support.get(key, 0) for key in model.assay_support}
+    model.tcell_support = {
+        key: previous.tcell_support.get(key, {"binary": 0, "conditional_ordinal": 0})
+        for key in model.tcell_support
+    }
     model.trained_parameters.update(previous.trained_parameters & set(inherited))
     for name in inherited:
         if name not in model.trained_elements:
@@ -626,6 +769,10 @@ def initialize_from_checkpoint(
     return {
         "inherited_parameters": inherited,
         "removed_tasks": sorted(removed_tasks),
+        "added_assay_tracks": sorted(track.key for track in new_tracks - old_tracks),
+        "removed_assay_tracks": sorted(track.key for track in removed_tracks),
+        "added_tcell_tracks": sorted(track.key for track in new_tcell_tracks - old_tcell_tracks),
+        "removed_tcell_tracks": sorted(track.key for track in removed_tcell_tracks),
         "feature_projection": projected,
         "scales": {name: scale for name, scale in scales.items() if name in model.config.endpoints},
         "metadata": payload["metadata"],

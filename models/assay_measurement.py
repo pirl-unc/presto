@@ -5,7 +5,9 @@ from torch import nn
 
 
 AFFINITY_ENDPOINTS = frozenset(("ic50", "kd", "ec50", "kd_via_ic50", "kd_via_ec50"))
+TRACKED_ENDPOINTS = AFFINITY_ENDPOINTS | {"qualitative_binding"}
 AXES = ("endpoint", "preparation", "mechanism", "detector")
+OUTPUT_POLARITY = {"qualitative_binding": -1}
 
 
 class AssayMeasurementLayer(nn.Module):
@@ -49,7 +51,10 @@ class AssayMeasurementLayer(nn.Module):
                 else hidden.new_zeros(self.embedding_dim)
             )
             vectors.append(vector.expand(*hidden.shape[:-1], self.embedding_dim))
-        return self.decoder(torch.cat(vectors, dim=-1)).squeeze(-1)
+        value = self.decoder(torch.cat(vectors, dim=-1)).squeeze(-1)
+        # The shared decoder is concentration-oriented: lower means stronger.
+        # A positive qualitative-binding label instead requires a higher logit.
+        return OUTPUT_POLARITY.get(endpoint, 1) * value
 
     def forward(self, hidden, endpoint):
         return {

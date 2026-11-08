@@ -74,11 +74,18 @@ def parameter_dependencies(model, target):
                 prefixes.discard("context_fusion.")
         for part in spec.parts:
             component(part, quantity_domain(target))
-        prefixes.add(f"offsets.{target}." if spec.parts else f"heads.{target}.")
-        if target in getattr(model, "affinity_endpoints", ()):
+        if spec.parts:
+            prefixes.add(f"offsets.{target}.")
+        elif target == "tcell_response" and model.config.tcell_tracks:
+            exact.update(
+                model.tcell_assay_layer.dependencies(
+                    ordinal=model.config.tcell_ordinal_loss_weight > 0
+                )
+            )
+        elif target in getattr(model, "assay_endpoints", ()):
             exact.update(model.assay_layer.dependencies(target))
-        elif any(track.endpoint == target for track in getattr(model.config, "assay_tracks", ())):
-            prefixes.add("assay_layer.")
+        else:
+            prefixes.add(f"heads.{target}.")
     elif target.startswith("component:"):
         parts = target.split(":")
         if len(parts) not in (2, 3):
