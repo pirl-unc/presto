@@ -91,7 +91,10 @@ def render_comparator_overview(metrics: list[dict], output_dir: Path) -> list[Pa
             markersize=5,
             label=methods[index],
         )
-    ax.set_yticks(y, [f"{label}\n{method}" for label, method in zip(labels, methods)])
+    method_labels = [
+        f"{row['method']} [{row.get('method_output_id', row['output_id'])}]" for row in primary
+    ]
+    ax.set_yticks(y, [f"{label}\n{method}" for label, method in zip(labels, method_labels)])
     ax.set_xlabel("Metric value (see labels; scales are not pooled)")
     ax.set_title("Primary matched-cohort comparator overview")
     ax.grid(axis="x", color="#d9d9d9", linewidth=0.7)

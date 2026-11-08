@@ -46,6 +46,7 @@ def _manifest(tmp_path: Path):
                 "split": "development",
                 "estimate_type": "method_value",
                 "method": method,
+                "method_output_id": "unspecified_assay_ic50",
                 "metric": "spearman",
                 "value": value,
                 "interval_kind": "bootstrap_95",

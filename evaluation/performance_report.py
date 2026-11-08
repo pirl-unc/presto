@@ -33,6 +33,7 @@ METRIC_COLUMNS = (
     "split",
     "estimate_type",
     "method",
+    "method_output_id",
     "metric",
     "value",
     "interval_kind",
@@ -211,6 +212,10 @@ def validate_manifest(manifest: dict, manifest_path: Path) -> None:
             metric.get("estimate_type") in {"method_value", "paired_difference"},
             f"{field}.estimate_type",
         )
+        _validate_identifier(
+            metric.get("method_output_id", metric["output_id"]),
+            f"{field}.method_output_id",
+        )
         _require(metric["split"] in ROLES - {"train", "calibration"}, f"{field}.split")
         _require(
             isinstance(metric.get("value"), (int, float)) and math.isfinite(metric["value"]),
@@ -373,7 +378,10 @@ def _readme(manifest: dict, report_id: str) -> str:
     lines.extend(["", "## Blocked claims", ""])
     lines.extend(f"- {value}" for value in state["blocked_claims"])
     lines.extend(["", "## Primary matched-cohort metrics", ""])
-    lines.append("| Task / output | Split | Metric | Method | Value | 95% interval | Rows |")
+    lines.append(
+        "| Task / comparison output | Split | Metric | Method / source output | Value | "
+        "95% interval | Rows |"
+    )
     lines.append("|---|---|---|---|---:|---:|---:|")
     for row in sorted(
         (metric for metric in manifest["metrics"] if metric["primary"]),
@@ -389,9 +397,10 @@ def _readme(manifest: dict, report_id: str) -> str:
             if row["interval_kind"] == "not_available"
             else f"[{row['ci_low']:.6g}, {row['ci_high']:.6g}]"
         )
+        method = f"{row['method']} / {row.get('method_output_id', row['output_id'])}"
         lines.append(
-            "| {task} / {output_id} | {split} | {metric} | {method} | {value:.6g} | "
-            "{interval} | {eligible_rows:,} |".format(interval=interval, **row)
+            "| {task} / {output_id} | {split} | {metric} | {method_label} | {value:.6g} | "
+            "{interval} | {eligible_rows:,} |".format(interval=interval, method_label=method, **row)
         )
     lines.extend(["", "## Promotion gates", ""])
     for gate in manifest["promotion_gates"]:
