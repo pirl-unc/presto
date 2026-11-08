@@ -6028,7 +6028,29 @@ because there is no validation/test split and no model. Large source-derived
 rows remain on `presto-checkpoints` because archive redistribution rights are
 unresolved.
 
-**Preferred condition / decision:** admit the two projected TRAIN files to the
+### Canonical-lineage / complete-development continuation
+
+The first shared-loader preflight rejected v1 at the first BA row because it
+lacked canonical original-measurement lineage. The immutable v2 continuation
+(`reproduce/v2/launch.json`, source commit
+`477196db03967443bc8e0ff7f7a8e90453d97613`) only annotates or removes verified
+v1 admitted rows. It adds archive-namespaced measurement IDs and extends the
+development embargo to the Stage B presentation union: exact peptide, shared
+8-mer core, and same-length Hamming distance one. It reads no outcome beyond
+presentation peptide identity and accesses no model, prediction, TEST, locked
+cohort, network, or GPU.
+
+Projection app/call `ap-iLZ81MzNcVpTs4U2aEnfok` /
+`fc-01M6YS3HZ79409AHMV4RVR2G1H` retained 143,213 rows (80,674 MHC-I / 62,539
+MHC-II) and removed 94 presentation-development neighbors. Runtime was 55.34
+seconds on 4 CPU / 16 GiB, peak RSS 3,895,259,136 bytes; requested/observed GPU
+were null. Independent verification app/call `ap-mQLkR0DdAnawlxMiat9ooB` /
+`fc-01M6YS6XKN48FXAWAH00SD6X9Z` passed all hashes, unique measurement/observation
+identities, qualifier/class counts, and complete presentation embargoes. The v2
+MHC-I/MHC-II hashes are `2c007e6b46a99835f95ec612aeb498f4e52940aa81c22809ad48b5e922d6d0ca`
+and `9fe752274c895cb4cd46e36dfeff43a3db73e0c96fa24ba495e1fcfd7f24c66a`.
+
+**Preferred condition / decision:** admit the two projected **v2** TRAIN files to the
 data-only successor arm after a canonical combined-loader preflight. This is
 comparator-parity training, not independent evidence against NetMHCpan or
 NetMHCIIpan; genuinely new study-disjoint affinity data remain mandatory for a

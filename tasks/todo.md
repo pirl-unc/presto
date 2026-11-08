@@ -14845,11 +14845,14 @@ PRIME, and independent TEST claims open.
 
 Projection progress: experiment
 `2026-11-08_1740_codex_netmhc-ba-parity-projection` independently verifies
-143,307 new comparator-parity TRAIN rows (80,744 MHC-I / 62,563 MHC-II), exact
-archive censoring, unknown assay-method routing, 138,168 current-TRAIN pMHC
-deduplications, and 19,003 exposed-development exact/core-9 embargoes. No model,
-prediction, validation, TEST, or locked cohort was accessed. The checklist stays
-open until the combined common-loader preflight is frozen and passes.
+143,213 v2 comparator-parity TRAIN rows (80,674 MHC-I / 62,539 MHC-II), exact
+archive censoring, canonical original-measurement lineage, unknown assay-method
+routing, and both affinity exact/core-9 and presentation exact/core-8/Hamming-1
+development embargoes. The continuation removed 94 presentation-near v1 rows;
+independent verification passed unique measurement/observation identities and
+all hashes. No model, prediction, validation, TEST, or locked cohort was
+accessed. The checklist stays open until the corrected combined common-loader
+preflight is frozen and passes.
 
 ### Newer-code parity retrain — 2026-11-08
 
@@ -14872,3 +14875,6 @@ parity manifest failed at its first BA row because the v1 projection lacked the
 canonical original-measurement identity required for cross-source deduplication.
 No GPU or optimizer ran. Continuation plan:
 `experiments/agents/codex/plans/2026-11-08_ba-projection-lineage-continuation.md`.
+The corrective v2 projection is now complete and independently verified on
+143,213 rows. A new immutable preflight continuation must point to v2; the
+executed failed contract remains unchanged as audit evidence.
