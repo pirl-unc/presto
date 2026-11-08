@@ -14850,3 +14850,19 @@ archive censoring, unknown assay-method routing, 138,168 current-TRAIN pMHC
 deduplications, and 19,003 exposed-development exact/core-9 embargoes. No model,
 prediction, validation, TEST, or locked cohort was accessed. The checklist stays
 open until the combined common-loader preflight is frozen and passes.
+
+### Newer-code parity retrain — 2026-11-08
+
+Canonical preregistration:
+`experiments/agents/codex/plans/2026-11-08_unified-parity-retrain.md`.
+
+- [ ] Freeze reference and parity manifests from the same Stage A checkpoint.
+- [ ] Run and independently verify full common-loader preflight for both.
+- [ ] Launch both exact 5,000-update conditions on requested `H100!`.
+- [ ] Collect checkpoints, coverage, resource receipts, and all development
+  prediction dumps; verify hashes independently.
+- [ ] Repeat matched affinity/presentation/processing evaluation and figures.
+- [ ] Apply the preregistered data-only decision and regression gates.
+- [ ] If required, specify and implement the single chain-aware class-II arm.
+- [ ] Extend the selected checkpoint with fixed assay-aware T-cell tracks only
+  after the affinity/presentation decision; do not access locked or TEST rows.
