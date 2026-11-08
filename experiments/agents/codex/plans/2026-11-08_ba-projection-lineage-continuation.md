@@ -33,10 +33,14 @@ protocol identity.
    - affinity development: exact peptide and shared 9-mer core;
    - presentation development: exact peptide, shared 8-mer core, or same-length
      Hamming distance one, matching the existing Stage B separation contract.
-4. Reproject from the same pinned archives and catalog into a new immutable
-   `prepared-v2` directory. Never edit the completed v1 artifacts in place.
-5. Preserve v1 plus the failed common-loader receipt as audit evidence. Record
-   v1-to-v2 dispositions and hashes.
+4. Deterministically transform the independently verified, hash-pinned v1
+   admitted rows into a new immutable `prepared-v2` directory. This is equivalent
+   to rerunning admission from the same archives because it only adds lineage or
+   removes rows; it cannot recover, relabel, or add a v1-excluded source row.
+   Keep the complete v1 physical-row disposition ledger as the parent audit and
+   add a v2 supplemental disposition for every v1-admitted observation.
+5. Never edit the completed v1 artifacts in place. Preserve v1 plus the failed
+   common-loader receipt as audit evidence and record every v1-to-v2 hash.
 
 ## Verification and continuation
 

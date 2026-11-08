@@ -7,11 +7,14 @@ import pytest
 from presto.data.modular import Observation
 from presto.data.netmhc_training import (
     ArchiveBAIssue,
+    archive_measurement_id,
     invert_ba_target,
     parse_ba_line,
     peptide_cores,
+    peptide_deletion_masks,
     project_ba_rows,
 )
+from presto.data.modular_lineage import measurement_key
 
 
 def parse(line, *, archive="netmhcpan42", member="NetMHCpan_train/c000_ba", number=1):
@@ -44,6 +47,8 @@ def project(rows, **kwargs):
         source_names={"netmhcpan42": "NetMHCpan-4.2-training/BA"},
         development_peptides=kwargs.get("development_peptides", set()),
         development_cores=kwargs.get("development_cores", set()),
+        development_cores8=kwargs.get("development_cores8", set()),
+        development_hamming1_masks=kwargs.get("development_hamming1_masks", set()),
         train_pmhc=kwargs.get("train_pmhc", set()),
         validate_observation=Observation.from_dict,
     )
@@ -87,6 +92,15 @@ def test_projection_excludes_conflicts_duplicates_and_unresolved_rows():
     assert observation.assay_method is not None and not observation.assay_method.usable
     assert observation.provenance["assay_output"] == "unspecified_assay/IC50"
     assert len(observation.provenance["archive_lineage"]) == 2
+    lineage = observation.provenance["measurement_lineage"]
+    assert lineage["namespace"] == "a" * 64
+    assert lineage["replicate_id"] == ""
+    assert measurement_key(observation) == (
+        "a" * 64,
+        lineage["measurement_id"],
+        "",
+        "ic50",
+    )
 
 
 def test_projection_applies_exact_core_and_train_pmhc_embargoes():
@@ -121,3 +135,39 @@ def test_observation_ids_and_disposition_order_are_input_order_independent():
         and len(row["observation_id"].rsplit(":", 1)[1]) == hashlib.sha256().digest_size * 2
         for row in forward.observations
     )
+
+
+def test_projection_applies_presentation_core8_and_hamming1_embargoes():
+    held = "ACDEFGHIK"
+    shared_core8 = parse("MACDEFGHI 0.5 HLA-A02:01 X", number=1)
+    hamming1 = parse("ACDEYGHIK 0.5 HLA-A02:01 X", number=2)
+    independent = parse("LMNPQRSTV 0.5 HLA-A02:01 X", number=3)
+    result = project(
+        [shared_core8, hamming1, independent],
+        development_cores8=set(peptide_cores(held, 8)),
+        development_hamming1_masks=set(peptide_deletion_masks(held)),
+    )
+    assert [row["peptide"] for row in result.observations] == [independent.peptide]
+    assert {row["disposition"] for row in result.dispositions} == {
+        "development_core8_embargo",
+        "development_hamming1_embargo",
+        "admitted_train",
+    }
+
+
+def test_measurement_lineage_is_fold_independent_and_target_independent():
+    first = parse("ACDEFGHIK 0.5 HLA-A02:01 X", number=1)
+    duplicate = parse(
+        "ACDEFGHIK 0.5 HLA-A02:01 X",
+        member="NetMHCpan_train/c001_ba",
+        number=2,
+    )
+    result = project([first, duplicate])
+    assert len(result.observations) == 1
+    lineage = result.observations[0]["provenance"]["measurement_lineage"]
+    expected = archive_measurement_id("netmhcpan42", "ACDEFGHIK", "HLA-A02:01", "X")
+    assert lineage == {
+        "namespace": "a" * 64,
+        "measurement_id": expected,
+        "replicate_id": "",
+    }

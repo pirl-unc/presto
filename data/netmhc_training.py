@@ -66,6 +66,14 @@ def peptide_cores(peptide: str, length: int = 9) -> tuple[str, ...]:
     return tuple(peptide[index : index + length] for index in range(len(peptide) - length + 1))
 
 
+def peptide_deletion_masks(peptide: str) -> tuple[tuple[int, int, str], ...]:
+    """Same-position deletion masks identify equal-length Hamming-1 neighbors."""
+    return tuple(
+        (len(peptide), index, peptide[:index] + peptide[index + 1 :])
+        for index in range(len(peptide))
+    )
+
+
 def parse_ba_line(
     raw: bytes,
     *,
@@ -155,6 +163,12 @@ def _observation_id(row: ArchiveBARow) -> str:
     return f"{row.archive}:ba:{hashlib.sha256(value.encode()).hexdigest()}"
 
 
+def archive_measurement_id(archive: str, peptide: str, identity: str, context: str) -> str:
+    """One logical archive measurement, independent of folds and exported row IDs."""
+    value = "\x1f".join((archive, peptide, identity, context))
+    return hashlib.sha256(value.encode()).hexdigest()
+
+
 def project_ba_rows(
     rows: Iterable[ArchiveBARow | ArchiveBAIssue],
     *,
@@ -164,6 +178,8 @@ def project_ba_rows(
     development_peptides: set[str],
     development_cores: set[str],
     train_pmhc: set[tuple[str, str, str]],
+    development_cores8: set[str] | None = None,
+    development_hamming1_masks: set[tuple[int, int, str]] | None = None,
     validate_observation: Callable[[Mapping], object] | None = None,
 ) -> ProjectionResult:
     """Project BA rows using a fixed, label-independent disposition order."""
@@ -182,6 +198,8 @@ def project_ba_rows(
     resolutions: dict[str, Mapping | None] = {}
     observations: list[dict] = []
     dispositions: list[dict] = []
+    development_cores8 = development_cores8 or set()
+    development_hamming1_masks = development_hamming1_masks or set()
 
     def disposition(row, reason: str) -> None:
         dispositions.append(
@@ -217,6 +235,14 @@ def project_ba_rows(
             continue
         if any(core in development_cores for core in peptide_cores(row.peptide)):
             disposition(row, "development_core9_embargo")
+            continue
+        if any(core in development_cores8 for core in peptide_cores(row.peptide, 8)):
+            disposition(row, "development_core8_embargo")
+            continue
+        if any(
+            mask in development_hamming1_masks for mask in peptide_deletion_masks(row.peptide)
+        ):
+            disposition(row, "development_hamming1_embargo")
             continue
         pmhc = (row.peptide, str(resolution["groove1"]), str(resolution["groove2"]))
         if pmhc in train_pmhc:
@@ -264,6 +290,11 @@ def project_ba_rows(
                 "archive_context": row.context,
                 "archive_transformed_target": row.target,
                 "archive_lineage": lineage,
+                "measurement_lineage": {
+                    "namespace": archive_hashes[row.archive],
+                    "measurement_id": archive_measurement_id(*row.source_key),
+                    "replicate_id": "",
+                },
                 "assay_output": "unspecified_assay/IC50",
                 "study_id": None,
                 "study_availability": "not_available_in_archive",
