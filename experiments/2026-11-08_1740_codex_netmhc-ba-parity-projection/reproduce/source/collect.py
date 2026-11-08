@@ -27,7 +27,7 @@ def collect(call_name, output_name, *, timeout):
     receipt = modal.FunctionCall.from_id(call["call_id"]).get(timeout=timeout)
     results = FAMILY / "results"
     results.mkdir(parents=True, exist_ok=True)
-    if "summary_path" in receipt:
+    if "summary_bytes" in receipt:
         target = results / "summary.json"
         with target.open("wb") as stream:
             VOLUME.read_file_into_fileobj(receipt["summary_path"], stream)
