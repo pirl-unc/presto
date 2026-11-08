@@ -310,7 +310,15 @@ def test_affinity_checkpoint_extends_tracks_and_trains_new_outputs_without_drift
     assert all(torch.equal(value, expanded.state_dict()[name]) for name, value in inherited.items())
     expanded.eval()
     for before, after in zip(expected, expanded(affinity_rows), strict=True):
-        assert torch.equal(before, after.value)
+        # The byte-exact state assertion above is the retention contract.  Linux
+        # BLAS may choose a different reduction kernel after the mixed-size
+        # training batch, so redundant inference can differ by one float32 ULP.
+        torch.testing.assert_close(
+            before,
+            after.value,
+            rtol=0,
+            atol=torch.finfo(after.value.dtype).eps,
+        )
     assert expanded.assay_support[QUAL_COMP.key] == 1
     assert expanded.assay_support[QUAL_DIRECT.key] == 1
 
