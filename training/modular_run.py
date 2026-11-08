@@ -262,6 +262,8 @@ def preflight(index: ObservationIndex):
     assay_classes = set()
     # Label and capability inspection is sequence-only; no training or random model scores.
     assay_track_counts = Counter()
+    tcell_track_counts = Counter()
+    tcell_intensity_levels = defaultdict(set)
     for row in index:
         if row.endpoint not in inherited_scales:
             scale_fitter.add(row)
@@ -302,6 +304,11 @@ def preflight(index: ObservationIndex):
             selected_track = validator.assay_selection(row)
             if selected_track is not None and row.split == "train" and row.value is not None:
                 assay_track_counts[selected_track.key] += 1
+            selected_tcell_track = validator.tcell_selection(row)
+            if selected_tcell_track is not None and row.split == "train" and row.value is not None:
+                tcell_track_counts[selected_tcell_track.key] += 1
+                if row.tcell_intensity is not None:
+                    tcell_intensity_levels[selected_tcell_track.key].add(row.tcell_intensity)
             spec = endpoint_spec(row.endpoint)
             route = spec.route
             if (
@@ -416,6 +423,15 @@ def preflight(index: ObservationIndex):
     for track in config.assay_tracks:
         if not assay_track_counts[track.key] and not frozen_output(validator, track.endpoint):
             raise ValueError(f"declared assay track has no training observations: {track.key}")
+    for track in config.tcell_tracks:
+        if not tcell_track_counts[track.key] and not frozen_output(validator, "tcell_response"):
+            raise ValueError(f"declared T-cell track has no training observations: {track.key}")
+        if (
+            config.tcell_ordinal_loss_weight > 0
+            and len(tcell_intensity_levels[track.key]) < 2
+            and not frozen_output(validator, "tcell_response")
+        ):
+            raise ValueError(f"T-cell track needs two conditional intensity levels: {track.key}")
     for endpoint in config.endpoints:
         if not counts[endpoint] and not frozen_output(validator, endpoint):
             raise ValueError(f"allocated endpoint has no training labels: {endpoint}")
@@ -1088,11 +1104,22 @@ def _fit_index(index, output_dir, *, device, resume):
     missing_assays = [
         key for key, value in assay_support.items() if value["status"] == "random/untrained"
     ]
+    tcell_support = selected.tcell_capabilities()
+    missing_tcell = [
+        key
+        for key, value in tcell_support.items()
+        if value["status"] == "random/untrained"
+        or (
+            selected.config.tcell_ordinal_loss_weight > 0
+            and value["conditional_ordinal_status"] == "random/untrained"
+        )
+    ]
     coverage_gate = {
         "status": "failed"
-        if unsupported or missing_features or missing_auxiliaries or missing_assays
+        if unsupported or missing_features or missing_auxiliaries or missing_assays or missing_tcell
         else "passed",
         "untrained_assay_tracks": missing_assays,
+        "untrained_tcell_tracks": missing_tcell,
         "untrained_parameters": unsupported,
         "exposed_features_without_updates": missing_features,
         "policy": training["coverage_policy"],
@@ -1111,6 +1138,7 @@ def _fit_index(index, output_dir, *, device, resume):
         "unique_training_labels": admission["training_labels"],
         "support": selected.support,
         "assay_tracks": assay_support,
+        "tcell_tracks": tcell_support,
         "untrained_selected_parameters": unsupported,
         "coverage_gate": coverage_gate,
         "qualification": "not_qualified",

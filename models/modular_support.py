@@ -78,7 +78,7 @@ def feature_layout(model):
             ]
         if model.has_cellular:
             names += [f"delivery:{value}" for value in DELIVERY]
-        if model.has_coreceptor:
+        if model.shared_has_coreceptor:
             names += [f"coreceptor:{value}" for value in CORECEPTORS]
         for name in config.auxiliary_context:
             if name != "mhc_pairing":

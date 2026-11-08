@@ -12,7 +12,7 @@ import torch
 
 from ..data.modular import endpoint_spec, observation_target
 from ..data.assay_measurement import observation_method
-from .modular import identity_targets, observation_loss
+from .modular import identity_targets, observation_loss, observation_loss_parts
 
 
 def _plain(value):
@@ -147,7 +147,12 @@ def evaluate(model, index, indices, scales, *, batch_size=64):
                                 }
                             )
                     else:
-                        loss = observation_loss(output, row, scales)
+                        loss = observation_loss(
+                            output,
+                            row,
+                            scales,
+                            tcell_ordinal_weight=model.config.tcell_ordinal_loss_weight,
+                        )
                         value = float(output.value)
                         spec = endpoint_spec(row.endpoint)
                         panel = {
@@ -158,33 +163,64 @@ def evaluate(model, index, indices, scales, *, batch_size=64):
                         }
                         if not spec.binary and not spec.quantitative:
                             value = scales[row.endpoint].decode(value)
-                        records.append(
-                            {
-                                **base,
-                                "prediction": value,
-                                "assay_panel": panel,
-                                "assay_method": asdict(observation_method(row)),
-                                "target": observation_target(row),
-                                "raw_value": row.value,
-                                "raw_unit": row.unit,
-                                "target_space": "logit"
-                                if spec.binary
-                                else row.quantity_contract.target_space
-                                if spec.quantitative
-                                else (f"log10({spec.unit})" if spec.log10 else spec.unit),
-                                "quantity_contract": asdict(row.quantity_contract)
-                                if spec.quantitative
-                                else None,
-                                "value_encoding": row.value_encoding,
-                                "loss": float(loss),
+                        record = {
+                            **base,
+                            "prediction": value,
+                            "assay_panel": panel,
+                            "assay_method": asdict(observation_method(row)),
+                            "target": observation_target(row),
+                            "raw_value": row.value,
+                            "raw_unit": row.unit,
+                            "target_space": "logit"
+                            if spec.binary
+                            else row.quantity_contract.target_space
+                            if spec.quantitative
+                            else (f"log10({spec.unit})" if spec.log10 else spec.unit),
+                            "quantity_contract": asdict(row.quantity_contract)
+                            if spec.quantitative
+                            else None,
+                            "value_encoding": row.value_encoding,
+                            "loss": float(loss),
+                        }
+                        if row.tcell_track is not None:
+                            record["tcell_track"] = asdict(row.tcell_track)
+                            record["tcell_panel"] = {
+                                key: float(item) for key, item in output.tcell_values.items()
                             }
-                        )
+                            record["tcell_intensity_panel"] = {
+                                key: _plain(item)
+                                for key, item in output.tcell_intensity_values.items()
+                            }
+                        if row.tcell_intensity is not None:
+                            logits = output.tcell_intensity_value
+                            greater = logits.sigmoid()
+                            probabilities = torch.stack(
+                                (1 - greater[0], greater[0] - greater[1], greater[1])
+                            )
+                            parts = observation_loss_parts(output, row, scales)
+                            record.update(
+                                {
+                                    "conditional_intensity_target": row.tcell_intensity,
+                                    "conditional_intensity_logits": _plain(logits),
+                                    "conditional_intensity_probabilities": _plain(probabilities),
+                                    "conditional_intensity_prediction": int(probabilities.argmax()),
+                                    "conditional_intensity_expected": float(
+                                        (probabilities * probabilities.new_tensor([0, 1, 2])).sum()
+                                    ),
+                                    "conditional_intensity_loss": float(
+                                        parts["conditional_ordinal"]
+                                    ),
+                                }
+                            )
+                        records.append(record)
     finally:
         model.train(was_training)
     return summarize(records), records
 
 
-def summarize(records: list[dict[str, Any]], *, assay_strata=True) -> dict[str, Any]:
+def summarize(
+    records: list[dict[str, Any]], *, assay_strata=True, tcell_strata=True
+) -> dict[str, Any]:
     grouped = defaultdict(list)
     for record in records:
         grouped[record.get("identity_task", record["endpoint"])].append(record)
@@ -212,6 +248,20 @@ def summarize(records: list[dict[str, Any]], *, assay_strata=True) -> dict[str, 
                         [row["prediction"] for row in subset],
                         [row["prediction"] >= 0 for row in subset],
                     )
+            ordinal = [row for row in rows if "conditional_intensity_target" in row]
+            if ordinal:
+                targets = [row["conditional_intensity_target"] for row in ordinal]
+                predictions = [row["conditional_intensity_prediction"] for row in ordinal]
+                expected = [row["conditional_intensity_expected"] for row in ordinal]
+                metrics["conditional_intensity"] = {
+                    "n": len(ordinal),
+                    "loss": float(np.mean([row["conditional_intensity_loss"] for row in ordinal])),
+                    "spearman": _correlation(_ranks(targets), _ranks(expected)),
+                    "accuracy": float(np.mean(np.asarray(targets) == predictions)),
+                    "within_one_level": float(
+                        np.mean(np.abs(np.asarray(targets) - predictions) <= 1)
+                    ),
+                }
         else:
             exact = [row for row in rows if row["qualifier"] == "="]
             if exact:
@@ -256,8 +306,20 @@ def summarize(records: list[dict[str, Any]], *, assay_strata=True) -> dict[str, 
                     methods[key].append(row)
             if methods:
                 metrics["by_assay_method"] = {
-                    key: summarize(subset, assay_strata=False)[endpoint]
+                    key: summarize(subset, assay_strata=False, tcell_strata=False)[endpoint]
                     for key, subset in sorted(methods.items())
+                }
+        if tcell_strata and "identity_task" not in rows[0]:
+            tracks = defaultdict(list)
+            for row in rows:
+                track = row.get("tcell_track")
+                if track:
+                    key = "/".join(("tcell", track["family"], track["response"], track["method"]))
+                    tracks[key].append(row)
+            if tracks:
+                metrics["by_tcell_track"] = {
+                    key: summarize(subset, assay_strata=False, tcell_strata=False)[endpoint]
+                    for key, subset in sorted(tracks.items())
                 }
     return result
 

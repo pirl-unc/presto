@@ -26,6 +26,7 @@ class AssayMethod:
         if self.review_status not in (
             "unknown",
             "source_tag_unreviewed",
+            "database_curated",
             "verified",
             "protocol_citation_conflict",
         ):
@@ -33,9 +34,11 @@ class AssayMethod:
 
     @property
     def usable(self):
-        return self.review_status in ("source_tag_unreviewed", "verified") and all(
-            getattr(self, axis) != "unknown" for axis in AXES
-        )
+        return self.review_status in (
+            "source_tag_unreviewed",
+            "database_curated",
+            "verified",
+        ) and all(getattr(self, axis) != "unknown" for axis in AXES)
 
 
 @dataclass(frozen=True)

@@ -80,9 +80,12 @@ def test_flag_off_is_identical_to_default_and_contract_is_unchanged():
     for a, b in zip(first, second):
         assert torch.equal(a.value, b.value)
     assert "cellular" in first[1].components
-    # Legacy contract carries no staging keys, so existing digests do not move.
+    # Legacy contract carries no staging or empty T-cell keys, so existing
+    # digests do not move.
     assert default.config.to_dict() == {
-        k: v for k, v in asdict(default.config).items() if not k.startswith("elution_")
+        k: v
+        for k, v in asdict(default.config).items()
+        if not k.startswith("elution_") and k not in ("tcell_tracks", "tcell_ordinal_loss_weight")
     }
     with pytest.raises(ValueError, match="require elution_staging"):
         ModularConfig(endpoints=("ic50", "elution_observation"), elution_detach_affinity=True)
