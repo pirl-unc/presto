@@ -2,7 +2,8 @@
 
 Date: 2026-11-08
 Owner: Codex / GPT-5
-Status: specified after the frozen primary common-loader preflight failed; no GPU fit launched
+Status: projection verified; corrected immutable preflight continuation specified;
+no GPU fit launched
 
 ## Trigger
 
@@ -53,3 +54,39 @@ protocol identity.
   BA hashes; do not mutate the already executed primary launch contract.
 - Rerun both full canonical loader passes and independent verification. H100
   training remains prohibited until both corrected passes succeed.
+
+## Frozen corrected-preflight implementation
+
+Do not edit or reuse the executed v1 preflight output directory, call receipt,
+launcher, or launch contract. Add a sibling `code/preflight_v2.py` and
+`reproduce/v2/` bundle with new call names and output directories
+`preflight-v2-primary` and `preflight-v2-verification`.
+
+The only scientific manifest change from the failed preflight is replacement of
+the two v1 BA sources by the independently verified v2 sources:
+
+- MHC-I: 80,674 rows, 141,870,035 bytes, SHA-256
+  `2c007e6b46a99835f95ec612aeb498f4e52940aa81c22809ad48b5e922d6d0ca`;
+- MHC-II: 62,539 rows, 112,640,875 bytes, SHA-256
+  `9fe752274c895cb4cd46e36dfeff43a3db73e0c96fa24ba495e1fcfd7f24c66a`.
+
+Keep the original four Stage B sources, Stage A parent, model, optimizer,
+balancing, selection, and no-TEST policy byte-for-byte identical. The effective
+reference/parity manifests may differ only by the two v2 TRAIN sources.
+
+For each CPU worker, stream-copy every pinned source and the parent checkpoint
+once from the Modal volume into an isolated local scratch directory while
+simultaneously checking byte count and SHA-256. Resolve both effective manifests
+to those verified local copies. This changes transport only: it avoids repeated
+network-filesystem traversal while the canonical `ObservationIndex` and
+`training.modular_run.preflight` still parse every row independently for each
+condition. Persist source-copy hashes/timings, complete condition receipts,
+partition/census/model/training/scales/admission output, peak RSS, and proof of
+zero TEST/model-prediction/optimizer/GPU access.
+
+The primary worker must pass reference and parity before the verification worker
+may start. The verification worker repeats the source copies and both complete
+canonical passes in a fresh container, then requires exact equality for all
+scientific outputs (rows, partitions, census, model, training, scales, and
+admission) against the primary receipt. Runtime-only fields may differ. Any
+failure stops before H100 launch and remains preserved as audit evidence.
