@@ -8,11 +8,16 @@
     "code/launch.py"
   ],
   "created_utc": "2026-11-08T22:45:15Z",
+  "continuation_of": {
+    "app_id": "ap-E5gNDZmqElXSoi7Rw8Cp0T",
+    "failure": "131072 MiB ephemeral disk below Modal's 524288 MiB minimum; no function call created",
+    "scientific_contract_changed": false
+  },
   "experiment": "2026-11-08_1740_codex_netmhc-ba-parity-projection",
   "git": {
     "branch": "codex/post-pr153-unified-retraining-20261108",
     "dirty": false,
-    "source_commit": "0eb0adb8a16566a0fb881599addc1a5fa4c4ea49"
+    "source_commit": "9043ef295c7bd1f4b47493ade18820366ceab483"
   },
   "inputs": {
     "admission_decisions": {
@@ -61,7 +66,7 @@
   "runtime": {
     "block_network": true,
     "cpu": 8,
-    "ephemeral_disk_mib": 131072,
+    "ephemeral_disk_mib": 524288,
     "memory_mib": 32768,
     "mhcseqs": "2.6.13",
     "observed_gpu": null,
@@ -70,7 +75,7 @@
     "timeout_seconds": 3600
   },
   "source_sha256": {
-    "code/launch.py": "63b4198a255505395ebd8957c68911cc9a279d69285db2bb9976023a1b02d8d2",
+    "code/launch.py": "0a1f17361a56802d6edcb597aca37c1e51fcfd3f6b0917c5ec4f91daedab7427",
     "data/netmhc_training.py": "d61446559b6576f4891fffe155e8192f445b02e77f6188cc9ad0c9c90981c3b3",
     "reproduce/source/collect.py": "be9712691da9516357f92de41bd1cba82c35e1b2b2080eec4817fa316afe8181"
   },
