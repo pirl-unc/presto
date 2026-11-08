@@ -1,0 +1,496 @@
+{
+  "canonical_manifest_sha256": "4156cbaf20df3e8568f5d5c7aa85a875268df9d849b055baa935dd1d2bfff292",
+  "comparators": [
+    {
+      "id": "netmhcpan",
+      "receipt": {
+        "bytes": 674,
+        "include_in_report": false,
+        "license": "DTU academic license; receipt only is redistributable",
+        "sha256": "2cd8883faafcfc00e41cac66f1e0ea09d3daf927a677989480362b3e4732f0ee",
+        "uri": "modal-volume://presto-checkpoints/2026-11-08_2210_codex_unified-state-report-v1/artifacts/affinity-baseline-receipt.json"
+      },
+      "version": "4.2c"
+    },
+    {
+      "id": "netmhciipan",
+      "receipt": {
+        "bytes": 674,
+        "include_in_report": false,
+        "license": "DTU academic license; receipt only is redistributable",
+        "sha256": "2cd8883faafcfc00e41cac66f1e0ea09d3daf927a677989480362b3e4732f0ee",
+        "uri": "modal-volume://presto-checkpoints/2026-11-08_2210_codex_unified-state-report-v1/artifacts/affinity-baseline-receipt.json"
+      },
+      "version": "4.3e"
+    },
+    {
+      "id": "mhcflurry",
+      "receipt": {
+        "bytes": 19451,
+        "include_in_report": false,
+        "license": "Apache-2.0 package; separately licensed training data/weights",
+        "sha256": "1bc4318c0cf4a9890cc98f4470f08132321457f9165cf18b2362bab2ce391fce",
+        "uri": "modal-volume://presto-checkpoints/2026-11-08_2210_codex_unified-state-report-v1/artifacts/mhcflurry-validation-receipt.json"
+      },
+      "version": "package-2.3.16_weights-2.3.0"
+    },
+    {
+      "id": "prime",
+      "receipt": {
+        "bytes": 10982,
+        "include_in_report": false,
+        "license": "PRIME 2.1 and MixMHCpred are academic/non-commercial",
+        "sha256": "5a2d418f6111c97490b2d17020e29e88f43c99c34aab912e5485a648e111064c",
+        "uri": "modal-volume://presto-checkpoints/2026-11-08_2210_codex_unified-state-report-v1/artifacts/prime-source-audit.md"
+      },
+      "version": "2.1_blocked_mixmhcpred-2.0.2"
+    }
+  ],
+  "git": {
+    "commit": "4935bd7f6676a6a3fa003b8411062eb3c70ae010",
+    "dirty": false
+  },
+  "input_manifest_sha256": "4156cbaf20df3e8568f5d5c7aa85a875268df9d849b055baa935dd1d2bfff292",
+  "metrics": [
+    {
+      "ci_high": null,
+      "ci_low": null,
+      "cohort_id": "affinity_exact_ic50_mhci_development",
+      "comparison_id": "mhci_affinity_netmhcpan",
+      "eligible_rows": 169,
+      "estimate_type": "method_value",
+      "higher_is_better": true,
+      "interval_kind": "not_available",
+      "method": "Presto_Stage_B",
+      "method_output_id": "assay_aware_ic50_panel",
+      "metric": "spearman",
+      "output_id": "matched_exact_ic50",
+      "primary": true,
+      "split": "development",
+      "studies": null,
+      "task": "mhc_i_affinity",
+      "value": 0.6688533273167817
+    },
+    {
+      "ci_high": null,
+      "ci_low": null,
+      "cohort_id": "affinity_exact_ic50_mhci_development",
+      "comparison_id": "mhci_affinity_netmhcpan",
+      "eligible_rows": 169,
+      "estimate_type": "method_value",
+      "higher_is_better": true,
+      "interval_kind": "not_available",
+      "method": "NetMHCpan_4.2c",
+      "method_output_id": "archive_unspecified_assay_ic50_BA",
+      "metric": "spearman",
+      "output_id": "matched_exact_ic50",
+      "primary": true,
+      "split": "development",
+      "studies": null,
+      "task": "mhc_i_affinity",
+      "value": 0.758445
+    },
+    {
+      "ci_high": null,
+      "ci_low": null,
+      "cohort_id": "affinity_exact_ic50_mhcii_development",
+      "comparison_id": "mhcii_affinity_netmhciipan",
+      "eligible_rows": 1170,
+      "estimate_type": "method_value",
+      "higher_is_better": true,
+      "interval_kind": "not_available",
+      "method": "Presto_Stage_B",
+      "method_output_id": "assay_aware_ic50_panel",
+      "metric": "spearman",
+      "output_id": "matched_exact_ic50",
+      "primary": true,
+      "split": "development",
+      "studies": null,
+      "task": "mhc_ii_affinity",
+      "value": 0.49949198220496377
+    },
+    {
+      "ci_high": null,
+      "ci_low": null,
+      "cohort_id": "affinity_exact_ic50_mhcii_development",
+      "comparison_id": "mhcii_affinity_netmhciipan",
+      "eligible_rows": 1170,
+      "estimate_type": "method_value",
+      "higher_is_better": true,
+      "interval_kind": "not_available",
+      "method": "NetMHCIIpan_4.3e",
+      "method_output_id": "archive_unspecified_assay_ic50_BA",
+      "metric": "spearman",
+      "output_id": "matched_exact_ic50",
+      "primary": true,
+      "split": "development",
+      "studies": null,
+      "task": "mhc_ii_affinity",
+      "value": 0.777863
+    },
+    {
+      "ci_high": null,
+      "ci_low": null,
+      "cohort_id": "presentation_matched_48530",
+      "comparison_id": "presentation_mhcflurry",
+      "eligible_rows": 48530,
+      "estimate_type": "method_value",
+      "higher_is_better": true,
+      "interval_kind": "not_available",
+      "method": "Presto_Stage_B",
+      "method_output_id": "presentation",
+      "metric": "auroc",
+      "output_id": "presentation",
+      "primary": true,
+      "split": "development",
+      "studies": 3,
+      "task": "presentation",
+      "value": 0.9520492273477882
+    },
+    {
+      "ci_high": null,
+      "ci_low": null,
+      "cohort_id": "presentation_matched_48530",
+      "comparison_id": "presentation_mhcflurry",
+      "eligible_rows": 48530,
+      "estimate_type": "method_value",
+      "higher_is_better": true,
+      "interval_kind": "not_available",
+      "method": "MHCflurry_2.3.16",
+      "method_output_id": "presentation_score",
+      "metric": "auroc",
+      "output_id": "presentation",
+      "primary": true,
+      "split": "development",
+      "studies": 3,
+      "task": "presentation",
+      "value": 0.9484334687571137
+    },
+    {
+      "ci_high": 0.02230063911801252,
+      "ci_low": -0.010639238086726902,
+      "cohort_id": "presentation_matched_48530",
+      "comparison_id": "presentation_mhcflurry",
+      "eligible_rows": 48530,
+      "estimate_type": "paired_difference",
+      "higher_is_better": true,
+      "interval_kind": "bootstrap_95",
+      "method": "Presto_minus_MHCflurry",
+      "method_output_id": "presentation_minus_presentation_score",
+      "metric": "auroc_difference",
+      "output_id": "presentation",
+      "primary": true,
+      "split": "development",
+      "studies": 3,
+      "task": "presentation",
+      "value": 0.003615758590674608
+    },
+    {
+      "ci_high": null,
+      "ci_low": null,
+      "cohort_id": "presentation_matched_48530",
+      "comparison_id": "presentation_mhcflurry",
+      "eligible_rows": 48530,
+      "estimate_type": "method_value",
+      "higher_is_better": true,
+      "interval_kind": "not_available",
+      "method": "Presto_Stage_B",
+      "method_output_id": "presentation",
+      "metric": "auprc",
+      "output_id": "presentation",
+      "primary": true,
+      "split": "development",
+      "studies": 3,
+      "task": "presentation",
+      "value": 0.9526680567042027
+    },
+    {
+      "ci_high": null,
+      "ci_low": null,
+      "cohort_id": "presentation_matched_48530",
+      "comparison_id": "presentation_mhcflurry",
+      "eligible_rows": 48530,
+      "estimate_type": "method_value",
+      "higher_is_better": true,
+      "interval_kind": "not_available",
+      "method": "MHCflurry_2.3.16",
+      "method_output_id": "presentation_score",
+      "metric": "auprc",
+      "output_id": "presentation",
+      "primary": true,
+      "split": "development",
+      "studies": 3,
+      "task": "presentation",
+      "value": 0.9542811005707517
+    },
+    {
+      "ci_high": 0.014798858589432574,
+      "ci_low": -0.016051075653918313,
+      "cohort_id": "presentation_matched_48530",
+      "comparison_id": "presentation_mhcflurry",
+      "eligible_rows": 48530,
+      "estimate_type": "paired_difference",
+      "higher_is_better": true,
+      "interval_kind": "bootstrap_95",
+      "method": "Presto_minus_MHCflurry",
+      "method_output_id": "presentation_minus_presentation_score",
+      "metric": "auprc_difference",
+      "output_id": "presentation",
+      "primary": true,
+      "split": "development",
+      "studies": 3,
+      "task": "presentation",
+      "value": -0.0016130438665488873
+    },
+    {
+      "ci_high": null,
+      "ci_low": null,
+      "cohort_id": "processing_matched_48530",
+      "comparison_id": "processing_mhcflurry",
+      "eligible_rows": 48530,
+      "estimate_type": "method_value",
+      "higher_is_better": true,
+      "interval_kind": "not_available",
+      "method": "Presto_Stage_B",
+      "method_output_id": "operational_processing",
+      "metric": "auroc",
+      "output_id": "operational_processing",
+      "primary": true,
+      "split": "development",
+      "studies": 3,
+      "task": "processing",
+      "value": 0.9057765692164845
+    },
+    {
+      "ci_high": null,
+      "ci_low": null,
+      "cohort_id": "processing_matched_48530",
+      "comparison_id": "processing_mhcflurry",
+      "eligible_rows": 48530,
+      "estimate_type": "method_value",
+      "higher_is_better": true,
+      "interval_kind": "not_available",
+      "method": "MHCflurry_2.3.16",
+      "method_output_id": "processing_AP",
+      "metric": "auroc",
+      "output_id": "operational_processing",
+      "primary": true,
+      "split": "development",
+      "studies": 3,
+      "task": "processing",
+      "value": 0.8056721978136417
+    },
+    {
+      "ci_high": 0.14577009912670083,
+      "ci_low": 0.07059197233457426,
+      "cohort_id": "processing_matched_48530",
+      "comparison_id": "processing_mhcflurry",
+      "eligible_rows": 48530,
+      "estimate_type": "paired_difference",
+      "higher_is_better": true,
+      "interval_kind": "bootstrap_95",
+      "method": "Presto_minus_MHCflurry",
+      "method_output_id": "operational_processing_minus_processing_AP",
+      "metric": "auroc_difference",
+      "output_id": "operational_processing",
+      "primary": true,
+      "split": "development",
+      "studies": 3,
+      "task": "processing",
+      "value": 0.10010437140284283
+    },
+    {
+      "ci_high": null,
+      "ci_low": null,
+      "cohort_id": "tcell_functional_development",
+      "comparison_id": "tcell_binary_recipe",
+      "eligible_rows": 861,
+      "estimate_type": "method_value",
+      "higher_is_better": true,
+      "interval_kind": "not_available",
+      "method": "binary_only",
+      "metric": "equal_track_equal_study_auroc",
+      "output_id": "functional_assay_aware_binary",
+      "primary": true,
+      "split": "development",
+      "studies": null,
+      "task": "tcell_immunogenicity",
+      "value": 0.6309977705239802
+    },
+    {
+      "ci_high": null,
+      "ci_low": null,
+      "cohort_id": "tcell_functional_development",
+      "comparison_id": "tcell_binary_recipe",
+      "eligible_rows": 861,
+      "estimate_type": "method_value",
+      "higher_is_better": true,
+      "interval_kind": "not_available",
+      "method": "binary_ordinal",
+      "metric": "equal_track_equal_study_auroc",
+      "output_id": "functional_assay_aware_binary",
+      "primary": true,
+      "split": "development",
+      "studies": null,
+      "task": "tcell_immunogenicity",
+      "value": 0.4910237721880867
+    },
+    {
+      "ci_high": null,
+      "ci_low": null,
+      "cohort_id": "tcell_functional_development",
+      "comparison_id": "tcell_binary_recipe_logloss",
+      "eligible_rows": 861,
+      "estimate_type": "method_value",
+      "higher_is_better": false,
+      "interval_kind": "not_available",
+      "method": "binary_only",
+      "metric": "equal_track_equal_study_log_loss",
+      "output_id": "functional_assay_aware_binary",
+      "primary": false,
+      "split": "development",
+      "studies": null,
+      "task": "tcell_immunogenicity",
+      "value": 0.625794378782467
+    },
+    {
+      "ci_high": null,
+      "ci_low": null,
+      "cohort_id": "tcell_functional_development",
+      "comparison_id": "tcell_binary_recipe_logloss",
+      "eligible_rows": 861,
+      "estimate_type": "method_value",
+      "higher_is_better": false,
+      "interval_kind": "not_available",
+      "method": "binary_ordinal",
+      "metric": "equal_track_equal_study_log_loss",
+      "output_id": "functional_assay_aware_binary",
+      "primary": false,
+      "split": "development",
+      "studies": null,
+      "task": "tcell_immunogenicity",
+      "value": 0.6296830838810803
+    }
+  ],
+  "model": {
+    "checkpoint": {
+      "bytes": 4433515,
+      "include_in_report": false,
+      "license": "Derived Presto checkpoint; source-data terms still apply",
+      "sha256": "0c8eab7381631e14bc1982439bdf639a5adb6f89a4bbdbda23111bb444e5e145",
+      "uri": "modal-volume://presto-checkpoints/2026-11-08_1130_codex_tcell-fixed-parent/binary-only/raw/selected.pt"
+    },
+    "id": "stage_b_plus_binary_only_tcell",
+    "training_recipe": {
+      "parent_checkpoint_sha256": "a83ac0d80c16798abc33be813dbeb1a6bad42c25dc18c29edbda2716aa801333",
+      "parent_code_commit": "85acdcf79080f121ae6be6fd643411c646114b18",
+      "presentation_affinity": "Stage B: 5,000 updates, batch 128, 50:50 EL/concentration replay, study-mean selection, seed 42",
+      "tcell": "Fixed parent, binary-only five-track panel, 3,000 updates, selected step 100, seed 42"
+    }
+  },
+  "prediction_artifacts": [
+    {
+      "bytes": 1164733,
+      "id": "affinity_comparator_predictions",
+      "include_in_report": false,
+      "license": "Derived NetMHCpan/NetMHCIIpan outputs; DTU academic terms apply",
+      "sha256": "3ffe283974a93e151f3d159e986b715781b4431c88d9392cac389d131f50fcb6",
+      "split": "development",
+      "uri": "modal-volume://presto-checkpoints/2026-11-08_2210_codex_unified-state-report-v1/artifacts/affinity-baseline-predictions.json"
+    },
+    {
+      "bytes": 7272830,
+      "id": "matched_presentation_predictions",
+      "include_in_report": false,
+      "license": "Derived Presto/MHCflurry matched predictions; source-data terms apply",
+      "sha256": "9d9cba9260142373dfe747ac9cf109a46b1b468df107e3ba0c93b37e146e643a",
+      "split": "development",
+      "uri": "modal-volume://presto-checkpoints/2026-11-08_2210_codex_unified-state-report-v1/artifacts/matched-presentation.jsonl.gz"
+    },
+    {
+      "bytes": 24362137,
+      "id": "stage_b_development_predictions",
+      "include_in_report": false,
+      "license": "Derived predictions; underlying source-data terms apply",
+      "sha256": "46bd116569a73a654411775192b76779aaeb7c0b2cb00a07a71584933f986068",
+      "split": "development",
+      "uri": "modal-volume://presto-checkpoints/2026-11-07_1915_codex_unified-presentation/stage-b/validation-predictions.jsonl.gz"
+    },
+    {
+      "bytes": 434985,
+      "id": "tcell_binary_only_development_predictions",
+      "include_in_report": false,
+      "license": "Derived predictions; IEDB data-use terms apply",
+      "sha256": "8c8868aeb1a721f7e1dae2539092484afc70985d9dc31090ace176b08fd36394",
+      "split": "development",
+      "uri": "modal-volume://presto-checkpoints/2026-11-08_1130_codex_tcell-fixed-parent/binary-only/validation-predictions.jsonl.gz"
+    }
+  ],
+  "promotion_gates": [
+    {
+      "id": "mhc_i_affinity_vs_netmhcpan",
+      "reason": "Presto Stage B exact-IC50 Spearman 0.66885 is below NetMHCpan 4.2c at 0.75845 on 169 matched development rows.",
+      "status": "fail"
+    },
+    {
+      "id": "mhc_ii_affinity_vs_netmhciipan",
+      "reason": "Presto Stage B exact-IC50 Spearman 0.49949 is below NetMHCIIpan 4.3e at 0.77786 on 1,170 matched development rows.",
+      "status": "fail"
+    },
+    {
+      "id": "presentation_vs_mhcflurry",
+      "reason": "AUROC difference is positive but both AUROC and AUPRC paired 95% intervals cross zero.",
+      "status": "fail"
+    },
+    {
+      "id": "processing_vs_mhcflurry",
+      "reason": "Paired development AUROC difference is 0.10010 with 95% interval [0.07059, 0.14577].",
+      "status": "pass"
+    },
+    {
+      "id": "tcell_vs_prime",
+      "reason": "PRIME was not run: PRIME 2.1 requires licensed MixMHCpred 3.x, while only 2.0.2 is installed; no independent T-cell TEST exists.",
+      "status": "not_evaluated"
+    },
+    {
+      "id": "independent_all_task_test",
+      "reason": "No untouched all-task TEST population has been scored by the frozen unified checkpoint.",
+      "status": "not_evaluated"
+    }
+  ],
+  "report_engine_version": "1",
+  "report_id": "2026-11-08_221000_4935bd7f",
+  "runtime": {
+    "model_size_bytes": 4433515,
+    "observed_gpu": "NVIDIA H100 80GB HBM3 (Stage B and T-cell training)",
+    "report_generation": "local CPU",
+    "requested_gpu": "H100!",
+    "stage_b_elapsed_seconds": 9637.9,
+    "tcell_binary_only_elapsed_seconds": 1842.35
+  },
+  "schema_version": 1,
+  "state": {
+    "blocked_claims": [
+      "Presto does not yet beat NetMHCpan on matched MHC-I exact-affinity development correlation.",
+      "Presto does not yet beat NetMHCIIpan on matched MHC-II exact-affinity development correlation.",
+      "Presentation performance is similar on three exposed studies, but the paired intervals do not support a superiority claim.",
+      "No PRIME or independent T-cell TEST result exists, and the current binary T-cell head is threshold-degenerate at 0.5."
+    ],
+    "headline": "The current assay-aware unified development checkpoint decisively improves operational processing versus MHCflurry, is statistically similar for presentation, remains behind both NetMHC affinity tools, and has no PRIME-qualified T-cell result.",
+    "limitations": [
+      "All headline metrics are development-only; no current cohort is relabeled as TEST.",
+      "Presentation has only three independent studies and participated in checkpoint selection.",
+      "NetMHC comparator versions are installed 4.2c/4.3e rather than the newest available patches.",
+      "MHCflurry historical training lineage cannot be reconstructed completely.",
+      "T-cell functional discrimination rests on few two-class studies per assay track and every row is positive at the fixed 0.5 threshold."
+    ],
+    "qualified_claims": [
+      "On the exact same 48,530 development rows and biological inputs, Stage B operational-processing AUROC is 0.90578 versus 0.80567 for MHCflurry; the paired difference interval is strictly positive.",
+      "Stage B presentation AUROC/AUPRC is 0.95205/0.95267 versus 0.94843/0.95428 for MHCflurry, so performance is similar rather than superior.",
+      "The binary-only assay-aware T-cell head is preferred to the ordinal arm within the exposed development comparison, while neither is promoted.",
+      "All exact training/development row bundles and prediction dumps in this report are recoverable from hash-pinned Modal-volume paths."
+    ],
+    "status": "development"
+  },
+  "timestamp_utc": "2026-11-08T22:10:00Z"
+}

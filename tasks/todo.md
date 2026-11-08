@@ -14814,9 +14814,12 @@ Spec: `tasks/post-pr153-unified-retraining-spec.md`.
   mark ready, merge, and verify merge commit `5a44a0dd`.
 - [x] Create successor branch from the merged base in an isolated sparse
   worktree; keep the approximately 900-MB experiment bundle out of Git.
-- [ ] Implement deterministic timestamped performance reports and reusable
+- [x] Implement deterministic timestamped performance reports and reusable
   figure generation with full model/data/comparator/artifact provenance.
-- [ ] Open the draft successor PR and freeze its training/report commit.
+- [x] Open draft successor PR #154 and freeze report code commit `4935bd7f`.
+- [ ] Add standardized per-example affinity, presentation/processing, and
+  T-cell figure panels beyond the v1 comparator/composition overview.
+- [ ] Freeze the successor training commit after the new cohort contracts pass.
 - [ ] Install and pin licensed MixMHCpred 3.x; smoke-test PRIME 2.1 through
   mhctools with explicit executable paths. Keep 2.0.2 fail-closed.
 - [ ] Freeze newly disjoint MHC-I/MHC-II affinity, presentation/processing, and
@@ -14825,5 +14828,14 @@ Spec: `tasks/post-pr153-unified-retraining-spec.md`.
   ordinal ablations on explicit `H100!` under the experiment registry.
 - [ ] Compare a frozen checkpoint on identical rows against NetMHCpan,
   NetMHCIIpan, MHCflurry, and PRIME; preserve every per-row output.
-- [ ] Generate a timestamped state-of-Presto report with figures, complete data
+- [x] Generate a timestamped state-of-Presto report with figures, complete data
   manifests, hashes, and explicit promotion-gate pass/fail results.
+
+Review: report v1 is registered under
+`experiments/2026-11-08_2210_codex_unified-state-report-v1`. Two independent
+renders are byte-identical. Six exact TRAIN/development row bundles, four
+per-example prediction artifacts, the selected checkpoint, and all comparator
+receipts resolve to hash-pinned Modal-volume paths; no large/licensed payload is
+in Git. The report says development-only, preserves method-specific output
+identities, passes only the processing gate, and leaves affinity, presentation,
+PRIME, and independent TEST claims open.

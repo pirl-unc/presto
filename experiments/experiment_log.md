@@ -5894,3 +5894,81 @@ Winner/promotion remains pending scientific review and study-aware uncertainty.
 ## 2026-10-30 — Stability and data-count audit of direct factorized fits
 
 Codex / GPT-6. Existing experiment [2026-10-30_1154_codex_direct-factorized-affinity](2026-10-30_1154_codex_direct-factorized-affinity/README.md#stability-and-training-population-audit-2026-10-30); no new training or relabeling. Independently recomputed stability metrics from hash-verified per-example validation/test dumps. Test half-life Spearman: I .0648/.3160 (n=62), II -.0726/-.1806 (n=148); validation I .4139/.4451 (n=71), no II validation. Test I td50 .3163/.3824 (n=140); validation .1960/.4390 (n=145). Endpoint heads share biology but do not yet use the categorical concentration decoder. MHC-II TRAIN contains 306,303 observed ligands, 306,302 generated backgrounds and 61,143 concentration labels; published NetMHCIIpan-4.3 counts use a different full-development-corpus contract. Stability is not qualified; all original experiment contracts and promotion limitations remain. Counts, Pearson, RMSE, exact target-space definitions and input hashes: `results/stability-and-data-audit.json`.
+
+<!-- closed-2026-11-08_2210_codex_unified-state-report-v1 -->
+## 2026-11-08 — Timestamped unified state report v1
+
+**Agent/model:** Codex / GPT-5
+
+**Experiment:** [2026-11-08_2210_codex_unified-state-report-v1](2026-11-08_2210_codex_unified-state-report-v1/README.md)
+
+**Report code:** `4935bd7f6676a6a3fa003b8411062eb3c70ae010` on
+`codex/post-pr153-unified-retraining-20261108`; source model code
+`85acdcf79080f121ae6be6fd643411c646114b18`
+
+**Reproduction:** `reproduce/launch.sh`; no non-default environment overrides;
+report generated locally on CPU.
+
+This is a reporting/evidence experiment, not new training. It freezes the state
+of the selected Stage B affinity/presentation checkpoint plus the preferred
+binary-only assay-aware T-cell head. The exact row bundles, checkpoint,
+comparator receipts, and per-example prediction dumps are retained on the
+`presto-checkpoints` Modal volume by immutable path, byte count, and SHA-256.
+
+### Dataset and curation contract
+
+- Presentation/processing: 1,349,378 TRAIN and 48,530 development rows from
+  three whole CARMEN studies. Reported ligands are paired 1:1 with generated
+  source-matched controls. Exact HLA sets and 15-aa flanks are retained. TRAIN
+  passes whole-study, exact, core8, Hamming-1, and affinity-development
+  embargoes.
+- Affinity: 160,326 TRAIN and 2,536 development concentration rows from Hitlist
+  v4 IEDB. Physical endpoints, assay preparation/mechanism/detector, units,
+  qualifiers, bounds, study, and exact MHC grooves are retained. The split uses
+  whole studies plus a cross-endpoint core9 embargo.
+- T-cell: 15,646 TRAIN and 1,530 development observations from the strict-clean
+  accessible IEDB projection. Five family/response/method tracks are separate;
+  all negatives are observed. No random-peptide negatives, PRIME rows, locked
+  confirmation, or TEST rows were used.
+- The report contains no independent TEST. The development-only reason is
+  machine-readable in `data_manifest.json`; no exposed or consumed cohort is
+  relabeled.
+
+### Training and output contract
+
+Stage B used 5,000 updates, batch 128, seed 42, 50:50 presentation/concentration
+replay, and equal-study EL checkpoint selection. The fixed-parent T-cell run
+used 3,000 updates and selected binary-only step 100. Requested `H100!` resolved
+to NVIDIA H100 80GB HBM3 for both source fits; runtimes were 9,637.90 and
+1,842.35 seconds. There was no synthetic affinity data. Generated EL controls
+remain EL backgrounds, not affinity negatives.
+
+Assay label to output mapping remains literal: separate affinity-method tracks;
+separate presentation and operational-processing outputs; and separate T-cell
+activation, IFNg ELISPOT, IFNg ICS, TNFa ICS, and multimer-binding outputs.
+Conditional ordinal intensity was an auxiliary ablation and was rejected.
+
+### Held-out development metrics
+
+| Task / condition | Presto | Comparator | Decision |
+|---|---:|---:|---|
+| MHC-I exact-IC50 Spearman, n=169 | 0.668853 | NetMHCpan 4.2c 0.758445 | fail |
+| MHC-II exact-IC50 Spearman, n=1,170 | 0.499492 | NetMHCIIpan 4.3e 0.777863 | fail |
+| Presentation equal-study AUROC / AUPRC, n=48,530 | 0.952049 / 0.952668 | MHCflurry 0.948433 / 0.954281 | fail; paired intervals cross zero |
+| Operational-processing equal-study AUROC, n=48,530 | 0.905777 | MHCflurry processing/AP 0.805672 | pass; delta 0.100104, 95% CI [0.070592, 0.145770] |
+| T-cell functional equal-track/equal-study AUROC, n=861 | binary-only 0.630998 | binary+ordinal 0.491024 | binary-only preferred, not promoted |
+
+**Test metrics:** none; TEST was intentionally not accessed. PRIME 2.1 was not
+run because the installed MixMHCpred 2.0.2 fails its 3.x requirement. The
+generated report preserves this as `not_evaluated`, not a missing-value win.
+
+**Preferred condition:** Stage B plus binary-only T-cell is the current
+development checkpoint solely for continuation. It is not a final model. It
+passes only the processing comparator gate; MHC-I affinity, MHC-II affinity,
+presentation superiority, PRIME, and an independent all-task TEST remain open.
+
+**Artifacts and figures:** the timestamped report contains canonical
+`report.json`, complete `data_manifest.json`, prediction index, metric CSV,
+deterministic PNG/SVG comparator and data-composition figures, reproduction
+receipts, and whole-tree checksums. No licensed binary or large raw bundle is
+committed.
