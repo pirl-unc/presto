@@ -230,7 +230,7 @@ def artifact(path: Path) -> dict:
     image=image,
     cpu=8,
     memory=32768,
-    ephemeral_disk=131072,
+    ephemeral_disk=524288,
     timeout=3600,
     max_containers=1,
     retries=0,

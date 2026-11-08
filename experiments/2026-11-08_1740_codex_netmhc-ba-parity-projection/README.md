@@ -19,9 +19,14 @@ No model, prediction, current outcome, TEST, or locked confirmation cohort is
 read. Large and redistribution-unresolved artifacts remain hash-pinned on the
 `presto-checkpoints` Modal volume rather than Git.
 
-The run will use 8 CPU / 32 GiB, no GPU, network blocked. A no-GPU contract is
-intentional because this is deterministic data preparation rather than a
-performance-sensitive fit.
+The run will use 8 CPU / 32 GiB / 512 GiB ephemeral disk, no GPU, network
+blocked. A no-GPU contract is intentional because this is deterministic data
+preparation rather than a performance-sensitive fit.
+
+The first submission, Modal app `ap-E5gNDZmqElXSoi7Rw8Cp0T`, failed before
+function creation because 128 GiB ephemeral disk is below Modal's current
+512-GiB minimum for this request. No call ID was created and no input was read.
+The retry changes only scratch capacity to the proven 512-GiB audit contract.
 
 ## Planned artifacts
 
