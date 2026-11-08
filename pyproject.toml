@@ -45,6 +45,7 @@ dev = [
 
 [project.scripts]
 presto = "presto.cli.main:main"
+presto-report = "presto.evaluation.performance_report:main"
 
 [tool.setuptools]
 # Enumerated on purpose, and it has to be.

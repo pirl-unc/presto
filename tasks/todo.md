@@ -14805,3 +14805,25 @@ Plan: `experiments/agents/claude/plans/2026-10-30_joint-model-vs-netmhc.md`.
 - [ ] PR 1: matched external benchmark harness (#140), CPU only.
 - [ ] PR 2: score existing checkpoints.
 - [ ] PR 3-5: coverage (#139), training experiments (#141), full-epoch fit (needs approval).
+
+## 2026-11-08 — Post-PR153 unified retraining and performance reporting
+
+Spec: `tasks/post-pr153-unified-retraining-spec.md`.
+
+- [x] Review PR #153, verify exact-head hosted CI, record evidence boundaries,
+  mark ready, merge, and verify merge commit `5a44a0dd`.
+- [x] Create successor branch from the merged base in an isolated sparse
+  worktree; keep the approximately 900-MB experiment bundle out of Git.
+- [ ] Implement deterministic timestamped performance reports and reusable
+  figure generation with full model/data/comparator/artifact provenance.
+- [ ] Open the draft successor PR and freeze its training/report commit.
+- [ ] Install and pin licensed MixMHCpred 3.x; smoke-test PRIME 2.1 through
+  mhctools with explicit executable paths. Keep 2.0.2 fail-closed.
+- [ ] Freeze newly disjoint MHC-I/MHC-II affinity, presentation/processing, and
+  assay-aware T-cell cohorts with whole-study and sequence-family embargoes.
+- [ ] Run the preregistered data-only, class-II mechanism, calibration, and
+  ordinal ablations on explicit `H100!` under the experiment registry.
+- [ ] Compare a frozen checkpoint on identical rows against NetMHCpan,
+  NetMHCIIpan, MHCflurry, and PRIME; preserve every per-row output.
+- [ ] Generate a timestamped state-of-Presto report with figures, complete data
+  manifests, hashes, and explicit promotion-gate pass/fail results.
