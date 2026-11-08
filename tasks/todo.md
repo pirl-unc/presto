@@ -14866,3 +14866,9 @@ Canonical preregistration:
 - [ ] If required, specify and implement the single chain-aware class-II arm.
 - [ ] Extend the selected checkpoint with fixed assay-aware T-cell tracks only
   after the affinity/presentation decision; do not access locked or TEST rows.
+
+Preflight stop: the frozen reference manifest passed on 1,560,770 rows, but the
+parity manifest failed at its first BA row because the v1 projection lacked the
+canonical original-measurement identity required for cross-source deduplication.
+No GPU or optimizer ran. Continuation plan:
+`experiments/agents/codex/plans/2026-11-08_ba-projection-lineage-continuation.md`.
