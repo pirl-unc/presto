@@ -1,6 +1,7 @@
 """Unequal study sizes must not silently determine validation checkpoint priority."""
 
 from collections import defaultdict
+from dataclasses import asdict
 import json
 
 import pytest
@@ -8,6 +9,7 @@ import torch
 
 from presto.data.modular import Observation
 from presto.data.modular_sources import ObservationIndex, write_observations
+from presto.data.tcell_assay import TCellTrack
 from presto.tests.test_modular_affinity_controls import fixture, run_with_interruption
 from presto.training import modular_run as runner
 
@@ -29,6 +31,70 @@ def test_studies_then_endpoints_receive_equal_weight():
         metrics, primary_endpoint="elution_observation", reduction="study_mean", records=records
     ) == pytest.approx(0.5)
     assert runner._selection_score(metrics, primary_endpoint="elution_observation") == 0.1
+
+
+def test_tcell_functional_tracks_then_studies_receive_equal_weight():
+    activation = TCellTrack("activation", "activation", "biological_activity")
+    ifng = TCellTrack("cytokine_release", "ifng_release", "elispot")
+    multimer = TCellTrack("multimer_binding", "qualitative_binding", "multimer_tetramer")
+    records = [row("tcell_response", "large", 0.0, tcell_track=asdict(activation))] * 9 + [
+        row("tcell_response", "small", 1.0, tcell_track=asdict(activation)),
+        row("tcell_response", "third", 0.8, tcell_track=asdict(ifng)),
+        row("tcell_response", "report-only", 100.0, tcell_track=asdict(multimer)),
+    ]
+    metrics = {
+        "tcell_response": {
+            "n": 12,
+            "by_tcell_track": {
+                activation.key: {"n": 10},
+                ifng.key: {"n": 1},
+                multimer.key: {"n": 1},
+            },
+        }
+    }
+    assert runner._selection_score(
+        metrics,
+        primary_endpoint="tcell_response",
+        reduction="tcell_track_study_mean",
+        records=records,
+        selection_tcell_tracks=[activation.key, ifng.key],
+    ) == pytest.approx(0.65)
+
+
+@pytest.mark.parametrize(
+    "records, message",
+    [
+        ([], "cover declared tracks"),
+        (
+            [
+                row(
+                    "tcell_response",
+                    "",
+                    0.1,
+                    tcell_track=asdict(
+                        TCellTrack("activation", "activation", "biological_activity")
+                    ),
+                )
+            ],
+            "canonical study group IDs",
+        ),
+    ],
+)
+def test_incomplete_or_invalid_tcell_track_study_records_fail(records, message):
+    activation = TCellTrack("activation", "activation", "biological_activity")
+    with pytest.raises(ValueError, match=message):
+        runner._selection_score(
+            {
+                "tcell_response": {
+                    "n": len(records),
+                    "by_tcell_track": {activation.key: {"n": len(records)}},
+                }
+            },
+            primary_endpoint="tcell_response",
+            reduction="tcell_track_study_mean",
+            records=records,
+            selection_tcell_tracks=[activation.key],
+        )
 
 
 def test_study_selection_excludes_frozen_and_identity_records(monkeypatch):

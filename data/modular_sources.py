@@ -235,6 +235,8 @@ class ObservationMetadata:
     split: str
     mhc_classes: frozenset[str | None]
     targets: frozenset[str]
+    group_id: str
+    tcell_track: str | None
 
     @classmethod
     def from_observation(cls, row: Observation):
@@ -243,6 +245,8 @@ class ObservationMetadata:
             row.split,
             frozenset(mhc.class_override or mhc.mhc_class for mhc in row.mhc),
             supervised_targets(row),
+            row.group_id,
+            row.tcell_track.key if row.tcell_track is not None else None,
         )
 
 

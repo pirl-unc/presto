@@ -10,10 +10,14 @@ from ..data.modular_sources import ObservationMetadata
 def validate_balance_by(fields):
     if (
         not isinstance(fields, (list, tuple))
-        or any(field not in ("endpoint", "mhc_class") for field in fields)
+        or any(
+            field not in ("endpoint", "mhc_class", "group_id", "tcell_track") for field in fields
+        )
         or len(fields) != len(set(fields))
     ):
-        raise ValueError("balance_by requires distinct endpoint/mhc_class fields")
+        raise ValueError(
+            "balance_by requires distinct endpoint/mhc_class/group_id/tcell_track fields"
+        )
 
 
 def stratum(row, fields):
@@ -21,7 +25,7 @@ def stratum(row, fields):
     for field in fields:
         if field == "endpoint":
             values.append(row.endpoint)
-        else:
+        elif field == "mhc_class":
             classes = (
                 row.mhc_classes
                 if isinstance(row, ObservationMetadata)
@@ -30,6 +34,21 @@ def stratum(row, fields):
             if len(classes) != 1 or not classes <= {"I", "II"}:
                 raise ValueError("balanced mhc_class sampling requires one explicit class per row")
             values.append(next(iter(classes)))
+        elif field == "group_id":
+            if not row.group_id:
+                raise ValueError("balanced group_id sampling requires a frozen group identity")
+            values.append(row.group_id)
+        else:
+            track = (
+                row.tcell_track
+                if isinstance(row, ObservationMetadata)
+                else row.tcell_track.key
+                if row.tcell_track is not None
+                else None
+            )
+            if not track:
+                raise ValueError("balanced tcell_track sampling requires a declared T-cell output")
+            values.append(track)
     return tuple(values)
 
 

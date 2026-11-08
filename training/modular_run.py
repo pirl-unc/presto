@@ -28,6 +28,7 @@ from ..data.modular import (
 from ..data.modular_quantitative import quantity_domain
 from ..data.modular_context import resolve_cell_context
 from ..data.modular_sources import ObservationIndex, file_sha256
+from ..data.tcell_assay import TCellTrack
 from ..models.modular import ModularConfig, ModularPresto
 from ..models.modular_support import feature_report, parameter_report
 from ..models.modular_dependencies import freeze_dependencies, frozen_output
@@ -105,6 +106,8 @@ DEFAULT_TRAINING = {
     "train_evaluation_max_rows": None,
 }
 
+OPTIONAL_TRAINING_KEYS = {"selection_tcell_tracks"}
+
 
 def _json(path, value):
     atomic_json(path, value)
@@ -157,7 +160,7 @@ def check_training_strata(index, training, indices):
 def preflight(index: ObservationIndex):
     config = ModularConfig.from_dict(index.manifest["model"])
     supplied = index.manifest.get("training", {})
-    if set(supplied) - DEFAULT_TRAINING.keys() - CONTROL_DEFAULTS.keys():
+    if set(supplied) - DEFAULT_TRAINING.keys() - CONTROL_DEFAULTS.keys() - OPTIONAL_TRAINING_KEYS:
         raise ValueError("unknown modular training option")
     training = {**DEFAULT_TRAINING, **supplied}
     validate_balance_by(training["balance_by"])
@@ -182,7 +185,12 @@ def preflight(index: ObservationIndex):
     limit = training["train_evaluation_max_rows"]
     if limit is not None and (type(limit) is not int or limit <= 0):
         raise ValueError("train_evaluation_max_rows must be a positive integer or null")
-    if training["selection_reduction"] not in ("observation_mean", "endpoint_mean", "study_mean"):
+    if training["selection_reduction"] not in (
+        "observation_mean",
+        "endpoint_mean",
+        "study_mean",
+        "tcell_track_study_mean",
+    ):
         raise ValueError("unsupported selection_reduction")
     if (
         training["selection_endpoint"] is not None
@@ -191,6 +199,25 @@ def preflight(index: ObservationIndex):
         raise ValueError(
             "selection_endpoint and selection_reduction cannot both override selection"
         )
+    selected_tcell_tracks = training.get("selection_tcell_tracks", [])
+    configured_tcell_tracks = {track.key for track in config.tcell_tracks}
+    if training["selection_reduction"] == "tcell_track_study_mean":
+        if (
+            training["selection_endpoint"] != "tcell_response"
+            or not isinstance(selected_tcell_tracks, list)
+            or not selected_tcell_tracks
+            or len(selected_tcell_tracks) != len(set(selected_tcell_tracks))
+            or any(
+                not isinstance(track, str) or track not in configured_tcell_tracks
+                for track in selected_tcell_tracks
+            )
+        ):
+            raise ValueError(
+                "tcell_track_study_mean requires tcell_response selection and distinct "
+                "configured selection_tcell_tracks"
+            )
+    elif selected_tcell_tracks:
+        raise ValueError("selection_tcell_tracks requires tcell_track_study_mean selection")
     if (
         not all(
             math.isfinite(training[key])
@@ -568,7 +595,13 @@ def preflight(index: ObservationIndex):
 
 
 def _selection_score(
-    metrics, model=None, primary_endpoint=None, reduction="observation_mean", *, records=None
+    metrics,
+    model=None,
+    primary_endpoint=None,
+    reduction="observation_mean",
+    *,
+    records=None,
+    selection_tcell_tracks=(),
 ):
     if model is not None:
         metrics = {
@@ -576,6 +609,41 @@ def _selection_score(
             for key, value in metrics.items()
             if not frozen_output(model, key if is_endpoint(key) else identity_head(key))
         }
+    if reduction == "tcell_track_study_mean":
+        if primary_endpoint != "tcell_response" or records is None:
+            raise ValueError("tcell_track_study_mean requires tcell_response records")
+        declared = set(selection_tcell_tracks)
+        if not declared or len(declared) != len(selection_tcell_tracks):
+            raise ValueError("tcell_track_study_mean requires distinct declared tracks")
+        groups = defaultdict(lambda: defaultdict(list))
+        for row in records:
+            if "identity_task" in row or row["endpoint"] != "tcell_response":
+                continue
+            descriptor = row.get("tcell_track")
+            track = TCellTrack(**descriptor).key if descriptor else None
+            if track not in declared:
+                continue
+            group, loss = row.get("group_id"), row.get("loss")
+            if not isinstance(group, str) or not group.strip():
+                raise ValueError("tcell_track_study_mean requires canonical study group IDs")
+            if not isinstance(loss, (int, float)) or not math.isfinite(loss):
+                raise ValueError("tcell_track_study_mean requires finite losses")
+            groups[track][group].append(loss)
+        if set(groups) != declared:
+            raise ValueError("tcell_track_study_mean records do not cover declared tracks")
+        track_metrics = metrics.get("tcell_response", {}).get("by_tcell_track", {})
+        if any(
+            track not in track_metrics
+            or sum(map(len, groups[track].values())) != track_metrics[track]["n"]
+            for track in declared
+        ):
+            raise ValueError(
+                "tcell_track_study_mean requires every evaluated selected-track record"
+            )
+        return sum(
+            sum(sum(values) / len(values) for values in studies.values()) / len(studies)
+            for studies in groups.values()
+        ) / len(groups)
     if reduction == "study_mean":
         eligible = {key for key in metrics if is_endpoint(key)}
         if primary_endpoint is not None:
@@ -956,16 +1024,22 @@ def _fit_index(index, output_dir, *, device, resume):
                 control(training, "selection_min_cell_rows"),
             )
         else:
+            selection_options = (
+                {
+                    "records": validation_records,
+                    "selection_tcell_tracks": training["selection_tcell_tracks"],
+                }
+                if training["selection_reduction"] == "tcell_track_study_mean"
+                else {"records": validation_records}
+                if training["selection_reduction"] == "study_mean"
+                else {}
+            )
             score = _selection_score(
                 validation_metrics,
                 model,
                 training["selection_endpoint"],
                 training["selection_reduction"],
-                **(
-                    {"records": validation_records}
-                    if training["selection_reduction"] == "study_mean"
-                    else {}
-                ),
+                **selection_options,
             )
         if score is None:
             # A declared training-only diagnostic selects its last executed update.
@@ -1084,10 +1158,18 @@ def _fit_index(index, output_dir, *, device, resume):
         }
     # Qualification requires scientific gates beyond these software/training reports.
     selected_coverage = payload["metadata"]["coverage"]
+    intentionally_inactive = (
+        selected.tcell_assay_layer.dependencies(ordinal=True)
+        - selected.tcell_assay_layer.dependencies(ordinal=False)
+        if selected.config.tcell_tracks and selected.config.tcell_ordinal_loss_weight == 0
+        else set()
+    )
     unsupported = [
         name
         for name, evidence in selected_coverage.items()
-        if not evidence["gradient_and_update_steps"] and name not in selected.frozen_parameters
+        if not evidence["gradient_and_update_steps"]
+        and name not in selected.frozen_parameters
+        and name not in intentionally_inactive
     ]
     features = feature_report(selected)
     missing_features = {
@@ -1121,6 +1203,7 @@ def _fit_index(index, output_dir, *, device, resume):
         "untrained_assay_tracks": missing_assays,
         "untrained_tcell_tracks": missing_tcell,
         "untrained_parameters": unsupported,
+        "intentionally_inactive_parameters": sorted(intentionally_inactive),
         "exposed_features_without_updates": missing_features,
         "policy": training["coverage_policy"],
         "exception_reason": training["coverage_exception_reason"],
