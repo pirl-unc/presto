@@ -14820,6 +14820,9 @@ Spec: `tasks/post-pr153-unified-retraining-spec.md`.
 - [ ] Add standardized per-example affinity, presentation/processing, and
   T-cell figure panels beyond the v1 comparator/composition overview.
 - [ ] Freeze the successor training commit after the new cohort contracts pass.
+- [ ] Project the audited NetMHCpan 4.2 / NetMHCIIpan 4.3 BA archives into a
+  source-faithful, development-embargoed comparator-parity TRAIN cohort; verify
+  every row/receipt and freeze the combined-loader preflight.
 - [ ] Install and pin licensed MixMHCpred 3.x; smoke-test PRIME 2.1 through
   mhctools with explicit executable paths. Keep 2.0.2 fail-closed.
 - [ ] Freeze newly disjoint MHC-I/MHC-II affinity, presentation/processing, and
