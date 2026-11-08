@@ -5972,3 +5972,64 @@ presentation superiority, PRIME, and an independent all-task TEST remain open.
 deterministic PNG/SVG comparator and data-composition figures, reproduction
 receipts, and whole-tree checksums. No licensed binary or large raw bundle is
 committed.
+
+<!-- closed-2026-11-08_1740_codex_netmhc-ba-parity-projection -->
+## 2026-11-08 — NetMHC BA comparator-parity TRAIN projection
+
+**Agent/model:** Codex / GPT-5
+
+**Experiment:** [2026-11-08_1740_codex_netmhc-ba-parity-projection](2026-11-08_1740_codex_netmhc-ba-parity-projection/README.md)
+
+**Reproduction:** `reproduce/launch.sh`, `launch.json`, implementation source
+commit `9043ef295c7bd1f4b47493ade18820366ceab483`, and collection continuation
+receipt. Projection app/call `ap-sKeyrUNZ5eFEpWFxrLcYec` /
+`fc-01M6YNP3C4BYYBPACXC49NPSVD`; verification app/call
+`ap-skFXSxLmvLle9aU67Rw5uZ` / `fc-01M6YNS41PTJMGR2NFJV8SASVR`.
+
+### Dataset and curation contract
+
+- Inputs are the public NetMHCpan 4.2 and NetMHCIIpan 4.3 training archives,
+  SHA-256 `243a3075887fef3c975da232a87e8d1e17b1aafbf7dba4e52180361d657b5d14`
+  and `b3602edd48fd34a2d4dcd574bea7781bb75c50f9f4dbc3a2d7178301b735c521`,
+  plus the frozen full-groove human MHC catalog (SHA-256
+  `0e26d38ed0c572692a3486e100272c56bd1134ce74d2b6122fa4be2f4c6b0a82`)
+  and identity-only current TRAIN/development manifests.
+- BA maps only to the archive-native unspecified-assay IC50 reference output:
+  `IC50_nM=50000**(1-y)`, with `y=0` retained as `>=50000 nM`, `y=1` as
+  `<=1 nM`, and interior targets exact. Preparation, mechanism, and detector
+  remain unknown. No EL, IEDB-pair, CEDAR-pair, or generated background row is
+  admitted.
+- Admission removes malformed/noncanonical rows, nonhuman/unresolved grooves,
+  every conflicting source key, and exact duplicates. It then embargoes exact
+  exposed-development peptides and all shared 9-mer cores, and deduplicates
+  exact peptide/groove pMHCs already in current TRAIN. Source folds are retained
+  as lineage but are never represented as studies.
+- Of 343,914 physical BA rows, 143,307 are admitted TRAIN: 80,744 MHC-I and
+  62,563 MHC-II; 121,447 exact, 19,547 right-censored, and 2,313 left-censored.
+  Main exclusions are 138,168 current-TRAIN pMHC duplicates, 43,414
+  nonhuman/unresolved rows, and 19,003 exposed-development exact/core rows.
+- Split contract: TRAIN only. Validation and TEST contain zero rows because the
+  comparator archives overlap known data and lack source-study identities.
+  No current outcome, model, prediction, TEST, or locked confirmation was read.
+
+### Training, hardware, and result
+
+There is no pretraining, optimizer, loss, synthetic-data generation, model, or
+predictive metric in this family. It is a data projection. Requested/observed
+GPU are null; Modal used 8 CPU / 32 GiB / 512 GiB scratch, network blocked,
+58.12 seconds, and 1,160,929,280 bytes peak RSS. The first 128-GiB scratch
+submission failed before function creation and is preserved; the continuation
+changed no scientific contract.
+
+Independent verification passes every large-artifact byte count/SHA-256,
+143,307 unique observation IDs, schema/split/endpoint/method contracts, and
+censor boundaries. Per-example validation/test predictions are inapplicable
+because there is no validation/test split and no model. Large source-derived
+rows remain on `presto-checkpoints` because archive redistribution rights are
+unresolved.
+
+**Preferred condition / decision:** admit the two projected TRAIN files to the
+data-only successor arm after a canonical combined-loader preflight. This is
+comparator-parity training, not independent evidence against NetMHCpan or
+NetMHCIIpan; genuinely new study-disjoint affinity data remain mandatory for a
+superiority claim.

@@ -1,0 +1,41 @@
+{
+  "artifacts": {
+    "netmhciipan43-ba-train": {
+      "bytes": 91225030,
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared/netmhciipan43-ba-train.jsonl",
+      "sha256": "153a51f8997093c0b8cf724dc8ff649a676ee3ee2e516c52dff810bb18d00ee2"
+    },
+    "netmhcpan42-ba-train": {
+      "bytes": 114297607,
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared/netmhcpan42-ba-train.jsonl",
+      "sha256": "4491918763c1cf1c64825af0228357f43516293d1b6ea73ef8a6a7554d4635df"
+    },
+    "source-exact-duplicates": {
+      "bytes": 9654,
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared/source-exact-duplicates.jsonl.gz",
+      "sha256": "f0766129bd266828a6e614d183181fd33bfa9403ee11f8e5b8307cfeeffe0b0b"
+    },
+    "source-row-dispositions": {
+      "bytes": 29476224,
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared/source-row-dispositions.jsonl.gz",
+      "sha256": "4d35b9008d2236bc0c0ffd8d9e2c951a273ac2eb576b2e848f83a584521cbe59"
+    },
+    "source-target-conflicts": {
+      "bytes": 13472,
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared/source-target-conflicts.jsonl.gz",
+      "sha256": "16527971728905d27de71e1845cef36bafe6518fa7ec722be086bd60da77d5da"
+    }
+  },
+  "resources": {
+    "cpu": 8,
+    "elapsed_seconds": 58.122464543,
+    "memory_mib": 32768,
+    "observed_gpu": null,
+    "peak_rss_bytes": 1160929280,
+    "requested_gpu": null
+  },
+  "status": "completed",
+  "summary_bytes": 5622,
+  "summary_path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared/summary.json",
+  "summary_sha256": "9411e528a8b5ce7a4aa527835d6a2750d9cfc1b36198e711ef3241f064002576"
+}

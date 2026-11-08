@@ -14842,3 +14842,11 @@ receipts resolve to hash-pinned Modal-volume paths; no large/licensed payload is
 in Git. The report says development-only, preserves method-specific output
 identities, passes only the processing gate, and leaves affinity, presentation,
 PRIME, and independent TEST claims open.
+
+Projection progress: experiment
+`2026-11-08_1740_codex_netmhc-ba-parity-projection` independently verifies
+143,307 new comparator-parity TRAIN rows (80,744 MHC-I / 62,563 MHC-II), exact
+archive censoring, unknown assay-method routing, 138,168 current-TRAIN pMHC
+deduplications, and 19,003 exposed-development exact/core-9 embargoes. No model,
+prediction, validation, TEST, or locked cohort was accessed. The checklist stays
+open until the combined common-loader preflight is frozen and passes.
