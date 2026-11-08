@@ -47,6 +47,7 @@ def _manifest(tmp_path: Path):
                 "method": method,
                 "metric": "spearman",
                 "value": value,
+                "interval_kind": "bootstrap_95",
                 "ci_low": low,
                 "ci_high": high,
                 "higher_is_better": True,

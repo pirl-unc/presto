@@ -75,8 +75,8 @@ def render_comparator_overview(metrics: list[dict], output_dir: Path) -> list[Pa
     for row in primary:
         labels.append(f"{row['task']} · {row['output_id']} · {row['split']} · {row['metric']}")
         values.append(float(row["value"]))
-        lows.append(float(row.get("ci_low", row["value"])))
-        highs.append(float(row.get("ci_high", row["value"])))
+        lows.append(float(row["value"] if row.get("ci_low") is None else row["ci_low"]))
+        highs.append(float(row["value"] if row.get("ci_high") is None else row["ci_high"]))
         methods.append(row["method"])
     y = list(reversed(range(len(primary))))
     for index, ypos in enumerate(y):

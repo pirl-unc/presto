@@ -34,6 +34,7 @@ METRIC_COLUMNS = (
     "method",
     "metric",
     "value",
+    "interval_kind",
     "ci_low",
     "ci_high",
     "higher_is_better",
@@ -206,12 +207,30 @@ def validate_manifest(manifest: dict, manifest_path: Path) -> None:
         ):
             _validate_identifier(metric.get(key), f"{field}.{key}")
         _require(metric["split"] in ROLES - {"train", "calibration"}, f"{field}.split")
-        for key in ("value", "ci_low", "ci_high"):
+        _require(
+            isinstance(metric.get("value"), (int, float)) and math.isfinite(metric["value"]),
+            f"{field}.value",
+        )
+        interval_kind = metric.get("interval_kind")
+        _require(
+            interval_kind in {"bootstrap_95", "analytic_95", "not_available"},
+            f"{field}.interval_kind",
+        )
+        if interval_kind == "not_available":
             _require(
-                isinstance(metric.get(key), (int, float)) and math.isfinite(metric[key]),
-                f"{field}.{key}",
+                metric.get("ci_low") is None and metric.get("ci_high") is None,
+                f"{field} must use null bounds when no interval is available",
             )
-        _require(metric["ci_low"] <= metric["value"] <= metric["ci_high"], f"{field}.ci")
+        else:
+            for key in ("ci_low", "ci_high"):
+                _require(
+                    isinstance(metric.get(key), (int, float)) and math.isfinite(metric[key]),
+                    f"{field}.{key}",
+                )
+            _require(
+                metric["ci_low"] <= metric["value"] <= metric["ci_high"],
+                f"{field}.ci",
+            )
         _require(isinstance(metric.get("higher_is_better"), bool), f"{field}.higher_is_better")
         _require(isinstance(metric.get("primary"), bool), f"{field}.primary")
         _require(
@@ -228,7 +247,12 @@ def validate_manifest(manifest: dict, manifest_path: Path) -> None:
             metric["split"],
             metric["metric"],
         )
-        contract = (metric["eligible_rows"], studies, metric["higher_is_better"])
+        contract = (
+            metric["eligible_rows"],
+            studies,
+            metric["higher_is_better"],
+            metric["interval_kind"],
+        )
         _require(
             key not in paired or paired[key] == contract,
             f"{field} changes matched-row contract",
@@ -351,9 +375,14 @@ def _readme(manifest: dict, report_id: str) -> str:
             metric["method"],
         ),
     ):
+        interval = (
+            "not available"
+            if row["interval_kind"] == "not_available"
+            else f"[{row['ci_low']:.6g}, {row['ci_high']:.6g}]"
+        )
         lines.append(
             "| {task} / {output_id} | {split} | {metric} | {method} | {value:.6g} | "
-            "[{ci_low:.6g}, {ci_high:.6g}] | {eligible_rows:,} |".format(**row)
+            "{interval} | {eligible_rows:,} |".format(interval=interval, **row)
         )
     lines.extend(["", "## Promotion gates", ""])
     for gate in manifest["promotion_gates"]:
