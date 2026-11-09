@@ -94,7 +94,7 @@ REQUIREMENTS = (
     "psutil==7.2.2",
 )
 
-app = modal.App("presto-unified-parity-preflight-v2-20261108")
+app = modal.App("presto-unified-parity-preflight-v3-20261108")
 volume = modal.Volume.from_name("presto-checkpoints")
 image = (
     modal.Image.debian_slim(python_version="3.12")
@@ -116,7 +116,7 @@ if modal.is_local():
     ROOT = FAMILY.parents[1]
     image = (
         image.add_local_file(FAMILY / "reproduce/base-manifest.json", "/bundle/base-manifest.json")
-        .add_local_file(FAMILY / "reproduce/v2/launch.json", "/bundle/launch.json")
+        .add_local_file(FAMILY / "reproduce/v3/launch.json", "/bundle/launch.json")
         .add_local_file(FAMILY / "code/preflight_v2.py", "/bundle/preflight_v2.py")
         .add_local_file(ROOT / "__init__.py", "/runtime/presto/__init__.py")
         .add_local_dir(ROOT / "data", "/runtime/presto/data")
@@ -336,6 +336,29 @@ def run_canonical_pass(output_name: str, *, independent: bool) -> dict:
     return receipt
 
 
+def compact_receipt(receipt: dict, output_name: str) -> dict:
+    path = Path("/volume") / FID / output_name / "receipt.json"
+    return {
+        "status": receipt["status"],
+        "schema": receipt["schema"],
+        "experiment": receipt["experiment"],
+        "independent_verification": receipt["independent_verification"],
+        "conditions": {
+            name: {
+                "status": condition["status"],
+                "rows": condition.get("rows"),
+                "partitions": condition.get("partitions"),
+            }
+            for name, condition in receipt["conditions"].items()
+        },
+        "receipt": {
+            "path": str(path.relative_to("/volume")),
+            "bytes": path.stat().st_size,
+            "sha256": sha256(path),
+        },
+    }
+
+
 FUNCTION = {
     "image": image,
     "cpu": 8,
@@ -352,18 +375,25 @@ FUNCTION = {
 
 @app.function(**FUNCTION)
 def preflight_v2_primary() -> dict:
-    return run_canonical_pass("preflight-v2-primary", independent=False)
+    receipt = run_canonical_pass("preflight-v2-primary", independent=False)
+    return compact_receipt(receipt, "preflight-v2-primary")
 
 
 @app.function(**FUNCTION)
 def preflight_v2_verification() -> dict:
     primary_path = Path("/volume") / FID / "preflight-v2-primary/receipt.json"
+    contract = json.loads(Path("/bundle/launch.json").read_text())
+    if (
+        primary_path.stat().st_size != contract["primary_receipt"]["bytes"]
+        or sha256(primary_path) != contract["primary_receipt"]["sha256"]
+    ):
+        raise ValueError("primary v2 preflight receipt differs from frozen contract")
     primary = json.loads(primary_path.read_text())
     if primary["status"] != "passed":
         raise ValueError("cannot verify a failed primary v2 preflight")
     result = run_canonical_pass("preflight-v2-verification", independent=True)
     if result["status"] != "passed":
-        return result
+        return compact_receipt(result, "preflight-v2-verification")
     verification_error = None
     try:
         for name in ("reference", "parity"):
@@ -395,7 +425,7 @@ def preflight_v2_verification() -> dict:
     result["primary_receipt_sha256"] = sha256(primary_path)
     write_json(Path("/volume") / FID / "preflight-v2-verification/receipt.json", result)
     volume.commit()
-    return result
+    return compact_receipt(result, "preflight-v2-verification")
 
 
 def local_contract_test() -> None:
@@ -416,15 +446,17 @@ def local_contract_test() -> None:
 
 @app.local_entrypoint()
 def main(verify: bool = False) -> None:
+    if not verify:
+        raise ValueError("the transport continuation may only run independent verification")
     local_contract_test()
-    contract = json.loads((FAMILY / "reproduce/v2/launch.json").read_text())
+    contract = json.loads((FAMILY / "reproduce/v3/launch.json").read_text())
     if sha256(FAMILY / "code/preflight_v2.py") != contract["source_sha256"]["code/preflight_v2.py"]:
         raise ValueError("local preflight v2 source differs from frozen contract")
-    stem = "preflight-v2-verification" if verify else "preflight-v2"
-    call_path = FAMILY / "reproduce/v2" / f"{stem}-call.json"
+    stem = "preflight-v2-verification"
+    call_path = FAMILY / "reproduce/v3" / f"{stem}-call.json"
     if call_path.exists():
         raise ValueError(f"{call_path.name} already exists")
-    call = (preflight_v2_verification if verify else preflight_v2_primary).spawn()
+    call = preflight_v2_verification.spawn()
     write_json(call_path, {"call_id": call.object_id, "submitted_unix": time.time()})
     print(call.object_id)
 

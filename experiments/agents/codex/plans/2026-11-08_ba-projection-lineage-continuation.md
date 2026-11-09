@@ -90,3 +90,23 @@ canonical passes in a fresh container, then requires exact equality for all
 scientific outputs (rows, partitions, census, model, training, scales, and
 admission) against the primary receipt. Runtime-only fields may differ. Any
 failure stops before H100 launch and remains preserved as audit evidence.
+
+## Primary-result transport continuation
+
+The frozen primary call `fc-01M6YSQBZ1AKY6WW2NN1ZBQD9N` completed both
+canonical passes and atomically committed a full receipt, SHA-256
+`6efe6b3f64cbff080f9b03b9dce0ca1906a008d487fee3bd7d9eb8532ac6aaa2`,
+before its return transport failed. The failure was not scientific: returning
+the complete Python receipt exceeded Modal's inline-result threshold, which
+attempted a blob upload from the intentionally network-blocked worker. Recover
+the committed receipt directly from the volume; do not rerun the primary pass.
+
+Freeze a transport-only source continuation for the independent verifier. Keep
+all input hashes, scratch transport, canonical loader/preflight logic, comparison
+keys, output path, blocked-network policy, and no-GPU contract unchanged. Change
+only the function return value to a compact status plus receipt path/bytes/hash.
+The local collector must download the complete committed verification receipt by
+that artifact pointer and verify its byte count and SHA-256. Preserve the primary
+call's remote transport exception and the recovered full receipt. The H100 gate
+still requires the independent full receipt to pass exact comparison against the
+recovered primary receipt.
