@@ -178,46 +178,23 @@ def affinity_rows(indexed: dict, comparator: list[dict]) -> list[dict]:
     if set(comparator_index) != ic50_ids:
         raise ValueError("affinity comparator does not exactly cover IC50 development rows")
 
+    affinity_ids = {
+        observation_id
+        for observation_id, row in indexed["Presto Stage B"].items()
+        if row["endpoint"] != "elution_observation"
+    }
     result = []
-    for observation_id in sorted(ic50_ids):
+    for observation_id in sorted(affinity_ids):
         truth = indexed["Presto Stage B"][observation_id]
-        baseline = comparator_index[observation_id]
         mhc_classes = truth["mhc_classes"]
         if len(mhc_classes) != 1:
             raise ValueError(f"affinity row {observation_id} has ambiguous class")
         mhc_class = mhc_classes[0]
         method = truth["assay_method"]
-        expected = {
-            "peptide": truth["peptide"],
-            "mhc_class": mhc_class,
-            "endpoint": truth["endpoint"],
-            "qualifier": truth["qualifier"],
-            "target_log10": truth["target"],
-            "raw_nM": truth["raw_value"],
-            "source": truth["source"],
-            "study": study_id(truth),
-            "preparation": method["preparation"],
-            "mechanism": method["mechanism"],
-            "detector": method["detector"],
-            "assay_review_status": method["review_status"],
-        }
-        for key, value in expected.items():
-            observed = baseline.get(key)
-            if isinstance(value, float):
-                equal = math.isclose(
-                    float(observed), value, rel_tol=1e-12, abs_tol=1e-12
-                )
-            else:
-                equal = observed == value
-            if not equal:
-                raise ValueError(
-                    f"affinity comparator truth differs at {observation_id}/{key}: "
-                    f"{observed!r} != {value!r}"
-                )
         common = {
             "observation_id": observation_id,
             "mhc_class": mhc_class,
-            "endpoint": "ic50",
+            "endpoint": truth["endpoint"],
             "assay_method": assay_key(truth),
             "qualifier": truth["qualifier"],
             "target_log10_nM": float(truth["target"]),
@@ -235,15 +212,44 @@ def affinity_rows(indexed: dict, comparator: list[dict]) -> list[dict]:
                     "score": prediction,
                 }
             )
-        prediction = float(baseline["comparator_log10"])
-        result.append(
-            {
-                **common,
-                "method": comparator_affinity_method(mhc_class),
-                "prediction_log10_nM": prediction,
-                "score": prediction,
+        if truth["endpoint"] == "ic50":
+            baseline = comparator_index[observation_id]
+            expected = {
+                "peptide": truth["peptide"],
+                "mhc_class": mhc_class,
+                "endpoint": truth["endpoint"],
+                "qualifier": truth["qualifier"],
+                "target_log10": truth["target"],
+                "raw_nM": truth["raw_value"],
+                "source": truth["source"],
+                "study": study_id(truth),
+                "preparation": method["preparation"],
+                "mechanism": method["mechanism"],
+                "detector": method["detector"],
+                "assay_review_status": method["review_status"],
             }
-        )
+            for key, value in expected.items():
+                observed = baseline.get(key)
+                if isinstance(value, float):
+                    equal = math.isclose(
+                        float(observed), value, rel_tol=1e-12, abs_tol=1e-12
+                    )
+                else:
+                    equal = observed == value
+                if not equal:
+                    raise ValueError(
+                        f"affinity comparator truth differs at {observation_id}/{key}: "
+                        f"{observed!r} != {value!r}"
+                    )
+            prediction = float(baseline["comparator_log10"])
+            result.append(
+                {
+                    **common,
+                    "method": comparator_affinity_method(mhc_class),
+                    "prediction_log10_nM": prediction,
+                    "score": prediction,
+                }
+            )
     return result
 
 
@@ -365,8 +371,9 @@ def affinity_summary(rows: list[dict]) -> tuple[list[dict], list[dict]]:
     }
     for mhc_class, methods in methods_by_class.items():
         class_rows = [row for row in rows if row["mhc_class"] == mhc_class]
+        ic50_rows = [row for row in class_rows if row["endpoint"] == "ic50"]
         for method in methods:
-            selected = [row for row in class_rows if row["method"] == method]
+            selected = [row for row in ic50_rows if row["method"] == method]
             exact = [row for row in selected if row["qualifier"] in ("=", "==", "")]
             regression = regression_metrics(
                 np.asarray([row["target_log10_nM"] for row in exact]),
@@ -437,7 +444,7 @@ def affinity_summary(rows: list[dict]) -> tuple[list[dict], list[dict]]:
                         ),
                     }
                 )
-        exact_class = [row for row in class_rows if row["qualifier"] in ("=", "==", "")]
+        exact_class = [row for row in ic50_rows if row["qualifier"] in ("=", "==", "")]
         for first, second in (
             ("Presto parity", "Presto reference"),
             ("Presto parity", "Presto Stage B"),
@@ -464,25 +471,43 @@ def affinity_summary(rows: list[dict]) -> tuple[list[dict], list[dict]]:
             by_assay[(row["method"], row["assay_method"])].append(row)
         for (method, method_key), selected in sorted(by_assay.items()):
             exact = [row for row in selected if row["qualifier"] in ("=", "==", "")]
-            if len(exact) < 2:
-                continue
-            regression = regression_metrics(
-                np.asarray([row["target_log10_nM"] for row in exact]),
-                np.asarray([row["prediction_log10_nM"] for row in exact]),
-            )
-            for metric in ("spearman", "pearson", "rmse"):
-                if metric in regression:
+            if len(exact) >= 2:
+                regression = regression_metrics(
+                    np.asarray([row["target_log10_nM"] for row in exact]),
+                    np.asarray([row["prediction_log10_nM"] for row in exact]),
+                )
+                for metric in ("spearman", "pearson", "rmse"):
+                    if metric in regression:
+                        summaries.append(
+                            {
+                                "task": "affinity",
+                                "mhc_class": mhc_class,
+                                "assay_method": method_key,
+                                "population": "exact",
+                                "estimate_type": "pooled",
+                                "method": method,
+                                "metric": metric,
+                                "value": regression[metric],
+                                "n": len(exact),
+                            }
+                        )
+            censored_rows = [
+                row for row in selected if row["qualifier"] not in ("=", "==", "")
+            ]
+            if censored_rows:
+                censored = censor_metrics(censored_rows)
+                for metric, value in censored.items():
                     summaries.append(
                         {
-                            "task": "affinity",
+                            "task": "affinity_censor",
                             "mhc_class": mhc_class,
                             "assay_method": method_key,
-                            "population": "exact",
+                            "population": "censored",
                             "estimate_type": "pooled",
                             "method": method,
                             "metric": metric,
-                            "value": regression[metric],
-                            "n": len(exact),
+                            "value": value,
+                            "n": int(censored["n"]),
                         }
                     )
     return summaries, bootstraps
@@ -595,9 +620,13 @@ def render_figures(
     per_study: list[dict],
     output: Path,
 ) -> None:
-    exact = [row for row in affinity if row["qualifier"] in ("=", "==", "")]
-    render_affinity_scatter(exact, output)
-    render_affinity_calibration(exact, output)
+    exact_ic50 = [
+        row
+        for row in affinity
+        if row["endpoint"] == "ic50" and row["qualifier"] in ("=", "==", "")
+    ]
+    render_affinity_scatter(exact_ic50, output)
+    render_affinity_calibration(exact_ic50, output)
     for mhc_class in ("I", "II"):
         curves = []
         cutoff = math.log10(500.0)
@@ -630,7 +659,7 @@ def render_figures(
         comparator = comparator_affinity_method(mhc_class)
         exact_class = [
             row
-            for row in exact
+            for row in exact_ic50
             if row["mhc_class"] == mhc_class
             and row["method"] in ("Presto parity", comparator)
         ]
