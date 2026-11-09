@@ -152,3 +152,15 @@ App `ap-dvE960vcRK3jSN6SPedzYN` submitted reference call
 and persisted their execution contract plus NVIDIA H100 hardware receipt before
 source copying/training. Final scientific status remains pending until both calls
 reach exactly 5,000 steps and their complete receipts are collected and verified.
+
+Both training-v2 calls later stopped symmetrically at zero optimizer steps and
+zero examples after the common-loader phase. `execution_contract()` correctly
+required `/runtime/presto/cli/train.py`, which the narrowed fit image had not
+mounted. The same declared resume-source set also requires
+`cli/training_sources.py` and `scripts/train_iedb.py`. Both failure receipts are
+206 bytes with SHA-256
+`6cf05c4c2be05c6fa64da8f582728ef8ee61812211bf4def567338c06b42a4cf`;
+complete execution, hardware, segment-end, and failure artifacts are preserved
+under `results/training-v2-failure/`. This is software evidence only—no model,
+optimizer, prediction, or TEST result exists. Training-v3 mounts and guards the
+entire declared resume-source set and uses a new `fits-v3` root.

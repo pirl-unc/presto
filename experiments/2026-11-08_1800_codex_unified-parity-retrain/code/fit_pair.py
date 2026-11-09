@@ -15,6 +15,7 @@ from pathlib import Path
 import modal
 
 FID = "2026-11-08_1800_codex_unified-parity-retrain"
+FIT_ROOT = "fits-v3"
 GPU_FID = "2026-11-07_1915_codex_unified-presentation"
 BA_FID = "2026-11-08_1740_codex_netmhc-ba-parity-projection"
 GPU = os.environ.get("PRESTO_MODAL_GPU", "H100!")
@@ -84,6 +85,13 @@ REQUIREMENTS = (
     "psutil==7.2.2",
 )
 RUNTIME_IDENTITY_KEYS = ("files", "bytes", "sha256")
+RUNTIME_EXTRA_FILES = (
+    "cli/__init__.py",
+    "cli/train.py",
+    "cli/training_sources.py",
+    "scripts/__init__.py",
+    "scripts/train_iedb.py",
+)
 
 app = modal.App("presto-unified-parity-fits-20261109")
 volume = modal.Volume.from_name("presto-checkpoints")
@@ -107,7 +115,7 @@ if modal.is_local():
     ROOT = FAMILY.parents[1]
     image = (
         image.add_local_file(
-            FAMILY / "reproduce/training-v2/launch.json", "/bundle/launch.json"
+            FAMILY / "reproduce/training-v3/launch.json", "/bundle/launch.json"
         )
         .add_local_file(FAMILY / "code/fit_pair.py", "/bundle/fit_pair.py")
         .add_local_file(
@@ -122,6 +130,17 @@ if modal.is_local():
         .add_local_dir(ROOT / "data", "/runtime/presto/data")
         .add_local_dir(ROOT / "models", "/runtime/presto/models")
         .add_local_dir(ROOT / "training", "/runtime/presto/training")
+        .add_local_file(ROOT / "cli/__init__.py", "/runtime/presto/cli/__init__.py")
+        .add_local_file(ROOT / "cli/train.py", "/runtime/presto/cli/train.py")
+        .add_local_file(
+            ROOT / "cli/training_sources.py", "/runtime/presto/cli/training_sources.py"
+        )
+        .add_local_file(
+            ROOT / "scripts/__init__.py", "/runtime/presto/scripts/__init__.py"
+        )
+        .add_local_file(
+            ROOT / "scripts/train_iedb.py", "/runtime/presto/scripts/train_iedb.py"
+        )
     )
 
 
@@ -148,7 +167,7 @@ def write_json(path: str | Path, value) -> None:
 
 
 def runtime_tree(root: Path) -> dict:
-    paths = [root / "__init__.py"]
+    paths = [root / "__init__.py", *(root / name for name in RUNTIME_EXTRA_FILES)]
     for directory in ("data", "models", "training"):
         paths.extend(
             path
@@ -219,7 +238,7 @@ def artifact(path: Path, root: Path) -> dict:
 
 
 def compact_receipt(condition: str, receipt: dict) -> dict:
-    path = Path("/volume") / FID / "fits" / condition / "receipt.json"
+    path = Path("/volume") / FID / FIT_ROOT / condition / "receipt.json"
     return {
         "status": receipt["status"],
         "condition": condition,
@@ -271,6 +290,14 @@ def fit(condition: str) -> dict:
                 sort_keys=True,
             )
         )
+    source_root = Path("/runtime/presto")
+    missing_resume_sources = [
+        name for name in runner.SOURCE_FILES if not (source_root / name).is_file()
+    ]
+    if missing_resume_sources:
+        raise ValueError(
+            f"resume source files are not mounted: {missing_resume_sources}"
+        )
 
     volume.reload()
     closure_path = Path("/volume") / CLOSURE["path"]
@@ -286,7 +313,7 @@ def fit(condition: str) -> dict:
     ):
         raise ValueError("corrected preflight gate did not pass")
 
-    target = Path("/volume") / FID / "fits" / condition
+    target = Path("/volume") / FID / FIT_ROOT / condition
     target.mkdir(parents=True, exist_ok=True)
     receipt_path = target / "receipt.json"
     if receipt_path.exists():
@@ -544,10 +571,10 @@ def local_contract_test() -> None:
 @app.local_entrypoint()
 def main() -> None:
     local_contract_test()
-    pins = read_json(FAMILY / "reproduce/training-v2/launch.json")
+    pins = read_json(FAMILY / "reproduce/training-v3/launch.json")
     if sha256(FAMILY / "code/fit_pair.py") != pins["source_sha256"]["code/fit_pair.py"]:
         raise ValueError("local fit source differs from frozen contract")
-    calls_path = FAMILY / "reproduce/training-v2/calls.json"
+    calls_path = FAMILY / "reproduce/training-v3/calls.json"
     calls = read_json(calls_path) if calls_path.exists() else {}
     for condition in ("reference", "parity"):
         if condition in calls:

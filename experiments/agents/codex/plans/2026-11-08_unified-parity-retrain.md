@@ -239,6 +239,20 @@ The read-only volume listing returned `No such file or directory` for the family
 `fits/` path, independently confirming neither stopped call created fit state.
 The training-v2 continuation may reuse the unchanged `fits/{condition}` targets.
 
+Training-v2 then passed runtime, closure, source-copy, parent, and common-loader
+work but both conditions stopped at zero steps in `execution_contract()` because
+the image lacked `/runtime/presto/cli/train.py`. The resume fingerprint declares
+three source files outside the already mounted data/models/training tree:
+`cli/train.py`, `cli/training_sources.py`, and `scripts/train_iedb.py`. Preserve
+both complete v2 attempt directories, including identical failure receipts at
+SHA-256 `6cf05c4c2be05c6fa64da8f582728ef8ee61812211bf4def567338c06b42a4cf`.
+Do not patch one missing path and retry. Training-v3 must mount all three declared
+files plus their two package `__init__.py` files, include all five in the frozen
+runtime-tree identity, and verify that every path in `modular_resume.SOURCE_FILES`
+exists before the expensive loader. Use a new `fits-v3/{condition}` root so v2
+evidence remains immutable. Manifests, closure, parent, data, model, optimizer,
+schedule, seed, resources, TEST prohibition, and evaluation policy remain equal.
+
 ## Preregistered decisions
 
 1. Prefer P as the next affinity/presentation parent only if it improves MHC-II

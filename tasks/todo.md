@@ -14874,6 +14874,10 @@ Canonical preregistration:
   as identity, so structurally unequal dictionaries rejected identical trees.
 - [x] Preserve the stopped launch and submit a new immutable `training-v2`
   continuation after the three-field identity fix; old `fits/` was absent.
+- [x] Preserve both symmetric training-v2 zero-step failure directories; the
+  resume-source fingerprint exposed missing CLI/script mounts after preflight.
+- [ ] Freeze training-v3 with the complete declared resume-source set and a new
+  immutable output root; prove all source paths before relaunch.
 - [ ] Collect checkpoints, coverage, resource receipts, and all development
   prediction dumps; verify hashes independently.
 - [ ] Repeat matched affinity/presentation/processing evaluation and figures.
