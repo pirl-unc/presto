@@ -9,6 +9,8 @@ import json
 import os
 from pathlib import Path
 import resource
+import shutil
+import tempfile
 import time
 import traceback
 
@@ -94,7 +96,7 @@ REQUIREMENTS = (
     "psutil==7.2.2",
 )
 
-app = modal.App("presto-unified-parity-preflight-v3-20261108")
+app = modal.App("presto-unified-parity-preflight-v4-20261108")
 volume = modal.Volume.from_name("presto-checkpoints")
 image = (
     modal.Image.debian_slim(python_version="3.12")
@@ -116,7 +118,7 @@ if modal.is_local():
     ROOT = FAMILY.parents[1]
     image = (
         image.add_local_file(FAMILY / "reproduce/base-manifest.json", "/bundle/base-manifest.json")
-        .add_local_file(FAMILY / "reproduce/v3/launch.json", "/bundle/launch.json")
+        .add_local_file(FAMILY / "reproduce/v4/launch.json", "/bundle/launch.json")
         .add_local_file(FAMILY / "code/preflight_v2.py", "/bundle/preflight_v2.py")
         .add_local_file(ROOT / "__init__.py", "/runtime/presto/__init__.py")
         .add_local_dir(ROOT / "data", "/runtime/presto/data")
@@ -237,7 +239,7 @@ def condition_summary(index, config, training, scales, admission, elapsed: float
     }
 
 
-def run_canonical_pass(output_name: str, *, independent: bool) -> dict:
+def run_canonical_pass(output_name: str, *, independent: bool) -> tuple[dict, Path]:
     from presto.data.modular_sources import ObservationIndex
     from presto.training.modular_run import preflight
 
@@ -251,8 +253,9 @@ def run_canonical_pass(output_name: str, *, independent: bool) -> dict:
     ):
         raise ValueError("base manifest differs from frozen launch contract")
 
-    output = Path("/volume") / FID / output_name
-    output.mkdir(parents=True, exist_ok=False)
+    final_output = Path("/volume") / FID / output_name
+    work_output = Path("/tmp/presto-unified-parity-v2-output") / output_name
+    work_output.mkdir(parents=True, exist_ok=False)
     results = {}
     copied = {}
     setup_error = None
@@ -265,7 +268,7 @@ def run_canonical_pass(output_name: str, *, independent: bool) -> dict:
         assert_matched_contract(reference, parity)
         matched_contract = True
         for name, manifest in (("reference", reference), ("parity", parity)):
-            condition_dir = output / name
+            condition_dir = work_output / name
             condition_dir.mkdir()
             manifest_path = condition_dir / "manifest.json"
             write_json(manifest_path, manifest)
@@ -285,7 +288,9 @@ def run_canonical_pass(output_name: str, *, independent: bool) -> dict:
                     "traceback": traceback.format_exc(),
                     "elapsed_seconds": time.monotonic() - began,
                 }
-            result["effective_manifest_path"] = str(manifest_path.relative_to("/volume"))
+            result["effective_manifest_path"] = str(
+                (final_output / name / "manifest.json").relative_to("/volume")
+            )
             result["effective_manifest_sha256"] = sha256(manifest_path)
             results[name] = result
             if result["status"] != "passed":
@@ -331,9 +336,40 @@ def run_canonical_pass(output_name: str, *, independent: bool) -> dict:
             "peak_rss_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024,
         },
     }
-    write_json(output / "receipt.json", receipt)
-    volume.commit()
+    write_json(work_output / "receipt.json", receipt)
+    return receipt, work_output
+
+
+def existing_receipt(output_name: str, *, independent: bool, contract: dict) -> dict | None:
+    output = Path("/volume") / FID / output_name
+    receipt_path = output / "receipt.json"
+    if not receipt_path.exists():
+        if output.exists():
+            raise ValueError(f"final output exists without receipt: {output_name}")
+        return None
+    receipt = json.loads(receipt_path.read_text())
+    if (
+        receipt.get("schema") != "presto.unified_parity_preflight.v2"
+        or receipt.get("source_commit") != contract["git"]["source_commit"]
+        or receipt.get("source_dirty") is not False
+        or receipt.get("independent_verification") is not independent
+    ):
+        raise ValueError(f"existing final receipt differs from frozen contract: {output_name}")
     return receipt
+
+
+def atomic_publish_tree(work_output: Path, final_output: Path) -> None:
+    if final_output.exists():
+        raise ValueError(f"final output already exists before publish: {final_output}")
+    staging = final_output.parent / (f".{final_output.name}.staging-{os.getpid()}-{time.time_ns()}")
+    shutil.copytree(work_output, staging)
+    staging.replace(final_output)
+
+
+def publish_output(work_output: Path, output_name: str) -> None:
+    final_output = Path("/volume") / FID / output_name
+    atomic_publish_tree(work_output, final_output)
+    volume.commit()
 
 
 def compact_receipt(receipt: dict, output_name: str) -> dict:
@@ -375,12 +411,19 @@ FUNCTION = {
 
 @app.function(**FUNCTION)
 def preflight_v2_primary() -> dict:
-    receipt = run_canonical_pass("preflight-v2-primary", independent=False)
-    return compact_receipt(receipt, "preflight-v2-primary")
+    volume.reload()
+    output_name = "preflight-v2-primary-r2"
+    contract = json.loads(Path("/bundle/launch.json").read_text())
+    receipt = existing_receipt(output_name, independent=False, contract=contract)
+    if receipt is None:
+        receipt, work_output = run_canonical_pass(output_name, independent=False)
+        publish_output(work_output, output_name)
+    return compact_receipt(receipt, output_name)
 
 
 @app.function(**FUNCTION)
 def preflight_v2_verification() -> dict:
+    volume.reload()
     primary_path = Path("/volume") / FID / "preflight-v2-primary/receipt.json"
     contract = json.loads(Path("/bundle/launch.json").read_text())
     if (
@@ -391,9 +434,22 @@ def preflight_v2_verification() -> dict:
     primary = json.loads(primary_path.read_text())
     if primary["status"] != "passed":
         raise ValueError("cannot verify a failed primary v2 preflight")
-    result = run_canonical_pass("preflight-v2-verification", independent=True)
+    output_name = "preflight-v2-verification-r2"
+    existing = existing_receipt(output_name, independent=True, contract=contract)
+    if existing is not None:
+        if (
+            existing.get("primary_receipt_sha256") != contract["primary_receipt"]["sha256"]
+            or "verification_error" not in existing
+        ):
+            raise ValueError("existing verification receipt lacks completed primary comparison")
+        return compact_receipt(existing, output_name)
+    result, work_output = run_canonical_pass(output_name, independent=True)
     if result["status"] != "passed":
-        return compact_receipt(result, "preflight-v2-verification")
+        result["verification_error"] = None
+        result["primary_receipt_sha256"] = sha256(primary_path)
+        write_json(work_output / "receipt.json", result)
+        publish_output(work_output, output_name)
+        return compact_receipt(result, output_name)
     verification_error = None
     try:
         for name in ("reference", "parity"):
@@ -423,9 +479,9 @@ def preflight_v2_verification() -> dict:
         }
     result["verification_error"] = verification_error
     result["primary_receipt_sha256"] = sha256(primary_path)
-    write_json(Path("/volume") / FID / "preflight-v2-verification/receipt.json", result)
-    volume.commit()
-    return compact_receipt(result, "preflight-v2-verification")
+    write_json(work_output / "receipt.json", result)
+    publish_output(work_output, output_name)
+    return compact_receipt(result, output_name)
 
 
 def local_contract_test() -> None:
@@ -442,6 +498,14 @@ def local_contract_test() -> None:
     assert parity["model"] == reference["model"]
     assert parity["training"] == reference["training"]
     assert parity["pretrained"] == reference["pretrained"]
+    with tempfile.TemporaryDirectory() as temporary:
+        root = Path(temporary)
+        work = root / "work"
+        work.mkdir()
+        write_json(work / "receipt.json", {"status": "passed"})
+        final = root / "final"
+        atomic_publish_tree(work, final)
+        assert json.loads((final / "receipt.json").read_text()) == {"status": "passed"}
 
 
 @app.local_entrypoint()
@@ -449,11 +513,11 @@ def main(verify: bool = False) -> None:
     if not verify:
         raise ValueError("the transport continuation may only run independent verification")
     local_contract_test()
-    contract = json.loads((FAMILY / "reproduce/v3/launch.json").read_text())
+    contract = json.loads((FAMILY / "reproduce/v4/launch.json").read_text())
     if sha256(FAMILY / "code/preflight_v2.py") != contract["source_sha256"]["code/preflight_v2.py"]:
         raise ValueError("local preflight v2 source differs from frozen contract")
     stem = "preflight-v2-verification"
-    call_path = FAMILY / "reproduce/v3" / f"{stem}-call.json"
+    call_path = FAMILY / "reproduce/v4" / f"{stem}-call.json"
     if call_path.exists():
         raise ValueError(f"{call_path.name} already exists")
     call = preflight_v2_verification.spawn()

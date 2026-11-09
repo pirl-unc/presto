@@ -110,3 +110,24 @@ that artifact pointer and verify its byte count and SHA-256. Preserve the primar
 call's remote transport exception and the recovered full receipt. The H100 gate
 still requires the independent full receipt to pass exact comparison against the
 recovered primary receipt.
+
+## Independent-verifier preemption continuation
+
+Verifier call `fc-01M6YTYJTA4Z33FBNACMH886HY` was preempted after completing
+the reference condition and writing the parity manifest. Its first container
+left an incomplete `preflight-v2-verification/` directory with no receipt; a
+platform restart then failed closed on `exist_ok=False`. Preserve that partial
+directory and call failure. Do not delete, overwrite, or treat its condition
+files as a completed verification.
+
+Freeze a second transport-only continuation at a new final output path,
+`preflight-v2-verification-r2`. Run all hashing, manifests, admissions, and the
+full receipt in container-local scratch. Only after the complete receipt is
+written and the exact primary comparison passes should the worker copy the small
+output tree to a uniquely named staging directory on the Modal volume and
+atomically rename it to the final path. If Modal restarts after a completed
+publish, validate and return the already committed receipt for the same frozen
+source commit; if the final path exists without a valid receipt, fail closed.
+This is a persistence/retry correction only. Input hashes, manifests, canonical
+loader/preflight logic, comparison keys, resource policy, and promotion gate
+remain unchanged.
