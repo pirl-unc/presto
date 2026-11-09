@@ -192,6 +192,20 @@ def validate_manifest(manifest: dict, manifest_path: Path) -> None:
         _require(artifact.get("split") in ROLES - {"train"}, f"{field}.split")
         _validate_artifact(artifact, field, manifest_path.parent)
 
+    supplemental = manifest.get("supplemental_artifacts", [])
+    _require(isinstance(supplemental, list), "supplemental_artifacts must be a list")
+    supplemental_ids = set()
+    for index, artifact in enumerate(supplemental):
+        field = f"supplemental_artifacts[{index}]"
+        _validate_identifier(artifact.get("id"), f"{field}.id")
+        _require(
+            artifact["id"] not in supplemental_ids,
+            f"duplicate supplemental artifact id {artifact['id']}",
+        )
+        supplemental_ids.add(artifact["id"])
+        _require(artifact.get("kind") in {"figure", "table"}, f"{field}.kind")
+        _validate_artifact(artifact, field, manifest_path.parent)
+
     metrics = manifest.get("metrics")
     _require(isinstance(metrics, list) and metrics, "metrics is required")
     paired = {}
@@ -342,6 +356,25 @@ def _copy_predictions(manifest: dict, manifest_dir: Path, output: Path) -> list[
     return result
 
 
+def _copy_supplemental(manifest: dict, manifest_dir: Path, output: Path) -> list[dict]:
+    result = []
+    for item in sorted(manifest.get("supplemental_artifacts", []), key=lambda row: row["id"]):
+        record = dict(item)
+        if item.get("include_in_report"):
+            source = Path(item["local_path"])
+            if not source.is_absolute():
+                source = manifest_dir / source
+            suffix = "".join(source.suffixes)
+            directory = "figures" if item["kind"] == "figure" else "tables"
+            destination = output / directory / f"{item['id']}{suffix}"
+            shutil.copyfile(source, destination)
+            _require(destination.stat().st_size == item["bytes"], "copied artifact size mismatch")
+            _require(sha256_file(destination) == item["sha256"], "copied artifact hash mismatch")
+            record["report_path"] = str(destination.relative_to(output))
+        result.append(record)
+    return result
+
+
 def _write_metrics(metrics: list[dict], path: Path) -> None:
     with open(path, "w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=METRIC_COLUMNS, extrasaction="ignore")
@@ -457,6 +490,7 @@ def generate_report(manifest_path: os.PathLike, output_root: os.PathLike) -> Pat
         prediction_index = _copy_predictions(
             manifest, manifest_path.parent, temporary / "predictions"
         )
+        supplemental = _copy_supplemental(manifest, manifest_path.parent, temporary)
         _write_metrics(manifest["metrics"], temporary / "tables" / "metrics.csv")
         render_comparator_overview(manifest["metrics"], temporary / "figures")
         render_data_composition(manifest["data"]["datasets"], temporary / "figures")
@@ -472,6 +506,7 @@ def generate_report(manifest_path: os.PathLike, output_root: os.PathLike) -> Pat
             "comparators": manifest["comparators"],
             "metrics": manifest["metrics"],
             "prediction_artifacts": prediction_index,
+            "supplemental_artifacts": supplemental,
             "promotion_gates": manifest["promotion_gates"],
             "runtime": manifest.get("runtime", {}),
             "input_manifest_sha256": sha256_file(manifest_path),

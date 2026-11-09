@@ -190,3 +190,33 @@ def test_report_verifies_local_artifact_hashes(tmp_path):
     path = _write_manifest(tmp_path, manifest)
     with pytest.raises(ValueError, match="checkpoint.sha256 mismatch"):
         validate_manifest(manifest, path)
+
+
+def test_report_copies_supplemental_figures_and_tables(tmp_path):
+    manifest = _manifest(tmp_path)
+    figure = tmp_path / "affinity.svg"
+    table = tmp_path / "affinity.csv"
+    figure.write_text("<svg/>\n")
+    table.write_text("metric,value\nspearman,0.8\n")
+    manifest["supplemental_artifacts"] = [
+        {
+            "id": "affinity_scatter",
+            "kind": "figure",
+            **_artifact(figure, include=True),
+        },
+        {
+            "id": "affinity_metrics",
+            "kind": "table",
+            **_artifact(table, include=True),
+        },
+    ]
+    report = generate_report(
+        _write_manifest(tmp_path, manifest), tmp_path / "reports-supplemental"
+    )
+    assert (report / "figures" / "affinity_scatter.svg").read_bytes() == figure.read_bytes()
+    assert (report / "tables" / "affinity_metrics.csv").read_bytes() == table.read_bytes()
+    saved = json.loads((report / "report.json").read_text())
+    assert [row["id"] for row in saved["supplemental_artifacts"]] == [
+        "affinity_metrics",
+        "affinity_scatter",
+    ]

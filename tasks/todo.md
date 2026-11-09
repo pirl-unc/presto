@@ -14880,6 +14880,8 @@ Canonical preregistration:
   set and a new immutable output root; both remote source guards passed.
 - [ ] Collect checkpoints, coverage, resource receipts, and all development
   prediction dumps; verify hashes independently.
+- [x] Freeze the exact matched parity-evaluation and timestamped-report contract
+  before implementing or collecting final metrics.
 - [ ] Repeat matched affinity/presentation/processing evaluation and figures.
 - [ ] Apply the preregistered data-only decision and regression gates.
 - [ ] If required, specify and implement the single chain-aware class-II arm.
