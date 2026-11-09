@@ -159,6 +159,23 @@ zero TEST rows, a zero-byte raw TEST prediction dump, and a locally hash-verifie
 receipt. Do not choose between conditions until both receipts and development
 prediction dumps are independently collected.
 
+### Runtime-tree packaging stop and continuation
+
+Initial fit calls `fc-01M6YZ10NHMN1FHFBRX8YRAQ91` (reference) and
+`fc-01M6YZ10QXBK1RR2WCZ4QFC6EZ` (parity) both failed at the runtime-tree guard,
+before preflight-closure reading, data copying, parent loading, or optimization.
+Preserve those call IDs and do not treat them as fit attempts with scientific
+state.
+
+Before relaunching H100, run a CPU-only probe using the exact same
+`add_local_file`/`add_local_dir` image mounts. Persist the observed remote file
+inventory and hashes, compare it to the clean committed local inventory, and
+identify the packaging-only difference. Narrow or correct the runtime contract
+only to the actually mounted immutable source tree; do not remove critical code
+hashing or change manifests, data, parent, training, GPU, or evaluation policy.
+Freeze a new launch continuation and require its local and CPU-remote tree checks
+to pass before the two H100 calls are submitted again.
+
 ## Preregistered decisions
 
 1. Prefer P as the next affinity/presentation parent only if it improves MHC-II
