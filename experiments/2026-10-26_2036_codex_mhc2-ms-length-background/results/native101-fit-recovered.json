@@ -1,0 +1,201 @@
+{
+  "coverage_gate": {
+    "exposed_features_without_updates": {},
+    "status": "passed",
+    "untrained_parameters": []
+  },
+  "history": [
+    {
+      "complete_epoch": true,
+      "epoch": 1,
+      "label_exposures": {
+        "elution_observation": 55296
+      },
+      "selected": true,
+      "steps": 864,
+      "training_loss": 0.6310349582453016,
+      "validation": {
+        "elution_observation": {
+          "accuracy": 0.6708333333333333,
+          "auprc": 0.7312172608554679,
+          "auroc": 0.7360957191241336,
+          "balanced_accuracy": 0.6708333333333333,
+          "f1": 0.6608809257185517,
+          "fn": 1979,
+          "fp": 1655,
+          "loss": 0.6027558573747755,
+          "n": 11040,
+          "precision": 0.6814857582755967,
+          "recall": 0.6414855072463768,
+          "tn": 3865,
+          "tp": 3541
+        }
+      }
+    },
+    {
+      "complete_epoch": true,
+      "epoch": 2,
+      "label_exposures": {
+        "elution_observation": 55296
+      },
+      "selected": true,
+      "steps": 1728,
+      "training_loss": 0.5891574117251568,
+      "validation": {
+        "elution_observation": {
+          "accuracy": 0.6838768115942029,
+          "auprc": 0.7590135573965772,
+          "auroc": 0.7555324019376182,
+          "balanced_accuracy": 0.6838768115942029,
+          "f1": 0.6737097980553478,
+          "fn": 1917,
+          "fp": 1573,
+          "loss": 0.5854493109722355,
+          "n": 11040,
+          "precision": 0.6960973724884081,
+          "recall": 0.6527173913043478,
+          "tn": 3947,
+          "tp": 3603
+        }
+      }
+    },
+    {
+      "complete_epoch": true,
+      "epoch": 3,
+      "label_exposures": {
+        "elution_observation": 55296
+      },
+      "selected": true,
+      "steps": 2592,
+      "training_loss": 0.5674081358506724,
+      "validation": {
+        "elution_observation": {
+          "accuracy": 0.6997282608695652,
+          "auprc": 0.7733738779601178,
+          "auroc": 0.7747199577294686,
+          "balanced_accuracy": 0.6997282608695652,
+          "f1": 0.7113123748149438,
+          "fn": 1436,
+          "fp": 1879,
+          "loss": 0.5678868429705145,
+          "n": 11040,
+          "precision": 0.6848901559617642,
+          "recall": 0.7398550724637681,
+          "tn": 3641,
+          "tp": 4084
+        }
+      }
+    }
+  ],
+  "metrics": {
+    "external": {
+      "elution_observation": {
+        "accuracy": 0.5939762525340284,
+        "auprc": 0.6499629287096299,
+        "auroc": 0.6331844053056522,
+        "balanced_accuracy": 0.5939762525340284,
+        "f1": 0.5245846049508308,
+        "fn": 1906,
+        "fp": 898,
+        "loss": 0.6998680798612511,
+        "n": 6906,
+        "precision": 0.632719836400818,
+        "recall": 0.44801621778163914,
+        "tn": 2555,
+        "tp": 1547
+      }
+    },
+    "test": {
+      "elution_observation": {
+        "accuracy": 0.7015582655826558,
+        "auprc": 0.772585929597887,
+        "auroc": 0.775585806967487,
+        "balanced_accuracy": 0.7015582655826558,
+        "f1": 0.7149789712067293,
+        "fn": 1484,
+        "fp": 2040,
+        "loss": 0.5677560947570908,
+        "n": 11808,
+        "precision": 0.6842105263157895,
+        "recall": 0.7486449864498645,
+        "tn": 3864,
+        "tp": 4420
+      }
+    },
+    "train": {
+      "elution_observation": {
+        "accuracy": 0.7147533275462963,
+        "auprc": 0.7808865182920699,
+        "auroc": 0.79122112415455,
+        "balanced_accuracy": 0.7147533275462963,
+        "f1": 0.7283000017225638,
+        "fn": 6508,
+        "fp": 9265,
+        "loss": 0.5551755143452426,
+        "n": 55296,
+        "precision": 0.695280381516198,
+        "recall": 0.7646122685185185,
+        "tn": 18383,
+        "tp": 21140
+      }
+    },
+    "validation": {
+      "elution_observation": {
+        "accuracy": 0.6997282608695652,
+        "auprc": 0.7733738779601178,
+        "auroc": 0.7747199577294686,
+        "balanced_accuracy": 0.6997282608695652,
+        "f1": 0.7113123748149438,
+        "fn": 1436,
+        "fp": 1879,
+        "loss": 0.5678868429705145,
+        "n": 11040,
+        "precision": 0.6848901559617642,
+        "recall": 0.7398550724637681,
+        "tn": 3641,
+        "tp": 4084
+      }
+    }
+  },
+  "new_optimizer_updates": 0,
+  "original_artifacts": {
+    "admission.json": {
+      "bytes": 2227,
+      "path": "/private/tmp/presto-mhc2-20261026/ms-length-background/native/native101/admission.json",
+      "sha256": "38061994e115c48a38485c0ffe291ea9e28a5e2e5d30f42223f85de9b3627b4e"
+    },
+    "evaluations/train-started.json": {
+      "bytes": 201,
+      "path": "/private/tmp/presto-mhc2-20261026/ms-length-background/native/native101/evaluations/train-started.json",
+      "sha256": "c75e34dd7b37bcb59a32ee3bee9a7bfad5ab6a3a2576e91842d13e8a8be8c7f0"
+    },
+    "history.json": {
+      "bytes": 2036,
+      "path": "/private/tmp/presto-mhc2-20261026/ms-length-background/native/native101/history.json",
+      "sha256": "e9cc7fd3a9f1402ed46f4e329889c0b74b3ead3fd0333971e982f60bbfb8f809"
+    },
+    "last.pt": {
+      "bytes": 2527468,
+      "path": "/private/tmp/presto-mhc2-20261026/ms-length-background/native/native101/last.pt",
+      "sha256": "2586ac52a7b5c8731e11bfcc0b44be675f66401c99e8d16d311ebbe3aca32bde"
+    },
+    "resolved-config.json": {
+      "bytes": 1564,
+      "path": "/private/tmp/presto-mhc2-20261026/ms-length-background/native/native101/resolved-config.json",
+      "sha256": "62bf6a98de970de44251a41e1163722a1df23b5d207d39ca068c8518ccecf427"
+    },
+    "resume.pt": {
+      "bytes": 6470761,
+      "path": "/private/tmp/presto-mhc2-20261026/ms-length-background/native/native101/resume.pt",
+      "sha256": "6374cab95102206f3017e3f1fa44818a4dba3927b05c5c0adb2b1af9dbf7a43f"
+    },
+    "selected.pt": {
+      "bytes": 2527468,
+      "path": "/private/tmp/presto-mhc2-20261026/ms-length-background/native/native101/selected.pt",
+      "sha256": "dced724c868fb176fb96267236643f5cc13d91c223172dc2a4956a194663c079"
+    }
+  },
+  "original_failure": "RSS while serializing training evaluation cache",
+  "selected_equals_fixed_final_tensors": true,
+  "status": "fixed_model_evaluation_recovered"
+}

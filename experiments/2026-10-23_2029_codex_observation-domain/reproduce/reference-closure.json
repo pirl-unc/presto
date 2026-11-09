@@ -1,0 +1,22 @@
+{
+  "registered_at": "2026-10-24T00:52:10.739177+00:00",
+  "scope": "Original-plan independent solver parity: one fresh NumPy eight-step full array per frozen condition/time/eta. No new physical state, quantity, fitted parameter, or change to primary gates.",
+  "required_log_tolerance": 1e-05,
+  "full_array_absolute_diagnostic": 1e-10,
+  "source_hashes": {
+    "code/reference_verify.py": "82537dc34af7309ccf646479e34d294626379a4744af911223b8bbf9c4031131",
+    "code/reference.py": "046db70c2638629cde227dc9a6a58b499e1a5029fb88a2b442d36154b416985a",
+    "reproduce/cases.json": "81bb64f254a523c9f90a04d9d0e4c7cc47fb5965d595e58951c72cc705bf1958",
+    "reproduce/training-support.json": "10f1dd0cff572dd80088ab1b8b6354f9fb692714e07435b8c4a5f86fe1db25a8",
+    "reproduce/coefficients.json": "fdd57fa2eb3ebf5b0612203f5081b5c4c3e3cb51e2096961b4fc6d1f140bc218"
+  },
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "argv": [
+    "sh",
+    "experiments/2026-10-23_2029_codex_observation-domain/reproduce/reference-verify.sh"
+  ]
+}

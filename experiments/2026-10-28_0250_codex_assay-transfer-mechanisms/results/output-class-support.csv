@@ -1,0 +1,105 @@
+condition,endpoint,mhc_class,train_rows,exact_train_rows,optimizer_label_exposures,validation_rows,validation_exact,test_rows,test_exact,scope
+small-ic50-s42,ic50,I,12185,11466,246197,1545,1433,1516,1476,development holdout only
+small-ic50-s42,ic50,II,6792,5955,137183,702,623,772,683,development holdout only
+small-ic50-s43,ic50,I,12185,11466,246150,1545,1433,1516,1476,development holdout only
+small-ic50-s43,ic50,II,6792,5955,137230,702,623,772,683,development holdout only
+wide-ic50-s42,ic50,I,12185,11466,246197,1545,1433,1516,1476,development holdout only
+wide-ic50-s42,ic50,II,6792,5955,137183,702,623,772,683,development holdout only
+wide-ic50-s43,ic50,I,12185,11466,246150,1545,1433,1516,1476,development holdout only
+wide-ic50-s43,ic50,II,6792,5955,137230,702,623,772,683,development holdout only
+wide-six-natural-s42,ic50,I,12185,11466,43653,1545,1433,1516,1476,development holdout only
+wide-six-natural-s42,ic50,II,6792,5955,24359,702,623,772,683,development holdout only
+wide-six-natural-s42,kd,I,11601,3311,41618,1515,381,1643,405,development holdout only
+wide-six-natural-s42,kd,II,326,280,1166,48,35,48,35,sparse validation (<100 exact)
+wide-six-natural-s42,ec50,I,243,243,867,18,18,27,27,sparse validation (<100 exact)
+wide-six-natural-s42,ec50,II,17,17,58,0,0,2,2,missing validation
+wide-six-natural-s42,kd_via_ic50,I,33372,31726,119603,4220,4004,4348,4105,development holdout only
+wide-six-natural-s42,kd_via_ic50,II,965,774,3451,75,54,64,58,sparse validation (<100 exact)
+wide-six-natural-s42,kd_via_ec50,I,24290,7270,87095,3148,871,3190,972,development holdout only
+wide-six-natural-s42,kd_via_ec50,II,11189,8941,40060,1453,1155,1576,1211,development holdout only
+wide-six-natural-s42,half_life,I,6141,6135,22020,700,700,818,815,development holdout only
+wide-six-natural-s42,half_life,II,11,11,38,1,1,0,0,sparse validation (<100 exact)
+wide-six-natural-s43,ic50,I,12185,11466,43703,1545,1433,1516,1476,development holdout only
+wide-six-natural-s43,ic50,II,6792,5955,24370,702,623,772,683,development holdout only
+wide-six-natural-s43,kd,I,11601,3311,41534,1515,381,1643,405,development holdout only
+wide-six-natural-s43,kd,II,326,280,1170,48,35,48,35,sparse validation (<100 exact)
+wide-six-natural-s43,ec50,I,243,243,855,18,18,27,27,sparse validation (<100 exact)
+wide-six-natural-s43,ec50,II,17,17,59,0,0,2,2,missing validation
+wide-six-natural-s43,kd_via_ic50,I,33372,31726,119664,4220,4004,4348,4105,development holdout only
+wide-six-natural-s43,kd_via_ic50,II,965,774,3471,75,54,64,58,sparse validation (<100 exact)
+wide-six-natural-s43,kd_via_ec50,I,24290,7270,86940,3148,871,3190,972,development holdout only
+wide-six-natural-s43,kd_via_ec50,II,11189,8941,40149,1453,1155,1576,1211,development holdout only
+wide-six-natural-s43,half_life,I,6141,6135,22032,700,700,818,815,development holdout only
+wide-six-natural-s43,half_life,II,11,11,41,1,1,0,0,sparse validation (<100 exact)
+wide-six-class-balanced-s42,ic50,I,12185,11466,26617,1545,1433,1516,1476,development holdout only
+wide-six-class-balanced-s42,ic50,II,6792,5955,67651,702,623,772,683,development holdout only
+wide-six-class-balanced-s42,kd,I,11601,3311,25361,1515,381,1643,405,development holdout only
+wide-six-class-balanced-s42,kd,II,326,280,3259,48,35,48,35,sparse validation (<100 exact)
+wide-six-class-balanced-s42,ec50,I,243,243,531,18,18,27,27,sparse validation (<100 exact)
+wide-six-class-balanced-s42,ec50,II,17,17,167,0,0,2,2,missing validation
+wide-six-class-balanced-s42,kd_via_ic50,I,33372,31726,73011,4220,4004,4348,4105,development holdout only
+wide-six-class-balanced-s42,kd_via_ic50,II,965,774,9595,75,54,64,58,sparse validation (<100 exact)
+wide-six-class-balanced-s42,kd_via_ec50,I,24290,7270,53038,3148,871,3190,972,development holdout only
+wide-six-class-balanced-s42,kd_via_ec50,II,11189,8941,111204,1453,1155,1576,1211,development holdout only
+wide-six-class-balanced-s42,half_life,I,6141,6135,13426,700,700,818,815,development holdout only
+wide-six-class-balanced-s42,half_life,II,11,11,108,1,1,0,0,sparse validation (<100 exact)
+wide-six-class-balanced-s43,ic50,I,12185,11466,26629,1545,1433,1516,1476,development holdout only
+wide-six-class-balanced-s43,ic50,II,6792,5955,67550,702,623,772,683,development holdout only
+wide-six-class-balanced-s43,kd,I,11601,3311,25347,1515,381,1643,405,development holdout only
+wide-six-class-balanced-s43,kd,II,326,280,3269,48,35,48,35,sparse validation (<100 exact)
+wide-six-class-balanced-s43,ec50,I,243,243,531,18,18,27,27,sparse validation (<100 exact)
+wide-six-class-balanced-s43,ec50,II,17,17,167,0,0,2,2,missing validation
+wide-six-class-balanced-s43,kd_via_ic50,I,33372,31726,72855,4220,4004,4348,4105,development holdout only
+wide-six-class-balanced-s43,kd_via_ic50,II,965,774,9623,75,54,64,58,sparse validation (<100 exact)
+wide-six-class-balanced-s43,kd_via_ec50,I,24290,7270,53136,3148,871,3190,972,development holdout only
+wide-six-class-balanced-s43,kd_via_ec50,II,11189,8941,111262,1453,1155,1576,1211,development holdout only
+wide-six-class-balanced-s43,half_life,I,6141,6135,13486,700,700,818,815,development holdout only
+wide-six-class-balanced-s43,half_life,II,11,11,113,1,1,0,0,sparse validation (<100 exact)
+wide-six-primary-matched-s42,ic50,I,12185,11466,246532,1545,1433,1516,1476,development holdout only
+wide-six-primary-matched-s42,ic50,II,6792,5955,137189,702,623,772,683,development holdout only
+wide-six-primary-matched-s42,kd,I,11601,3311,50483,1515,381,1643,405,development holdout only
+wide-six-primary-matched-s42,kd,II,326,280,1429,48,35,48,35,sparse validation (<100 exact)
+wide-six-primary-matched-s42,ec50,I,243,243,1057,18,18,27,27,sparse validation (<100 exact)
+wide-six-primary-matched-s42,ec50,II,17,17,77,0,0,2,2,missing validation
+wide-six-primary-matched-s42,kd_via_ic50,I,33372,31726,145341,4220,4004,4348,4105,development holdout only
+wide-six-primary-matched-s42,kd_via_ic50,II,965,774,4237,75,54,64,58,sparse validation (<100 exact)
+wide-six-primary-matched-s42,kd_via_ec50,I,24290,7270,105854,3148,871,3190,972,development holdout only
+wide-six-primary-matched-s42,kd_via_ec50,II,11189,8941,48686,1453,1155,1576,1211,development holdout only
+wide-six-primary-matched-s42,half_life,I,6141,6135,26792,700,700,818,815,development holdout only
+wide-six-primary-matched-s42,half_life,II,11,11,47,1,1,0,0,sparse validation (<100 exact)
+wide-six-primary-matched-s43,ic50,I,12185,11466,246445,1545,1433,1516,1476,development holdout only
+wide-six-primary-matched-s43,ic50,II,6792,5955,137421,702,623,772,683,development holdout only
+wide-six-primary-matched-s43,kd,I,11601,3311,50470,1515,381,1643,405,development holdout only
+wide-six-primary-matched-s43,kd,II,326,280,1412,48,35,48,35,sparse validation (<100 exact)
+wide-six-primary-matched-s43,ec50,I,243,243,1061,18,18,27,27,sparse validation (<100 exact)
+wide-six-primary-matched-s43,ec50,II,17,17,74,0,0,2,2,missing validation
+wide-six-primary-matched-s43,kd_via_ic50,I,33372,31726,145365,4220,4004,4348,4105,development holdout only
+wide-six-primary-matched-s43,kd_via_ic50,II,965,774,4208,75,54,64,58,sparse validation (<100 exact)
+wide-six-primary-matched-s43,kd_via_ec50,I,24290,7270,105755,3148,871,3190,972,development holdout only
+wide-six-primary-matched-s43,kd_via_ec50,II,11189,8941,48690,1453,1155,1576,1211,development holdout only
+wide-six-primary-matched-s43,half_life,I,6141,6135,26776,700,700,818,815,development holdout only
+wide-six-primary-matched-s43,half_life,II,11,11,47,1,1,0,0,sparse validation (<100 exact)
+wide-six-primary-shuffled-s42,ic50,I,12185,11466,246532,1545,1433,1516,1476,development holdout only
+wide-six-primary-shuffled-s42,ic50,II,6792,5955,137189,702,623,772,683,development holdout only
+wide-six-primary-shuffled-s42,kd,I,11601,3311,50483,1515,381,1643,405,development holdout only
+wide-six-primary-shuffled-s42,kd,II,326,280,1429,48,35,48,35,sparse validation (<100 exact)
+wide-six-primary-shuffled-s42,ec50,I,243,243,1057,18,18,27,27,sparse validation (<100 exact)
+wide-six-primary-shuffled-s42,ec50,II,17,17,77,0,0,2,2,missing validation
+wide-six-primary-shuffled-s42,kd_via_ic50,I,33372,31726,145341,4220,4004,4348,4105,development holdout only
+wide-six-primary-shuffled-s42,kd_via_ic50,II,965,774,4237,75,54,64,58,sparse validation (<100 exact)
+wide-six-primary-shuffled-s42,kd_via_ec50,I,24290,7270,105854,3148,871,3190,972,development holdout only
+wide-six-primary-shuffled-s42,kd_via_ec50,II,11189,8941,48686,1453,1155,1576,1211,development holdout only
+wide-six-primary-shuffled-s42,half_life,I,6141,6135,26792,700,700,818,815,development holdout only
+wide-six-primary-shuffled-s42,half_life,II,11,11,47,1,1,0,0,sparse validation (<100 exact)
+wide-six-primary-shuffled-s43,ic50,I,12185,11466,246445,1545,1433,1516,1476,development holdout only
+wide-six-primary-shuffled-s43,ic50,II,6792,5955,137421,702,623,772,683,development holdout only
+wide-six-primary-shuffled-s43,kd,I,11601,3311,50470,1515,381,1643,405,development holdout only
+wide-six-primary-shuffled-s43,kd,II,326,280,1412,48,35,48,35,sparse validation (<100 exact)
+wide-six-primary-shuffled-s43,ec50,I,243,243,1061,18,18,27,27,sparse validation (<100 exact)
+wide-six-primary-shuffled-s43,ec50,II,17,17,74,0,0,2,2,missing validation
+wide-six-primary-shuffled-s43,kd_via_ic50,I,33372,31726,145365,4220,4004,4348,4105,development holdout only
+wide-six-primary-shuffled-s43,kd_via_ic50,II,965,774,4208,75,54,64,58,sparse validation (<100 exact)
+wide-six-primary-shuffled-s43,kd_via_ec50,I,24290,7270,105755,3148,871,3190,972,development holdout only
+wide-six-primary-shuffled-s43,kd_via_ec50,II,11189,8941,48690,1453,1155,1576,1211,development holdout only
+wide-six-primary-shuffled-s43,half_life,I,6141,6135,26776,700,700,818,815,development holdout only
+wide-six-primary-shuffled-s43,half_life,II,11,11,47,1,1,0,0,sparse validation (<100 exact)

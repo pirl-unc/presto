@@ -1,0 +1,28 @@
+{
+  "status": "passed",
+  "kind": "historical_checkpoint_compatibility_regression",
+  "biological_fit_or_new_accuracy_evaluation": false,
+  "reference_scope": "first eight already-recorded training predictions per arm",
+  "frozen_files_verified": 168,
+  "closure_sha256": "815cade2f21c1214ee7f2e8953ea9a4294b1771557239e8b993769ee88c73220",
+  "variants": {
+    "native_levels": {
+      "checkpoint": "/private/tmp/presto-mhc2-evaluation-20261027/presto/experiments/2026-10-27_1250_codex_do-dm-native-memory-fit/results/runs/native_levels/selected.pt",
+      "checkpoint_sha256": "cf1ef4a0ab80d53cbf0fba3c22039ed11a4356cdd38381600a7ed024815a77e3",
+      "rows": 8,
+      "max_absolute_difference": 0.0
+    },
+    "native_collapsed": {
+      "checkpoint": "/private/tmp/presto-mhc2-evaluation-20261027/presto/experiments/2026-10-27_1250_codex_do-dm-native-memory-fit/results/runs/native_collapsed/selected.pt",
+      "checkpoint_sha256": "a6dc4f153c1e09ffa6c7b693e0748c5f166927765694fe3677aea3c6bd87d742",
+      "rows": 8,
+      "max_absolute_difference": 0.0
+    },
+    "native_shuffled": {
+      "checkpoint": "/private/tmp/presto-mhc2-evaluation-20261027/presto/experiments/2026-10-27_1250_codex_do-dm-native-memory-fit/results/runs/native_shuffled/selected.pt",
+      "checkpoint_sha256": "13c0b78e726f943a8afbb13f59eb722b1cc4f210c119f9e0f558028b3e22c51f",
+      "rows": 8,
+      "max_absolute_difference": 0.0
+    }
+  }
+}

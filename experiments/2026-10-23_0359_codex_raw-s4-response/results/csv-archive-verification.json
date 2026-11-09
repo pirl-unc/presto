@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "reason": "Preserve exact standard CRLF CSV bytes without introducing Git whitespace failures; no model/data/metric changes.",
+  "files": [
+    {
+      "name": "outer-test-predictions.csv",
+      "sha256": "ecca73f28122065607bda1b8e6fe5346dbe9cc565c83ba8334b6c60b8698ae5d",
+      "size_bytes": 151865,
+      "raw_path": "artifacts/2026-10-23_0359_codex_raw-s4-response/original_csv/outer-test-predictions.csv",
+      "compressed_artifact": "results/outer-test-predictions.csv.gz"
+    },
+    {
+      "name": "summary.csv",
+      "sha256": "63d0e676eb2f46693ecd4a2aaf0abe377c83d40b989cbbfa501e29946eef6e8d",
+      "size_bytes": 735,
+      "raw_path": "artifacts/2026-10-23_0359_codex_raw-s4-response/original_csv/summary.csv",
+      "compressed_artifact": "results/summary.csv.gz"
+    }
+  ]
+}

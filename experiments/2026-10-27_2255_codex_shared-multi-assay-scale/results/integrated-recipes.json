@@ -1,0 +1,26 @@
+{
+  "ic50_joint_development": {
+    "variant": "ic50-exact",
+    "path": "configs/ic50_joint_development.json",
+    "sha256": "59e8bd24a154b87c4d0ee984142d233febb4a0d6b3649827777085531c55fc01",
+    "scope": "validation-selected IC50 development recipe",
+    "preflight": "passed",
+    "fitting_performed": false
+  },
+  "multi_assay_development": {
+    "variant": "multi-assay",
+    "path": "configs/multi_assay_development.json",
+    "sha256": "eab0960f97fac084a30558035458b2b6decf5e641d40bcb833f5eb9d032f5a35",
+    "scope": "experimental multi-output recipe; not globally promoted",
+    "preflight": "passed",
+    "fitting_performed": false
+  },
+  "multi_assay_wide_development": {
+    "variant": "multi-assay-wide",
+    "path": "configs/multi_assay_wide_development.json",
+    "sha256": "761705a11b11bcd672619d4ff2d1c8183ca6d368f0d4f0484a99a238f90d913a",
+    "scope": "experimental multi-output recipe; not globally promoted",
+    "preflight": "passed",
+    "fitting_performed": false
+  }
+}

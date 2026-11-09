@@ -1,0 +1,29 @@
+{
+  "status": "passed",
+  "seconds": 14.616963125008624,
+  "peak_gib": 1.266845703125,
+  "n_prediction_values": 361281,
+  "max_prediction_error": 1.1610157280017575e-13,
+  "n_stratum_metric_records": 50995,
+  "gates": {
+    "validation:direct": {
+      "passed": true,
+      "relative_rmse_gain": 0.10896887996781501
+    },
+    "validation:erap1": {
+      "passed": false,
+      "relative_rmse_gain": 0.0014705647127484234
+    },
+    "test:direct": {
+      "passed": true,
+      "relative_rmse_gain": 0.09167366842241709
+    },
+    "test:erap1": {
+      "passed": false,
+      "relative_rmse_gain": -1.7441518279870394e-05
+    }
+  },
+  "component_disjointness": true,
+  "source_scope": "Canonical recipe lineage and all origins/precursors; upstream original-cell audit reused.",
+  "no_fitting": true
+}

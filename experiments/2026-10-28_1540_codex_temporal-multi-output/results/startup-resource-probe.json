@@ -1,0 +1,14 @@
+{
+  "observed_unix": 1793244184.5949268,
+  "condition": "wide-multi-s42",
+  "container": "ta-01M62SMMGKXEEGYE67SFBSRR3R",
+  "pid": 4,
+  "rss_bytes": 5714374656,
+  "cpu_user_seconds": 1134.98,
+  "io_read_count": 15995499,
+  "io_read_chars": 93158156448,
+  "run_files": [
+    ".training.lock"
+  ],
+  "interpretation": "Read character counters include repeated reads and hashing; not physical disk traffic. No optimizer progress file existed at this point. Inspection of the common source shows repeated full scans during preflight, plus per-observation open/stat/seek in ObservationIndex."
+}

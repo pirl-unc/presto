@@ -1,0 +1,48 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "argv": [
+    "experiments/2026-10-24_2106_codex_hap1-tap-route/code/launch.py"
+  ],
+  "environment": {
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "VECLIB_MAXIMUM_THREADS": "1"
+  },
+  "git_commit": "59a8db61014eede3715b11295096a83bb9aeb34d",
+  "git_dirty": " M experiments/agents/codex/todo.md\n M tasks/todo.md\n",
+  "lr": 0.03,
+  "outer_validation_test_scored": false,
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "samples": 64,
+  "seed": 42,
+  "source_sha256": {
+    "data/hap1_response_recipes/2026-10-24_0730_v1/derived/responses.parquet": "c929bad7494577b40f9b39797e0db560374677a44032e244be27332917690a2e",
+    "data/hap1_response_recipes/2026-10-24_0730_v1/manifest.json": "a1eec392c06485966e131663f85e7599dcd9e5ff621841eb0d44eeaafe779309",
+    "experiments/2026-10-24_2018_codex_hap1-context-ablation/code/core.py": "b3e5e21b8f56f2cb649eb4fd64f5d73da81ce02daf805413b8d775aa7f78ba89",
+    "experiments/2026-10-24_2018_codex_hap1-context-ablation/results/fits/context-features.npz": "1da53c6ffcaec4d0f0b3c23c1246c912c481d194365d4af7e98871286bb25f91",
+    "experiments/2026-10-24_2041_codex_hap1-affinity-control/results/predictor/exposure.parquet": "7e4dc15e4220a77b123b99630b8d169170f5d41b1b8bd66211c23328a4aada3f",
+    "experiments/2026-10-24_2041_codex_hap1-affinity-control/results/predictor/scores.parquet": "9becb5432c2d8962d58e47654bbf2f61afe7cf37f0007888400c1f0491e5396c",
+    "experiments/2026-10-24_2106_codex_hap1-tap-route/code/core.py": "83cffd366518b86ce6d4c5ba256e1a4110c1f3aba4ddcf9c0ab5315a9962a4b8",
+    "experiments/2026-10-24_2106_codex_hap1-tap-route/code/launch.py": "9f41a1f5b02087c556416db9d2fbc37b66cd68d267dd97e3dc2ce7b7a9889a9d",
+    "experiments/2026-10-24_2106_codex_hap1-tap-route/code/qualify.py": "4f4eccb2dfa208756315a49cdf0a2c91b092acf3d16028f702686a1d9550d1fb",
+    "experiments/2026-10-24_2106_codex_hap1-tap-route/reproduce/plan.md": "90db6540571fb2bd3444063dd11a37233265c8ab881aab81d938c861fe93d9d5"
+  },
+  "steps": 250,
+  "variants": [
+    "sequence_scores",
+    "expanded_ridge",
+    "route_only_exact",
+    "route_scores_exact",
+    "route_scores_sampled"
+  ],
+  "versions": {
+    "numpy": "2.5.4",
+    "pandas": "3.1.0",
+    "pyarrow": "26.0.0",
+    "scipy": "1.18.1",
+    "torch": "2.14.1"
+  }
+}

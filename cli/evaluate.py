@@ -9,7 +9,7 @@ from typing import Any, Dict, Iterable, List, Optional
 
 import torch
 from ..data import PrestoCollator, PrestoDataset, create_dataloader
-from ..scripts import train_synthetic
+from ..legacy.scripts import train_synthetic
 from ..training.checkpointing import load_model_from_checkpoint
 
 

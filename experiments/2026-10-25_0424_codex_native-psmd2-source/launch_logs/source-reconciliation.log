@@ -1,0 +1,73 @@
+{
+  "n_peptides": 10647,
+  "n_peptide_fields": 80,
+  "n_evidence_rows": 40679,
+  "n_modification_specific_rows": 10935,
+  "n_workbook_fields": 35,
+  "n_common_source_cells": 372645,
+  "common_cell_comparison": {
+    "literal_equal": 270301,
+    "within_two_parts_per_quadrillion_not_decimal_equal": 19635,
+    "both_blank": 80231,
+    "numeric_decimal_equal": 2465,
+    "literal_difference": 13
+  },
+  "n_identifier_link_errors": 0,
+  "quantity_comparison": {
+    "evidence": {
+      "exact_equal": 60520,
+      "numeric_difference": 3362
+    },
+    "form": {
+      "exact_equal": 63243,
+      "numeric_difference": 639
+    },
+    "raw_status": {
+      "zero": 29846,
+      "positive": 34036
+    },
+    "lfq_status": {
+      "zero": 29846,
+      "positive": 34036
+    },
+    "support": {
+      "positive_sequence_sample_cells_with_modified_evidence": 5765
+    }
+  },
+  "max_relative_aggregation_residual": {
+    "evidence": 8.051217382869337e-05,
+    "form": 7.549883156570196e-05
+  },
+  "evidence_types": {
+    "MSMS": 900,
+    "MULTI-MSMS": 28519,
+    "MULTI-MATCH": 10283,
+    "MULTI-SECPEP": 977
+  },
+  "n_sequences_with_multiple_modification_rows": 276,
+  "run_mapping": {
+    "Cont1": "Seq61406_HFX",
+    "Cont2": "Seq61407_HFX",
+    "Cont3": "Seq61408_HFX",
+    "KD1": "Seq61409_HFX",
+    "KD2": "Seq61410_HFX",
+    "KD3": "Seq61411_HFX"
+  },
+  "metadata_fields_kept_distinct": [
+    "Intensity",
+    "LFQ intensity",
+    "modification-specific intensity",
+    "evidence intensity"
+  ],
+  "all_aggregation_residuals_retained": true,
+  "decimal_equality_required_for_exact_claim": true,
+  "numeric_machine_comparison_relative_tolerance": 2e-15,
+  "no_condition_effects_or_predictive_metrics_computed": true,
+  "source_sha256": "7b2d58ef082bd2b713c00a74c3f98e64520100a84c52a3189deffbd265b239ff",
+  "argv": [
+    "code/reconcile.py"
+  ],
+  "shared_reader_sha256": "c113d68abb0da1c734364763309c48868e325cce6ccd8bb41f8f9c9993341570",
+  "seconds": 2.3604458749759942,
+  "peak_rss_bytes": 321323008
+}

@@ -1,0 +1,151 @@
+{
+  "accession" : "PXD052314",
+  "title" : "A549 adenocarcinoma human alveolar basal epithelial cells Salmonella enterica infection Proteomics",
+  "additionalAttributes" : [ ],
+  "projectDescription" : "For decades, the prevailing paradigm has posited that the primary function of proteasome-derived peptides is serving for antigen presentation. The proteasome-cleaved peptides are loaded onto Major Histocompatibility Complex I (MHCI) molecules and serve to elicit T cell-mediated cytotoxicity. Yet, whether the products of proteasomal degradation may play additional roles in modulating immune responses, remains largely unknown. Antimicrobial peptides (AMPs) serve as a first line of defense against invading pathogens. They act quickly to prevent the establishment of infections, providing an initial barrier against microbes before the adaptive immune system can respond. As such, there is a great need in constitutive and bacterial-induced production of AMPs, across numerous tissues. As AMPs are widely distributed across the proteome and may not be readily clipped from their host proteins, degradation mechanisms may facilitate their release and diversity. In this study, we uncover a role for cellular proteasomes in the constitutive generation of proteasome-derived defense peptides (PDDPs) capable of impeding bacterial growth in vitro and in vivo by disrupting bacterial membranes. Further, we found that in response to bacterial infection, the composition and function of cellular proteasomes are altered. Specifically, recruitment of the regulatory cap, PSME3 onto proteasomes, increases tryptic-like cleavages of peptides, which in turn, enhances the production of PDDPs with cationic termini as a defense mechanism. In silico prediction of proteome-wide proteasomal cleavage identified more than 270,000 putative peptides that may be generated en route to degradation and bear cationic properties to serve as a first line of defense. Our findings suggest that PDDPs play a previously unrecognized fundamental role in cell-autonomous innate immunity against pathogens.",
+  "sampleProcessingProtocol" : "A549 cells were incubated with Salmonella enterica for 1 or 4 hours in triplicates and then were processed using the MAPP protocol [PMID: 30346940] and whole cell extract proteomics. As a results we obtained three types of proteomics data per each sample: (i) shotgun proteomics data, (ii) peptidomics data of proteasome-derived peptides and (iii) proteins which were pulldown with proteasome (\"proteasome composition\")",
+  "dataProcessingProtocol" : "The acquired raw spectra were analyzed using MaxQuant software (version 1.6.0.16) with the default parameters for the analysis of proteins and peptides (LFQ) minimum ratio count of 1, minimum peptide length for unspecific search of 6, maximum peptide length for unspecific search of 40, peptide FDR was set to 0.01 and match between runs enabled. Masses were searched against the human proteome database from UniprotKB",
+  "projectTags" : [ ],
+  "keywords" : [ "Infection", "Proteomics" ],
+  "doi" : "",
+  "submissionType" : "PARTIAL",
+  "license" : "Creative Commons Public Domain (CC0)",
+  "submissionDate" : "2024-05-16",
+  "publicationDate" : "2025-03-07",
+  "submitters" : [ {
+    "title" : "Professor",
+    "firstName" : "Yifat",
+    "lastName" : "Merbl",
+    "identifier" : "3313913",
+    "affiliation" : "Weizmann Institute of Science",
+    "email" : "merbllab@weizmann.ac.il",
+    "country" : "Israel",
+    "orcid" : "",
+    "name" : "Yifat Merbl",
+    "id" : "3313913"
+  } ],
+  "labPIs" : [ {
+    "title" : "Dr",
+    "firstName" : "Yifat",
+    "lastName" : "Merbl",
+    "identifier" : "2917110",
+    "affiliation" : "Systems Immunology Department, The Merbl Lab, Weizmann Institute of Science, Israel",
+    "email" : "yifat.merbl@weizmann.ac.il",
+    "country" : "",
+    "orcid" : "",
+    "name" : "Yifat Merbl",
+    "id" : "2917110"
+  } ],
+  "instruments" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "MS",
+    "accession" : "MS:1003028",
+    "name" : "Orbitrap Exploris 480"
+  } ],
+  "softwares" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "MS",
+    "accession" : "MS:1001583",
+    "name" : "MaxQuant"
+  } ],
+  "experimentTypes" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "PRIDE",
+    "accession" : "PRIDE:0000428",
+    "name" : "Bottom-up proteomics"
+  } ],
+  "quantificationMethods" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "PRIDE",
+    "accession" : "PRIDE:0000312",
+    "name" : "Label free"
+  } ],
+  "countries" : [ "Israel" ],
+  "sampleAttributes" : [ {
+    "@type" : "Tuple",
+    "key" : {
+      "cvLabel" : "EFO",
+      "accession" : "EFO:0000635",
+      "name" : "organism part"
+    },
+    "value" : [ {
+      "cvLabel" : "CL",
+      "accession" : "CL:0000066",
+      "name" : "epithelial cell"
+    } ]
+  }, {
+    "@type" : "Tuple",
+    "key" : {
+      "cvLabel" : "EFO",
+      "accession" : "OBI:0100026",
+      "name" : "organism"
+    },
+    "value" : [ {
+      "cvLabel" : "NEWT",
+      "accession" : "NEWT:9606",
+      "name" : "Homo sapiens (Human)"
+    }, {
+      "cvLabel" : "NEWT",
+      "accession" : "NEWT:562",
+      "name" : "Escherichia coli"
+    } ]
+  }, {
+    "@type" : "Tuple",
+    "key" : {
+      "cvLabel" : "EFO",
+      "accession" : "EFO:0000408",
+      "name" : "disease"
+    },
+    "value" : [ {
+      "cvLabel" : "DOID",
+      "accession" : "DOID:3910",
+      "name" : "lung adenocarcinoma"
+    } ]
+  } ],
+  "organisms" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "NEWT",
+    "accession" : "NEWT:562",
+    "name" : "Escherichia coli"
+  }, {
+    "@type" : "CvParam",
+    "cvLabel" : "NEWT",
+    "accession" : "NEWT:9606",
+    "name" : "Homo sapiens (human)"
+  } ],
+  "organismParts" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "CL",
+    "accession" : "CL:0000066",
+    "name" : "Epithelial cell"
+  } ],
+  "diseases" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "DOID",
+    "accession" : "DOID:3910",
+    "name" : "Lung adenocarcinoma"
+  } ],
+  "references" : [ {
+    "pubmedID" : 0,
+    "doi" : "10.1038/S41586-025-08615-W"
+  }, {
+    "referenceLine" : "Goldberg K, Lobov A, Antonello P, Shmueli MD, Yakir I, Weizman T, Ulman A, Sheban D, Laser E, Kramer MP, Shteinvil R, Chen G, Ibraheem A, Sysoeva V, Fishbain-Yoskovitz V, Mohapatra G, Abramov A, Shimshi S, Ogneva K, Nandy M, Amidror S, Bootz-Maoz H, Kuo SH, Dezorella N, Kacen A, Javitt A, Lau GW, Yissachar N, Hayouka Z, Merbl Y. Cell-autonomous innate immunity by proteasome-derived defence peptides. Nature. 2025 639(8056):1032-1041",
+    "pubmedID" : 40044870,
+    "doi" : "10.1038/s41586-025-08615-w"
+  } ],
+  "identifiedPTMStrings" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "MOD",
+    "accession" : "MOD:00425",
+    "name" : "monohydroxylated residue"
+  }, {
+    "@type" : "CvParam",
+    "cvLabel" : "MOD",
+    "accession" : "MOD:00408",
+    "name" : "mono N-acetylated residue"
+  } ],
+  "totalFileDownloads" : 2675,
+  "botCount" : 1253,
+  "hubCount" : 1384,
+  "organicCount" : 38
+}

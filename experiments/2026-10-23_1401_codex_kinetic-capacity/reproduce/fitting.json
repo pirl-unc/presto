@@ -1,0 +1,27 @@
+{
+  "registered_at": "2026-10-23T14:08:01.251536-04:00",
+  "source_hashes": {
+    "code/fit_capacity.py": "665f7c198620c1e11c5d0f2bdcbb918670d609b0b97c18a9efd3ee7bb42c5002",
+    "code/source.py": "e81c4beca5c73e2aa91f356acb892401da402ce11c68cb13d608a266f7701df5"
+  },
+  "primitive_sha256": "6b6a2afa884ed3d0fa4ba553a1f6c94d884e9299f3ece68d62cd34bcc6f3771f",
+  "variants": [
+    "unregularized_sequence",
+    "free_condition_rates"
+  ],
+  "initialization": "saved regularized40-coefficient rate field; equivalent internal-only bond groups use mean rate and retain initial predictions",
+  "optimizer": "Adam lr.01 betas.9/.999 eps1e-8 for2000updates; L-BFGS-B maxfun500 maxiter500 gtol1e-8 ftol1e-15 maxls20 with explicit500-evaluation guard",
+  "loss": "same hierarchical training log10 temporal-ratio MSE, no regularization",
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_1401_codex_kinetic-capacity/code/fit_capacity.py"
+  ],
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "PYTHONPATH": "/private/tmp/presto-modular-imports"
+  },
+  "runtime_context": "May overlap substrate-entry sampled fit; no isolated hardware benchmark claim",
+  "reference_schema_amendment_at": "2026-10-23T14:09:59.947523-04:00"
+}

@@ -1,0 +1,37 @@
+{
+  "argv": [
+    "experiments/2026-10-23_0037_codex_mapp-run-repeatability/code/fit_linear.py"
+  ],
+  "device": "CPU",
+  "environment_overrides": {
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PYTHONHASHSEED": "0"
+  },
+  "git_commit": "dccafe1204359282cf32ded23d8ea5bf7d2af9ee",
+  "git_dirty": " M tasks/todo.md\n?? data/availability_recipes/\n?? experiments/2026-10-23_0037_codex_mapp-run-repeatability/\n?? experiments/agents/codex/plans/full-ic50-fitting.md\n?? experiments/agents/codex/plans/mapp-run-repeatability.md\n?? tasks/modular_model/trajectory-sampling-issue.md\n",
+  "lambdas": [
+    0.0,
+    0.001,
+    0.01,
+    0.1,
+    1.0
+  ],
+  "learning_rate": 0.03,
+  "numpy": "2.5.4",
+  "optimizer": "Adam",
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "pretraining": null,
+  "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "recipe_manifest_sha256": "df78d02f8200809c659e43adfae29866c48b712122b740379106994622f4ac80",
+  "source_hashes": {
+    "composition_metrics.py": "13c10e8f65a11851878add13302a5c5bde2eef0b256562a39ec7322061d4aa01",
+    "features.py": "f1b8e2c0a0fa9e571bac7b351f890f33aa27e7d5ed07c3accc5a70de19c99b0b",
+    "fit_linear.py": "bf2388677667788048fdd157fc2a3fe6866a0ef472d81b7eaf57ce40f6abc2b0"
+  },
+  "stage_b_plan_sha256": "87e9a2cb6b77e21be0bf251d47fdd66d8e257f4e8853adb0174a05714817d74a",
+  "threads": 1,
+  "torch": "2.14.1",
+  "updates": 1000
+}

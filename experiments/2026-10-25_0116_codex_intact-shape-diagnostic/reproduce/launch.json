@@ -1,0 +1,43 @@
+{
+  "registered_utc": "2026-10-25T01:14:45.323701+00:00",
+  "agent": "Codex",
+  "model": "GPT-6",
+  "presto_commit": "3ab625edce9ceb6aed9d94ee104306dcf84e248c",
+  "tracked_dirty_status": " M experiments/experiment_log.md\n M experiments/model_to_beat.md\n M tasks/todo.md\n",
+  "prior_family": "/private/tmp/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast",
+  "inputs": {
+    "/private/tmp/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/data/train/covariates.parquet": "5ca7dedbdbbae542506c451717140a1d5a365d676b46e270f08983bf8d755214",
+    "/private/tmp/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/data/train/outcomes.parquet": "538c9a0100adf243901aee67b4567c555d709e122768b6a997eccdb808f23c10",
+    "/private/tmp/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/code/model.py": "3823a48e22adba2cd6906272a47f2ac1844656d713c58957a4b43c706eb35a83",
+    "/private/tmp/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/fits/fit-uniform-exact-0-42/checkpoints.npz": "63149a958f566542fbf629e875b024300f0547c6bbf2d52410d85e64ee39defb",
+    "/private/tmp/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/fits/fit-uniform-exact-0-42/summary.json": "67538d50e21132ef5e450d621a4f2b6cf90754b042644a79365d81fc8e77aaed",
+    "/private/tmp/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/fits/fit-residue-exact-0-42/checkpoints.npz": "ef868d4ce5135f7177cf8f410967ad85c4a20291e7dc0ab7ff0c59e619fea25b",
+    "/private/tmp/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/fits/fit-residue-exact-0-42/summary.json": "2b4bc510e467904417f44955bddd26a94580641dbfa58df333e4f098fc266361"
+  },
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "python_version": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "environment_overrides": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "limits": {
+    "free_disk_floor_bytes": 1073741824,
+    "rss_bytes": 3221225472,
+    "stage_seconds": 1200,
+    "new_logical_bytes": 33554432
+  },
+  "stages": [
+    "diagnose",
+    "replay",
+    "closure"
+  ],
+  "commands": [
+    "sh reproduce/launch.sh diagnose",
+    "sh reproduce/launch.sh replay",
+    "sh reproduce/launch.sh closure"
+  ],
+  "heldout_outcomes_authorized": false,
+  "primary_scope": "training_only_shape_and_optimizer_diagnosis"
+}

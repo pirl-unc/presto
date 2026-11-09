@@ -1,0 +1,4 @@
+#!/bin/sh
+set -eu
+export OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MPLBACKEND=Agg
+exec /Users/iskander/code/shared-virtual-env/bin/python -B "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0711_codex_native-acquisition-sensitivity/analysis/report.py"

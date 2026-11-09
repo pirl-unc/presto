@@ -1,0 +1,39 @@
+{
+  "requested_url": "https://pmc-oa-opendata.s3.amazonaws.com/README.txt",
+  "started_at": "2026-10-24T10:07:39.744453+00:00",
+  "command": [
+    "experiments/2026-10-24_0602_codex_dc-machinery-admission/code/launch.py",
+    "pmc-cloud-readme",
+    "https://pmc-oa-opendata.s3.amazonaws.com/README.txt"
+  ],
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "presto_head": "c7d538cfc64f2295e70c2bf693e333f08d1f34b6",
+  "launcher_sha256": "86c54f88a4c9edc743467e5a9acc2fd49d9fcdf57786562ac2f3b24a28eb1e4d",
+  "body_path": "/private/tmp/presto-modular-model/data/dc_machinery_source_admission/2026-10-24_0602_codex_dc-machinery-admission/retrieval/pmc-cloud-readme/body",
+  "purpose": "source-discovery-only; not a curated training observation",
+  "status_code": 200,
+  "final_url": "https://pmc-oa-opendata.s3.amazonaws.com/README.txt",
+  "content_type": "text/plain",
+  "response_headers": {
+    "x-amz-id-2": "Z0I8ldQYJ0iqwrbWhebZfJX4xAdRyyUsZobUNfO6LdvxJzlXuS6fwE6nLKYN2OOQ6Yb01g0zCg3SRhXKtU37h0MVQSYv9CTC",
+    "x-amz-request-id": "5QWPBNKH5JX7Y5S5",
+    "Server": "AmazonS3",
+    "Date": "Sat, 24 Oct 2026 10:07:41 GMT",
+    "Last-Modified": "Tue, 01 Sep 2026 11:05:21 GMT",
+    "ETag": "\"21882f479527d57cebddbfcceadf305d\"",
+    "x-amz-server-side-encryption": "AES256",
+    "Accept-Ranges": "bytes",
+    "Content-Type": "text/plain",
+    "Content-Length": "14524"
+  },
+  "redirects": [],
+  "n_bytes": 14524,
+  "sha256": "257a001b400485176702ed49ca7607d73cd83c581bffb6dd3c9be127a2e42634",
+  "elapsed_seconds": 0.5268790840054862
+}

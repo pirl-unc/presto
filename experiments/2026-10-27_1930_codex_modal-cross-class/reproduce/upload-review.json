@@ -1,0 +1,2319 @@
+{
+  "destination": "Modal account iskandr; app presto-cross-class-20261027",
+  "purpose": "ten fixed 1000-update H100 benchmark jobs, maximum two simultaneous GPU workers",
+  "source_files": 566,
+  "input_files": [
+    {
+      "path": "inputs/joint-validation.jsonl",
+      "bytes": 13436812,
+      "sha256": "12b88ebf0573e98b434f20e1a5fa8645128d5a14b05dfda3985ef57440d1719b"
+    },
+    {
+      "path": "inputs/joint-train.jsonl",
+      "bytes": 99312103,
+      "sha256": "79e44788883a4668fb790191e2079b46bb28e3ea06314e75ace3aa25c65b096c"
+    },
+    {
+      "path": "inputs/joint-test.jsonl",
+      "bytes": 12860441,
+      "sha256": "0ade7b1ed2436bcdc9fd145831a1718db36c00056321b9815cad418c293fbd75"
+    }
+  ],
+  "total_staged_bytes": 135393411,
+  "included": "three frozen Presto source snapshots, normalized human purified IC50 train/validation/test observations and source/hash metadata; worker launcher is staged separately",
+  "files": [
+    {
+      "path": "source-pins.json",
+      "bytes": 99468
+    },
+    {
+      "path": "inputs/joint-validation.jsonl",
+      "bytes": 13436812
+    },
+    {
+      "path": "inputs/joint-train.jsonl",
+      "bytes": 99312103
+    },
+    {
+      "path": "inputs/joint-test.jsonl",
+      "bytes": 12860441
+    },
+    {
+      "path": "runtimes/full/presto/pyproject.toml",
+      "bytes": 3166
+    },
+    {
+      "path": "runtimes/full/presto/__init__.py",
+      "bytes": 123
+    },
+    {
+      "path": "runtimes/full/presto/README.md",
+      "bytes": 4667
+    },
+    {
+      "path": "runtimes/full/presto/__main__.py",
+      "bytes": 135
+    },
+    {
+      "path": "runtimes/full/presto/training/data_support.py",
+      "bytes": 23508
+    },
+    {
+      "path": "runtimes/full/presto/training/output_contract.py",
+      "bytes": 25397
+    },
+    {
+      "path": "runtimes/full/presto/training/supported_outputs.py",
+      "bytes": 10056
+    },
+    {
+      "path": "runtimes/full/presto/training/coverage_preflight.py",
+      "bytes": 4193
+    },
+    {
+      "path": "runtimes/full/presto/training/tasks.py",
+      "bytes": 33521
+    },
+    {
+      "path": "runtimes/full/presto/training/modular_run.py",
+      "bytes": 44028
+    },
+    {
+      "path": "runtimes/full/presto/training/config.py",
+      "bytes": 5024
+    },
+    {
+      "path": "runtimes/full/presto/training/config_io.py",
+      "bytes": 3366
+    },
+    {
+      "path": "runtimes/full/presto/training/evaluation_ledger.py",
+      "bytes": 9339
+    },
+    {
+      "path": "runtimes/full/presto/training/mil.py",
+      "bytes": 14252
+    },
+    {
+      "path": "runtimes/full/presto/training/__init__.py",
+      "bytes": 440
+    },
+    {
+      "path": "runtimes/full/presto/training/modular_resume.py",
+      "bytes": 9703
+    },
+    {
+      "path": "runtimes/full/presto/training/run_logger.py",
+      "bytes": 1458
+    },
+    {
+      "path": "runtimes/full/presto/training/supervision.py",
+      "bytes": 31841
+    },
+    {
+      "path": "runtimes/full/presto/training/output_updates.py",
+      "bytes": 17504
+    },
+    {
+      "path": "runtimes/full/presto/training/modular_evaluation.py",
+      "bytes": 9782
+    },
+    {
+      "path": "runtimes/full/presto/training/holdout_eval.py",
+      "bytes": 48127
+    },
+    {
+      "path": "runtimes/full/presto/training/output_coverage.py",
+      "bytes": 27695
+    },
+    {
+      "path": "runtimes/full/presto/training/losses.py",
+      "bytes": 7283
+    },
+    {
+      "path": "runtimes/full/presto/training/trainer.py",
+      "bytes": 684
+    },
+    {
+      "path": "runtimes/full/presto/training/modular.py",
+      "bytes": 23493
+    },
+    {
+      "path": "runtimes/full/presto/training/target_policy.py",
+      "bytes": 9887
+    },
+    {
+      "path": "runtimes/full/presto/training/checkpointing.py",
+      "bytes": 11059
+    },
+    {
+      "path": "runtimes/full/presto/legacy/pcgrad.py",
+      "bytes": 2553
+    },
+    {
+      "path": "runtimes/full/presto/legacy/__init__.py",
+      "bytes": 152
+    },
+    {
+      "path": "runtimes/full/presto/legacy/modular_v2.py",
+      "bytes": 51332
+    },
+    {
+      "path": "runtimes/full/presto/legacy/modular_support_v2.py",
+      "bytes": 7465
+    },
+    {
+      "path": "runtimes/full/presto/legacy/presto.py",
+      "bytes": 173111
+    },
+    {
+      "path": "runtimes/full/presto/legacy/training_sources.py",
+      "bytes": 3246
+    },
+    {
+      "path": "runtimes/full/presto/legacy/trainer.py",
+      "bytes": 13639
+    },
+    {
+      "path": "runtimes/full/presto/legacy/tcr_specificity.py",
+      "bytes": 8508
+    },
+    {
+      "path": "runtimes/full/presto/models/modular_support.py",
+      "bytes": 7442
+    },
+    {
+      "path": "runtimes/full/presto/models/pmhc.py",
+      "bytes": 34550
+    },
+    {
+      "path": "runtimes/full/presto/models/independent_cut.py",
+      "bytes": 5005
+    },
+    {
+      "path": "runtimes/full/presto/models/affinity.py",
+      "bytes": 8427
+    },
+    {
+      "path": "runtimes/full/presto/models/__init__.py",
+      "bytes": 812
+    },
+    {
+      "path": "runtimes/full/presto/models/encoders.py",
+      "bytes": 6381
+    },
+    {
+      "path": "runtimes/full/presto/models/steady_processing.py",
+      "bytes": 4350
+    },
+    {
+      "path": "runtimes/full/presto/models/presto_modules.py",
+      "bytes": 23742
+    },
+    {
+      "path": "runtimes/full/presto/models/presto.py",
+      "bytes": 52070
+    },
+    {
+      "path": "runtimes/full/presto/models/fragment_state.py",
+      "bytes": 11621
+    },
+    {
+      "path": "runtimes/full/presto/models/modular.py",
+      "bytes": 429
+    },
+    {
+      "path": "runtimes/full/presto/models/modular_dependencies.py",
+      "bytes": 4945
+    },
+    {
+      "path": "runtimes/full/presto/models/tcr_specificity.py",
+      "bytes": 683
+    },
+    {
+      "path": "runtimes/full/presto/models/n_terminal_trimming.py",
+      "bytes": 6984
+    },
+    {
+      "path": "runtimes/full/presto/models/heads.py",
+      "bytes": 80566
+    },
+    {
+      "path": "runtimes/full/presto/models/substrate_entry.py",
+      "bytes": 5735
+    },
+    {
+      "path": "runtimes/full/presto/models/peptide_availability.py",
+      "bytes": 10771
+    },
+    {
+      "path": "runtimes/full/presto/cli/predict.py",
+      "bytes": 5213
+    },
+    {
+      "path": "runtimes/full/presto/cli/__init__.py",
+      "bytes": 81
+    },
+    {
+      "path": "runtimes/full/presto/cli/train.py",
+      "bytes": 926
+    },
+    {
+      "path": "runtimes/full/presto/cli/evaluate.py",
+      "bytes": 5532
+    },
+    {
+      "path": "runtimes/full/presto/cli/training_sources.py",
+      "bytes": 1131
+    },
+    {
+      "path": "runtimes/full/presto/cli/main.py",
+      "bytes": 33277
+    },
+    {
+      "path": "runtimes/full/presto/cli/weights.py",
+      "bytes": 7145
+    },
+    {
+      "path": "runtimes/full/presto/cli/data.py",
+      "bytes": 32697
+    },
+    {
+      "path": "runtimes/full/presto/scripts/focused_binding_probe.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/experiment_registry.py",
+      "bytes": 8522
+    },
+    {
+      "path": "runtimes/full/presto/scripts/train_modal.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/train_remote.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/benchmark_broad_frontier_5ep.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/benchmark_lr_schedule_bakeoff.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/benchmark_positional_composition.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/train_synthetic.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/probe_training.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/audit_mhc_groove.py",
+      "bytes": 16810
+    },
+    {
+      "path": "runtimes/full/presto/scripts/benchmark_directness_designs.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/train_iedb.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/assay_ablation_probe.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/sweep_20m_models.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/benchmark_distributional_ba_heads_v3.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/benchmark_runtime_variants.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/benchmark_design_round3.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/benchmark_lr_stability_7allele.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/benchmark_binding_latents.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/pretrain_mhc_encoder.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/benchmark_h100_batchsize.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/benchmark_design_round2.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/__init__.py",
+      "bytes": 22
+    },
+    {
+      "path": "runtimes/full/presto/scripts/benchmark_register_designs.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/benchmark_assay_head_bakeoff.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/aggregate_summary_runs.py",
+      "bytes": 10273
+    },
+    {
+      "path": "runtimes/full/presto/scripts/collect_modal_runs.py",
+      "bytes": 36680
+    },
+    {
+      "path": "runtimes/full/presto/scripts/benchmark_distributional_ba_heads_v2.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/benchmark_presto_bakeoff.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/benchmark_runtime_multiallele.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/train_class1.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/benchmark_hardware_generalization.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/benchmark_distributional_ba_heads_v4.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/fetch_experiment_modal_runs.py",
+      "bytes": 6230
+    },
+    {
+      "path": "runtimes/full/presto/scripts/benchmark_distributional_ba_heads.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/check_wheel.py",
+      "bytes": 3675
+    },
+    {
+      "path": "runtimes/full/presto/scripts/benchmark_factorized_multioutput.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/sanity_check_modal.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/benchmark_factorized_ablation.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/groove_baseline_probe.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/benchmark_target_space_bakeoff.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/benchmark_assay_ablation.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/scripts/benchmark_modal_hardware.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/full/presto/data/hitlist_source.py",
+      "bytes": 63562
+    },
+    {
+      "path": "runtimes/full/presto/data/flank_selection.py",
+      "bytes": 12971
+    },
+    {
+      "path": "runtimes/full/presto/data/modular_auxiliary.py",
+      "bytes": 6698
+    },
+    {
+      "path": "runtimes/full/presto/data/scoped_partitions.py",
+      "bytes": 15162
+    },
+    {
+      "path": "runtimes/full/presto/data/collate.py",
+      "bytes": 96127
+    },
+    {
+      "path": "runtimes/full/presto/data/vocab.py",
+      "bytes": 57150
+    },
+    {
+      "path": "runtimes/full/presto/data/scoped_bulk.py",
+      "bytes": 20715
+    },
+    {
+      "path": "runtimes/full/presto/data/modular_ordinal.py",
+      "bytes": 1965
+    },
+    {
+      "path": "runtimes/full/presto/data/modular_quantitative.py",
+      "bytes": 3370
+    },
+    {
+      "path": "runtimes/full/presto/data/modular_reference.py",
+      "bytes": 11478
+    },
+    {
+      "path": "runtimes/full/presto/data/loaders.py",
+      "bytes": 188313
+    },
+    {
+      "path": "runtimes/full/presto/data/modular_preparation.py",
+      "bytes": 11470
+    },
+    {
+      "path": "runtimes/full/presto/data/__init__.py",
+      "bytes": 4253
+    },
+    {
+      "path": "runtimes/full/presto/data/modular_sources.py",
+      "bytes": 17205
+    },
+    {
+      "path": "runtimes/full/presto/data/modular_context.py",
+      "bytes": 11369
+    },
+    {
+      "path": "runtimes/full/presto/data/modular_hitlist.py",
+      "bytes": 10897
+    },
+    {
+      "path": "runtimes/full/presto/data/tokenizer.py",
+      "bytes": 7047
+    },
+    {
+      "path": "runtimes/full/presto/data/label_provenance.py",
+      "bytes": 1585
+    },
+    {
+      "path": "runtimes/full/presto/data/b2m_sequences.csv",
+      "bytes": 1497
+    },
+    {
+      "path": "runtimes/full/presto/data/mouse_mhc_overlay.py",
+      "bytes": 15111
+    },
+    {
+      "path": "runtimes/full/presto/data/downloaders.py",
+      "bytes": 52690
+    },
+    {
+      "path": "runtimes/full/presto/data/bulk_ms.py",
+      "bytes": 13643
+    },
+    {
+      "path": "runtimes/full/presto/data/modular_lineage.py",
+      "bytes": 3429
+    },
+    {
+      "path": "runtimes/full/presto/data/assay_context.py",
+      "bytes": 3759
+    },
+    {
+      "path": "runtimes/full/presto/data/allele_resolver.py",
+      "bytes": 31359
+    },
+    {
+      "path": "runtimes/full/presto/data/modular.py",
+      "bytes": 23144
+    },
+    {
+      "path": "runtimes/full/presto/data/assay_types.py",
+      "bytes": 3859
+    },
+    {
+      "path": "runtimes/full/presto/data/frozen_partitions.py",
+      "bytes": 25848
+    },
+    {
+      "path": "runtimes/full/presto/data/cross_source_dedup.py",
+      "bytes": 98123
+    },
+    {
+      "path": "runtimes/full/presto/data/sequence_augmentation.py",
+      "bytes": 5024
+    },
+    {
+      "path": "runtimes/full/presto/data/groove.py",
+      "bytes": 8778
+    },
+    {
+      "path": "runtimes/full/presto/data/source_lineage.py",
+      "bytes": 6714
+    },
+    {
+      "path": "runtimes/full/presto/data/species_context.py",
+      "bytes": 4959
+    },
+    {
+      "path": "runtimes/full/presto/data/tcr_specificity.py",
+      "bytes": 4105
+    },
+    {
+      "path": "runtimes/full/presto/data/mhc_index.py",
+      "bytes": 51739
+    },
+    {
+      "path": "runtimes/full/presto/data/modular_hitlist_ms.py",
+      "bytes": 8778
+    },
+    {
+      "path": "runtimes/full/presto/data/mhc_sequence_resolver.py",
+      "bytes": 11553
+    },
+    {
+      "path": "runtimes/full/presto/data/frozen_hitlist.py",
+      "bytes": 9760
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/focused_binding_probe.py",
+      "bytes": 193098
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/train_modal.py",
+      "bytes": 59680
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/train_remote.py",
+      "bytes": 12814
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/benchmark_broad_frontier_5ep.py",
+      "bytes": 20795
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/benchmark_lr_schedule_bakeoff.py",
+      "bytes": 10692
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/benchmark_positional_composition.py",
+      "bytes": 13623
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/train_synthetic.py",
+      "bytes": 88418
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/probe_training.py",
+      "bytes": 21455
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/benchmark_directness_designs.py",
+      "bytes": 10100
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/train_iedb.py",
+      "bytes": 283518
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/assay_ablation_probe.py",
+      "bytes": 39863
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/sweep_20m_models.py",
+      "bytes": 24011
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/benchmark_distributional_ba_heads_v3.py",
+      "bytes": 7260
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/benchmark_runtime_variants.py",
+      "bytes": 8149
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/benchmark_design_round3.py",
+      "bytes": 12102
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/benchmark_lr_stability_7allele.py",
+      "bytes": 13131
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/benchmark_binding_latents.py",
+      "bytes": 15989
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/pretrain_mhc_encoder.py",
+      "bytes": 22444
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/benchmark_h100_batchsize.py",
+      "bytes": 8612
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/benchmark_design_round2.py",
+      "bytes": 11682
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/__init__.py",
+      "bytes": 80
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/benchmark_register_designs.py",
+      "bytes": 21086
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/benchmark_assay_head_bakeoff.py",
+      "bytes": 12981
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/benchmark_distributional_ba_heads_v2.py",
+      "bytes": 7418
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/benchmark_presto_bakeoff.py",
+      "bytes": 10739
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/benchmark_runtime_multiallele.py",
+      "bytes": 18503
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/train_class1.py",
+      "bytes": 9850
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/benchmark_hardware_generalization.py",
+      "bytes": 10875
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/benchmark_distributional_ba_heads_v4.py",
+      "bytes": 7220
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/benchmark_distributional_ba_heads.py",
+      "bytes": 7286
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/benchmark_factorized_multioutput.py",
+      "bytes": 7140
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/sanity_check_modal.py",
+      "bytes": 12619
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/benchmark_factorized_ablation.py",
+      "bytes": 14706
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/groove_baseline_probe.py",
+      "bytes": 51021
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/benchmark_target_space_bakeoff.py",
+      "bytes": 10746
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/benchmark_assay_ablation.py",
+      "bytes": 7942
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/benchmark_modal_hardware.py",
+      "bytes": 8776
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/distributional_ba/assay_combos.py",
+      "bytes": 9552
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/distributional_ba/metrics.py",
+      "bytes": 7370
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/distributional_ba/config.py",
+      "bytes": 9481
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/distributional_ba/config_v5.py",
+      "bytes": 1303
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/distributional_ba/__init__.py",
+      "bytes": 81
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/distributional_ba/encoders.py",
+      "bytes": 3053
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/distributional_ba/config_v4.py",
+      "bytes": 1084
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/distributional_ba/config_v3.py",
+      "bytes": 1171
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/distributional_ba/config_v6.py",
+      "bytes": 1638
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/distributional_ba/pretrain_mhc.py",
+      "bytes": 10242
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/distributional_ba/train.py",
+      "bytes": 20466
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/distributional_ba/config_v2.py",
+      "bytes": 2385
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/distributional_ba/evaluate.py",
+      "bytes": 6866
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/distributional_ba/losses.py",
+      "bytes": 9967
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/distributional_ba/assay_context.py",
+      "bytes": 5564
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/distributional_ba/heads/regression.py",
+      "bytes": 5258
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/distributional_ba/heads/quantile.py",
+      "bytes": 4578
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/distributional_ba/heads/hlgauss.py",
+      "bytes": 2165
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/distributional_ba/heads/__init__.py",
+      "bytes": 648
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/distributional_ba/heads/distributional.py",
+      "bytes": 6513
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/distributional_ba/heads/twohot.py",
+      "bytes": 2884
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/distributional_ba/heads/base.py",
+      "bytes": 2362
+    },
+    {
+      "path": "runtimes/full/presto/legacy/scripts/distributional_ba/heads/gaussian.py",
+      "bytes": 4716
+    },
+    {
+      "path": "runtimes/full/presto/scripts/distributional_ba/__init__.py",
+      "bytes": 74
+    },
+    {
+      "path": "runtimes/full/presto/scripts/distributional_ba/pretrain_mhc.py",
+      "bytes": 180
+    },
+    {
+      "path": "runtimes/full/presto/scripts/distributional_ba/train.py",
+      "bytes": 180
+    },
+    {
+      "path": "runtimes/three_aa/presto/pyproject.toml",
+      "bytes": 3068
+    },
+    {
+      "path": "runtimes/three_aa/presto/__init__.py",
+      "bytes": 123
+    },
+    {
+      "path": "runtimes/three_aa/presto/README.md",
+      "bytes": 5769
+    },
+    {
+      "path": "runtimes/three_aa/presto/__main__.py",
+      "bytes": 135
+    },
+    {
+      "path": "runtimes/three_aa/presto/training/data_support.py",
+      "bytes": 23508
+    },
+    {
+      "path": "runtimes/three_aa/presto/training/output_contract.py",
+      "bytes": 25397
+    },
+    {
+      "path": "runtimes/three_aa/presto/training/supported_outputs.py",
+      "bytes": 10056
+    },
+    {
+      "path": "runtimes/three_aa/presto/training/coverage_preflight.py",
+      "bytes": 4193
+    },
+    {
+      "path": "runtimes/three_aa/presto/training/tasks.py",
+      "bytes": 33521
+    },
+    {
+      "path": "runtimes/three_aa/presto/training/modular_run.py",
+      "bytes": 44028
+    },
+    {
+      "path": "runtimes/three_aa/presto/training/config.py",
+      "bytes": 5024
+    },
+    {
+      "path": "runtimes/three_aa/presto/training/config_io.py",
+      "bytes": 3366
+    },
+    {
+      "path": "runtimes/three_aa/presto/training/evaluation_ledger.py",
+      "bytes": 9339
+    },
+    {
+      "path": "runtimes/three_aa/presto/training/mil.py",
+      "bytes": 14252
+    },
+    {
+      "path": "runtimes/three_aa/presto/training/__init__.py",
+      "bytes": 1453
+    },
+    {
+      "path": "runtimes/three_aa/presto/training/modular_resume.py",
+      "bytes": 9601
+    },
+    {
+      "path": "runtimes/three_aa/presto/training/run_logger.py",
+      "bytes": 1458
+    },
+    {
+      "path": "runtimes/three_aa/presto/training/supervision.py",
+      "bytes": 31841
+    },
+    {
+      "path": "runtimes/three_aa/presto/training/output_updates.py",
+      "bytes": 17504
+    },
+    {
+      "path": "runtimes/three_aa/presto/training/modular_evaluation.py",
+      "bytes": 9782
+    },
+    {
+      "path": "runtimes/three_aa/presto/training/holdout_eval.py",
+      "bytes": 48127
+    },
+    {
+      "path": "runtimes/three_aa/presto/training/output_coverage.py",
+      "bytes": 27695
+    },
+    {
+      "path": "runtimes/three_aa/presto/training/losses.py",
+      "bytes": 9720
+    },
+    {
+      "path": "runtimes/three_aa/presto/training/trainer.py",
+      "bytes": 13592
+    },
+    {
+      "path": "runtimes/three_aa/presto/training/modular.py",
+      "bytes": 22615
+    },
+    {
+      "path": "runtimes/three_aa/presto/training/target_policy.py",
+      "bytes": 9887
+    },
+    {
+      "path": "runtimes/three_aa/presto/training/checkpointing.py",
+      "bytes": 10883
+    },
+    {
+      "path": "runtimes/three_aa/presto/models/modular_support.py",
+      "bytes": 7465
+    },
+    {
+      "path": "runtimes/three_aa/presto/models/pmhc.py",
+      "bytes": 34550
+    },
+    {
+      "path": "runtimes/three_aa/presto/models/independent_cut.py",
+      "bytes": 5005
+    },
+    {
+      "path": "runtimes/three_aa/presto/models/affinity.py",
+      "bytes": 8427
+    },
+    {
+      "path": "runtimes/three_aa/presto/models/__init__.py",
+      "bytes": 873
+    },
+    {
+      "path": "runtimes/three_aa/presto/models/encoders.py",
+      "bytes": 6381
+    },
+    {
+      "path": "runtimes/three_aa/presto/models/steady_processing.py",
+      "bytes": 4350
+    },
+    {
+      "path": "runtimes/three_aa/presto/models/presto_modules.py",
+      "bytes": 23742
+    },
+    {
+      "path": "runtimes/three_aa/presto/models/presto.py",
+      "bytes": 172975
+    },
+    {
+      "path": "runtimes/three_aa/presto/models/fragment_state.py",
+      "bytes": 11621
+    },
+    {
+      "path": "runtimes/three_aa/presto/models/modular.py",
+      "bytes": 51313
+    },
+    {
+      "path": "runtimes/three_aa/presto/models/modular_dependencies.py",
+      "bytes": 4945
+    },
+    {
+      "path": "runtimes/three_aa/presto/models/tcr_specificity.py",
+      "bytes": 8476
+    },
+    {
+      "path": "runtimes/three_aa/presto/models/n_terminal_trimming.py",
+      "bytes": 6984
+    },
+    {
+      "path": "runtimes/three_aa/presto/models/heads.py",
+      "bytes": 80566
+    },
+    {
+      "path": "runtimes/three_aa/presto/models/substrate_entry.py",
+      "bytes": 5735
+    },
+    {
+      "path": "runtimes/three_aa/presto/models/peptide_availability.py",
+      "bytes": 10771
+    },
+    {
+      "path": "runtimes/three_aa/presto/cli/predict.py",
+      "bytes": 5213
+    },
+    {
+      "path": "runtimes/three_aa/presto/cli/__init__.py",
+      "bytes": 81
+    },
+    {
+      "path": "runtimes/three_aa/presto/cli/train.py",
+      "bytes": 503
+    },
+    {
+      "path": "runtimes/three_aa/presto/cli/evaluate.py",
+      "bytes": 5525
+    },
+    {
+      "path": "runtimes/three_aa/presto/cli/training_sources.py",
+      "bytes": 3254
+    },
+    {
+      "path": "runtimes/three_aa/presto/cli/main.py",
+      "bytes": 64985
+    },
+    {
+      "path": "runtimes/three_aa/presto/cli/weights.py",
+      "bytes": 7145
+    },
+    {
+      "path": "runtimes/three_aa/presto/cli/data.py",
+      "bytes": 32697
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/focused_binding_probe.py",
+      "bytes": 192940
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/experiment_registry.py",
+      "bytes": 8522
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/train_modal.py",
+      "bytes": 59582
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/train_remote.py",
+      "bytes": 12814
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/benchmark_broad_frontier_5ep.py",
+      "bytes": 20658
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/benchmark_lr_schedule_bakeoff.py",
+      "bytes": 10555
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/benchmark_positional_composition.py",
+      "bytes": 13486
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/train_synthetic.py",
+      "bytes": 88276
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/probe_training.py",
+      "bytes": 21304
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/audit_mhc_groove.py",
+      "bytes": 16810
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/benchmark_directness_designs.py",
+      "bytes": 9963
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/train_iedb.py",
+      "bytes": 283328
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/assay_ablation_probe.py",
+      "bytes": 39705
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/sweep_20m_models.py",
+      "bytes": 23867
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/benchmark_distributional_ba_heads_v3.py",
+      "bytes": 7116
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/benchmark_runtime_variants.py",
+      "bytes": 8012
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/benchmark_design_round3.py",
+      "bytes": 11965
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/benchmark_lr_stability_7allele.py",
+      "bytes": 12994
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/benchmark_binding_latents.py",
+      "bytes": 15845
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/pretrain_mhc_encoder.py",
+      "bytes": 22307
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/benchmark_h100_batchsize.py",
+      "bytes": 8475
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/benchmark_design_round2.py",
+      "bytes": 11545
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/__init__.py",
+      "bytes": 22
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/benchmark_register_designs.py",
+      "bytes": 20949
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/benchmark_assay_head_bakeoff.py",
+      "bytes": 12844
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/aggregate_summary_runs.py",
+      "bytes": 10273
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/collect_modal_runs.py",
+      "bytes": 36680
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/benchmark_distributional_ba_heads_v2.py",
+      "bytes": 7274
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/benchmark_presto_bakeoff.py",
+      "bytes": 10602
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/benchmark_runtime_multiallele.py",
+      "bytes": 18366
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/train_class1.py",
+      "bytes": 9713
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/benchmark_hardware_generalization.py",
+      "bytes": 10738
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/benchmark_distributional_ba_heads_v4.py",
+      "bytes": 7076
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/fetch_experiment_modal_runs.py",
+      "bytes": 6230
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/benchmark_distributional_ba_heads.py",
+      "bytes": 7142
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/check_wheel.py",
+      "bytes": 3675
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/benchmark_factorized_multioutput.py",
+      "bytes": 7003
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/sanity_check_modal.py",
+      "bytes": 12612
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/benchmark_factorized_ablation.py",
+      "bytes": 14569
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/groove_baseline_probe.py",
+      "bytes": 50870
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/benchmark_target_space_bakeoff.py",
+      "bytes": 10609
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/benchmark_assay_ablation.py",
+      "bytes": 7805
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/benchmark_modal_hardware.py",
+      "bytes": 8639
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/hitlist_source.py",
+      "bytes": 63562
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/flank_selection.py",
+      "bytes": 12971
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/modular_auxiliary.py",
+      "bytes": 6698
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/scoped_partitions.py",
+      "bytes": 15162
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/collate.py",
+      "bytes": 96127
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/vocab.py",
+      "bytes": 57150
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/scoped_bulk.py",
+      "bytes": 20715
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/modular_ordinal.py",
+      "bytes": 1965
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/modular_quantitative.py",
+      "bytes": 3370
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/modular_reference.py",
+      "bytes": 11478
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/loaders.py",
+      "bytes": 188313
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/modular_preparation.py",
+      "bytes": 11470
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/__init__.py",
+      "bytes": 4253
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/modular_sources.py",
+      "bytes": 17205
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/modular_context.py",
+      "bytes": 11369
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/modular_hitlist.py",
+      "bytes": 10897
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/tokenizer.py",
+      "bytes": 7047
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/label_provenance.py",
+      "bytes": 1585
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/b2m_sequences.csv",
+      "bytes": 1497
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/mouse_mhc_overlay.py",
+      "bytes": 15111
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/downloaders.py",
+      "bytes": 52690
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/bulk_ms.py",
+      "bytes": 13643
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/modular_lineage.py",
+      "bytes": 3429
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/assay_context.py",
+      "bytes": 3759
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/allele_resolver.py",
+      "bytes": 31359
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/modular.py",
+      "bytes": 23144
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/assay_types.py",
+      "bytes": 3859
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/frozen_partitions.py",
+      "bytes": 25848
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/cross_source_dedup.py",
+      "bytes": 98123
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/sequence_augmentation.py",
+      "bytes": 5024
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/groove.py",
+      "bytes": 8778
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/source_lineage.py",
+      "bytes": 6714
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/species_context.py",
+      "bytes": 4959
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/tcr_specificity.py",
+      "bytes": 4105
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/mhc_index.py",
+      "bytes": 51739
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/modular_hitlist_ms.py",
+      "bytes": 8778
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/mhc_sequence_resolver.py",
+      "bytes": 11553
+    },
+    {
+      "path": "runtimes/three_aa/presto/data/frozen_hitlist.py",
+      "bytes": 9760
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/distributional_ba/assay_combos.py",
+      "bytes": 9552
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/distributional_ba/metrics.py",
+      "bytes": 7370
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/distributional_ba/config.py",
+      "bytes": 9481
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/distributional_ba/config_v5.py",
+      "bytes": 1303
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/distributional_ba/__init__.py",
+      "bytes": 81
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/distributional_ba/encoders.py",
+      "bytes": 3046
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/distributional_ba/config_v4.py",
+      "bytes": 1084
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/distributional_ba/config_v3.py",
+      "bytes": 1171
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/distributional_ba/config_v6.py",
+      "bytes": 1638
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/distributional_ba/pretrain_mhc.py",
+      "bytes": 10091
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/distributional_ba/train.py",
+      "bytes": 20308
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/distributional_ba/config_v2.py",
+      "bytes": 2385
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/distributional_ba/evaluate.py",
+      "bytes": 6866
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/distributional_ba/losses.py",
+      "bytes": 9967
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/distributional_ba/assay_context.py",
+      "bytes": 5564
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/distributional_ba/heads/regression.py",
+      "bytes": 5258
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/distributional_ba/heads/quantile.py",
+      "bytes": 4578
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/distributional_ba/heads/hlgauss.py",
+      "bytes": 2165
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/distributional_ba/heads/__init__.py",
+      "bytes": 648
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/distributional_ba/heads/distributional.py",
+      "bytes": 6513
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/distributional_ba/heads/twohot.py",
+      "bytes": 2884
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/distributional_ba/heads/base.py",
+      "bytes": 2362
+    },
+    {
+      "path": "runtimes/three_aa/presto/scripts/distributional_ba/heads/gaussian.py",
+      "bytes": 4716
+    },
+    {
+      "path": "runtimes/shared/presto/pyproject.toml",
+      "bytes": 3166
+    },
+    {
+      "path": "runtimes/shared/presto/__init__.py",
+      "bytes": 123
+    },
+    {
+      "path": "runtimes/shared/presto/README.md",
+      "bytes": 4667
+    },
+    {
+      "path": "runtimes/shared/presto/__main__.py",
+      "bytes": 135
+    },
+    {
+      "path": "runtimes/shared/presto/training/data_support.py",
+      "bytes": 23508
+    },
+    {
+      "path": "runtimes/shared/presto/training/output_contract.py",
+      "bytes": 25397
+    },
+    {
+      "path": "runtimes/shared/presto/training/supported_outputs.py",
+      "bytes": 10056
+    },
+    {
+      "path": "runtimes/shared/presto/training/coverage_preflight.py",
+      "bytes": 4193
+    },
+    {
+      "path": "runtimes/shared/presto/training/tasks.py",
+      "bytes": 33521
+    },
+    {
+      "path": "runtimes/shared/presto/training/modular_run.py",
+      "bytes": 43259
+    },
+    {
+      "path": "runtimes/shared/presto/training/config.py",
+      "bytes": 5024
+    },
+    {
+      "path": "runtimes/shared/presto/training/config_io.py",
+      "bytes": 3366
+    },
+    {
+      "path": "runtimes/shared/presto/training/evaluation_ledger.py",
+      "bytes": 9339
+    },
+    {
+      "path": "runtimes/shared/presto/training/mil.py",
+      "bytes": 14252
+    },
+    {
+      "path": "runtimes/shared/presto/training/__init__.py",
+      "bytes": 440
+    },
+    {
+      "path": "runtimes/shared/presto/training/modular_resume.py",
+      "bytes": 9703
+    },
+    {
+      "path": "runtimes/shared/presto/training/run_logger.py",
+      "bytes": 1458
+    },
+    {
+      "path": "runtimes/shared/presto/training/supervision.py",
+      "bytes": 31841
+    },
+    {
+      "path": "runtimes/shared/presto/training/output_updates.py",
+      "bytes": 17504
+    },
+    {
+      "path": "runtimes/shared/presto/training/modular_evaluation.py",
+      "bytes": 9782
+    },
+    {
+      "path": "runtimes/shared/presto/training/holdout_eval.py",
+      "bytes": 48127
+    },
+    {
+      "path": "runtimes/shared/presto/training/output_coverage.py",
+      "bytes": 27695
+    },
+    {
+      "path": "runtimes/shared/presto/training/losses.py",
+      "bytes": 7283
+    },
+    {
+      "path": "runtimes/shared/presto/training/trainer.py",
+      "bytes": 684
+    },
+    {
+      "path": "runtimes/shared/presto/training/modular.py",
+      "bytes": 23777
+    },
+    {
+      "path": "runtimes/shared/presto/training/target_policy.py",
+      "bytes": 9887
+    },
+    {
+      "path": "runtimes/shared/presto/training/checkpointing.py",
+      "bytes": 11059
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/pcgrad.py",
+      "bytes": 2553
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/shared_v3_support.py",
+      "bytes": 7442
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/__init__.py",
+      "bytes": 152
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/modular_v2.py",
+      "bytes": 51332
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/modular_support_v2.py",
+      "bytes": 7465
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/shared_v3.py",
+      "bytes": 52088
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/presto.py",
+      "bytes": 173111
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/training_sources.py",
+      "bytes": 3246
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/trainer.py",
+      "bytes": 13639
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/tcr_specificity.py",
+      "bytes": 8508
+    },
+    {
+      "path": "runtimes/shared/presto/models/modular_support.py",
+      "bytes": 7300
+    },
+    {
+      "path": "runtimes/shared/presto/models/pmhc.py",
+      "bytes": 34550
+    },
+    {
+      "path": "runtimes/shared/presto/models/independent_cut.py",
+      "bytes": 5005
+    },
+    {
+      "path": "runtimes/shared/presto/models/affinity.py",
+      "bytes": 8427
+    },
+    {
+      "path": "runtimes/shared/presto/models/__init__.py",
+      "bytes": 812
+    },
+    {
+      "path": "runtimes/shared/presto/models/encoders.py",
+      "bytes": 6381
+    },
+    {
+      "path": "runtimes/shared/presto/models/steady_processing.py",
+      "bytes": 4350
+    },
+    {
+      "path": "runtimes/shared/presto/models/presto_modules.py",
+      "bytes": 23742
+    },
+    {
+      "path": "runtimes/shared/presto/models/presto.py",
+      "bytes": 52437
+    },
+    {
+      "path": "runtimes/shared/presto/models/fragment_state.py",
+      "bytes": 11621
+    },
+    {
+      "path": "runtimes/shared/presto/models/modular.py",
+      "bytes": 429
+    },
+    {
+      "path": "runtimes/shared/presto/models/modular_dependencies.py",
+      "bytes": 4945
+    },
+    {
+      "path": "runtimes/shared/presto/models/tcr_specificity.py",
+      "bytes": 683
+    },
+    {
+      "path": "runtimes/shared/presto/models/n_terminal_trimming.py",
+      "bytes": 6984
+    },
+    {
+      "path": "runtimes/shared/presto/models/heads.py",
+      "bytes": 80566
+    },
+    {
+      "path": "runtimes/shared/presto/models/substrate_entry.py",
+      "bytes": 5735
+    },
+    {
+      "path": "runtimes/shared/presto/models/peptide_availability.py",
+      "bytes": 10771
+    },
+    {
+      "path": "runtimes/shared/presto/cli/predict.py",
+      "bytes": 5213
+    },
+    {
+      "path": "runtimes/shared/presto/cli/__init__.py",
+      "bytes": 81
+    },
+    {
+      "path": "runtimes/shared/presto/cli/train.py",
+      "bytes": 926
+    },
+    {
+      "path": "runtimes/shared/presto/cli/evaluate.py",
+      "bytes": 5532
+    },
+    {
+      "path": "runtimes/shared/presto/cli/training_sources.py",
+      "bytes": 1131
+    },
+    {
+      "path": "runtimes/shared/presto/cli/main.py",
+      "bytes": 33277
+    },
+    {
+      "path": "runtimes/shared/presto/cli/weights.py",
+      "bytes": 7145
+    },
+    {
+      "path": "runtimes/shared/presto/cli/data.py",
+      "bytes": 32697
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/focused_binding_probe.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/experiment_registry.py",
+      "bytes": 8522
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/train_modal.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/train_remote.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/benchmark_broad_frontier_5ep.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/benchmark_lr_schedule_bakeoff.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/benchmark_positional_composition.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/train_synthetic.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/probe_training.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/audit_mhc_groove.py",
+      "bytes": 16810
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/benchmark_directness_designs.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/train_iedb.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/assay_ablation_probe.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/sweep_20m_models.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/benchmark_distributional_ba_heads_v3.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/benchmark_runtime_variants.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/benchmark_design_round3.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/benchmark_lr_stability_7allele.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/benchmark_binding_latents.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/pretrain_mhc_encoder.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/benchmark_h100_batchsize.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/benchmark_design_round2.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/__init__.py",
+      "bytes": 22
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/benchmark_register_designs.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/benchmark_assay_head_bakeoff.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/aggregate_summary_runs.py",
+      "bytes": 10273
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/collect_modal_runs.py",
+      "bytes": 36680
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/benchmark_distributional_ba_heads_v2.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/benchmark_presto_bakeoff.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/benchmark_runtime_multiallele.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/train_class1.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/benchmark_hardware_generalization.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/benchmark_distributional_ba_heads_v4.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/fetch_experiment_modal_runs.py",
+      "bytes": 6230
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/benchmark_distributional_ba_heads.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/check_wheel.py",
+      "bytes": 3675
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/benchmark_factorized_multioutput.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/sanity_check_modal.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/benchmark_factorized_ablation.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/groove_baseline_probe.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/benchmark_target_space_bakeoff.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/benchmark_assay_ablation.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/benchmark_modal_hardware.py",
+      "bytes": 276
+    },
+    {
+      "path": "runtimes/shared/presto/data/hitlist_source.py",
+      "bytes": 63562
+    },
+    {
+      "path": "runtimes/shared/presto/data/flank_selection.py",
+      "bytes": 12971
+    },
+    {
+      "path": "runtimes/shared/presto/data/modular_auxiliary.py",
+      "bytes": 6698
+    },
+    {
+      "path": "runtimes/shared/presto/data/scoped_partitions.py",
+      "bytes": 15162
+    },
+    {
+      "path": "runtimes/shared/presto/data/collate.py",
+      "bytes": 96127
+    },
+    {
+      "path": "runtimes/shared/presto/data/vocab.py",
+      "bytes": 57150
+    },
+    {
+      "path": "runtimes/shared/presto/data/scoped_bulk.py",
+      "bytes": 20715
+    },
+    {
+      "path": "runtimes/shared/presto/data/modular_ordinal.py",
+      "bytes": 1965
+    },
+    {
+      "path": "runtimes/shared/presto/data/modular_quantitative.py",
+      "bytes": 3370
+    },
+    {
+      "path": "runtimes/shared/presto/data/modular_reference.py",
+      "bytes": 11478
+    },
+    {
+      "path": "runtimes/shared/presto/data/loaders.py",
+      "bytes": 188313
+    },
+    {
+      "path": "runtimes/shared/presto/data/modular_preparation.py",
+      "bytes": 11470
+    },
+    {
+      "path": "runtimes/shared/presto/data/__init__.py",
+      "bytes": 4253
+    },
+    {
+      "path": "runtimes/shared/presto/data/modular_sources.py",
+      "bytes": 17205
+    },
+    {
+      "path": "runtimes/shared/presto/data/modular_context.py",
+      "bytes": 11369
+    },
+    {
+      "path": "runtimes/shared/presto/data/modular_hitlist.py",
+      "bytes": 10897
+    },
+    {
+      "path": "runtimes/shared/presto/data/tokenizer.py",
+      "bytes": 7047
+    },
+    {
+      "path": "runtimes/shared/presto/data/label_provenance.py",
+      "bytes": 1585
+    },
+    {
+      "path": "runtimes/shared/presto/data/b2m_sequences.csv",
+      "bytes": 1497
+    },
+    {
+      "path": "runtimes/shared/presto/data/mouse_mhc_overlay.py",
+      "bytes": 15111
+    },
+    {
+      "path": "runtimes/shared/presto/data/downloaders.py",
+      "bytes": 52690
+    },
+    {
+      "path": "runtimes/shared/presto/data/bulk_ms.py",
+      "bytes": 13643
+    },
+    {
+      "path": "runtimes/shared/presto/data/modular_lineage.py",
+      "bytes": 3429
+    },
+    {
+      "path": "runtimes/shared/presto/data/assay_context.py",
+      "bytes": 3759
+    },
+    {
+      "path": "runtimes/shared/presto/data/allele_resolver.py",
+      "bytes": 31359
+    },
+    {
+      "path": "runtimes/shared/presto/data/modular.py",
+      "bytes": 23314
+    },
+    {
+      "path": "runtimes/shared/presto/data/assay_types.py",
+      "bytes": 3859
+    },
+    {
+      "path": "runtimes/shared/presto/data/frozen_partitions.py",
+      "bytes": 25848
+    },
+    {
+      "path": "runtimes/shared/presto/data/cross_source_dedup.py",
+      "bytes": 98123
+    },
+    {
+      "path": "runtimes/shared/presto/data/sequence_augmentation.py",
+      "bytes": 5024
+    },
+    {
+      "path": "runtimes/shared/presto/data/groove.py",
+      "bytes": 8778
+    },
+    {
+      "path": "runtimes/shared/presto/data/source_lineage.py",
+      "bytes": 6714
+    },
+    {
+      "path": "runtimes/shared/presto/data/species_context.py",
+      "bytes": 4959
+    },
+    {
+      "path": "runtimes/shared/presto/data/tcr_specificity.py",
+      "bytes": 4105
+    },
+    {
+      "path": "runtimes/shared/presto/data/mhc_index.py",
+      "bytes": 51739
+    },
+    {
+      "path": "runtimes/shared/presto/data/modular_hitlist_ms.py",
+      "bytes": 8778
+    },
+    {
+      "path": "runtimes/shared/presto/data/mhc_sequence_resolver.py",
+      "bytes": 11553
+    },
+    {
+      "path": "runtimes/shared/presto/data/frozen_hitlist.py",
+      "bytes": 9760
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/focused_binding_probe.py",
+      "bytes": 193098
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/train_modal.py",
+      "bytes": 59680
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/train_remote.py",
+      "bytes": 12814
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/benchmark_broad_frontier_5ep.py",
+      "bytes": 20795
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/benchmark_lr_schedule_bakeoff.py",
+      "bytes": 10692
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/benchmark_positional_composition.py",
+      "bytes": 13623
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/train_synthetic.py",
+      "bytes": 88418
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/probe_training.py",
+      "bytes": 21455
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/benchmark_directness_designs.py",
+      "bytes": 10100
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/train_iedb.py",
+      "bytes": 283518
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/assay_ablation_probe.py",
+      "bytes": 39863
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/sweep_20m_models.py",
+      "bytes": 24011
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/benchmark_distributional_ba_heads_v3.py",
+      "bytes": 7260
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/benchmark_runtime_variants.py",
+      "bytes": 8149
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/benchmark_design_round3.py",
+      "bytes": 12102
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/benchmark_lr_stability_7allele.py",
+      "bytes": 13131
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/benchmark_binding_latents.py",
+      "bytes": 15989
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/pretrain_mhc_encoder.py",
+      "bytes": 22444
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/benchmark_h100_batchsize.py",
+      "bytes": 8612
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/benchmark_design_round2.py",
+      "bytes": 11682
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/__init__.py",
+      "bytes": 80
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/benchmark_register_designs.py",
+      "bytes": 21086
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/benchmark_assay_head_bakeoff.py",
+      "bytes": 12981
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/benchmark_distributional_ba_heads_v2.py",
+      "bytes": 7418
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/benchmark_presto_bakeoff.py",
+      "bytes": 10739
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/benchmark_runtime_multiallele.py",
+      "bytes": 18503
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/train_class1.py",
+      "bytes": 9850
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/benchmark_hardware_generalization.py",
+      "bytes": 10875
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/benchmark_distributional_ba_heads_v4.py",
+      "bytes": 7220
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/benchmark_distributional_ba_heads.py",
+      "bytes": 7286
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/benchmark_factorized_multioutput.py",
+      "bytes": 7140
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/sanity_check_modal.py",
+      "bytes": 12619
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/benchmark_factorized_ablation.py",
+      "bytes": 14706
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/groove_baseline_probe.py",
+      "bytes": 51021
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/benchmark_target_space_bakeoff.py",
+      "bytes": 10746
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/benchmark_assay_ablation.py",
+      "bytes": 7942
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/benchmark_modal_hardware.py",
+      "bytes": 8776
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/distributional_ba/assay_combos.py",
+      "bytes": 9552
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/distributional_ba/metrics.py",
+      "bytes": 7370
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/distributional_ba/config.py",
+      "bytes": 9481
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/distributional_ba/config_v5.py",
+      "bytes": 1303
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/distributional_ba/__init__.py",
+      "bytes": 81
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/distributional_ba/encoders.py",
+      "bytes": 3053
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/distributional_ba/config_v4.py",
+      "bytes": 1084
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/distributional_ba/config_v3.py",
+      "bytes": 1171
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/distributional_ba/config_v6.py",
+      "bytes": 1638
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/distributional_ba/pretrain_mhc.py",
+      "bytes": 10242
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/distributional_ba/train.py",
+      "bytes": 20466
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/distributional_ba/config_v2.py",
+      "bytes": 2385
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/distributional_ba/evaluate.py",
+      "bytes": 6866
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/distributional_ba/losses.py",
+      "bytes": 9967
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/distributional_ba/assay_context.py",
+      "bytes": 5564
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/distributional_ba/heads/regression.py",
+      "bytes": 5258
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/distributional_ba/heads/quantile.py",
+      "bytes": 4578
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/distributional_ba/heads/hlgauss.py",
+      "bytes": 2165
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/distributional_ba/heads/__init__.py",
+      "bytes": 648
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/distributional_ba/heads/distributional.py",
+      "bytes": 6513
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/distributional_ba/heads/twohot.py",
+      "bytes": 2884
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/distributional_ba/heads/base.py",
+      "bytes": 2362
+    },
+    {
+      "path": "runtimes/shared/presto/legacy/scripts/distributional_ba/heads/gaussian.py",
+      "bytes": 4716
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/distributional_ba/__init__.py",
+      "bytes": 74
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/distributional_ba/pretrain_mhc.py",
+      "bytes": 180
+    },
+    {
+      "path": "runtimes/shared/presto/scripts/distributional_ba/train.py",
+      "bytes": 180
+    }
+  ],
+  "launcher_files": [
+    {
+      "path": "experiments/2026-10-27_1930_codex_modal-cross-class/code/worker.py",
+      "bytes": 11893,
+      "sha256": "d879522bb3b36509571bf65bb9d738a38804d2d6770b7f33fddddfe4bc122c35"
+    },
+    {
+      "path": "experiments/2026-10-27_1930_codex_modal-cross-class/code/modal_run.py",
+      "bytes": 9511,
+      "sha256": "57d962610fb1dbeb81221c093efa32c29431459e42fc1b9198d096e4e47f40fa"
+    }
+  ],
+  "approval_status": "blocked by automatic approval review; explicit data/source upload approval requested"
+}

@@ -7,7 +7,7 @@ import torch
 
 from presto.data.bulk_ms import _mismatched_machinery, would_cleave
 from presto.data.vocab import AA_TO_IDX, EXCISION_MACHINERY_TO_IDX
-from presto.models.presto import Presto
+from presto.legacy.presto import Presto
 from presto.training.checkpointing import load_model_from_checkpoint, save_model_checkpoint
 
 
@@ -151,7 +151,7 @@ def test_fractional_or_nonfinite_machinery_index_is_rejected(value):
 
 
 def test_trainer_rejects_legacy_resume_before_mutating_model(tmp_path):
-    from presto.training.trainer import Trainer
+    from presto.legacy.trainer import Trainer
 
     legacy = Trainer(Presto(d_model=32, n_layers=1, n_heads=4, excision_machinery_version=1))
     path = tmp_path / "legacy.pt"

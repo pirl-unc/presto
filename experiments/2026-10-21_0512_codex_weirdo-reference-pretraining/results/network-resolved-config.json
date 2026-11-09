@@ -1,0 +1,67 @@
+{
+  "model": {
+    "acquisition_features": [],
+    "acquisition_units": {},
+    "auxiliary_context": [],
+    "cell_types": [],
+    "component_activity_units": {},
+    "components": [],
+    "context_species": [],
+    "cytokine_dose_units": {},
+    "cytokine_duration_features": [],
+    "cytokines": [],
+    "dropout": 0.1,
+    "endpoints": [],
+    "enzymes": [],
+    "identity_tasks": [
+      "peptide_source"
+    ],
+    "identity_threshold": 0.8,
+    "machinery_profiles": {},
+    "machinery_references": [],
+    "max_length": 512,
+    "mhc_classes": [
+      "I",
+      "II"
+    ],
+    "observation_features": [],
+    "observation_units": {},
+    "preparation_features": [],
+    "preparation_units": {},
+    "quantity_domains": {},
+    "register_pooling": true,
+    "source_categories": [
+      "archaea",
+      "bacteria",
+      "fungi",
+      "human",
+      "invertebrates",
+      "mammals",
+      "plants",
+      "rodents",
+      "vertebrates",
+      "viruses"
+    ],
+    "source_context": false,
+    "species": [],
+    "species_defaults": true
+  },
+  "scales": {},
+  "training": {
+    "batch_size": 64,
+    "checkpoint_every_steps": 100,
+    "coverage_exception_reason": null,
+    "coverage_policy": "required",
+    "identity_batch_size": 64,
+    "identity_weight": 0.1,
+    "learning_rate": 0.0003,
+    "max_epochs": 20,
+    "max_steps": null,
+    "min_epochs": 5,
+    "no_test_reason": null,
+    "patience": 5,
+    "seed": 42,
+    "test_policy": "evaluate_selected_once",
+    "weight_decay": 0.0001
+  }
+}

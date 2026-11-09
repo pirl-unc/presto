@@ -1,0 +1,34 @@
+{
+  "status": "scientific_closure_complete",
+  "utc": "2026-10-28T07:37:27.769896+00:00",
+  "fixed_fits": 12,
+  "heldout_metric_rows": 208,
+  "training_predictions_verified": 932964,
+  "fresh_h100_training_probes": 768,
+  "evaluation_max_error": 0,
+  "serving_max_error": 0,
+  "preferred_variant": "wide-ic50",
+  "six_output_promoted": false,
+  "prior_full_cohort_recipe_changed": false,
+  "new_test_inference_during_verification": false,
+  "local_software": {
+    "suite_passed": 2778,
+    "suite_skipped": 4,
+    "analysis_tests_passed": 2,
+    "final_docs_strict": "passed",
+    "changed_analysis_static_check": "passed",
+    "changed_analysis_format_check": "passed"
+  },
+  "source_ci": "https://github.com/pirl-unc/presto/actions/runs/40648481129",
+  "plots_visually_checked": [
+    "ic50-comparison.png",
+    "exposure-curves.png",
+    "training-curves.png",
+    "original-training-composition.png"
+  ],
+  "runtime_commit": "89d3360a307b5485cdc3e3f37abcac1dfa9cf979",
+  "launcher_commit": "fe9ca8b82489b5afc222e3f2237460ef7bd7af63",
+  "decision": "Sealed validation decision retained; no post-test promotion. All inspection remains development-only.",
+  "transport": "All original calls returned. Twelve original archive hashes passed; frozen collector with verified local transport; preserved failed original receipts and byte-verified redundant-file compaction.",
+  "scientific_pr": "131 remains draft pending milestones130/132; TCRvdb unavailable."
+}

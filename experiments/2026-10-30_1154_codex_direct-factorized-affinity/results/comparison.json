@@ -1,0 +1,150 @@
+{
+  "status": "verified",
+  "ic50": [
+    {
+      "condition": "direct-s43",
+      "split": "validation",
+      "mhc_class": "I",
+      "detector": "radioactivity",
+      "n": 141,
+      "spearman": 0.5001444895137278,
+      "rmse": 1.2859723788758923
+    },
+    {
+      "condition": "direct-s43",
+      "split": "validation",
+      "mhc_class": "I",
+      "detector": "fluorescence",
+      "n": 28,
+      "spearman": 0.5834701696770662,
+      "rmse": 1.2440180110319399
+    },
+    {
+      "condition": "direct-s43",
+      "split": "validation",
+      "mhc_class": "II",
+      "detector": "radioactivity",
+      "n": 1129,
+      "spearman": 0.4040084779263908,
+      "rmse": 0.8756913997994755
+    },
+    {
+      "condition": "direct-s43",
+      "split": "validation",
+      "mhc_class": "II",
+      "detector": "fluorescence",
+      "n": 41,
+      "spearman": 0.8169588485453656,
+      "rmse": 0.5174945047926609
+    },
+    {
+      "condition": "direct-s43",
+      "split": "test",
+      "mhc_class": "I",
+      "detector": "radioactivity",
+      "n": 100,
+      "spearman": 0.2989561737629531,
+      "rmse": 1.0062075219616609
+    },
+    {
+      "condition": "direct-s43",
+      "split": "test",
+      "mhc_class": "I",
+      "detector": "fluorescence",
+      "n": 157,
+      "spearman": 0.314589389957817,
+      "rmse": 1.158863209799118
+    },
+    {
+      "condition": "direct-s43",
+      "split": "test",
+      "mhc_class": "II",
+      "detector": "radioactivity",
+      "n": 123,
+      "spearman": 0.22851771602748683,
+      "rmse": 0.7608628776818765
+    },
+    {
+      "condition": "direct-s43",
+      "split": "test",
+      "mhc_class": "II",
+      "detector": "fluorescence",
+      "n": 634,
+      "spearman": 0.09972723684096334,
+      "rmse": 1.665488518839926
+    },
+    {
+      "condition": "direct-s42",
+      "split": "validation",
+      "mhc_class": "I",
+      "detector": "radioactivity",
+      "n": 141,
+      "spearman": 0.45508527032484203,
+      "rmse": 1.4392959241556733
+    },
+    {
+      "condition": "direct-s42",
+      "split": "validation",
+      "mhc_class": "I",
+      "detector": "fluorescence",
+      "n": 28,
+      "spearman": 0.531472359058566,
+      "rmse": 0.827653519205733
+    },
+    {
+      "condition": "direct-s42",
+      "split": "validation",
+      "mhc_class": "II",
+      "detector": "radioactivity",
+      "n": 1129,
+      "spearman": 0.35339138728000147,
+      "rmse": 0.9117789622925606
+    },
+    {
+      "condition": "direct-s42",
+      "split": "validation",
+      "mhc_class": "II",
+      "detector": "fluorescence",
+      "n": 41,
+      "spearman": 0.8449948736542205,
+      "rmse": 0.5653647690684405
+    },
+    {
+      "condition": "direct-s42",
+      "split": "test",
+      "mhc_class": "I",
+      "detector": "radioactivity",
+      "n": 100,
+      "spearman": 0.20674301595052236,
+      "rmse": 1.021173112707748
+    },
+    {
+      "condition": "direct-s42",
+      "split": "test",
+      "mhc_class": "I",
+      "detector": "fluorescence",
+      "n": 157,
+      "spearman": 0.23440550115927736,
+      "rmse": 1.0796191636410257
+    },
+    {
+      "condition": "direct-s42",
+      "split": "test",
+      "mhc_class": "II",
+      "detector": "radioactivity",
+      "n": 123,
+      "spearman": 0.18881321834243675,
+      "rmse": 0.8897311292049703
+    },
+    {
+      "condition": "direct-s42",
+      "split": "test",
+      "mhc_class": "II",
+      "detector": "fluorescence",
+      "n": 634,
+      "spearman": 0.12555776212394834,
+      "rmse": 1.5856008802044959
+    }
+  ],
+  "interpretation": "retrospective development comparison; no automatic model promotion"
+}

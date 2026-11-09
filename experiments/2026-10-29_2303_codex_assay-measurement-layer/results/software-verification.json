@@ -1,0 +1,27 @@
+{
+  "status": "passed",
+  "full_suite": {
+    "command": "PYTHONPATH=/Users/iskander/code/presto/.worktrees/shared-training /Users/iskander/code/shared-virtual-env/bin/python -m pytest tests -q --disable-warnings --maxfail=3",
+    "passed": 2891,
+    "skipped": 4,
+    "warnings": 33,
+    "elapsed_seconds": 381.37
+  },
+  "focused": {
+    "passed": 14,
+    "includes_later_common_manifest_fit": true
+  },
+  "projection_fixture": {
+    "passed": 1
+  },
+  "lint": "root lint.sh and experiment scripts passed",
+  "runtime_contract": "../reproduce/launch.json",
+  "no_predictive_accuracy_claim": true,
+  "strict_docs_build": "passed after replacing out-of-docs relative link with pinned repository URL",
+  "docs_command": "python -m mkdocs build --strict --site-dir /private/tmp/presto-assay-docs",
+  "post_launch_historical_reader_checks": {
+    "passed": 77,
+    "scope": "shared measurement layer, coordinate coverage, historical inference, transfer and resume; includes v5 coordinate mask retention and unknown-history handling",
+    "frozen_v6_fit_unchanged": true
+  }
+}

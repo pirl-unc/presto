@@ -1,0 +1,29 @@
+{
+  "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8548400/fullTextXML",
+  "utc": "2026-10-25T03:45:25.831643+00:00",
+  "argv": [
+    "/private/tmp/presto-modular-model/experiments/2026-10-25_0344_codex_proteasome-quantity-source/code/fetch.py",
+    "--url",
+    "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8548400/fullTextXML",
+    "--name",
+    "sahu-article.xml"
+  ],
+  "source_sha256": "becab32c2ac179a01d53c75c21030dc6ec7505bb444a665c99f0b630fd089053",
+  "git_commit": "8454ef9c40913c89d56bca5cd02f923701af91f6",
+  "status": 200,
+  "final_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8548400/fullTextXML",
+  "headers": {
+    "Vary": "Access-Control-Request-Headers",
+    "Content-Type": "application/xml",
+    "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+    "Date": "Sun, 25 Oct 2026 03:45:26 GMT",
+    "Transfer-Encoding": "chunked",
+    "Connection": "close"
+  },
+  "body_complete": true,
+  "access_status": "retrieved",
+  "path": "/private/tmp/presto-modular-model/data/proteasome_quantity_sources/2026-10-25_0344_codex_proteasome-quantity-source/sahu-article.xml",
+  "size_bytes": 241272,
+  "sha256": "6b1687f4fd729a959e323502d57b07710bda66fd1ffe09569e44d84624090d95",
+  "seconds": 1.1323662499780767
+}

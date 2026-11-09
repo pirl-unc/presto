@@ -1,0 +1,133 @@
+/Users/iskander/.matplotlib is not a writable directory
+Matplotlib created a temporary cache directory at /var/folders/qm/qf74v01n2s12j3w0h1yrx4l00000gn/T/matplotlib-b_o3k_th because there was an issue with the default path (/Users/iskander/.matplotlib); it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing.
+Matplotlib is building the font cache; this may take a moment.
+[
+  {
+    "condition": "interaction-natural-joint-s42",
+    "mhc_class": "I",
+    "test": {
+      "n_all": 1845,
+      "loss": 0.8195427267555024,
+      "censor_satisfaction": 0.034482758620689655,
+      "n": 1758,
+      "spearman": 0.5191785691126813,
+      "pearson": 0.5498610546688261,
+      "rmse": 1.1856546701860586,
+      "prediction_sd": 0.8917407084571604,
+      "target_sd": 1.4127423162551709,
+      "binding_at_500_nM": {
+        "accuracy": 0.6939704209328783,
+        "balanced_accuracy": 0.6786054937725053,
+        "precision": 0.7002652519893899,
+        "recall": 0.7991927346115035,
+        "f1": 0.7464655984919887,
+        "auroc": 0.7472263408486023,
+        "auprc": 0.7699902178707376
+      }
+    },
+    "bounds": 87,
+    "satisfied_bounds": 3,
+    "alleles_at_least20": 12,
+    "negative_alleles": 1,
+    "macro_allele_spearman": 0.33230086720679514,
+    "weighted_allele_spearman": 0.4462442708008989,
+    "prediction_target_sd_ratio": 0.6312125701882729,
+    "source_study_overlap": "see strata; study is not an independent holdout"
+  },
+  {
+    "condition": "interaction-natural-joint-s43",
+    "mhc_class": "I",
+    "test": {
+      "n_all": 1845,
+      "loss": 0.8359857762365963,
+      "censor_satisfaction": 0.011494252873563218,
+      "n": 1758,
+      "spearman": 0.5304094547842212,
+      "pearson": 0.54914553240313,
+      "rmse": 1.1942247299641804,
+      "prediction_sd": 0.9239930422957605,
+      "target_sd": 1.4127423162551709,
+      "binding_at_500_nM": {
+        "accuracy": 0.7025028441410694,
+        "balanced_accuracy": 0.6891205990814331,
+        "precision": 0.7115732368896925,
+        "recall": 0.7941473259334006,
+        "f1": 0.7505960896518836,
+        "auroc": 0.7589037978047539,
+        "auprc": 0.7776818289054264
+      }
+    },
+    "bounds": 87,
+    "satisfied_bounds": 1,
+    "alleles_at_least20": 12,
+    "negative_alleles": 3,
+    "macro_allele_spearman": 0.31113248242864544,
+    "weighted_allele_spearman": 0.44413587137351473,
+    "prediction_target_sd_ratio": 0.6540421644231884,
+    "source_study_overlap": "see strata; study is not an independent holdout"
+  },
+  {
+    "condition": "interaction-natural-joint-s42",
+    "mhc_class": "II",
+    "test": {
+      "n_all": 958,
+      "loss": 0.3704526335725348,
+      "censor_satisfaction": 0.11206896551724138,
+      "n": 842,
+      "spearman": 0.5261269466995511,
+      "pearson": 0.557342493985971,
+      "rmse": 0.7806860723433701,
+      "prediction_sd": 0.5517105570628491,
+      "target_sd": 0.9382039472708004,
+      "binding_at_500_nM": {
+        "accuracy": 0.7755344418052257,
+        "balanced_accuracy": 0.6051232405187781,
+        "precision": 0.5773195876288659,
+        "recall": 0.27450980392156865,
+        "f1": 0.37209302325581395,
+        "auroc": 0.7699151761017886,
+        "auprc": 0.5501761315423906
+      }
+    },
+    "bounds": 116,
+    "satisfied_bounds": 13,
+    "alleles_at_least20": 10,
+    "negative_alleles": 0,
+    "macro_allele_spearman": 0.5284920397266911,
+    "weighted_allele_spearman": 0.5275984620210316,
+    "prediction_target_sd_ratio": 0.5880497078143342,
+    "source_study_overlap": "see strata; study is not an independent holdout"
+  },
+  {
+    "condition": "interaction-natural-joint-s43",
+    "mhc_class": "II",
+    "test": {
+      "n_all": 958,
+      "loss": 0.41583103100668145,
+      "censor_satisfaction": 0.10344827586206896,
+      "n": 842,
+      "spearman": 0.48164293642351536,
+      "pearson": 0.5062711065579003,
+      "rmse": 0.8310276739870205,
+      "prediction_sd": 0.6208317525166323,
+      "target_sd": 0.9382039472708004,
+      "binding_at_500_nM": {
+        "accuracy": 0.7612826603325415,
+        "balanced_accuracy": 0.6457372917819165,
+        "precision": 0.5088757396449705,
+        "recall": 0.4215686274509804,
+        "f1": 0.46112600536193027,
+        "auroc": 0.7356168172598193,
+        "auprc": 0.4677846797954605
+      }
+    },
+    "bounds": 116,
+    "satisfied_bounds": 12,
+    "alleles_at_least20": 10,
+    "negative_alleles": 0,
+    "macro_allele_spearman": 0.5026843565131023,
+    "weighted_allele_spearman": 0.4988127793099784,
+    "prediction_target_sd_ratio": 0.661723662880132,
+    "source_study_overlap": "see strata; study is not an independent holdout"
+  }
+]

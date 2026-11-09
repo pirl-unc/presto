@@ -8,7 +8,7 @@ warning, just weights that stay at their initialization.
 
 import pytest
 
-from presto.models.presto import Presto
+from presto.legacy.presto import Presto
 
 
 @pytest.mark.parametrize("topology", ["collapsed", "expanded"])

@@ -1,0 +1,63 @@
+{
+  "stage": "fetch",
+  "attempt": 12,
+  "started_utc": "2026-10-25T15:13:06.828509+00:00",
+  "status": "passed",
+  "child_launched": true,
+  "exit_code": 0,
+  "resource_violation": null,
+  "memory_admission": {
+    "metric": "macos_free_plus_speculative",
+    "bytes": 6734643200
+  },
+  "disk_free_before_bytes": 19437604864,
+  "request_set_sha256": "75746cd354421f398c7775bd1ecc7a5799e5709cf020b136b7984aa5aec2741e",
+  "request_set": {
+    "phase": "metadata",
+    "scope": "Fixed fallback Sobsey2025 after the primary supplements proved insufficient for separate raw isotope areas. Retrieve article XML and article-specific public supplement inventory only.",
+    "requests": [
+      {
+        "name": "sobsey2025.xml",
+        "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC11812018/fullTextXML",
+        "expected_kind": "xml",
+        "discovery_provenance": "Fallback PMCID11812018 and DOI10.1021/acs.jproteome.4c00576 prespecified in the original family plan; documented Europe PMC fullTextXML endpoint."
+      },
+      {
+        "name": "sobsey2025-s3-inventory.xml",
+        "url": "https://pmc-oa-opendata.s3.amazonaws.com/?list-type=2&prefix=PMC11812018.&max-keys=100",
+        "expected_kind": "xml",
+        "discovery_provenance": "Same current official per-article ListObjectsV2 route qualified for the primary study; fixed fallback PMCID, no whole-bucket scan."
+      }
+    ]
+  },
+  "environment": {
+    "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "versions": {
+      "requests": "2.34.2",
+      "psutil": "7.2.2"
+    },
+    "overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUNBUFFERED": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    }
+  },
+  "child_pid": 97988,
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "-B",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1451_codex_mrm-anchor-admission/code/fetch_v3.py",
+    "--requests",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1451_codex_mrm-anchor-admission/reproduce/requests/metadata-9.json"
+  ],
+  "elapsed_seconds": 1.6436807090067305,
+  "peak_observed_process_tree_rss_bytes": 47284224,
+  "peak_child_process_rss_bytes": 47349760,
+  "rss_poll_interval_seconds": 0.05,
+  "disk_free_after_bytes": 19437416448
+}

@@ -1,0 +1,23 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "argv": [
+    "experiments/2026-10-24_1702_codex_ms1-grouped-observer/code/select.py"
+  ],
+  "environment": {
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PYTHONPATH": "/private/tmp/hitlist-proteometools-ms1"
+  },
+  "hitlist_commit": "b9b10470058e32e679652c6fd405cc834b649bf3",
+  "hitlist_tracked_status": "",
+  "phase": "metadata_only_selection",
+  "presto_commit": "1606976b3b684d2f4c4dfe5f1b91b7d83a25530a",
+  "presto_tracked_status": "M experiments/agents/codex/todo.md\n M tasks/todo.md",
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "source_manifest": {
+    "sha256": "fa32ddc4ec30675dea28ba873dbf2667954833183dcfabf60f61d6364f7454ff",
+    "size_bytes": 3256
+  },
+  "started_utc": "2026-10-24T17:03:14.538286+00:00"
+}

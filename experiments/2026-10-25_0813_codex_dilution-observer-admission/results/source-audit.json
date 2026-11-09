@@ -1,0 +1,320 @@
+{
+  "passed": true,
+  "columns": [
+    "peptide_id",
+    "precursor",
+    "run",
+    "RT",
+    "intensity",
+    "leftWidth",
+    "rightWidth",
+    "peak_group_rank",
+    "m_score",
+    "alignment_rank",
+    "feature_id",
+    "sequence",
+    "charge",
+    "group_label"
+  ],
+  "n_rows": 64070,
+  "column_string_sha256": {
+    "peptide_id": "c3df97a9a8980c6009d491f30183062d33d99ace41dd91fc3ebb5b355e2a9835",
+    "precursor": "acee9f4604b7bc6f179bb65e0f3d888ac79a0491b100b70a0720fad0a0c121fb",
+    "run": "06dcffcecdb0c51a3e98f9da761d606164b6e30f5596cfb21254215d519b0adc",
+    "RT": "e146f545d7e7cbf8d5b332448b7dc47869126bfb1224a88b7d6cfb924986a28e",
+    "intensity": "d4497828390eb23240a80283984bf915aee5497da54d7420d56a3f2a9d163620",
+    "leftWidth": "e07c09491ab476b719fa55f58d2eb47e6c62502c75a7d82f8097469f232bf9ec",
+    "rightWidth": "a5d445ac0ed3c8a32930e942edb86f964beb79f8ecdf6532ca9947bbe0e51108",
+    "peak_group_rank": "8a7cea482a3ebed04f068641235bba574d0377f9f51fb0e22c96729e31ada9de",
+    "m_score": "457eefe9f39366880b3d95f54ae312854962161e0cad8a9121f09e7d196f5d81",
+    "alignment_rank": "4aed78c5d91b9c3e21d36f5be407c217bb1c61e6ae3849ec0850f9ed3a6deabf",
+    "feature_id": "9a0b7d24252b05224b941072f55ecf95671cb928aa09d91352636733d36dc1df",
+    "sequence": "d1b305ff45eccefcbc09fd07d335eaff8a6e17adffcd638cbe887ce1bdf142e4",
+    "charge": "e297964bfe60b260be8970de92e4bd9c22fd5e8a3b323c7ac6cf2ab98e0d0059",
+    "group_label": "d682c59dc9e85c76912a711f3961f2fd5810f9066cfabf4da95d633f99a0d997"
+  },
+  "numeric_states": {
+    "RT": {
+      "positive": 64046,
+      "missing:NA": 24
+    },
+    "intensity": {
+      "positive": 58063,
+      "zero": 5743,
+      "missing:NA": 264
+    },
+    "leftWidth": {
+      "positive": 64048,
+      "missing:NA": 22
+    },
+    "rightWidth": {
+      "positive": 64035,
+      "missing:NA": 35
+    },
+    "peak_group_rank": {
+      "positive": 53131,
+      "missing:NA": 10939
+    },
+    "m_score": {
+      "positive": 53131,
+      "missing:NA": 10939
+    },
+    "alignment_rank": {
+      "positive": 64070
+    },
+    "charge": {
+      "positive": 64070
+    }
+  },
+  "identity_counts": {
+    "peptide_id": 6406,
+    "precursor": 6407,
+    "run": 10,
+    "sequence": 6406,
+    "charge": 2,
+    "group_label": 6407
+  },
+  "n_precursor_run_slots": 64070,
+  "duplicate_slots": 0,
+  "slot_multiplicity": {
+    "1": 64070
+  },
+  "run_links": [
+    {
+      "run": "201207_AM_Demobox_V3_JY19#1_No1_Dilution1_02fmol-ul_DIA#1_400-650mz_msms35",
+      "sample_index_from_name": 1,
+      "factor_token": "1",
+      "concentration_token": "02",
+      "acquisition_index_from_name": 1,
+      "rows": 6407,
+      "raw_file_matches": [
+        "201207_AM_Demobox_V3_JY19_1_No1_Dilution1_02fmol-ul_DIA_1_400-650mz_msms35.raw"
+      ],
+      "join_evidence": "Name-derived, exact after replacing # with _; not a physical specimen/pairing assertion"
+    },
+    {
+      "run": "201207_AM_Demobox_V3_JY19#1_No1_Dilution1_02fmol-ul_DIA#2_400-650mz_msms36",
+      "sample_index_from_name": 1,
+      "factor_token": "1",
+      "concentration_token": "02",
+      "acquisition_index_from_name": 2,
+      "rows": 6407,
+      "raw_file_matches": [
+        "201207_AM_Demobox_V3_JY19_1_No1_Dilution1_02fmol-ul_DIA_2_400-650mz_msms36.raw"
+      ],
+      "join_evidence": "Name-derived, exact after replacing # with _; not a physical specimen/pairing assertion"
+    },
+    {
+      "run": "201207_AM_Demobox_V3_JY19#1_No2_Dilution1-2_01fmol-ul_DIA#1_400-650mz_msms30",
+      "sample_index_from_name": 2,
+      "factor_token": "1-2",
+      "concentration_token": "01",
+      "acquisition_index_from_name": 1,
+      "rows": 6407,
+      "raw_file_matches": [
+        "201207_AM_Demobox_V3_JY19_1_No2_Dilution1-2_01fmol-ul_DIA_1_400-650mz_msms30.raw"
+      ],
+      "join_evidence": "Name-derived, exact after replacing # with _; not a physical specimen/pairing assertion"
+    },
+    {
+      "run": "201207_AM_Demobox_V3_JY19#1_No2_Dilution1-2_01fmol-ul_DIA#2_400-650mz_msms31",
+      "sample_index_from_name": 2,
+      "factor_token": "1-2",
+      "concentration_token": "01",
+      "acquisition_index_from_name": 2,
+      "rows": 6407,
+      "raw_file_matches": [
+        "201207_AM_Demobox_V3_JY19_1_No2_Dilution1-2_01fmol-ul_DIA_2_400-650mz_msms31.raw"
+      ],
+      "join_evidence": "Name-derived, exact after replacing # with _; not a physical specimen/pairing assertion"
+    },
+    {
+      "run": "201207_AM_Demobox_V3_JY19#1_No3_Dilution1-4_005fmol-ul_DIA#1_400-650mz_msms25_201209153602",
+      "sample_index_from_name": 3,
+      "factor_token": "1-4",
+      "concentration_token": "005",
+      "acquisition_index_from_name": 1,
+      "rows": 6407,
+      "raw_file_matches": [
+        "201207_AM_Demobox_V3_JY19_1_No3_Dilution1-4_005fmol-ul_DIA_1_400-650mz_msms25_201209153602.raw"
+      ],
+      "join_evidence": "Name-derived, exact after replacing # with _; not a physical specimen/pairing assertion"
+    },
+    {
+      "run": "201207_AM_Demobox_V3_JY19#1_No3_Dilution1-4_005fmol-ul_DIA#2_400-650mz_msms26",
+      "sample_index_from_name": 3,
+      "factor_token": "1-4",
+      "concentration_token": "005",
+      "acquisition_index_from_name": 2,
+      "rows": 6407,
+      "raw_file_matches": [
+        "201207_AM_Demobox_V3_JY19_1_No3_Dilution1-4_005fmol-ul_DIA_2_400-650mz_msms26.raw"
+      ],
+      "join_evidence": "Name-derived, exact after replacing # with _; not a physical specimen/pairing assertion"
+    },
+    {
+      "run": "201207_AM_Demobox_V3_JY19#1_No4_Dilution1-8_0025fmol-ul_DIA#1_400-650mz_msms20",
+      "sample_index_from_name": 4,
+      "factor_token": "1-8",
+      "concentration_token": "0025",
+      "acquisition_index_from_name": 1,
+      "rows": 6407,
+      "raw_file_matches": [
+        "201207_AM_Demobox_V3_JY19_1_No4_Dilution1-8_0025fmol-ul_DIA_1_400-650mz_msms20.raw"
+      ],
+      "join_evidence": "Name-derived, exact after replacing # with _; not a physical specimen/pairing assertion"
+    },
+    {
+      "run": "201207_AM_Demobox_V3_JY19#1_No4_Dilution1-8_0025fmol-ul_DIA#2_400-650mz_msms21",
+      "sample_index_from_name": 4,
+      "factor_token": "1-8",
+      "concentration_token": "0025",
+      "acquisition_index_from_name": 2,
+      "rows": 6407,
+      "raw_file_matches": [
+        "201207_AM_Demobox_V3_JY19_1_No4_Dilution1-8_0025fmol-ul_DIA_2_400-650mz_msms21.raw"
+      ],
+      "join_evidence": "Name-derived, exact after replacing # with _; not a physical specimen/pairing assertion"
+    },
+    {
+      "run": "201207_AM_Demobox_V3_JY19#1_No5_Dilution1-16_00125fmol-ul_DIA#1_400-650mz_msms15",
+      "sample_index_from_name": 5,
+      "factor_token": "1-16",
+      "concentration_token": "00125",
+      "acquisition_index_from_name": 1,
+      "rows": 6407,
+      "raw_file_matches": [
+        "201207_AM_Demobox_V3_JY19_1_No5_Dilution1-16_00125fmol-ul_DIA_1_400-650mz_msms15.raw"
+      ],
+      "join_evidence": "Name-derived, exact after replacing # with _; not a physical specimen/pairing assertion"
+    },
+    {
+      "run": "201207_AM_Demobox_V3_JY19#1_No5_Dilution1-16_00125fmol-ul_DIA#2_400-650mz_msms16",
+      "sample_index_from_name": 5,
+      "factor_token": "1-16",
+      "concentration_token": "00125",
+      "acquisition_index_from_name": 2,
+      "rows": 6407,
+      "raw_file_matches": [
+        "201207_AM_Demobox_V3_JY19_1_No5_Dilution1-16_00125fmol-ul_DIA_2_400-650mz_msms16.raw"
+      ],
+      "join_evidence": "Name-derived, exact after replacing # with _; not a physical specimen/pairing assertion"
+    }
+  ],
+  "article_table1_doses": [
+    {
+      "sample": "No. 1",
+      "factor": "1",
+      "concentration": "0.2",
+      "units": "fmol/\u00b5L"
+    },
+    {
+      "sample": "No. 2",
+      "factor": "1:2",
+      "concentration": "0.1",
+      "units": "fmol/\u00b5L"
+    },
+    {
+      "sample": "No. 3",
+      "factor": "1:4",
+      "concentration": "0.05",
+      "units": "fmol/\u00b5L"
+    },
+    {
+      "sample": "No. 4",
+      "factor": "1:8",
+      "concentration": "0.025",
+      "units": "fmol/\u00b5L"
+    },
+    {
+      "sample": "No. 5",
+      "factor": "1:16",
+      "concentration": "0.0125",
+      "units": "fmol/\u00b5L"
+    }
+  ],
+  "nominal_standards": [
+    {
+      "canonical_candidate": "ISLGEHEGGGK",
+      "reported_form": "IS[L(13C6; 15N)]GEHEGGGK",
+      "observed_sequence_forms": {
+        "ISL(UniMod:695)GEHEGGGK": 10
+      }
+    },
+    {
+      "canonical_candidate": "VGASTGYSGLK",
+      "reported_form": "VGASTGYSG[L(13C6; 15N)]K",
+      "observed_sequence_forms": {
+        "VGASTGYSGL(UniMod:695)K": 10
+      }
+    },
+    {
+      "canonical_candidate": "TLIAYDDSSTK",
+      "reported_form": "T[L(13C6; 15N)]IAYDDSSTK",
+      "observed_sequence_forms": {
+        "TL(UniMod:695)IAYDDSSTK": 10
+      }
+    },
+    {
+      "canonical_candidate": "FLASSEGGFTK",
+      "reported_form": "F[L(13C6; 15N)]ASSEGGFTK",
+      "observed_sequence_forms": {
+        "FL(UniMod:695)ASSEGGFTK": 10
+      }
+    },
+    {
+      "canonical_candidate": "GFLDYESTGAK",
+      "reported_form": "GF[L(13C6; 15N)]DYESTGAK",
+      "observed_sequence_forms": {
+        "GFL(UniMod:695)DYESTGAK": 10
+      }
+    },
+    {
+      "canonical_candidate": "ALFSSITDSEK",
+      "reported_form": "A[L(13C6; 15N)]FSSITDSEK",
+      "observed_sequence_forms": {
+        "AL(UniMod:695)FSSITDSEK": 10
+      }
+    },
+    {
+      "canonical_candidate": "HFALFSTDVTK",
+      "reported_form": "HFA[L(13C6; 15N)]FSTDVTK",
+      "observed_sequence_forms": {
+        "HFAL(UniMod:695)FSTDVTK": 10
+      }
+    },
+    {
+      "canonical_candidate": "VYAETLSGFIK",
+      "reported_form": "VYAET[L(13C6; 15N)]SGFIK",
+      "observed_sequence_forms": {}
+    },
+    {
+      "canonical_candidate": "GASDFLSFAVK",
+      "reported_form": "GASDF[L(13C6; 15N)]SFAVK",
+      "observed_sequence_forms": {
+        "GASDFL(UniMod:695)SFAVK": 10
+      }
+    },
+    {
+      "canonical_candidate": "FFLTGTSIFVK",
+      "reported_form": "FF[L(13C6; 15N)]TGTSIFVK",
+      "observed_sequence_forms": {
+        "FFL(UniMod:695)TGTSIFVK": 10
+      }
+    }
+  ],
+  "standard_query_rows": 90,
+  "inventory_n_files": 68,
+  "inventory_extensions": {
+    ".mzTab": 15,
+    ".idXML": 15,
+    ".raw": 24,
+    ".tsv": 12,
+    ".mzML": 1,
+    ".csv": 1
+  },
+  "all_deposit_checksums_missing": true,
+  "dilution_conflict": "Table1/project protocol twofold vs article Results 1:10; retain both source assertions",
+  "source_conflict_paragraph_count": 1,
+  "interpretation": "Unfiltered observation slots, no fitted calibration or native concentration claim"
+}

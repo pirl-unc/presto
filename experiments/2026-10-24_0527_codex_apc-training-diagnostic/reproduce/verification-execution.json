@@ -1,0 +1,17 @@
+{
+  "frozen_at": "2026-10-24T05:38:20.710364-04:00",
+  "command": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0527_codex_apc-training-diagnostic/analysis/verify.py"
+  ],
+  "sha256": {
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0527_codex_apc-training-diagnostic/analysis/verify.py": "6bb6087efab2991661344fdacb4ae06da7abb7c77d5814059470e93fb47d013f",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0449_codex_apc-precursor-response/analysis/verify_predictions.py": "aed957a29c85e9b6522c85601cd6e034cd862e38f5dd8d2b953e6f1a9f578d65"
+  },
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "scope": "independent scalar source/calibration/offset/prediction/metric closure; only originaltraining inputs"
+}

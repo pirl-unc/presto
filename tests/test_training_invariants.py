@@ -29,8 +29,8 @@ torch = pytest.importorskip("torch")
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from presto.models.presto import Presto  # noqa: E402
-from presto.scripts.train_synthetic import (  # noqa: E402
+from presto.legacy.presto import Presto  # noqa: E402
+from presto.legacy.scripts.train_synthetic import (  # noqa: E402
     LOSS_TASK_SPECS,
     compute_loss,
 )
@@ -407,7 +407,7 @@ class TestEvaluationIsDeterministic:
 
         from source_probe import occurrences
 
-        from presto.scripts import train_synthetic
+        from presto.legacy.scripts import train_synthetic
 
         source = inspect.getsource(train_synthetic)
         assert occurrences(source, "model.eval()"), "no eval() call in the trainer"
@@ -435,7 +435,7 @@ class TestCheckpointHoldsTheBestEpoch:
         import ast
         import inspect
 
-        from presto.scripts import train_synthetic
+        from presto.legacy.scripts import train_synthetic
 
         source = inspect.getsource(train_synthetic)
         tree = ast.parse(source)

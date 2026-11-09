@@ -1,0 +1,34 @@
+{
+  "whole_checkout_invocation": "ruff check --no-cache .; ruff format --no-cache --check . (separate calls)",
+  "whole_checkout_result": "Both fail only on one untracked historical frozen source; it is not edited or published by this task.",
+  "untracked_archive": "data/erap1_source_qualification/2026-10-24_0924_maben-v1/executed-launch.py",
+  "tracked_scope_checks": [
+    {
+      "command_prefix": [
+        "/private/tmp/presto-pr66-tools/bin/ruff",
+        "check",
+        "--no-cache"
+      ],
+      "input_selection": "git ls-files *.py (repository force-excludes apply)",
+      "n_selected_files": 2377,
+      "exit_code": 0,
+      "stdout": "All checks passed!\n",
+      "stderr": ""
+    },
+    {
+      "command_prefix": [
+        "/private/tmp/presto-pr66-tools/bin/ruff",
+        "format",
+        "--no-cache",
+        "--check"
+      ],
+      "input_selection": "git ls-files *.py (repository force-excludes apply)",
+      "n_selected_files": 2377,
+      "exit_code": 0,
+      "stdout": "290 files already formatted\n",
+      "stderr": ""
+    }
+  ],
+  "frozen_new_experiment_source_check": "ruff check --no-cache --isolated --select E9,F experiments/2026-10-25_0844_codex_dilution-scoring-lineage/code: passed",
+  "production_tests": "Not rerun locally: no production code changed; complete independent data replay is the relevant validation. Hosted CI will run on the published commit."
+}

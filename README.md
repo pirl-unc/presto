@@ -25,25 +25,30 @@ Each main-push and immutable-tag run has its own protected group, so neither run
 nor pending release validation can be displaced by a later update. Distribution
 still requires successful checks on the exact merged-main commit.
 
-## Quickstart
+## Development quickstart
+
+The released 0.1.1 interface predates this development architecture. New training
+from this checkout uses one model and one observation manifest:
 
 ```bash
 python -m presto --help
-python -m presto data list
-python -m presto train unified --data-dir ./data --epochs 5 --checkpoint presto.pt
-python -m presto predict presentation --checkpoint presto.pt --peptide SIINFEKL --allele HLA-A*02:01
+python -m presto train --manifest /absolute/path/manifest.json --preflight
+python -m presto train --manifest /absolute/path/manifest.json \
+  --run-dir experiments/YYYY-MM-DD_HHMM_codex_description --device cpu
 ```
 
-## Canonical Docs
+Model, optimization and hash-pinned observation sources are configured in the
+manifest. Pretraining, binding, MS, paired TCR and joint fits all use this path.
+Historical checkpoint readers and frozen experiment records remain available.
 
-- Single authoritative input/output design: [model I/O contract](docs/model_io_contract.md)
-- Current architecture guide: [design](docs/design.md)
-- Assay policy summary: [assay modeling](docs/assay_modeling_contract.md)
-- Assay source inventory and supervision map: `docs/assay_learning_scheme.md`
-- Training and batch construction spec: `docs/training_spec.md`
-- CLI usage: `docs/cli.md`
-- Repo inventory and retention guide: [repo inventory](docs/repo_inventory.md)
-- Implementation status audit: `TODO.md`
+## Canonical docs
+
+- [Shared architecture and observation contract](docs/modular_model.md)
+- [Single training interface and migration](docs/unified_training.md)
+- [CLI usage](docs/cli.md)
+- [Study curation contract](docs/study_curation_contract.md)
+- [Repo inventory and retention](docs/repo_inventory.md)
+- Experiment registration: `experiments/EXPERIMENT_WORKFLOW.md`
 
 ## Repo At A Glance
 
@@ -65,11 +70,10 @@ APC state, interventions and cytokines are allowed biological inputs. Presenting
 MHC and repertoire-selection MHC, and APC/MHC/TCR/repertoire/antigen species,
 are distinct roles. Assay identity only selects fixed output tracks and losses.
 
-The full role-specific schema is not implemented yet. The
-[I/O contract](docs/model_io_contract.md) separates target design, actual outputs
-and remaining gaps; [issue #46](https://github.com/pirl-unc/presto/issues/46)
-tracks implementation. Receptor evidence is currently pMHC-only, not matching
-against a supplied TCR.
+The shared model accepts explicit MHC and paired receptor sequences with scoped
+cellular/MS context. Output availability and shared parameters do not establish
+scientific validity. The new full-flank architecture has no qualified checkpoint;
+see the [capability limits](docs/unified_training.md).
 
 ## Mouse MHC Overlay (IMGT + UniProt, Provenance Tracked)
 
@@ -91,27 +95,12 @@ The catalog includes explicit source columns per emitted protein:
 - `uniprot_record_url`
 - `allele_derivation_rule`
 
-## Synthetic Negatives (Default: Enabled)
+## Synthetic data
 
-Canonical unified training defaults enable all synthetic-negative categories.
-
-These are synthetic hypotheses, not measured negatives. In particular,
-`no_mhc_beta` currently deletes the second groove segment (class-I alpha2),
-not beta2m. Its assembly interpretation and missing-sequence priors are known
-design drift tracked in #46, not scientifically validated defaults.
-
-| Category | Modes | Default control (unified) | Primary target effect |
-|---|---|---|---|
-| pMHC negatives | `peptide_scramble`, `peptide_random`, `mhc_scramble`, `mhc_random`, `no_mhc_alpha`, `no_mhc_beta` | `--synthetic-pmhc-negative-ratio 1.0` and `--synthetic-class-i-no-mhc-beta-negative-ratio 0.25` | Drive weak/non-binder supervision (`binding`/`affinity`) and low downstream presentation |
-| Elution negatives | `peptide_random_mhc_real`, `peptide_real_mhc_random`, `peptide_random_mhc_random`, plus data-conditional hard-pair negatives | Derived from `--synthetic-pmhc-negative-ratio` (`0.5x` scale) | Drive low elution/presentation for implausible peptide:MHC pairs |
-| Processing negatives | `flank_shuffle`, `peptide_scramble` | `--synthetic-processing-negative-ratio 0.5` | Drive low processing probability for corrupted cleavage/context inputs |
-| Cascade negatives | binding->elution, binding->tcell projection | Derived from `--synthetic-pmhc-negative-ratio` (`0.5x` each for elution/tcell) | Enforce biological cascade consistency across tasks |
-
-Semantics:
-- `random` = de novo generation/sampling.
-- `scramble` = permutation of existing sequence content.
-
-Reference: [training guide](docs/training_spec.md).
+New training does not generate implicit negatives. Synthetic observations must
+be explicitly prepared with provenance and label policy in the same manifest
+schema. Such labels remain hypotheses or software fixtures, not measurements.
+Historical synthetic defaults belong to the frozen legacy implementation.
 
 ## Development
 

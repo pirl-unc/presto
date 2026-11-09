@@ -1,0 +1,3 @@
+# Checksum qualification correction
+
+The first inventory stopped before workbook inspection because it assumed every S3 ETag was a single-object MD5. Two original workbooks use multipart ETags. Preserve the original executed source/log. Verify bytes/SHA256 and listing-versus-response ETag identity for every file; for content MD5 use the explicit md5 query parameters in the publisher-provided article metadata, as documented by PMC Cloud README. Verify the metadata file itself against its single-object ETag first. No original source bytes, asset selection or biological settings change. Rerun only the inventory with a separate log.

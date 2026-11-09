@@ -1,0 +1,24 @@
+{
+  "hitlist_commit": "0219827e08d2d8a400c1091ad770e87d62562b7a",
+  "format": "pass",
+  "lint": "pass",
+  "strict_docs": "pass",
+  "focused_tests": {
+    "passed": 70,
+    "seconds": 1.49
+  },
+  "normal_tests": {
+    "command": "PATH=/private/tmp/presto-pr66-tools/bin:/Users/iskander/code/shared-virtual-env/bin:$PATH ./test.sh",
+    "passed": 3317,
+    "warnings": 10,
+    "pytest_seconds": 321.51,
+    "wall_seconds": 325.53,
+    "peak_process_rss_bytes": 941506560,
+    "workers": 1,
+    "memory_guard": "4.50 GiB available; default 2.5 GiB/worker, no guard override",
+    "scope": "normal local not-integration suite; hosted indexed-corpus integration separate"
+  },
+  "initial_sandbox_attempt": "memory probe unavailable; rerun normal command outside sandbox without override",
+  "environment_changes": "none",
+  "review_merge_release": "pending"
+}

@@ -1,0 +1,67 @@
+{
+  "utc": "2026-10-27T04:26:21.248919+00:00",
+  "agent": "Codex / GPT-6",
+  "base_commit": "3260488e5366276438011316f5d7fcc09a95332a",
+  "checkout": "/private/tmp/presto-mhc2-context-20261027/presto",
+  "unchanged_evaluation_runtime": "/private/tmp/presto-mhc2-evaluation-20261027/presto",
+  "source_hashes": {
+    "data/modular.py": "c388df4b775018722a66f6cb429cc1eb49df2e9fcaab23a898d34ca274b14a47",
+    "data/modular_context.py": "fe98a9b7716f1fae2197133e08f1ff4dbc56c9bd156efb41e0586c1272c01935",
+    "data/modular_lineage.py": "174832268ee01099fcd608dd82d3e60359905936e5de6f18f3c35d000112bdc7",
+    "data/modular_ordinal.py": "530667626cca2ba535585e1bd5aa0b1dbf5c77b8be0540b1da911e27be1b9520",
+    "models/modular.py": "5200ff65a74c1612f26520dbf2c6f29f88146e250fd5a8a54107259ecb74a9d4",
+    "models/modular_support.py": "da5d2c5db89a53a0cfce870dd93a4adbf393b1ef5d9c41d2784ebe36c0d1368d",
+    "training/modular.py": "5f68c2cc14bde1c74a23b0618c05b0fd3929852d8f17e60a27bc8460f85ad4e0",
+    "training/modular_run.py": "49db330575c3fbd5e9de2a8733fdcc48a6b04a27ffb3a694d8040e7c7906f370",
+    "tests/test_modular_ordinal_context.py": "fc5a376d8ec4cad9f2f2d74d0a0c2b2b50c6c18eaf32784daa528e43bf5ba655"
+  },
+  "artifact_hashes": {
+    "modular-suite-attempt01.log.gz": "c2f6c25cc70871c5ea7aeaa737e1d0315f9c5a5041bccd7a135add30d39014ce",
+    "parity.py": "d2fce5d733496a7fcc52e0a36a26771d89f1d06a590b09b4aa7062a2c638454f",
+    "candidate.json": "c9c1675dedad5ec88ad52b1235dcf495487fcbeb4b5103cee04d38491eba002f",
+    "candidate.log": "e97531f7a1a468453092cf154649b477cfb9dd5475704fbe5c76913e2549c0d6",
+    "README.md": "558b687ebaec10fd12c8226582d6307cfaa0e0289a098f47e1dea2e8dcb1d454",
+    "baseline.log.gz": "7b1c39f43966e27d1383ce04420d0ef6e6fc14686f00fc56768406e148b459e7",
+    "baseline.log": "d313bba650c85aeb503ebbe59d448c5b146e0c072263ded7b707c614021da900",
+    "baseline.json": "c9c1675dedad5ec88ad52b1235dcf495487fcbeb4b5103cee04d38491eba002f",
+    "modular-suite-attempt01.log": "8a204be7ebe8688269af600b0cb6d613ac5fb6f76073b5f4ff24fc7e3de2a519",
+    "isolation.json": "4150886b4c4225b815803b961943c66db3b0cf5c82fb77eb4fba04637f46efdb",
+    "candidate.log.gz": "f9b098c0aab10f9d4081c545b69168331e52b465927ea62da17dc185d526acb4",
+    "focused-attempt01.log.gz": "b4eb86c2e580eb1755528043f0a044c92fb2be758eb8ac990e15f19f42a306c8",
+    "focused-attempt01.log": "c2b902b27e877423ef04a470b0fd4cd83d94bccbcd4a6c9382dbd3089de538e5"
+  },
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "PYTORCH_ENABLE_MPS_FALLBACK": "0",
+    "PYTHONPATH": "/private/tmp/presto-mhc2-context-20261027:/private/tmp/presto-pr-completion-20261026/dependencies"
+  },
+  "commands": {
+    "suite": "python -m pytest -q -o addopts='' tests/test_modular*.py",
+    "baseline": "PYTHONPATH=/private/tmp/presto-mhc2-evaluation-20261027:/private/tmp/presto-pr-completion-20261026/dependencies python tasks/mhc2_ordinal_context_20261027/parity.py /private/tmp/presto-mhc2-evaluation-20261027/presto tasks/mhc2_ordinal_context_20261027/baseline.json",
+    "candidate": "python tasks/mhc2_ordinal_context_20261027/parity.py /private/tmp/presto-mhc2-context-20261027/presto tasks/mhc2_ordinal_context_20261027/candidate.json",
+    "lint": "ruff check data/modular.py data/modular_context.py data/modular_lineage.py data/modular_ordinal.py models/modular.py models/modular_support.py training/modular.py training/modular_run.py tests/test_modular_ordinal_context.py",
+    "format": "ruff format --check data/modular.py data/modular_context.py data/modular_lineage.py data/modular_ordinal.py models/modular.py models/modular_support.py training/modular.py training/modular_run.py tests/test_modular_ordinal_context.py"
+  },
+  "tests": {
+    "passed": 219,
+    "seconds": 15.53,
+    "terminal_session": 48164,
+    "exit_code": 0
+  },
+  "exact_default_parity": {
+    "state_tensors": 47,
+    "endpoint_outputs": 5,
+    "semantic_fingerprints": 5,
+    "feature_layout": true
+  },
+  "source_context_contract": "/private/tmp/presto-mhc2-evaluation-20261027/presto/experiments/2026-10-27_0400_codex_mhc2-do-measurement-admission/results/context-contract.json",
+  "source_context_contract_sha256": "c1e48e96777f0dbdf3a22a674df50a3d96054aa1b5fc86033a0b3309cab612c5",
+  "available_ram_bytes": 15452291072,
+  "disk_bytes": 45949693952,
+  "biological_training_performed": false,
+  "full_goal_achieved": false,
+  "log_archives": "Original logs retained locally; byte-identical gzip copies are included in the local commit."
+}

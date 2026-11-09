@@ -1,0 +1,3 @@
+Startup failed before any source reads: PyArrow 26 requires NumPy >=2, while the base image contains 1.26.3. Preserve failed source/call/launch/log. Retry explicitly pins NumPy 2.5.4 alongside PyArrow 26.0.0; data and analysis contract unchanged. The unavailable temporary Ruff executable was replaced with the existing shared-environment Ruff 0.16.10.
+
+Correction: the installed Ruff 0.16.10 refused this repository's exact 0.16.0 requirement. Final formatting/lint used an isolated uv cache of Ruff 0.16.0; the shared environment was not downgraded. The executed failed/retry source snapshots remain unchanged.

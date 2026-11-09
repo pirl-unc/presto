@@ -1,0 +1,32 @@
+{
+  "status": "completed-metadata-audit-only",
+  "agent": "Codex",
+  "model": "GPT-6",
+  "purpose": "MHC-II source and context coverage, not predictive evaluation",
+  "plan": "experiments/agents/codex/plans/2026-10-26_mhc2-source-context-audit.md",
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "environment_overrides": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "source_bundle": "/Users/iskander/.hitlist/corrected-corpus/public-downloads/v4/bundles/2026-10-16T07-20-43Z",
+  "hitlist_current_source_commit": "13b91424295e01286db46e8e9818fcc2fe816834",
+  "limits": {
+    "seconds_per_invocation": 300,
+    "rss_gib": 3,
+    "existing_input_gib": 1,
+    "new_download_mib": 100,
+    "primary_literature_operations": 8
+  },
+  "test_split": {
+    "used": false,
+    "reason": "metadata inventory; no model fits or prediction metrics"
+  },
+  "commands": [
+    "sh experiments/2026-10-26_1803_codex_mhc2-source-context-audit/reproduce/launch.sh",
+    "sh experiments/2026-10-26_1803_codex_mhc2-source-context-audit/reproduce/review-sources.sh",
+    "sh experiments/2026-10-26_1803_codex_mhc2-source-context-audit/reproduce/verify-coverage.sh"
+  ],
+  "report_correction": "Use inventory-corrected.json. Original category-label serialization defect and original outputs preserved."
+}

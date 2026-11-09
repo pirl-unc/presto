@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "output_kind": "registered_intact_organ_method",
+  "catalog_schema_version": 37,
+  "hitlist_version": "2.0.41",
+  "recipe": {
+    "schema_version": 1,
+    "name": "frozen_method_supported_organ_transfer",
+    "registered_recipe": "pxd058121_organ_method_baseline_change_v1"
+  },
+  "recipe_sha256": "9eeb03c7619f88cf4596fbcf829f408b708aa3105d87a1565c03f4f065265334",
+  "source_package_manifest_sha256": "fd91bb6ff3178a2246b760f6b0f99bc3824d83815a65719c34587816f3459974",
+  "source_package_schema_version": 26,
+  "coverage": {
+    "cohort_support": {
+      "test": {
+        "Brain": {
+          "n_sequences": 20,
+          "n_observations": 92,
+          "n_acquisitions": 6
+        },
+        "Liver": {
+          "n_sequences": 23,
+          "n_observations": 79,
+          "n_acquisitions": 5
+        },
+        "Spleen": {
+          "n_sequences": 21,
+          "n_observations": 65,
+          "n_acquisitions": 5
+        }
+      },
+      "extrapolation": {
+        "Brain": {
+          "n_sequences": 19,
+          "n_observations": 74,
+          "n_acquisitions": 6
+        },
+        "Liver": {
+          "n_sequences": 17,
+          "n_observations": 60,
+          "n_acquisitions": 5
+        },
+        "Spleen": {
+          "n_sequences": 16,
+          "n_observations": 55,
+          "n_acquisitions": 6
+        }
+      }
+    },
+    "support_passed": true,
+    "reason_counts": {
+      "ambiguous_mass_assignment": 2060,
+      "input_link_or_quantity_conflict": 38,
+      "multiple_masses_for_sequence_acquisition": 26,
+      "no_eligible_zero_baseline": 1383,
+      "no_unique_admitted_intact_substrate": 79,
+      "outside_organs_view": 3940
+    },
+    "output_counts": {
+      "n_decisions_rows": 8138,
+      "n_examples_rows": 425,
+      "n_covariates_rows": 425,
+      "n_baselines_rows": 155,
+      "n_trajectories_rows": 517,
+      "n_search_policies_rows": 1
+    }
+  },
+  "files": {
+    "contract.json": {
+      "sha256": "f3386c410890061acd238f556736590af40f55a7768b4eb0f551f0505fa23287",
+      "size_bytes": 1832
+    },
+    "source_assets/article.xml": {
+      "sha256": "34c2d374b62afe17c48e04bdfd75a5f91e23786db1d537035d632c0f7f411bea",
+      "size_bytes": 125833
+    },
+    "source_manifest.json": {
+      "sha256": "fd91bb6ff3178a2246b760f6b0f99bc3824d83815a65719c34587816f3459974",
+      "size_bytes": 6336
+    },
+    "source_tables/acquisitions.parquet": {
+      "sha256": "49a3895b18b70b64d84b947277e754ae3619824b42e4bbaba8f3e884f643d8d2",
+      "size_bytes": 19608
+    },
+    "source_tables/assertions.parquet": {
+      "sha256": "7b2e3490d89e5b6b0316993d7b4142f543ee26f5cb62294b69f30bea1803140c",
+      "size_bytes": 5701
+    },
+    "source_tables/assignments.parquet": {
+      "sha256": "bf72e96a94fe266e7e3c351d24ad8dca89d656f9bf2a04a239768714a5c267e1",
+      "size_bytes": 1279164
+    },
+    "source_tables/material_contexts.parquet": {
+      "sha256": "253725e5e2f83625b393bd8a089421c8552c69cb5cde0f6d3656b7b5f5eda4d5",
+      "size_bytes": 10353
+    },
+    "source_tables/material_links.parquet": {
+      "sha256": "76a4a31491dcf7a41376d08a5d5d138d9ef97f7993b4d308b9d66b80bbf15847",
+      "size_bytes": 11589
+    },
+    "source_tables/quantities.parquet": {
+      "sha256": "eed95613683e61e1b885adb6d04bdbbaed2726cd390b872ee21fffb58df07010",
+      "size_bytes": 4520233
+    },
+    "source_tables/reconciliations.parquet": {
+      "sha256": "354109a7fc6521597529197ba34bf5a8c314d64029575dcc495868c1444cfed2",
+      "size_bytes": 847301
+    },
+    "source_tables/source_views.parquet": {
+      "sha256": "1676b32c0751b73deafba3839cb30d91d241765832142eaffa193ce64be2b3fc",
+      "size_bytes": 20135
+    },
+    "summary.json": {
+      "sha256": "1cea0a09a1e5a2db3bed9cd996af371843292947f6455b2fac92051a6b2fff48",
+      "size_bytes": 1257
+    },
+    "typed/baselines.parquet": {
+      "sha256": "3fc2b4b1d32d8d87ebd3610dbd6cd02de02a2304e40fa001e241d28d04f1efbf",
+      "size_bytes": 56970
+    },
+    "typed/covariates.parquet": {
+      "sha256": "4573c9d6354dec6a07f4d5b6cad18112525c774e8ac9edb6c7be6c85f1f679e8",
+      "size_bytes": 85918
+    },
+    "typed/decisions.parquet": {
+      "sha256": "859a0f7ccc2428594a9dd77d9ba8b9ea75af107f0d208ff5a1513f2683d474b0",
+      "size_bytes": 986445
+    },
+    "typed/examples.parquet": {
+      "sha256": "b973980446c29caae2bf820cf921b40280852734c52143a42b631807fba7d7c5",
+      "size_bytes": 97116
+    },
+    "typed/search_policies.parquet": {
+      "sha256": "3724a21c79408d2d18aa8ce0d47e9cb8079dd587e2d0f0e78b98be2aae0bc604",
+      "size_bytes": 5259
+    },
+    "typed/trajectories.parquet": {
+      "sha256": "9f8a44bb2728b32fda2e8b7322e5cf8e845fbd64c9abb0dce89908742fe4e8fa",
+      "size_bytes": 28226
+    }
+  }
+}

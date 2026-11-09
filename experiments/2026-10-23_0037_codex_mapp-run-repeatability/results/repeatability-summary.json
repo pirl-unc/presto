@@ -1,0 +1,246 @@
+{
+  "base_run_value_statuses": {
+    "filtered_zero": 50,
+    "reported_positive": 3412,
+    "reported_zero_no_positive_evidence": 234
+  },
+  "base_runs_with_direct_msms": 2874,
+  "by_scope": {
+    "all": {
+      "expected_sampling_noise_rms": 0.10355708960119711,
+      "fraction_parents_positive_variance_adjusted_change": 0.5774647887323944,
+      "mean_contrast_sampling_variance": 0.010724070806670368,
+      "n_parents": 71,
+      "observed_change_rms": 0.12360457412603969,
+      "observed_mean_squared_change": 0.015278090744879638,
+      "variance_adjusted_mean_squared_change": 0.00455401993820927
+    },
+    "test": {
+      "expected_sampling_noise_rms": 0.1113504052755842,
+      "fraction_parents_positive_variance_adjusted_change": 0.7777777777777778,
+      "mean_contrast_sampling_variance": 0.012398912755036849,
+      "n_parents": 9,
+      "observed_change_rms": 0.16526388342071768,
+      "observed_mean_squared_change": 0.027312151163296564,
+      "variance_adjusted_mean_squared_change": 0.014913238408259715
+    },
+    "train": {
+      "expected_sampling_noise_rms": 0.09738237018103939,
+      "fraction_parents_positive_variance_adjusted_change": 0.5454545454545454,
+      "mean_contrast_sampling_variance": 0.009483326022076988,
+      "n_parents": 55,
+      "observed_change_rms": 0.10936841655473611,
+      "observed_mean_squared_change": 0.011961450539690275,
+      "variance_adjusted_mean_squared_change": 0.0024781245176132873
+    },
+    "validation": {
+      "expected_sampling_noise_rms": 0.13534922094030372,
+      "fraction_parents_positive_variance_adjusted_change": 0.5714285714285714,
+      "mean_contrast_sampling_variance": 0.018319411609147154,
+      "n_parents": 7,
+      "observed_change_rms": 0.16082612737888258,
+      "observed_mean_squared_change": 0.02586504324768856,
+      "variance_adjusted_mean_squared_change": 0.007545631638541408
+    }
+  },
+  "by_task": {
+    "all:condition_change": {
+      "other_run_mean": {
+        "mse": 0.048258318630016665,
+        "n_parents": 71,
+        "n_peptide_predictions": 3321,
+        "n_records": 639,
+        "pearson": 0.17194021323266956,
+        "prediction_sd": 0.17486473844786873,
+        "rmse": 0.21967776089084817,
+        "spearman": 0.17815057203569093,
+        "target_sd": 0.2327194557612233
+      },
+      "zero_baseline": {
+        "mse": 0.036726232358220375,
+        "n_parents": 71,
+        "n_peptide_predictions": 3321,
+        "n_records": 639,
+        "pearson": null,
+        "prediction_sd": 0.0,
+        "rmse": 0.19164089427421377,
+        "spearman": null,
+        "target_sd": 0.2327194557612233
+      }
+    },
+    "all:same_condition_composition": {
+      "other_run_mean": {
+        "mse": 0.024129159315008333,
+        "n_parents": 71,
+        "n_peptide_predictions": 2214,
+        "n_records": 426,
+        "pearson": 0.9135735413212844,
+        "prediction_sd": 0.44478499982249553,
+        "rmse": 0.15533563440179568,
+        "spearman": 0.9086744604434231,
+        "target_sd": 0.4578471690813175
+      },
+      "zero_baseline": {
+        "mse": 0.125844277230728,
+        "n_parents": 71,
+        "n_peptide_predictions": 2214,
+        "n_records": 426,
+        "pearson": null,
+        "prediction_sd": 0.0,
+        "rmse": 0.354745369569115,
+        "spearman": null,
+        "target_sd": 0.4578471690813175
+      }
+    },
+    "test:condition_change": {
+      "other_run_mean": {
+        "mse": 0.05579510739766582,
+        "n_parents": 9,
+        "n_peptide_predictions": 612,
+        "n_records": 81,
+        "pearson": 0.12626844497933112,
+        "prediction_sd": 0.1954410569698311,
+        "rmse": 0.23620987997470771,
+        "spearman": 0.19200622688261196,
+        "target_sd": 0.2643316603223311
+      },
+      "zero_baseline": {
+        "mse": 0.05210997667337027,
+        "n_parents": 9,
+        "n_peptide_predictions": 612,
+        "n_records": 81,
+        "pearson": null,
+        "prediction_sd": 0.0,
+        "rmse": 0.22827609746394883,
+        "spearman": null,
+        "target_sd": 0.2643316603223311
+      }
+    },
+    "test:same_condition_composition": {
+      "other_run_mean": {
+        "mse": 0.02789755369883291,
+        "n_parents": 9,
+        "n_peptide_predictions": 408,
+        "n_records": 54,
+        "pearson": 0.9071696846462631,
+        "prediction_sd": 0.496770435983058,
+        "rmse": 0.16702560791337628,
+        "spearman": 0.8907109193316585,
+        "target_sd": 0.5124625605997332
+      },
+      "zero_baseline": {
+        "mse": 0.1381120189813099,
+        "n_parents": 9,
+        "n_peptide_predictions": 408,
+        "n_records": 54,
+        "pearson": null,
+        "prediction_sd": 0.0,
+        "rmse": 0.37163425431640434,
+        "spearman": null,
+        "target_sd": 0.5124625605997332
+      }
+    },
+    "train:condition_change": {
+      "other_run_mean": {
+        "mse": 0.04267496709934645,
+        "n_parents": 55,
+        "n_peptide_predictions": 2457,
+        "n_records": 495,
+        "pearson": 0.18809391416384103,
+        "prediction_sd": 0.16326347890206883,
+        "rmse": 0.20657920296909477,
+        "spearman": 0.1706906775213945,
+        "target_sd": 0.21604497393355795
+      },
+      "zero_baseline": {
+        "mse": 0.030928102583844257,
+        "n_parents": 55,
+        "n_peptide_predictions": 2457,
+        "n_records": 495,
+        "pearson": null,
+        "prediction_sd": 0.0,
+        "rmse": 0.1758638751530406,
+        "spearman": null,
+        "target_sd": 0.21604497393355795
+      }
+    },
+    "train:same_condition_composition": {
+      "other_run_mean": {
+        "mse": 0.02133748354967323,
+        "n_parents": 55,
+        "n_peptide_predictions": 1638,
+        "n_records": 330,
+        "pearson": 0.9230260788547231,
+        "prediction_sd": 0.43507738850860217,
+        "rmse": 0.1460735552715591,
+        "spearman": 0.921263664294991,
+        "target_sd": 0.44643316140362815
+      },
+      "zero_baseline": {
+        "mse": 0.12514643988537746,
+        "n_parents": 55,
+        "n_peptide_predictions": 1638,
+        "n_records": 330,
+        "pearson": null,
+        "prediction_sd": 0.0,
+        "rmse": 0.3537604272461484,
+        "spearman": null,
+        "target_sd": 0.44643316140362815
+      }
+    },
+    "validation:condition_change": {
+      "other_run_mean": {
+        "mse": 0.0824373522411622,
+        "n_parents": 7,
+        "n_peptide_predictions": 252,
+        "n_records": 63,
+        "pearson": 0.17460907048163968,
+        "prediction_sd": 0.22432021240299174,
+        "rmse": 0.2871190558656151,
+        "spearman": 0.1490503260813325,
+        "target_sd": 0.29825644095593734
+      },
+      "zero_baseline": {
+        "mse": 0.06250386646598287,
+        "n_parents": 7,
+        "n_peptide_predictions": 252,
+        "n_records": 63,
+        "pearson": null,
+        "prediction_sd": 0.0,
+        "rmse": 0.250007732812373,
+        "spearman": null,
+        "target_sd": 0.29825644095593734
+      }
+    },
+    "validation:same_condition_composition": {
+      "other_run_mean": {
+        "mse": 0.0412186761205811,
+        "n_parents": 7,
+        "n_peptide_predictions": 168,
+        "n_records": 42,
+        "pearson": 0.832740542990079,
+        "prediction_sd": 0.402790612767739,
+        "rmse": 0.2030238314104556,
+        "spearman": 0.8156797141136157,
+        "target_sd": 0.4260973494090291
+      },
+      "zero_baseline": {
+        "mse": 0.11555447412201991,
+        "n_parents": 7,
+        "n_peptide_predictions": 168,
+        "n_records": 42,
+        "pearson": null,
+        "prediction_sd": 0.0,
+        "rmse": 0.3399330435865568,
+        "spearman": null,
+        "target_sd": 0.4260973494090291
+      }
+    }
+  },
+  "complete_runs_with_direct_msms": 1873,
+  "n_complete_parents": 71,
+  "n_complete_peptides": 369,
+  "peak_rss_bytes": 155123712,
+  "scope": "Selected complete captured-intensity observations; acquisition repeatability, not calibrated biological noise or concentration",
+  "seconds": 0.09714379202341661
+}

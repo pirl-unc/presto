@@ -1,0 +1,74 @@
+{
+  "schema": "presto.runtime_tree_h100_probe_launch.v1",
+  "experiment": "2026-11-08_1800_codex_unified-parity-retrain",
+  "created_utc": "2026-11-09T01:50:25Z",
+  "purpose": "Resolve the initial fit guard stop under the exact H100 container and mount contract without scientific-state access",
+  "git": {
+    "branch": "codex/post-pr153-unified-retraining-20261108",
+    "source_commit": "260338e433d78e9e046a8254cd7932cd85b60819",
+    "dirty": false
+  },
+  "source_sha256": {
+    "code/runtime_tree_h100_probe.py": "8052eab02f2812ca271a2444fe9e0c4a4aaeb36fccaedf6b37d42cc10fee8053",
+    "reproduce/runtime-tree-h100-probe/launch.sh": "48831c2aa7309f89f06b5dfa2f28a6b905047fe4b7314f333aa2e0de11d650fc",
+    "reproduce/runtime-tree-h100-probe/collect.sh": "c773f0eab315b701c2bcf1978f9afde543c24c3abb334fa561807df1600cb185",
+    "reproduce/runtime-tree-h100-probe/source/collect.py": "2e1a29d6e0b13b2e5ee81e64e0b6bdda695310691c3b915bd588088684e5a27d"
+  },
+  "bundle_sha256": {
+    "runtime_tree_h100_probe.py": "8052eab02f2812ca271a2444fe9e0c4a4aaeb36fccaedf6b37d42cc10fee8053",
+    "fit_pair.py": "e6f579fed15c17dfc76cb64ab3bc9d09ada90a73186053f26830471568e64aab",
+    "reference-manifest.json": "e2724c0ba873a98fa15f90c6ccc06013f320e65eb8968af0400bf7722e6db16d",
+    "parity-manifest.json": "8259d1ec1b59430d7078174a7718d8b7157e351a0261e70384996692605bbd7c"
+  },
+  "local_expected": {
+    "files": 89,
+    "bytes": 1711245,
+    "sha256": "3c3c39fc2c570bcb1ae68f5572889249770024648b00b3bc429162e98fb06d64"
+  },
+  "baseline_receipt": {
+    "path": "results/runtime-tree-probe/receipt.json",
+    "bytes": 14741,
+    "sha256": "b2c5406c375ad11342fa209c76b871b7e246da72024b0b2bf3eb5b33a6d0491f"
+  },
+  "prior_cpu_import_receipt": {
+    "path": "results/runtime-tree-import-probe-v2/receipt.json",
+    "bytes": 1160,
+    "sha256": "88c933ce39f22e4df9cd7a42f84b1b93a85663ce4d7e0483138d47750199283f"
+  },
+  "image": {
+    "python": "3.12",
+    "requirements": [
+      "torch==2.14.1",
+      "numpy==2.5.4",
+      "pyyaml==6.0.3",
+      "mhcgnomes==3.64.6",
+      "mhcseqs==2.6.13",
+      "tqdm==4.70.1",
+      "psutil==7.2.2"
+    ],
+    "matches_fit_image": true
+  },
+  "resources": {
+    "cpu": 4,
+    "memory_mib": 32768,
+    "ephemeral_disk_mib": 524288,
+    "timeout_seconds": 600,
+    "network": "blocked",
+    "volume_mount": "/volume",
+    "volume_api_calls": false,
+    "requested_gpu": "H100!"
+  },
+  "data_access": {
+    "volume_reload": false,
+    "volume_list": false,
+    "volume_read": false,
+    "training_rows": false,
+    "development_rows": false,
+    "test": false,
+    "locked_confirmation": false,
+    "checkpoint": false,
+    "model": false,
+    "optimizer_steps": 0
+  },
+  "launch_command": "PRESTO_MODAL_GPU=H100! PRESTO_EXPERIMENT_DIR=experiments/2026-11-08_1800_codex_unified-parity-retrain modal run --detach experiments/2026-11-08_1800_codex_unified-parity-retrain/code/runtime_tree_h100_probe.py"
+}

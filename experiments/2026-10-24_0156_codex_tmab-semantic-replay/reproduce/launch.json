@@ -1,0 +1,38 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "registered_at": "2026-10-24T01:56:58.507808-04:00",
+  "presto_commit": "b298ea991f7b1ed603ab0c5d700f6b8c3e827107",
+  "presto_dirty": " M tasks/todo.md\n",
+  "hitlist_checkout": "/private/tmp/hitlist-native-fix",
+  "hitlist_base": "f4d3a6d0f1933162f9ac6eac42ac1b134c8a27dc",
+  "hitlist_source_sha256": {
+    "docs/evidence-store.md": "114776d42edf45d67ce7791e4c75cae039a84d27cc3ca6990dd902a4e956bef8",
+    "hitlist/evidence_bindings.py": "fdaa5b016e45dc31f60686cee50fe8ea51bca08c5c65a2846e634345df302ef8",
+    "hitlist/evidence_catalog.py": "2cfc5db8252414ca4539cc9d73f42ed074ef02b648de875a2cbded956f4ec678",
+    "hitlist/evidence_package.py": "12f0b229788344c9acb4ed20bc74080d7a08d6693d2d044a696ae3b1977cb2dc",
+    "hitlist/tmab_peptidomics.py": "0f85f7a16667239a62a7ff4443c8bb6ef438879880805bf21fc3178c6cdebf0f",
+    "hitlist/version.py": "e8a299aacfab899cbb07f648e542832c9c870935fd2d19703df04dd3171fabf5",
+    "tasks/todo.md": "c8f4fcdfe93e0b346da9d293373aa24d0bee45eb7e64b1d99c355e2dac975bd4",
+    "tests/test_binding_context_availability.py": "065b1693da982dde3dd1cef7ae1d498bbaab60b66c61512e58834d8de49fdf06",
+    "tests/test_evidence_catalog.py": "851ceb9b655642090803bf4fa9fdf736c18ad87253600530b401c53add1503e9",
+    "tests/test_gomez_prediction_panel.py": "32f63cfa7895165fed02972d15cec8885c792ec3592f71055a31f74d2df8b026",
+    "tests/test_tmab_peptidomics.py": "11b6ba45be82abd1d576886603e580e4aec88c40ca2c5a0237a8308e6e2d9b4a",
+    "tests/test_tmab_semantics.py": "6508e03dec2e862a1d92acad26d831d1e5b50fa36f2c37b7159848312ba85dbb",
+    "tasks/tmab-semantic-corrections-791.md": "f9615c496de2e4b4e3e36a9a5d1a1a3d2a0fac5791306a6f2b983e765b7be8a2"
+  },
+  "old_family": "/private/tmp/presto-modular-model/experiments/2026-10-24_0117_codex_native-peptidome-admission",
+  "old_package": "/private/tmp/presto-modular-model/data/native_peptidome_source_audit/2026-10-24_0117_codex_native-peptidome-admission/hitlist-f4d3a6d-package",
+  "old_manifest_sha256": "b15de0b80c9fff1aad5b60f66e4e5b083c7f585ea01e723209a482182e26c32b",
+  "source_directory": "/private/tmp/presto-modular-model/data/native_peptidome_source_audit/2026-10-24_0117_codex_native-peptidome-admission/canonical-inputs",
+  "new_package": "/private/tmp/presto-modular-model/data/native_peptidome_source_audit/2026-10-24_0117_codex_native-peptidome-admission/2026-10-24_0156_codex_tmab-semantic-replay-package",
+  "seconds_cap": 180,
+  "rss_bytes_cap": 2147483648,
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "training": "none; source semantic replay only",
+  "predictive_split": "none: source qualification before admission"
+}

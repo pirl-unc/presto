@@ -1,0 +1,122 @@
+{
+  "status": "passed",
+  "n_prediction_values": 1047120,
+  "n_condition_systems": 360,
+  "max_prediction_error": 1.4827028493868966e-13,
+  "max_coefficient_error": 1.7416623698807143e-14,
+  "max_metric_error": 3.9968028886505635e-15,
+  "donor_counts": {
+    "0:fit": {
+      "n_keys": 5053,
+      "unchanged": 0,
+      "same_component": 28
+    },
+    "0:eval": {
+      "n_keys": 1264,
+      "unchanged": 0,
+      "same_component": 11
+    },
+    "1:fit": {
+      "n_keys": 5079,
+      "unchanged": 0,
+      "same_component": 41
+    },
+    "1:eval": {
+      "n_keys": 1238,
+      "unchanged": 0,
+      "same_component": 3
+    },
+    "2:fit": {
+      "n_keys": 5078,
+      "unchanged": 0,
+      "same_component": 34
+    },
+    "2:eval": {
+      "n_keys": 1239,
+      "unchanged": 0,
+      "same_component": 9
+    },
+    "3:fit": {
+      "n_keys": 5143,
+      "unchanged": 0,
+      "same_component": 35
+    },
+    "3:eval": {
+      "n_keys": 1174,
+      "unchanged": 1,
+      "same_component": 8
+    },
+    "4:fit": {
+      "n_keys": 4915,
+      "unchanged": 0,
+      "same_component": 7
+    },
+    "4:eval": {
+      "n_keys": 1402,
+      "unchanged": 0,
+      "same_component": 145
+    },
+    "full:fit": {
+      "n_keys": 6317,
+      "unchanged": 0,
+      "same_component": 28
+    },
+    "full:eval": {
+      "n_keys": 6317,
+      "unchanged": 0,
+      "same_component": 28
+    }
+  },
+  "rank_diagnostics": {
+    "sequence_affinity:train": {
+      "raw_difference": 4.170298173455933e-08,
+      "raw_archived_spearman": 0.5043512338657228,
+      "raw_replayed_spearman": 0.5043512755687045,
+      "canonical_archived_spearman": 0.5043512576969195,
+      "canonical_replayed_spearman": 0.5043512576969195,
+      "max_identical_input_original_spread": 4.440892098500626e-16,
+      "max_identical_input_replay_spread": 3.3306690738754696e-16,
+      "n_input_groups": 34367
+    },
+    "sequence_affinity:inner_cv": {
+      "raw_difference": 6.931406948407215e-09,
+      "raw_archived_spearman": 0.479328872382082,
+      "raw_replayed_spearman": 0.47932887931348894,
+      "canonical_archived_spearman": 0.47932888052852446,
+      "canonical_replayed_spearman": 0.47932888052852446,
+      "max_identical_input_original_spread": 2.220446049250313e-16,
+      "max_identical_input_replay_spread": 4.440892098500626e-16,
+      "n_input_groups": 34367
+    },
+    "sequence_shuffled_affinity:train": {
+      "raw_difference": 2.2847282232785204e-08,
+      "raw_archived_spearman": 0.4866172533091214,
+      "raw_replayed_spearman": 0.48661727615640366,
+      "canonical_archived_spearman": 0.48661725088642976,
+      "canonical_replayed_spearman": 0.48661725088642976,
+      "max_identical_input_original_spread": 4.440892098500626e-16,
+      "max_identical_input_replay_spread": 4.440892098500626e-16,
+      "n_input_groups": 34367
+    },
+    "sequence_shuffled_affinity:inner_cv": {
+      "raw_difference": 1.3558261124924087e-08,
+      "raw_archived_spearman": 0.4600156748379427,
+      "raw_replayed_spearman": 0.4600156612796816,
+      "canonical_archived_spearman": 0.4600156663552945,
+      "canonical_replayed_spearman": 0.4600156663552945,
+      "max_identical_input_original_spread": 8.881784197001252e-16,
+      "max_identical_input_replay_spread": 4.440892098500626e-16,
+      "n_input_groups": 34367
+    }
+  },
+  "n_predictor_training_rows": 811134,
+  "n_exposed_hap1_peptides": 4925,
+  "member_aggregation_error": 2.220446049250313e-15,
+  "seconds": 39.29279233299894,
+  "peak_gib": 1.7632598876953125,
+  "argv": [
+    "experiments/2026-10-24_2041_codex_hap1-affinity-control/analysis/verify.py"
+  ],
+  "source_sha256": "9730c737565c7ad128b6f097401fab6507233055c6ab37cc7b5abc67e6d8b6d7",
+  "outer_validation_test_scored": false
+}

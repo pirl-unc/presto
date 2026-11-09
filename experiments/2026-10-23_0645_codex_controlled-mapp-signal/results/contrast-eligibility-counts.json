@@ -1,0 +1,20 @@
+{
+  "counts": {
+    "train": {
+      "n_peptides_with_any_qualified_positive": 2301,
+      "n_complete_case_peptides": 59,
+      "n_complete_case_components": 40
+    },
+    "val": {
+      "n_peptides_with_any_qualified_positive": 585,
+      "n_complete_case_peptides": 14,
+      "n_complete_case_components": 5
+    },
+    "test": {
+      "n_peptides_with_any_qualified_positive": 446,
+      "n_complete_case_peptides": 14,
+      "n_complete_case_components": 9
+    }
+  },
+  "scope": "Eligibility counts only; no held-out intensity sums, contrasts, model fits or predictive metrics."
+}

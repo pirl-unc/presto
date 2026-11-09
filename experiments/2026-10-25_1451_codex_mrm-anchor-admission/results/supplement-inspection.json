@@ -1,0 +1,2385 @@
+{
+  "article": {
+    "pmcid": "PMC6123701",
+    "version": 1,
+    "pmid": 30271959,
+    "doi": "10.1038/s42003-018-0087-6",
+    "mid": null,
+    "title": "Molecular phenotyping of laboratory mouse strains using 500 multiple reaction monitoring mass spectrometry plasma assays",
+    "citation": "Commun Biol. 2018 Jun 27;1:78. doi: 10.1038/s42003-018-0087-6",
+    "is_pmc_openaccess": true,
+    "is_manuscript": false,
+    "is_historical_ocr": false,
+    "is_retracted": false,
+    "license_code": "CC BY",
+    "pdf_url": "s3://pmc-oa-opendata/PMC6123701.1/PMC6123701.1.pdf?md5=8fe40fc4c42983c286c4af6256fc1243",
+    "xml_url": "s3://pmc-oa-opendata/PMC6123701.1/PMC6123701.1.xml?md5=f388f7c897a133518f8ff4572c590f5c",
+    "text_url": "s3://pmc-oa-opendata/PMC6123701.1/PMC6123701.1.txt?md5=503ad8b50d57a36208037904e8018404",
+    "media_urls": [
+      "s3://pmc-oa-opendata/PMC6123701.1/42003_2018_87_Fig1_HTML.jpg?md5=81baa108c88fa7cbd6b260eba1e80b18",
+      "s3://pmc-oa-opendata/PMC6123701.1/42003_2018_87_Fig2_HTML.jpg?md5=46708f3824f562cd8b957475ebfe18c8",
+      "s3://pmc-oa-opendata/PMC6123701.1/42003_2018_87_Fig3_HTML.jpg?md5=08e8653edc8630003ae340b14eef6679",
+      "s3://pmc-oa-opendata/PMC6123701.1/42003_2018_87_MOESM10_ESM.xlsx?md5=7385fd3a7f5fd528d45f2ee5c6b7851d",
+      "s3://pmc-oa-opendata/PMC6123701.1/42003_2018_87_MOESM1_ESM.pdf?md5=41c250f14bea1b7feefec085aaa3070a",
+      "s3://pmc-oa-opendata/PMC6123701.1/42003_2018_87_MOESM2_ESM.docx?md5=c789afcdd5a367f513ee36ef2c245472",
+      "s3://pmc-oa-opendata/PMC6123701.1/42003_2018_87_MOESM3_ESM.xlsx?md5=9b119c3220e062622d076aeddc3ddaf8",
+      "s3://pmc-oa-opendata/PMC6123701.1/42003_2018_87_MOESM4_ESM.xlsx?md5=fcf63d996a59775ca02f0e5a5f948c87",
+      "s3://pmc-oa-opendata/PMC6123701.1/42003_2018_87_MOESM5_ESM.xlsx?md5=e6c0e77ab1a8c907f272723ac2badd6c",
+      "s3://pmc-oa-opendata/PMC6123701.1/42003_2018_87_MOESM6_ESM.xlsx?md5=4894b4ea97f43d65a517efc107b48cd8",
+      "s3://pmc-oa-opendata/PMC6123701.1/42003_2018_87_MOESM7_ESM.xlsx?md5=73c9861415277aaa250d8675791dd4bc",
+      "s3://pmc-oa-opendata/PMC6123701.1/42003_2018_87_MOESM8_ESM.xlsx?md5=08db3e890dadee94dfc12d32a695b619",
+      "s3://pmc-oa-opendata/PMC6123701.1/42003_2018_87_MOESM9_ESM.xlsx?md5=6366a9b4c10a92ec86c3c3fe9baa896a"
+    ]
+  },
+  "assets": [
+    {
+      "file": "s3-42003_2018_87_MOESM10_ESM.xlsx",
+      "bytes": 27327,
+      "sha256": "d32088b64eb08fabca6bc3a6f55c4d741064e164be090a69b82c1d86b51dba6c",
+      "archive_members": [
+        {
+          "name": "[Content_Types].xml",
+          "bytes": 1284
+        },
+        {
+          "name": "_rels/.rels",
+          "bytes": 588
+        },
+        {
+          "name": "xl/_rels/workbook.xml.rels",
+          "bytes": 698
+        },
+        {
+          "name": "xl/workbook.xml",
+          "bytes": 691
+        },
+        {
+          "name": "xl/sharedStrings.xml",
+          "bytes": 28978
+        },
+        {
+          "name": "xl/worksheets/_rels/sheet1.xml.rels",
+          "bytes": 322
+        },
+        {
+          "name": "xl/theme/theme1.xml",
+          "bytes": 6745
+        },
+        {
+          "name": "xl/styles.xml",
+          "bytes": 8063
+        },
+        {
+          "name": "xl/worksheets/sheet1.xml",
+          "bytes": 56906
+        },
+        {
+          "name": "xl/printerSettings/printerSettings1.bin",
+          "bytes": 2228
+        },
+        {
+          "name": "docProps/core.xml",
+          "bytes": 601
+        },
+        {
+          "name": "docProps/app.xml",
+          "bytes": 807
+        }
+      ],
+      "sheets": [
+        {
+          "name": "Sheet1",
+          "dimensions": "A1:E245",
+          "nonempty_cached_cells": 1131,
+          "header_rows": [
+            [
+              "A1",
+              "Supplementary Data 8. Mouse proteotypic peptides that are identical to those for human proteins. "
+            ],
+            [
+              "A3",
+              "Peptide sequence"
+            ],
+            [
+              "B3",
+              "Mouse UniProt accession number"
+            ],
+            [
+              "C3",
+              "Mouse MRM assay annotation"
+            ],
+            [
+              "D3",
+              "Human UniProt accession number"
+            ],
+            [
+              "E3",
+              "Human protein annotation"
+            ],
+            [
+              "A4",
+              "AAEDYGVIK"
+            ],
+            [
+              "B4",
+              "P37804"
+            ],
+            [
+              "C4",
+              "Transgelin"
+            ],
+            [
+              "D4",
+              "Q01995"
+            ],
+            [
+              "E4",
+              "Transgelin"
+            ],
+            [
+              "A5",
+              "ADEGISFR"
+            ],
+            [
+              "B5",
+              "P35700"
+            ],
+            [
+              "C5",
+              "Peroxiredoxin-1 "
+            ],
+            [
+              "D5",
+              "Q06830"
+            ],
+            [
+              "E5",
+              "Peroxiredoxin-1 "
+            ],
+            [
+              "A6",
+              "AELNEFLTR"
+            ],
+            [
+              "B6",
+              "P62908"
+            ],
+            [
+              "C6",
+              "40S ribosomal protein S3"
+            ],
+            [
+              "D6",
+              "P23396"
+            ],
+            [
+              "E6",
+              "40S ribosomal protein S3"
+            ]
+          ],
+          "semantic_text_cells": [],
+          "formula_cells": 0,
+          "types": {
+            "s": 1131,
+            "n": 89
+          }
+        }
+      ]
+    },
+    {
+      "file": "s3-42003_2018_87_MOESM2_ESM.docx",
+      "bytes": 16589,
+      "sha256": "6e01645cf8a201b83033c6c7df7c18ddc2d148de6ef8d642d5da1070ee4fed9d",
+      "archive_members": [
+        {
+          "name": "[Content_Types].xml",
+          "bytes": 1422
+        },
+        {
+          "name": "_rels/.rels",
+          "bytes": 590
+        },
+        {
+          "name": "word/_rels/document.xml.rels",
+          "bytes": 953
+        },
+        {
+          "name": "word/document.xml",
+          "bytes": 31690
+        },
+        {
+          "name": "word/theme/theme1.xml",
+          "bytes": 7076
+        },
+        {
+          "name": "word/settings.xml",
+          "bytes": 2232
+        },
+        {
+          "name": "word/webSettings.xml",
+          "bytes": 2844
+        },
+        {
+          "name": "word/stylesWithEffects.xml",
+          "bytes": 15931
+        },
+        {
+          "name": "docProps/core.xml",
+          "bytes": 656
+        },
+        {
+          "name": "word/styles.xml",
+          "bytes": 15204
+        },
+        {
+          "name": "word/fontTable.xml",
+          "bytes": 1450
+        },
+        {
+          "name": "docProps/app.xml",
+          "bytes": 1003
+        }
+      ],
+      "paragraphs": [
+        "Description of Additional Supplementary Files",
+        "",
+        "File Name: Supplementary Data 1",
+        "Description:  Optimized parameters for MRM mouse plasma assays and purity-adjusted SIS peptide concentrations.  ",
+        "AAA \u2013 amino acid analysis, CZE \u2013 capillary zone electrophoresis",
+        "",
+        "File Name: Supplementary Data 2",
+        "Description:    Total variability and lower limit of quantification of MRM mouse plasma assays (CPTAC Experiment 2). ",
+        "Blue- and yellow-shaded cells represent total variability at the 2.5x and 5x assay LLOQ , respectively.",
+        "",
+        "File Name: Supplementary Data 3",
+        "Description:  Stability of MRM mouse plasma assays (CPTAC Experiment 4). ",
+        "Table summarizes variability and technical variability of each assay at six experimental time points spanning 4 weeks.",
+        "T \u2013 freeze-thaw, wks \u2013 weeks.",
+        "",
+        "File Name: Supplementary Data 4 ",
+        "Description:  Reproducibility of target endogenous analyte detection in pooled plasma from (CPTAC Experiment 5).",
+        "ND \u2013endogenous analyte not detected",
+        "",
+        "File Name: Supplementary Data 5",
+        "Description:  Selectivity of MRM mouse plasma assays (CPTAC Experiment 3)",
+        "Table summarizes the slopes of the response curves of each assay in the plasma of individual C57BL/6BR mice (M436 \u2013 M441).",
+        "ND \u2013endogenous analyte not detected",
+        "",
+        "File Name: Supplementary Data 6",
+        "Description:  Reference concentrations of 272 target proteins in 5 mouse strains.",
+        "Concentrations of 500 target analytes were measured by the CPTAC-validated MRM assays in plasma from C57BL/6 mice (C57BL/6BR from BioreclamationIVT, C57BL/6/CRL originating in the Charles River Laboratories, and C57BL/6J mice originating in the Jacksons Laboratories), CD1, 129S1/SvlmJ, NOD/SCID/J#1303, and Balb/cJ mice. Reference values are reported only for analytes detected within the dynamic range of the respective assays in plasma of at least 4 mice per mouse strain (N=272).  For the protein Q19LI2, reference values for males and females are listed separately due to distinct sex-specific differences in protein abundance. ULOQ \u2013 upper limit of quantification.  Molecular weight (MW) of target mature proteins (without signal sequences) used for calculation of protein concentration (in ng/ml) is shown.  For proteins with multiple cleaving products, the average molecular weights of the full-length mature protein are listed; all additional cleaving products containing the surrogate peptide are highlighted in bold.  For proteins with cleaving products that do not overlap, the average molecular weight of the product containing the surrogate peptide is shown (yellow-shaded cells). Finally, the average molecular weight of the full-length protein sequences of IgG chain fragments is listed (blue-shaded cells).  Surrogate peptide VAPEEHPVLLTEAPLNPK matches two proteins, P60710 and P63260 (Actin cytoplasmic 1 and 2, respectively); molecular weights of both proteins are listed. Grey-shaded cells represent statistically significant comparisons (p<0.05) as determined by two-way ANOVA with Tukey\u2019s correction for multiple comparisons; a and b stand for statistically significant comparisons between the indicated vendors. Green-shaded cell highlight lower immunoglobulin (Ig) abundance in immunocompromised NOD/SCID/J#1303 mice.",
+        "",
+        "File Name: Supplementary Data 7",
+        "Description: Concentrations of 500 target analytes in 5 mouse strains (raw data). ",
+        "M \u2013 male, F \u2013 female, ND \u2013 analyte not detected or detected below the lower limit of quantification of the assay ",
+        "ULOQ \u2013 analyte detected above the upper limit of quantification (ULOQ).",
+        "",
+        "File Name: Supplementary Data 8",
+        "Description: Mouse proteotypic peptides that are identical to those for human proteins.",
+        ""
+      ]
+    },
+    {
+      "file": "s3-42003_2018_87_MOESM3_ESM.xlsx",
+      "bytes": 67911,
+      "sha256": "c85d02ec40fa62ccaebe1b9b9de4b9a578774043b404f1f996e312c24dd284b9",
+      "archive_members": [
+        {
+          "name": "[Content_Types].xml",
+          "bytes": 1284
+        },
+        {
+          "name": "_rels/.rels",
+          "bytes": 588
+        },
+        {
+          "name": "xl/_rels/workbook.xml.rels",
+          "bytes": 698
+        },
+        {
+          "name": "xl/workbook.xml",
+          "bytes": 823
+        },
+        {
+          "name": "xl/sharedStrings.xml",
+          "bytes": 26026
+        },
+        {
+          "name": "xl/worksheets/_rels/sheet1.xml.rels",
+          "bytes": 322
+        },
+        {
+          "name": "xl/theme/theme1.xml",
+          "bytes": 6745
+        },
+        {
+          "name": "xl/styles.xml",
+          "bytes": 8167
+        },
+        {
+          "name": "xl/worksheets/sheet1.xml",
+          "bytes": 226556
+        },
+        {
+          "name": "xl/printerSettings/printerSettings1.bin",
+          "bytes": 2228
+        },
+        {
+          "name": "docProps/core.xml",
+          "bytes": 601
+        },
+        {
+          "name": "docProps/app.xml",
+          "bytes": 807
+        }
+      ],
+      "sheets": [
+        {
+          "name": "Sheet1",
+          "dimensions": "A1:J503",
+          "nonempty_cached_cells": 5012,
+          "header_rows": [
+            [
+              "A1",
+              "Supplementary Data 1. Optimized parameters for MRM mouse plasma assays and purity-adjusted SIS peptide concentrations.  "
+            ],
+            [
+              "A2",
+              "AAA \u2013 amino acid analysis, CZE \u2013 capillary zone electrophoresis"
+            ],
+            [
+              "A3",
+              "Peptide sequence"
+            ],
+            [
+              "B3",
+              "UniProt accession number"
+            ],
+            [
+              "C3",
+              "Heavy Precursor m/z"
+            ],
+            [
+              "D3",
+              "Heavy Quantfier m/z"
+            ],
+            [
+              "E3",
+              "Light Precursor m/z"
+            ],
+            [
+              "F3",
+              "Light Quantfier m/z"
+            ],
+            [
+              "G3",
+              "Quantifier"
+            ],
+            [
+              "H3",
+              "SIS peptide concentration (AAA; pmol/\u00b5l)"
+            ],
+            [
+              "I3",
+              "SIS peptide purity (CZE; %)"
+            ],
+            [
+              "J3",
+              "Purity-adjusted SIS peptide concentration (pmol/\u00b5l)"
+            ],
+            [
+              "A4",
+              "AAEDYGVIK"
+            ],
+            [
+              "B4",
+              "P37804"
+            ],
+            [
+              "C4",
+              487.2582
+            ],
+            [
+              "D4",
+              831.4338
+            ],
+            [
+              "E4",
+              483.2511
+            ],
+            [
+              "F4",
+              823.4338
+            ],
+            [
+              "G4",
+              "y7+"
+            ],
+            [
+              "H4",
+              6.565
+            ],
+            [
+              "I4",
+              93.06
+            ],
+            [
+              "J4",
+              6.109389
+            ],
+            [
+              "A5",
+              "AAPITQYLK"
+            ],
+            [
+              "B5",
+              "O89020"
+            ],
+            [
+              "C5",
+              506.8
+            ],
+            [
+              "D5",
+              435.7624
+            ],
+            [
+              "E5",
+              502.8
+            ],
+            [
+              "F5",
+              431.7624
+            ],
+            [
+              "G5",
+              "y7++"
+            ],
+            [
+              "H5",
+              9.7
+            ],
+            [
+              "I5",
+              100.0
+            ],
+            [
+              "J5",
+              9.7
+            ],
+            [
+              "A6",
+              "ADEGISFR"
+            ],
+            [
+              "B6",
+              "P35700"
+            ],
+            [
+              "C6",
+              452.7241
+            ],
+            [
+              "D6",
+              419.2277
+            ],
+            [
+              "E6",
+              447.719
+            ],
+            [
+              "F6",
+              409.22
+            ],
+            [
+              "G6",
+              "y3+"
+            ],
+            [
+              "H6",
+              3.8
+            ],
+            [
+              "I6",
+              58.05
+            ],
+            [
+              "J6",
+              2.2059
+            ]
+          ],
+          "semantic_text_cells": [
+            [
+              "A1",
+              "Supplementary Data 1. Optimized parameters for MRM mouse plasma assays and purity-adjusted SIS peptide concentrations.  "
+            ],
+            [
+              "H3",
+              "SIS peptide concentration (AAA; pmol/\u00b5l)"
+            ],
+            [
+              "I3",
+              "SIS peptide purity (CZE; %)"
+            ],
+            [
+              "J3",
+              "Purity-adjusted SIS peptide concentration (pmol/\u00b5l)"
+            ]
+          ],
+          "formula_cells": 0,
+          "types": {
+            "s": 1512,
+            "n": 3505,
+            "e": 4
+          }
+        }
+      ]
+    },
+    {
+      "file": "s3-42003_2018_87_MOESM4_ESM.xlsx",
+      "bytes": 60311,
+      "sha256": "34a658bd3c5e7bbc4cfe7fa990d25566cd1eb49eb265a9d379141fbca5c9aaba",
+      "archive_members": [
+        {
+          "name": "[Content_Types].xml",
+          "bytes": 1284
+        },
+        {
+          "name": "_rels/.rels",
+          "bytes": 588
+        },
+        {
+          "name": "xl/_rels/workbook.xml.rels",
+          "bytes": 698
+        },
+        {
+          "name": "xl/workbook.xml",
+          "bytes": 835
+        },
+        {
+          "name": "xl/sharedStrings.xml",
+          "bytes": 25277
+        },
+        {
+          "name": "xl/worksheets/_rels/sheet1.xml.rels",
+          "bytes": 322
+        },
+        {
+          "name": "xl/theme/theme1.xml",
+          "bytes": 6745
+        },
+        {
+          "name": "xl/styles.xml",
+          "bytes": 10044
+        },
+        {
+          "name": "xl/worksheets/sheet1.xml",
+          "bytes": 168628
+        },
+        {
+          "name": "xl/printerSettings/printerSettings1.bin",
+          "bytes": 2228
+        },
+        {
+          "name": "docProps/core.xml",
+          "bytes": 601
+        },
+        {
+          "name": "docProps/app.xml",
+          "bytes": 812
+        }
+      ],
+      "sheets": [
+        {
+          "name": "Final table",
+          "dimensions": "A1:G504",
+          "nonempty_cached_cells": 3510,
+          "header_rows": [
+            [
+              "A1",
+              "Supplementary Data 2. Total variability and lower limit of quantification (LLOQ) of MRM mouse plasma assays (CPTAC Experiment 2)."
+            ],
+            [
+              "A2",
+              "Blue- and yellow-shaded cells represent total variability at the 2.5x and 5x assay LLOQ , respectively"
+            ],
+            [
+              "A3",
+              "Peptide sequence"
+            ],
+            [
+              "B3",
+              "UniProt accession number"
+            ],
+            [
+              "C3",
+              "Experiment 2: Total variability  (%)"
+            ],
+            [
+              "F3",
+              "CPTAC Experiment 2: Validated Assay LLOQ (fmol on LC column for each injection) using AAA/CZE adjusted SIS peptide concentration"
+            ],
+            [
+              "G3",
+              "CPTAC Experiment 1: Peptide LLOQ (fmol on LC column for each injection) using AAA/CZE adjusted SIS peptide concentration"
+            ],
+            [
+              "C4",
+              "High concentration (500x LLOQ)"
+            ],
+            [
+              "D4",
+              "Medium concentration (50x LLOQ)"
+            ],
+            [
+              "E4",
+              "Low concentration (2.5x or 5x LLOQ)"
+            ],
+            [
+              "A5",
+              "AAEDYGVIK"
+            ],
+            [
+              "B5",
+              "P37804"
+            ],
+            [
+              "C5",
+              10.85
+            ],
+            [
+              "D5",
+              12.54
+            ],
+            [
+              "E5",
+              16.0
+            ],
+            [
+              "F5",
+              3.0546945
+            ],
+            [
+              "G5",
+              3.0545
+            ],
+            [
+              "A6",
+              "AAPITQYLK"
+            ],
+            [
+              "B6",
+              "O89020"
+            ],
+            [
+              "C6",
+              13.062382102210103
+            ],
+            [
+              "D6",
+              6.635447551893974
+            ],
+            [
+              "E6",
+              13.996121973655384
+            ],
+            [
+              "F6",
+              4.85
+            ],
+            [
+              "G6",
+              4.85
+            ]
+          ],
+          "semantic_text_cells": [
+            [
+              "F3",
+              "CPTAC Experiment 2: Validated Assay LLOQ (fmol on LC column for each injection) using AAA/CZE adjusted SIS peptide concentration"
+            ],
+            [
+              "G3",
+              "CPTAC Experiment 1: Peptide LLOQ (fmol on LC column for each injection) using AAA/CZE adjusted SIS peptide concentration"
+            ],
+            [
+              "C4",
+              "High concentration (500x LLOQ)"
+            ],
+            [
+              "D4",
+              "Medium concentration (50x LLOQ)"
+            ],
+            [
+              "E4",
+              "Low concentration (2.5x or 5x LLOQ)"
+            ]
+          ],
+          "formula_cells": 0,
+          "types": {
+            "s": 1010,
+            "n": 2513
+          }
+        }
+      ]
+    },
+    {
+      "file": "s3-42003_2018_87_MOESM5_ESM.xlsx",
+      "bytes": 151284,
+      "sha256": "94d921f693c51f23bba29d36877b13ec951be0bf79cb2912f6beeafc8848128a",
+      "archive_members": [
+        {
+          "name": "[Content_Types].xml",
+          "bytes": 1432
+        },
+        {
+          "name": "_rels/.rels",
+          "bytes": 588
+        },
+        {
+          "name": "xl/_rels/workbook.xml.rels",
+          "bytes": 839
+        },
+        {
+          "name": "xl/workbook.xml",
+          "bytes": 882
+        },
+        {
+          "name": "xl/styles.xml",
+          "bytes": 11325
+        },
+        {
+          "name": "xl/worksheets/_rels/sheet2.xml.rels",
+          "bytes": 293
+        },
+        {
+          "name": "xl/worksheets/sheet2.xml",
+          "bytes": 11818
+        },
+        {
+          "name": "xl/theme/theme1.xml",
+          "bytes": 6745
+        },
+        {
+          "name": "xl/sharedStrings.xml",
+          "bytes": 25976
+        },
+        {
+          "name": "xl/worksheets/sheet1.xml",
+          "bytes": 406899
+        },
+        {
+          "name": "xl/tables/table1.xml",
+          "bytes": 1276
+        },
+        {
+          "name": "docProps/core.xml",
+          "bytes": 601
+        },
+        {
+          "name": "docProps/app.xml",
+          "bytes": 834
+        }
+      ],
+      "sheets": [
+        {
+          "name": "Sheet1",
+          "dimensions": "A1:Q502",
+          "nonempty_cached_cells": 8519,
+          "header_rows": [
+            [
+              "A1",
+              "Peptide"
+            ],
+            [
+              "B1",
+              "UniProt accession number"
+            ],
+            [
+              "C1",
+              "Average intra-assay  variability"
+            ],
+            [
+              "D1",
+              "Average inter-assay variability"
+            ],
+            [
+              "E1",
+              "Total variability"
+            ],
+            [
+              "F1",
+              "Intra-assay varibility (across six individual injections) "
+            ],
+            [
+              "L1",
+              "Inter-assay variability (across six experimental conditions)"
+            ],
+            [
+              "F2",
+              "0 h"
+            ],
+            [
+              "G2",
+              "6 h"
+            ],
+            [
+              "H2",
+              "24 h"
+            ],
+            [
+              "I2",
+              "T 1x"
+            ],
+            [
+              "J2",
+              "T 2x"
+            ],
+            [
+              "K2",
+              "T4 wks"
+            ],
+            [
+              "L2",
+              "Injection 1"
+            ],
+            [
+              "M2",
+              "Injection 2"
+            ],
+            [
+              "N2",
+              "Injection 3"
+            ],
+            [
+              "O2",
+              "Injection 4"
+            ],
+            [
+              "P2",
+              "Injection 5"
+            ],
+            [
+              "Q2",
+              "Injection 6"
+            ],
+            [
+              "A3",
+              "AAEDYGVIK"
+            ],
+            [
+              "B3",
+              "P37804"
+            ],
+            [
+              "C3",
+              3.868070064644701
+            ],
+            [
+              "D3",
+              4.2950845676309575
+            ],
+            [
+              "E3",
+              5.7801139667053345
+            ],
+            [
+              "F3",
+              5.213547985403315
+            ],
+            [
+              "G3",
+              3.491114317144195
+            ],
+            [
+              "H3",
+              2.3835235270614885
+            ],
+            [
+              "I3",
+              4.717884280361172
+            ],
+            [
+              "J3",
+              3.8197286783799203
+            ],
+            [
+              "K3",
+              3.5826215995181174
+            ],
+            [
+              "L3",
+              4.830597920754453
+            ],
+            [
+              "M3",
+              4.928786332289619
+            ],
+            [
+              "N3",
+              2.1478615058108783
+            ],
+            [
+              "O3",
+              4.6794880086887645
+            ],
+            [
+              "P3",
+              5.704669430419891
+            ],
+            [
+              "Q3",
+              3.479104207822139
+            ],
+            [
+              "A4",
+              "AAPITQYLK"
+            ],
+            [
+              "B4",
+              "O89020"
+            ],
+            [
+              "C4",
+              3.8346374100527485
+            ],
+            [
+              "D4",
+              3.7573178165403553
+            ],
+            [
+              "E4",
+              5.368601423189063
+            ],
+            [
+              "F4",
+              3.858773659980905
+            ],
+            [
+              "G4",
+              2.626185981580809
+            ],
+            [
+              "H4",
+              3.0328966459721864
+            ],
+            [
+              "I4",
+              2.524738597064553
+            ],
+            [
+              "J4",
+              4.8198721402186315
+            ],
+            [
+              "K4",
+              6.145357435499407
+            ],
+            [
+              "L4",
+              4.848543600950901
+            ],
+            [
+              "M4",
+              4.052447463363683
+            ],
+            [
+              "N4",
+              2.2187198658016865
+            ],
+            [
+              "O4",
+              3.0021171714507022
+            ],
+            [
+              "P4",
+              5.139950017771356
+            ],
+            [
+              "Q4",
+              3.282128779903802
+            ],
+            [
+              "A5",
+              "ADEGISFR"
+            ],
+            [
+              "B5",
+              "P35700"
+            ],
+            [
+              "C5",
+              21.292682817752024
+            ],
+            [
+              "D5",
+              22.09987156850097
+            ],
+            [
+              "E5",
+              30.68847772245521
+            ],
+            [
+              "F5",
+              22.232345283213743
+            ],
+            [
+              "G5",
+              32.5417840927932
+            ],
+            [
+              "H5",
+              15.379800380630149
+            ],
+            [
+              "I5",
+              18.45578847143635
+            ],
+            [
+              "J5",
+              22.637554566573304
+            ],
+            [
+              "K5",
+              16.508824111865405
+            ],
+            [
+              "L5",
+              17.438052720588352
+            ],
+            [
+              "M5",
+              19.05612029958858
+            ],
+            [
+              "N5",
+              29.642732833878476
+            ],
+            [
+              "O5",
+              18.466467083671233
+            ],
+            [
+              "P5",
+              17.183914001183055
+            ],
+            [
+              "Q5",
+              30.81194247209612
+            ],
+            [
+              "A6",
+              "ADVDLYQVR"
+            ],
+            [
+              "B6",
+              "Q9CR00"
+            ],
+            [
+              "C6",
+              8.33395432932061
+            ],
+            [
+              "D6",
+              7.461421294781772
+            ],
+            [
+              "E6",
+              11.186044989245513
+            ],
+            [
+              "F6",
+              7.635355740912099
+            ],
+            [
+              "G6",
+              9.563128884569615
+            ],
+            [
+              "H6",
+              7.321474627193178
+            ],
+            [
+              "I6",
+              7.779510925025591
+            ],
+            [
+              "J6",
+              11.061676859359867
+            ],
+            [
+              "K6",
+              6.642578938863306
+            ],
+            [
+              "L6",
+              8.075672578885774
+            ],
+            [
+              "M6",
+              3.9410596360622616
+            ],
+            [
+              "N6",
+              7.506363229508784
+            ],
+            [
+              "O6",
+              8.582686028916944
+            ],
+            [
+              "P6",
+              8.786404989851732
+            ],
+            [
+              "Q6",
+              7.876341305465134
+            ]
+          ],
+          "semantic_text_cells": [],
+          "formula_cells": 0,
+          "types": {
+            "s": 1019,
+            "n": 7515
+          }
+        },
+        {
+          "name": "Sheet2",
+          "dimensions": "A1:P23",
+          "nonempty_cached_cells": 212,
+          "header_rows": [
+            [
+              "A1",
+              "Supplementary Data 3. Stability of MRM mouse plasma assays (CPTAC Experiment 4). Table summarizes variability and technical variability of each assay at six experimental time points spanning 4 weeks. "
+            ],
+            [
+              "A2",
+              "T \u2013 freeze-thaw, wks \u2013 weeks."
+            ],
+            [
+              "A3",
+              "Peptide"
+            ],
+            [
+              "B3",
+              "0hrs"
+            ],
+            [
+              "C3",
+              "6hrs"
+            ],
+            [
+              "D3",
+              "24hrs"
+            ],
+            [
+              "E3",
+              "FT1x"
+            ],
+            [
+              "F3",
+              "FT2x"
+            ],
+            [
+              "G3",
+              "FT4w"
+            ],
+            [
+              "H3",
+              "Intra-assay variability average"
+            ],
+            [
+              "I3",
+              "Inter-assay variability average"
+            ],
+            [
+              "J3",
+              "Total variability"
+            ],
+            [
+              "A4",
+              "VFTLLDPQASR"
+            ],
+            [
+              "B4",
+              2.7789898040345133
+            ],
+            [
+              "C4",
+              2.8329779535918065
+            ],
+            [
+              "D4",
+              2.8449678060296293
+            ],
+            [
+              "E4",
+              2.8493072968603452
+            ],
+            [
+              "F4",
+              2.8477541120893757
+            ],
+            [
+              "G4",
+              2.862691521303567
+            ],
+            [
+              "H4",
+              2.4378260056174033
+            ],
+            [
+              "I4",
+              2.3531917572877075
+            ],
+            [
+              "J4",
+              3.3882896983922897
+            ],
+            [
+              "A5",
+              "GLPNVQR"
+            ],
+            [
+              "B5",
+              1.6571966747340496
+            ],
+            [
+              "C5",
+              1.6434381874844977
+            ],
+            [
+              "D5",
+              1.629416572613609
+            ],
+            [
+              "E5",
+              1.6621788950174834
+            ],
+            [
+              "F5",
+              1.6356741465657045
+            ],
+            [
+              "G5",
+              1.5899172844152656
+            ],
+            [
+              "H5",
+              3.0888617985668074
+            ],
+            [
+              "I5",
+              3.0557752214284997
+            ],
+            [
+              "J5",
+              4.344977492984488
+            ],
+            [
+              "A6",
+              "NLLELLINIK"
+            ],
+            [
+              "B6",
+              1.4846076806664161
+            ],
+            [
+              "C6",
+              1.4954213404591856
+            ],
+            [
+              "D6",
+              1.516425972647552
+            ],
+            [
+              "E6",
+              1.4971316611455077
+            ],
+            [
+              "F6",
+              1.4891078789767092
+            ],
+            [
+              "G6",
+              1.4782872251016428
+            ],
+            [
+              "H6",
+              2.8121558686032846
+            ],
+            [
+              "I6",
+              2.7352966921642476
+            ],
+            [
+              "J6",
+              3.9230177954585637
+            ]
+          ],
+          "semantic_text_cells": [],
+          "formula_cells": 0,
+          "types": {
+            "s": 32,
+            "n": 190
+          }
+        }
+      ]
+    },
+    {
+      "file": "s3-42003_2018_87_MOESM6_ESM.xlsx",
+      "bytes": 47960,
+      "sha256": "9cfa5ca571b8ac751e1a9d44e60950cb02bc5bf5366d3d5a65d28154c536e4c0",
+      "archive_members": [
+        {
+          "name": "[Content_Types].xml",
+          "bytes": 1284
+        },
+        {
+          "name": "_rels/.rels",
+          "bytes": 588
+        },
+        {
+          "name": "xl/_rels/workbook.xml.rels",
+          "bytes": 698
+        },
+        {
+          "name": "xl/workbook.xml",
+          "bytes": 666
+        },
+        {
+          "name": "xl/sharedStrings.xml",
+          "bytes": 26028
+        },
+        {
+          "name": "xl/worksheets/_rels/sheet1.xml.rels",
+          "bytes": 322
+        },
+        {
+          "name": "xl/theme/theme1.xml",
+          "bytes": 6995
+        },
+        {
+          "name": "xl/styles.xml",
+          "bytes": 22188
+        },
+        {
+          "name": "xl/worksheets/sheet1.xml",
+          "bytes": 139806
+        },
+        {
+          "name": "xl/printerSettings/printerSettings1.bin",
+          "bytes": 2228
+        },
+        {
+          "name": "docProps/core.xml",
+          "bytes": 608
+        },
+        {
+          "name": "docProps/app.xml",
+          "bytes": 766
+        }
+      ],
+      "sheets": [
+        {
+          "name": "Sheet2",
+          "dimensions": "A1:O503",
+          "nonempty_cached_cells": 2122,
+          "header_rows": [
+            [
+              "A1",
+              "Supplementary Data 4. Reproducibility of target endogenous analyte detection in pooled plasma from C57BL/6BR mice "
+            ],
+            [
+              "A2",
+              "(CPTAC Experiment 5). "
+            ],
+            [
+              "A3",
+              "ND \u2013endogenous analyte not detected"
+            ],
+            [
+              "A4",
+              "Peptide sequence"
+            ],
+            [
+              "B4",
+              "UniProt accession number"
+            ],
+            [
+              "C4",
+              "Concentration in pooled plasma of C57BL/6BR mice (pmol ml-1)"
+            ],
+            [
+              "D4",
+              "Coefficient of Variation of detection (%)"
+            ],
+            [
+              "E4",
+              "Concentration in pooled plasma of C57BL/6BR mice (pmol ml-1) 2D-LC/MS"
+            ],
+            [
+              "F4",
+              "Coefficient of Variation of detection (%)"
+            ],
+            [
+              "A5",
+              "AAEDYGVIK"
+            ],
+            [
+              "B5",
+              "P37804"
+            ],
+            [
+              "C5",
+              "NA"
+            ],
+            [
+              "D5",
+              "NA"
+            ],
+            [
+              "A6",
+              "AAPITQYLK"
+            ],
+            [
+              "B6",
+              "O89020"
+            ],
+            [
+              "C6",
+              440.41470401535594
+            ],
+            [
+              "D6",
+              7.82
+            ]
+          ],
+          "semantic_text_cells": [
+            [
+              "C4",
+              "Concentration in pooled plasma of C57BL/6BR mice (pmol ml-1)"
+            ],
+            [
+              "E4",
+              "Concentration in pooled plasma of C57BL/6BR mice (pmol ml-1) 2D-LC/MS"
+            ]
+          ],
+          "formula_cells": 0,
+          "types": {
+            "s": 1271,
+            "n": 2810
+          }
+        }
+      ]
+    },
+    {
+      "file": "s3-42003_2018_87_MOESM7_ESM.xlsx",
+      "bytes": 87993,
+      "sha256": "cf7b21094165882d30777a6875065c63ecb612ed88e8beb033305e3e68ee23b1",
+      "archive_members": [
+        {
+          "name": "[Content_Types].xml",
+          "bytes": 1284
+        },
+        {
+          "name": "_rels/.rels",
+          "bytes": 588
+        },
+        {
+          "name": "xl/_rels/workbook.xml.rels",
+          "bytes": 698
+        },
+        {
+          "name": "xl/workbook.xml",
+          "bytes": 665
+        },
+        {
+          "name": "xl/sharedStrings.xml",
+          "bytes": 25444
+        },
+        {
+          "name": "xl/worksheets/_rels/sheet1.xml.rels",
+          "bytes": 322
+        },
+        {
+          "name": "xl/theme/theme1.xml",
+          "bytes": 6995
+        },
+        {
+          "name": "xl/styles.xml",
+          "bytes": 9075
+        },
+        {
+          "name": "xl/worksheets/sheet1.xml",
+          "bytes": 251004
+        },
+        {
+          "name": "xl/printerSettings/printerSettings1.bin",
+          "bytes": 2228
+        },
+        {
+          "name": "docProps/core.xml",
+          "bytes": 600
+        },
+        {
+          "name": "docProps/app.xml",
+          "bytes": 807
+        }
+      ],
+      "sheets": [
+        {
+          "name": "Sheet1",
+          "dimensions": "A1:J509",
+          "nonempty_cached_cells": 5014,
+          "header_rows": [
+            [
+              "A1",
+              "Supplementary Data 5. Selectivity of MRM mouse plasma assays (CPTAC Experiment 3).  "
+            ],
+            [
+              "A2",
+              "Table summarizes the slopes of the response curves of each assay in the plasma of individual C57BL/6BR mice (M436 \u2013 M441). "
+            ],
+            [
+              "A3",
+              "ND \u2013endogenous analyte not detected"
+            ],
+            [
+              "A4",
+              "Peptide sequence"
+            ],
+            [
+              "B4",
+              "UniProt accession number"
+            ],
+            [
+              "C4",
+              "Slope of the response curve"
+            ],
+            [
+              "I4",
+              "Mean of  the slopes"
+            ],
+            [
+              "J4",
+              "Individual slopes within 10 % from the mean"
+            ],
+            [
+              "C5",
+              "M436"
+            ],
+            [
+              "D5",
+              "M437"
+            ],
+            [
+              "E5",
+              "M438"
+            ],
+            [
+              "F5",
+              "M439"
+            ],
+            [
+              "G5",
+              "M440"
+            ],
+            [
+              "H5",
+              "M441"
+            ],
+            [
+              "A6",
+              "AAEDYGVIK"
+            ],
+            [
+              "B6",
+              "P37804"
+            ],
+            [
+              "C6",
+              0.004005245736819953
+            ],
+            [
+              "D6",
+              0.003996343382514386
+            ],
+            [
+              "E6",
+              0.0038650945104561725
+            ],
+            [
+              "F6",
+              0.00415541955274216
+            ],
+            [
+              "G6",
+              0.004087951262854405
+            ],
+            [
+              "H6",
+              0.0038296557101937414
+            ],
+            [
+              "I6",
+              0.003989951692596803
+            ],
+            [
+              "J6",
+              "Yes"
+            ]
+          ],
+          "semantic_text_cells": [
+            [
+              "A2",
+              "Table summarizes the slopes of the response curves of each assay in the plasma of individual C57BL/6BR mice (M436 \u2013 M441). "
+            ],
+            [
+              "C4",
+              "Slope of the response curve"
+            ]
+          ],
+          "formula_cells": 0,
+          "types": {
+            "s": 1528,
+            "n": 3505
+          }
+        }
+      ]
+    },
+    {
+      "file": "s3-42003_2018_87_MOESM8_ESM.xlsx",
+      "bytes": 93545,
+      "sha256": "606106ee73400e7726aa90cdf3183ca33008bbd2a8e884cef34f264fe464a136",
+      "archive_members": [
+        {
+          "name": "[Content_Types].xml",
+          "bytes": 1284
+        },
+        {
+          "name": "_rels/.rels",
+          "bytes": 588
+        },
+        {
+          "name": "xl/_rels/workbook.xml.rels",
+          "bytes": 698
+        },
+        {
+          "name": "xl/workbook.xml",
+          "bytes": 875
+        },
+        {
+          "name": "xl/sharedStrings.xml",
+          "bytes": 150288
+        },
+        {
+          "name": "xl/worksheets/_rels/sheet1.xml.rels",
+          "bytes": 322
+        },
+        {
+          "name": "xl/theme/theme1.xml",
+          "bytes": 6745
+        },
+        {
+          "name": "xl/styles.xml",
+          "bytes": 22540
+        },
+        {
+          "name": "xl/worksheets/sheet1.xml",
+          "bytes": 290488
+        },
+        {
+          "name": "xl/printerSettings/printerSettings1.bin",
+          "bytes": 2228
+        },
+        {
+          "name": "docProps/core.xml",
+          "bytes": 601
+        },
+        {
+          "name": "docProps/app.xml",
+          "bytes": 812
+        }
+      ],
+      "sheets": [
+        {
+          "name": "FINAL TABLE",
+          "dimensions": "A1:U514",
+          "nonempty_cached_cells": 4364,
+          "header_rows": [
+            [
+              "A1",
+              "Supplementary Data 6. Reference concentrations of 272 target proteins in 5 mouse strains."
+            ],
+            [
+              "A2",
+              "Concentrations of 500 target analytes were measured by the CPTAC-validated MRM assays in plasma from C57BL/6 mice (C57BL/6BR from BioreclamationIVT, C57BL/6/CRL originating in the Charles River Laboratories, and C57BL/6J mice originating in the Jacksons Laboratories), CD1, 129S1/SvlmJ, NOD/SCID/J#1303, and Balb/cJ mice. Reference values are reported only for analytes detected within the dynamic range of the respective assays in plasma of at least 4 mice per mouse strain (N=272).  For the protein Q19LI2, reference values for males and females are listed separately due to distinct sex-specific differences in protein abundance. ULOQ \u2013 upper limit of quantification.  Molecular weight (MW) of target mature proteins (without signal sequences) used for calculation of protein concentration (in ng/ml) is shown.  For proteins with multiple cleaving products, the average molecular weight of the full-length mature protein is listed; all additional cleaving products containing the surrogate peptide are highlighted in bold.  For proteins with cleaving products that do not overlap, the average molecular weight of the product containing the surrogate peptide is shown (yellow-shaded cells). Finally, the average molecular weight of the full-length protein sequences of IgG chain fragments is listed (blue-shaded cells).  Surrogate peptide VAPEEHPVLLTEAPLNPK matches two proteins, P60710 and P63260 (Actin cytoplasmic 1 and 2, respectively); molecular weights of both proteins are listed. Grey-shaded cells represent statistically significant comparisons (p<0.05) as determined by two-way ANOVA with Tukey\u2019s correction for multiple comparisons; a and b stand for statistically significant comparisons between the indicated vendors. Green-shaded cell highlight lower immunoglobulin (Ig) abundance in immunocompromised NOD/SCID/J#1303 mice. "
+            ],
+            [
+              "A6",
+              "Peptide sequence"
+            ],
+            [
+              "B6",
+              "UniProt accession number"
+            ],
+            [
+              "C6",
+              "Molecular weight (Da)"
+            ],
+            [
+              "D6",
+              "Concentration in mouse plasma (pmol ml-1; mean \u00b1 STD)"
+            ],
+            [
+              "K6",
+              "Concentration in mouse plasma (\u00b5g ml-1; mean \u00b1 STD)"
+            ],
+            [
+              "R6",
+              "MRM assay annotation"
+            ]
+          ],
+          "semantic_text_cells": [
+            [
+              "A1",
+              "Supplementary Data 6. Reference concentrations of 272 target proteins in 5 mouse strains."
+            ],
+            [
+              "A2",
+              "Concentrations of 500 target analytes were measured by the CPTAC-validated MRM assays in plasma from C57BL/6 mice (C57BL/6BR from BioreclamationIVT, C57BL/6/CRL originating in the Charles River Laboratories, and C57BL/6J mice originating in the Jacksons Laboratories), CD1, 129S1/SvlmJ, NOD/SCID/J#1303, and Balb/cJ mice. Reference values are reported only for analytes detected within the dynamic range of the respective assays in plasma of at least 4 mice per mouse strain (N=272).  For the protein Q19LI2, reference values for males and females are listed separately due to distinct sex-specific differences in protein abundance. ULOQ \u2013 upper limit of quantification.  Molecular weight (MW) of target mature proteins (without signal sequences) used for calculation of protein concentration (in ng/ml) is shown.  For proteins with multiple cleaving products, the average molecular weight of the full-length mature protein is listed; all additional cleaving products containing the surrogate peptide are highlighted in bold.  For proteins with cleaving products that do not overlap, the average molecular weight of the product containing the surrogate peptide is shown (yellow-shaded cells). Finally, the average molecular weight of the full-length protein sequences of IgG chain fragments is listed (blue-shaded cells).  Surrogate peptide VAPEEHPVLLTEAPLNPK matches two proteins, P60710 and P63260 (Actin cytoplasmic 1 and 2, respectively); molecular weights of both proteins are listed. Grey-shaded cells represent statistically significant comparisons (p<0.05) as determined by two-way ANOVA with Tukey\u2019s correction for multiple comparisons; a and b stand for statistically significant comparisons between the indicated vendors. Green-shaded cell highlight lower immunoglobulin (Ig) abundance in immunocompromised NOD/SCID/J#1303 mice. "
+            ],
+            [
+              "D6",
+              "Concentration in mouse plasma (pmol ml-1; mean \u00b1 STD)"
+            ],
+            [
+              "K6",
+              "Concentration in mouse plasma (\u00b5g ml-1; mean \u00b1 STD)"
+            ]
+          ],
+          "formula_cells": 0,
+          "types": {
+            "s": 4090,
+            "n": 5139
+          }
+        }
+      ]
+    },
+    {
+      "file": "s3-42003_2018_87_MOESM9_ESM.xlsx",
+      "bytes": 211003,
+      "sha256": "8ceee92e60ea8dfd51a43835aa96bc139a16b3d34d2dc50644d785e56f2ac6be",
+      "archive_members": [
+        {
+          "name": "[Content_Types].xml",
+          "bytes": 1420
+        },
+        {
+          "name": "_rels/.rels",
+          "bytes": 588
+        },
+        {
+          "name": "xl/_rels/workbook.xml.rels",
+          "bytes": 839
+        },
+        {
+          "name": "xl/workbook.xml",
+          "bytes": 935
+        },
+        {
+          "name": "xl/styles.xml",
+          "bytes": 17755
+        },
+        {
+          "name": "xl/worksheets/_rels/sheet1.xml.rels",
+          "bytes": 322
+        },
+        {
+          "name": "xl/worksheets/sheet2.xml",
+          "bytes": 15695
+        },
+        {
+          "name": "xl/theme/theme1.xml",
+          "bytes": 6745
+        },
+        {
+          "name": "xl/sharedStrings.xml",
+          "bytes": 87015
+        },
+        {
+          "name": "xl/worksheets/sheet1.xml",
+          "bytes": 983958
+        },
+        {
+          "name": "xl/printerSettings/printerSettings1.bin",
+          "bytes": 2228
+        },
+        {
+          "name": "docProps/core.xml",
+          "bytes": 601
+        },
+        {
+          "name": "docProps/app.xml",
+          "bytes": 878
+        }
+      ],
+      "sheets": [
+        {
+          "name": "Measured peptide abundance",
+          "dimensions": "A1:AU506",
+          "nonempty_cached_cells": 23604,
+          "header_rows": [
+            [
+              "A1",
+              "Supplementary Data 7. Concentrations of 500 target analytes in 5 mouse strains (raw data). "
+            ],
+            [
+              "A2",
+              " M \u2013 male, F \u2013 female, ND \u2013 analyte not detected or detected below the lower limit of quantification of the assay"
+            ],
+            [
+              "A3",
+              " ULOQ \u2013 analyte detected above the upper limit of quantification (ULOQ)."
+            ],
+            [
+              "A4",
+              "Peptide sequence"
+            ],
+            [
+              "B4",
+              "UniProt accession number"
+            ],
+            [
+              "C4",
+              "ULOQ (pmol/ml)"
+            ],
+            [
+              "D4",
+              "Concentration in plasma of C57BL/6BR mice (pmol ml-1)"
+            ],
+            [
+              "J4",
+              "Concentration in plasma of C57/CRL mice (pmol ml-1)"
+            ],
+            [
+              "P4",
+              "Concentration in plasma of C57BL/6J mice (pmol ml-1)"
+            ],
+            [
+              "V4",
+              "Concentration in plasma of CD1 mice (pmol ml-1)"
+            ],
+            [
+              "AB4",
+              "Concentration in plasma of 129S1/SvlmJ mice (pmol ml-1)"
+            ],
+            [
+              "AH4",
+              "Concentration in plasma of NOD/SCID/J#1303 mice (pmol ml-1)"
+            ],
+            [
+              "AN4",
+              "Concentration in plasma of Balb/cJ mice (pmol ml-1)"
+            ],
+            [
+              "AT4",
+              "Molecular weight (Da)"
+            ],
+            [
+              "AU4",
+              "MRM assay annotation"
+            ],
+            [
+              "D5",
+              "M1"
+            ],
+            [
+              "E5",
+              "M2"
+            ],
+            [
+              "F5",
+              "M3"
+            ],
+            [
+              "G5",
+              "F1"
+            ],
+            [
+              "H5",
+              "F2"
+            ],
+            [
+              "I5",
+              "F3"
+            ],
+            [
+              "J5",
+              "M1"
+            ],
+            [
+              "K5",
+              "M2"
+            ],
+            [
+              "L5",
+              "M3"
+            ],
+            [
+              "M5",
+              "F1"
+            ],
+            [
+              "N5",
+              "F2"
+            ],
+            [
+              "O5",
+              "F3"
+            ],
+            [
+              "P5",
+              "M1"
+            ],
+            [
+              "Q5",
+              "M2"
+            ],
+            [
+              "R5",
+              "M3"
+            ],
+            [
+              "S5",
+              "F1"
+            ],
+            [
+              "T5",
+              "F2"
+            ],
+            [
+              "U5",
+              "F3"
+            ],
+            [
+              "V5",
+              "M1"
+            ],
+            [
+              "W5",
+              "M2"
+            ],
+            [
+              "X5",
+              "M3"
+            ],
+            [
+              "Y5",
+              "F1"
+            ],
+            [
+              "Z5",
+              "F2"
+            ],
+            [
+              "AA5",
+              "F3"
+            ],
+            [
+              "AB5",
+              "M1"
+            ],
+            [
+              "AC5",
+              "M2"
+            ],
+            [
+              "AD5",
+              "M3"
+            ],
+            [
+              "AE5",
+              "F1"
+            ],
+            [
+              "AF5",
+              "F2"
+            ],
+            [
+              "AG5",
+              "F3"
+            ],
+            [
+              "AH5",
+              "M1"
+            ],
+            [
+              "AI5",
+              "M2"
+            ],
+            [
+              "AJ5",
+              "M3"
+            ],
+            [
+              "AK5",
+              "F1"
+            ],
+            [
+              "AL5",
+              "F2"
+            ],
+            [
+              "AM5",
+              "F3"
+            ],
+            [
+              "AN5",
+              "M1"
+            ],
+            [
+              "AO5",
+              "M2"
+            ],
+            [
+              "AP5",
+              "M3"
+            ],
+            [
+              "AQ5",
+              "F1"
+            ],
+            [
+              "AR5",
+              "F2"
+            ],
+            [
+              "AS5",
+              "F3"
+            ],
+            [
+              "A6",
+              "AAEDYGVIK"
+            ],
+            [
+              "B6",
+              "P37804"
+            ],
+            [
+              "C6",
+              8473.5
+            ],
+            [
+              "D6",
+              "ND"
+            ],
+            [
+              "E6",
+              "ND"
+            ],
+            [
+              "F6",
+              "ND"
+            ],
+            [
+              "G6",
+              "ND"
+            ],
+            [
+              "H6",
+              "ND"
+            ],
+            [
+              "I6",
+              "ND"
+            ],
+            [
+              "J6",
+              "ND"
+            ],
+            [
+              "K6",
+              "ND"
+            ],
+            [
+              "L6",
+              "ND"
+            ],
+            [
+              "M6",
+              "ND"
+            ],
+            [
+              "N6",
+              "ND"
+            ],
+            [
+              "O6",
+              "ND"
+            ],
+            [
+              "P6",
+              "ND"
+            ],
+            [
+              "Q6",
+              "ND"
+            ],
+            [
+              "R6",
+              "ND"
+            ],
+            [
+              "S6",
+              "ND"
+            ],
+            [
+              "T6",
+              "ND"
+            ],
+            [
+              "U6",
+              "ND"
+            ],
+            [
+              "V6",
+              "ND"
+            ],
+            [
+              "W6",
+              "ND"
+            ],
+            [
+              "X6",
+              "ND"
+            ],
+            [
+              "Y6",
+              "ND"
+            ],
+            [
+              "Z6",
+              "ND"
+            ],
+            [
+              "AA6",
+              "ND"
+            ],
+            [
+              "AB6",
+              "ND"
+            ],
+            [
+              "AC6",
+              "ND"
+            ],
+            [
+              "AD6",
+              "ND"
+            ],
+            [
+              "AE6",
+              "ND"
+            ],
+            [
+              "AF6",
+              "ND"
+            ],
+            [
+              "AG6",
+              "ND"
+            ],
+            [
+              "AH6",
+              "ND"
+            ],
+            [
+              "AI6",
+              "ND"
+            ],
+            [
+              "AJ6",
+              "ND"
+            ],
+            [
+              "AK6",
+              "ND"
+            ],
+            [
+              "AL6",
+              "ND"
+            ],
+            [
+              "AM6",
+              "ND"
+            ],
+            [
+              "AN6",
+              "ND"
+            ],
+            [
+              "AO6",
+              "ND"
+            ],
+            [
+              "AP6",
+              "ND"
+            ],
+            [
+              "AQ6",
+              "ND"
+            ],
+            [
+              "AR6",
+              "ND"
+            ],
+            [
+              "AS6",
+              "ND"
+            ],
+            [
+              "AT6",
+              22444.62
+            ],
+            [
+              "AU6",
+              "Transgelin"
+            ]
+          ],
+          "semantic_text_cells": [
+            [
+              "A1",
+              "Supplementary Data 7. Concentrations of 500 target analytes in 5 mouse strains (raw data). "
+            ],
+            [
+              "D4",
+              "Concentration in plasma of C57BL/6BR mice (pmol ml-1)"
+            ],
+            [
+              "J4",
+              "Concentration in plasma of C57/CRL mice (pmol ml-1)"
+            ],
+            [
+              "P4",
+              "Concentration in plasma of C57BL/6J mice (pmol ml-1)"
+            ],
+            [
+              "V4",
+              "Concentration in plasma of CD1 mice (pmol ml-1)"
+            ],
+            [
+              "AB4",
+              "Concentration in plasma of 129S1/SvlmJ mice (pmol ml-1)"
+            ],
+            [
+              "AH4",
+              "Concentration in plasma of NOD/SCID/J#1303 mice (pmol ml-1)"
+            ],
+            [
+              "AN4",
+              "Concentration in plasma of Balb/cJ mice (pmol ml-1)"
+            ],
+            [
+              "AU287",
+              "Macrophage migration inhibitory factor"
+            ]
+          ],
+          "formula_cells": 0,
+          "types": {
+            "s": 12616,
+            "n": 11070
+          }
+        },
+        {
+          "name": "Linear regression slope and R2",
+          "dimensions": "A1:C92",
+          "nonempty_cached_cells": 276,
+          "header_rows": [
+            [
+              "A1",
+              "Linear regression comparison"
+            ],
+            [
+              "B1",
+              "Slope"
+            ],
+            [
+              "C1",
+              "R-squared"
+            ],
+            [
+              "A2",
+              "C57BL/6BR/m vs C57/CRL/m"
+            ],
+            [
+              "B2",
+              0.93491743471581
+            ],
+            [
+              "C2",
+              0.864999590562591
+            ],
+            [
+              "A3",
+              "C57BL/6BR/m vs C57BL/6J/m"
+            ],
+            [
+              "B3",
+              1.01069722598268
+            ],
+            [
+              "C3",
+              0.909657636090716
+            ],
+            [
+              "A4",
+              "C57BL/6BR/m vs CD1/m"
+            ],
+            [
+              "B4",
+              0.978873529991454
+            ],
+            [
+              "C4",
+              0.828965206856011
+            ],
+            [
+              "A5",
+              "C57BL/6BR/m vs 129S1/SvlmJ/m"
+            ],
+            [
+              "B5",
+              1.03069961774583
+            ],
+            [
+              "C5",
+              0.867120363994745
+            ],
+            [
+              "A6",
+              "C57BL/6BR/m vs NOD/SCID/J/m"
+            ],
+            [
+              "B6",
+              1.05901592830351
+            ],
+            [
+              "C6",
+              0.888294169303433
+            ]
+          ],
+          "semantic_text_cells": [],
+          "formula_cells": 0,
+          "types": {
+            "s": 94,
+            "n": 182
+          }
+        }
+      ]
+    }
+  ],
+  "cell_checks": 60825,
+  "unverified_cells": [],
+  "status": "verified"
+}

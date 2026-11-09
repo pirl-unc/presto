@@ -1,0 +1,51 @@
+{
+  "schema": "presto.runtime_tree_probe_launch.v1",
+  "experiment": "2026-11-08_1800_codex_unified-parity-retrain",
+  "created_utc": "2026-11-09T01:35:59Z",
+  "purpose": "Identify the exact Modal image packaging difference before H100 relaunch",
+  "git": {
+    "branch": "codex/post-pr153-unified-retraining-20261108",
+    "source_commit": "e3925f2b12a49b78bb6babcba52d40e4c57a4bcf",
+    "dirty": false
+  },
+  "source_sha256": {
+    "code/runtime_tree_probe.py": "82e49ced7ec2e9fb7f37f05ff1330901ab8a79515a288ec8380e487f615a00d7",
+    "reproduce/runtime-tree-probe/launch.sh": "8cfd509caa4a371032b20afdd6d2a149b6a85feed970a21e86bf528f08ac1f0c",
+    "reproduce/runtime-tree-probe/collect.sh": "5e9caeaeccf27197130767a4a471e08afcf6d77929927942c321e0acd7d97bea",
+    "reproduce/runtime-tree-probe/source/collect.py": "a7b7eaf5734368df1c3abeda4980a00536d10b513782879b92d9247c2e948808"
+  },
+  "local_expected": {
+    "paths": "__init__.py plus every non-pyc file under data/, models/ and training/",
+    "files": 89,
+    "bytes": 1711245,
+    "sha256": "3c3c39fc2c570bcb1ae68f5572889249770024648b00b3bc429162e98fb06d64"
+  },
+  "failed_fit_calls": {
+    "reference": "fc-01M6YZ10NHMN1FHFBRX8YRAQ91",
+    "parity": "fc-01M6YZ10QXBK1RR2WCZ4QFC6EZ",
+    "failure": "runtime source tree differs from frozen contract",
+    "data_parent_or_optimizer_access": false
+  },
+  "resources": {
+    "cpu": 2,
+    "memory_mib": 4096,
+    "timeout_seconds": 600,
+    "network": "blocked",
+    "requested_gpu": null
+  },
+  "image_mount_contract": [
+    "__init__.py -> /runtime/presto/__init__.py",
+    "data/ -> /runtime/presto/data",
+    "models/ -> /runtime/presto/models",
+    "training/ -> /runtime/presto/training"
+  ],
+  "data_access": {
+    "training_rows": false,
+    "development_rows": false,
+    "test": false,
+    "locked_confirmation": false,
+    "model": false,
+    "optimizer_steps": 0
+  },
+  "launch_command": "PRESTO_EXPERIMENT_DIR=experiments/2026-11-08_1800_codex_unified-parity-retrain modal run --detach experiments/2026-11-08_1800_codex_unified-parity-retrain/code/runtime_tree_probe.py"
+}

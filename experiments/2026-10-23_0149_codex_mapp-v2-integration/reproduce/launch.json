@@ -1,0 +1,34 @@
+{
+  "registered_at": "2026-10-23T01:49:52.177863-04:00",
+  "agent_model": "Codex / GPT-6",
+  "stage": "source/API/recipe conservation; no training or model evaluation",
+  "presto_commit": "c06fcb7d701fd7ce3ec7204b23d9efc6c64469df",
+  "presto_dirty": " M tasks/todo.md\n?? data/availability_recipes/\n?? experiments/agents/codex/plans/full-ic50-fitting.md\n?? tasks/modular_model/trajectory-sampling-issue.md\n",
+  "hitlist_commit": "1442c033698ae2d345d21853750328c2e65918e8",
+  "hitlist_dirty": "",
+  "hitlist_root": "/private/tmp/hitlist-mapp-recipe",
+  "reference_package": "/private/tmp/hitlist-v2-reference-200-final",
+  "reference_manifest_sha256": "d99f67e625c6c33a2054a56dea4f98fb8248ca5f717cc98af3662f228655fa6a",
+  "historical_mapp_package": "/private/tmp/hitlist-v2-mapp-reference-second",
+  "historical_mapp_manifest_sha256": "55f7a3d50df5d162e55bf1d66fbcf413a35fc927fd08c266f90d981068a053c2",
+  "source_assets": "/private/tmp/hitlist-v2-mapp-reference-second/external/pxd009092/assets",
+  "output_package": "/private/tmp/hitlist-v2-mapp-202-canonical",
+  "old_recipes": {
+    "mapp_captured_composition_v1": "/private/tmp/presto-modular-model/data/availability_recipes/2026-10-22-mapp-captured-composition-v1",
+    "mapp_captured_composition_min2_v1": "/private/tmp/presto-modular-model/data/availability_recipes/2026-10-22-mapp-captured-composition-min2-v1",
+    "mapp_complete_run_composition_v1": "/private/tmp/presto-modular-model/data/availability_recipes/2026-10-23-mapp-complete-run-composition-v1"
+  },
+  "old_recipe_manifests": {
+    "mapp_captured_composition_v1": "9c1388c5e0c867623bcb902f743f8da9c540122496aa33afd0c5cd1ce2d41062",
+    "mapp_captured_composition_min2_v1": "df78d02f8200809c659e43adfae29866c48b712122b740379106994622f4ac80",
+    "mapp_complete_run_composition_v1": "23bcfeb4067fa4f47f0b1db702d6ae79f97a9c32a1366ff3de322c99f210b9bf"
+  },
+  "recipe_outputs": "/private/tmp/presto-modular-model/artifacts/2026-10-23_0149_codex_mapp-v2-integration/recipes",
+  "device": "local CPU, no Modal",
+  "environment": {
+    "PYTHONPATH": "/private/tmp/hitlist-mapp-recipe",
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1"
+  },
+  "test_policy": "No new predictive split or fitting: verify exact preservation of existing targets and previously exposed partitions."
+}

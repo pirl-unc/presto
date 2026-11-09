@@ -1,0 +1,75 @@
+{
+  "files": {
+    "results/base/checkpoint.pt": {
+      "bytes": 10681,
+      "sha256": "83a950e343ad090827e94fa1785feb5174b1e2732c5be7eadcde72ffd8005b86"
+    },
+    "results/base/updates.npz": {
+      "bytes": 4780555,
+      "sha256": "7ccfe48abd07f2494ecd2252186ace8d8f85980686b70dd7a8892b2c8465f17a"
+    },
+    "results/both/checkpoint.pt": {
+      "bytes": 15545,
+      "sha256": "91666415f1c71617f11f509b3266bfede3c4fa1c3721fda2892fb5cfa2a49129"
+    },
+    "results/both/updates.npz": {
+      "bytes": 17231051,
+      "sha256": "587163d2e0b3e0f5241c04ff090a9c9158cb2d94c023f91fe98d433e6a506bf1"
+    },
+    "results/both_hybrid/checkpoint.pt": {
+      "bytes": 15545,
+      "sha256": "2a8e4643a2a91997f954e294e25825660c713cd9fe1804ccd2334ca9a63f08af"
+    },
+    "results/both_hybrid/updates.npz": {
+      "bytes": 17631655,
+      "sha256": "e59e210b835b4f864ed91c9b083d8326eaedfd936c3276b06d34522f890bad13"
+    },
+    "results/rate_context/checkpoint.pt": {
+      "bytes": 13241,
+      "sha256": "06d5a8440a971261c182e547427b29c0a0fac358fcfed13e2a7f86d3ca8ac1ef"
+    },
+    "results/rate_context/updates.npz": {
+      "bytes": 10349524,
+      "sha256": "3685767e221463d76935f3fe7f2fdd50bd84bf28ee85bbdf328d83a4158df6a8"
+    },
+    "results/response_termini/checkpoint.pt": {
+      "bytes": 12985,
+      "sha256": "53292739d3e814bdd837140afa1320808cb3067fb09d72994e35ddf20e48c482"
+    },
+    "results/response_termini/updates.npz": {
+      "bytes": 9829368,
+      "sha256": "fbbbb3b085277feb5740c3f4b706206ff5e7cbc26363ad9800d9cc98b9cd8c26"
+    }
+  },
+  "archives": [
+    {
+      "path": "results/raw-training-00.tar.gz",
+      "sha256": "00cfebff9a751a1c030f530ad2720e3ad4f7cd2a7a48a03aad639011d4a6aae6",
+      "members": [
+        "results/base/checkpoint.pt",
+        "results/base/updates.npz",
+        "results/both/checkpoint.pt",
+        "results/both/updates.npz",
+        "results/both_hybrid/checkpoint.pt"
+      ]
+    },
+    {
+      "path": "results/raw-training-01.tar.gz",
+      "sha256": "db92425e06cb7ae9648c5d99847dbd269d0bb19be425ce42bbeab8f28e8d8311",
+      "members": [
+        "results/both_hybrid/updates.npz",
+        "results/rate_context/checkpoint.pt",
+        "results/rate_context/updates.npz",
+        "results/response_termini/checkpoint.pt"
+      ]
+    },
+    {
+      "path": "results/raw-training-02.tar.gz",
+      "sha256": "93943e34527f455529e1ab37ff84908fe78b980b231094da5ff79a97d98ea928",
+      "members": [
+        "results/response_termini/updates.npz"
+      ]
+    }
+  ],
+  "scope": "Exact executed checkpoints/arrays; prediction gzip files are kept directly. Restore original paths with reproduce/unpack.py."
+}

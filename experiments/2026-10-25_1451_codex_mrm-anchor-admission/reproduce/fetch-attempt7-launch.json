@@ -1,0 +1,102 @@
+{
+  "argv": [
+    "experiments/2026-10-25_1451_codex_mrm-anchor-admission/code/launch_v2.py",
+    "fetch",
+    "--attempt",
+    "7",
+    "--requests",
+    "experiments/2026-10-25_1451_codex_mrm-anchor-admission/reproduce/requests/processed-2.json"
+  ],
+  "configuration": {
+    "agent_model": "Codex / GPT-6",
+    "created_utc": "2026-10-25T14:54:41.644897+00:00",
+    "experiment_id": "2026-10-25_1451_codex_mrm-anchor-admission",
+    "presto_commit": "22241241daaae1b223d4ed6e0543f8fa1afcad9a",
+    "dirty_tracked": true,
+    "dirty_scope": "Preserved unrelated task changes and this newly registered source audit; all executed source frozen",
+    "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+    "data_directory": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/mrm_anchor_sources/2026-10-25_1451_codex_mrm-anchor-admission",
+    "public_hosts": [
+      "assays.cancer.gov",
+      "panoramaweb.org",
+      "www.ebi.ac.uk",
+      "europepmc.org",
+      "pmc.ncbi.nlm.nih.gov",
+      "www.ncbi.nlm.nih.gov",
+      "www.peptideatlas.org",
+      "db.systemsbiology.net",
+      "peptideatlas.org",
+      "ftp.peptideatlas.org",
+      "pubs.acs.org",
+      "acs.figshare.com",
+      "api.figshare.com",
+      "www.nature.com",
+      "static-content.springer-cdn.com",
+      "ftp.ncbi.nlm.nih.gov"
+    ],
+    "limits": {
+      "stage_seconds": 1200,
+      "rss_bytes": 3221225472,
+      "startup_memory_bytes": 3221225472,
+      "disk_floor_bytes": 1073741824,
+      "start_margin_bytes": 33554432
+    },
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUNBUFFERED": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    },
+    "frozen_code_sha256": {
+      "code/fetch.py": "4bd1e7a00dac4e3cca64a422c7b2156b382a5bdba8a25d5eb92af7b4ea36e566",
+      "code/launch.py": "269256f34e97d6c3d9124eb536c527cf01a32e305a67d9ac3cd32ecaea3e4acf",
+      "reproduce/source/fetch.py": "4bd1e7a00dac4e3cca64a422c7b2156b382a5bdba8a25d5eb92af7b4ea36e566",
+      "reproduce/source/launch.py": "269256f34e97d6c3d9124eb536c527cf01a32e305a67d9ac3cd32ecaea3e4acf",
+      "reproduce/launch.sh": "af09263c9fe4d2a90b55a8dd40ec25147d9da4d4c2d4c1f7c1461a657d64b8f8",
+      "code/fetch_v2.py": "6968f41871c26240bef94adf58ab79e12c9ca2091ab71f7a2eb883f6dcac5592",
+      "code/launch_v2.py": "e428af8be57ada528c1afaf54e992c77017fd67beae3d1db9cbc34e5632398db",
+      "reproduce/source/fetch_v2.py": "6968f41871c26240bef94adf58ab79e12c9ca2091ab71f7a2eb883f6dcac5592",
+      "reproduce/source/launch_v2.py": "e428af8be57ada528c1afaf54e992c77017fd67beae3d1db9cbc34e5632398db",
+      "reproduce/metadata-decoding-amendment.md": "eb5acef5a600094633262d6b410723d549a1946f34f59f8780be9bdf7718c539"
+    },
+    "plan_sha256": "b7e6242fdafa0d07f78687a3a91a3e6011dc88940f676892a99ba40b03cd6423",
+    "input_sha256": {},
+    "network_limits": {
+      "metadata_requests": 20,
+      "metadata_bytes_each": 5242880,
+      "processed_bytes_each": 268435456,
+      "total_bytes": 536870912,
+      "connect_seconds": 10,
+      "read_seconds": 30,
+      "request_wall_seconds": 120
+    },
+    "training_contract": null,
+    "test_split": null,
+    "reason_no_predictions": "Public source access/schema/semantic admission only; no model fitting or outer-data access.",
+    "extension_policy": "Every discovered request set is an immutable JSON file under reproduce/requests, citing observed source links/API documentation and its stage/scope before execution.",
+    "supersedes_for_new_attempts": "reproduce/launch.json",
+    "amendment": "reproduce/metadata-decoding-amendment.md"
+  },
+  "request_set": {
+    "phase": "processed",
+    "scope": "Individual small supplements explicitly linked by PMC; preserve original files, inspect XLSX source fields and descriptions without fitting. Unchanged size and archive-safety limits.",
+    "requests": [
+      {
+        "name": "michaud2018-data1.xlsx",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/instance/6123701/bin/42003_2018_87_MOESM3_ESM.xlsx",
+        "expected_kind": "xlsx",
+        "discovery_provenance": "Exact Supplementary Data1 href on https://pmc.ncbi.nlm.nih.gov/articles/PMC6123701/; published size66.3KB."
+      },
+      {
+        "name": "michaud2018-descriptions.docx",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/instance/6123701/bin/42003_2018_87_MOESM2_ESM.docx",
+        "expected_kind": "zip",
+        "discovery_provenance": "Exact Description of Additional Supplementary Files href on the same PMC page; published size16.2KB."
+      }
+    ]
+  },
+  "request_set_sha256": "7e495ef03397704f2a109c6f8b92fedb5b2bbcb4f4b6de139d15d5fbe31011d2"
+}

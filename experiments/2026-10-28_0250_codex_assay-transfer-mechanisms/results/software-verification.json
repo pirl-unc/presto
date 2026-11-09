@@ -1,0 +1,32 @@
+{
+  "status": "passed",
+  "tested_runtime_commit": "89d3360a307b5485cdc3e3f37abcac1dfa9cf979",
+  "full_tests": {
+    "passed": 2778,
+    "skipped": 4,
+    "warnings": 33,
+    "seconds": 293.65
+  },
+  "analysis_tests": 2,
+  "lint": true,
+  "format": true,
+  "strict_docs": true,
+  "wheel_sdist_build": true,
+  "twine": true,
+  "installed_wheel_smoke": true,
+  "logs": {
+    "full-tests-retry.log": "e1bd85e362971152d9c6d252b4a92c58a648f939bb3d1734d0c24e6f801b90ca",
+    "analysis-tests.log": "fbf834ed000ff63cef6aba584945158c33adb38b91e49939db4a9c3b9f3ed6bd",
+    "ruff.log": "5e0e07b91deda0d6a586f2ed44278b77f1ce1d16ee0400fcaaf4209ea9d8c8ec",
+    "docs.log": "0b17d9ecc53bab0ea5a800b6aba618f35a168f9dace4e86baaa63e113132a0c9",
+    "build.log": "c277e2eb91fdf33851e221d66a1fe5826e0837af2a796f81ae49f8fe4e704b7a",
+    "twine.log": "9db9112bd95308895e6ec97e35d9e9abc6ba2723a62f8b34f566a95dccbc8503",
+    "wheel.log": "1046eb921a5b0c299150a788853386e072428ecc3f23b6f8493b4adc4ca4a6ea"
+  },
+  "scope": "Source package checks plus artificial analysis fixtures. Scientific result verification remains pending.",
+  "hosted_ci": {
+    "commit": "3d627e7ff5f2ec14995a3a2538f922785eb491c7",
+    "status": "passed",
+    "url": "https://github.com/pirl-unc/presto/actions/runs/40626989848"
+  }
+}

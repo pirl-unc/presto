@@ -1,0 +1,36 @@
+{
+  "status": "partial_source_recovery",
+  "accepted_ligand_set_sha256": "3dc547ae7cd4cfd735794e30c52430bb33f52d3960644d24bf07e44d6496e085",
+  "counts": {
+    "psm:unmodified": 5584,
+    "outside_published_ligand_set": 2309,
+    "psm:modified": 2471,
+    "published_pmhc:modified": 1072,
+    "published_pmhc:unmodified": 2339
+  },
+  "sources": [
+    {
+      "path": "/Users/iskander/code/presto/artifacts/2026-10-29_1653_codex_measurement-curation-recovery/sources/strazar-psm-DQB0301_DQA0303_1hr.PSMexport.1/DQB0301_DQA0303_1hr.PSMexport.1.ssv",
+      "sha256": "8443b343940c5e49f237235e04c743b41587314b41f6e226fdf07b61c7108d27"
+    },
+    {
+      "path": "/Users/iskander/code/presto/artifacts/2026-10-29_1653_codex_measurement-curation-recovery/sources/strazar-psm-DQB0301_DQA0303_3hr.PSMexport.1/DQB0301_DQA0303_3hr.PSMexport.1.ssv",
+      "sha256": "320d4ad9194fccb5e4afded054757d0b1892b03d792dce0d94bd175550ad73a2"
+    },
+    {
+      "path": "/Users/iskander/code/presto/artifacts/2026-10-29_1653_codex_measurement-curation-recovery/sources/strazar-psm-DQB0301_DQA0303_overnight.PSMexport.1/DQB0301_DQA0303_overnight.PSMexport.1.ssv",
+      "sha256": "2667d4c762ddef174b014c7753be69016696e3958a387255633d82b5a1900972"
+    }
+  ],
+  "output": {
+    "path": "/Users/iskander/code/presto/artifacts/2026-10-29_1653_codex_measurement-curation-recovery/recovered/strazar_2023_recovered_unmodified.csv",
+    "sha256": "5400d3e8220bbad6269524fac919146f4005ed3a3568203fdc10b2715941bb2b"
+  },
+  "evidence": {
+    "path": "/Users/iskander/code/presto/artifacts/2026-10-29_1653_codex_measurement-curation-recovery/recovered/source-evidence.jsonl",
+    "sha256": "3fe354a4ebf5bd2849e6ecaf484a15571565f91e84c690a8d784f866e4caa652"
+  },
+  "policy": "exact published ligand/MHC intersection; explicit native terminal groups + no variable/fixed modifications; human source support; preserve co-observed modified forms separately",
+  "seconds": 2.8520882080192678,
+  "limitations": "Only successfully downloaded PSM files reviewed; no negative chemistry claim for remaining ligand rows. No model/test outcomes consulted."
+}

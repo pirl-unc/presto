@@ -1,0 +1,58 @@
+{
+  "registered_utc": "2026-10-25T08:14:02.624680+00:00",
+  "agent": "Codex",
+  "model": "GPT-6 (system identity)",
+  "git_commit": "869b2acfffb6a15ac914b9a335dfef66f8ad507e",
+  "dirty": true,
+  "dirty_scope": "Preserved unrelated tasks/todo.md edits and untracked historical evidence; this new source family is frozen before retrieval.",
+  "source_directory": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/dilution_observer_sources/2026-10-25_0813_codex_dilution-observer-admission",
+  "source_sha256": "0a781ac9c1e4722caf091ad46767b0c1759e97162abc89e172d8141ad94b1fb1",
+  "plan_sha256": "347e6a1de536c97753d5e38d25098f37b208e41a55afda275b8331397e25d16a",
+  "max_bytes_per_asset": 4194304,
+  "wall_time_limit_seconds": 240,
+  "per_request_timeout_seconds": 60,
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "non_default_environment_overrides": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1",
+    "MPLBACKEND": "Agg"
+  },
+  "metadata_assets": [
+    {
+      "name": "project.json",
+      "kind": "json",
+      "url": "https://www.ebi.ac.uk/pride/ws/archive/v2/projects/PXD024809"
+    },
+    {
+      "name": "files-page0.json",
+      "kind": "json",
+      "url": "https://www.ebi.ac.uk/pride/ws/archive/v2/files/byProject?accession=PXD024809&pageSize=100&page=0"
+    },
+    {
+      "name": "article.xml",
+      "kind": "xml",
+      "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12406853/fullTextXML"
+    }
+  ],
+  "fitting": false,
+  "outer_partitions_accessed": false,
+  "stages": [
+    "audit",
+    "verify"
+  ],
+  "limits": {
+    "stage_seconds": 1200,
+    "rss_bytes": 3221225472,
+    "disk_floor_bytes": 1073741824,
+    "start_margin_bytes": 33554432
+  },
+  "input_sha256": {
+    "project.json": "3f3c061802f8f2517b9cdc3ab48157d688c220fe97b7e86b95b80e7f627b0fd7",
+    "article.xml": "1f0f06ae0ac20ecb0edd84ca8244e5ce080770e1d99791fedb3c83b58060389d",
+    "files-project-page0.json": "3e5b9b29f9cd531d7f55d44b16fdb579a79f75664dbbc6e8c4ac6332589837c0",
+    "Dilute_peptide_quantities.csv": "646f8054ca9f60d9ebad46722a994c507c0b30c0c897a75df356586f0bfcccb8"
+  }
+}

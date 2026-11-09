@@ -1,0 +1,47 @@
+{
+  "base_run_coverage": {
+    "examples_by_project": {
+      "PXD007263": 12203,
+      "PXD009508": 9404
+    },
+    "examples_by_split": {
+      "test": 2673,
+      "train": 14862,
+      "val": 4072
+    },
+    "n_components": 1488,
+    "n_examples": 21607,
+    "n_excluded_results": 125225,
+    "n_source_peptides": 9206,
+    "n_source_results": 146832,
+    "reason_counts": {
+      "no_positive_evidence_sum": 110408,
+      "no_reported_positive_quantity": 110408,
+      "not_one_source_group": 18528,
+      "peptide_PEP_unreported_or_above_0.01": 51600,
+      "source_contaminant": 522,
+      "source_reverse": 2964
+    }
+  },
+  "components_by_split": {
+    "test": 9,
+    "train": 40,
+    "val": 5
+  },
+  "examples_by_split": {
+    "test": 14,
+    "train": 59,
+    "val": 14
+  },
+  "n_contributing_runs": 522,
+  "n_examples": 87,
+  "n_excluded_peptides": 9119,
+  "n_source_peptides": 9206,
+  "reason_counts": {
+    "fewer_than_three_positive_runs_epoxo": 5746,
+    "fewer_than_three_positive_runs_ut": 4599,
+    "no_direct_msms_epoxo": 5412,
+    "no_direct_msms_ut": 3089,
+    "outside_inhibitor_project": 3146
+  }
+}

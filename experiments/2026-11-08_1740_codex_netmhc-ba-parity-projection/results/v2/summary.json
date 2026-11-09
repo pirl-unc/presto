@@ -1,0 +1,92 @@
+{
+  "artifacts": {
+    "netmhciipan43": {
+      "bytes": 112640875,
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared-v2/netmhciipan43-ba-train.jsonl",
+      "sha256": "9fe752274c895cb4cd46e36dfeff43a3db73e0c96fa24ba495e1fcfd7f24c66a"
+    },
+    "netmhcpan42": {
+      "bytes": 141870035,
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared-v2/netmhcpan42-ba-train.jsonl",
+      "sha256": "2c007e6b46a99835f95ec612aeb498f4e52940aa81c22809ad48b5e922d6d0ca"
+    },
+    "v1-admitted-row-dispositions": {
+      "bytes": 5581707,
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared-v2/v1-admitted-row-dispositions.jsonl.gz",
+      "sha256": "c9c7a384e6affe555d2fae3a6e8ba37c324763bc586c43c7b5a84107d7ad9f3d"
+    }
+  },
+  "development_embargo": {
+    "affinity": "inherited v1 exact peptide plus shared core9",
+    "presentation": "v2 exact peptide plus shared core8 plus same-length Hamming1"
+  },
+  "dispositions": {
+    "presentation_development_core8_embargo": 91,
+    "presentation_development_exact_peptide_embargo": 1,
+    "presentation_development_hamming1_embargo": 2,
+    "retained_v2_train": 143213
+  },
+  "evaluation": {
+    "locked_confirmation_accessed": false,
+    "model_loaded": false,
+    "predictions": false,
+    "test_accessed": false
+  },
+  "experiment": "2026-11-08_1740_codex_netmhc-ba-parity-projection",
+  "input_v1_admitted_rows": 143307,
+  "measurement_lineage": {
+    "measurement_id": "SHA-256(archive, peptide, identity, context)",
+    "namespace": "source archive SHA-256",
+    "replicate_id": "empty; unavailable in archive"
+  },
+  "output_rows": 143213,
+  "output_rows_by_class": {
+    "I": 80674,
+    "II": 62539
+  },
+  "output_rows_by_qualifier": {
+    "<=": 2313,
+    "=": 121353,
+    ">=": 19547
+  },
+  "parent": {
+    "netmhciipan43": {
+      "bytes": 91225030,
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared/netmhciipan43-ba-train.jsonl",
+      "sha256": "153a51f8997093c0b8cf724dc8ff649a676ee3ee2e516c52dff810bb18d00ee2"
+    },
+    "netmhcpan42": {
+      "bytes": 114297607,
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared/netmhcpan42-ba-train.jsonl",
+      "sha256": "4491918763c1cf1c64825af0228357f43516293d1b6ea73ef8a6a7554d4635df"
+    },
+    "summary": {
+      "bytes": 5622,
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared/summary.json",
+      "sha256": "9411e528a8b5ce7a4aa527835d6a2750d9cfc1b36198e711ef3241f064002576"
+    }
+  },
+  "presentation_development": {
+    "bytes": 218542980,
+    "path": "2026-11-07_1915_codex_unified-presentation/prepared-v2/presentation-val.jsonl",
+    "sha256": "0313b2d6b394320da7dcf6aa9144cbc44b73abe48b16380e03c1b27a9559fc52"
+  },
+  "presentation_development_rows": 48530,
+  "presentation_development_unique_peptides": 17573,
+  "resources": {
+    "cpu": 4,
+    "elapsed_seconds": 55.337911701,
+    "memory_mib": 16384,
+    "observed_gpu": null,
+    "peak_rss_bytes": 3895259136,
+    "requested_gpu": null
+  },
+  "schema": "presto.netmhc_ba_projection_continuation.v2",
+  "split": {
+    "test": 0,
+    "test_absence_reason": "This continuation only removes or annotates v1 TRAIN rows.",
+    "train": 143213,
+    "validation": 0
+  },
+  "status": "completed"
+}

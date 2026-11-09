@@ -1,0 +1,95 @@
+[
+  {
+    "operation": 1,
+    "tool": "web.search",
+    "query": "absolute quantification HLA peptides isotope dilution SureQuant known concentration raw peak areas supplementary data",
+    "outcome": "original2021 hipMHC quantification and2025 protocol identified"
+  },
+  {
+    "operation": 2,
+    "tool": "web.search",
+    "query": "nontryptic peptide isotope dilution calibration immunopeptidomics synthetic heavy peptides absolute quantification data availability",
+    "outcome": "same primary route plus other calibration concepts; no numeric dataset admitted"
+  },
+  {
+    "operation": 3,
+    "tool": "web.open",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8449407/",
+    "outcome": "reCAPTCHA page, not article content"
+  },
+  {
+    "operation": 4,
+    "tool": "web.open",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12012165/",
+    "outcome": "reCAPTCHA page, not article content"
+  },
+  {
+    "operation": 5,
+    "tool": "guarded_fetch",
+    "url": "https://pmc-oa-opendata.s3.amazonaws.com/?list-type=2&prefix=PMC8449407.&max-keys=100",
+    "outcome": "retrieved_validated_payload",
+    "sha256": "08d68659cabf59efae540452506516ef65dc61b9677e97107399336b41aafa17",
+    "bytes": 4689
+  },
+  {
+    "operation": 6,
+    "tool": "guarded_fetch",
+    "url": "https://pmc-oa-opendata.s3.amazonaws.com/PMC8449407.1/PMC8449407.1.json",
+    "outcome": "retrieved_validated_payload",
+    "sha256": "c5fb574244106e77aa6fb72844a3cbfc78c883f09301322dfb15e97f792b738e",
+    "bytes": 1756
+  },
+  {
+    "operation": 7,
+    "tool": "guarded_fetch",
+    "url": "https://pmc-oa-opendata.s3.amazonaws.com/PMC8449407.1/PMC8449407.1.xml",
+    "outcome": "retrieved_validated_payload",
+    "sha256": "3711c276803de4ee25b43ebb94509a06febb1a20e24424aab9398bef22420a42",
+    "bytes": 39888
+  },
+  {
+    "operation": 8,
+    "tool": "guarded_fetch",
+    "url": "https://pmc-oa-opendata.s3.amazonaws.com/PMC8449407.1/pnas.2111173118.sapp.pdf",
+    "outcome": "retrieved_validated_payload",
+    "purpose": "Exact official article media object and MD5 in operation6 metadata; S1panel,S3titrations,S7filemap and Methods appendix identified before numeric inspection.",
+    "sha256": "5f8b2868251304250a0a1e18d0c27ffa49a4df886bfcaf57b44329084d991265",
+    "bytes": 147582
+  },
+  {
+    "operation": 9,
+    "tool": "guarded_fetch",
+    "url": "https://pmc-oa-opendata.s3.amazonaws.com/PMC8449407.1/pnas.2111173118.sd01.xlsx",
+    "outcome": "retrieved_validated_payload",
+    "purpose": "Exact official article media object and MD5 in operation6 metadata; S1panel,S3titrations,S7filemap and Methods appendix identified before numeric inspection.",
+    "sha256": "71f8bd65d178d78014faf8d4e01a227fbb20ee90eee9ee8e9fbe6c5d311d0d2c",
+    "bytes": 49365
+  },
+  {
+    "operation": 10,
+    "tool": "guarded_fetch",
+    "url": "https://pmc-oa-opendata.s3.amazonaws.com/PMC8449407.1/pnas.2111173118.sd03.xlsx",
+    "outcome": "retrieved_validated_payload",
+    "purpose": "Exact official article media object and MD5 in operation6 metadata; S1panel,S3titrations,S7filemap and Methods appendix identified before numeric inspection.",
+    "sha256": "a51dce88e3fa91b6f38d6f5f86cf3347ee285bcf7e6ca0384a16de1a8d9d0803",
+    "bytes": 20234
+  },
+  {
+    "operation": 11,
+    "tool": "guarded_fetch",
+    "url": "https://pmc-oa-opendata.s3.amazonaws.com/PMC8449407.1/pnas.2111173118.sd07.xlsx",
+    "outcome": "retrieved_validated_payload",
+    "purpose": "Exact official article media object and MD5 in operation6 metadata; S1panel,S3titrations,S7filemap and Methods appendix identified before numeric inspection.",
+    "sha256": "ab93052b47887c19df62a2c5580a7b2245cf98e5aa91eee88d4d61c31607cfa9",
+    "bytes": 10401
+  },
+  {
+    "operation": 12,
+    "tool": "guarded_fetch",
+    "url": "https://pmc-oa-opendata.s3.amazonaws.com/PMC8449407.1/pnas.2111173118.sd06.xlsx",
+    "outcome": "retrieved_validated_payload",
+    "purpose": "Supplementary Methods p2 assigns isotope identities to S6A; p3 assigns trigger acquisition metadata to S6B/C. Completes original form/protocol qualification; no fitted model.",
+    "sha256": "ed26e8b29dda9d48e5784e392b30271cfc1e5a7b7ada3fadfcbe344fe68131b5",
+    "bytes": 21980
+  }
+]

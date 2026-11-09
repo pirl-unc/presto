@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "suites": [
+    {
+      "path": "results/tests/source-admission.log",
+      "passed": 146,
+      "sha256": "01f6642c8fbadf64764436d0c6fd93fa58cd9c455ef9d79c1ea6b19ba03c13cd"
+    },
+    {
+      "path": "results/tests/training-integration.log",
+      "passed": 26,
+      "sha256": "7beeee096ccc4bdd002e5864c97fe3c315b9aa9e03b84ad8a9408fc475a97eed"
+    }
+  ],
+  "scope": "Source curation/admission and inherited checkpoint, reporting and prediction verification; full cohort preflight remains mandatory inside both workers"
+}

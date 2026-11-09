@@ -1,0 +1,72 @@
+{
+  "case_id": 67,
+  "block_id": 22,
+  "eta": 0.0,
+  "status": "completed",
+  "accepted": true,
+  "condition": "soh2024_digestion:condition:aSPIRE_LEDGF",
+  "time_hours": 4.0,
+  "n_residues": 533,
+  "n_required_spans": 1912,
+  "n_measurements": 3824,
+  "phase": "complete",
+  "forwards": [
+    {
+      "substeps": 2,
+      "seconds": 1.3614371659932658,
+      "required_nonpositive": 0,
+      "required_nonfinite": 0,
+      "full_negative_count": 0,
+      "full_zero_count": 0,
+      "full_minimum": 8.469302515380114e-15,
+      "full_mass": 532.9999999999998,
+      "required_minimum": 7.608106068329857e-05,
+      "required_maximum": 0.05904461957660092
+    },
+    {
+      "substeps": 4,
+      "seconds": 2.6593592499848455,
+      "required_nonpositive": 0,
+      "required_nonfinite": 0,
+      "full_negative_count": 0,
+      "full_zero_count": 0,
+      "full_minimum": 8.4693025153801e-15,
+      "full_mass": 532.9999999999998,
+      "required_minimum": 7.608106068329857e-05,
+      "required_maximum": 0.05904461957660112
+    },
+    {
+      "substeps": 8,
+      "seconds": 5.310287125001196,
+      "required_nonpositive": 0,
+      "required_nonfinite": 0,
+      "full_negative_count": 0,
+      "full_zero_count": 0,
+      "full_minimum": 8.469302515380142e-15,
+      "full_mass": 533.0000000000007,
+      "required_minimum": 7.60810606832985e-05,
+      "required_maximum": 0.05904461957660131
+    }
+  ],
+  "required_positive_finite": true,
+  "max_log_disagreement": 8.881784197001252e-15,
+  "n_unresolved_precision": 0,
+  "max_analytical_log_error": 1.5987211554602254e-14,
+  "forward_pass": true,
+  "autograd_seconds": 8.904276042012498,
+  "independent_fd_seconds": 10.570071749971248,
+  "gradient_error": [
+    6.795577295326538e-11,
+    5.6594908447171743e-11,
+    2.9462369609961625e-11
+  ],
+  "gradient_tolerance": [
+    1.0006264804795764e-05,
+    1.0006364585768138e-05,
+    1.0002047084406154e-05
+  ],
+  "gradient_pass": true,
+  "gradient_status": "evaluated",
+  "seconds": 29.283577708003577,
+  "peak_rss_bytes": 2202894336
+}

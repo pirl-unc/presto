@@ -1,0 +1,68 @@
+{
+  "decision": "retain_reference",
+  "development_only": true,
+  "evaluation": {
+    "bootstrap_replicates": 2000,
+    "bootstrap_seed": 42,
+    "independent_verification": {
+      "comparisons": 110,
+      "maximum_absolute_delta": 3.3306690738754696e-16,
+      "status": "passed"
+    },
+    "locked_confirmation_accessed": false,
+    "test_accessed": false
+  },
+  "gates": {
+    "data_only_parent": {
+      "mhc_ii_equal_study_spearman_delta": -0.03647622445341639,
+      "mhc_ii_equal_study_spearman_delta_ci95": [-0.08256063238224476, 0.00960818347541198],
+      "mhc_ii_pooled_spearman_delta": 0.0063551796701752,
+      "required_pooled_delta": 0.05,
+      "status": "fail"
+    },
+    "mhc_i_preservation": {
+      "equal_study_spearman_delta": 0.036071311878449974,
+      "equal_study_spearman_delta_ci95": [0.032733756761826105, 0.039408866995073843],
+      "status": "pass"
+    },
+    "presentation_preservation": {
+      "equal_study_auroc_delta": 0.00022304527382436637,
+      "equal_study_auroc_delta_ci95": [-0.0013216473915534932, 0.0025978148284273583],
+      "status": "pass"
+    },
+    "processing_preservation": {
+      "equal_study_auroc_delta": 0.0010488171060364,
+      "equal_study_auroc_delta_ci95": [-0.0026980520565337285, 0.003950681169083259],
+      "status": "pass"
+    }
+  },
+  "headline_metrics": {
+    "mhc_i_exact_ic50_pooled_spearman": {
+      "netmhcpan_4_2c": 0.7584454946418003,
+      "parity": 0.7057841460609422,
+      "reference": 0.6697135712433656,
+      "rows": 169
+    },
+    "mhc_ii_exact_ic50_pooled_spearman": {
+      "netmhciipan_4_3e": 0.777862578220219,
+      "parity": 0.5060083661877504,
+      "reference": 0.4996531865175752,
+      "rows": 1170
+    },
+    "processing_equal_study_auroc": {
+      "mhcflurry_2_3_16": 0.8056721978136417,
+      "parity": 0.9068112606989437,
+      "reference": 0.9057624435929071,
+      "studies": 3
+    },
+    "presentation_equal_study_auroc": {
+      "mhcflurry_2_3_16": 0.9484334687571137,
+      "parity": 0.952254968916377,
+      "reference": 0.9520319236425525,
+      "studies": 3
+    }
+  },
+  "next_experiment": "genuinely new whole-study-disjoint affinity data plus one neutral-start class-II alpha/beta interaction adapter; newly disjoint T-cell negatives/calibration and PRIME evaluation follow after the affinity mechanism gate",
+  "reason": "The parity arm improved MHC-I but produced only +0.00636 pooled MHC-II exact-IC50 Spearman and a negative equal-study delta, far below the preregistered +0.05 MHC-II parent gate.",
+  "schema": "presto.unified_parity_decision.v1"
+}

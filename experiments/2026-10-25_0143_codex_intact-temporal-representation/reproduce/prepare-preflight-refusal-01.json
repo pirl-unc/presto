@@ -1,0 +1,12 @@
+{
+  "observed_utc": "2026-10-25T02:12:54.658789+00:00",
+  "command": "sh reproduce/launch.sh prepare",
+  "exit_code": 1,
+  "failure": "startup free-space assertion before stage receipt, snapshot, subprocess or data preparation",
+  "startup_required_bytes": 1107296256,
+  "preceding_df_available_kib": 1104288,
+  "free_bytes_after_refusal": 1083863040,
+  "launcher_sha256": "e5be40b4efc7cb7198eaa309afd08c853ff80e1064e8029da3d43188e157ae94",
+  "stage_started": false,
+  "guards_changed": false
+}

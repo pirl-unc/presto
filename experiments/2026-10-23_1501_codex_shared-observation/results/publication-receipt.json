@@ -1,0 +1,45 @@
+{
+  "published_commit": "d92dad06301a6ad0de95a2ae2bbe0bd2182fe8b3",
+  "time": "2026-10-23T18:14:32.196895-04:00",
+  "remote_readme_matches": true,
+  "readme_sha256": "48e4ff9fdf753e92a9b488e4a155fa39202f2e587df48b00a02cb437e8ece7aa",
+  "committed_artifact_hashes_verified": 115,
+  "body_updates": [
+    {
+      "endpoint": "repos/pirl-unc/hitlist/issues/770",
+      "before_sha256": "3368cc37e9bb93cf5f2bd6dd2deabc32d3ee19a6dacf71343e815c32065526ad",
+      "after_sha256": "8ab019edbd4cb27e13ece3e85fa64b725f595f590f6c48d7c59d3284765485b4",
+      "state": "open",
+      "draft": null,
+      "readback_exact": true
+    },
+    {
+      "endpoint": "repos/pirl-unc/hitlist/issues/762",
+      "before_sha256": "8552e060badc42f026c264301bee0aa871f35e1acf4fd6d12c8d020a3794acc9",
+      "after_sha256": "ce77d0cf1427d9f47ec1708aa36e82ca4a8f94130006ef0ea3bb9ffbc7df0e9e",
+      "state": "open",
+      "draft": null,
+      "readback_exact": true
+    },
+    {
+      "endpoint": "repos/pirl-unc/presto/pulls/131",
+      "before_sha256": "5f2fba3d83f8978ab9ccac6f8db5a86d511ecee0033cfad70e5528e56b2c527f",
+      "after_sha256": "ba1365e710730a2a6ffdb1df6a9bc16199dda583e69e95905a03e9c2b71ad729",
+      "state": "open",
+      "draft": true,
+      "readback_exact": true
+    }
+  ],
+  "hitlist775_state": "closed",
+  "previous_presto_ci": {
+    "commit": "ce86bdb29b4ac45f08dda7147c8833333f0bd8b4",
+    "run_id": 40007665669,
+    "conclusion": "success"
+  },
+  "report_commit_ci": {
+    "run_id": 40032238888,
+    "status": "in_progress",
+    "conclusion": null
+  },
+  "connector_write_fallback": "GitHub connector returned403 Resource not accessible by integration; authenticated CLI fresh GET/body-only PATCH/exact readback succeeded."
+}

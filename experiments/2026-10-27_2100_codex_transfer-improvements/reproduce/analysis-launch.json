@@ -1,0 +1,37 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "source_sha256": {
+    "analysis/compare.py": "6c039842aa7e3c9be029d77f1d3070b99d086d94c2b9f41ee8cb6008d04e165c",
+    "analysis/dashboard.html": "752cd30f8d6a7cafcb8acd20030e9b3d996ba6223e9d2619cc8f66cd71b8f7ef",
+    "analysis/dashboard.py": "a0e322ae7c6cb1db9db5c71f3fdeece8b392bbd0cc9d0be22c2bd15b0a836055",
+    "analysis/exposure.py": "b44cc8c0cabf78a11a142420aa03971d1137b4db7612b674e86faa563af871c2",
+    "analysis/historical_compare.py": "49312dc5a0bb91413b180b8131e02f648345c46b3d6b320e816e9743733c92bd",
+    "analysis/prefix_audit.py": "fe5bb3fcddb281fb0ce4968933262844f3323104f423436d857e1f898e2adae2",
+    "analysis/replay_modal.py": "0cd2ceb8689570efae5939592cb6abc8b5cd230b49669aab159301e022e09289",
+    "analysis/replay_remote.py": "1ce759f9d9ffbf45d7fc2d2910edf07111ac32e1c9c1fd1d22a27af169afc806",
+    "analysis/selection.py": "c73928ea23d2407dc0929cafe959bf39c257f0794dee25ccadb99823fb7e225c",
+    "analysis/series_inventory.py": "345ff7ad5e9bde5cc721c033e37d6363fa31094a24e927e009626455687adc6c",
+    "analysis/test_analysis.py": "16facc78c83bac58c855dfb277db3cbcaf054e5f7cd3049f031c60f9e5790599",
+    "analysis/validation_only.py": "422fbb829e0effb7ff95fe5cddbcb3553ead09b4ba97014812686543eece9239",
+    "analysis/verify.py": "105bffecbfe750ba2334ca42bfefd8b00adbeace4f74d6b8d58aab23f65f5281"
+  },
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "MPLCONFIGDIR": "/private/tmp/presto-benchmark-matplotlib"
+  },
+  "command": "reproduce/analysis-launch.sh",
+  "new_test_read_requires": "results/validation-decision.json",
+  "selection_procedure_disclosure": "reproduce/selection-clarification.json",
+  "local_analysis_versions": {
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "scikit-learn": "1.9.1",
+    "matplotlib": "3.11.2",
+    "torch": "2.14.1"
+  },
+  "checkpoint_replay_command": "modal run experiments/2026-10-27_2100_codex_transfer-improvements/analysis/replay_modal.py",
+  "checkpoint_replay_gpu": "H100!",
+  "checkpoint_replay_max_workers": 1
+}

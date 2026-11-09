@@ -1,0 +1,50 @@
+{
+  "passed": true,
+  "n_members": 3,
+  "members": [
+    {
+      "name": "Hi20S_txt/parameters.txt",
+      "flags": 0,
+      "method": 8,
+      "crc32": 2570141904,
+      "compressed_bytes": 1162,
+      "uncompressed_bytes": 3541,
+      "local_header_offset": 165030948,
+      "directory_offset": 167389250,
+      "directory_record_bytes": 106,
+      "retained_range": "Hi20S_txt.parameters-peptides.range",
+      "sha256": "3ee0e199e8c5a6588996e3d1132982fcda42cf101c92568186cc1b495f947ba7"
+    },
+    {
+      "name": "Hi20S_txt/peptides.txt",
+      "flags": 0,
+      "method": 8,
+      "crc32": 1274756029,
+      "compressed_bytes": 1676578,
+      "uncompressed_bytes": 4934986,
+      "local_header_offset": 165032164,
+      "directory_offset": 167389356,
+      "directory_record_bytes": 104,
+      "retained_range": "Hi20S_txt.parameters-peptides.range",
+      "sha256": "b7ffff93a4354e1597b4f0d166221471e4694547af5b7f3324780d1e26dffdab"
+    },
+    {
+      "name": "Hi20S_txt/summary.txt",
+      "flags": 0,
+      "method": 8,
+      "crc32": 1110024846,
+      "compressed_bytes": 1200,
+      "uncompressed_bytes": 3038,
+      "local_header_offset": 167347916,
+      "directory_offset": 167389569,
+      "directory_record_bytes": 103,
+      "retained_range": "Hi20S_txt.zip.tail",
+      "sha256": "d590e9850f5deb301b4eaabda7a57e8b3325eebb0fe0dd814e6895eee144b45d"
+    }
+  ],
+  "original_central_and_local_headers_verified": true,
+  "independent_zipfile_bytes_and_crcs_equal": true,
+  "full_original_archive_checksum_verified": false,
+  "seconds": 0.03226095798891038,
+  "peak_rss_bytes": 56508416
+}

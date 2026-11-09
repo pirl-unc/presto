@@ -1,0 +1,27 @@
+{
+  "status": "collected",
+  "condition": "curated-multi-s43",
+  "receipt": {
+    "condition": "curated-multi-s43",
+    "archive": "2026-10-29_1956_codex_curated-data-retrain/revisions/source-review-v2/curated-multi-s43-review.tar.gz",
+    "sha256": "23ff1e0eba149c1882f591b162df35dcf1e3982deb1b0555a698e99074170adc",
+    "bytes": 84153514,
+    "raw_directory": "/volume/2026-10-29_1956_codex_curated-data-retrain/revisions/source-review-v2/curated-multi-s43"
+  },
+  "directory": "/Users/iskander/code/presto/artifacts/2026-10-29_1956_codex_curated-data-retrain/collected/curated-multi-s43",
+  "predictions": {
+    "train": {
+      "path": "/Users/iskander/code/presto/artifacts/2026-10-29_1956_codex_curated-data-retrain/collected/curated-multi-s43/train-predictions.jsonl.gz",
+      "sha256": "ca927e105aaf0f3d0ef006d1e5e83e08123ca31329fde793e6ed4a2c12d8a893"
+    },
+    "validation": {
+      "path": "/Users/iskander/code/presto/artifacts/2026-10-29_1956_codex_curated-data-retrain/collected/curated-multi-s43/validation-predictions.jsonl.gz",
+      "sha256": "00293e07fdf7cfc994c282b17f334fa253594d634dec904e8a6569620b328ff5"
+    },
+    "test": {
+      "path": "/Users/iskander/code/presto/artifacts/2026-10-29_1956_codex_curated-data-retrain/collected/curated-multi-s43/test-predictions.jsonl.gz",
+      "sha256": "3424a37ec9437b76fc7bfa7dc3977a790cbfaf31808bbe494809c56303613c16"
+    }
+  },
+  "collected_unix": 1793361373.79012
+}

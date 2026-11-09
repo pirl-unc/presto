@@ -1,0 +1,88 @@
+{
+  "refreshed_unix": 1793251475.79092,
+  "runs": [
+    {
+      "condition": "wide-multi-s42",
+      "status": {
+        "status": "training",
+        "condition": "wide-multi-s42"
+      },
+      "progress": {
+        "steps": 825,
+        "examples": 105600,
+        "optimizer_seconds": 383.7920333139773,
+        "endpoint_class_examples": {
+          "elution_observation:I": 43370,
+          "ic50:I": 8832,
+          "elution_observation:II": 20238,
+          "kd:I": 2151,
+          "half_life:I": 1474,
+          "ic50:II": 12362,
+          "kd_via_ic50:II": 2480,
+          "kd_via_ec50:I": 3213,
+          "kd_via_ic50:I": 3732,
+          "qualitative_binding:II": 2440,
+          "kd_via_ec50:II": 844,
+          "kd:II": 667,
+          "td50:I": 347,
+          "qualitative_binding:I": 2844,
+          "koff:II": 19,
+          "koff:I": 39,
+          "ec50:I": 160,
+          "half_life:II": 184,
+          "td50:II": 44,
+          "ec50:II": 160
+        },
+        "peak_rss": 7384920064,
+        "max_steps": 51099,
+        "unique_training_rows_seen": 100287,
+        "latest_training_loss": 0.558907151222229,
+        "elapsed_seconds": 4383.314396439,
+        "updated_unix": 1793251467.439239,
+        "gpu_allocated": 3540601344,
+        "gpu_reserved": 9909043200
+      }
+    },
+    {
+      "condition": "wide-multi-s43",
+      "status": {
+        "status": "training",
+        "condition": "wide-multi-s43"
+      },
+      "progress": {
+        "steps": 125,
+        "examples": 16000,
+        "optimizer_seconds": 71.71808953199434,
+        "endpoint_class_examples": {
+          "kd_via_ec50:I": 489,
+          "elution_observation:II": 3143,
+          "ic50:II": 1862,
+          "elution_observation:I": 6398,
+          "half_life:I": 199,
+          "kd:I": 308,
+          "qualitative_binding:I": 422,
+          "kd_via_ic50:II": 396,
+          "qualitative_binding:II": 401,
+          "ic50:I": 1414,
+          "kd_via_ec50:II": 138,
+          "kd_via_ic50:I": 579,
+          "ec50:II": 16,
+          "ec50:I": 34,
+          "td50:I": 54,
+          "kd:II": 112,
+          "half_life:II": 20,
+          "td50:II": 7,
+          "koff:I": 8
+        },
+        "peak_rss": 7360675840,
+        "max_steps": 51099,
+        "unique_training_rows_seen": 15853,
+        "latest_training_loss": 0.6750931739807129,
+        "elapsed_seconds": 4368.79911669,
+        "updated_unix": 1793251462.161292,
+        "gpu_allocated": 3545817088,
+        "gpu_reserved": 10571743232
+      }
+    }
+  ]
+}

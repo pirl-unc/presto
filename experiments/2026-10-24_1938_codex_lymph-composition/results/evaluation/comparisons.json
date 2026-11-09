@@ -1,0 +1,42 @@
+{
+  "human_native": {
+    "selected_controls": {
+      "length": "length_1",
+      "sequence": "sequence_1"
+    },
+    "gates": {
+      "sequence_1": {
+        "val": 0.10913277133369892,
+        "test": -0.037657037906492
+      },
+      "observer_calibrated": {
+        "val": 0.001256387830171568,
+        "test": -0.011473611913339399
+      },
+      "primary_passes": false,
+      "observer_gains": {
+        "val": -0.03736612895725888,
+        "test": -0.010113328211849515
+      },
+      "observer_passes": false
+    },
+    "paired_component_bootstrap": {
+      "sequence_1": {
+        "relative_RMSE_gain_percentile_95": [
+          -0.1839116134966078,
+          0.1055916028389276
+        ],
+        "n_components": 12,
+        "scope": "same_study_component_resampling_not_biological_specimen_or_external_transfer_uncertainty"
+      },
+      "observer_calibrated": {
+        "relative_RMSE_gain_percentile_95": [
+          -0.16366128575682318,
+          0.1221087912196894
+        ],
+        "n_components": 12,
+        "scope": "same_study_component_resampling_not_biological_specimen_or_external_transfer_uncertainty"
+      }
+    }
+  }
+}

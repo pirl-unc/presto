@@ -1,0 +1,37 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "argv": [
+    "sh",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_1202_codex_biological-cut-rates/reproduce/launch.sh"
+  ],
+  "device": "local CPU float64, one Torch thread; no Modal/GPU",
+  "environment": {
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1"
+  },
+  "epochs": 2000,
+  "initial_rate_per_hour": 0.01,
+  "l2_nonintercept": 0.01,
+  "learning_rate": 0.03,
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "predictive_split": "original source groups; descriptive held-out repeatability already exposed, no prior kinetic model predictions",
+  "presto_commit": "fc4d24a89800e3c6df2697b0f13e49ca0dd4a803",
+  "presto_dirty": " M tasks/todo.md\n?? data/availability_recipes/\n?? experiments/2026-10-23_1202_codex_biological-cut-rates/\n?? experiments/agents/codex/plans/full-ic50-fitting.md\n?? tasks/modular_model/trajectory-sampling-issue.md\n",
+  "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "recipe_directory": "/private/tmp/hitlist-digestion-209-review-candidate",
+  "recipe_manifest_sha256": "5f616170b5514cb4d8f0c7b7843d232959e9514eebbca6483f976e17b0846615",
+  "registered_at": "2026-10-23T12:02:06.200907-04:00",
+  "source_hashes": {
+    "experiments/2026-10-23_1202_codex_biological-cut-rates/code/check_math.py": "451844e8f4271d9b7a4746eb092e312e5a5d7e90d7a60f94cc8f4cb2c591a67f",
+    "experiments/2026-10-23_1202_codex_biological-cut-rates/code/common.py": "a9b32c6d0bafa0796b26731a17e1131ab12171924f9e831b68a3fd630492bf58",
+    "experiments/2026-10-23_1202_codex_biological-cut-rates/code/fit.py": "1dbee26c86aebdcbba151ed00ed5fa37c5096c0e1b84f6d2aaae163981e7ff52",
+    "models/independent_cut.py": "7380a59d979305654ea30aa218e4310096bb11e246cd5af2b21154ba6a351935",
+    "tests/test_independent_cut.py": "4e54a4c368150e0205de96fb46fb54217fedcd353010eacafd4da72546fc5123"
+  },
+  "variants": [
+    "constant",
+    "sequence",
+    "sequence_context"
+  ]
+}

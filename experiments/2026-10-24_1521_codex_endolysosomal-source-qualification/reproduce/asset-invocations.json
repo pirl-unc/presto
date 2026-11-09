@@ -1,0 +1,148 @@
+{
+  "note": "Argument vectors reconstructed from original per-asset receipts; exact initial invocation is launch.json",
+  "retrievals": [
+    {
+      "argv": [
+        "code/launch.py",
+        "--asset-url",
+        "https://www.frontiersin.org/journals/allergy/articles/10.3389/falgy.2026.1936335/full",
+        "--asset-name",
+        "article-accessible.html"
+      ]
+    },
+    {
+      "argv": [
+        "code/launch.py",
+        "--asset-url",
+        "https://www.frontiersin.org/journals/allergy/articles/10.3389/falgy.2026.1936335/xml",
+        "--asset-name",
+        "article.xml"
+      ]
+    },
+    {
+      "argv": [
+        "code/launch.py",
+        "--asset-url",
+        "https://www.frontiersin.org/ap-2024/_nuxt/DzsOzbfK.js",
+        "--asset-name",
+        "publisher-app.js"
+      ]
+    },
+    {
+      "argv": [
+        "code/launch.py",
+        "--asset-url",
+        "https://www.frontiersin.org/ap-2024/_nuxt/DQBfl_Gd.js",
+        "--asset-name",
+        "publisher-article.js"
+      ]
+    },
+    {
+      "argv": [
+        "code/launch.py",
+        "--asset-url",
+        "https://www.frontiersin.org/ap-2024/_nuxt/MalL8IVE.js",
+        "--asset-name",
+        "publisher-details.js"
+      ]
+    },
+    {
+      "argv": [
+        "code/launch.py",
+        "--asset-url",
+        "https://www.frontiersin.org/ap-2024/_nuxt/xRAUm4Yu.js",
+        "--asset-name",
+        "publisher-full.js"
+      ]
+    },
+    {
+      "argv": [
+        "code/launch.py",
+        "--asset-url",
+        "https://www.frontiersin.org/ap-2024/_nuxt/Bh6AQ2cv.js",
+        "--asset-name",
+        "publisher-layout.js"
+      ]
+    },
+    {
+      "argv": [
+        "code/launch.py",
+        "--asset-url",
+        "https://www.frontiersin.org/ap-2024/_nuxt/ryyPLz5M.js",
+        "--asset-name",
+        "publisher-service.js"
+      ]
+    },
+    {
+      "argv": [
+        "code/launch.py",
+        "--asset-url",
+        "https://www.frontiersin.org/ap-2024/_nuxt/9vvFyujj.js",
+        "--asset-name",
+        "publisher-view.js"
+      ]
+    },
+    {
+      "argv": [
+        "code/launch.py",
+        "--asset-url",
+        "https://public-pages-files-2025.frontiersin.org/articles/1936335/file/Data_Sheet_1.pdf/1936335_data-sheet_1/1",
+        "--asset-name",
+        "supplement-1.pdf"
+      ]
+    },
+    {
+      "argv": [
+        "code/launch.py",
+        "--asset-url",
+        "https://public-pages-files-2025.frontiersin.org/articles/1936335/file/Data_Sheet_2.pdf/1936335_data-sheet_2/1",
+        "--asset-name",
+        "supplement-2.pdf"
+      ]
+    },
+    {
+      "argv": [
+        "code/launch.py",
+        "--asset-url",
+        "https://public-pages-files-2025.frontiersin.org/articles/1936335/file/Data_Sheet_3.pdf/1936335_data-sheet_3/1",
+        "--asset-name",
+        "supplement-3.pdf"
+      ]
+    },
+    {
+      "argv": [
+        "code/launch.py",
+        "--asset-url",
+        "https://public-pages-files-2025.frontiersin.org/articles/1936335/file/Data_Sheet_4.pdf/1936335_data-sheet_4/1",
+        "--asset-name",
+        "supplement-4.pdf"
+      ]
+    },
+    {
+      "argv": [
+        "code/launch.py",
+        "--asset-url",
+        "https://public-pages-files-2025.frontiersin.org/articles/1936335/file/Data_Sheet_5.pdf/1936335_data-sheet_5/1",
+        "--asset-name",
+        "supplement-5.pdf"
+      ]
+    },
+    {
+      "argv": [
+        "code/launch.py",
+        "--asset-url",
+        "https://www.frontiersin.org/api/v4/articles/1936335/supplemental-data",
+        "--asset-name",
+        "supplements.json"
+      ]
+    }
+  ],
+  "other_executed_scripts": [
+    "code/figshare_index.py",
+    "code/inspect_pdfs.py",
+    "analysis/verify_source.py"
+  ],
+  "runtime_root_required": "/private/tmp/presto-modular-model/experiments/2026-10-24_1521_codex_endolysosomal-source-qualification",
+  "environment_overrides": {},
+  "frozen_inspection_scripts_require": "original experiment directory layout and raw assets"
+}

@@ -5,8 +5,8 @@ import torch
 import torch.nn.functional as F
 
 from presto.data.collate import PrestoCollator, PrestoSample
-from presto.models.presto import Presto, _processing_species_idx_tensor
-from presto.scripts.train_synthetic import (
+from presto.legacy.presto import Presto, _processing_species_idx_tensor
+from presto.legacy.scripts.train_synthetic import (
     LOSS_TASK_SPECS,
     _compute_task_loss_vector,
     _get_batch_mask,

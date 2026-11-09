@@ -1,0 +1,9 @@
+{
+  "matched": true,
+  "updates": 8,
+  "evidence": "Exact equality of all initial/last/selected model and optimizer tensors, element coverage and validation/test metrics",
+  "synthetic_contract": "14 artificial observations; 10 affinity across I/II and IC50/KD, 4 identity rows; weighted sampling plus replay and dropout; software equivalence only",
+  "raw_artifacts": "/Users/iskander/code/presto/artifacts/2026-10-30_1725_codex_preparation-throughput",
+  "baseline": "/Users/iskander/code/presto/artifacts/2026-10-30_1725_codex_preparation-throughput/software-baseline/parity.json",
+  "candidate": "/Users/iskander/code/presto/artifacts/2026-10-30_1725_codex_preparation-throughput/software-candidate/parity.json"
+}

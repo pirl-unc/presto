@@ -1,0 +1,41 @@
+{
+  "argv": [
+    "code/fetch.py",
+    "--url",
+    "https://ftp.pride.ebi.ac.uk/pride/data/archive/2021/11/PXD018722/HUMAN_NS3_Cyclin.fasta",
+    "--name",
+    "HUMAN_NS3_Cyclin.fasta",
+    "--size",
+    "33003906",
+    "--sha1",
+    "ebfe21f8f804ceb7679d4c41c001fde25cea2a96"
+  ],
+  "source_sha256": "e6a7d4375eb45cd268b3fb0566fd74408f5f7933199aca831a8df1f35c7c77c2",
+  "utc": "2026-10-25T04:26:17.324448+00:00",
+  "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2021/11/PXD018722/HUMAN_NS3_Cyclin.fasta",
+  "expected_size_bytes": 33003906,
+  "expected_sha1": "ebfe21f8f804ceb7679d4c41c001fde25cea2a96",
+  "requested_range": null,
+  "access_status": "retrieved_and_length_verified",
+  "status": 200,
+  "final_url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2021/11/PXD018722/HUMAN_NS3_Cyclin.fasta",
+  "headers": {
+    "Date": "Sun, 25 Oct 2026 04:26:17 GMT",
+    "Server": "Apache",
+    "Last-Modified": "Thu, 07 Apr 2022 01:10:27 GMT",
+    "ETag": "\"1f79982-5dc0624b046c0\"",
+    "Accept-Ranges": "bytes",
+    "Content-Length": "33003906",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET,OPTIONS",
+    "Access-Control-Allow-Headers": "Authorization,Origin,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Accept",
+    "Connection": "close"
+  },
+  "body_complete": true,
+  "path": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/native_psmd2_sources/2026-10-25_0424_codex_native-psmd2-source/HUMAN_NS3_Cyclin.fasta",
+  "size_bytes": 33003906,
+  "sha256": "70d892190223b0491c48446bfda48845865822f975beb518aaa3334a56873cba",
+  "sha1": "ebfe21f8f804ceb7679d4c41c001fde25cea2a96",
+  "seconds": 26.403823625005316,
+  "peak_rss_bytes": 71467008
+}

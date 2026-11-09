@@ -1,0 +1,25 @@
+{
+  "status": "passed",
+  "recorded_unix": 1793247015.22664,
+  "family_tests": "34 passed; 3 additional revision gate/byte conservation tests passed",
+  "focused_shared_tests": "112 passed",
+  "preceding_full_suite": "2855 passed, 4 skipped; final registry correction recheck running",
+  "wheel": "isolated unpacked wheel import and packaged registry lookup passed",
+  "launcher_image_and_function_import": "passed",
+  "changed_sources_ruff": "passed",
+  "partition_verification_sha256": "0291efeae292dbd66ae2dd404a3cbe5136b032e734cbd651670730990c506053",
+  "training_contract_sha256": "c4b8a6c3b68db8a049d8b26ea8f8aaa290e316544eee6b5a3dadb17e06a0366c",
+  "source_hashes": {
+    "code/worker.py": "dea39b33a1ff5938a9a96a9eb6c6dbc1ac24d27404103db3beca28c725f135ea",
+    "code/launch.py": "b78a04ff1c673322488dc3823723be15e04836863d2fa9ff076ca5d7f2afcdd0",
+    "code/checkpoint_observer.py": "0a7952de71d2475df455190dde8a171d3da20bf30be85b8f48b9c7bc289a2aea",
+    "code/freeze_contract.py": "133aa985eec0b4e1b0160aef3d88849611f82d27b8c9a6c4257685d0200d33fc",
+    "code/revise_cohort.py": "6f74f7ba8d6b1947ddd44c838039d733e4285b70ae43031ab97d1dcda18c00dc"
+  },
+  "runtime_source": "aa2b3f7a358010f1d6163cbaad7c28dd1e1fa97e",
+  "model_and_trainer_unchanged": true,
+  "requested_gpu": "H100!",
+  "max_concurrent_gpus": 2,
+  "predictive_metrics_available": false,
+  "final_full_suite": "2854 passed, 4 skipped, 33 warnings in 327.09s"
+}

@@ -1,0 +1,131 @@
+{
+  "accession" : "PXD024917",
+  "title" : "Absolute quantification of tumor antigens using embedded MHC-I isotopologue calibrants",
+  "additionalAttributes" : [ ],
+  "projectDescription" : "SureQuant-MHC utilizes a series of isotopologues and internal standard-triggered targeted mass spectrometry to generate an embedded multipoint calibration curve to determine the endogenous pMHC concentrations for a panel of 18 antigen targets. We apply this methiod to profile changes in pMHC expression levels in melanoma cell lines treated with binimetinib, a MEK inhibitr, and traslate the approach to profiling antigen levels in human tumor punch biopsies.",
+  "sampleProcessingProtocol" : "Peptide MHCs were purified by immunoprecipitation, acid elution, and molecular weight cut-off filtration and analyzed with targeted and discovery mass spectrometry. Additional details can be found in the associated manuscript.",
+  "dataProcessingProtocol" : "Targeted analyses were analyzed using Skyline, and discovery analyses were analyzed with Proteome Discoverer 2.5. Additional details can be found in the associated manuscript.",
+  "projectTags" : [ ],
+  "keywords" : [ "Lc-ms/ms", "Mhc", "Surequant" ],
+  "doi" : "",
+  "submissionType" : "PARTIAL",
+  "license" : "Creative Commons Public Domain (CC0)",
+  "submissionDate" : "2021-03-22",
+  "publicationDate" : "2021-09-21",
+  "submitters" : [ {
+    "title" : "Ms",
+    "firstName" : "Lauren",
+    "lastName" : "Stopfer",
+    "identifier" : "95870142",
+    "affiliation" : "MIT",
+    "email" : "lstopfer@mit.edu",
+    "country" : "United States",
+    "orcid" : "0000-0001-6984-3004",
+    "name" : "Lauren Stopfer",
+    "id" : "95870142"
+  } ],
+  "labPIs" : [ {
+    "title" : "Dr",
+    "firstName" : "Forest",
+    "lastName" : "White",
+    "identifier" : "2229947",
+    "affiliation" : "Department of Biological Engineering",
+    "email" : "fwhite@mit.edu",
+    "country" : "",
+    "orcid" : "",
+    "name" : "Forest White",
+    "id" : "2229947"
+  } ],
+  "instruments" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "MS",
+    "accession" : "MS:1003028",
+    "name" : "Orbitrap Exploris 480"
+  }, {
+    "@type" : "CvParam",
+    "cvLabel" : "MS",
+    "accession" : "MS:1002523",
+    "name" : "Q Exactive HF"
+  } ],
+  "softwares" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "MS",
+    "accession" : "MS:1000650",
+    "name" : "Proteome Discoverer"
+  } ],
+  "experimentTypes" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "PRIDE",
+    "accession" : "PRIDE:0000311",
+    "name" : "SRM/MRM"
+  }, {
+    "@type" : "CvParam",
+    "cvLabel" : "PRIDE",
+    "accession" : "PRIDE:0000429",
+    "name" : "Shotgun proteomics"
+  } ],
+  "quantificationMethods" : [ ],
+  "countries" : [ "United States" ],
+  "sampleAttributes" : [ {
+    "@type" : "Tuple",
+    "key" : {
+      "cvLabel" : "EFO",
+      "accession" : "EFO:0000635",
+      "name" : "organism part"
+    },
+    "value" : [ {
+      "cvLabel" : "CL",
+      "accession" : "CL:0000148",
+      "name" : "melanocyte"
+    }, {
+      "cvLabel" : "BTO",
+      "accession" : "BTO:0001253",
+      "name" : "skin"
+    } ]
+  }, {
+    "@type" : "Tuple",
+    "key" : {
+      "cvLabel" : "EFO",
+      "accession" : "OBI:0100026",
+      "name" : "organism"
+    },
+    "value" : [ {
+      "cvLabel" : "NEWT",
+      "accession" : "NEWT:9606",
+      "name" : "Homo sapiens (Human)"
+    } ]
+  } ],
+  "organisms" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "NEWT",
+    "accession" : "NEWT:9606",
+    "name" : "Homo sapiens (human)"
+  } ],
+  "organismParts" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "BTO",
+    "accession" : "BTO:0001253",
+    "name" : "Skin"
+  }, {
+    "@type" : "CvParam",
+    "cvLabel" : "CL",
+    "accession" : "CL:0000148",
+    "name" : "Melanocyte"
+  } ],
+  "diseases" : [ ],
+  "references" : [ {
+    "referenceLine" : "Stopfer LE, Gajadhar AS, Patel B, Gallien S, Frederick DT, Boland GM, Sullivan RJ, White FM. Absolute quantification of tumor antigens using embedded MHC-I isotopologue calibrants. Proc Natl Acad Sci U S A. 2021 118(37)",
+    "pubmedID" : 34497125,
+    "doi" : "10.1073/pnas.2111173118"
+  } ],
+  "identifiedPTMStrings" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "PRIDE",
+    "accession" : "PRIDE:0000398",
+    "name" : "No PTMs are included in the dataset"
+  } ],
+  "totalFileDownloads" : 4025,
+  "botCount" : 1066,
+  "hubCount" : 2923,
+  "organicCount" : 36
+}

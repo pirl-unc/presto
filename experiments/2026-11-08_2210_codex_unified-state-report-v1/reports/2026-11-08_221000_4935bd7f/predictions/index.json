@@ -1,0 +1,41 @@
+{
+  "artifacts": [
+    {
+      "bytes": 1164733,
+      "id": "affinity_comparator_predictions",
+      "include_in_report": false,
+      "license": "Derived NetMHCpan/NetMHCIIpan outputs; DTU academic terms apply",
+      "sha256": "3ffe283974a93e151f3d159e986b715781b4431c88d9392cac389d131f50fcb6",
+      "split": "development",
+      "uri": "modal-volume://presto-checkpoints/2026-11-08_2210_codex_unified-state-report-v1/artifacts/affinity-baseline-predictions.json"
+    },
+    {
+      "bytes": 7272830,
+      "id": "matched_presentation_predictions",
+      "include_in_report": false,
+      "license": "Derived Presto/MHCflurry matched predictions; source-data terms apply",
+      "sha256": "9d9cba9260142373dfe747ac9cf109a46b1b468df107e3ba0c93b37e146e643a",
+      "split": "development",
+      "uri": "modal-volume://presto-checkpoints/2026-11-08_2210_codex_unified-state-report-v1/artifacts/matched-presentation.jsonl.gz"
+    },
+    {
+      "bytes": 24362137,
+      "id": "stage_b_development_predictions",
+      "include_in_report": false,
+      "license": "Derived predictions; underlying source-data terms apply",
+      "sha256": "46bd116569a73a654411775192b76779aaeb7c0b2cb00a07a71584933f986068",
+      "split": "development",
+      "uri": "modal-volume://presto-checkpoints/2026-11-07_1915_codex_unified-presentation/stage-b/validation-predictions.jsonl.gz"
+    },
+    {
+      "bytes": 434985,
+      "id": "tcell_binary_only_development_predictions",
+      "include_in_report": false,
+      "license": "Derived predictions; IEDB data-use terms apply",
+      "sha256": "8c8868aeb1a721f7e1dae2539092484afc70985d9dc31090ace176b08fd36394",
+      "split": "development",
+      "uri": "modal-volume://presto-checkpoints/2026-11-08_1130_codex_tcell-fixed-parent/binary-only/validation-predictions.jsonl.gz"
+    }
+  ],
+  "schema_version": 1
+}

@@ -1,0 +1,42 @@
+{
+  "recorded_utc": "2026-10-25T07:25:20.803189+00:00",
+  "goal_turn": "progress",
+  "previous_scientific_turn": "progress: negative native screen0630",
+  "intervening_cleanup_check": "no scientific progress; cleanup not rerun",
+  "presto_commit": "0de1ef166c93eb3e9f92cd2e7e2eb82e17c49f4b",
+  "presto_ci": 40172565872,
+  "presto_ci_confirmed_live": true,
+  "family": "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0711_codex_native-acquisition-sensitivity",
+  "experiment_complete": true,
+  "independent_replay_passed": true,
+  "full_goal_complete": false,
+  "recipe_release_version": "2.0.38",
+  "recipe_release_successful_run": 40169827556,
+  "recipe_release_published_byte_verified": true,
+  "recipe_release_receipt": "/Users/iskander/code/presto/.worktrees/presto-modular-model/tasks/modular_model/native-contrast-2038-release.json",
+  "diagnostic": {
+    "n_contrasts": 158,
+    "n_components": 55,
+    "median_partition_pearson": 0.8381778636277973,
+    "within_arm_rms": 0.12977612818517123,
+    "stable_nonzero_sign_fraction": 0.7320700511609602,
+    "next_step": "training_only_boundary_context_comparison"
+  },
+  "no_outer_rows_materialized": true,
+  "no_model_fit": true,
+  "next_plan": "experiments/agents/codex/plans/native-boundary-context-development.md",
+  "next": [
+    "Poll same Presto CI40172565872; no release job remains pending.",
+    "Register boundary-context development family, qualify fixed feature mapping and nested component folds using training rows only, then compare zero/length/61feature/149feature conditions under the frozen plan.",
+    "Keep native screen0630 outer groups closed; do not change original eligibility/reference/acquisition choices or tune these inspected outcomes.",
+    "Full APC precursor-relative amount distribution, unseen/sub-ligand products, observation calibration, transfer and exact/discrete comparison remain unachieved."
+  ],
+  "all_local_sessions_terminal": true,
+  "verified_live_and_committed_artifacts": 45,
+  "primary_checkout_unchanged": true,
+  "unrelated_todo_diff_preserved": {
+    "additions": 346,
+    "deletions": 4
+  },
+  "issue_update": "https://github.com/pirl-unc/hitlist/issues/837#issuecomment-6394848954"
+}

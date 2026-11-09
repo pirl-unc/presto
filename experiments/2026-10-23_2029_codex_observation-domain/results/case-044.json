@@ -1,0 +1,71 @@
+{
+  "case_id": 44,
+  "block_id": 14,
+  "eta": 1.0,
+  "status": "completed",
+  "accepted": true,
+  "condition": "soh2024_digestion:condition:aSPIRE_H2B",
+  "time_hours": 4.0,
+  "n_residues": 123,
+  "n_required_spans": 750,
+  "n_measurements": 1500,
+  "phase": "complete",
+  "forwards": [
+    {
+      "substeps": 2,
+      "seconds": 0.2594037500093691,
+      "required_nonpositive": 0,
+      "required_nonfinite": 0,
+      "full_negative_count": 0,
+      "full_zero_count": 0,
+      "full_minimum": 8.117404615114322e-18,
+      "full_mass": 123.00000000000009,
+      "required_minimum": 4.452276013776709e-05,
+      "required_maximum": 0.07844877941877089
+    },
+    {
+      "substeps": 4,
+      "seconds": 0.5147711249883287,
+      "required_nonpositive": 0,
+      "required_nonfinite": 0,
+      "full_negative_count": 0,
+      "full_zero_count": 0,
+      "full_minimum": 8.117404615114285e-18,
+      "full_mass": 123.00000000000017,
+      "required_minimum": 4.4522760137766945e-05,
+      "required_maximum": 0.0784487794187711
+    },
+    {
+      "substeps": 8,
+      "seconds": 1.024706750002224,
+      "required_nonpositive": 0,
+      "required_nonfinite": 0,
+      "full_negative_count": 0,
+      "full_zero_count": 0,
+      "full_minimum": 8.117404615114321e-18,
+      "full_mass": 123.00000000000037,
+      "required_minimum": 4.45227601377671e-05,
+      "required_maximum": 0.07844877941877125
+    }
+  ],
+  "required_positive_finite": true,
+  "max_log_disagreement": 1.1546319456101628e-14,
+  "n_unresolved_precision": 0,
+  "forward_pass": true,
+  "autograd_seconds": 1.1878942920011468,
+  "independent_fd_seconds": 1.593475292029325,
+  "gradient_error": [
+    1.042647738980218e-10,
+    1.1775155020965142e-10,
+    3.03370232580813e-11
+  ],
+  "gradient_tolerance": [
+    1.0004636450590124e-05,
+    1.0000368081343184e-05,
+    1.000332820003224e-05
+  ],
+  "gradient_pass": true,
+  "gradient_status": "evaluated",
+  "seconds": 4.635393040953204,
+  "peak_rss_bytes": 562937856
+}

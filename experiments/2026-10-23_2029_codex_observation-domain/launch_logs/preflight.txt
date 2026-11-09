@@ -1,0 +1,13 @@
+
+==================================== ERRORS ====================================
+_ ERROR collecting experiments/2026-10-23_2029_codex_observation-domain/code/test_admission.py _
+ImportError while importing test module '/private/tmp/presto-modular-model/experiments/2026-10-23_2029_codex_observation-domain/code/test_admission.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+experiments/2026-10-23_2029_codex_observation-domain/code/test_admission.py:7: in <module>
+    from admission import directions, readout_weights
+E   ModuleNotFoundError: No module named 'admission'
+=========================== short test summary info ============================
+ERROR experiments/2026-10-23_2029_codex_observation-domain/code/test_admission.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 1.21s

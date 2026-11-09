@@ -1,0 +1,17 @@
+{
+  "status": "collector_resumed",
+  "recorded_utc": "2026-10-29T14:05:40.989258+00:00",
+  "cause": "Original collector exited after repeated transient DNS failures; no collector process remained.",
+  "command": "PRESTO_MODAL_GPU='H100!' python -u experiments/2026-10-28_1540_codex_temporal-multi-output/code/advance.py",
+  "calls_preserved": {
+    "wide-multi-s42": "fc-01M62XMCM816XJJJT29A62VV67",
+    "wide-multi-s43": "fc-01M62XMCQ63CRJ69VFR96TX0MW"
+  },
+  "new_fit_launched": false,
+  "observed_processes": {
+    "controller_pid": 33566,
+    "collector_pid": 33687
+  },
+  "log": "experiments/2026-10-28_1540_codex_temporal-multi-output/launch_logs/continuation-recovery-20261029.log",
+  "test_selection_gate_unchanged": true
+}

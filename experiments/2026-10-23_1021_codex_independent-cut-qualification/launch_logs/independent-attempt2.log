@@ -1,0 +1,11 @@
+Independent replay passed exact_seed42
+Independent replay passed exact_seed43
+Independent replay passed exact_seed44
+Independent replay passed sampled32_seed42
+Independent replay passed sampled32_seed43
+Independent replay passed sampled32_seed44
+Independent replay passed sampled128_seed42
+Independent replay passed sampled128_seed43
+Independent replay passed sampled128_seed44
+Independent replay passed constant_seed42
+{'passed': True, 'updates': 10000, 'noninitial_checkpoints': 30, 'prediction_values': 2940, 'max_log_rate_checkpoint_error': 3.4638958368304884e-14, 'max_metric_error': 1.925543058334256e-15, 'wall_seconds': 1.1786665419931524, 'implementation': 'NumPy cut-state enumeration, analytic score derivatives and independently implemented Adam; Torch only for exact uniform RNG stream', 'constant_control_analytic_ties': {'test': {'raw_spearman': 0.8591426442575838, 'enumerated_spearman': 0.8573058058335619, 'canonical_spearman': 0.8571058513762922, 'n_analytic_classes': 50}, 'train': {'raw_spearman': 0.8104958283511092, 'enumerated_spearman': 0.808748670357468, 'canonical_spearman': 0.8082646613698518, 'n_analytic_classes': 50}, 'validation': {'raw_spearman': 0.7851670678768845, 'enumerated_spearman': 0.7873190665145766, 'canonical_spearman': 0.7823458557609229, 'n_analytic_classes': 40}}}

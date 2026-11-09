@@ -1,0 +1,38 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+________ test_correlation_is_undefined_for_constant_float_arrays[False] ________
+
+constant_target = False
+
+    @pytest.mark.parametrize("constant_target", [False, True])
+    def test_correlation_is_undefined_for_constant_float_arrays(constant_target):
+        # A nonrepresentable decimal can have a tiny positive computed standard
+        # deviation despite every element being identical.
+        constant = np.full(2726, 0.1)
+        varying = np.linspace(0, 5, len(constant))
+        targets, predictions = (constant, varying) if constant_target else (varying, constant)
+        metrics = regression_metrics(targets, predictions, binding=False)
+>       assert metrics["pearson"] is None
+E       assert 2.1662416483662594e-16 is None
+
+tests/test_modular_training.py:235: AssertionError
+________ test_correlation_is_undefined_for_constant_float_arrays[True] _________
+
+constant_target = True
+
+    @pytest.mark.parametrize("constant_target", [False, True])
+    def test_correlation_is_undefined_for_constant_float_arrays(constant_target):
+        # A nonrepresentable decimal can have a tiny positive computed standard
+        # deviation despite every element being identical.
+        constant = np.full(2726, 0.1)
+        varying = np.linspace(0, 5, len(constant))
+        targets, predictions = (constant, varying) if constant_target else (varying, constant)
+        metrics = regression_metrics(targets, predictions, binding=False)
+>       assert metrics["pearson"] is None
+E       assert 2.1662416483662594e-16 is None
+
+tests/test_modular_training.py:235: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_modular_training.py::test_correlation_is_undefined_for_constant_float_arrays[False]
+FAILED tests/test_modular_training.py::test_correlation_is_undefined_for_constant_float_arrays[True]
+2 failed, 18 deselected in 0.94s

@@ -1,0 +1,55 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "argv": [
+    "modal",
+    "run",
+    "--detach",
+    "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-28_0250_codex_assay-transfer-mechanisms/code/launch.py"
+  ],
+  "cwd": "/Users/iskander/code/presto/.worktrees/shared-training/presto",
+  "git_commit": "fe9ca8b82489b5afc222e3f2237460ef7bd7af63",
+  "git_dirty": true,
+  "source_pins": {
+    "verify_data.py": "f37d0640dc6b381236f3f80cc173ce67a794080f224dc561bd1f910e250e7f52",
+    "worker.py": "f8e56ae789b53adb98af78348ebdf4f763b2dbeeb7aed3c1f4b629ef93e72fb4",
+    "prepare_data.py": "2e2306e38b37c7f3edd310631755f3caeb3e7b4d8c9d97eacf40e3253dc5782f",
+    "compress_inputs.py": "4326bbcf51b6fce7650d44aab687383d5a5bca4425c53c6e87e335b7942ae884",
+    "launch.py": "63cce292c009c2ba63128ccfda392191083e3b9daf3be05b447bb2cba784a6a2",
+    "freeze.py": "fda618ba08167b55b586b8744c510823486b49dd4e0b3860b7d360a4bf08536f",
+    "preflight.py": "ec4f79e6fbc2262266583b5e245d503a663ae7837949117274519cfb2277e973"
+  },
+  "transport_metadata_sha256": "18c3caf2d7426481bcf09cbe1aac8c85ce656681aeee43a833bc4443ff8f642b",
+  "input_archive_sha256": "d8e433e5c57fbb27de7a8ff22f4823dc601948a5764910f5f9b993c69a512e99",
+  "conditions": [
+    "small-ic50-s42",
+    "wide-ic50-s42",
+    "wide-six-natural-s42",
+    "wide-six-class-balanced-s42",
+    "wide-six-primary-matched-s42",
+    "wide-six-primary-shuffled-s42",
+    "small-ic50-s43",
+    "wide-ic50-s43",
+    "wide-six-natural-s43",
+    "wide-six-class-balanced-s43",
+    "wide-six-primary-matched-s43",
+    "wide-six-primary-shuffled-s43"
+  ],
+  "requirements": [
+    "torch==2.14.1",
+    "numpy==2.5.4",
+    "pyyaml==6.0.3",
+    "mhcgnomes==3.64.6",
+    "mhcseqs==2.6.13",
+    "tqdm==4.70.1",
+    "psutil==7.2.2"
+  ],
+  "requested_gpu": "H100!",
+  "cpu": 4,
+  "memory_mib": 32768,
+  "max_containers": 2,
+  "timeout_seconds": 14400,
+  "environment": {
+    "PRESTO_MODAL_GPU": "H100!"
+  },
+  "started_unix": 1793157710.796222
+}

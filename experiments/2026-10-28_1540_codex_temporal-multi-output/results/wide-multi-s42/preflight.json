@@ -1,0 +1,146 @@
+{
+  "status": "passed",
+  "seconds": 1824.511180082,
+  "scales": {
+    "ec50": {
+      "mean": 2.205902327397387,
+      "scale": 1.2217749646362066,
+      "exact_count": 199,
+      "floor": 0.001
+    },
+    "half_life": {
+      "mean": 1.469606931206776,
+      "scale": 1.2402569463054927,
+      "exact_count": 8720,
+      "floor": 0.001
+    },
+    "ic50": {
+      "mean": 2.8406464294881957,
+      "scale": 1.2450092784401297,
+      "exact_count": 49732,
+      "floor": 0.001
+    },
+    "kd": {
+      "mean": 2.1026252648121795,
+      "scale": 1.3067658400941011,
+      "exact_count": 5546,
+      "floor": 0.001
+    },
+    "kd_via_ec50": {
+      "mean": 2.2656107544938755,
+      "scale": 1.1617859546098435,
+      "exact_count": 12789,
+      "floor": 0.001
+    },
+    "kd_via_ic50": {
+      "mean": 2.7035132118164293,
+      "scale": 1.3770101866859144,
+      "exact_count": 67967,
+      "floor": 0.001
+    },
+    "koff": {
+      "mean": -4.362379195457084,
+      "scale": 1.1852063683573564,
+      "exact_count": 8,
+      "floor": 0.001
+    },
+    "td50": {
+      "mean": 56.43594017094015,
+      "scale": 10.572835686700087,
+      "exact_count": 468,
+      "floor": 0.001
+    }
+  },
+  "admission": {
+    "census": {
+      "test:ic50:=": 367,
+      "test:kd_via_ic50:=": 659,
+      "test:kd:=": 407,
+      "test:kd:>": 72,
+      "test:half_life:=": 210,
+      "test:ec50:=": 177,
+      "test:ic50:>": 111,
+      "test:kd_via_ec50:=": 215,
+      "test:kd_via_ec50:>": 190,
+      "test:td50:=": 140,
+      "test:qualitative_binding:=": 441,
+      "test:ic50:>=": 1,
+      "train:kd_via_ec50:=": 12789,
+      "train:kd_via_ic50:=": 67967,
+      "train:kd_via_ec50:>": 26143,
+      "train:kd_via_ic50:>": 4954,
+      "train:ic50:=": 49732,
+      "train:ic50:>": 4819,
+      "train:qualitative_binding:=": 40460,
+      "train:half_life:=": 8720,
+      "train:kd_via_ic50:>=": 4,
+      "train:td50:=": 468,
+      "train:kd:=": 5546,
+      "train:kd:>": 12286,
+      "train:half_life:>": 9,
+      "train:koff:=": 8,
+      "train:ic50:>=": 185,
+      "train:ec50:>": 13,
+      "train:ec50:=": 199,
+      "train:td50:>": 31,
+      "train:td50:>=": 4,
+      "validation:kd:=": 151,
+      "validation:kd:>": 381,
+      "validation:ec50:=": 69,
+      "validation:half_life:=": 71,
+      "validation:qualitative_binding:=": 1135,
+      "validation:kd_via_ec50:=": 458,
+      "validation:ic50:=": 1270,
+      "validation:kd_via_ic50:=": 329,
+      "validation:kd_via_ec50:>": 70,
+      "validation:kd_via_ic50:>": 13,
+      "validation:td50:=": 145,
+      "test:elution_observation:=": 71166,
+      "train:elution_observation:=": 3258795,
+      "validation:elution_observation:=": 14492
+    },
+    "training_labels": {
+      "kd_via_ec50": 38932,
+      "kd_via_ic50": 72925,
+      "ic50": 54736,
+      "qualitative_binding": 40460,
+      "half_life": 8729,
+      "td50": 503,
+      "kd": 17832,
+      "koff": 8,
+      "ec50": 212,
+      "elution_observation": 3258795
+    },
+    "component_states": {},
+    "manifest_sha256": "5541024b53ce7d09ef6779639eb9fb1b7fd2f72c770f84ba311a5b294053b9a1",
+    "module_pruning": [],
+    "source_label_values": {},
+    "cell_types": [],
+    "ordinal_levels": {},
+    "cytokine_states": {},
+    "cytokine_numeric": {},
+    "context_assertion_states": {
+      "pathway": {},
+      "intervention": {}
+    },
+    "observed_numeric_features": {
+      "acquisition": [],
+      "observation": [],
+      "preparation": []
+    },
+    "frozen_targets": [],
+    "frozen_parameters": [],
+    "inherited_scalers": []
+  },
+  "manifest_sha256": "5541024b53ce7d09ef6779639eb9fb1b7fd2f72c770f84ba311a5b294053b9a1",
+  "source_review": {
+    "revision": "kinetic-review-v2",
+    "policy_sha256": "d1d1ae11d51314da292e9b37b41f9e8241d34bc50555d33ac6b3a243070cd829",
+    "removed_rows": 20,
+    "reasons": {
+      "published_time_unit_conflicts_with_export": 14,
+      "association_measurement_scope_unresolved": 6
+    },
+    "runtime_source": "aa2b3f7a358010f1d6163cbaad7c28dd1e1fa97e"
+  }
+}

@@ -1,0 +1,80 @@
+Note that running a local entrypoint in detached mode only keeps the last triggered Modal function alive after the parent process has been killed or disconnected.
+✓ Initialized. View run at 
+https://modal.com/apps/iskandr/main/ap-1ZOCIxGSsnG5aQggEbkAjg
+✓ Created objects.
+├── ✓ Uploaded 
+│   /Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/20
+│   26-10-29_1428_codex_assay-methods-censoring/code/source_ledger.py
+├── ✓ Uploaded 
+│   /Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/20
+│   26-10-28_1540_codex_temporal-multi-output/reproduce/manifests/wide-multi-s42
+│   .json
+└── ✓ Created Function run.
+error: unable to normalize alternate object path: /private/tmp/presto-shared-core-20261027/presto/.git/objects
+Traceback (most recent call last):
+  File "/pkg/modal/_runtime/container_io_manager.py", line 987, in handle_input_exception
+    yield
+  File "/pkg/modal/_container_entrypoint.py", line 189, in run_input_sync
+    values = io_context.call_function_sync()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/pkg/modal/_runtime/container_io_manager.py", line 266, in call_function_sync
+    expected_value_or_values = self.finalized_function.callable(*args, **kwargs)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/source_ledger.py", line 29, in run
+    import pyarrow.parquet as pq
+  File "/usr/local/lib/python3.12/site-packages/pyarrow/__init__.py", line 59, in <module>
+    from pyarrow.lib import (BuildInfo, CppBuildInfo, RuntimeInfo, set_timezone_db_path,
+  File "pyarrow/lib.pyx", line 42, in init pyarrow.lib
+ImportError: pyarrow requires NumPy 2.0 or newer, found 1.26.3
+╭───────────────────── Traceback (most recent call last) ──────────────────────╮
+│ /Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/20 │
+│ 26-10-29_1428_codex_assay-methods-censoring/code/source_ledger.py:71 in main │
+│                                                                              │
+│   70 │   call=run.spawn();callpath.write_text(json.dumps(dict(call_id=call.o │
+│ ❱ 71 │   result=call.get();(f/'results/source-ledger.json').write_text(json. │
+│   72 │   print(json.dumps(dict(status=result['status'],train=result['train'] │
+│                                                                              │
+│ /Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_ │
+│ object.py:49 in wrapped                                                      │
+│                                                                              │
+│    48 │   │   await self.hydrate()                                           │
+│ ❱  49 │   │   return await method(self, *args, **kwargs)                     │
+│    50                                                                        │
+│                                                                              │
+│ /Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_ │
+│ functions.py:2405 in get                                                     │
+│                                                                              │
+│   2404 │   │   """                                                           │
+│ ❱ 2405 │   │   return await self._invocation().poll_function(timeout=timeout │
+│   2406                                                                       │
+│                                                                              │
+│ /Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_ │
+│ functions.py:348 in poll_function                                            │
+│                                                                              │
+│    347 │   │                                                                 │
+│ ❱  348 │   │   return await _process_result(                                 │
+│    349 │   │   │   response.outputs[0].result, response.outputs[0].data_form │
+│                                                                              │
+│ /Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_ │
+│ utils/function_utils.py:572 in _process_result                               │
+│                                                                              │
+│   571 │   │   │                                                              │
+│ ❱ 572 │   │   │   raise exc_with_hints(exc)                                  │
+│   573                                                                        │
+│                                                                              │
+│     ...Remote call to Modal Function (ta-01M641W18SH8D8469SE0EEZ3XR)...      │
+│                                                                              │
+│ /root/source_ledger.py:29 in run                                             │
+│                                                                              │
+│ ❱ 29 import pyarrow.parquet as pq                                            │
+│                                                                              │
+│                                                                              │
+│ /usr/local/lib/python3.12/site-packages/pyarrow/__init__.py:59 in <module>   │
+│                                                                              │
+│ ❱ 59 from pyarrow.lib import (BuildInfo, CppBuildInfo, RuntimeInfo, set_time │
+│                                                                              │
+│                                                                              │
+│ pyarrow/lib.pyx:42 in init pyarrow.lib                                       │
+│                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+ImportError: pyarrow requires NumPy 2.0 or newer, found 1.26.3

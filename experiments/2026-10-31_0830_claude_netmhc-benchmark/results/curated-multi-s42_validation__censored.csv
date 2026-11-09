@@ -1,0 +1,12 @@
+mhc_class,detector,study_id,endpoint,direction,bound_source,method,n,bound_threshold_median_nM,satisfied,n_violated,median_violation_log10,mean_violation_log10
+I,fluorescence,reference:http://www.iedb.org/reference/1019524,kd,lower_bound,explicit,presto,381,20000.0,0.7191601049868767,107,0.4374881435144595,0.17029441341524548
+I,fluorescence,reference:http://www.iedb.org/reference/1019524,kd,lower_bound,explicit,train_mean,381,20000.0,0.0,381,2.187738930230957,2.096575968862646
+I,fluorescence,reference:http://www.iedb.org/reference/1019524,kd,lower_bound,explicit,netmhcpan41,381,20000.0,0.6062992125984252,150,0.22418984278889909,0.13621705422371638
+I,fluorescence,reference:http://www.iedb.org/reference/1019524,kd,lower_bound,explicit,mhcflurry,381,20000.0,0.5616797900262467,167,0.3909904386260612,0.23897373634256844
+I,radioactivity,pmid:16172378,kd_via_ic50,lower_bound,explicit,presto,13,50000.0,0.0,13,0.6026922654279341,1.0012491845691376
+I,radioactivity,pmid:16172378,kd_via_ic50,lower_bound,explicit,train_mean,13,50000.0,0.0,13,2.013959226130895,2.0139592261308943
+I,radioactivity,pmid:16172378,kd_via_ic50,lower_bound,explicit,netmhcpan41,13,50000.0,0.0,13,0.7085436777720839,0.8402664510011479
+I,radioactivity,pmid:16172378,kd_via_ic50,lower_bound,explicit,mhcflurry,13,50000.0,0.0,13,0.833067096377742,1.0006824702887145
+II,fluorescence,reference:http://www.iedb.org/reference/1028716,kd_via_ec50,lower_bound,explicit,presto,70,10000.0,0.3142857142857143,48,0.44915638755499665,0.3269020119324045
+II,fluorescence,reference:http://www.iedb.org/reference/1028716,kd_via_ec50,lower_bound,explicit,train_mean,70,10000.0,0.0,70,1.7213866568090688,1.721386656809069
+II,fluorescence,reference:http://www.iedb.org/reference/1028716,kd_via_ec50,lower_bound,explicit,netmhciipan43,70,10000.0,0.5571428571428572,31,0.19032852783214516,0.10357371170158285

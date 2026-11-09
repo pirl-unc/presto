@@ -111,7 +111,7 @@ def test_canonical_scoped_preflight_never_reads_unrelated_sources(
 ):
     import presto.data.scoped_bulk as scoped
     import presto.data.scoped_partitions as partitions
-    from presto.scripts import train_iedb
+    from presto.legacy.scripts import train_iedb
 
     directory, digest, cache = scoped_bundle
     load, freeze = scoped.load_scoped_bulk_records, partitions.prepare_scoped_partitions
@@ -173,7 +173,7 @@ def test_canonical_scoped_preflight_never_reads_unrelated_sources(
     ],
 )
 def test_canonical_scoped_guards_reject_mixed_or_overstated_inputs(override):
-    from presto.scripts.train_iedb import run
+    from presto.legacy.scripts.train_iedb import run
 
     args = dict(data_source="scoped_bulk", mhc_augmentation_samples=0, uniprot_negative_ratio=0)
     args.update(override)
@@ -181,9 +181,9 @@ def test_canonical_scoped_guards_reject_mixed_or_overstated_inputs(override):
         run(argparse.Namespace(**args))
 
 
-def test_both_cli_entry_points_expose_the_same_source_pins(monkeypatch):
+def test_archived_source_pins_and_new_manifest_only_interface(monkeypatch):
     from presto.cli.main import create_parser
-    from presto.scripts import train_iedb
+    from presto.legacy.scripts import train_iedb
 
     flags = [
         "--data-source",
@@ -199,17 +199,19 @@ def test_both_cli_entry_points_expose_the_same_source_pins(monkeypatch):
         "--frozen-assignment-sha256",
         "b" * 64,
     ]
-    cli = create_parser().parse_args(["train", "unified", *flags])
+    with pytest.raises(SystemExit, match="2"):
+        create_parser().parse_args(["train", "--manifest", "fixture.json", *flags])
     captured = []
     monkeypatch.setattr(train_iedb, "run", captured.append)
     train_iedb.main(flags)
-    for name in (
-        "data_source",
-        "scoped_bundle",
-        "scoped_bundle_sha256",
-        "max_scoped_bulk",
-        "frozen_assignment_file",
-        "frozen_assignment_sha256",
-        "frozen_partition_policy",
-    ):
-        assert getattr(cli, name) == getattr(captured[0], name)
+    expected = dict(
+        data_source="scoped_bulk",
+        scoped_bundle="/frozen",
+        scoped_bundle_sha256="a" * 64,
+        max_scoped_bulk=100,
+        frozen_assignment_file="/assignments.parquet",
+        frozen_assignment_sha256="b" * 64,
+        frozen_partition_policy="peptide_disjoint",
+    )
+    for name, value in expected.items():
+        assert getattr(captured[0], name) == value

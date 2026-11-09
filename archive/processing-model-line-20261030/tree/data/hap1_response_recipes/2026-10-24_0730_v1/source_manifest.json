@@ -1,0 +1,124 @@
+{
+  "catalog_schema_version": 25,
+  "files": {
+    "hap1/assets.json": {
+      "sha256": "205589dd32e389d38d413801c304c3b9f199936306549fe0062c553586a1c510",
+      "size_bytes": 2412
+    },
+    "hap1/contract.json": {
+      "sha256": "8b771b15b9c367622dfbe794a9d43a6aa20e5ce145148f1871332a5a5f23a54f",
+      "size_bytes": 10620
+    },
+    "hap1/source_assets/Search.zip": {
+      "sha256": "487af2106fa6f73d40c79dfc7d17c3c736a4e8c97a3aa97747bccf98797978b9",
+      "size_bytes": 130237651
+    },
+    "hap1/source_assets/article.xml": {
+      "sha256": "cd648ff45478c7f826aa3f52fac7d708b49aef8b4e108e74f80a9c5012ec74c4",
+      "size_bytes": 144026
+    },
+    "hap1/source_assets/files-page0.json": {
+      "sha256": "c5cf319100948902911e634fb8def64892b71caaadbe65cc17f5e8810674c76e",
+      "size_bytes": 117858
+    },
+    "hap1/source_assets/files-page1.json": {
+      "sha256": "fb24f1a51db85017fe10ac7dabc62237cbf436c8aca4fc243a3a23dca9978e8d",
+      "size_bytes": 78940
+    },
+    "hap1/source_assets/project.json": {
+      "sha256": "df500d1321185fffa29a1dd3c66556062f4f866eeaa03818d5d94c7b3d91ec66",
+      "size_bytes": 9481
+    },
+    "hap1/source_assets/samples.sdrf.tsv": {
+      "sha256": "fa3f78d329b75638314462366d8bb4a58f5f0784b184ec33a28258865175b970",
+      "size_bytes": 46722
+    },
+    "hap1/source_assets/supplements.zip": {
+      "sha256": "8f9327e501cdf4831fa2a9e25a67d986f631457ca331c15966f6180225b98153",
+      "size_bytes": 14889810
+    },
+    "hap1/typed/assets.parquet": {
+      "sha256": "2e4978b797e147689e6182a1be82eafb1e8916b94ab1b18bbc3ddb25f74bf95f",
+      "size_bytes": 4867
+    },
+    "hap1/typed/contexts.parquet": {
+      "sha256": "21f21cfb18363f5204faf89e621cc69da0cafe4eb981d2e68e20baf202d02b48",
+      "size_bytes": 11629
+    },
+    "hap1/typed/occurrences.parquet": {
+      "sha256": "521dc8030d9263503398ed168cd9cd7b3f818525178eb309779b6654d6107c51",
+      "size_bytes": 6282492
+    },
+    "hap1/typed/precursors.parquet": {
+      "sha256": "0e6daff65c275c209ca0ceea86b590af72ffa19bc26d286952b4db43e80cccc2",
+      "size_bytes": 202490799
+    },
+    "hap1/typed/protein_quantities.parquet": {
+      "sha256": "7e5b73b75372338143d332dc5bed8e04af0c6989628216f43c6db53a7d105532",
+      "size_bytes": 25519946
+    },
+    "hap1/typed/quantities.parquet": {
+      "sha256": "d1adff7c25e48e781dc3b192d2479952e5fb9e767a455daa9f10f24b344c371d",
+      "size_bytes": 100740706
+    },
+    "hap1/typed/references.parquet": {
+      "sha256": "b307fd64aebc83ce943143b1d1fbf5380807af3b2bdff27670e592ec60412a75",
+      "size_bytes": 16892511
+    },
+    "hap1/typed/runs.parquet": {
+      "sha256": "2f19c7a384bb86ad0e3dfa885bee8dee953f175b73d997752de19c790c82303c",
+      "size_bytes": 19141
+    },
+    "hap1/typed/samples.parquet": {
+      "sha256": "48b8bf927447c5304eb7db5061a2839f42081ff1595fab84c6f68c9e1869ecaa",
+      "size_bytes": 4786
+    },
+    "hap1/typed/source_records.parquet": {
+      "sha256": "f05dcb3f648da8199e31bff37623082c4673f93f2505b7ce2892fb4d75cc07fb",
+      "size_bytes": 20707558
+    }
+  },
+  "hitlist_version": "2.0.20",
+  "limitations": [
+    "relative_MS_response_not_intracellular_concentration",
+    "HAP1_not_professional_APC",
+    "clone_and_intervention_not_independently_identified",
+    "biological_replicate_numbers_not_cross_modality_specimen_pairs",
+    "source_filtering_and_missingness_retained_without_imputation",
+    "source_HLA_predictions_not_measured_allele_restrictions"
+  ],
+  "package_family": "hap1_quantitative",
+  "reconciliation": {
+    "relation_rows": {
+      "assets": 23,
+      "contexts": 24,
+      "occurrences": 60447,
+      "precursors": 607928,
+      "protein_quantities": 558216,
+      "quantities": 2391692,
+      "references": 40964,
+      "runs": 166,
+      "samples": 83,
+      "source_records": 62496
+    },
+    "source_counts": {
+      "mmc6.csv:source_missing_NA:n_cells": 448573,
+      "mmc6.csv:source_positive:n_cells": 296483,
+      "mmc7.csv:source_missing_NA:n_cells": 623896,
+      "mmc7.csv:source_positive:n_cells": 327544,
+      "mmc8.csv:source_missing_NA:n_cells": 284138,
+      "mmc8.csv:source_positive:n_cells": 411058,
+      "n_unmapped_precursor_rows": 40529
+    }
+  },
+  "revision": "shapiro2025_hap1_quantitative_v1",
+  "schema_version": 20,
+  "source_registry": {
+    "shapiro2025_hap1": {
+      "source_pmid": "40113210",
+      "source_role": "MHC_I_elution_and_global_proteomics",
+      "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12090245/",
+      "training_status": "deferred_endpoint_recipe"
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "model": "fit-uniform-score-16-44",
+  "kind": "uniform",
+  "method": "score",
+  "draws": 16,
+  "seed": 44,
+  "updates": 800,
+  "n_parameters": 2,
+  "n_profiled_training_offsets": 96,
+  "rates_by_category": [
+    9.25898125532982e-05
+  ],
+  "tau_minutes": 102.37593179395083,
+  "raw_parameters": [
+    -9.288319459970834,
+    1.759376396376764
+  ],
+  "gradient_absolute_totals": [
+    46.58064960135417,
+    11.203666114713718
+  ],
+  "all_parameters_changed": true,
+  "hessian_eigenvalues": [
+    0.001181640948317921,
+    0.014816317164398822
+  ],
+  "fit_seconds": 4.513496625004336,
+  "training_objective": 0.04522848071586201,
+  "training_mse": 0.04522848071586201,
+  "last_50_step_objective_change": -0.00011370441636798789,
+  "conditional_Bernoulli_draw_equivalents": 1113779200,
+  "actual_binomial_count_draws": 69611200,
+  "exact_forward_example_scores": 1002226,
+  "sampler": "independent_binomial_sufficient_statistics_of_complete_conditional_cut_sets",
+  "prediction_sha256": "1a7e86dc923995b0f70ed0831599ad38132928d7a7d280a3bf43ef2a5064e4ff",
+  "checkpoint_sha256": "456ad5828e749ae662a28234d3b7ee8cd73b1aa18ac200246c53f1e0d93414c1",
+  "model_source_sha256": "3823a48e22adba2cd6906272a47f2ac1844656d713c58957a4b43c706eb35a83",
+  "versions": {
+    "numpy": "2.5.4",
+    "torch": "2.14.1",
+    "pyarrow": "26.0.0"
+  },
+  "predictive_outcomes_read": false
+}

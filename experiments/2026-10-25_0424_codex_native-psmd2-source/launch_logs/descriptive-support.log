@@ -1,0 +1,43 @@
+{
+  "n_all_source_peptides": 10647,
+  "n_all_source_dependency_components": 1689,
+  "largest_component_n_peptides": 514,
+  "strict_origin_dispositions": {
+    "strict_origin_support": 2554,
+    "pep_above_001_or_missing": 3178,
+    "multiple_distinct_parent_sequences": 4704,
+    "source_reverse_or_contaminant": 175,
+    "nonendogenous_reference_possible": 36
+  },
+  "descriptive_presence_strata": [
+    {
+      "minimum_positive_acquisitions_per_condition": 1,
+      "n_strict_peptides_with_presence": 761,
+      "n_parent_sequences_with_two_or_more_peptides": 138,
+      "n_peptides_in_multi_peptide_parents": 603,
+      "n_independent_dependency_components": 131,
+      "n_possible_single_reference_contrasts": 465
+    },
+    {
+      "minimum_positive_acquisitions_per_condition": 2,
+      "n_strict_peptides_with_presence": 574,
+      "n_parent_sequences_with_two_or_more_peptides": 113,
+      "n_peptides_in_multi_peptide_parents": 462,
+      "n_independent_dependency_components": 109,
+      "n_possible_single_reference_contrasts": 349
+    },
+    {
+      "minimum_positive_acquisitions_per_condition": 3,
+      "n_strict_peptides_with_presence": 403,
+      "n_parent_sequences_with_two_or_more_peptides": 82,
+      "n_peptides_in_multi_peptide_parents": 310,
+      "n_independent_dependency_components": 81,
+      "n_possible_single_reference_contrasts": 228
+    }
+  ],
+  "biological_replicate_independence_established": false,
+  "numerical_contrasts_reference_choices_splits_or_models_computed": false,
+  "prospective_model_eligibility_not_fixed": true,
+  "seconds": 0.296565750031732,
+  "peak_rss_bytes": 196411392
+}

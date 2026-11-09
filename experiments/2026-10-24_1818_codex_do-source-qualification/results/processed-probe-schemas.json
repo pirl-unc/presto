@@ -1,0 +1,272 @@
+{
+  "mzTab_sections": {
+    "MTD": 37,
+    "": 4,
+    "COM": 1,
+    "PRH": 1,
+    "PRT": 612,
+    "PSH": 1,
+    "PSM": 3385
+  },
+  "mzTab_headers": {
+    "PRH": [
+      "accession",
+      "description",
+      "taxid",
+      "species",
+      "database",
+      "database_version",
+      "search_engine",
+      "best_search_engine_score[1]",
+      "search_engine_score[1]_ms_run[1]",
+      "num_psms_ms_run[1]",
+      "num_peptides_distinct_ms_run[1]",
+      "num_peptides_unique_ms_run[1]",
+      "ambiguity_members",
+      "modifications",
+      "protein_coverage"
+    ],
+    "PSH": [
+      "sequence",
+      "PSM_ID",
+      "accession",
+      "unique",
+      "database",
+      "database_version",
+      "search_engine",
+      "search_engine_score[1]",
+      "search_engine_score[2]",
+      "search_engine_score[3]",
+      "modifications",
+      "retention_time",
+      "charge",
+      "exp_mass_to_charge",
+      "calc_mass_to_charge",
+      "spectra_ref",
+      "pre",
+      "post",
+      "start",
+      "end",
+      "opt_global_mzidentml_original_ID",
+      "opt_global_cv_MS:1002217_decoy_peptide",
+      "opt_global_cv_PRIDE:0000091_rank",
+      "opt_global_pass_threshold",
+      "opt_global_valid",
+      "opt_global_invalid_reason",
+      "opt_global_cv_MS:1002354_PSM-level_q-value"
+    ]
+  },
+  "mzTab_quantitative_headers": {
+    "PRH": [],
+    "PSH": []
+  },
+  "mzIdentML_elements": {
+    "MzIdentML": 1,
+    "cvList": 1,
+    "cv": 3,
+    "AnalysisSoftwareList": 1,
+    "AnalysisSoftware": 2,
+    "ContactRole": 2,
+    "Role": 2,
+    "cvParam": 24659,
+    "SoftwareName": 2,
+    "Customizations": 2,
+    "AuditCollection": 1,
+    "Organization": 2,
+    "AnalysisSampleCollection": 1,
+    "Sample": 1,
+    "SequenceCollection": 1,
+    "DBSequence": 2379,
+    "Seq": 2379,
+    "Peptide": 3168,
+    "PeptideSequence": 3168,
+    "Modification": 520,
+    "PeptideEvidence": 9312,
+    "AnalysisCollection": 1,
+    "SpectrumIdentification": 1,
+    "InputSpectra": 1,
+    "SearchDatabaseRef": 3,
+    "ProteinDetection": 1,
+    "InputSpectrumIdentifications": 1,
+    "AnalysisProtocolCollection": 1,
+    "SpectrumIdentificationProtocol": 1,
+    "SearchType": 1,
+    "ModificationParams": 1,
+    "SearchModification": 2,
+    "SpecificityRules": 1,
+    "Enzymes": 1,
+    "Enzyme": 1,
+    "SiteRegexp": 1,
+    "EnzymeName": 1,
+    "userParam": 10,
+    "FragmentTolerance": 1,
+    "ParentTolerance": 1,
+    "Threshold": 2,
+    "ProteinDetectionProtocol": 1,
+    "AnalysisParams": 1,
+    "DataCollection": 1,
+    "Inputs": 1,
+    "SourceFile": 1,
+    "FileFormat": 7,
+    "SearchDatabase": 5,
+    "DatabaseName": 5,
+    "SpectraData": 1,
+    "SpectrumIDFormat": 1,
+    "AnalysisData": 1,
+    "SpectrumIdentificationList": 1,
+    "SpectrumIdentificationResult": 4751,
+    "SpectrumIdentificationItem": 4800,
+    "PeptideEvidenceRef": 13962,
+    "ProteinDetectionList": 1,
+    "ProteinAmbiguityGroup": 840,
+    "ProteinDetectionHypothesis": 1074,
+    "PeptideHypothesis": 4250,
+    "SpectrumIdentificationItemRef": 6335
+  },
+  "mzIdentML_cv_terms": [
+    {
+      "accession": "MS:1001267",
+      "name": "software vendor",
+      "count": 2
+    },
+    {
+      "accession": "MS:1001207",
+      "name": "Mascot",
+      "count": 1
+    },
+    {
+      "accession": "MS:1001561",
+      "name": "Scaffold",
+      "count": 1
+    },
+    {
+      "accession": "MS:1001088",
+      "name": "protein description",
+      "count": 2379
+    },
+    {
+      "accession": "UNIMOD:35",
+      "name": "Oxidation",
+      "count": 432
+    },
+    {
+      "accession": "MS:1001524",
+      "name": "fragment neutral loss",
+      "count": 431
+    },
+    {
+      "accession": "UNIMOD:28",
+      "name": "Gln->pyro-Glu",
+      "count": 90
+    },
+    {
+      "accession": "MS:1001083",
+      "name": "ms-ms search",
+      "count": 1
+    },
+    {
+      "accession": "MS:1001189",
+      "name": "modification specificity N-term",
+      "count": 1
+    },
+    {
+      "accession": "MS:1001412",
+      "name": "search tolerance plus value",
+      "count": 2
+    },
+    {
+      "accession": "MS:1001413",
+      "name": "search tolerance minus value",
+      "count": 2
+    },
+    {
+      "accession": "MS:1001494",
+      "name": "no threshold",
+      "count": 1
+    },
+    {
+      "accession": "MS:1001575",
+      "name": "Scaffold: Minimum Peptide Count",
+      "count": 1
+    },
+    {
+      "accession": "MS:1001576",
+      "name": "Scaffold: Minimum Protein Probability",
+      "count": 1
+    },
+    {
+      "accession": "MS:1001577",
+      "name": "Scaffold: Minimum Peptide Probability",
+      "count": 1
+    },
+    {
+      "accession": "MS:1001578",
+      "name": "minimum number of enzymatic termini",
+      "count": 1
+    },
+    {
+      "accession": "MS:1001564",
+      "name": "Discoverer MSF",
+      "count": 1
+    },
+    {
+      "accession": "MS:1001348",
+      "name": "FASTA format",
+      "count": 5
+    },
+    {
+      "accession": "MS:1001073",
+      "name": "database type amino acid",
+      "count": 5
+    },
+    {
+      "accession": "MS:1001062",
+      "name": "Mascot MGF file",
+      "count": 1
+    },
+    {
+      "accession": "MS:1000774",
+      "name": "multiple peak list nativeID format",
+      "count": 1
+    },
+    {
+      "accession": "MS:1001568",
+      "name": "Scaffold:Peptide Probability",
+      "count": 4800
+    },
+    {
+      "accession": "MS:1001171",
+      "name": "Mascot:score",
+      "count": 4800
+    },
+    {
+      "accession": "MS:1001371",
+      "name": "Mascot:identity threshold",
+      "count": 4800
+    },
+    {
+      "accession": "MS:1000796",
+      "name": "spectrum title",
+      "count": 4751
+    },
+    {
+      "accession": "MS:1001579",
+      "name": "Scaffold:Protein Probability",
+      "count": 1074
+    },
+    {
+      "accession": "MS:1001093",
+      "name": "sequence coverage",
+      "count": 1074
+    }
+  ],
+  "mzIdentML_user_terms": {
+    "Enzyme": 1,
+    "Scaffold:Samples In Mudpit Mode": 1,
+    "Scaffold:Samples In Condense Data Mode": 1,
+    "Scaffold:Show Hidden Proteins": 1,
+    "Scaffold:Show Decoy Identifications": 1,
+    "name": 5
+  },
+  "mzIdentML_quantitative_terms": []
+}

@@ -1,0 +1,114 @@
+{
+  "registered_utc": "2026-10-25T08:45:57.781385+00:00",
+  "agent": "Codex",
+  "model": "GPT-6 (system identity)",
+  "git_commit": "e232719fa0d0cf7e574bb2d558ebcac74edec0e1",
+  "dirty": true,
+  "dirty_scope": "Unrelated tasks/todo.md changes and historical evidence preserved; new source family frozen before retrieval.",
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "stages": [
+    "retrieve"
+  ],
+  "source_directory": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/dilution_observer_sources/2026-10-25_0844_codex_dilution-scoring-lineage",
+  "prior_source_directory": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/dilution_observer_sources/2026-10-25_0813_codex_dilution-observer-admission",
+  "plan_sha256": "d28412a79857625cb8705424323af9ccf4b4766ae219e84dc1ffae7b6cef8c7f",
+  "input_sha256": {
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/dilution_observer_sources/2026-10-25_0813_codex_dilution-observer-admission/files-project-page0.json": "3e5b9b29f9cd531d7f55d44b16fdb579a79f75664dbbc6e8c4ac6332589837c0"
+  },
+  "selected_assets": [
+    {
+      "name": "201207_AM_Demobox_V3_JY19_1_No1_Dilution1_02fmol-ul_DIA_1_400-650mz_msms35.mzML.tsv",
+      "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2025/09/PXD024809/201207_AM_Demobox_V3_JY19_1_No1_Dilution1_02fmol-ul_DIA_1_400-650mz_msms35.mzML.tsv",
+      "expected_bytes": 26860000,
+      "deposit_checksum": "",
+      "role": "per_run_scored_candidates"
+    },
+    {
+      "name": "201207_AM_Demobox_V3_JY19_1_No1_Dilution1_02fmol-ul_DIA_2_400-650mz_msms36.mzML.tsv",
+      "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2025/09/PXD024809/201207_AM_Demobox_V3_JY19_1_No1_Dilution1_02fmol-ul_DIA_2_400-650mz_msms36.mzML.tsv",
+      "expected_bytes": 26891605,
+      "deposit_checksum": "",
+      "role": "per_run_scored_candidates"
+    },
+    {
+      "name": "201207_AM_Demobox_V3_JY19_1_No2_Dilution1-2_01fmol-ul_DIA_1_400-650mz_msms30.mzML.tsv",
+      "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2025/09/PXD024809/201207_AM_Demobox_V3_JY19_1_No2_Dilution1-2_01fmol-ul_DIA_1_400-650mz_msms30.mzML.tsv",
+      "expected_bytes": 26437141,
+      "deposit_checksum": "",
+      "role": "per_run_scored_candidates"
+    },
+    {
+      "name": "201207_AM_Demobox_V3_JY19_1_No2_Dilution1-2_01fmol-ul_DIA_2_400-650mz_msms31.mzML.tsv",
+      "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2025/09/PXD024809/201207_AM_Demobox_V3_JY19_1_No2_Dilution1-2_01fmol-ul_DIA_2_400-650mz_msms31.mzML.tsv",
+      "expected_bytes": 26290105,
+      "deposit_checksum": "",
+      "role": "per_run_scored_candidates"
+    },
+    {
+      "name": "201207_AM_Demobox_V3_JY19_1_No3_Dilution1-4_005fmol-ul_DIA_1_400-650mz_msms25_201209153602.mzML.tsv",
+      "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2025/09/PXD024809/201207_AM_Demobox_V3_JY19_1_No3_Dilution1-4_005fmol-ul_DIA_1_400-650mz_msms25_201209153602.mzML.tsv",
+      "expected_bytes": 22348912,
+      "deposit_checksum": "",
+      "role": "per_run_scored_candidates"
+    },
+    {
+      "name": "201207_AM_Demobox_V3_JY19_1_No3_Dilution1-4_005fmol-ul_DIA_2_400-650mz_msms26.mzML.tsv",
+      "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2025/09/PXD024809/201207_AM_Demobox_V3_JY19_1_No3_Dilution1-4_005fmol-ul_DIA_2_400-650mz_msms26.mzML.tsv",
+      "expected_bytes": 22196869,
+      "deposit_checksum": "",
+      "role": "per_run_scored_candidates"
+    },
+    {
+      "name": "201207_AM_Demobox_V3_JY19_1_No4_Dilution1-8_0025fmol-ul_DIA_1_400-650mz_msms20.mzML.tsv",
+      "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2025/09/PXD024809/201207_AM_Demobox_V3_JY19_1_No4_Dilution1-8_0025fmol-ul_DIA_1_400-650mz_msms20.mzML.tsv",
+      "expected_bytes": 18679990,
+      "deposit_checksum": "",
+      "role": "per_run_scored_candidates"
+    },
+    {
+      "name": "201207_AM_Demobox_V3_JY19_1_No4_Dilution1-8_0025fmol-ul_DIA_2_400-650mz_msms21.mzML.tsv",
+      "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2025/09/PXD024809/201207_AM_Demobox_V3_JY19_1_No4_Dilution1-8_0025fmol-ul_DIA_2_400-650mz_msms21.mzML.tsv",
+      "expected_bytes": 18855037,
+      "deposit_checksum": "",
+      "role": "per_run_scored_candidates"
+    },
+    {
+      "name": "201207_AM_Demobox_V3_JY19_1_No5_Dilution1-16_00125fmol-ul_DIA_1_400-650mz_msms15.mzML.tsv",
+      "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2025/09/PXD024809/201207_AM_Demobox_V3_JY19_1_No5_Dilution1-16_00125fmol-ul_DIA_1_400-650mz_msms15.mzML.tsv",
+      "expected_bytes": 14158089,
+      "deposit_checksum": "",
+      "role": "per_run_scored_candidates"
+    },
+    {
+      "name": "201207_AM_Demobox_V3_JY19_1_No5_Dilution1-16_00125fmol-ul_DIA_2_400-650mz_msms16.mzML.tsv",
+      "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2025/09/PXD024809/201207_AM_Demobox_V3_JY19_1_No5_Dilution1-16_00125fmol-ul_DIA_2_400-650mz_msms16.mzML.tsv",
+      "expected_bytes": 14378443,
+      "deposit_checksum": "",
+      "role": "per_run_scored_candidates"
+    },
+    {
+      "name": "Dilute_library_merged_decoy.tsv",
+      "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2025/09/PXD024809/Dilute_library_merged_decoy.tsv",
+      "expected_bytes": 172372507,
+      "deposit_checksum": "",
+      "role": "master_query_library"
+    }
+  ],
+  "limits": {
+    "stage_seconds": 1200,
+    "rss_bytes": 3221225472,
+    "disk_floor_bytes": 1073741824,
+    "start_margin_bytes": 33554432
+  },
+  "non_default_environment_overrides": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1",
+    "MPLBACKEND": "Agg"
+  },
+  "total_download_cap_bytes": 536870912,
+  "source_role_selected_before_quantities": true,
+  "model_fitting": false
+}

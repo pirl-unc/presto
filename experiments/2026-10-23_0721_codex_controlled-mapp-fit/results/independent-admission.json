@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "n_source_peptide_decisions": 9206,
+  "n_admitted_peptides": 87,
+  "n_original_run_values": 522,
+  "examples_by_split": {
+    "test": 14,
+    "train": 59,
+    "val": 14
+  },
+  "old_run_recipe_payloads_unchanged": true,
+  "prior_training_signal_cohort_identical": true,
+  "held_out_policy": "Source arithmetic and frozen eligibility only; no aggregate response metrics or outcome-driven selection.",
+  "wall_seconds": 1.3191347919637337
+}

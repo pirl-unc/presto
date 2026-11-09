@@ -1,0 +1,59 @@
+{
+  "stage": "fetch",
+  "attempt": 13,
+  "started_utc": "2026-10-25T15:14:25.711374+00:00",
+  "status": "passed",
+  "child_launched": true,
+  "exit_code": 0,
+  "resource_violation": null,
+  "memory_admission": {
+    "metric": "macos_free_plus_speculative",
+    "bytes": 6704889856
+  },
+  "disk_free_before_bytes": 19436290048,
+  "request_set_sha256": "89c4643db233ecf7d58335f98b008fae15e055754f6fcfed62b6fefe9eb2e045",
+  "request_set": {
+    "phase": "metadata",
+    "scope": "Fixed fallback article metadata and both XLSX supplements; audit all fields without training. No MS raw files.",
+    "requests": [
+      {
+        "name": "s3-PMC11812018.1.json",
+        "url": "https://pmc-oa-opendata.s3.amazonaws.com/PMC11812018.1/PMC11812018.1.json",
+        "expected_kind": "json",
+        "expected_bytes": 2206,
+        "expected_inventory_etag": "d27d17fee18f8f2a5c75a89777d08cd8",
+        "discovery_provenance": "Exact object key/size/ETag in archived sobsey2025-s3-inventory.xml; XLSX names match archived paper supplements."
+      }
+    ]
+  },
+  "environment": {
+    "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "versions": {
+      "requests": "2.34.2",
+      "psutil": "7.2.2"
+    },
+    "overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUNBUFFERED": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    }
+  },
+  "child_pid": 98054,
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "-B",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1451_codex_mrm-anchor-admission/code/fetch_v3.py",
+    "--requests",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1451_codex_mrm-anchor-admission/reproduce/requests/metadata-10.json"
+  ],
+  "elapsed_seconds": 0.3232209589914419,
+  "peak_observed_process_tree_rss_bytes": 45367296,
+  "peak_child_process_rss_bytes": 45416448,
+  "rss_poll_interval_seconds": 0.05,
+  "disk_free_after_bytes": 19436236800
+}

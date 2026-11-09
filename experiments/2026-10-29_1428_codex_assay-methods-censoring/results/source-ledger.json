@@ -1,0 +1,2060 @@
+{
+  "status": "verified_source_ledger",
+  "requested_gpu": null,
+  "cpu": 4,
+  "memory_mib": 8192,
+  "export": {
+    "path": "/volume/2026-10-28_1540_codex_temporal-multi-output/admission/canonical-ms-export.parquet",
+    "sha256": "0f6fe591e6f5c12975ec89bdbdc8e17b1b910b26e24e27a80ded09a6576e114e",
+    "rows": 5440009
+  },
+  "export_metadata": [
+    {
+      "has_ptm": false,
+      "mhc_allele_provenance": "exact",
+      "mhc_class": "I",
+      "restriction_evidence": "unknown",
+      "source": "iedb",
+      "n": 678681
+    },
+    {
+      "has_ptm": false,
+      "mhc_allele_provenance": "unmatched",
+      "mhc_class": "I",
+      "restriction_evidence": "unknown",
+      "source": "iedb",
+      "n": 560322
+    },
+    {
+      "has_ptm": false,
+      "mhc_allele_provenance": "exact",
+      "mhc_class": "II",
+      "restriction_evidence": "unknown",
+      "source": "iedb",
+      "n": 293628
+    },
+    {
+      "has_ptm": false,
+      "mhc_allele_provenance": "exact",
+      "mhc_class": "I",
+      "restriction_evidence": "monoallelic",
+      "source": "iedb",
+      "n": 563363
+    },
+    {
+      "has_ptm": false,
+      "mhc_allele_provenance": "unmatched",
+      "mhc_class": "II",
+      "restriction_evidence": "unknown",
+      "source": "iedb",
+      "n": 141949
+    },
+    {
+      "has_ptm": true,
+      "mhc_allele_provenance": "exact",
+      "mhc_class": "II",
+      "restriction_evidence": "unknown",
+      "source": "iedb",
+      "n": 12211
+    },
+    {
+      "has_ptm": false,
+      "mhc_allele_provenance": "sample_allele_match",
+      "mhc_class": "II",
+      "restriction_evidence": "unknown",
+      "source": "iedb",
+      "n": 434593
+    },
+    {
+      "has_ptm": false,
+      "mhc_allele_provenance": "sample_allele_match",
+      "mhc_class": "I",
+      "restriction_evidence": "unknown",
+      "source": "iedb",
+      "n": 1587308
+    },
+    {
+      "has_ptm": false,
+      "mhc_allele_provenance": "sample_locus_match",
+      "mhc_class": "II",
+      "restriction_evidence": "unknown",
+      "source": "iedb",
+      "n": 89004
+    },
+    {
+      "has_ptm": true,
+      "mhc_allele_provenance": "exact",
+      "mhc_class": "I",
+      "restriction_evidence": "unknown",
+      "source": "iedb",
+      "n": 36064
+    },
+    {
+      "has_ptm": true,
+      "mhc_allele_provenance": "sample_locus_match",
+      "mhc_class": "II",
+      "restriction_evidence": "unknown",
+      "source": "iedb",
+      "n": 11430
+    },
+    {
+      "has_ptm": false,
+      "mhc_allele_provenance": "sample_serotype_match",
+      "mhc_class": "II",
+      "restriction_evidence": "unknown",
+      "source": "iedb",
+      "n": 1
+    },
+    {
+      "has_ptm": false,
+      "mhc_allele_provenance": "unmatched",
+      "mhc_class": "I",
+      "restriction_evidence": "monoallelic",
+      "source": "iedb",
+      "n": 4110
+    },
+    {
+      "has_ptm": true,
+      "mhc_allele_provenance": "unmatched",
+      "mhc_class": "I",
+      "restriction_evidence": "unknown",
+      "source": "iedb",
+      "n": 19842
+    },
+    {
+      "has_ptm": false,
+      "mhc_allele_provenance": "unmatched",
+      "mhc_class": "non-classical",
+      "restriction_evidence": "unknown",
+      "source": "iedb",
+      "n": 24
+    },
+    {
+      "has_ptm": true,
+      "mhc_allele_provenance": "unmatched",
+      "mhc_class": "II",
+      "restriction_evidence": "unknown",
+      "source": "iedb",
+      "n": 9180
+    },
+    {
+      "has_ptm": true,
+      "mhc_allele_provenance": "sample_allele_match",
+      "mhc_class": "I",
+      "restriction_evidence": "unknown",
+      "source": "iedb",
+      "n": 61310
+    },
+    {
+      "has_ptm": true,
+      "mhc_allele_provenance": "exact",
+      "mhc_class": "I",
+      "restriction_evidence": "monoallelic",
+      "source": "iedb",
+      "n": 87595
+    },
+    {
+      "has_ptm": false,
+      "mhc_allele_provenance": "pmid_serotype_pool",
+      "mhc_class": "I",
+      "restriction_evidence": "unknown",
+      "source": "iedb",
+      "n": 19
+    },
+    {
+      "has_ptm": false,
+      "mhc_allele_provenance": "exact",
+      "mhc_class": "non-classical",
+      "restriction_evidence": "unknown",
+      "source": "iedb",
+      "n": 1375
+    },
+    {
+      "has_ptm": false,
+      "mhc_allele_provenance": "pmid_class_pool",
+      "mhc_class": "I",
+      "restriction_evidence": "unknown",
+      "source": "iedb",
+      "n": 78059
+    },
+    {
+      "has_ptm": true,
+      "mhc_allele_provenance": "pmid_class_pool",
+      "mhc_class": "I",
+      "restriction_evidence": "unknown",
+      "source": "iedb",
+      "n": 3591
+    },
+    {
+      "has_ptm": false,
+      "mhc_allele_provenance": "exact",
+      "mhc_class": "non-classical",
+      "restriction_evidence": "monoallelic",
+      "source": "iedb",
+      "n": 4572
+    },
+    {
+      "has_ptm": true,
+      "mhc_allele_provenance": "exact",
+      "mhc_class": "non-classical",
+      "restriction_evidence": "unknown",
+      "source": "iedb",
+      "n": 17
+    },
+    {
+      "has_ptm": false,
+      "mhc_allele_provenance": "sample_serotype_match",
+      "mhc_class": "I",
+      "restriction_evidence": "unknown",
+      "source": "iedb",
+      "n": 2776
+    },
+    {
+      "has_ptm": false,
+      "mhc_allele_provenance": "peptide_attribution",
+      "mhc_class": "I",
+      "restriction_evidence": "unknown",
+      "source": "iedb",
+      "n": 51067
+    },
+    {
+      "has_ptm": true,
+      "mhc_allele_provenance": "peptide_attribution",
+      "mhc_class": "I",
+      "restriction_evidence": "unknown",
+      "source": "iedb",
+      "n": 3615
+    },
+    {
+      "has_ptm": true,
+      "mhc_allele_provenance": "exact",
+      "mhc_class": "non-classical",
+      "restriction_evidence": "monoallelic",
+      "source": "iedb",
+      "n": 341
+    },
+    {
+      "has_ptm": false,
+      "mhc_allele_provenance": "exact",
+      "mhc_class": "II",
+      "restriction_evidence": "predicted",
+      "source": "iedb",
+      "n": 79406
+    },
+    {
+      "has_ptm": true,
+      "mhc_allele_provenance": "sample_allele_match",
+      "mhc_class": "II",
+      "restriction_evidence": "unknown",
+      "source": "iedb",
+      "n": 12527
+    },
+    {
+      "has_ptm": false,
+      "mhc_allele_provenance": "pmid_locus_pool",
+      "mhc_class": "II",
+      "restriction_evidence": "unknown",
+      "source": "iedb",
+      "n": 61800
+    },
+    {
+      "has_ptm": true,
+      "mhc_allele_provenance": "pmid_locus_pool",
+      "mhc_class": "II",
+      "restriction_evidence": "unknown",
+      "source": "iedb",
+      "n": 15055
+    },
+    {
+      "has_ptm": true,
+      "mhc_allele_provenance": "sample_serotype_match",
+      "mhc_class": "I",
+      "restriction_evidence": "unknown",
+      "source": "iedb",
+      "n": 148
+    },
+    {
+      "has_ptm": null,
+      "mhc_allele_provenance": "exact",
+      "mhc_class": "I",
+      "restriction_evidence": "monoallelic",
+      "source": "supplement",
+      "n": 9954
+    },
+    {
+      "has_ptm": null,
+      "mhc_allele_provenance": "exact",
+      "mhc_class": "II",
+      "restriction_evidence": "monoallelic",
+      "source": "supplement",
+      "n": 332866
+    },
+    {
+      "has_ptm": null,
+      "mhc_allele_provenance": "pmid_class_pool",
+      "mhc_class": "II",
+      "restriction_evidence": "unknown",
+      "source": "supplement",
+      "n": 5999
+    },
+    {
+      "has_ptm": null,
+      "mhc_allele_provenance": "exact",
+      "mhc_class": "I",
+      "restriction_evidence": "unknown",
+      "source": "supplement",
+      "n": 50761
+    },
+    {
+      "has_ptm": null,
+      "mhc_allele_provenance": "unmatched",
+      "mhc_class": "I",
+      "restriction_evidence": "unknown",
+      "source": "supplement",
+      "n": 135446
+    }
+  ],
+  "train": {
+    "path": "/volume/2026-10-28_1540_codex_temporal-multi-output/revisions/kinetic-review-v2/prepared/hitlist_native_ms-train.jsonl",
+    "sha256": "bc709276b36bd456a09451deba140aeb618c9614a79505981e7567d1a0b0e203",
+    "rows": 1641063,
+    "source_counts": {
+      "iedb": 1641063
+    }
+  },
+  "train_studies": [
+    {
+      "source": "iedb",
+      "study_id": "pmid:15116427",
+      "n": 8
+    },
+    {
+      "source": "iedb",
+      "study_id": "reference:http://www.iedb.org/reference/1027271",
+      "n": 4424
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:25576301",
+      "n": 15897
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:31844290",
+      "n": 180318
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:20934997",
+      "n": 194
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:12919753",
+      "n": 1
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:18299564",
+      "n": 5
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:21209280",
+      "n": 69
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:18507432",
+      "n": 137
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:18292551",
+      "n": 112
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:23739916",
+      "n": 42
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:22424782",
+      "n": 577
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:9751018",
+      "n": 1
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:25502872",
+      "n": 16343
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:17934211",
+      "n": 3
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:28314751",
+      "n": 1
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:32161166",
+      "n": 11394
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:32488085",
+      "n": 10824
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:31039795",
+      "n": 17
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:18794202",
+      "n": 1
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:10760807",
+      "n": 3
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:24366607",
+      "n": 2291
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:25418920",
+      "n": 14958
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:15843563",
+      "n": 10
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:24352655",
+      "n": 3
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:24397554",
+      "n": 538
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:10518571",
+      "n": 3
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:15777939",
+      "n": 36
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:26728094",
+      "n": 2579
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:22009320",
+      "n": 49
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:31998317",
+      "n": 4258
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:15944288",
+      "n": 74
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:24714562",
+      "n": 4436
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:26768311",
+      "n": 1739
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:22869377",
+      "n": 1
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:26360328",
+      "n": 1611
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:33858848",
+      "n": 341705
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:26718497",
+      "n": 6
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:26754738",
+      "n": 21
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:26824387",
+      "n": 294
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:26811146",
+      "n": 2719
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:26740625",
+      "n": 39
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:26758079",
+      "n": 392
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:27058226",
+      "n": 73
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:27090790",
+      "n": 3
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:26929215",
+      "n": 1578
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:25645385",
+      "n": 11322
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:16185891",
+      "n": 3
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:19122146",
+      "n": 13
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:22235280",
+      "n": 2
+    },
+    {
+      "source": "iedb",
+      "study_id": "reference:http://www.iedb.org/reference/1022782",
+      "n": 2028
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:11466336",
+      "n": 26
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:22299025",
+      "n": 22
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:15118850",
+      "n": 29
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:20220067",
+      "n": 32
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:17308301",
+      "n": 50
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:26707565",
+      "n": 79
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:27543614",
+      "n": 312
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:11929585",
+      "n": 6
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:24971174",
+      "n": 13
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:8892091",
+      "n": 16
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:20707881",
+      "n": 17
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:12220628",
+      "n": 3
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:12391225",
+      "n": 112
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:16112985",
+      "n": 26
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:15275975",
+      "n": 14
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:27452731",
+      "n": 659
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:15104674",
+      "n": 373
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:27110896",
+      "n": 7
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:27600516",
+      "n": 412
+    },
+    {
+      "source": "iedb",
+      "study_id": "reference:http://www.iedb.org/reference/1013592",
+      "n": 2
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:8760827",
+      "n": 14
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:25548167",
+      "n": 128
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:18802479",
+      "n": 2
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:10562307",
+      "n": 35
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:10380706",
+      "n": 15
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:27841757",
+      "n": 26709
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:23646949",
+      "n": 51
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:25505266",
+      "n": 1291
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:11875071",
+      "n": 41
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:25469497",
+      "n": 465
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:18160138",
+      "n": 90
+    },
+    {
+      "source": "iedb",
+      "study_id": "reference:http://www.iedb.org/reference/1028836",
+      "n": 2579
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:27503676",
+      "n": 33
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:27861808",
+      "n": 12
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:27846572",
+      "n": 3291
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:18941228",
+      "n": 9
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:19443418",
+      "n": 3
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:19553306",
+      "n": 4
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:27397612",
+      "n": 1192
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:31527070",
+      "n": 11
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:32162841",
+      "n": 12
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:32357974",
+      "n": 28263
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:32502341",
+      "n": 18117
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:19531498",
+      "n": 94
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:33091337",
+      "n": 1579
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:32265295",
+      "n": 6920
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:33537174",
+      "n": 1923
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:32561536",
+      "n": 6082
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:33141586",
+      "n": 8264
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:33298915",
+      "n": 24309
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:28218747",
+      "n": 11346
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:30568303",
+      "n": 21
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:33392160",
+      "n": 3474
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:25646416",
+      "n": 12
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:33123756",
+      "n": 1440
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:11163091",
+      "n": 2
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:9366419",
+      "n": 6
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:7878657",
+      "n": 2
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:33649166",
+      "n": 2
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:32387766",
+      "n": 31916
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:8981922",
+      "n": 9
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:1465617",
+      "n": 2
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:8360479",
+      "n": 6
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:9045906",
+      "n": 20
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:25802875",
+      "n": 772
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:33238185",
+      "n": 6
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:33912179",
+      "n": 19544
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:34093574",
+      "n": 61
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:11465720",
+      "n": 2
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:18802091",
+      "n": 49
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:28254787",
+      "n": 24
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:28228285",
+      "n": 22477
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:17975675",
+      "n": 58
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:34006841",
+      "n": 122
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:34166618",
+      "n": 92
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:32218997",
+      "n": 427
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:25855358",
+      "n": 2
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:25516468",
+      "n": 16
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:25135637",
+      "n": 1
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:7865457",
+      "n": 24
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:7594476",
+      "n": 1
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:12042320",
+      "n": 81
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:21993680",
+      "n": 309
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:25810538",
+      "n": 1261
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:34433824",
+      "n": 4657
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:33633747",
+      "n": 2152
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:34561969",
+      "n": 5606
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:33592498",
+      "n": 50877
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:34638844",
+      "n": 65
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:32938616",
+      "n": 67023
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:11557759",
+      "n": 18
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:9177214",
+      "n": 6
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:11435436",
+      "n": 7
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:26041704",
+      "n": 6
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:21136679",
+      "n": 96
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:26024233",
+      "n": 352
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:28352266",
+      "n": 63
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:28422163",
+      "n": 29
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:28063628",
+      "n": 3443
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:34725257",
+      "n": 5
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:33691108",
+      "n": 6484
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:25837513",
+      "n": 9
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:23783831",
+      "n": 89
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:27920218",
+      "n": 13538
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:9321428",
+      "n": 7
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:15004565",
+      "n": 48
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:15240697",
+      "n": 12
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:34509645",
+      "n": 11720
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:34211107",
+      "n": 2795
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:25892735",
+      "n": 5508
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:33731925",
+      "n": 1102
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:35051231",
+      "n": 85
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:32983136",
+      "n": 2793
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:26992070",
+      "n": 24450
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:33968037",
+      "n": 27146
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:35298559",
+      "n": 1
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:35154160",
+      "n": 24337
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:35255101",
+      "n": 228
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:35379743",
+      "n": 12
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:35318648",
+      "n": 6769
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:35251023",
+      "n": 39129
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:35484264",
+      "n": 5
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:35526384",
+      "n": 194
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:32897882",
+      "n": 19056
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:36010968",
+      "n": 6868
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:35580925",
+      "n": 73250
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:28489076",
+      "n": 33
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:35878026",
+      "n": 12
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:36241641",
+      "n": 7476
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:28514659",
+      "n": 8942
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:35728869",
+      "n": 11
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:9823325",
+      "n": 1
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:36605211",
+      "n": 1453
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:35080970",
+      "n": 7
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:25880248",
+      "n": 3720
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:36589698",
+      "n": 27
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:31849039",
+      "n": 1
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:31741759",
+      "n": 1
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:37662941",
+      "n": 117
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:38117652",
+      "n": 275
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:37938771",
+      "n": 14
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:38446892",
+      "n": 16
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:28159928",
+      "n": 84
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:38412034",
+      "n": 1
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:27689397",
+      "n": 1
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:38920720",
+      "n": 42
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:39111711",
+      "n": 4
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:39394480",
+      "n": 11
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:39939820",
+      "n": 8
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:39972144",
+      "n": 2
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:23147993",
+      "n": 1
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:24032635",
+      "n": 2
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:40273911",
+      "n": 4
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:23926201",
+      "n": 1
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:34391887",
+      "n": 68
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:28446606",
+      "n": 617
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:28188227",
+      "n": 23281
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:28811980",
+      "n": 8
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:28649982",
+      "n": 1807
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:28855257",
+      "n": 2443
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:28871256",
+      "n": 549
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:25576336",
+      "n": 27
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:28819312",
+      "n": 501
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:28860189",
+      "n": 223
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:40927585",
+      "n": 1
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:40744664",
+      "n": 3
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:40906332",
+      "n": 20612
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:40990156",
+      "n": 3
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:37606040",
+      "n": 2283
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:18991276",
+      "n": 569
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:40866620",
+      "n": 5
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:38240239",
+      "n": 10
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:23263746",
+      "n": 132
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:40994043",
+      "n": 78
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:41440022",
+      "n": 1
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:38791049",
+      "n": 2
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:22246683",
+      "n": 5
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:22031944",
+      "n": 11
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:22617051",
+      "n": 26
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:40466865",
+      "n": 7189
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:26261890",
+      "n": 2
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:21654843",
+      "n": 438
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:22722860",
+      "n": 10
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:22522618",
+      "n": 2
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:37073954",
+      "n": 212
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:38923358",
+      "n": 830
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:41056506",
+      "n": 9
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:17145369",
+      "n": 82
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:23719902",
+      "n": 330
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:36656713",
+      "n": 11673
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:20112406",
+      "n": 1255
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:38684663",
+      "n": 43989
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:28904123",
+      "n": 24971
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:22645359",
+      "n": 917
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:23555621",
+      "n": 149
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:18512783",
+      "n": 219
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:42273698",
+      "n": 5710
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:26375851",
+      "n": 6009
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:42378906",
+      "n": 33
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:42402043",
+      "n": 3433
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:38779658",
+      "n": 721
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:42490907",
+      "n": 25
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:41528883",
+      "n": 4
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:28834231",
+      "n": 12072
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:29317506",
+      "n": 1832
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:29435138",
+      "n": 11
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:29437277",
+      "n": 7287
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:29343547",
+      "n": 6
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:29331515",
+      "n": 2955
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:29507109",
+      "n": 7
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:42304380",
+      "n": 14
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:39617188",
+      "n": 4551
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:29603667",
+      "n": 17
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:29508533",
+      "n": 3658
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:29632046",
+      "n": 9142
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:29093164",
+      "n": 56
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:30001391",
+      "n": 39
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:29393594",
+      "n": 20981
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:21872626",
+      "n": 390
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:26154972",
+      "n": 894
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:29786170",
+      "n": 45
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:21037588",
+      "n": 11
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:23430249",
+      "n": 5
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:23762485",
+      "n": 6
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:1448153",
+      "n": 7
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:23372163",
+      "n": 8
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:12010981",
+      "n": 3
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:23543059",
+      "n": 161
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:29769354",
+      "n": 4942
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:27869121",
+      "n": 159
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:29314611",
+      "n": 126
+    },
+    {
+      "source": "iedb",
+      "study_id": "reference:http://www.iedb.org/reference/1026752",
+      "n": 7
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:23867464",
+      "n": 3
+    },
+    {
+      "source": "iedb",
+      "study_id": "reference:http://www.iedb.org/reference/1026802",
+      "n": 295
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:12122005",
+      "n": 3
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:20081153",
+      "n": 10
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:30128813",
+      "n": 6
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:22706990",
+      "n": 209
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:10513815",
+      "n": 54
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:16216671",
+      "n": 1
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:1546328",
+      "n": 1
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:14978097",
+      "n": 93
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:30410026",
+      "n": 9283
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:9382929",
+      "n": 4
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:19748539",
+      "n": 85
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:18446792",
+      "n": 107
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:30524438",
+      "n": 2794
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:24108701",
+      "n": 7
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:22544926",
+      "n": 496
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:30629447",
+      "n": 14
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:12816978",
+      "n": 12
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:30626607",
+      "n": 933
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:30315122",
+      "n": 44259
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:23481700",
+      "n": 10026
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:30114007",
+      "n": 17
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:29789417",
+      "n": 17
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:23475216",
+      "n": 22
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:17697703",
+      "n": 134
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:16115862",
+      "n": 49
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:18987854",
+      "n": 4
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:12939341",
+      "n": 24
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:9190931",
+      "n": 1
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:10605027",
+      "n": 2
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:19494351",
+      "n": 4
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:10203015",
+      "n": 21
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:30784271",
+      "n": 3
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:30817223",
+      "n": 16
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:30778243",
+      "n": 44
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:30912293",
+      "n": 24
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:9820524",
+      "n": 1
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:24029068",
+      "n": 239
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:26579122",
+      "n": 59
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:19615748",
+      "n": 235
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:26783342",
+      "n": 14799
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:30078552",
+      "n": 107
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:31276466",
+      "n": 73
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:31020640",
+      "n": 92
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:31217245",
+      "n": 10568
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:9864030",
+      "n": 1
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:30573663",
+      "n": 4949
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:31530632",
+      "n": 10239
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:30833945",
+      "n": 5645
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:31685621",
+      "n": 4
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:31540894",
+      "n": 8
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:27862975",
+      "n": 3224
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:10843661",
+      "n": 1
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:31092671",
+      "n": 2691
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:14671086",
+      "n": 1
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:30484775",
+      "n": 2837
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:31869419",
+      "n": 392
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:31908851",
+      "n": 95
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:31556206",
+      "n": 2047
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:31873306",
+      "n": 4
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:12431390",
+      "n": 4
+    },
+    {
+      "source": "iedb",
+      "study_id": "pmid:28329770",
+      "n": 5
+    }
+  ],
+  "seconds": 263.974800616,
+  "model_fitted": false,
+  "validation_test_used": false
+}

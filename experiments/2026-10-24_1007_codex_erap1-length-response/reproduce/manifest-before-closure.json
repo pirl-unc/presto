@@ -1,0 +1,19 @@
+{
+  "registered_at": "2026-10-24T14:06:30.988055+00:00",
+  "training_launched_at": "2026-10-24T14:10:50.754635+00:00",
+  "status": "training_origin_local_prefix",
+  "source_sha256": {
+    "reproduce/source/core.py": "ae32c12ffdb758334275142ec9d153c3d7134524bb285372ab412e486c949e70",
+    "reproduce/source/launch.py": "b22cf4e097adaac1e8412cd14a98ebc9c65afc1b2e5eb8b2881f3618d91b673d",
+    "reproduce/source/verify.py": "6947f8cd27a0735e6b524eef797c6ecee34a70bed8b92343d682cb8a3c6a510f",
+    "reproduce/source/report.py": "624143e5a7bf6d1d1c9cfc0b0e5d003af43af878d66988c04400d209950b7056",
+    "reproduce/source/verify_path_equivalence.py": "ba8be651e755fac6af85293846ee2421474f340546be03484be048479ba820b0",
+    "reproduce/source/n_terminal_trimming.py": "4d9e7ccfbd69084937ad1b62a2f75e140bc13972aecfd837a5df73e12cb6f4ed"
+  },
+  "qualification": "results/qualification.json",
+  "outer_validation_test_scored": false,
+  "training_session": 14762,
+  "training_exit_code": 143,
+  "recovery_launched_at": "2026-10-24T14:22:43.172048+00:00",
+  "preserved_attempt": "results/attempt-global-prefix"
+}

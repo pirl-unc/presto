@@ -1,0 +1,35 @@
+{
+  "absolute_concentration_claim": false,
+  "defer_reason_counts": {
+    "deferred_conflicting_possible_reuse_context": 1100,
+    "deferred_control_or_derived_average": 30954,
+    "deferred_nonquantifiable": 2399,
+    "deferred_tentative": 135,
+    "deferred_unidentified": 15798,
+    "deferred_unresolved_annotation": 27
+  },
+  "groups_by_split": {
+    "test": 631,
+    "train": 1861,
+    "val": 245
+  },
+  "n_admitted_source_slots": 11495,
+  "n_components": 4843,
+  "n_conflicting_reuse_groups": 412,
+  "n_control_proxies_crossing_splits": 33,
+  "n_deferred_source_slots": 50413,
+  "n_effective_observations": 10114,
+  "n_full_parent_supported_groups": 2731,
+  "n_reference_occurrences": 1155,
+  "n_reference_proteins": 42562,
+  "n_response_groups": 2737,
+  "n_source_measurement_slots": 61908,
+  "n_source_rows": 10564,
+  "n_source_sequences": 571,
+  "n_used_reference_proteins": 345,
+  "observations_by_censoring_status": {
+    "exact": 6083,
+    "source_declared_bound": 4031
+  },
+  "specimen_independence": "unresolved"
+}

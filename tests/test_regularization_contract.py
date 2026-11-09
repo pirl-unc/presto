@@ -7,27 +7,28 @@ import pytest
 import torch
 
 from presto.cli.main import create_parser
-from presto.scripts import train_iedb
-from presto.scripts.train_synthetic import (
+from presto.legacy.scripts import train_iedb
+from presto.legacy.scripts.train_synthetic import (
     _compute_consistency_losses,
     _regularization_config_from_args,
 )
 
 
 @pytest.mark.parametrize("value", [0.0, 0.37])
-def test_binding_prior_has_cli_config_and_direct_script_parity(monkeypatch, tmp_path, value):
+def test_historical_binding_prior_config_and_rejected_new_cli_flag(monkeypatch, tmp_path, value):
     flags = ["--binding-orthogonality-weight", str(value)]
-    cli = create_parser().parse_args(["train", "unified", *flags])
+    with pytest.raises(SystemExit, match="2"):
+        create_parser().parse_args(["train", "--manifest", "fixture.json", *flags])
     captured = []
     monkeypatch.setattr(train_iedb, "run", captured.append)
     train_iedb.main(flags)
     config = tmp_path / "config.json"
     config.write_text(json.dumps({"train": {"unified": {"binding_orthogonality_weight": value}}}))
     resolved = train_iedb._resolve_run_args(argparse.Namespace(config=str(config)))
-    for args in (cli, captured[0], resolved):
+    for args in (captured[0], resolved):
         assert _regularization_config_from_args(args)["binding_orthogonality_weight"] == value
-    synthetic = create_parser().parse_args(["train", "synthetic", *flags])
-    assert synthetic.binding_orthogonality_weight == value
+    with pytest.raises(SystemExit, match="2"):
+        create_parser().parse_args(["train", "synthetic", "--manifest", "fixture.json", *flags])
 
 
 def test_regularization_keys_are_declared_and_default_behavior_is_preserved():
@@ -67,7 +68,9 @@ def test_explicit_zero_removes_the_actual_orthogonality_loss():
 
 
 @pytest.mark.parametrize("supplied", [None, "0", "0.01"])
-def test_actual_entry_points_preserve_explicit_default_over_config(monkeypatch, tmp_path, supplied):
+def test_historical_explicit_default_over_config_and_rejected_new_cli_config(
+    monkeypatch, tmp_path, supplied
+):
     from presto.cli import main as cli_main
 
     config = tmp_path / "prior.json"
@@ -80,7 +83,8 @@ def test_actual_entry_points_preserve_explicit_default_over_config(monkeypatch, 
         train_iedb, "run", lambda args: resolved.append(train_iedb._resolve_run_args(args))
     )
     train_iedb.main(flags)
-    assert cli_main(["train", "unified", *flags]) == 0
-    assert len(resolved) == 2
+    with pytest.raises(SystemExit, match="2"):
+        cli_main(["train", "--manifest", "fixture.json", *flags])
+    assert len(resolved) == 1
     expected = 0.37 if supplied is None else float(supplied)
     assert all(args.binding_orthogonality_weight == expected for args in resolved)

@@ -1,0 +1,41 @@
+{
+  "requested_url": "https://www.ebi.ac.uk/pride/ws/archive/v2/projects/PXD056426/files?pageSize=100&page=0",
+  "started_at": "2026-10-24T10:14:30.481026+00:00",
+  "command": [
+    "experiments/2026-10-24_0612_codex_hap1-quantitative-admission/code/launch.py",
+    "pride-files-page0",
+    "https://www.ebi.ac.uk/pride/ws/archive/v2/projects/PXD056426/files?pageSize=100&page=0"
+  ],
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "presto_head": "c7d538cfc64f2295e70c2bf693e333f08d1f34b6",
+  "launcher_sha256": "86c54f88a4c9edc743467e5a9acc2fd49d9fcdf57786562ac2f3b24a28eb1e4d",
+  "body_path": "/private/tmp/presto-modular-model/data/hap1_quantitative_source_admission/2026-10-24_0612_codex_hap1-quantitative-admission/retrieval/pride-files-page0/body",
+  "purpose": "source-discovery-only; not a curated training observation",
+  "status_code": 200,
+  "final_url": "https://www.ebi.ac.uk/pride/ws/archive/v2/projects/PXD056426/files?pageSize=100&page=0",
+  "content_type": "application/json",
+  "response_headers": {
+    "Vary": "Origin, Access-Control-Request-Method, Access-Control-Request-Headers",
+    "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+    "Content-Type": "application/json",
+    "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+    "total_records": "167",
+    "Expires": "0",
+    "Pragma": "no-cache",
+    "X-XSS-Protection": "0",
+    "transfer-encoding": "chunked",
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "Referrer-Policy": "no-referrer"
+  },
+  "redirects": [],
+  "n_bytes": 117858,
+  "sha256": "c5cf319100948902911e634fb8def64892b71caaadbe65cc17f5e8810674c76e",
+  "elapsed_seconds": 0.8754605409922078
+}

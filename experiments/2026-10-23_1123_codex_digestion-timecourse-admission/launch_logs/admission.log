@@ -1,0 +1,48 @@
+Frozen source verified; opening canonical EvidenceStore
+Materializing registered time courses
+{
+  "manifest_sha256": "9d5e7cbd53a39c659d39dc8800413bce41414e39e50fd441f40413caa027830e",
+  "peak_rss_bytes": 3473801216,
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "predictive_evaluation": false,
+  "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "recipe_directory": "/private/tmp/presto-modular-model/artifacts/2026-10-23_1123_codex_digestion-timecourse-admission/recipe",
+  "source_freeze_verified": true,
+  "summary": {
+    "curves_by_condition": {
+      "soh2024_digestion:condition:aSPIRE_AnnexinA1": 1600,
+      "soh2024_digestion:condition:aSPIRE_FFH_12p5": 5058,
+      "soh2024_digestion:condition:aSPIRE_FFH_6p25": 5400,
+      "soh2024_digestion:condition:aSPIRE_H2A": 1394,
+      "soh2024_digestion:condition:aSPIRE_H2B": 1500,
+      "soh2024_digestion:condition:aSPIRE_H3": 644,
+      "soh2024_digestion:condition:aSPIRE_H4": 1588,
+      "soh2024_digestion:condition:aSPIRE_IL37b": 1140,
+      "soh2024_digestion:condition:aSPIRE_LEDGF": 3888,
+      "soh2024_digestion:condition:aSPIRE_UBE2K": 1200,
+      "soh2024_digestion:condition:aSPIRE_aSyn": 2480,
+      "soh2024_digestion:condition:aSPIRE_hTau": 4674
+    },
+    "curves_by_split": {
+      "test": 3680,
+      "train": 23054,
+      "val": 3832
+    },
+    "n_components": 15,
+    "n_constructs": 15,
+    "n_curve_candidates": 50372,
+    "n_examples": 30566,
+    "n_source_final_vectors": 53413,
+    "reason_counts": {
+      "annotation_only": 206,
+      "conflicting_IL_alias_or_repeated_slot_values": 1,
+      "fewer_than_three_positive_nonzero_times": 907,
+      "insufficient_repeated_common_positive_times": 2880,
+      "no_actual_zero_baseline_for_every_technical_label": 10641,
+      "not_exclusively_source_contiguous": 7094,
+      "not_one_IL_equivalent_contiguous_span": 6912,
+      "unresolved_condition_time_conflict": 2198
+    }
+  },
+  "wall_seconds": 50.33521645900328
+}

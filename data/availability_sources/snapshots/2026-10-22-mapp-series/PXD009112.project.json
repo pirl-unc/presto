@@ -1,0 +1,147 @@
+{
+  "accession" : "PXD009112",
+  "title" : "Defining the cellular proteolytic landscape in systemic lupus erythematosus",
+  "additionalAttributes" : [ ],
+  "projectDescription" : "Mass spectrometry analysis of cellular targets of protein degradation in PBMCs of healthy individuals and systemic lupus",
+  "sampleProcessingProtocol" : "Cellular lysates were subjected to MS/MS analysis on a QE instrument",
+  "dataProcessingProtocol" : "tryptic digests with default parameters, apart from minimum peptide length of 6. Masses were searched against the human proteome database from UniprotKB",
+  "projectTags" : [ "Biomedical" ],
+  "keywords" : [ "Degradation", "Degradome", "Ubiquitin", "Systemic lupus erythematosus" ],
+  "doi" : "",
+  "submissionType" : "PARTIAL",
+  "license" : "EBI terms of use",
+  "submissionDate" : "2018-03-05",
+  "publicationDate" : "2018-10-11",
+  "submitters" : [ {
+    "title" : "Mr",
+    "firstName" : "Assaf",
+    "lastName" : "Kacen",
+    "identifier" : "98210109",
+    "affiliation" : "Weizmann Institute of Science",
+    "email" : "assaf.kacen@weizmann.ac.il",
+    "country" : "Israel",
+    "orcid" : "",
+    "name" : "Assaf Kacen",
+    "id" : "98210109"
+  } ],
+  "labPIs" : [ {
+    "title" : "Dr",
+    "firstName" : "Yifat",
+    "lastName" : "Merbl",
+    "identifier" : "96970100",
+    "affiliation" : "Weizmann Institute of Science",
+    "email" : "yifat.merbl@weizmann.ac.il",
+    "country" : "",
+    "orcid" : "",
+    "name" : "Yifat Merbl",
+    "id" : "96970100"
+  } ],
+  "instruments" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "MS",
+    "accession" : "MS:1001911",
+    "name" : "Q Exactive",
+    "value" : ""
+  } ],
+  "softwares" : [ ],
+  "experimentTypes" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "PRIDE",
+    "accession" : "PRIDE:0000429",
+    "name" : "Shotgun proteomics"
+  } ],
+  "quantificationMethods" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "PRIDE",
+    "accession" : "PRIDE:0000312",
+    "name" : "Label free"
+  } ],
+  "countries" : [ "Israel" ],
+  "sampleAttributes" : [ {
+    "@type" : "Tuple",
+    "key" : {
+      "cvLabel" : "EFO",
+      "accession" : "EFO:0000635",
+      "name" : "organism part"
+    },
+    "value" : [ {
+      "cvLabel" : "BTO",
+      "accession" : "BTO:0000133",
+      "name" : "blood serum",
+      "value" : ""
+    } ]
+  }, {
+    "@type" : "Tuple",
+    "key" : {
+      "cvLabel" : "EFO",
+      "accession" : "OBI:0100026",
+      "name" : "organism"
+    },
+    "value" : [ {
+      "cvLabel" : "NEWT",
+      "accession" : "NEWT:9606",
+      "name" : "Homo sapiens (Human)",
+      "value" : ""
+    } ]
+  }, {
+    "@type" : "Tuple",
+    "key" : {
+      "cvLabel" : "EFO",
+      "accession" : "EFO:0000408",
+      "name" : "disease"
+    },
+    "value" : [ {
+      "cvLabel" : "DOID",
+      "accession" : "DOID:9074",
+      "name" : "systemic lupus erythematosus",
+      "value" : ""
+    } ]
+  } ],
+  "organisms" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "NEWT",
+    "accession" : "NEWT:9606",
+    "name" : "Homo sapiens (human)",
+    "value" : ""
+  } ],
+  "organismParts" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "BTO",
+    "accession" : "BTO:0000133",
+    "name" : "Blood serum",
+    "value" : ""
+  } ],
+  "diseases" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "DOID",
+    "accession" : "DOID:9074",
+    "name" : "Systemic lupus erythematosus",
+    "value" : ""
+  } ],
+  "references" : [ {
+    "referenceLine" : "Wolf-Levy H, Javitt A, Eisenberg-Lerner A, Kacen A, Ulman A, Sheban D, Dassa B, Fishbain-Yoskovitz V, Carmona-Rivera C, Kramer MP, Nudel N, Regev I, Zahavi L, Elinger D, Kaplan MJ, Morgenstern D, Levin Y, Merbl Y. Revealing the cellular degradome by mass spectrometry analysis of proteasome-cleaved peptides. Nat Biotechnol. 2018",
+    "pubmedID" : 30346940,
+    "doi" : "10.1038/nbt.4279"
+  } ],
+  "identifiedPTMStrings" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "MOD",
+    "accession" : "MOD:00425",
+    "name" : "monohydroxylated residue",
+    "value" : ""
+  }, {
+    "@type" : "CvParam",
+    "cvLabel" : "MOD",
+    "accession" : "MOD:00408",
+    "name" : "mono N-acetylated residue",
+    "value" : ""
+  }, {
+    "@type" : "CvParam",
+    "cvLabel" : "MOD",
+    "accession" : "MOD:00397",
+    "name" : "iodoacetamide derivatized residue",
+    "value" : ""
+  } ],
+  "totalFileDownloads" : 1241,
+  "otherOmicsLinks" : [ "pride.project:PXD009092", "pride.project:PXD009438", "pride.project:PXD009181", "pride.project:PXD007263", "pride.project:PXD009508", "pride.project:PXD009360" ]
+}

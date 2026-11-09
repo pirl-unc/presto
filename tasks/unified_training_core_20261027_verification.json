@@ -1,0 +1,176 @@
+{
+  "status": "software_verification_passed",
+  "agent": "Codex / GPT-6",
+  "base_commit": "9dd71348124faa49a4c6a60872385c86895d50b0",
+  "tested_with_uncommitted_changes": true,
+  "source_hashes": {
+    "data/modular.py": "c388df4b775018722a66f6cb429cc1eb49df2e9fcaab23a898d34ca274b14a47",
+    "data/modular_context.py": "fe98a9b7716f1fae2197133e08f1ff4dbc56c9bd156efb41e0586c1272c01935",
+    "data/modular_ordinal.py": "530667626cca2ba535585e1bd5aa0b1dbf5c77b8be0540b1da911e27be1b9520",
+    "data/modular_quantitative.py": "751a66c8aa68fd697d395ec3fc63951e262278a0fb6c3f26c185e8963f7d148d",
+    "data/modular_sources.py": "1f179c5f3b7791f6c79df7e77aa1ceafe4940ae1fcda50fd6e43e9fb4d886edf",
+    "data/modular_lineage.py": "174832268ee01099fcd608dd82d3e60359905936e5de6f18f3c35d000112bdc7",
+    "data/modular_preparation.py": "e0268e9a9f5a531af378158f164ef5bce99361f6923be74f39bcd1f97bfc6962",
+    "data/modular_auxiliary.py": "7e2f6e9f560fe62650809ec6be6a781c5d3040270c73b8ec02cfa4bdb4cdb34f",
+    "data/vocab.py": "ecc2e1c5154d25d80cddae4f0708317e2cf40e39c171d9eaeb777ad88541e4f7",
+    "models/modular_dependencies.py": "17918102c6d7965e48b7c2c367e371da46d858624725fd81193d3a726a2b07a0",
+    "models/modular.py": "0bd99a93a6eabdba27ca79b3e22360f5e0c84be26f0f6b38321d665e07b83172",
+    "models/presto.py": "509faf84b23c7be80e78794a4ca1d5186c2483d035ba161f69d6b10c5ca346e2",
+    "cli/train.py": "64b852afbb3c09fe4d394836980362e1ec27d723efbec59c5eb854c796476133",
+    "training/trainer.py": "b0aa1f1299b376c3dc8222874d24382ded01c226ab70bf641d80ae8a6f27e331",
+    "models/modular_support.py": "3eae9ab29bad5aac6b86387458c4de23c4a40d246b90d9d6b60183fb3878b9e4",
+    "models/encoders.py": "c49f2461052b308f89289a3c44072c62edd09a1c1d41fb55426a5679db2b14c2",
+    "training/modular.py": "b787a8060b89e8f78f379c0908e6b2b30973b9c38feaed2cc758ecb176ab5fc4",
+    "training/modular_run.py": "49db330575c3fbd5e9de2a8733fdcc48a6b04a27ffb3a694d8040e7c7906f370",
+    "training/modular_resume.py": "0a70a61904da315166013b2e5c9cfb36c03d7f5fa7acb5ffb009e27ab43d069b",
+    "training/modular_evaluation.py": "ca75a674691a27e8c34ddf195ff31c29b76d134ec852320fa09aeeb9e69789ab",
+    "cli/training_sources.py": "90a21da60c464f2925dd7087e34d7fe913105deb54574b735f2d09c147b3996c",
+    "scripts/train_iedb.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10"
+  },
+  "environment": {
+    "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+    "torch": "2.14.1",
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "python_executable": "/Users/iskander/code/shared-virtual-env/bin/python",
+    "torch_threads": 1,
+    "torch_interop_threads": 1,
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONPATH": "/private/tmp/presto-unified-core-20261027"
+  },
+  "test_invocation": {
+    "cwd": "/private/tmp/presto-unified-core-20261027/presto/tests",
+    "setup": [
+      "sys.path.insert(0, str(Path.cwd()))",
+      "torch.set_num_threads(1)",
+      "torch.set_num_interop_threads(1)"
+    ],
+    "pytest_args": [
+      ".",
+      "--confcutdir=.",
+      "--import-mode=importlib",
+      "-p",
+      "no:cacheprovider",
+      "-o",
+      "addopts=",
+      "-q",
+      "--tb=short",
+      "--junitxml=../tasks/unified_training_core_20261027_suite.xml"
+    ]
+  },
+  "full_suite": {
+    "file": "tasks/unified_training_core_20261027_suite.xml",
+    "passed": 2724,
+    "failed": 0,
+    "skipped": [
+      {
+        "name": "tests.test_dataloader_sharing.TestSharingStrategy.test_file_descriptor_strategy_is_replaced",
+        "reason": "platform offers only file_system sharing"
+      },
+      {
+        "name": "tests.test_excision_window.TestTheCorpusActuallySuppliesFlanks.test_both_flanks_are_present_for_most_rows[I]",
+        "reason": "Real-corpus qualification unavailable: no pinned Hitlist bundle supplied"
+      },
+      {
+        "name": "tests.test_excision_window.TestTheCorpusActuallySuppliesFlanks.test_both_flanks_are_present_for_most_rows[II]",
+        "reason": "Real-corpus qualification unavailable: no pinned Hitlist bundle supplied"
+      },
+      {
+        "name": "tests.test_stimulus_vocabulary.TestEveryCorpusCategoryIsMapped.test_no_corpus_category_is_unmapped",
+        "reason": "Real-corpus qualification unavailable: no pinned Hitlist bundle supplied"
+      }
+    ]
+  },
+  "final_followup": {
+    "file": "tasks/unified_training_core_20261027_final_resume.xml",
+    "passed": 38,
+    "failed": 0,
+    "skipped": []
+  },
+  "followup_scope": "After the full suite, added the ordinal-context source fingerprint and four resume rejection cases. Re-ran all resume and shared-core acceptance tests; no model computation changed.",
+  "historical_replay": {
+    "status": "passed",
+    "kind": "historical_checkpoint_compatibility_regression",
+    "biological_fit_or_new_accuracy_evaluation": false,
+    "reference_scope": "first eight already-recorded training predictions per arm",
+    "frozen_files_verified": 168,
+    "closure_sha256": "815cade2f21c1214ee7f2e8953ea9a4294b1771557239e8b993769ee88c73220",
+    "variants": {
+      "native_levels": {
+        "checkpoint": "/private/tmp/presto-mhc2-evaluation-20261027/presto/experiments/2026-10-27_1250_codex_do-dm-native-memory-fit/results/runs/native_levels/selected.pt",
+        "checkpoint_sha256": "cf1ef4a0ab80d53cbf0fba3c22039ed11a4356cdd38381600a7ed024815a77e3",
+        "rows": 8,
+        "max_absolute_difference": 0.0
+      },
+      "native_collapsed": {
+        "checkpoint": "/private/tmp/presto-mhc2-evaluation-20261027/presto/experiments/2026-10-27_1250_codex_do-dm-native-memory-fit/results/runs/native_collapsed/selected.pt",
+        "checkpoint_sha256": "a6dc4f153c1e09ffa6c7b693e0748c5f166927765694fe3677aea3c6bd87d742",
+        "rows": 8,
+        "max_absolute_difference": 0.0
+      },
+      "native_shuffled": {
+        "checkpoint": "/private/tmp/presto-mhc2-evaluation-20261027/presto/experiments/2026-10-27_1250_codex_do-dm-native-memory-fit/results/runs/native_shuffled/selected.pt",
+        "checkpoint_sha256": "13c0b78e726f943a8afbb13f59eb722b1cc4f210c119f9e0f558028b3e22c51f",
+        "rows": 8,
+        "max_absolute_difference": 0.0
+      }
+    }
+  },
+  "wheel_smoke": {
+    "status": "passed",
+    "source": "/private/tmp/presto-unified-wheel-smoke/presto/__init__.py",
+    "format": "presto.shared.v3",
+    "fixture_rows": 2,
+    "register_counts": [
+      1,
+      7
+    ],
+    "remote_launcher_is_canonical": true,
+    "wheel_sha256": "1fb47518bbcc26f79a77c4e9efc902e06c2d52610a9f9928d8ff1fe4c40127ca"
+  },
+  "build": {
+    "command": [
+      "/Users/iskander/code/shared-virtual-env/bin/python",
+      "-m",
+      "build",
+      "--no-isolation",
+      "--outdir",
+      "/private/tmp/presto-unified-distributions"
+    ],
+    "artifacts": {
+      "/private/tmp/presto-unified-distributions/presto-0.1.22-py3-none-any.whl": "1fb47518bbcc26f79a77c4e9efc902e06c2d52610a9f9928d8ff1fe4c40127ca",
+      "/private/tmp/presto-unified-distributions/presto-0.1.22.tar.gz": "1d57a9604f30199e8582e6b1d75c86a63e716fab2d699c63d317c0b970c4a53a"
+    },
+    "source_pin_files_match_wheel": 22,
+    "published": false
+  },
+  "docs": {
+    "command": [
+      "/Users/iskander/code/shared-virtual-env/bin/python",
+      "-m",
+      "mkdocs",
+      "build",
+      "--site-dir",
+      "/private/tmp/presto-unified-docs-site"
+    ],
+    "status": "passed",
+    "warnings": []
+  },
+  "lint": {
+    "ruff_version": "0.16.0",
+    "commands": [
+      "ruff check .",
+      "ruff format --check .",
+      "git diff --check"
+    ],
+    "status": "passed"
+  },
+  "active_launcher_aliases": 38,
+  "qualification": "Synthetic software tests and historical replay only. No new biological fit or predictive comparison. No MHC-I transfer/accuracy benefit established; PR #131 scientific gates remain open.",
+  "preserved_checkouts": {
+    "/private/tmp/presto-shared-core-20261027/presto": "clean at 9dd71348124faa49a4c6a60872385c86895d50b0",
+    "/private/tmp/presto-mhc2-context-20261027/presto": "clean at c0358852f85f42d7d91d41a0af02327d9a6f2981"
+  }
+}

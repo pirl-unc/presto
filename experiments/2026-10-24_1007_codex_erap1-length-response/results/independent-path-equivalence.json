@@ -1,0 +1,47 @@
+{
+  "status": "passed",
+  "checks": [
+    {
+      "probe": 0,
+      "condition": "wt",
+      "n_paths": 1741916,
+      "max_absolute_error": 4.324647306930274e-10
+    },
+    {
+      "probe": 0,
+      "condition": "ko",
+      "n_paths": 1741916,
+      "max_absolute_error": 6.2118488131091e-10
+    },
+    {
+      "probe": 1,
+      "condition": "wt",
+      "n_paths": 1741916,
+      "max_absolute_error": 1.4870238373987377e-10
+    },
+    {
+      "probe": 1,
+      "condition": "ko",
+      "n_paths": 1741916,
+      "max_absolute_error": 1.0413714335300028e-10
+    },
+    {
+      "probe": 2,
+      "condition": "wt",
+      "n_paths": 1741916,
+      "max_absolute_error": 5.6843418860808015e-11
+    },
+    {
+      "probe": 2,
+      "condition": "ko",
+      "n_paths": 1741916,
+      "max_absolute_error": 8.822098607197404e-11
+    }
+  ],
+  "seconds": 0.7002239999710582,
+  "peak_gib": 0.8588409423828125,
+  "source_sha256": "ba8be651e755fac6af85293846ee2421474f340546be03484be048479ba820b0",
+  "scope": "Actual Torch origin-local path scores versus independent NumPy residue-count reference at zero length modifiers, all paths and three WT/KO probes; required before biological training.",
+  "padded_states": 2516006,
+  "model_source_sha256": "4d9e7ccfbd69084937ad1b62a2f75e140bc13972aecfd837a5df73e12cb6f4ed"
+}

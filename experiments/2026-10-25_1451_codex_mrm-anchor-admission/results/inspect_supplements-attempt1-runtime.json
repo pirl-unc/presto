@@ -1,0 +1,50 @@
+{
+  "stage": "inspect_supplements",
+  "attempt": 1,
+  "started_utc": "2026-10-25T15:11:45.170591+00:00",
+  "status": "passed",
+  "child_launched": true,
+  "exit_code": 0,
+  "resource_violation": null,
+  "memory_admission": {
+    "metric": "macos_free_plus_speculative",
+    "bytes": 6771589120
+  },
+  "disk_free_before_bytes": 19439312896,
+  "request_set_sha256": "81efcf9f27658fd262af37f9c88fc6f82cb4f3f4c9b06131b685159c48ac875a",
+  "request_set": {
+    "phase": "audit",
+    "source_requests": "reproduce/requests/processed-3.json",
+    "scope": "All nine successfully downloaded primary supplements; independent XML cached-value replay against openpyxl, source MD5/size/SHA checks, archive integrity, schema/description inventory only. No fitting."
+  },
+  "environment": {
+    "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "versions": {
+      "requests": "2.34.2",
+      "psutil": "7.2.2"
+    },
+    "overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUNBUFFERED": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    }
+  },
+  "child_pid": 97936,
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "-B",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1451_codex_mrm-anchor-admission/code/inspect_supplements.py",
+    "--requests",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1451_codex_mrm-anchor-admission/reproduce/requests/audit-1.json"
+  ],
+  "elapsed_seconds": 0.9349701669998467,
+  "peak_observed_process_tree_rss_bytes": 74940416,
+  "peak_child_process_rss_bytes": 74940416,
+  "rss_poll_interval_seconds": 0.05,
+  "disk_free_after_bytes": 19439222784
+}

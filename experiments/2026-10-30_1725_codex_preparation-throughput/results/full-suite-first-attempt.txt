@@ -1,0 +1,937 @@
+........................................................................ [  2%]
+........................................................................ [  4%]
+........................................................................ [  7%]
+........................................................................ [  9%]
+........................................................................ [ 12%]
+........................................................................ [ 14%]
+....................................................................EEEE [ 17%]
+EE...................................................................... [ 19%]
+.s...................................................................... [ 22%]
+........................................................................ [ 24%]
+........................................................................ [ 27%]
+..ss.................................................................... [ 29%]
+........................................................................ [ 31%]
+........................................................................ [ 34%]
+........................................................................ [ 36%]
+........................................................................ [ 39%]
+........................................................................ [ 41%]
+........................................................................ [ 44%]
+........................................................................ [ 46%]
+........................................................................ [ 49%]
+........................................................................ [ 51%]
+........................................................................ [ 54%]
+........................................................................ [ 56%]
+........................................................................ [ 58%]
+........................................................................ [ 61%]
+........................................................................ [ 63%]
+........................................................................ [ 66%]
+........................................................................ [ 68%]
+........................................................................ [ 71%]
+........................................................................ [ 73%]
+........................................................................ [ 76%]
+........................................................................ [ 78%]
+........................................................................ [ 81%]
+........................................................................ [ 83%]
+.....................................s.................................. [ 85%]
+........................................................................ [ 88%]
+........................................................................ [ 90%]
+........................................................................ [ 93%]
+........................................................................ [ 95%]
+........................................................................ [ 98%]
+.....................................................                    [100%]
+==================================== ERRORS ====================================
+_ ERROR at setup of test_selected_sources_reach_census_with_competing_inputs[False-merged_tsv-relative_deficit_v2-three_peptides] _
+
+tmp_path = PosixPath('/private/var/folders/qm/qf74v01n2s12j3w0h1yrx4l00000gn/T/pytest-of-iskander/pytest-1137/test_selected_sources_reach_ce0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x12a50d070>
+request = <SubRequest 'frozen_bundle' for <Function test_selected_sources_reach_census_with_competing_inputs[False-merged_tsv-relative_deficit_v2-three_peptides]>>
+
+    @pytest.fixture
+    def frozen_bundle(tmp_path, monkeypatch, request):
+        from hitlist import builder, curation, downloads, supplement
+        from hitlist.training_bundle import write_training_bundle
+        from hitlist.parquet_io import atomic_write_parquet
+
+        monkeypatch.setattr(downloads, "_override_data_dir", tmp_path / "shared-data")
+        # No unrelated curation or network acquisitions in this synthetic fixture.
+        original_data_path = curation._data_path
+        empty_overrides = tmp_path / "pmid_overrides.yaml"
+        empty_overrides.write_text("[]\n")
+        monkeypatch.setattr(
+            curation,
+            "_data_path",
+            lambda name: (
+                str(empty_overrides) if name == "pmid_overrides.yaml" else original_data_path(name)
+            ),
+        )
+        curation._clear_curation_caches()
+        try:
+            monkeypatch.setattr(supplement, "scan_supplementary", lambda **kwargs: pd.DataFrame())
+
+            def empty(path):
+                frame = pd.DataFrame()
+                atomic_write_parquet(frame, path)
+                return frame
+
+            monkeypatch.setattr(
+                builder, "build_bulk_proteomics", lambda **kw: empty(builder._bulk_proteomics_path())
+            )
+            monkeypatch.setattr(
+                builder, "build_line_expression", lambda **kw: empty(builder._line_expression_path())
+            )
+            fields = [
+                "Assay IRI",
+                "Reference IRI",
+                "PMID",
+                "Epitope | Name",
+                "Epitope | Source Organism",
+                "Host",
+                "Host | Process Type",
+                "Qualitative Measurement",
+                "Effector Cells | Cell Name",
+                "MHC Restriction | Name",
+                "MHC Allele Class",
+                "Assay | Method",
+                "Assay | Response measured",
+                "Assay | Units",
+                "Assay | Measurement Inequality",
+                "Assay | Quantitative measurement",
+            ]
+            common = [
+                "ref:1",
+                "99999999",
+                "SLYNTVATL",
+                "Homo sapiens",
+                "Homo sapiens",
+                "Cellular MHC ligand presentation",
+                "Positive",
+                "unknown fixture cell",
+                "HLA-A*02:01",
+                "I",
+            ]
+            rows = [
+                ["http://iedb.org/assay/1", *common, "mass spectrometry", "", "", "", ""],
+                [
+                    "http://iedb.org/assay/2",
+                    *common,
+                    "purified MHC/competitive/radioactivity",
+                    "half maximal inhibitory concentration (IC50)",
+                    "nM",
+                    "<",
+                    "25",
+                ],
+                ["http://iedb.org/assay/3", *common, "purified MHC", "half life", "min", ">", "120"],
+            ]
+            if getattr(request, "param", None) == "three_peptides":
+                rows = [
+                    [row[0] + str(group), *row[1:3], peptide, *row[4:]]
+                    for group, peptide in enumerate(("SLYNTVATL", "ACDEFGHIK", "LMNPQRSTV"))
+                    for row in rows
+                ]
+            missing_fields = [
+                "Submission ID",
+                "Title",
+                "Epitope | Species",
+                "Host Age",
+                "Host | Disease",
+                "Host | Disease Stage",
+                "Antigen Processing Comments",
+                "Assay Comments",
+                "Effector Cells | Source Tissue",
+                "Assay | Culture Condition",
+                "Host | MHC Types Present",
+            ]
+            fields.extend(missing_fields)
+            rows = [row + [""] * len(missing_fields) for row in rows]
+            source = tmp_path / "iedb.csv"
+            with source.open("w", newline="") as handle:
+                writer = csv.writer(handle)
+                writer.writerow([""] * len(fields))
+                writer.writerow(fields)
+                writer.writerows(rows)
+            downloads.register("iedb", source)
+>           builder.build_observations(build_mappings=False)
+
+tests/test_frozen_hitlist.py:140:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../hitlist-release-2.0.40/hitlist/builder.py:861: in build_observations
+    published = publish_dataset(
+../../../../hitlist-release-2.0.40/hitlist/dataset.py:222: in publish_dataset
+    for name, path in materialize(
+../../../../shared-virtual-env/lib/python3.12/site-packages/datacache/materialization.py:413: in materialize
+    builder(dict(source_paths), dict(output_paths))
+../../../../hitlist-release-2.0.40/hitlist/dataset.py:216: in staged
+    build({name: Path(path) for name, path in source_paths.items()})
+../../../../hitlist-release-2.0.40/hitlist/builder.py:837: in build
+    with ContributorCollector() as provenance:
+         ^^^^^^^^^^^^^^^^^^^^^^
+../../../../hitlist-release-2.0.40/hitlist/provenance.py:212: in __enter__
+    self._check_space(force=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <hitlist.provenance.ContributorCollector object at 0x12a2e8f50>
+force = True
+
+    def _check_space(self, *, force=False):
+        now = time.monotonic()
+        if not force and now < self._next_space_check:
+            return
+        self._next_space_check = now + 1
+        for directory in {self.scratch_dir, self._output_directory} - {None}:
+            free = shutil.disk_usage(directory).free
+            if free <= self.min_free_bytes:
+>               raise self._storage_error(
+                    f"{directory} has only {free / 1024**3:.3f} GiB available"
+                )
+E               hitlist.provenance.ProvenanceStorageError: Contributor build stopped: /var/folders/qm/qf74v01n2s12j3w0h1yrx4l00000gn/T has only 0.333 GiB available. Scratch directory: /var/folders/qm/qf74v01n2s12j3w0h1yrx4l00000gn/T; database limit: 16.000 GiB; free-space reserve: 1.000 GiB. Free space or choose HITLIST_PROVENANCE_SCRATCH_DIR (default: TMPDIR); increase HITLIST_PROVENANCE_MAX_GB only on a filesystem with capacity. The required space depends on the source rows and contributor links. Existing published contributor data is preserved; owned scratch and partial output are removed. Retry the build after correcting capacity.
+
+../../../../hitlist-release-2.0.40/hitlist/provenance.py:158: ProvenanceStorageError
+_ ERROR at setup of test_selected_sources_reach_census_with_competing_inputs[False-hitlist-absolute_deficit_v1-three_peptides] _
+
+tmp_path = PosixPath('/private/var/folders/qm/qf74v01n2s12j3w0h1yrx4l00000gn/T/pytest-of-iskander/pytest-1137/test_selected_sources_reach_ce1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x12a9fcd40>
+request = <SubRequest 'frozen_bundle' for <Function test_selected_sources_reach_census_with_competing_inputs[False-hitlist-absolute_deficit_v1-three_peptides]>>
+
+    @pytest.fixture
+    def frozen_bundle(tmp_path, monkeypatch, request):
+        from hitlist import builder, curation, downloads, supplement
+        from hitlist.training_bundle import write_training_bundle
+        from hitlist.parquet_io import atomic_write_parquet
+
+        monkeypatch.setattr(downloads, "_override_data_dir", tmp_path / "shared-data")
+        # No unrelated curation or network acquisitions in this synthetic fixture.
+        original_data_path = curation._data_path
+        empty_overrides = tmp_path / "pmid_overrides.yaml"
+        empty_overrides.write_text("[]\n")
+        monkeypatch.setattr(
+            curation,
+            "_data_path",
+            lambda name: (
+                str(empty_overrides) if name == "pmid_overrides.yaml" else original_data_path(name)
+            ),
+        )
+        curation._clear_curation_caches()
+        try:
+            monkeypatch.setattr(supplement, "scan_supplementary", lambda **kwargs: pd.DataFrame())
+
+            def empty(path):
+                frame = pd.DataFrame()
+                atomic_write_parquet(frame, path)
+                return frame
+
+            monkeypatch.setattr(
+                builder, "build_bulk_proteomics", lambda **kw: empty(builder._bulk_proteomics_path())
+            )
+            monkeypatch.setattr(
+                builder, "build_line_expression", lambda **kw: empty(builder._line_expression_path())
+            )
+            fields = [
+                "Assay IRI",
+                "Reference IRI",
+                "PMID",
+                "Epitope | Name",
+                "Epitope | Source Organism",
+                "Host",
+                "Host | Process Type",
+                "Qualitative Measurement",
+                "Effector Cells | Cell Name",
+                "MHC Restriction | Name",
+                "MHC Allele Class",
+                "Assay | Method",
+                "Assay | Response measured",
+                "Assay | Units",
+                "Assay | Measurement Inequality",
+                "Assay | Quantitative measurement",
+            ]
+            common = [
+                "ref:1",
+                "99999999",
+                "SLYNTVATL",
+                "Homo sapiens",
+                "Homo sapiens",
+                "Cellular MHC ligand presentation",
+                "Positive",
+                "unknown fixture cell",
+                "HLA-A*02:01",
+                "I",
+            ]
+            rows = [
+                ["http://iedb.org/assay/1", *common, "mass spectrometry", "", "", "", ""],
+                [
+                    "http://iedb.org/assay/2",
+                    *common,
+                    "purified MHC/competitive/radioactivity",
+                    "half maximal inhibitory concentration (IC50)",
+                    "nM",
+                    "<",
+                    "25",
+                ],
+                ["http://iedb.org/assay/3", *common, "purified MHC", "half life", "min", ">", "120"],
+            ]
+            if getattr(request, "param", None) == "three_peptides":
+                rows = [
+                    [row[0] + str(group), *row[1:3], peptide, *row[4:]]
+                    for group, peptide in enumerate(("SLYNTVATL", "ACDEFGHIK", "LMNPQRSTV"))
+                    for row in rows
+                ]
+            missing_fields = [
+                "Submission ID",
+                "Title",
+                "Epitope | Species",
+                "Host Age",
+                "Host | Disease",
+                "Host | Disease Stage",
+                "Antigen Processing Comments",
+                "Assay Comments",
+                "Effector Cells | Source Tissue",
+                "Assay | Culture Condition",
+                "Host | MHC Types Present",
+            ]
+            fields.extend(missing_fields)
+            rows = [row + [""] * len(missing_fields) for row in rows]
+            source = tmp_path / "iedb.csv"
+            with source.open("w", newline="") as handle:
+                writer = csv.writer(handle)
+                writer.writerow([""] * len(fields))
+                writer.writerow(fields)
+                writer.writerows(rows)
+            downloads.register("iedb", source)
+>           builder.build_observations(build_mappings=False)
+
+tests/test_frozen_hitlist.py:140:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../hitlist-release-2.0.40/hitlist/builder.py:861: in build_observations
+    published = publish_dataset(
+../../../../hitlist-release-2.0.40/hitlist/dataset.py:222: in publish_dataset
+    for name, path in materialize(
+../../../../shared-virtual-env/lib/python3.12/site-packages/datacache/materialization.py:413: in materialize
+    builder(dict(source_paths), dict(output_paths))
+../../../../hitlist-release-2.0.40/hitlist/dataset.py:216: in staged
+    build({name: Path(path) for name, path in source_paths.items()})
+../../../../hitlist-release-2.0.40/hitlist/builder.py:837: in build
+    with ContributorCollector() as provenance:
+         ^^^^^^^^^^^^^^^^^^^^^^
+../../../../hitlist-release-2.0.40/hitlist/provenance.py:212: in __enter__
+    self._check_space(force=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <hitlist.provenance.ContributorCollector object at 0x12a9fe2d0>
+force = True
+
+    def _check_space(self, *, force=False):
+        now = time.monotonic()
+        if not force and now < self._next_space_check:
+            return
+        self._next_space_check = now + 1
+        for directory in {self.scratch_dir, self._output_directory} - {None}:
+            free = shutil.disk_usage(directory).free
+            if free <= self.min_free_bytes:
+>               raise self._storage_error(
+                    f"{directory} has only {free / 1024**3:.3f} GiB available"
+                )
+E               hitlist.provenance.ProvenanceStorageError: Contributor build stopped: /var/folders/qm/qf74v01n2s12j3w0h1yrx4l00000gn/T has only 0.341 GiB available. Scratch directory: /var/folders/qm/qf74v01n2s12j3w0h1yrx4l00000gn/T; database limit: 16.000 GiB; free-space reserve: 1.000 GiB. Free space or choose HITLIST_PROVENANCE_SCRATCH_DIR (default: TMPDIR); increase HITLIST_PROVENANCE_MAX_GB only on a filesystem with capacity. The required space depends on the source rows and contributor links. Existing published contributor data is preserved; owned scratch and partial output are removed. Retry the build after correcting capacity.
+
+../../../../hitlist-release-2.0.40/hitlist/provenance.py:158: ProvenanceStorageError
+_ ERROR at setup of test_selected_sources_reach_census_with_competing_inputs[False-hitlist-relative_deficit_v2-three_peptides] _
+
+tmp_path = PosixPath('/private/var/folders/qm/qf74v01n2s12j3w0h1yrx4l00000gn/T/pytest-of-iskander/pytest-1137/test_selected_sources_reach_ce2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x12a6a5e50>
+request = <SubRequest 'frozen_bundle' for <Function test_selected_sources_reach_census_with_competing_inputs[False-hitlist-relative_deficit_v2-three_peptides]>>
+
+    @pytest.fixture
+    def frozen_bundle(tmp_path, monkeypatch, request):
+        from hitlist import builder, curation, downloads, supplement
+        from hitlist.training_bundle import write_training_bundle
+        from hitlist.parquet_io import atomic_write_parquet
+
+        monkeypatch.setattr(downloads, "_override_data_dir", tmp_path / "shared-data")
+        # No unrelated curation or network acquisitions in this synthetic fixture.
+        original_data_path = curation._data_path
+        empty_overrides = tmp_path / "pmid_overrides.yaml"
+        empty_overrides.write_text("[]\n")
+        monkeypatch.setattr(
+            curation,
+            "_data_path",
+            lambda name: (
+                str(empty_overrides) if name == "pmid_overrides.yaml" else original_data_path(name)
+            ),
+        )
+        curation._clear_curation_caches()
+        try:
+            monkeypatch.setattr(supplement, "scan_supplementary", lambda **kwargs: pd.DataFrame())
+
+            def empty(path):
+                frame = pd.DataFrame()
+                atomic_write_parquet(frame, path)
+                return frame
+
+            monkeypatch.setattr(
+                builder, "build_bulk_proteomics", lambda **kw: empty(builder._bulk_proteomics_path())
+            )
+            monkeypatch.setattr(
+                builder, "build_line_expression", lambda **kw: empty(builder._line_expression_path())
+            )
+            fields = [
+                "Assay IRI",
+                "Reference IRI",
+                "PMID",
+                "Epitope | Name",
+                "Epitope | Source Organism",
+                "Host",
+                "Host | Process Type",
+                "Qualitative Measurement",
+                "Effector Cells | Cell Name",
+                "MHC Restriction | Name",
+                "MHC Allele Class",
+                "Assay | Method",
+                "Assay | Response measured",
+                "Assay | Units",
+                "Assay | Measurement Inequality",
+                "Assay | Quantitative measurement",
+            ]
+            common = [
+                "ref:1",
+                "99999999",
+                "SLYNTVATL",
+                "Homo sapiens",
+                "Homo sapiens",
+                "Cellular MHC ligand presentation",
+                "Positive",
+                "unknown fixture cell",
+                "HLA-A*02:01",
+                "I",
+            ]
+            rows = [
+                ["http://iedb.org/assay/1", *common, "mass spectrometry", "", "", "", ""],
+                [
+                    "http://iedb.org/assay/2",
+                    *common,
+                    "purified MHC/competitive/radioactivity",
+                    "half maximal inhibitory concentration (IC50)",
+                    "nM",
+                    "<",
+                    "25",
+                ],
+                ["http://iedb.org/assay/3", *common, "purified MHC", "half life", "min", ">", "120"],
+            ]
+            if getattr(request, "param", None) == "three_peptides":
+                rows = [
+                    [row[0] + str(group), *row[1:3], peptide, *row[4:]]
+                    for group, peptide in enumerate(("SLYNTVATL", "ACDEFGHIK", "LMNPQRSTV"))
+                    for row in rows
+                ]
+            missing_fields = [
+                "Submission ID",
+                "Title",
+                "Epitope | Species",
+                "Host Age",
+                "Host | Disease",
+                "Host | Disease Stage",
+                "Antigen Processing Comments",
+                "Assay Comments",
+                "Effector Cells | Source Tissue",
+                "Assay | Culture Condition",
+                "Host | MHC Types Present",
+            ]
+            fields.extend(missing_fields)
+            rows = [row + [""] * len(missing_fields) for row in rows]
+            source = tmp_path / "iedb.csv"
+            with source.open("w", newline="") as handle:
+                writer = csv.writer(handle)
+                writer.writerow([""] * len(fields))
+                writer.writerow(fields)
+                writer.writerows(rows)
+            downloads.register("iedb", source)
+>           builder.build_observations(build_mappings=False)
+
+tests/test_frozen_hitlist.py:140:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../hitlist-release-2.0.40/hitlist/builder.py:861: in build_observations
+    published = publish_dataset(
+../../../../hitlist-release-2.0.40/hitlist/dataset.py:222: in publish_dataset
+    for name, path in materialize(
+../../../../shared-virtual-env/lib/python3.12/site-packages/datacache/materialization.py:413: in materialize
+    builder(dict(source_paths), dict(output_paths))
+../../../../hitlist-release-2.0.40/hitlist/dataset.py:216: in staged
+    build({name: Path(path) for name, path in source_paths.items()})
+../../../../hitlist-release-2.0.40/hitlist/builder.py:837: in build
+    with ContributorCollector() as provenance:
+         ^^^^^^^^^^^^^^^^^^^^^^
+../../../../hitlist-release-2.0.40/hitlist/provenance.py:212: in __enter__
+    self._check_space(force=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <hitlist.provenance.ContributorCollector object at 0x12a6a5ca0>
+force = True
+
+    def _check_space(self, *, force=False):
+        now = time.monotonic()
+        if not force and now < self._next_space_check:
+            return
+        self._next_space_check = now + 1
+        for directory in {self.scratch_dir, self._output_directory} - {None}:
+            free = shutil.disk_usage(directory).free
+            if free <= self.min_free_bytes:
+>               raise self._storage_error(
+                    f"{directory} has only {free / 1024**3:.3f} GiB available"
+                )
+E               hitlist.provenance.ProvenanceStorageError: Contributor build stopped: /var/folders/qm/qf74v01n2s12j3w0h1yrx4l00000gn/T has only 0.341 GiB available. Scratch directory: /var/folders/qm/qf74v01n2s12j3w0h1yrx4l00000gn/T; database limit: 16.000 GiB; free-space reserve: 1.000 GiB. Free space or choose HITLIST_PROVENANCE_SCRATCH_DIR (default: TMPDIR); increase HITLIST_PROVENANCE_MAX_GB only on a filesystem with capacity. The required space depends on the source rows and contributor links. Existing published contributor data is preserved; owned scratch and partial output are removed. Retry the build after correcting capacity.
+
+../../../../hitlist-release-2.0.40/hitlist/provenance.py:158: ProvenanceStorageError
+_ ERROR at setup of test_selected_sources_reach_census_with_competing_inputs[True-merged_tsv-relative_deficit_v2-three_peptides] _
+
+tmp_path = PosixPath('/private/var/folders/qm/qf74v01n2s12j3w0h1yrx4l00000gn/T/pytest-of-iskander/pytest-1137/test_selected_sources_reach_ce3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x12a9fd190>
+request = <SubRequest 'frozen_bundle' for <Function test_selected_sources_reach_census_with_competing_inputs[True-merged_tsv-relative_deficit_v2-three_peptides]>>
+
+    @pytest.fixture
+    def frozen_bundle(tmp_path, monkeypatch, request):
+        from hitlist import builder, curation, downloads, supplement
+        from hitlist.training_bundle import write_training_bundle
+        from hitlist.parquet_io import atomic_write_parquet
+
+        monkeypatch.setattr(downloads, "_override_data_dir", tmp_path / "shared-data")
+        # No unrelated curation or network acquisitions in this synthetic fixture.
+        original_data_path = curation._data_path
+        empty_overrides = tmp_path / "pmid_overrides.yaml"
+        empty_overrides.write_text("[]\n")
+        monkeypatch.setattr(
+            curation,
+            "_data_path",
+            lambda name: (
+                str(empty_overrides) if name == "pmid_overrides.yaml" else original_data_path(name)
+            ),
+        )
+        curation._clear_curation_caches()
+        try:
+            monkeypatch.setattr(supplement, "scan_supplementary", lambda **kwargs: pd.DataFrame())
+
+            def empty(path):
+                frame = pd.DataFrame()
+                atomic_write_parquet(frame, path)
+                return frame
+
+            monkeypatch.setattr(
+                builder, "build_bulk_proteomics", lambda **kw: empty(builder._bulk_proteomics_path())
+            )
+            monkeypatch.setattr(
+                builder, "build_line_expression", lambda **kw: empty(builder._line_expression_path())
+            )
+            fields = [
+                "Assay IRI",
+                "Reference IRI",
+                "PMID",
+                "Epitope | Name",
+                "Epitope | Source Organism",
+                "Host",
+                "Host | Process Type",
+                "Qualitative Measurement",
+                "Effector Cells | Cell Name",
+                "MHC Restriction | Name",
+                "MHC Allele Class",
+                "Assay | Method",
+                "Assay | Response measured",
+                "Assay | Units",
+                "Assay | Measurement Inequality",
+                "Assay | Quantitative measurement",
+            ]
+            common = [
+                "ref:1",
+                "99999999",
+                "SLYNTVATL",
+                "Homo sapiens",
+                "Homo sapiens",
+                "Cellular MHC ligand presentation",
+                "Positive",
+                "unknown fixture cell",
+                "HLA-A*02:01",
+                "I",
+            ]
+            rows = [
+                ["http://iedb.org/assay/1", *common, "mass spectrometry", "", "", "", ""],
+                [
+                    "http://iedb.org/assay/2",
+                    *common,
+                    "purified MHC/competitive/radioactivity",
+                    "half maximal inhibitory concentration (IC50)",
+                    "nM",
+                    "<",
+                    "25",
+                ],
+                ["http://iedb.org/assay/3", *common, "purified MHC", "half life", "min", ">", "120"],
+            ]
+            if getattr(request, "param", None) == "three_peptides":
+                rows = [
+                    [row[0] + str(group), *row[1:3], peptide, *row[4:]]
+                    for group, peptide in enumerate(("SLYNTVATL", "ACDEFGHIK", "LMNPQRSTV"))
+                    for row in rows
+                ]
+            missing_fields = [
+                "Submission ID",
+                "Title",
+                "Epitope | Species",
+                "Host Age",
+                "Host | Disease",
+                "Host | Disease Stage",
+                "Antigen Processing Comments",
+                "Assay Comments",
+                "Effector Cells | Source Tissue",
+                "Assay | Culture Condition",
+                "Host | MHC Types Present",
+            ]
+            fields.extend(missing_fields)
+            rows = [row + [""] * len(missing_fields) for row in rows]
+            source = tmp_path / "iedb.csv"
+            with source.open("w", newline="") as handle:
+                writer = csv.writer(handle)
+                writer.writerow([""] * len(fields))
+                writer.writerow(fields)
+                writer.writerows(rows)
+            downloads.register("iedb", source)
+>           builder.build_observations(build_mappings=False)
+
+tests/test_frozen_hitlist.py:140:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../hitlist-release-2.0.40/hitlist/builder.py:861: in build_observations
+    published = publish_dataset(
+../../../../hitlist-release-2.0.40/hitlist/dataset.py:222: in publish_dataset
+    for name, path in materialize(
+../../../../shared-virtual-env/lib/python3.12/site-packages/datacache/materialization.py:413: in materialize
+    builder(dict(source_paths), dict(output_paths))
+../../../../hitlist-release-2.0.40/hitlist/dataset.py:216: in staged
+    build({name: Path(path) for name, path in source_paths.items()})
+../../../../hitlist-release-2.0.40/hitlist/builder.py:837: in build
+    with ContributorCollector() as provenance:
+         ^^^^^^^^^^^^^^^^^^^^^^
+../../../../hitlist-release-2.0.40/hitlist/provenance.py:212: in __enter__
+    self._check_space(force=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <hitlist.provenance.ContributorCollector object at 0x12a567dd0>
+force = True
+
+    def _check_space(self, *, force=False):
+        now = time.monotonic()
+        if not force and now < self._next_space_check:
+            return
+        self._next_space_check = now + 1
+        for directory in {self.scratch_dir, self._output_directory} - {None}:
+            free = shutil.disk_usage(directory).free
+            if free <= self.min_free_bytes:
+>               raise self._storage_error(
+                    f"{directory} has only {free / 1024**3:.3f} GiB available"
+                )
+E               hitlist.provenance.ProvenanceStorageError: Contributor build stopped: /var/folders/qm/qf74v01n2s12j3w0h1yrx4l00000gn/T has only 0.341 GiB available. Scratch directory: /var/folders/qm/qf74v01n2s12j3w0h1yrx4l00000gn/T; database limit: 16.000 GiB; free-space reserve: 1.000 GiB. Free space or choose HITLIST_PROVENANCE_SCRATCH_DIR (default: TMPDIR); increase HITLIST_PROVENANCE_MAX_GB only on a filesystem with capacity. The required space depends on the source rows and contributor links. Existing published contributor data is preserved; owned scratch and partial output are removed. Retry the build after correcting capacity.
+
+../../../../hitlist-release-2.0.40/hitlist/provenance.py:158: ProvenanceStorageError
+_ ERROR at setup of test_selected_sources_reach_census_with_competing_inputs[True-hitlist-absolute_deficit_v1-three_peptides] _
+
+tmp_path = PosixPath('/private/var/folders/qm/qf74v01n2s12j3w0h1yrx4l00000gn/T/pytest-of-iskander/pytest-1137/test_selected_sources_reach_ce4')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x12a6a5c70>
+request = <SubRequest 'frozen_bundle' for <Function test_selected_sources_reach_census_with_competing_inputs[True-hitlist-absolute_deficit_v1-three_peptides]>>
+
+    @pytest.fixture
+    def frozen_bundle(tmp_path, monkeypatch, request):
+        from hitlist import builder, curation, downloads, supplement
+        from hitlist.training_bundle import write_training_bundle
+        from hitlist.parquet_io import atomic_write_parquet
+
+        monkeypatch.setattr(downloads, "_override_data_dir", tmp_path / "shared-data")
+        # No unrelated curation or network acquisitions in this synthetic fixture.
+        original_data_path = curation._data_path
+        empty_overrides = tmp_path / "pmid_overrides.yaml"
+        empty_overrides.write_text("[]\n")
+        monkeypatch.setattr(
+            curation,
+            "_data_path",
+            lambda name: (
+                str(empty_overrides) if name == "pmid_overrides.yaml" else original_data_path(name)
+            ),
+        )
+        curation._clear_curation_caches()
+        try:
+            monkeypatch.setattr(supplement, "scan_supplementary", lambda **kwargs: pd.DataFrame())
+
+            def empty(path):
+                frame = pd.DataFrame()
+                atomic_write_parquet(frame, path)
+                return frame
+
+            monkeypatch.setattr(
+                builder, "build_bulk_proteomics", lambda **kw: empty(builder._bulk_proteomics_path())
+            )
+            monkeypatch.setattr(
+                builder, "build_line_expression", lambda **kw: empty(builder._line_expression_path())
+            )
+            fields = [
+                "Assay IRI",
+                "Reference IRI",
+                "PMID",
+                "Epitope | Name",
+                "Epitope | Source Organism",
+                "Host",
+                "Host | Process Type",
+                "Qualitative Measurement",
+                "Effector Cells | Cell Name",
+                "MHC Restriction | Name",
+                "MHC Allele Class",
+                "Assay | Method",
+                "Assay | Response measured",
+                "Assay | Units",
+                "Assay | Measurement Inequality",
+                "Assay | Quantitative measurement",
+            ]
+            common = [
+                "ref:1",
+                "99999999",
+                "SLYNTVATL",
+                "Homo sapiens",
+                "Homo sapiens",
+                "Cellular MHC ligand presentation",
+                "Positive",
+                "unknown fixture cell",
+                "HLA-A*02:01",
+                "I",
+            ]
+            rows = [
+                ["http://iedb.org/assay/1", *common, "mass spectrometry", "", "", "", ""],
+                [
+                    "http://iedb.org/assay/2",
+                    *common,
+                    "purified MHC/competitive/radioactivity",
+                    "half maximal inhibitory concentration (IC50)",
+                    "nM",
+                    "<",
+                    "25",
+                ],
+                ["http://iedb.org/assay/3", *common, "purified MHC", "half life", "min", ">", "120"],
+            ]
+            if getattr(request, "param", None) == "three_peptides":
+                rows = [
+                    [row[0] + str(group), *row[1:3], peptide, *row[4:]]
+                    for group, peptide in enumerate(("SLYNTVATL", "ACDEFGHIK", "LMNPQRSTV"))
+                    for row in rows
+                ]
+            missing_fields = [
+                "Submission ID",
+                "Title",
+                "Epitope | Species",
+                "Host Age",
+                "Host | Disease",
+                "Host | Disease Stage",
+                "Antigen Processing Comments",
+                "Assay Comments",
+                "Effector Cells | Source Tissue",
+                "Assay | Culture Condition",
+                "Host | MHC Types Present",
+            ]
+            fields.extend(missing_fields)
+            rows = [row + [""] * len(missing_fields) for row in rows]
+            source = tmp_path / "iedb.csv"
+            with source.open("w", newline="") as handle:
+                writer = csv.writer(handle)
+                writer.writerow([""] * len(fields))
+                writer.writerow(fields)
+                writer.writerows(rows)
+            downloads.register("iedb", source)
+>           builder.build_observations(build_mappings=False)
+
+tests/test_frozen_hitlist.py:140:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../hitlist-release-2.0.40/hitlist/builder.py:861: in build_observations
+    published = publish_dataset(
+../../../../hitlist-release-2.0.40/hitlist/dataset.py:222: in publish_dataset
+    for name, path in materialize(
+../../../../shared-virtual-env/lib/python3.12/site-packages/datacache/materialization.py:413: in materialize
+    builder(dict(source_paths), dict(output_paths))
+../../../../hitlist-release-2.0.40/hitlist/dataset.py:216: in staged
+    build({name: Path(path) for name, path in source_paths.items()})
+../../../../hitlist-release-2.0.40/hitlist/builder.py:837: in build
+    with ContributorCollector() as provenance:
+         ^^^^^^^^^^^^^^^^^^^^^^
+../../../../hitlist-release-2.0.40/hitlist/provenance.py:212: in __enter__
+    self._check_space(force=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <hitlist.provenance.ContributorCollector object at 0x12a9fddf0>
+force = True
+
+    def _check_space(self, *, force=False):
+        now = time.monotonic()
+        if not force and now < self._next_space_check:
+            return
+        self._next_space_check = now + 1
+        for directory in {self.scratch_dir, self._output_directory} - {None}:
+            free = shutil.disk_usage(directory).free
+            if free <= self.min_free_bytes:
+>               raise self._storage_error(
+                    f"{directory} has only {free / 1024**3:.3f} GiB available"
+                )
+E               hitlist.provenance.ProvenanceStorageError: Contributor build stopped: /var/folders/qm/qf74v01n2s12j3w0h1yrx4l00000gn/T has only 0.341 GiB available. Scratch directory: /var/folders/qm/qf74v01n2s12j3w0h1yrx4l00000gn/T; database limit: 16.000 GiB; free-space reserve: 1.000 GiB. Free space or choose HITLIST_PROVENANCE_SCRATCH_DIR (default: TMPDIR); increase HITLIST_PROVENANCE_MAX_GB only on a filesystem with capacity. The required space depends on the source rows and contributor links. Existing published contributor data is preserved; owned scratch and partial output are removed. Retry the build after correcting capacity.
+
+../../../../hitlist-release-2.0.40/hitlist/provenance.py:158: ProvenanceStorageError
+_ ERROR at setup of test_selected_sources_reach_census_with_competing_inputs[True-hitlist-relative_deficit_v2-three_peptides] _
+
+tmp_path = PosixPath('/private/var/folders/qm/qf74v01n2s12j3w0h1yrx4l00000gn/T/pytest-of-iskander/pytest-1137/test_selected_sources_reach_ce5')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x12a6a7ad0>
+request = <SubRequest 'frozen_bundle' for <Function test_selected_sources_reach_census_with_competing_inputs[True-hitlist-relative_deficit_v2-three_peptides]>>
+
+    @pytest.fixture
+    def frozen_bundle(tmp_path, monkeypatch, request):
+        from hitlist import builder, curation, downloads, supplement
+        from hitlist.training_bundle import write_training_bundle
+        from hitlist.parquet_io import atomic_write_parquet
+
+        monkeypatch.setattr(downloads, "_override_data_dir", tmp_path / "shared-data")
+        # No unrelated curation or network acquisitions in this synthetic fixture.
+        original_data_path = curation._data_path
+        empty_overrides = tmp_path / "pmid_overrides.yaml"
+        empty_overrides.write_text("[]\n")
+        monkeypatch.setattr(
+            curation,
+            "_data_path",
+            lambda name: (
+                str(empty_overrides) if name == "pmid_overrides.yaml" else original_data_path(name)
+            ),
+        )
+        curation._clear_curation_caches()
+        try:
+            monkeypatch.setattr(supplement, "scan_supplementary", lambda **kwargs: pd.DataFrame())
+
+            def empty(path):
+                frame = pd.DataFrame()
+                atomic_write_parquet(frame, path)
+                return frame
+
+            monkeypatch.setattr(
+                builder, "build_bulk_proteomics", lambda **kw: empty(builder._bulk_proteomics_path())
+            )
+            monkeypatch.setattr(
+                builder, "build_line_expression", lambda **kw: empty(builder._line_expression_path())
+            )
+            fields = [
+                "Assay IRI",
+                "Reference IRI",
+                "PMID",
+                "Epitope | Name",
+                "Epitope | Source Organism",
+                "Host",
+                "Host | Process Type",
+                "Qualitative Measurement",
+                "Effector Cells | Cell Name",
+                "MHC Restriction | Name",
+                "MHC Allele Class",
+                "Assay | Method",
+                "Assay | Response measured",
+                "Assay | Units",
+                "Assay | Measurement Inequality",
+                "Assay | Quantitative measurement",
+            ]
+            common = [
+                "ref:1",
+                "99999999",
+                "SLYNTVATL",
+                "Homo sapiens",
+                "Homo sapiens",
+                "Cellular MHC ligand presentation",
+                "Positive",
+                "unknown fixture cell",
+                "HLA-A*02:01",
+                "I",
+            ]
+            rows = [
+                ["http://iedb.org/assay/1", *common, "mass spectrometry", "", "", "", ""],
+                [
+                    "http://iedb.org/assay/2",
+                    *common,
+                    "purified MHC/competitive/radioactivity",
+                    "half maximal inhibitory concentration (IC50)",
+                    "nM",
+                    "<",
+                    "25",
+                ],
+                ["http://iedb.org/assay/3", *common, "purified MHC", "half life", "min", ">", "120"],
+            ]
+            if getattr(request, "param", None) == "three_peptides":
+                rows = [
+                    [row[0] + str(group), *row[1:3], peptide, *row[4:]]
+                    for group, peptide in enumerate(("SLYNTVATL", "ACDEFGHIK", "LMNPQRSTV"))
+                    for row in rows
+                ]
+            missing_fields = [
+                "Submission ID",
+                "Title",
+                "Epitope | Species",
+                "Host Age",
+                "Host | Disease",
+                "Host | Disease Stage",
+                "Antigen Processing Comments",
+                "Assay Comments",
+                "Effector Cells | Source Tissue",
+                "Assay | Culture Condition",
+                "Host | MHC Types Present",
+            ]
+            fields.extend(missing_fields)
+            rows = [row + [""] * len(missing_fields) for row in rows]
+            source = tmp_path / "iedb.csv"
+            with source.open("w", newline="") as handle:
+                writer = csv.writer(handle)
+                writer.writerow([""] * len(fields))
+                writer.writerow(fields)
+                writer.writerows(rows)
+            downloads.register("iedb", source)
+>           builder.build_observations(build_mappings=False)
+
+tests/test_frozen_hitlist.py:140:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../hitlist-release-2.0.40/hitlist/builder.py:861: in build_observations
+    published = publish_dataset(
+../../../../hitlist-release-2.0.40/hitlist/dataset.py:222: in publish_dataset
+    for name, path in materialize(
+../../../../shared-virtual-env/lib/python3.12/site-packages/datacache/materialization.py:413: in materialize
+    builder(dict(source_paths), dict(output_paths))
+../../../../hitlist-release-2.0.40/hitlist/dataset.py:216: in staged
+    build({name: Path(path) for name, path in source_paths.items()})
+../../../../hitlist-release-2.0.40/hitlist/builder.py:837: in build
+    with ContributorCollector() as provenance:
+         ^^^^^^^^^^^^^^^^^^^^^^
+../../../../hitlist-release-2.0.40/hitlist/provenance.py:212: in __enter__
+    self._check_space(force=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <hitlist.provenance.ContributorCollector object at 0x12a6a5640>
+force = True
+
+    def _check_space(self, *, force=False):
+        now = time.monotonic()
+        if not force and now < self._next_space_check:
+            return
+        self._next_space_check = now + 1
+        for directory in {self.scratch_dir, self._output_directory} - {None}:
+            free = shutil.disk_usage(directory).free
+            if free <= self.min_free_bytes:
+>               raise self._storage_error(
+                    f"{directory} has only {free / 1024**3:.3f} GiB available"
+                )
+E               hitlist.provenance.ProvenanceStorageError: Contributor build stopped: /var/folders/qm/qf74v01n2s12j3w0h1yrx4l00000gn/T has only 0.341 GiB available. Scratch directory: /var/folders/qm/qf74v01n2s12j3w0h1yrx4l00000gn/T; database limit: 16.000 GiB; free-space reserve: 1.000 GiB. Free space or choose HITLIST_PROVENANCE_SCRATCH_DIR (default: TMPDIR); increase HITLIST_PROVENANCE_MAX_GB only on a filesystem with capacity. The required space depends on the source rows and contributor links. Existing published contributor data is preserved; owned scratch and partial output are removed. Retry the build after correcting capacity.
+
+../../../../hitlist-release-2.0.40/hitlist/provenance.py:158: ProvenanceStorageError
+=============================== warnings summary ===============================
+tests/test_assay_ablation.py::TestForwardPass::test_all_variants_forward[a1]
+  /Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/torch/nn/modules/transformer.py:533: UserWarning: The PyTorch API of nested tensors is in prototype stage and will change in the near future. We recommend specifying layout=torch.jagged when constructing a nested tensor, as this layout receives active development, has better operator coverage, and works with torch.compile. (Triggered internally at /Users/runner/work/pytorch/pytorch/aten/src/ATen/NestedTensorImpl.cpp:181.)
+    output = torch._nested_tensor_from_mask(
+
+tests/test_curriculum_and_init.py::TestDeliberateInitSurvives::test_zero_init_embeddings_are_not_clobbered
+  /Users/iskander/code/presto/.worktrees/shared-training/presto/tests/test_curriculum_and_init.py:102: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+  Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:821.)
+    assert float(model.excision_head.length_preference.weight.abs().sum()) == 0.0
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+ERROR tests/test_coverage_preflight.py::test_selected_sources_reach_census_with_competing_inputs[False-merged_tsv-relative_deficit_v2-three_peptides]
+ERROR tests/test_coverage_preflight.py::test_selected_sources_reach_census_with_competing_inputs[False-hitlist-absolute_deficit_v1-three_peptides]
+ERROR tests/test_coverage_preflight.py::test_selected_sources_reach_census_with_competing_inputs[False-hitlist-relative_deficit_v2-three_peptides]
+ERROR tests/test_coverage_preflight.py::test_selected_sources_reach_census_with_competing_inputs[True-merged_tsv-relative_deficit_v2-three_peptides]
+ERROR tests/test_coverage_preflight.py::test_selected_sources_reach_census_with_competing_inputs[True-hitlist-absolute_deficit_v1-three_peptides]
+ERROR tests/test_coverage_preflight.py::test_selected_sources_reach_census_with_competing_inputs[True-hitlist-relative_deficit_v2-three_peptides]
+2923 passed, 4 skipped, 2 warnings, 6 errors in 386.09s (0:06:26)

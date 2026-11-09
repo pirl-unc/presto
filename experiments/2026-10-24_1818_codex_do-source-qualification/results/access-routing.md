@@ -1,0 +1,3 @@
+# Official access routing
+
+The legacy PMC OA service returned HTTP404. Current official documentation says this service was retired in August2026: https://pmc.ncbi.nlm.nih.gov/tools/oa-service/. This failure is not evidence of absent supplementary data. Use the publicly documented anonymous PMC Cloud Service, https://pmc.ncbi.nlm.nih.gov/tools/pmcaws and https://pmc-oa-opendata.s3.amazonaws.com/README.txt, first listing article-specific version prefixes. No login, payment or access-control bypass is involved. Europe PMC fullTextXML independently returned HTTP500; that receipt remains an access failure. Repository descriptor and complete embedded file inventory retrieved successfully. Publisher DOI resolved to its public redirect page, not article full text.

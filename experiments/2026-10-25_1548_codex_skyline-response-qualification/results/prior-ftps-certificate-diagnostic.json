@@ -1,0 +1,27 @@
+{
+  "purpose": "Public certificate inspection only; no login or file request",
+  "argv": [
+    "/opt/homebrew/bin/openssl",
+    "s_client",
+    "-connect",
+    "ftp.peptideatlas.org:21",
+    "-starttls",
+    "ftp",
+    "-servername",
+    "ftp.peptideatlas.org",
+    "-verify_hostname",
+    "ftp.peptideatlas.org",
+    "-showcerts"
+  ],
+  "exit_code": 0,
+  "verification_messages": [
+    "verify error:num=62:hostname mismatch",
+    "verify return:1",
+    "verify return:1",
+    "verify return:1",
+    "verify error:num=10:certificate has expired",
+    "verify return:1",
+    "verify return:1"
+  ],
+  "certificate_identity": "subject=CN=isbscience.org\nissuer=C=GB, O=Sectigo Limited, CN=Sectigo Public Server Authentication CA DV R36\nX509v3 Subject Alternative Name: \n    DNS:isbscience.org, DNS:*.isbscience.org, DNS:*.systemsbiology.net, DNS:*.systemsbiology.org\n"
+}

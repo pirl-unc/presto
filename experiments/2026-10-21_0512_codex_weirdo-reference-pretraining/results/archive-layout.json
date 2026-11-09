@@ -1,0 +1,69 @@
+{
+  "path": "/Users/iskander/code/weirdo/data/category-splits/splits.npz",
+  "arrays": [
+    {
+      "name": "train_kmers.npy",
+      "shape": [
+        3000000
+      ],
+      "dtype": "<U8",
+      "fortran": false
+    },
+    {
+      "name": "train_masks.npy",
+      "shape": [
+        3000000
+      ],
+      "dtype": "uint16",
+      "fortran": false
+    },
+    {
+      "name": "val_kmers.npy",
+      "shape": [
+        300000
+      ],
+      "dtype": "<U8",
+      "fortran": false
+    },
+    {
+      "name": "val_masks.npy",
+      "shape": [
+        300000
+      ],
+      "dtype": "uint16",
+      "fortran": false
+    },
+    {
+      "name": "test_kmers.npy",
+      "shape": [
+        600000
+      ],
+      "dtype": "<U8",
+      "fortran": false
+    },
+    {
+      "name": "test_masks.npy",
+      "shape": [
+        600000
+      ],
+      "dtype": "uint16",
+      "fortran": false
+    },
+    {
+      "name": "all_kmers.npy",
+      "shape": [
+        4000000
+      ],
+      "dtype": "<U8",
+      "fortran": false
+    },
+    {
+      "name": "all_masks.npy",
+      "shape": [
+        4000000
+      ],
+      "dtype": "uint16",
+      "fortran": false
+    }
+  ]
+}

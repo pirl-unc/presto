@@ -1,0 +1,51 @@
+{
+  "status": "admitted",
+  "splits": {
+    "train": {
+      "n_peptide_rows": 492,
+      "n_response_groups": 984,
+      "n_components": 361,
+      "n_observations": 2952,
+      "n_conditions": 2,
+      "weight_sum": 1.0
+    },
+    "val": {
+      "n_peptide_rows": 96,
+      "n_response_groups": 192,
+      "n_components": 69,
+      "n_observations": 576,
+      "n_conditions": 2,
+      "weight_sum": 1.0
+    },
+    "test": {
+      "n_peptide_rows": 129,
+      "n_response_groups": 258,
+      "n_components": 82,
+      "n_observations": 774,
+      "n_conditions": 2,
+      "weight_sum": 1.0
+    }
+  },
+  "n_total_table9_peptide_rows": 1309,
+  "n_source_measurements_table9_and_11": 158508,
+  "n_admitted_peptide_rows": 717,
+  "exclusion_group_counts": {
+    "candidate_parent_without_two_digest_sequences": 1176,
+    "noncanonical_candidate_parent": 8
+  },
+  "n_used_parent_sequences": 920,
+  "n_parent_condition_surrogates": 1840,
+  "n_reference_alternatives_retained": 2450,
+  "model_input_directory": "/private/tmp/presto-modular-model/data/apc_response_recipes/2026-10-24_0449_codex_apc-precursor-response/model-inputs",
+  "files": {
+    "parents.json.gz": "8e2134101a2a8676532e376a7a3d6623f3fe96cfceeee49ad377e88534d17707",
+    "dispositions.json.gz": "c2fcf8a7d7a739a80daa50534334f3427860343ca7f001469b78d1518e638a95",
+    "groups.json.gz": "5f2f98ce09fd6d1b80ca4cef985b3a224ff66088291019e34e2350919894e94c",
+    "precursor-estimates.json.gz": "ed5d0a531200cbe21297da1ae30e56c384425a09f82deece7f945828e1f17318"
+  },
+  "source_recipe_sha256": "93ef0b2368c077330d5621d0017b91f7709d17e543fb6d7d17fc1a92ab2250f6",
+  "seconds": 7.642231167003047,
+  "peak_rss_bytes": 1447526400,
+  "held_out_metrics_evaluated": false,
+  "scope": "MHC-bound APC response with condition-surrogate digest input; not free concentrations"
+}

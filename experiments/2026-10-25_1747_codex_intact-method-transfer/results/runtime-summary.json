@@ -1,0 +1,19 @@
+{
+  "n_stages": 7,
+  "all_passed": true,
+  "elapsed_seconds": 17.84406695800135,
+  "peak_process_tree_or_os_rss_bytes": 774225920,
+  "minimum_disk_free_after_bytes": 15534161920,
+  "conditions_trained": 0,
+  "predictions": 8925,
+  "stage_scope": [
+    "admission",
+    "independent admission replay",
+    "frozen predictions plus algebra checks",
+    "outcome scoring",
+    "independent metrics/bootstrap replay",
+    "first figure",
+    "layout correction"
+  ],
+  "visual_review": "v2 PNG inspected; no clipping; initial clipped title preserved"
+}

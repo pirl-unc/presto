@@ -1,0 +1,52 @@
+{
+  "commit": "f4d3a6d0f1933162f9ac6eac42ac1b134c8a27dc",
+  "hitlist_version": "2.0.15",
+  "package_path": "/private/tmp/presto-modular-model/data/native_peptidome_source_audit/2026-10-24_0117_codex_native-peptidome-admission/hitlist-f4d3a6d-package",
+  "package_manifest_sha256": "b15de0b80c9fff1aad5b60f66e4e5b083c7f585ea01e723209a482182e26c32b",
+  "n_source_rows": 10564,
+  "n_source_row_values_replayed": 328880,
+  "n_ratio_slots_replayed": 61908,
+  "n_query_rows": 61908,
+  "coverage": {
+    "absolute_quantity_claim": false,
+    "by_censoring_status": {
+      "exact": 34763,
+      "missing_signal": 11330,
+      "overlapping_peak": 60,
+      "source_declared_bound": 15753,
+      "unresolved_text": 2
+    },
+    "by_source_file": {
+      "dasgupta_s1.xlsx": 6073,
+      "dasgupta_s2.xlsx": 73,
+      "gelman_s1.xlsx": 4245,
+      "gelman_s2.xlsx": 173
+    },
+    "by_value_status": {
+      "missing_source_value": 4113,
+      "reported_bound": 15753,
+      "reported_exact": 34763,
+      "reported_nonnumeric": 2,
+      "reported_not_detected": 7217,
+      "reported_overlap": 60
+    },
+    "n_contexts": 33,
+    "n_deferred_heatmap_rows": 246,
+    "n_lineage_rows": 61908,
+    "n_measurements": 61908,
+    "n_possible_cross_paper_reuse_groups": 0,
+    "n_primary_ratio_rows": 10318,
+    "n_source_assets": 4,
+    "n_source_rows": 10564,
+    "native_rows_preserved": true,
+    "processing_or_MHC_label_claim": false,
+    "source_assets_snapshotted": true
+  },
+  "n_cross_paper_candidate_groups": 830,
+  "n_tentative_candidate_exact_slots": 219,
+  "seconds": 14.598383333999664,
+  "peak_rss_bytes": 1046462464,
+  "source_value_replay_pass": true,
+  "training_admission": false,
+  "training_admission_reason": "Lineage, tentative identification, modification and context semantics need shared correction/adjudication."
+}

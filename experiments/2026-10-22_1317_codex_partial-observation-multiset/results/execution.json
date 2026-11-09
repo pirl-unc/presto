@@ -1,0 +1,27 @@
+{
+  "argv": [
+    "/private/tmp/presto-modular-model/experiments/2026-10-22_1317_codex_partial-observation-multiset/reproduce/source/launch.py",
+    "run",
+    "--output",
+    "/private/tmp/presto-modular-model/experiments/2026-10-22_1317_codex_partial-observation-multiset/results/run"
+  ],
+  "git_commit": "942cb62c925f01b6aaaadd96d3a1b41270e02fa0",
+  "git_status": "M tasks/todo.md\n?? experiments/2026-10-22_1317_codex_partial-observation-multiset/analysis/\n?? experiments/agents/codex/plans/full-ic50-fitting.md\n?? tasks/modular_model/trajectory-sampling-issue.md",
+  "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "torch": "2.14.1",
+  "numpy": "2.5.4",
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "device": "cpu",
+  "modal_gpu": null,
+  "threads": 1,
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "PYTHONHASHSEED": "0"
+  },
+  "sources": {
+    "launch.py": "4d53ac3fdf1a8fa3bc72de14fa010b7db757a13315b110b048f9a358a2cb11b9",
+    "base.py": "e66c3a5cffc0d512989094ad653ba7ea4f3ff56778d3b298fecb8e809eee5945"
+  }
+}

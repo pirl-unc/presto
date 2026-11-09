@@ -1,0 +1,101 @@
+{
+  "rows": 1008,
+  "columns": 29,
+  "cells_verified": 29261,
+  "source_sha256": "820934b3c7faaf7010f7b168919dac8953d0b3b77922c24bca6f542808e017d0",
+  "duplicate_fields_preserved_by_position": [
+    {
+      "column_1based": 25,
+      "name": "comment[modification parameters]",
+      "counts": {
+        "NT=Carbamidomethyl;AC=UNIMOD:4;TA=C;MT=Fixed": 1008
+      }
+    },
+    {
+      "column_1based": 26,
+      "name": "comment[modification parameters]",
+      "counts": {
+        "NT=Acetyl;AC=UNIMOD:1;PP=Protein N-term;MT=Variable": 1008
+      }
+    },
+    {
+      "column_1based": 27,
+      "name": "comment[modification parameters]",
+      "counts": {
+        "NT=Oxidation;AC=UNIMOD:35;MT=Variable;TA=M": 1008
+      }
+    }
+  ],
+  "distinct_raw_files": 1008,
+  "metadata_value_counts": {
+    "characteristics[organism]": {
+      "homo sapiens": 1008
+    },
+    "characteristics[organism part]": {
+      "not applicable": 1008
+    },
+    "characteristics[disease]": {
+      "not available": 1008
+    },
+    "characteristics[age]": {
+      "not available": 1008
+    },
+    "characteristics[sex]": {
+      "not available": 1008
+    },
+    "characteristics[cell type]": {
+      "not available": 1008
+    },
+    "characteristics[biological replicate]": {
+      "1": 1008
+    },
+    "material type": {
+      "cell": 1008
+    },
+    "characteristics[developmental stage]": {
+      "not available": 1008
+    },
+    "characteristics[strain or breed]": {
+      "not available": 1008
+    },
+    "assay name": {
+      "run 1": 1008
+    },
+    "technology type": {
+      "proteomic profiling by mass spectrometry": 1008
+    },
+    "comment[sdrf version]": {
+      "v1.1.0": 1008
+    },
+    "comment[sdrf template]": {
+      "NT=ms-proteomics;VV=v1.1.0": 1008
+    },
+    "comment[proteomics data acquisition method]": {
+      "NT=Data-Dependent Acquisition;AC=PRIDE:0000627": 1008
+    },
+    "comment[technical replicate]": {
+      "1": 1008
+    },
+    "comment[fraction identifier]": {
+      "1": 1008
+    },
+    "comment[label]": {
+      "AC=MS:1002038;NT=label free sample": 1008
+    },
+    "comment[instrument]": {
+      "NT=Orbitrap Fusion;AC=MS:1002416": 1008
+    },
+    "comment[precursor mass tolerance]": {
+      "20 ppm": 1008
+    },
+    "comment[fragment mass tolerance]": {
+      "0.03 Da": 1008
+    },
+    "comment[dissociation method]": {
+      "AC=MS:1000422;NT=HCD": 1008
+    },
+    "comment[cleavage agent details]": {
+      "AC=MS:1001956;NT=unspecific cleavage": 1008
+    }
+  }
+}

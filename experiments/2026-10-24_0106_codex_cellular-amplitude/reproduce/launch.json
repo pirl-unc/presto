@@ -1,0 +1,70 @@
+{
+  "registered_at": "2026-10-24T01:06:11.535884-04:00",
+  "agent_model": "Codex / GPT-6",
+  "source_commit": "ebb70e3f4a86fd6ba33f9e2422dd0df63d56479b",
+  "dirty_status": " M tasks/todo.md\n",
+  "prior_family": "/private/tmp/presto-modular-model/experiments/2026-10-24_0043_codex_digestion-cellular-transfer",
+  "source_hashes": {
+    "/private/tmp/presto-modular-model/experiments/agents/codex/plans/cellular-transfer-amplitude.md": "45e078170c9c355054d15418b399a181f5756a73e58980896cd9919312cebc24",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0043_codex_digestion-cellular-transfer/reproduce/launch.json": "67771078f10473841b25af74c169971c33fff1a3db8d2b368838c63d99345dc0",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0043_codex_digestion-cellular-transfer/code/verify.py": "5c505abdfda511b6c3eba9f89dffd1d80e4ac9874bc78da2fc410c99f3694f44",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0043_codex_digestion-cellular-transfer/results/exposure.json": "1511dff038e9c95035891db7cefa5795be46e25ecdde644be169466649082dbe",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0043_codex_digestion-cellular-transfer/results/closure.json": "e03e6bdf2735401969ca8910bf44391b86b3e63c0e6ff18fb7a426f09c2ff965",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0043_codex_digestion-cellular-transfer/reproduce/closure-hashes.json": "70653d95385200965559c2ff21a748e5e969b8c101714d19f052f0815a5db7ca",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0043_codex_digestion-cellular-transfer/results/uniform_composition/predictions.jsonl.gz": "255fc87b27dbd62905e374ab027fcf585f073cd553ab4b1825b77f03aba1ef00",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0043_codex_digestion-cellular-transfer/results/uniform_composition/evaluation.json": "5770eb8e9c243e58d54479af38906355540ee83aa76564314bb7c100b3ec7a34",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0043_codex_digestion-cellular-transfer/results/uniform_composition/independent-verification.json": "3a7f01c8a7a241c83cc5d96e514e37632f3fae290d349ea0a0e24cf7a5a160ef",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0043_codex_digestion-cellular-transfer/results/uniform_rates/predictions.jsonl.gz": "38742b60d79c4f8c866f1208f1491c4a7dbba02de2de8eb5a6dacc200efc682c",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0043_codex_digestion-cellular-transfer/results/uniform_rates/evaluation.json": "b6b1c1020282126542aab37976ba81e44b41ed890ad8d8db4484ff528c6f9fad",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0043_codex_digestion-cellular-transfer/results/uniform_rates/independent-verification.json": "295f7e187ff2916b6464c34e7f7bbb0cf9fc9db502162ee8853058cce16f0f40",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0043_codex_digestion-cellular-transfer/results/uniform_rates/checkpoint.json": "035db29649ad795f1eedc7e1761f8d0f348d2619186eed6bd0ba87168f8c5774",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0043_codex_digestion-cellular-transfer/results/adjacent_rates/predictions.jsonl.gz": "eb895eb57e05ea7daed4d09bebd46a183f030c722fc01342777a5703ef74b534",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0043_codex_digestion-cellular-transfer/results/adjacent_rates/evaluation.json": "16535dce05d3cc1a937f7a514f1633d2a3799403e18265ea65010729a965c341",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0043_codex_digestion-cellular-transfer/results/adjacent_rates/independent-verification.json": "757d9269a6a01c0be01b6c4479eeae356366d4afc9e42d19ddde8dd13d7e6c8a",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0043_codex_digestion-cellular-transfer/results/adjacent_rates/checkpoint.json": "6a8da5392e7c8d2ed0af510afdfdec537c8b14ea66da90de168630487fb86c62",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0043_codex_digestion-cellular-transfer/results/wider_rates/predictions.jsonl.gz": "e6b243eb8096219e02ee2a04091ddc8ea7203e350853e8d6ad3e888af5c6ad76",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0043_codex_digestion-cellular-transfer/results/wider_rates/evaluation.json": "904360b9ef4a2bb447f651e46d479f49e1e0a6fa34fa5baf2fe7554bc199c462",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0043_codex_digestion-cellular-transfer/results/wider_rates/independent-verification.json": "0b12a492579e0ef2e481b2b140ec4723a12316225fdfce45d05c68b52a3a47aa",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0043_codex_digestion-cellular-transfer/results/wider_rates/checkpoint.json": "92a09cf0339e1a523702b0bbe3c6c00f655b4a0659071320a00e6b68aa25e433"
+  },
+  "arms": [
+    "uniform_rates",
+    "adjacent_rates",
+    "wider_rates"
+  ],
+  "allowed_splits": [
+    "train",
+    "validation"
+  ],
+  "objective": "sum_train w * (beta * frozen_prediction - original_target)^2; beta >= 0",
+  "fit": "one exact scalar weighted least squares per arm; train only",
+  "test_policy": "14 historically exposed test parents excluded; validation is also historically inspected",
+  "caps": {
+    "producer_seconds": 60,
+    "peak_rss_bytes": 2147483648
+  },
+  "verification_tolerance": {
+    "source_absolute": 1e-09,
+    "coefficient_absolute": 1e-10,
+    "metrics_absolute": 1e-09,
+    "kkt_absolute": 1e-10
+  },
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "MPLCONFIGDIR": "/private/tmp/presto-boundary-matplotlib"
+  },
+  "metrics": [
+    "equal-parent-condition-candidate MSE/RMSE and weighted R2 relative to uniform",
+    "pooled Pearson/Spearman and prediction/target SD",
+    "forward KL(target||prediction)",
+    "per-parent and exposure strata",
+    "parents improved versus each control"
+  ],
+  "argv": [
+    "sh",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0106_codex_cellular-amplitude/reproduce/launch.sh"
+  ]
+}

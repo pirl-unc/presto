@@ -1,0 +1,3 @@
+# Preserved verification-reporting failure
+
+The independent verifier passed original membership/targets/weights, every prediction, reference mass and all 2,121 gradients, then failed a 1e-8 raw Spearman agreement assertion. Direct summation and sparse multiplication can order nearly tied predictions differently. The amended verifier preserves both raw rank metrics, their exact difference and an independent direct-sum prediction dump; it does not loosen a rank-agreement threshold or claim the ranks match. No fit, labels, coefficients or predictions are replaced. The size and practical relevance of the discrepancy remain to be measured by the amended run.

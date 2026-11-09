@@ -1,0 +1,47 @@
+{
+  "registered_at": "2026-10-24T02:15:38.179556+00:00",
+  "agent": "Codex / GPT-6",
+  "commit": "a6c655905247bef41459221a1a2c402361c09a75",
+  "dirty": true,
+  "inputs": {
+    "joint_analytical": {
+      "path": "/private/tmp/presto-modular-model/experiments/2026-10-23_2108_codex_fragment-biological-fit/results/analytical/predictions.jsonl.gz",
+      "sha256": "4acdb9590f40fd78312bd7aefd2b5b16aefa3be59bc3db02afc1d0312c558984"
+    },
+    "joint_fragment": {
+      "path": "/private/tmp/presto-modular-model/experiments/2026-10-23_2108_codex_fragment-biological-fit/results/fragment/predictions.jsonl.gz",
+      "sha256": "f7af5fad4c991a57c9007a0afc3c09d64d7291653289a2cfb14f882d2ade4f8f"
+    },
+    "profiled_analytical": {
+      "path": "/private/tmp/presto-modular-model/experiments/2026-10-23_2201_codex_profiled-fragment-fit/results/analytical/predictions.jsonl.gz",
+      "sha256": "52387c5b9774506c8e2d7184656323aefc731c60a2f5b2490615cb258fd46999"
+    },
+    "long_exact": {
+      "path": "/private/tmp/presto-modular-model/experiments/2026-10-23_1501_codex_shared-observation/results/sequence_response-predictions.jsonl.gz",
+      "sha256": "f0977fc99d8988e6b60b1ea5d29a1533e2974e7ac2a2b30c3a06308f01734bd9"
+    },
+    "long_hybrid": {
+      "path": "/private/tmp/presto-modular-model/experiments/2026-10-23_1501_codex_shared-observation/results/conditional_sequence_response-predictions.jsonl.gz",
+      "sha256": "9b80c734edc27e6d8499615c6c246d52e53bcc8dfb196777ce341444774ba48f"
+    }
+  },
+  "reference": "profiled_analytical",
+  "train_rows": 90630,
+  "weights": "Original equal parent/condition/curve/time hierarchical weights, unchanged",
+  "source_manifest": "5f616170b5514cb4d8f0c7b7843d232959e9514eebbca6483f976e17b0846615",
+  "optimizer_updates": 0,
+  "test_policy": "Training-only posthoc residual arithmetic; no new development/test evaluation or model promotion",
+  "runtime_limits": {
+    "seconds": 120,
+    "rss_bytes": 4294967296
+  },
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "argv": [
+    "sh",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_2214_codex_residual-decomposition/reproduce/launch.sh"
+  ]
+}

@@ -1,0 +1,47 @@
+[
+  {
+    "arm": "uniform_rates",
+    "repetition_seconds": [
+      0.10489187500206754,
+      0.0761115420027636,
+      0.07502541597932577
+    ],
+    "projected": 690,
+    "seconds": 690,
+    "admitted": true
+  },
+  {
+    "arm": "adjacent_rates",
+    "repetition_seconds": [
+      0.07527379202656448,
+      0.07611120899673551,
+      0.07589700003154576
+    ],
+    "projected": 517,
+    "seconds": 517,
+    "admitted": true
+  },
+  {
+    "arm": "wider_rates",
+    "repetition_seconds": [
+      0.07739033398684114,
+      0.07691345794592053,
+      0.07582399999955669
+    ],
+    "projected": 525,
+    "seconds": 525,
+    "admitted": true
+  },
+  {
+    "arm": "wider_hybrid",
+    "repetition_seconds": [
+      1.2938980829785578,
+      1.2860968330060132,
+      1.304026875004638
+    ],
+    "prepare_seconds": 0.11886024998966604,
+    "projected": 8598,
+    "seconds": 8598,
+    "admitted": false
+  }
+]

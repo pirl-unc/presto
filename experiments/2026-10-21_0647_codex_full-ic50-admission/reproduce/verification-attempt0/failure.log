@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/private/tmp/presto-modular-model/experiments/2026-10-21_0647_codex_full-ic50-admission/analysis/verify.py", line 79, in <module>
+    catalog = defaultdict(lambda raw=raw: defaultdict(list))
+                                     ^^^
+NameError: name 'raw' is not defined

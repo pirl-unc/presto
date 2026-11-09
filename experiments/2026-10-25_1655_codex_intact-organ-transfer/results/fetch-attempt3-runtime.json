@@ -1,0 +1,68 @@
+{
+  "stage": "fetch",
+  "attempt": 3,
+  "started_utc": "2026-10-25T17:25:50.835441+00:00",
+  "status": "passed",
+  "child_launched": true,
+  "exit_code": 0,
+  "resource_violation": null,
+  "memory_admission": {
+    "metric": "macos_free_plus_speculative",
+    "bytes": 23149920256
+  },
+  "disk_free_before_bytes": 15879745536,
+  "request_set_sha256": "e331666b70a1e294b7747848c468c6c052b386497a052bb014c7b329ac075ccc",
+  "request_set": {
+    "action": "original_F3_modification_cell_replay",
+    "task_source": "analysis/modification_cells.py",
+    "source_records": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/intact_degradomics_canonical/2026-10-25_0021_codex_intact-canonical/intact_degradomics/typed/source_records.parquet",
+    "assignments": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/intact_degradomics_canonical/2026-10-25_0021_codex_intact-canonical/intact_degradomics/typed/assignments.parquet",
+    "workbook": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/intact_degradomics_canonical/2026-10-25_0021_codex_intact-canonical/intact_degradomics/source_assets/F3_SF7_SearchResults.xlsx",
+    "source_sha256": {
+      "code/fetch.py": "ae0782737c2e07627f7a473dad95c4e7c579429f59aa962a7706641846d4caa7",
+      "reproduce/source/fetch.py": "ae0782737c2e07627f7a473dad95c4e7c579429f59aa962a7706641846d4caa7",
+      "analysis/modification_cells.py": "b6a29902923dcac6bdb1e25d3f65c15b969c1afb6e23a558e200b9e7c7a5b4eb",
+      "reproduce/source/modification_cells.py": "b6a29902923dcac6bdb1e25d3f65c15b969c1afb6e23a558e200b9e7c7a5b4eb",
+      "reproduce/launch-safe.sh": "a22afcd1eb1c7eebf8749f63b01f57af7fab2908d6ae9a5c6c29cb25abf33178"
+    },
+    "input_sha256": {
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/intact_degradomics_canonical/2026-10-25_0021_codex_intact-canonical/intact_degradomics/typed/source_records.parquet": "aca26d7800f806f9ffbc707901b9471b25a826de5669bfc67a0b81f15f3ae58f",
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/intact_degradomics_canonical/2026-10-25_0021_codex_intact-canonical/intact_degradomics/typed/assignments.parquet": "bf72e96a94fe266e7e3c351d24ad8dca89d656f9bf2a04a239768714a5c267e1",
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/intact_degradomics_canonical/2026-10-25_0021_codex_intact-canonical/intact_degradomics/source_assets/F3_SF7_SearchResults.xlsx": "71f6ef6327387a0b739c358015a49f9b39c7bc6f3703e6cc413ee9eaf307f55f"
+    },
+    "bootstrap_environment": {
+      "PYTHONSAFEPATH": "1"
+    }
+  },
+  "environment": {
+    "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "versions": {
+      "requests": "2.34.2",
+      "psutil": "7.2.2"
+    },
+    "overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUNBUFFERED": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "PYTHONPATH": "/Users/iskander/code/presto/.worktrees/hitlist-dilution-release"
+    }
+  },
+  "child_pid": 48632,
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "-B",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1655_codex_intact-organ-transfer/code/fetch.py",
+    "--requests",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1655_codex_intact-organ-transfer/reproduce/requests/fetch-3.json"
+  ],
+  "elapsed_seconds": 0.6195225829724222,
+  "peak_observed_process_tree_rss_bytes": 217022464,
+  "peak_child_process_rss_bytes": 217497600,
+  "rss_poll_interval_seconds": 0.05,
+  "disk_free_after_bytes": 15878475776
+}

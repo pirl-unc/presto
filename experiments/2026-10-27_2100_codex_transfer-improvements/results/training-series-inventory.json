@@ -1,0 +1,28 @@
+{
+  "scope": "descriptive training-only provenance inventory; no new labels, fitting, or held-out access",
+  "source_sha256": "79e44788883a4668fb790191e2079b46bb28e3ea06314e75ace3aa25c65b096c",
+  "training_rows": 21636,
+  "classes": {
+    "I": 14375,
+    "II": 7261
+  },
+  "field_present_rows": {
+    "pmid": 12053,
+    "assay_iri": 21636,
+    "assay_method": 21636,
+    "reference_title": 21636,
+    "submission_id": 9659
+  },
+  "same_mhc_assay_identifiers_with_multiple_peptides": 0,
+  "candidate_same_mhc_publication_method_groups_with_nested_peptides": {
+    "I": 106,
+    "II": 5
+  },
+  "candidate_terminally_nested_sequence_pairs": {
+    "I": 1611,
+    "II": 39
+  },
+  "candidate_definition": "measured exact peptides in the same MHC/publication/method/unit group; total terminal trimming1..4; shorter length>=8",
+  "admission_decision": "none: publication/method agreement does not verify matched assay conditions or plate/panel membership; no rank labels derived",
+  "next_requirement": "curated experimental-series/condition membership and family-disjoint splits before a measured-series ranking experiment"
+}

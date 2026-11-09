@@ -1,0 +1,32 @@
+binding.parquet scanned 814268 candidates 140846
+other_assays.parquet scanned 26537 candidates 140846
+partitioned 140846 rows
+{
+  "status": "admitted",
+  "raw_rows": 840805,
+  "candidate_rows": 140846,
+  "partition_admitted": 140846,
+  "deduplicated_new_rows": 140846,
+  "total_rows": 168210,
+  "endpoints": [
+    "ec50",
+    "half_life",
+    "ic50",
+    "kd",
+    "kd_via_ec50",
+    "kd_via_ic50",
+    "koff"
+  ],
+  "cohort": "/Users/iskander/code/presto/.worktrees/shared-training/presto/data/modular_cohorts/2026-10-27-purified-multi-assay",
+  "manifest_sha256": "8bfb2db9b6e491ef1710d878053170e3f9a927661dc4770ea43e0559eee27eb3",
+  "source_hashes": {
+    "binding.parquet": "2b3f6ea2dd647e7fc54d214eef420feaebc4e81fab97ffc0565a2de1f8695ba0",
+    "other_assays.parquet": "c40f5227ded408830885ecba8336dbdd701172df9573b0d32e5e8a5f8fc947c2"
+  },
+  "source_catalog_sha256": "ddc3493c64f4328de174a6c2cda1f007ec2f93a1ef649add25d2ef9c1720add1",
+  "historical_membership_sha256": "8959e60c0d9b8049aec25095b9c354d456b48f97ba8fb31d7b786e2861113e99",
+  "seconds": 719.2005566669977,
+  "synthetic_labels": 0,
+  "pretraining": false,
+  "original_ic50_files_byte_identical": true
+}

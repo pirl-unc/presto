@@ -1,0 +1,41 @@
+{
+  "call_id": "fc-01M64R71D8F2XQ3R5GMD5PSM6X",
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/__main__.py",
+    "run",
+    "--detach",
+    "experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/audit_late_candidates.py"
+  ],
+  "source_sha256": "e9f3488359259dc022d8d591f662b90d892ea93ae5e1bf1708e17ee7c5a54417",
+  "git_head": "865eac08c75b205322526197c3ab17f8106f7304",
+  "dirty_status": " M experiments/2026-10-29_1653_codex_measurement-curation-recovery/README.md\n M experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/acquire_serial.py\n M experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/admit_recovery.py\n M experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/recover_strazar.py\n M experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/launch.json\n M experiments/2026-10-29_1956_codex_curated-data-retrain/analysis/compare_parent.py\n M experiments/2026-10-29_1956_codex_curated-data-retrain/dashboard.html\n M experiments/agents/codex/ideas.md\n M experiments/agents/codex/plans/2026-10-29_curated-data-retrain.md\n M experiments/agents/codex/plans/2026-10-29_measurement-curation-recovery.md\n M experiments/experiment_log.md\n M tasks/todo.md\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/attempts/late-admission-environment/\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/audit_late_candidates.py\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/recover_late.py\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/verify_late_recovery.py\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/acquisition-strazar-late-launch.json\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/hitlist-publication-verification-retry.json\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/recovery-admission-late-call.json\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/recovery-admission-late-launch.json\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/recovery-admission-late-v2-call.json\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/recovery-admission-late-v2-launch.json\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/recovery-late-call.json\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/recovery-late-launch.json\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/recovery-late-manifest.json\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/source/acquire_serial-acquisition-strazar-late.py\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/source/late-candidate-audit.py\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/source/late-recover_late.py\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/source/late-recover_strazar.py\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/source/recovery-admission-late-v2/\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/source/recovery-admission-late/\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/reproduce/source/verify_late_recovery.py\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/results/acquisition-strazar-late.json\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/results/hitlist-pypi-2.1.3-verified.json\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/results/hitlist-release-2.1.3.json\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/results/recovery-admission-late-v2.json\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/results/recovery-late-verification-initial.json\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/results/recovery-late-verification.json\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/results/recovery-late.json\n?? experiments/2026-10-29_1956_codex_curated-data-retrain/.pipeline.lock\n?? experiments/2026-10-29_1956_codex_curated-data-retrain/reproduce/analysis-before-predictions/\n?? experiments/2026-10-29_1956_codex_curated-data-retrain/results/closeout-readiness.json\n?? experiments/2026-10-29_1956_codex_curated-data-retrain/results/curated-multi-s42/\n?? experiments/2026-10-29_1956_codex_curated-data-retrain/results/curated-multi-s43/\n?? experiments/2026-10-29_1956_codex_curated-data-retrain/results/hosted-source-tests.json\n?? experiments/2026-10-29_1956_codex_curated-data-retrain/results/live.json\n?? experiments/2026-10-29_1956_codex_curated-data-retrain/results/worker-preflight-verification.json\n",
+  "started_unix": 1793308460.613664,
+  "requested_gpu": null,
+  "cpu": 4,
+  "memory_mib": 8192,
+  "local_verification": {
+    "status": "passed",
+    "archive_sha256": "6d855faeefc8ad45577c2f7eefedd730e639156f3810edae4072daccaf298a2b",
+    "verified_candidate_observations": 32628,
+    "short_source_observations_by_length": {
+      "8": 262,
+      "7": 186
+    },
+    "heldout_exclusions": 607,
+    "source_sha256": "711636451ee1ff8c16e25b487164dcedaafa7a2766a7bbcb3540b0d4888e4560",
+    "member_hashes_verified": {
+      "contributors.parquet": {
+        "sha256": "f8ab1ac19b72ab8fe5b2bd9e28f22429524f7e6099e8afd56c1db32370eaff58",
+        "bytes": 3700665
+      },
+      "observations.parquet": {
+        "sha256": "ab42d727b3f6cbdef8faf57dc179c48609255f826bf20322ec03138f5019c0d2",
+        "bytes": 2528106
+      },
+      "train.jsonl.gz": {
+        "sha256": "75b7f1a7645ab7ca1658d2a364a8050a7599211c3146316dc2093852cf8d61ef",
+        "bytes": 4476734
+      }
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "hitlist_base": "f4d3a6d0f1933162f9ac6eac42ac1b134c8a27dc",
+  "hitlist_version": "2.0.16",
+  "source_snapshot": "reproduce/source/hitlist",
+  "new_package": "/private/tmp/presto-modular-model/data/native_peptidome_source_audit/2026-10-24_0117_codex_native-peptidome-admission/2026-10-24_0156_codex_tmab-semantic-replay-package",
+  "old_manifest_sha256": "b15de0b80c9fff1aad5b60f66e4e5b083c7f585ea01e723209a482182e26c32b",
+  "new_manifest_sha256": "f84bd8e738a2c14d446956c719cfeaba91bc867a95aebd62dac1c91d3e3a1666",
+  "n_source_rows": 10564,
+  "n_measurement_slots": 61908,
+  "n_candidate_cross_paper_row_groups": 830,
+  "n_candidate_rows": 1660,
+  "n_candidate_groups_with_equal_labels": 552,
+  "n_changed_source_rows": 5493,
+  "n_changed_measurement_slots": 61908,
+  "n_disagreements": 1242,
+  "seconds": 38.98915633303113,
+  "peak_rss_bytes": 1208320000,
+  "independent_specimens": "unresolved",
+  "training_admission": false,
+  "training_admission_reason": "Source candidates are not an independence-qualified native-response recipe."
+}
+Traceback (most recent call last):
+  File "/private/tmp/presto-modular-model/experiments/2026-10-24_0156_codex_tmab-semantic-replay/code/launch.py", line 274, in <module>
+    main()
+  File "/private/tmp/presto-modular-model/experiments/2026-10-24_0156_codex_tmab-semantic-replay/code/launch.py", line 269, in main
+    assert not failures, "See preserved disagreements.json"
+           ^^^^^^^^^^^^
+AssertionError: See preserved disagreements.json

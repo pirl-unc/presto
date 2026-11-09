@@ -1,0 +1,49 @@
+{
+  "registered_at": "2026-10-23T12:57:35.068495-04:00",
+  "agent_model": "Codex / GPT-6",
+  "presto_commit": "aa4c809ef8811b55e35ee13d5e596ecd8d9c1444",
+  "presto_dirty": " M tasks/todo.md\n?? data/availability_recipes/\n?? experiments/2026-10-23_1257_codex_digestion-observation-effects/\n?? experiments/agents/codex/plans/digestion-observation-effects.md\n?? experiments/agents/codex/plans/full-ic50-fitting.md\n?? tasks/modular_model/trajectory-sampling-issue.md\n",
+  "recipe_directory": "/private/tmp/hitlist-digestion-209-review-candidate",
+  "input_hashes": {
+    "/private/tmp/hitlist-digestion-209-review-candidate/manifest.json": "5f616170b5514cb4d8f0c7b7843d232959e9514eebbca6483f976e17b0846615",
+    "/private/tmp/hitlist-digestion-209-review-candidate/examples.json": "8b89735c3a0f4fe11d863dd886118e64b2ff1fb8570b4e01f4d209e5078f3d8c",
+    "/private/tmp/hitlist-digestion-209-review-candidate/components.json": "f671af6267de6e1531027bb14fc4e76f8c3617b94e42c0b7913c8093daed74a9",
+    "/private/tmp/hitlist-digestion-209-review-candidate/recipe.json": "601b1465f9774d0c47db063b80c297a7e49f3f088cdd9ed2607e5a3628de1ef7",
+    "/private/tmp/hitlist-digestion-209-review-candidate/source_tables/filtered_vectors.parquet": "84b20ffbeafed3cb1c9d164b1c2830d62edce42dc4c468564b02211e91245c23",
+    "/private/tmp/hitlist-digestion-209-review-candidate/source_tables/raw_quantities.parquet": "656d7cb70dcc78181ce37685ef2aa60b6ad3e758faf9387c44030224f5cc9154",
+    "/private/tmp/hitlist-digestion-209-review-candidate/source_tables/final_vectors.parquet": "6e75ff952a809e1a867d39e6e03ce1dbb4690d35c7173f36eaecdef463315e85",
+    "/private/tmp/hitlist-digestion-209-review-candidate/source_tables/contexts.parquet": "a1d9dd9a5a689d9e08bbbf94fbff0c1a59b8069a0776af9616e2eb4ba0bf0af6",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_1202_codex_biological-cut-rates/results/predictions.jsonl.gz": "dc415f2b9c7f17944f92141ad146cdbfbf35bc7ac718de459467f80abb9a9403",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_1202_codex_biological-cut-rates/results/training-shape-constraints.json": "bc1e5ef7bc4628b5cf1c2e1607d4d6bd413c01c738cf26d21f151c899bbbb6b2"
+  },
+  "previous_family": "/private/tmp/presto-modular-model/experiments/2026-10-23_1202_codex_biological-cut-rates",
+  "training_only": true,
+  "thresholds": [
+    0,
+    0.3,
+    0.5
+  ],
+  "reference_subtracted_fraction_bins": [
+    0,
+    0.25,
+    0.5,
+    0.75,
+    0.9,
+    0.99,
+    1
+  ],
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "argv": [
+    "sh",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_1257_codex_digestion-observation-effects/reproduce/launch.sh"
+  ],
+  "source_hashes": {
+    "code/analyze.py": "57cd8e9b1fd9b7bbc83d0e278a0e8dfa50a2790f314859b62052e6068a757f7f",
+    "code/layers.py": "3a4ff7426815edf8eb781efa9367f381774774a7681318b6deadd6c5a90d01be"
+  }
+}

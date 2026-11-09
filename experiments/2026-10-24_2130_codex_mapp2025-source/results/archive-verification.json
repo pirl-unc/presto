@@ -1,0 +1,245 @@
+{
+  "selected_members": {
+    "peptides.txt": {
+      "member": "peptides.txt",
+      "bytes": 17177126,
+      "sha256": "903eb19bfeb024449c01f4050a03fde6a8c8f61b92053c06382f39d0c09b0a74"
+    },
+    "summary.txt": {
+      "member": "summary.txt",
+      "bytes": 6108,
+      "sha256": "e6abb32957ae4c29ee8ac4ebae93a37a379ad07dc677ce305087924fa4155c6a"
+    },
+    "parameters.txt": {
+      "member": "parameters.txt",
+      "bytes": 3407,
+      "sha256": "faad20d55079f3abe13103a3b1906ed4d7886afb08c54062ed7f3c747d806a29"
+    }
+  },
+  "original_peptide_rows": 30364,
+  "publisher_rows": 21082,
+  "publisher_unique_sequences": 21082,
+  "quantity_cells_verified": 210820,
+  "matching_quantity_columns": [
+    "Intensity 5424_A549AMP30_Ctrl_1",
+    "Intensity 5426_A549AMP30_Infect_1",
+    "Intensity 5428_A549AMP30_Ctrl_2",
+    "Intensity 5430_A549AMP30_Infect_2",
+    "Intensity 5432_A549AMP30_Ctrl_3",
+    "Intensity 5434_A549AMP30_Infect_3",
+    "Intensity 5440_A549AMP30_Ctrl4_1",
+    "Intensity 5442_A549AMP30_Infect4_1",
+    "Intensity 5444_A549AMP30_Ctrl4_2",
+    "Intensity 5448_A549AMP30_Ctrl4_3"
+  ],
+  "unmatched_publisher_columns": [
+    "Intensity 5450_A549AMP30_Infect4_2",
+    "Intensity 5454_A549AMP30_Infect4_3"
+  ],
+  "unmatched_original_columns": [
+    "Intensity 5450_A549AMP30_Infect4_3",
+    "Intensity 5454_A549AMP30_Infect4_4"
+  ],
+  "baseline_cells_verified": 126492,
+  "maximum_absolute_difference": 0.0,
+  "original_rows_not_in_publisher": 9282,
+  "remaining_reverse_contaminant_counts": [
+    {
+      "reverse": "+",
+      "contaminant": "",
+      "rows": 942
+    },
+    {
+      "reverse": "",
+      "contaminant": "",
+      "rows": 6817
+    },
+    {
+      "reverse": "",
+      "contaminant": "+",
+      "rows": 1517
+    },
+    {
+      "reverse": "+",
+      "contaminant": "+",
+      "rows": 6
+    }
+  ],
+  "source_parameters": [
+    {
+      "Parameter": "Version",
+      "Value": "1.6.0.16"
+    },
+    {
+      "Parameter": "Match between runs",
+      "Value": "True"
+    },
+    {
+      "Parameter": "Fasta file",
+      "Value": "C:\\Databases\\Human_SP_27042020_with_E-coli.fasta"
+    },
+    {
+      "Parameter": "Min. peptide length for unspecific search",
+      "Value": "6"
+    },
+    {
+      "Parameter": "Max. peptide length for unspecific search",
+      "Value": "40"
+    }
+  ],
+  "summary_rows": [
+    {
+      "Raw file": "EX1_YM_19175_5424_23072023",
+      "Experiment": "5424_A549AMP30_Ctrl_1",
+      "Enzyme": "",
+      "Enzyme mode": "Unspecific"
+    },
+    {
+      "Raw file": "EX1_YM_19175_5426_23072023",
+      "Experiment": "5426_A549AMP30_Infect_1",
+      "Enzyme": "",
+      "Enzyme mode": "Unspecific"
+    },
+    {
+      "Raw file": "EX1_YM_19175_5428_23072023",
+      "Experiment": "5428_A549AMP30_Ctrl_2",
+      "Enzyme": "",
+      "Enzyme mode": "Unspecific"
+    },
+    {
+      "Raw file": "EX1_YM_19175_5430_23072023",
+      "Experiment": "5430_A549AMP30_Infect_2",
+      "Enzyme": "",
+      "Enzyme mode": "Unspecific"
+    },
+    {
+      "Raw file": "EX1_YM_19175_5432_23072023",
+      "Experiment": "5432_A549AMP30_Ctrl_3",
+      "Enzyme": "",
+      "Enzyme mode": "Unspecific"
+    },
+    {
+      "Raw file": "EX1_YM_19175_5434_23072023",
+      "Experiment": "5434_A549AMP30_Infect_3",
+      "Enzyme": "",
+      "Enzyme mode": "Unspecific"
+    },
+    {
+      "Raw file": "EX1_YM_19175_5440_25072023",
+      "Experiment": "5440_A549AMP30_Ctrl4_1",
+      "Enzyme": "",
+      "Enzyme mode": "Unspecific"
+    },
+    {
+      "Raw file": "EX1_YM_19175_5442_25072023",
+      "Experiment": "5442_A549AMP30_Infect4_1",
+      "Enzyme": "",
+      "Enzyme mode": "Unspecific"
+    },
+    {
+      "Raw file": "EX1_YM_19175_5444_25072023",
+      "Experiment": "5444_A549AMP30_Ctrl4_2",
+      "Enzyme": "",
+      "Enzyme mode": "Unspecific"
+    },
+    {
+      "Raw file": "EX1_YM_19175_5448_25072023",
+      "Experiment": "5448_A549AMP30_Ctrl4_3",
+      "Enzyme": "",
+      "Enzyme mode": "Unspecific"
+    },
+    {
+      "Raw file": "EX1_YM_19175_5450_25072023",
+      "Experiment": "5450_A549AMP30_Infect4_3",
+      "Enzyme": "",
+      "Enzyme mode": "Unspecific"
+    },
+    {
+      "Raw file": "EX1_YM_19175_5454_25072023",
+      "Experiment": "5454_A549AMP30_Infect4_4",
+      "Enzyme": "",
+      "Enzyme mode": "Unspecific"
+    },
+    {
+      "Raw file": "5424_A549AMP30_Ctrl_1",
+      "Experiment": "",
+      "Enzyme": "",
+      "Enzyme mode": ""
+    },
+    {
+      "Raw file": "5426_A549AMP30_Infect_1",
+      "Experiment": "",
+      "Enzyme": "",
+      "Enzyme mode": ""
+    },
+    {
+      "Raw file": "5428_A549AMP30_Ctrl_2",
+      "Experiment": "",
+      "Enzyme": "",
+      "Enzyme mode": ""
+    },
+    {
+      "Raw file": "5430_A549AMP30_Infect_2",
+      "Experiment": "",
+      "Enzyme": "",
+      "Enzyme mode": ""
+    },
+    {
+      "Raw file": "5432_A549AMP30_Ctrl_3",
+      "Experiment": "",
+      "Enzyme": "",
+      "Enzyme mode": ""
+    },
+    {
+      "Raw file": "5434_A549AMP30_Infect_3",
+      "Experiment": "",
+      "Enzyme": "",
+      "Enzyme mode": ""
+    },
+    {
+      "Raw file": "5440_A549AMP30_Ctrl4_1",
+      "Experiment": "",
+      "Enzyme": "",
+      "Enzyme mode": ""
+    },
+    {
+      "Raw file": "5442_A549AMP30_Infect4_1",
+      "Experiment": "",
+      "Enzyme": "",
+      "Enzyme mode": ""
+    },
+    {
+      "Raw file": "5444_A549AMP30_Ctrl4_2",
+      "Experiment": "",
+      "Enzyme": "",
+      "Enzyme mode": ""
+    },
+    {
+      "Raw file": "5448_A549AMP30_Ctrl4_3",
+      "Experiment": "",
+      "Enzyme": "",
+      "Enzyme mode": ""
+    },
+    {
+      "Raw file": "5450_A549AMP30_Infect4_3",
+      "Experiment": "",
+      "Enzyme": "",
+      "Enzyme mode": ""
+    },
+    {
+      "Raw file": "5454_A549AMP30_Infect4_4",
+      "Experiment": "",
+      "Enzyme": "",
+      "Enzyme mode": ""
+    },
+    {
+      "Raw file": "Total",
+      "Experiment": "",
+      "Enzyme": "",
+      "Enzyme mode": ""
+    }
+  ],
+  "source_reference_members": [],
+  "seconds": 6.67945354199037,
+  "peak_rss_gib": 0.3889617919921875
+}

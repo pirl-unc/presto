@@ -1,0 +1,21 @@
+{
+  "frozen_at": "2026-10-24T00:02:54.832177-04:00",
+  "arms": [
+    "base",
+    "rate_context",
+    "response_termini",
+    "both",
+    "both_hybrid"
+  ],
+  "input_hashes": {
+    "reproduce/launch.json": "34d7324853e1c003f3312f10827ab6d3fcff5a66c1e81da859a92348810d94fd",
+    "reproduce/execution-code.json": "eaf642f88669e2c3f16be5b07cc8958b555c00ba27dc0b1537bf347c5a4e71e9",
+    "results/qualification.json": "2bc0f6024ef011f400c2d804661516f5032df7a836f067f4d438120155f7e3cf",
+    "code/run_fits.py": "2947a75f7c15ec57668464a86c90ec5146d6ebc2b6d8fc4198e727e664c6c0f0"
+  },
+  "command": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "code/run_fits.py"
+  ],
+  "verification": "All final source-linked predictions and metrics, all optimizer arithmetic, four fixed gradient states; see prospective plan. No new test."
+}

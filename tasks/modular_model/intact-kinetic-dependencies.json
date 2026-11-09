@@ -1,0 +1,51 @@
+{
+  "observed_utc": "2026-10-25T02:19:06.476010+00:00",
+  "source": {
+    "pr": 832,
+    "state": "MERGED",
+    "head": "97d3311a239cd901aa11b8ff8b627a7ce910cbd4",
+    "merge": "18bbf81d34084e6118b49a1cc4727ea4aec8a422",
+    "tests_run": 40147468788,
+    "tests_conclusion": "success",
+    "release_run": 40149903223,
+    "release_state": "completed",
+    "release_conclusion": "success",
+    "deployed": true,
+    "release_download_state": "fresh_retry_verified_first_failure_preserved",
+    "pypi_bytes_verified": true,
+    "release_receipt": "intact-2033-release.json"
+  },
+  "recipe": {
+    "pr": 833,
+    "state": "MERGED",
+    "head": "fbd4f1a84205e59ad201299f41e279a4e1ef4618",
+    "tests_run": 40150207226,
+    "tests_state": "completed",
+    "final_focused_tests": 27,
+    "prior_broader_focused_tests": 32,
+    "full_local_suite": "deferred_under_unchanged_2GiB_disk_prerequisite",
+    "merge": "759ceae499e9bce3ab1ec93d7eee7ecb9a4fe7c2",
+    "tests_conclusion": "success",
+    "release_run": 40151233071,
+    "release_state": "completed",
+    "deployed": true,
+    "release_conclusion": "success",
+    "pypi_bytes_verified": true,
+    "release_receipt": "intact-2034-release.json"
+  },
+  "pbmc_release": "pbmc-2032-release.json",
+  "goal_complete": false,
+  "frozen_recipe_runtime_unchanged_after_rebase": true,
+  "presto": {
+    "head": "19b158b91cbfa8a5ef33019381b60356799f0f82",
+    "ci_run": 40153189450,
+    "ci_state": "in_progress",
+    "draft": true,
+    "ci_conclusion": "",
+    "lint": "passed",
+    "docs": "passed",
+    "active_step": "Test"
+  },
+  "local_free_bytes": 852717568,
+  "new_training_requires_free_bytes": 1107296256
+}

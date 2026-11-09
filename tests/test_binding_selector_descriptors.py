@@ -9,14 +9,14 @@ import torch
 from presto.data.collate import PrestoCollator
 from presto.data.loaders import PrestoDataset
 from presto.data.vocab import BINDING_ASSAY_PREP_TO_IDX, BINDING_ASSAY_READOUT_TO_IDX
-from presto.models.presto import Presto
-from presto.scripts.focused_binding_probe import _load_binding_records_from_merged_tsv
-from presto.scripts.train_iedb import (
+from presto.legacy.presto import Presto
+from presto.legacy.scripts.focused_binding_probe import _load_binding_records_from_merged_tsv
+from presto.legacy.scripts.train_iedb import (
     load_binding_records_for_alleles_from_merged_tsv,
     load_probe_allele_binding_bootstrap_from_merged_tsv,
     load_records_from_merged_tsv,
 )
-from presto.scripts.train_synthetic import compute_loss
+from presto.legacy.scripts.train_synthetic import compute_loss
 
 ALLELES = ["HLA-A*02:01", "HLA-A*03:01"]
 FIELDS = ("assay_type", "assay_method", "effector_culture_condition", "apc_culture_condition")

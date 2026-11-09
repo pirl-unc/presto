@@ -1,0 +1,57 @@
+Note that running a local entrypoint in detached mode only keeps the last triggered Modal function alive after the parent process has been killed or disconnected.
+✓ Initialized. View run at 
+https://modal.com/apps/iskandr/main/ap-eQlGbWHVdqXHZmZclqWWH9
+Building image im-6Nu5C3KWgNfZM6LB49kdBm
+
+Using legacy Image Builder version. We suggest upgrading at https://modal.com/settings/image-config.
+
+=> Step 0: FROM base
+
+=> Step 1: COPY --from=ghcr.io/astral-sh/uv:latest /uv /.uv/uv
+Getting image source signatures
+Copying blob sha256:e3b3ce09610df9e33a3e90c84989e0440a483bfe967864661138014697502694
+Copying blob sha256:65f8c8b0f6f03e53646584e7bbafc47f58b188e31a9932a0b32ee4ee9928f555
+Copying config sha256:58e006e07103590f3d49fc64244e0c81c68877537b83160be11e02b40ae8ecec
+Writing manifest to image destination
+Unpacking OCI image
+   • unpacking rootfs ...     
+   • ... done                 
+   • unpacked image rootfs: /tmp/task-data/ta-01M641BZ0T8GPPP5N7BYYGDW2B/registry-unpackwVIZ3d
+
+=> Step 2: RUN /.uv/uv pip install --python $(command -v python) --compile-bytecode numpy==2.5.4 pyarrow==26.0.0 scipy==1.18.1
+Using Python 3.12.1 environment at: /usr/local
+Resolved 3 packages in 47ms
+Downloading numpy (16.0MiB)
+Downloading pyarrow (51.4MiB)
+Downloading scipy (33.7MiB)
+ Downloaded numpy
+ Downloaded pyarrow
+ Downloaded scipy
+Prepared 3 packages in 435ms
+Uninstalled 1 package in 76ms
+Installed 3 packages in 137ms
+Bytecode compiled 1500 files in 614ms
+ - numpy==1.26.3
+ + numpy==2.5.4
+ + pyarrow==26.0.0
+ + scipy==1.18.1
+Saving image...
+Image saved, took 1.31s
+
+Built image im-6Nu5C3KWgNfZM6LB49kdBm in 5.16s
+
+
+✓ Created objects.
+├── ✓ Uploaded 
+│   /Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/20
+│   26-10-29_1428_codex_assay-methods-censoring/code/launch.py
+├── ✓ Uploaded 
+│   /Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/20
+│   26-10-28_1540_codex_temporal-multi-output/results/build.json
+├── ✓ Uploaded 
+│   /Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/20
+│   26-10-29_1428_codex_assay-methods-censoring/analysis/audit_methods.py
+└── ✓ Created Function run.
+{"status": "completed", "archive": "2026-10-29_1428_codex_assay-methods-censoring/audit.tar.gz", "bytes": 10064856, "sha256": "13b61c267b6e1f06afa8f06bfc800b9cf311ea4facaf4daf1999e8162f0d61ec", "counts": {"physical_rows": 234337, "concentration_rows": 184637, "qualifier:=": 136233, "raw_qualifier:missing": 100544, "qualifier:>": 48215, "raw_qualifier:>": 48215, "raw_qualifier:=": 35689, "qualifier:>=": 189, "raw_qualifier:>=": 189}, "seconds": 30.08027464, "census": {"rows": 848164, "strata": 557, "sources": {"binding.parquet": {"path": "/volume/2026-10-28_1540_codex_temporal-multi-output/source/dataset/bundles/2026-10-28T17-55-53Z/binding.parquet", "size_bytes": 17306340, "sha256": "c5df3057d56ffb6e70d17d78e95f473c8f2bb6e3af684513567e235d08c6879c", "rows": 821470}, "other_assays.parquet": {"path": "/volume/2026-10-28_1540_codex_temporal-multi-output/source/dataset/bundles/2026-10-28T17-55-53Z/other_assays.parquet", "size_bytes": 1271725, "sha256": "41ecb0c4eddf0e27a933e513e9d7ffcadb1bc8bb4145b55e117ceb292f0d2085", "rows": 26694}}}}
+✓ App completed. View run at 
+https://modal.com/apps/iskandr/main/ap-eQlGbWHVdqXHZmZclqWWH9

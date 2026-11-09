@@ -1,0 +1,42 @@
+{
+  "experiment_id": "2026-10-25_1816_codex_nontryptic-calibration-screen",
+  "status": "source_screen_closed_training_admission_incomplete",
+  "new_model_fits": 0,
+  "discovery_operations": 12,
+  "guarded_attempts": 10,
+  "attempt_status_counts": {
+    "failed": 3,
+    "passed": 7
+  },
+  "guarded_stage_seconds_total": 6.443315791955683,
+  "maximum_child_peak_rss_bytes": 225804288,
+  "source_cells_verified": 18911,
+  "response_slots_verified": 348,
+  "support": {
+    "DatasetS3A": {
+      "n_sequences": 18,
+      "n_slots": 213,
+      "n_positive": 213,
+      "n_zero": 0,
+      "n_missing": 0,
+      "n_sequences_with_3_positive_doses": 18
+    },
+    "DatasetS3B": {
+      "n_sequences": 9,
+      "n_slots": 135,
+      "n_positive": 126,
+      "n_zero": 0,
+      "n_missing": 9,
+      "n_sequences_with_3_positive_doses": 9
+    }
+  },
+  "isotope_status_counts": {
+    "nominal_shift_consistent": 17,
+    "source_conflict": 54,
+    "source_assignment_absent": 1
+  },
+  "hitlist_issue": "https://github.com/pirl-unc/hitlist/issues/849",
+  "heldout_predictions": null,
+  "no_test_reason": "source qualification only; no predictor or fitting dataset admitted",
+  "full_apc_availability_goal_complete": false
+}

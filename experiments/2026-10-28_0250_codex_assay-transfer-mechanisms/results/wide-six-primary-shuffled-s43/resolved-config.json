@@ -1,0 +1,151 @@
+{
+  "model": {
+    "acquisition_features": [],
+    "acquisition_units": {},
+    "auxiliary_context": [],
+    "cell_types": [],
+    "component_activity_units": {},
+    "components": [],
+    "context_species": [],
+    "cytokine_dose_units": {},
+    "cytokine_duration_features": [],
+    "cytokines": [],
+    "d_ff": 768,
+    "d_model": 192,
+    "dropout": 0.1,
+    "endpoints": [
+      "ic50",
+      "kd",
+      "ec50",
+      "kd_via_ic50",
+      "kd_via_ec50",
+      "half_life"
+    ],
+    "enzymes": [],
+    "identity_tasks": [],
+    "identity_threshold": 0.8,
+    "interventions": [],
+    "machinery_profiles": {},
+    "machinery_references": [],
+    "max_length": 512,
+    "mhc_classes": [
+      "I",
+      "II"
+    ],
+    "n_heads": 6,
+    "n_layers": 3,
+    "observation_features": [],
+    "observation_units": {},
+    "ordinal_scales": {},
+    "peptide_context": "shared_core_context_v2",
+    "preparation_features": [],
+    "preparation_units": {},
+    "processing_pathways": [],
+    "quantity_domains": {},
+    "register_pooling": true,
+    "source_categories": [],
+    "source_context": false,
+    "species": [
+      "human"
+    ],
+    "species_defaults": true
+  },
+  "scales": {
+    "ec50": {
+      "exact_count": 260,
+      "floor": 0.001,
+      "mean": 2.9979446540214085,
+      "scale": 1.1989459724093225
+    },
+    "half_life": {
+      "exact_count": 6146,
+      "floor": 0.001,
+      "mean": 1.5186611654099071,
+      "scale": 1.207040479268606
+    },
+    "ic50": {
+      "exact_count": 17421,
+      "floor": 0.001,
+      "mean": 2.7783075195209537,
+      "scale": 1.3320785714587942
+    },
+    "kd": {
+      "exact_count": 3591,
+      "floor": 0.001,
+      "mean": 1.8938664198652235,
+      "scale": 1.302441456056331
+    },
+    "kd_via_ec50": {
+      "exact_count": 16211,
+      "floor": 0.001,
+      "mean": 2.321752835454904,
+      "scale": 1.03516009299967
+    },
+    "kd_via_ic50": {
+      "exact_count": 32500,
+      "floor": 0.001,
+      "mean": 2.806131204904976,
+      "scale": 1.4114454777360752
+    }
+  },
+  "training": {
+    "balance_by": [
+      "endpoint"
+    ],
+    "batch_size": 128,
+    "checkpoint_every_steps": 100,
+    "coverage_exception_reason": null,
+    "coverage_policy": "required",
+    "identity_batch_size": 64,
+    "identity_weight": 0,
+    "learning_rate": 0.0003,
+    "max_epochs": 10000,
+    "max_steps": 6000,
+    "min_epochs": 10000,
+    "no_test_reason": null,
+    "patience": 10000,
+    "seed": 43,
+    "selection_endpoint": "ic50",
+    "stratum_weights": [
+      {
+        "values": [
+          "ic50"
+        ],
+        "weight": 1.0
+      },
+      {
+        "values": [
+          "kd"
+        ],
+        "weight": 0.13529578583177357
+      },
+      {
+        "values": [
+          "ec50"
+        ],
+        "weight": 0.002949350575690545
+      },
+      {
+        "values": [
+          "kd_via_ic50"
+        ],
+        "weight": 0.3895071181441779
+      },
+      {
+        "values": [
+          "kd_via_ec50"
+        ],
+        "weight": 0.4024615733650956
+      },
+      {
+        "values": [
+          "half_life"
+        ],
+        "weight": 0.06978617208326243
+      }
+    ],
+    "test_policy": "evaluate_selected_once",
+    "validation_every_steps": 500,
+    "weight_decay": 0.0001
+  }
+}

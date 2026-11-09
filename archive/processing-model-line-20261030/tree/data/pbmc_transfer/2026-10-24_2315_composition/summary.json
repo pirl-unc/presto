@@ -1,0 +1,40 @@
+{
+  "n_eligible_before_group": 580,
+  "n_duplicate_measurements": 0,
+  "n_small_groups": 146,
+  "cohort_support": {
+    "CTRL": {
+      "n_components": 6,
+      "n_groups": 27,
+      "n_observations": 234,
+      "n_peptides": 82
+    },
+    "LUPUS": {
+      "n_components": 7,
+      "n_groups": 20,
+      "n_observations": 161,
+      "n_peptides": 66
+    }
+  },
+  "support_passed": {
+    "CTRL": false,
+    "LUPUS": false
+  },
+  "reason_counts": {
+    "fewer_than_three_distinct_sequences_in_group": 185,
+    "incomplete_evidence_intensities": 185,
+    "no_positive_direct_MS_MS_evidence": 10597,
+    "not_direct_run_MS_MS_identification": 10423,
+    "not_one_distinct_supplied_parent": 5782,
+    "not_positive_finite_original_run_intensity": 6137,
+    "peptide_PEP_not_in_[0,.01)": 5040,
+    "peptide_flags_not_explicitly_blank": 4956
+  },
+  "output_counts": {
+    "n_decisions_rows": 13790,
+    "n_examples_rows": 395,
+    "n_covariates_rows": 395,
+    "n_components_rows": 1756,
+    "n_groups_rows": 47
+  }
+}

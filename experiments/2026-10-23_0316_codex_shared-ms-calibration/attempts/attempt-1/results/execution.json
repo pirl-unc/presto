@@ -1,0 +1,17 @@
+{
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PYTHONPATH": "/private/tmp/hitlist-ms-calibration"
+  },
+  "error": "Traceback (most recent call last):\n  File \"/private/tmp/presto-modular-model/experiments/2026-10-23_0316_codex_shared-ms-calibration/code/launch.py\", line 45, in main\n    write_external_successor(\n  File \"/private/tmp/hitlist-ms-calibration/hitlist/external_successor.py\", line 97, in write_external_successor\n    reconciliation = adapter.write(source)\n                     ^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/hitlist-ms-calibration/hitlist/ms_calibration_evidence.py\", line 835, in write\n    tables = _build_tables(source_dir)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/hitlist-ms-calibration/hitlist/ms_calibration_evidence.py\", line 701, in _build_tables\n    raise ValueError(\"Unresolved curve source context or reporter\")\nValueError: Unresolved curve source context or reporter\n",
+  "finished_utc": "2026-10-23T07:16:19Z",
+  "launcher_sha256": "ab69ae3a9d456ea49651d091d774a78be02fbbe7445a5c9ed6486e5081d0ea44",
+  "passed": false,
+  "peak_rss_bytes": 783548416,
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "pyarrow": "26.0.0",
+  "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "stages": {},
+  "started_utc": "2026-10-23T07:16:03Z"
+}

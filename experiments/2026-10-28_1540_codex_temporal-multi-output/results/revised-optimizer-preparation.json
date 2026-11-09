@@ -1,0 +1,37 @@
+{
+  "recorded_unix": 1793250515.0015116,
+  "status": {
+    "status": "preflight_passed_preparing_optimizer",
+    "condition": "wide-multi-s42"
+  },
+  "raw_files": [
+    {
+      "name": ".training.lock",
+      "bytes": 0
+    },
+    {
+      "name": "admission.json",
+      "bytes": 2171
+    },
+    {
+      "name": "resolved-config.json",
+      "bytes": 5556
+    }
+  ],
+  "cpu": {
+    "user": 3125.05,
+    "system": 271.46,
+    "children_user": 0.02,
+    "children_system": 0.02,
+    "iowait": 0.0
+  },
+  "rss": 6158213120,
+  "io": {
+    "read_count": 38157781,
+    "write_count": 24,
+    "read_bytes": 0,
+    "write_bytes": 0,
+    "read_chars": 211583444128,
+    "write_chars": 38925
+  }
+}

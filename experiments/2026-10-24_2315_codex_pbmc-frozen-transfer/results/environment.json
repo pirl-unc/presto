@@ -1,0 +1,22 @@
+{
+  "python": "3.12.6",
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "packages": {
+    "numpy": "2.5.4",
+    "pandas": "3.1.0",
+    "pyarrow": "26.0.0",
+    "networkx": "3.7",
+    "psutil": "7.2.2",
+    "torch": "2.14.1",
+    "scipy": "1.18.1"
+  },
+  "overrides": {
+    "PYTHONPATH": "/private/tmp/hitlist-pbmc-composition-20261024",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1"
+  },
+  "shared_environment_changed": false
+}

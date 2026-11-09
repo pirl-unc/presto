@@ -1,0 +1,34 @@
+{
+  "condition": "uniform-low_rate",
+  "kind": "uniform",
+  "initialization": "low_rate",
+  "success": true,
+  "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+  "iterations": 26,
+  "function_evaluations": 31,
+  "seconds": 0.057315625017508864,
+  "objective": 0.04419477470456104,
+  "mse": 0.04419477470456104,
+  "penalty": 0.0,
+  "original_adam_objective": 0.04523021726518167,
+  "original_adam_mse": 0.04523021726518167,
+  "mse_improvement_percent": 2.289271693191086,
+  "tau_minutes": 119.99998853758322,
+  "rates_by_category": [
+    9.046236363618663e-05
+  ],
+  "raw_parameters": [
+    -9.311592242258657,
+    16.16392029455744
+  ],
+  "raw_gradient": [
+    -2.940981122231669e-10,
+    -4.925887191370112e-10
+  ],
+  "all_parameters_changed": true,
+  "gradient_absolute_totals": [
+    0.027450261627349325,
+    0.01449595664634345
+  ],
+  "raw_boundary_coordinates": []
+}

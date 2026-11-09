@@ -1,0 +1,272 @@
+{
+  "model": {
+    "acquisition_features": [],
+    "acquisition_units": {},
+    "auxiliary_context": [],
+    "cell_types": [],
+    "component_activity_units": {},
+    "components": [],
+    "context_species": [],
+    "cytokine_dose_units": {},
+    "cytokine_duration_features": [],
+    "cytokines": [],
+    "d_ff": 768,
+    "d_model": 192,
+    "dropout": 0.1,
+    "endpoints": [
+      "ec50",
+      "elution_observation",
+      "half_life",
+      "ic50",
+      "kd",
+      "kd_via_ec50",
+      "kd_via_ic50",
+      "koff",
+      "qualitative_binding",
+      "td50"
+    ],
+    "enzymes": [],
+    "identity_tasks": [],
+    "identity_threshold": 0.8,
+    "interventions": [],
+    "machinery_profiles": {},
+    "machinery_references": [],
+    "max_length": 512,
+    "mhc_classes": [
+      "I",
+      "II"
+    ],
+    "n_heads": 6,
+    "n_layers": 3,
+    "observation_features": [],
+    "observation_units": {},
+    "ordinal_scales": {},
+    "peptide_context": "shared_core_context_v2",
+    "preparation_features": [],
+    "preparation_units": {},
+    "processing_pathways": [],
+    "quantity_domains": {},
+    "register_pooling": true,
+    "source_categories": [],
+    "source_context": false,
+    "species": [],
+    "species_defaults": true
+  },
+  "scales": {
+    "ec50": {
+      "exact_count": 199,
+      "floor": 0.001,
+      "mean": 2.205902327397387,
+      "scale": 1.2217749646362066
+    },
+    "half_life": {
+      "exact_count": 8720,
+      "floor": 0.001,
+      "mean": 1.469606931206776,
+      "scale": 1.2402569463054927
+    },
+    "ic50": {
+      "exact_count": 49732,
+      "floor": 0.001,
+      "mean": 2.8406464294881957,
+      "scale": 1.2450092784401297
+    },
+    "kd": {
+      "exact_count": 5546,
+      "floor": 0.001,
+      "mean": 2.1026252648121795,
+      "scale": 1.3067658400941011
+    },
+    "kd_via_ec50": {
+      "exact_count": 12789,
+      "floor": 0.001,
+      "mean": 2.2656107544938755,
+      "scale": 1.1617859546098435
+    },
+    "kd_via_ic50": {
+      "exact_count": 67967,
+      "floor": 0.001,
+      "mean": 2.7035132118164293,
+      "scale": 1.3770101866859144
+    },
+    "koff": {
+      "exact_count": 8,
+      "floor": 0.001,
+      "mean": -4.362379195457084,
+      "scale": 1.1852063683573564
+    },
+    "td50": {
+      "exact_count": 468,
+      "floor": 0.001,
+      "mean": 56.43594017094015,
+      "scale": 10.572835686700087
+    }
+  },
+  "training": {
+    "balance_by": [
+      "endpoint",
+      "mhc_class"
+    ],
+    "batch_size": 128,
+    "checkpoint_every_steps": 500,
+    "coverage_exception_reason": null,
+    "coverage_policy": "required",
+    "identity_batch_size": 64,
+    "identity_weight": 0.0,
+    "learning_rate": 0.0003,
+    "max_epochs": 1,
+    "max_steps": 51099,
+    "min_epochs": 100000,
+    "no_test_reason": null,
+    "patience": 100000,
+    "seed": 43,
+    "selection_endpoint": null,
+    "selection_reduction": "endpoint_mean",
+    "stratum_weights": [
+      {
+        "values": [
+          "ec50",
+          "I"
+        ],
+        "weight": 0.0017203288456584865
+      },
+      {
+        "values": [
+          "ec50",
+          "II"
+        ],
+        "weight": 0.001579968463386015
+      },
+      {
+        "values": [
+          "elution_observation",
+          "I"
+        ],
+        "weight": 0.4087201506356801
+      },
+      {
+        "values": [
+          "elution_observation",
+          "II"
+        ],
+        "weight": 0.19127984936431988
+      },
+      {
+        "values": [
+          "half_life",
+          "I"
+        ],
+        "weight": 0.01486995606825546
+      },
+      {
+        "values": [
+          "half_life",
+          "II"
+        ],
+        "weight": 0.0018776854234773901
+      },
+      {
+        "values": [
+          "ic50",
+          "I"
+        ],
+        "weight": 0.08341093299426422
+      },
+      {
+        "values": [
+          "ic50",
+          "II"
+        ],
+        "weight": 0.11658906700573582
+      },
+      {
+        "values": [
+          "kd",
+          "I"
+        ],
+        "weight": 0.020512006628559728
+      },
+      {
+        "values": [
+          "kd",
+          "II"
+        ],
+        "weight": 0.006177789792667524
+      },
+      {
+        "values": [
+          "kd_via_ec50",
+          "I"
+        ],
+        "weight": 0.030582076003222627
+      },
+      {
+        "values": [
+          "kd_via_ec50",
+          "II"
+        ],
+        "weight": 0.00816417740650399
+      },
+      {
+        "values": [
+          "kd_via_ic50",
+          "I"
+        ],
+        "weight": 0.03638315584846757
+      },
+      {
+        "values": [
+          "kd_via_ic50",
+          "II"
+        ],
+        "weight": 0.023515842832449518
+      },
+      {
+        "values": [
+          "koff",
+          "I"
+        ],
+        "weight": 0.00039295079925706335
+      },
+      {
+        "values": [
+          "koff",
+          "II"
+        ],
+        "weight": 0.00022687024972934414
+      },
+      {
+        "values": [
+          "qualitative_binding",
+          "I"
+        ],
+        "weight": 0.02620832779969901
+      },
+      {
+        "values": [
+          "qualitative_binding",
+          "II"
+        ],
+        "weight": 0.02379167220030099
+      },
+      {
+        "values": [
+          "td50",
+          "I"
+        ],
+        "weight": 0.003572756265495763
+      },
+      {
+        "values": [
+          "td50",
+          "II"
+        ],
+        "weight": 0.00042443537286952467
+      }
+    ],
+    "test_policy": "evaluate_selected_once",
+    "train_evaluation_max_rows": 16384,
+    "validation_every_steps": 1000,
+    "weight_decay": 0.0001
+  }
+}

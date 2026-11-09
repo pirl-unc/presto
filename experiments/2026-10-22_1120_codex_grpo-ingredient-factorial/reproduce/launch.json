@@ -1,0 +1,270 @@
+{
+  "agent": "Codex / GPT-6",
+  "command": "bash experiments/2026-10-22_1120_codex_grpo-ingredient-factorial/reproduce/launch.sh",
+  "interpreter": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "PYTHONHASHSEED": "0"
+  },
+  "device": "cpu",
+  "modal_gpu": null,
+  "model_seeds": [
+    42,
+    43,
+    44
+  ],
+  "conditions": [
+    {
+      "name": "factorial-c0-s0-r1-b0",
+      "method": "factorial",
+      "clip": false,
+      "standardize": false,
+      "reuse": 1,
+      "beta": 0,
+      "samples": 8,
+      "steps": 1440,
+      "budget": "optimizer_matched"
+    },
+    {
+      "name": "factorial-c0-s0-r1-b0.1",
+      "method": "factorial",
+      "clip": false,
+      "standardize": false,
+      "reuse": 1,
+      "beta": 0.1,
+      "samples": 8,
+      "steps": 1440,
+      "budget": "optimizer_matched"
+    },
+    {
+      "name": "factorial-c0-s0-r4-b0",
+      "method": "factorial",
+      "clip": false,
+      "standardize": false,
+      "reuse": 4,
+      "beta": 0,
+      "samples": 8,
+      "steps": 1440,
+      "budget": "optimizer_matched"
+    },
+    {
+      "name": "factorial-c0-s0-r4-b0.1",
+      "method": "factorial",
+      "clip": false,
+      "standardize": false,
+      "reuse": 4,
+      "beta": 0.1,
+      "samples": 8,
+      "steps": 1440,
+      "budget": "optimizer_matched"
+    },
+    {
+      "name": "factorial-c0-s1-r1-b0",
+      "method": "factorial",
+      "clip": false,
+      "standardize": true,
+      "reuse": 1,
+      "beta": 0,
+      "samples": 8,
+      "steps": 1440,
+      "budget": "optimizer_matched"
+    },
+    {
+      "name": "factorial-c0-s1-r1-b0.1",
+      "method": "factorial",
+      "clip": false,
+      "standardize": true,
+      "reuse": 1,
+      "beta": 0.1,
+      "samples": 8,
+      "steps": 1440,
+      "budget": "optimizer_matched"
+    },
+    {
+      "name": "factorial-c0-s1-r4-b0",
+      "method": "factorial",
+      "clip": false,
+      "standardize": true,
+      "reuse": 4,
+      "beta": 0,
+      "samples": 8,
+      "steps": 1440,
+      "budget": "optimizer_matched"
+    },
+    {
+      "name": "factorial-c0-s1-r4-b0.1",
+      "method": "factorial",
+      "clip": false,
+      "standardize": true,
+      "reuse": 4,
+      "beta": 0.1,
+      "samples": 8,
+      "steps": 1440,
+      "budget": "optimizer_matched"
+    },
+    {
+      "name": "factorial-c1-s0-r1-b0",
+      "method": "factorial",
+      "clip": true,
+      "standardize": false,
+      "reuse": 1,
+      "beta": 0,
+      "samples": 8,
+      "steps": 1440,
+      "budget": "optimizer_matched"
+    },
+    {
+      "name": "factorial-c1-s0-r1-b0.1",
+      "method": "factorial",
+      "clip": true,
+      "standardize": false,
+      "reuse": 1,
+      "beta": 0.1,
+      "samples": 8,
+      "steps": 1440,
+      "budget": "optimizer_matched"
+    },
+    {
+      "name": "factorial-c1-s0-r4-b0",
+      "method": "factorial",
+      "clip": true,
+      "standardize": false,
+      "reuse": 4,
+      "beta": 0,
+      "samples": 8,
+      "steps": 1440,
+      "budget": "optimizer_matched"
+    },
+    {
+      "name": "factorial-c1-s0-r4-b0.1",
+      "method": "factorial",
+      "clip": true,
+      "standardize": false,
+      "reuse": 4,
+      "beta": 0.1,
+      "samples": 8,
+      "steps": 1440,
+      "budget": "optimizer_matched"
+    },
+    {
+      "name": "factorial-c1-s1-r1-b0",
+      "method": "factorial",
+      "clip": true,
+      "standardize": true,
+      "reuse": 1,
+      "beta": 0,
+      "samples": 8,
+      "steps": 1440,
+      "budget": "optimizer_matched"
+    },
+    {
+      "name": "factorial-c1-s1-r1-b0.1",
+      "method": "factorial",
+      "clip": true,
+      "standardize": true,
+      "reuse": 1,
+      "beta": 0.1,
+      "samples": 8,
+      "steps": 1440,
+      "budget": "optimizer_matched"
+    },
+    {
+      "name": "factorial-c1-s1-r4-b0",
+      "method": "factorial",
+      "clip": true,
+      "standardize": true,
+      "reuse": 4,
+      "beta": 0,
+      "samples": 8,
+      "steps": 1440,
+      "budget": "optimizer_matched"
+    },
+    {
+      "name": "factorial-c1-s1-r4-b0.1",
+      "method": "factorial",
+      "clip": true,
+      "standardize": true,
+      "reuse": 4,
+      "beta": 0.1,
+      "samples": 8,
+      "steps": 1440,
+      "budget": "optimizer_matched"
+    },
+    {
+      "name": "exact-b0",
+      "method": "exact",
+      "beta": 0,
+      "reuse": 1,
+      "steps": 1440,
+      "budget": "optimizer_matched",
+      "samples": 8
+    },
+    {
+      "name": "exact-b0.1",
+      "method": "exact",
+      "beta": 0.1,
+      "reuse": 1,
+      "steps": 1440,
+      "budget": "optimizer_matched",
+      "samples": 8
+    },
+    {
+      "name": "original-reinforce8",
+      "method": "original",
+      "reuse": 1,
+      "beta": 0,
+      "steps": 1440,
+      "budget": "optimizer_matched",
+      "samples": 8
+    },
+    {
+      "name": "hybrid-starts2",
+      "method": "hybrid",
+      "reuse": 1,
+      "beta": 0,
+      "samples": 2,
+      "steps": 1440,
+      "budget": "optimizer_matched"
+    },
+    {
+      "name": "hybrid-starts8",
+      "method": "hybrid",
+      "reuse": 1,
+      "beta": 0,
+      "samples": 8,
+      "steps": 1440,
+      "budget": "optimizer_matched"
+    },
+    {
+      "name": "query-matched-c0-r4",
+      "method": "factorial",
+      "clip": false,
+      "standardize": false,
+      "reuse": 4,
+      "beta": 0,
+      "samples": 8,
+      "steps": 5760,
+      "budget": "target_query_matched"
+    },
+    {
+      "name": "query-matched-c1-r4",
+      "method": "factorial",
+      "clip": true,
+      "standardize": false,
+      "reuse": 4,
+      "beta": 0,
+      "samples": 8,
+      "steps": 5760,
+      "budget": "target_query_matched"
+    }
+  ],
+  "plan": "experiments/agents/codex/plans/grpo-ingredient-factorial.md",
+  "plan_sha256": "4aa4b04b13e595d544665a48fff7059a10ba344ea961b1edf62d7dfaff1fa3e6",
+  "source_sha256": {
+    "launch.py": "893ca18d317ea726daaeb34c8ff45c222ab4d70de0ab95bed49ad6a7cb81b5da",
+    "base.py": "e66c3a5cffc0d512989094ad653ba7ea4f3ff56778d3b298fecb8e809eee5945"
+  },
+  "source_commit": "Written into execution.json at launch; source committed before execution."
+}

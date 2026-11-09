@@ -1,0 +1,21 @@
+{
+  "status": "passed",
+  "recorded_unix": 1793242841.030856,
+  "family_tests": "32 passed, 2 upstream/cache warnings in 7.15s",
+  "checkpoint_equivalence_tests": 3,
+  "launcher_image_and_function_import": "passed",
+  "changed_launcher_worker_observer_ruff": "passed",
+  "git_diff_check": "passed",
+  "partition_verification_sha256": "fcb209cdff4d777536b22f3d2fcad20f99481f350330879565695cfa04acd908",
+  "training_contract_sha256": "a01d849d131ef93febb7d01b84bd32834c8b3fdc3742c782db93cf41d479b18a",
+  "source_hashes": {
+    "code/worker.py": "ae205b5749a546ce5f6cfdc4492f692fcf5636491e825e08a052dc8a109428fb",
+    "code/launch.py": "75a8cf550b55e37778eb2a8d80af5356fb0cb6892eb3b3ff328a055cdaddb3b5",
+    "code/checkpoint_observer.py": "0a7952de71d2475df455190dde8a171d3da20bf30be85b8f48b9c7bc289a2aea",
+    "analysis/test_checkpoint_observer.py": "a5e48221edcc73292c4425c0c4cfd50eaf424241b2fe3105e4fdb5b255cb6ac4"
+  },
+  "scientific_source_unchanged": "c8f032a7a200a1ea87121b016eb9dbb22c90e3db",
+  "requested_gpu": "H100!",
+  "max_concurrent_gpus": 2,
+  "predictive_metrics_available": false
+}

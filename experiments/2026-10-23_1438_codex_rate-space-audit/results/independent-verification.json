@@ -1,0 +1,106 @@
+{
+  "conditions": [
+    {
+      "condition": "soh2024_digestion:condition:aSPIRE_FFH_12p5",
+      "observations": 14740,
+      "prediction_error": 2.609024107869118e-14,
+      "reference_log_mass_error": 3.552713678800501e-15,
+      "gradient_error": 7.524363077049401e-17,
+      "mse": 0.07887685491184229,
+      "projected_gradient_mapping_max": 3.37914320965635e-07,
+      "source_targets_weights_exact": true,
+      "saved_final_found_in_evaluation_trace": true,
+      "trace_evaluations": 114
+    },
+    {
+      "condition": "soh2024_digestion:condition:aSPIRE_FFH_6p25",
+      "observations": 15774,
+      "prediction_error": 9.450773497121645e-15,
+      "reference_log_mass_error": 7.105427357601002e-15,
+      "gradient_error": 4.83554168928535e-17,
+      "mse": 0.07489685028642014,
+      "projected_gradient_mapping_max": 1.3288664820437876e-07,
+      "source_targets_weights_exact": true,
+      "saved_final_found_in_evaluation_trace": true,
+      "trace_evaluations": 51
+    },
+    {
+      "condition": "soh2024_digestion:condition:aSPIRE_H2A",
+      "observations": 4150,
+      "prediction_error": 8.992806499463768e-15,
+      "reference_log_mass_error": 4.440892098500626e-16,
+      "gradient_error": 2.5413698923060224e-16,
+      "mse": 0.08724046577414132,
+      "projected_gradient_mapping_max": 3.277612560526055e-08,
+      "source_targets_weights_exact": true,
+      "saved_final_found_in_evaluation_trace": true,
+      "trace_evaluations": 74
+    },
+    {
+      "condition": "soh2024_digestion:condition:aSPIRE_H2B",
+      "observations": 4404,
+      "prediction_error": 4.107825191113079e-15,
+      "reference_log_mass_error": 3.552713678800501e-15,
+      "gradient_error": 9.606031248221569e-17,
+      "mse": 0.09210557680735618,
+      "projected_gradient_mapping_max": 4.562693528538279e-07,
+      "source_targets_weights_exact": true,
+      "saved_final_found_in_evaluation_trace": true,
+      "trace_evaluations": 29
+    },
+    {
+      "condition": "soh2024_digestion:condition:aSPIRE_IL37b",
+      "observations": 3360,
+      "prediction_error": 2.6145752229922437e-14,
+      "reference_log_mass_error": 0.0,
+      "gradient_error": 5.793976409762536e-16,
+      "mse": 0.07133606416047342,
+      "projected_gradient_mapping_max": 5.9026633889378705e-06,
+      "source_targets_weights_exact": true,
+      "saved_final_found_in_evaluation_trace": true,
+      "trace_evaluations": 300
+    },
+    {
+      "condition": "soh2024_digestion:condition:aSPIRE_LEDGF",
+      "observations": 11508,
+      "prediction_error": 3.4416913763379853e-15,
+      "reference_log_mass_error": 3.552713678800501e-15,
+      "gradient_error": 9.665662367708272e-17,
+      "mse": 0.11332663829532712,
+      "projected_gradient_mapping_max": 1.0324651143590311e-07,
+      "source_targets_weights_exact": true,
+      "saved_final_found_in_evaluation_trace": true,
+      "trace_evaluations": 59
+    },
+    {
+      "condition": "soh2024_digestion:condition:aSPIRE_hTau",
+      "observations": 13640,
+      "prediction_error": 4.884981308350689e-15,
+      "reference_log_mass_error": 3.552713678800501e-15,
+      "gradient_error": 2.135108910836902e-16,
+      "mse": 0.11789221108225138,
+      "projected_gradient_mapping_max": 2.134133960757838e-06,
+      "source_targets_weights_exact": true,
+      "saved_final_found_in_evaluation_trace": true,
+      "trace_evaluations": 48
+    }
+  ],
+  "rank_discrepancy": {
+    "producer_raw_spearman": 0.4963661982626829,
+    "independent_direct_sum_spearman": 0.4963660451413412,
+    "absolute_difference": 1.5312134171718839e-07,
+    "interpretation": "Raw ranks are not asserted equal. All per-point values agree within the independently checked 1e-10 gate; finite-precision near-tie ordering can differ."
+  },
+  "metrics": {
+    "mse": 0.6356746613178118,
+    "rmse": 0.7972920803054624,
+    "pearson": 0.6037850699847781,
+    "spearman": 0.4963660451413412,
+    "prediction_sd": 0.7856536452042354
+  },
+  "all_predictions_verified": 67576,
+  "all_parameter_gradients_verified": 2121,
+  "verification_scope": "Original source membership, targets, weights, direct bond sums, all final gradients, KKT mapping, metrics, reference masses and trace consistency. No independent optimizer trajectory replay or global-optimum proof.",
+  "seconds": 3.1531714579905383,
+  "peak_rss_bytes": 1073561600
+}

@@ -1,0 +1,17 @@
+{
+  "frozen_at": "2026-10-24T05:11:40.408977-04:00",
+  "command": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0449_codex_apc-precursor-response/analysis/verify_predictions.py"
+  ],
+  "source_sha256": {
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0449_codex_apc-precursor-response/analysis/verify_predictions.py": "aed957a29c85e9b6522c85601cd6e034cd862e38f5dd8d2b953e6f1a9f578d65"
+  },
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "independent_of": "producer model and physical primitives; independent NumPy/SciPy metric calculation",
+  "test_metrics_not_yet_inspected": true
+}

@@ -1,0 +1,45 @@
+{
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "limits": {
+    "stage_seconds": 1200,
+    "rss_bytes": 3221225472,
+    "startup_memory_bytes": 3221225472,
+    "disk_floor_bytes": 1073741824,
+    "start_margin_bytes": 33554432
+  },
+  "environment_overrides": {
+    "PYTHONSAFEPATH": "1",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONUNBUFFERED": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "PYTHONPATH": "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-26_0308_codex_nontryptic-sequence-response/code"
+  },
+  "experiment_id": "2026-10-26_0308_codex_nontryptic-sequence-response",
+  "agent_model": "Codex/GPT-6",
+  "presto_commit": "964ffd3ade535208c9ff94b7d31eaa3d89ea7928",
+  "dirty_tracked": true,
+  "source_scope": "nominal free1H targeted-MS2 sequence response, not endogenous APC concentration",
+  "new_network_requests": 0,
+  "validation_test_split": "nested precursor-gene-grouped development; no independent biological test",
+  "reason_no_predictions": "predictions will be preserved after fitting",
+  "plan_sha256": "50e2e6eb54e8c72f3b91dd075b9121efdf9dc2d5fb0dcf8c42d280fc360b6cf7",
+  "frozen_code_sha256": {
+    "code/launch.py": "5537d6bb7d632132810574c566bc7fbe9b4697399bc9ea3062c11016c156279e",
+    "reproduce/source/launch.py": "5537d6bb7d632132810574c566bc7fbe9b4697399bc9ea3062c11016c156279e",
+    "reproduce/launch.sh": "69021de3a709d5dad9b46eac169aeacefd3802093c4b880afe1ac9870df33bbd"
+  },
+  "hitlist_commit": "ac3e04841e5a8b0655b1bbd91df2ffd3e23d8cc0",
+  "hitlist_checkout": "/Users/iskander/code/presto/.worktrees/hitlist-nontryptic-calibration",
+  "package": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/nontryptic_calibration_package/2026-10-26_0236_codex_nontryptic-source-package/attempt2",
+  "recipe_destination": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/nontryptic_response_recipes/2026-10-26_0308_codex_nontryptic-sequence-response",
+  "alphas": [
+    0.1,
+    1.0,
+    10.0,
+    100.0
+  ]
+}

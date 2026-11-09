@@ -1,0 +1,3 @@
+# Independent verifier representation correction
+
+The first verifier stopped before producing a successful receipt: numeric Excel channel headers were decoded as floats, so str(126.0) did not match canonical channel text 126. Inspection of all twelve headers found only this numeric rendering mismatch (126 and 131); isotope suffixes match literally. Preserve the failed executed source/log under results/verification-attempt1. Normalize integral numeric header values to integer text only at header comparison. Do not change source quantities, eligibility, components, splits, thresholds or inventory. Rerun the corrected independent verifier once and retain its separate log. No biological fit is authorized by this correction.

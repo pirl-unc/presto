@@ -1,0 +1,36 @@
+{
+  "manifest": "experiments/2026-10-24_1818_codex_do-source-qualification/reproduce/processed-probe.json",
+  "assets": [
+    {
+      "name": "012916_WT1_1.mzTab",
+      "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000082570%2Fccms_result%2F012916_WT1_1.mzTab&forceDownload=true",
+      "expected_bytes": 1208795,
+      "selection": "First source-named WT acquisition; schema/quantity-field inspection only",
+      "started_utc": "2026-10-24T18:23:05.826663+00:00",
+      "status_code": 200,
+      "final_url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000082570%2Fccms_result%2F012916_WT1_1.mzTab&forceDownload=true",
+      "headers": {},
+      "status": "retrieved",
+      "bytes": 1208795,
+      "sha256": "1256ba06f205dde8a7fc247ddfc021551ea3deaebdddeab4166aef24a2e93820",
+      "path": "/private/tmp/presto-modular-model/data/do_source_qualification/2026-10-24_1818_v1/012916_WT1_1.mzTab",
+      "seconds": 0.9249004169832915
+    },
+    {
+      "name": "012916_WT1_1.mzid",
+      "url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000082570%2Fresult%2F012916_WT1_1.mzid&forceDownload=true",
+      "expected_bytes": 13384555,
+      "selection": "First source-named WT acquisition; schema/quantity-field inspection only",
+      "started_utc": "2026-10-24T18:23:06.752734+00:00",
+      "status_code": 200,
+      "final_url": "https://massive.ucsd.edu/ProteoSAFe/DownloadResultFile?file=f.MSV000082570%2Fresult%2F012916_WT1_1.mzid&forceDownload=true",
+      "headers": {},
+      "status": "retrieved",
+      "bytes": 13384555,
+      "sha256": "3f3b48298d7534fa16c42292e319dec6654064c86aaced69d44cb6c6db82f177",
+      "path": "/private/tmp/presto-modular-model/data/do_source_qualification/2026-10-24_1818_v1/012916_WT1_1.mzid",
+      "seconds": 1.2913681250065565
+    }
+  ],
+  "total_stored_bytes": 14866858
+}

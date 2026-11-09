@@ -1,0 +1,699 @@
+{
+  "all_checks_pass": true,
+  "toy": {
+    "mathematical_cases": [
+      {
+        "eta": -1.0,
+        "time": 0.0,
+        "amount_error": 0.0,
+        "gradient_error": 0.0
+      },
+      {
+        "eta": -1.0,
+        "time": 0.5,
+        "amount_error": 2.220446049250313e-16,
+        "gradient_error": 2.220446049250313e-16
+      },
+      {
+        "eta": -1.0,
+        "time": 2.0,
+        "amount_error": 1.3877787807814457e-15,
+        "gradient_error": 8.881784197001252e-16
+      },
+      {
+        "eta": -1.0,
+        "time": 8.0,
+        "amount_error": 2.220446049250313e-16,
+        "gradient_error": 7.882583474838611e-15
+      },
+      {
+        "eta": 0.0,
+        "time": 0.0,
+        "amount_error": 0.0,
+        "gradient_error": 0.0
+      },
+      {
+        "eta": 0.0,
+        "time": 0.5,
+        "amount_error": 1.3877787807814457e-17,
+        "gradient_error": 1.1102230246251565e-16
+      },
+      {
+        "eta": 0.0,
+        "time": 2.0,
+        "amount_error": 2.7755575615628914e-17,
+        "gradient_error": 2.220446049250313e-15
+      },
+      {
+        "eta": 0.0,
+        "time": 8.0,
+        "amount_error": 2.220446049250313e-16,
+        "gradient_error": 1.609823385706477e-15
+      },
+      {
+        "eta": 1.0,
+        "time": 0.0,
+        "amount_error": 0.0,
+        "gradient_error": 0.0
+      },
+      {
+        "eta": 1.0,
+        "time": 0.5,
+        "amount_error": 6.938893903907228e-18,
+        "gradient_error": 4.052314039881821e-15
+      },
+      {
+        "eta": 1.0,
+        "time": 2.0,
+        "amount_error": 2.7755575615628914e-17,
+        "gradient_error": 1.0103029524088925e-14
+      },
+      {
+        "eta": 1.0,
+        "time": 8.0,
+        "amount_error": 1.1102230246251565e-16,
+        "gradient_error": 1.176836406102666e-14
+      }
+    ],
+    "probes": [
+      {
+        "eta": -1.0,
+        "time": 0.5,
+        "count": 1024,
+        "mean_relative_error": 0.00432153744626469,
+        "rms_relative_error": 0.049335553418293404,
+        "maximum_marginal_standard_errors": 1.793832287891135,
+        "gate": false
+      },
+      {
+        "eta": -1.0,
+        "time": 0.5,
+        "count": 8192,
+        "mean_relative_error": 0.0012732519094336382,
+        "rms_relative_error": 0.021813348366621202,
+        "maximum_marginal_standard_errors": 1.3317447296671763,
+        "gate": false
+      },
+      {
+        "eta": -1.0,
+        "time": 0.5,
+        "count": 65536,
+        "mean_relative_error": 0.001796055181171063,
+        "rms_relative_error": 0.008442257916404234,
+        "maximum_marginal_standard_errors": 1.9494757889598568,
+        "gate": true
+      },
+      {
+        "eta": -1.0,
+        "time": 2.0,
+        "count": 1024,
+        "mean_relative_error": 0.0072093545988258624,
+        "rms_relative_error": 0.0532784528980249,
+        "maximum_marginal_standard_errors": 2.1970152293190273,
+        "gate": false
+      },
+      {
+        "eta": -1.0,
+        "time": 2.0,
+        "count": 8192,
+        "mean_relative_error": 0.007612420558698393,
+        "rms_relative_error": 0.019883641768933254,
+        "maximum_marginal_standard_errors": 2.002849865609856,
+        "gate": false
+      },
+      {
+        "eta": -1.0,
+        "time": 2.0,
+        "count": 65536,
+        "mean_relative_error": 0.0003903424862327383,
+        "rms_relative_error": 0.007136608227076512,
+        "maximum_marginal_standard_errors": 1.5342309508767953,
+        "gate": true
+      },
+      {
+        "eta": -1.0,
+        "time": 8.0,
+        "count": 1024,
+        "mean_relative_error": 0.013702471904215953,
+        "rms_relative_error": 0.06848474463295938,
+        "maximum_marginal_standard_errors": 2.7451686849815284,
+        "gate": false
+      },
+      {
+        "eta": -1.0,
+        "time": 8.0,
+        "count": 8192,
+        "mean_relative_error": 0.013250779660523102,
+        "rms_relative_error": 0.0375738297220851,
+        "maximum_marginal_standard_errors": 1.5493773943317046,
+        "gate": false
+      },
+      {
+        "eta": -1.0,
+        "time": 8.0,
+        "count": 65536,
+        "mean_relative_error": 0.004776715122136294,
+        "rms_relative_error": 0.012960080504218702,
+        "maximum_marginal_standard_errors": 2.100417847729163,
+        "gate": true
+      },
+      {
+        "eta": 0.0,
+        "time": 0.5,
+        "count": 1024,
+        "mean_relative_error": 0.005253014338173979,
+        "rms_relative_error": 0.07231143609017272,
+        "maximum_marginal_standard_errors": 1.477443477064982,
+        "gate": false
+      },
+      {
+        "eta": 0.0,
+        "time": 0.5,
+        "count": 8192,
+        "mean_relative_error": 0.004457132429121444,
+        "rms_relative_error": 0.02778908858431183,
+        "maximum_marginal_standard_errors": 1.8229598367690882,
+        "gate": false
+      },
+      {
+        "eta": 0.0,
+        "time": 0.5,
+        "count": 65536,
+        "mean_relative_error": 0.0013675330053049195,
+        "rms_relative_error": 0.01015426004679129,
+        "maximum_marginal_standard_errors": 1.869495141863047,
+        "gate": true
+      },
+      {
+        "eta": 0.0,
+        "time": 2.0,
+        "count": 1024,
+        "mean_relative_error": 0.009139425614619404,
+        "rms_relative_error": 0.050689484873674744,
+        "maximum_marginal_standard_errors": 1.7590441483824975,
+        "gate": false
+      },
+      {
+        "eta": 0.0,
+        "time": 2.0,
+        "count": 8192,
+        "mean_relative_error": 0.0035758718138653293,
+        "rms_relative_error": 0.02319870723300892,
+        "maximum_marginal_standard_errors": 2.383049619033034,
+        "gate": false
+      },
+      {
+        "eta": 0.0,
+        "time": 2.0,
+        "count": 65536,
+        "mean_relative_error": 0.0005990949717059006,
+        "rms_relative_error": 0.0077421185062200954,
+        "maximum_marginal_standard_errors": 2.4449999004305774,
+        "gate": true
+      },
+      {
+        "eta": 0.0,
+        "time": 8.0,
+        "count": 1024,
+        "mean_relative_error": 0.00714268505835176,
+        "rms_relative_error": 0.0482199844687719,
+        "maximum_marginal_standard_errors": 1.974742577275158,
+        "gate": false
+      },
+      {
+        "eta": 0.0,
+        "time": 8.0,
+        "count": 8192,
+        "mean_relative_error": 0.0020319336041158004,
+        "rms_relative_error": 0.018964530823256498,
+        "maximum_marginal_standard_errors": 1.7472983891196343,
+        "gate": false
+      },
+      {
+        "eta": 0.0,
+        "time": 8.0,
+        "count": 65536,
+        "mean_relative_error": 0.0008028484359568941,
+        "rms_relative_error": 0.006303910137406155,
+        "maximum_marginal_standard_errors": 3.297457080686612,
+        "gate": true
+      },
+      {
+        "eta": 1.0,
+        "time": 0.5,
+        "count": 1024,
+        "mean_relative_error": 0.09436272289316482,
+        "rms_relative_error": 0.1631345078224649,
+        "maximum_marginal_standard_errors": 2.4168138528963294,
+        "gate": false
+      },
+      {
+        "eta": 1.0,
+        "time": 0.5,
+        "count": 8192,
+        "mean_relative_error": 0.007623257827286369,
+        "rms_relative_error": 0.0499256164990466,
+        "maximum_marginal_standard_errors": 1.9291307411338117,
+        "gate": false
+      },
+      {
+        "eta": 1.0,
+        "time": 0.5,
+        "count": 65536,
+        "mean_relative_error": 0.005517859097027854,
+        "rms_relative_error": 0.023513978246540335,
+        "maximum_marginal_standard_errors": 1.8494232415160006,
+        "gate": true
+      },
+      {
+        "eta": 1.0,
+        "time": 2.0,
+        "count": 1024,
+        "mean_relative_error": 0.00713957416593105,
+        "rms_relative_error": 0.08079377743913387,
+        "maximum_marginal_standard_errors": 2.3537303405547476,
+        "gate": false
+      },
+      {
+        "eta": 1.0,
+        "time": 2.0,
+        "count": 8192,
+        "mean_relative_error": 0.006462486607775042,
+        "rms_relative_error": 0.029134490286843614,
+        "maximum_marginal_standard_errors": 2.6040414042617632,
+        "gate": false
+      },
+      {
+        "eta": 1.0,
+        "time": 2.0,
+        "count": 65536,
+        "mean_relative_error": 0.0029818102337402933,
+        "rms_relative_error": 0.010964030297811662,
+        "maximum_marginal_standard_errors": 1.839657443617726,
+        "gate": true
+      },
+      {
+        "eta": 1.0,
+        "time": 8.0,
+        "count": 1024,
+        "mean_relative_error": 0.004370834936223021,
+        "rms_relative_error": 0.03877284218963921,
+        "maximum_marginal_standard_errors": 1.7779707675741194,
+        "gate": false
+      },
+      {
+        "eta": 1.0,
+        "time": 8.0,
+        "count": 8192,
+        "mean_relative_error": 0.002443180696890623,
+        "rms_relative_error": 0.01679411306580775,
+        "maximum_marginal_standard_errors": 2.4183278257375096,
+        "gate": false
+      },
+      {
+        "eta": 1.0,
+        "time": 8.0,
+        "count": 65536,
+        "mean_relative_error": 0.0012012788926488189,
+        "rms_relative_error": 0.0063651473621371205,
+        "maximum_marginal_standard_errors": 2.5821455023054014,
+        "gate": true
+      }
+    ],
+    "n_traces": 288,
+    "maximum_trace_error": 3.552713678800501e-15
+  },
+  "runtime": {
+    "cases": [
+      {
+        "case_id": 0,
+        "backend": "exact",
+        "status": "verified"
+      },
+      {
+        "case_id": 0,
+        "backend": "sampled",
+        "status": "verified"
+      },
+      {
+        "case_id": 1,
+        "backend": "exact",
+        "status": "verified"
+      },
+      {
+        "case_id": 1,
+        "backend": "sampled",
+        "status": "verified"
+      },
+      {
+        "case_id": 2,
+        "backend": "exact",
+        "status": "verified"
+      },
+      {
+        "case_id": 2,
+        "backend": "sampled",
+        "status": "verified"
+      },
+      {
+        "case_id": 3,
+        "backend": "exact",
+        "status": "verified"
+      },
+      {
+        "case_id": 3,
+        "backend": "sampled",
+        "status": "verified"
+      },
+      {
+        "case_id": 4,
+        "backend": "exact",
+        "status": "verified"
+      },
+      {
+        "case_id": 4,
+        "backend": "sampled",
+        "status": "verified"
+      },
+      {
+        "case_id": 5,
+        "backend": "exact",
+        "status": "verified"
+      },
+      {
+        "case_id": 5,
+        "backend": "sampled",
+        "status": "verified"
+      },
+      {
+        "case_id": 6,
+        "backend": "exact",
+        "status": "verified"
+      },
+      {
+        "case_id": 6,
+        "backend": "sampled",
+        "status": "verified"
+      },
+      {
+        "case_id": 7,
+        "backend": "exact",
+        "status": "verified",
+        "independent_amount_error": 8.604228440844963e-15,
+        "independent_log_rate_gradient_error": 3.74049749507499e-17
+      },
+      {
+        "case_id": 7,
+        "backend": "sampled",
+        "status": "verified"
+      },
+      {
+        "case_id": 8,
+        "backend": "exact",
+        "status": "verified",
+        "independent_amount_error": 3.83026943495679e-15,
+        "independent_log_rate_gradient_error": 2.2442984970449942e-17
+      },
+      {
+        "case_id": 8,
+        "backend": "sampled",
+        "status": "verified"
+      },
+      {
+        "case_id": 9,
+        "backend": "exact",
+        "status": "verified",
+        "independent_amount_error": 6.106226635438361e-16,
+        "independent_log_rate_gradient_error": 2.2551405187698492e-17
+      },
+      {
+        "case_id": 9,
+        "backend": "sampled",
+        "status": "verified"
+      },
+      {
+        "case_id": 10,
+        "backend": "exact",
+        "status": "verified",
+        "independent_amount_error": 8.326672684688674e-16,
+        "independent_log_rate_gradient_error": 1.734723475976807e-17
+      },
+      {
+        "case_id": 10,
+        "backend": "sampled",
+        "status": "verified"
+      },
+      {
+        "case_id": 11,
+        "backend": "exact",
+        "status": "verified",
+        "independent_amount_error": 1.3877787807814457e-15,
+        "independent_log_rate_gradient_error": 3.5128150388530344e-17
+      },
+      {
+        "case_id": 11,
+        "backend": "sampled",
+        "status": "verified"
+      },
+      {
+        "case_id": 12,
+        "backend": "exact",
+        "status": "verified",
+        "independent_amount_error": 3.774758283725532e-15,
+        "independent_log_rate_gradient_error": 1.3986208025063007e-17
+      },
+      {
+        "case_id": 12,
+        "backend": "sampled",
+        "status": "verified"
+      },
+      {
+        "case_id": 13,
+        "backend": "exact",
+        "status": "verified",
+        "independent_amount_error": 3.83026943495679e-15,
+        "independent_log_rate_gradient_error": 1.1492543028346347e-17
+      },
+      {
+        "case_id": 13,
+        "backend": "sampled",
+        "status": "verified"
+      },
+      {
+        "case_id": 14,
+        "backend": "exact",
+        "status": "budget_exceeded",
+        "scope": "Recorded failure retained; no successful-output claim"
+      },
+      {
+        "case_id": 14,
+        "backend": "sampled",
+        "status": "verified"
+      },
+      {
+        "case_id": 15,
+        "backend": "exact",
+        "status": "budget_exceeded",
+        "scope": "Recorded failure retained; no successful-output claim"
+      },
+      {
+        "case_id": 15,
+        "backend": "sampled",
+        "status": "verified"
+      },
+      {
+        "case_id": 16,
+        "backend": "exact",
+        "status": "verified"
+      },
+      {
+        "case_id": 16,
+        "backend": "sampled",
+        "status": "verified"
+      },
+      {
+        "case_id": 17,
+        "backend": "exact",
+        "status": "verified"
+      },
+      {
+        "case_id": 17,
+        "backend": "sampled",
+        "status": "verified"
+      },
+      {
+        "case_id": 18,
+        "backend": "exact",
+        "status": "verified"
+      },
+      {
+        "case_id": 18,
+        "backend": "sampled",
+        "status": "verified"
+      },
+      {
+        "case_id": 19,
+        "backend": "exact",
+        "status": "budget_exceeded",
+        "scope": "Recorded failure retained; no successful-output claim"
+      },
+      {
+        "case_id": 19,
+        "backend": "sampled",
+        "status": "verified"
+      },
+      {
+        "case_id": 20,
+        "backend": "exact",
+        "status": "budget_exceeded",
+        "scope": "Recorded failure retained; no successful-output claim"
+      },
+      {
+        "case_id": 20,
+        "backend": "sampled",
+        "status": "verified"
+      }
+    ],
+    "comparisons": [
+      {
+        "case_id": 0,
+        "tagged_residue_mass_TV": 0.48510550254599205,
+        "copy_count_rmse": 0.0012235009442169392,
+        "raw_bond_gradient_relative_error": 0.11172728844633836,
+        "sequence_parameter_gradient_relative_error": 0.08822693974742603,
+        "scope": "One K512 group and deterministic artificial readout; no biological training quality or variance guarantee"
+      },
+      {
+        "case_id": 1,
+        "tagged_residue_mass_TV": 0.4636303309755746,
+        "copy_count_rmse": 0.0013261167603343907,
+        "raw_bond_gradient_relative_error": 0.10305492920623184,
+        "sequence_parameter_gradient_relative_error": 0.0694982656301301,
+        "scope": "One K512 group and deterministic artificial readout; no biological training quality or variance guarantee"
+      },
+      {
+        "case_id": 2,
+        "tagged_residue_mass_TV": 0.2712875113515215,
+        "copy_count_rmse": 0.0027525119317436176,
+        "raw_bond_gradient_relative_error": 0.4104827751587584,
+        "sequence_parameter_gradient_relative_error": 0.10769960862195994,
+        "scope": "One K512 group and deterministic artificial readout; no biological training quality or variance guarantee"
+      },
+      {
+        "case_id": 3,
+        "tagged_residue_mass_TV": 0.31765292613383034,
+        "copy_count_rmse": 0.0025992826329222234,
+        "raw_bond_gradient_relative_error": 0.6089306194128832,
+        "sequence_parameter_gradient_relative_error": 0.17211679329068896,
+        "scope": "One K512 group and deterministic artificial readout; no biological training quality or variance guarantee"
+      },
+      {
+        "case_id": 4,
+        "tagged_residue_mass_TV": 0.30968109562893087,
+        "copy_count_rmse": 0.0022862293043621395,
+        "raw_bond_gradient_relative_error": 0.5470284887674128,
+        "sequence_parameter_gradient_relative_error": 0.14200409637150926,
+        "scope": "One K512 group and deterministic artificial readout; no biological training quality or variance guarantee"
+      },
+      {
+        "case_id": 5,
+        "tagged_residue_mass_TV": 0.7048564624370135,
+        "copy_count_rmse": 0.0008236269376381611,
+        "raw_bond_gradient_relative_error": 0.09637474938498625,
+        "sequence_parameter_gradient_relative_error": 0.09054052110193433,
+        "scope": "One K512 group and deterministic artificial readout; no biological training quality or variance guarantee"
+      },
+      {
+        "case_id": 6,
+        "tagged_residue_mass_TV": 0.7437853427437668,
+        "copy_count_rmse": 0.000872537005001077,
+        "raw_bond_gradient_relative_error": 0.07960850919470652,
+        "sequence_parameter_gradient_relative_error": 0.07803829564411816,
+        "scope": "One K512 group and deterministic artificial readout; no biological training quality or variance guarantee"
+      },
+      {
+        "case_id": 7,
+        "tagged_residue_mass_TV": 0.15072608735397197,
+        "copy_count_rmse": 0.001562812033126364,
+        "raw_bond_gradient_relative_error": 0.2147082994559115,
+        "sequence_parameter_gradient_relative_error": 0.11475471522893363,
+        "scope": "One K512 group and deterministic artificial readout; no biological training quality or variance guarantee"
+      },
+      {
+        "case_id": 8,
+        "tagged_residue_mass_TV": 0.14559271904985505,
+        "copy_count_rmse": 0.0015269005693384875,
+        "raw_bond_gradient_relative_error": 0.11034261072526995,
+        "sequence_parameter_gradient_relative_error": 0.11675010590664116,
+        "scope": "One K512 group and deterministic artificial readout; no biological training quality or variance guarantee"
+      },
+      {
+        "case_id": 9,
+        "tagged_residue_mass_TV": 0.15616077500242775,
+        "copy_count_rmse": 0.0026985172204213818,
+        "raw_bond_gradient_relative_error": 0.15759413267073236,
+        "sequence_parameter_gradient_relative_error": 0.04453372325709419,
+        "scope": "One K512 group and deterministic artificial readout; no biological training quality or variance guarantee"
+      },
+      {
+        "case_id": 10,
+        "tagged_residue_mass_TV": 0.1874397543079913,
+        "copy_count_rmse": 0.0026123975922788035,
+        "raw_bond_gradient_relative_error": 0.16085503625514488,
+        "sequence_parameter_gradient_relative_error": 0.11933839252293127,
+        "scope": "One K512 group and deterministic artificial readout; no biological training quality or variance guarantee"
+      },
+      {
+        "case_id": 11,
+        "tagged_residue_mass_TV": 0.15057898140308784,
+        "copy_count_rmse": 0.002393294471145177,
+        "raw_bond_gradient_relative_error": 0.09235611273679399,
+        "sequence_parameter_gradient_relative_error": 0.034583787995618565,
+        "scope": "One K512 group and deterministic artificial readout; no biological training quality or variance guarantee"
+      },
+      {
+        "case_id": 12,
+        "tagged_residue_mass_TV": 0.2085306450176702,
+        "copy_count_rmse": 0.0012432117393229886,
+        "raw_bond_gradient_relative_error": 0.2741870390655958,
+        "sequence_parameter_gradient_relative_error": 0.0855142728390854,
+        "scope": "One K512 group and deterministic artificial readout; no biological training quality or variance guarantee"
+      },
+      {
+        "case_id": 13,
+        "tagged_residue_mass_TV": 0.2345921497605422,
+        "copy_count_rmse": 0.0012978959487629864,
+        "raw_bond_gradient_relative_error": 0.6529374062431279,
+        "sequence_parameter_gradient_relative_error": 0.10219018627203205,
+        "scope": "One K512 group and deterministic artificial readout; no biological training quality or variance guarantee"
+      },
+      {
+        "case_id": 16,
+        "tagged_residue_mass_TV": 0.15694933662116675,
+        "copy_count_rmse": 0.002347854815898549,
+        "raw_bond_gradient_relative_error": 0.14786691693184933,
+        "sequence_parameter_gradient_relative_error": 0.18541223192005704,
+        "scope": "One K512 group and deterministic artificial readout; no biological training quality or variance guarantee"
+      },
+      {
+        "case_id": 17,
+        "tagged_residue_mass_TV": 0.17707110217943692,
+        "copy_count_rmse": 0.0023999258952482195,
+        "raw_bond_gradient_relative_error": 0.2579286372796933,
+        "sequence_parameter_gradient_relative_error": 0.08054878410043492,
+        "scope": "One K512 group and deterministic artificial readout; no biological training quality or variance guarantee"
+      },
+      {
+        "case_id": 18,
+        "tagged_residue_mass_TV": 0.1548216630637603,
+        "copy_count_rmse": 0.0021971908386083077,
+        "raw_bond_gradient_relative_error": 0.13749294921837893,
+        "sequence_parameter_gradient_relative_error": 0.05453005623696999,
+        "scope": "One K512 group and deterministic artificial readout; no biological training quality or variance guarantee"
+      }
+    ]
+  },
+  "seconds": 0.6341891670017503,
+  "peak_rss_bytes": 198705152,
+  "scope": "Independent mask generator/Frechet derivatives, all saved Monte Carlo sufficient statistics,288toy event traces and every successful runtime output. Full-scale path scores not regenerated; failures preserved."
+}

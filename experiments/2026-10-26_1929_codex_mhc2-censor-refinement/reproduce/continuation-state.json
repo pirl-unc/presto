@@ -1,0 +1,39 @@
+{
+  "status": "stopped_on_failure",
+  "events": [
+    {
+      "utc": "2026-10-26T19:48:46.233631+00:00",
+      "action": "fit-exact_continuation",
+      "argv": [
+        "/Users/iskander/code/shared-virtual-env/bin/python",
+        "/private/tmp/presto-mhc2-20261026/presto/experiments/2026-10-26_1929_codex_mhc2-censor-refinement/code/launch.py",
+        "fit",
+        "exact_continuation"
+      ]
+    },
+    {
+      "utc": "2026-10-26T20:03:22.290121+00:00",
+      "action": "score-exact_continuation",
+      "argv": [
+        "/Users/iskander/code/shared-virtual-env/bin/python",
+        "/private/tmp/presto-mhc2-20261026/presto/experiments/2026-10-26_1929_codex_mhc2-censor-refinement/code/launch.py",
+        "score",
+        "exact_continuation"
+      ]
+    },
+    {
+      "utc": "2026-10-26T20:03:54.264140+00:00",
+      "action": "fit-censor_refinement",
+      "argv": [
+        "/Users/iskander/code/shared-virtual-env/bin/python",
+        "/private/tmp/presto-mhc2-20261026/presto/experiments/2026-10-26_1929_codex_mhc2-censor-refinement/code/launch.py",
+        "fit",
+        "censor_refinement"
+      ]
+    }
+  ],
+  "current_action": "fit-censor_refinement",
+  "pid": 11578,
+  "error": "RuntimeError('fit-censor_refinement exited 1; no next condition launched')",
+  "updated_utc": "2026-10-26T20:06:02.911867+00:00"
+}

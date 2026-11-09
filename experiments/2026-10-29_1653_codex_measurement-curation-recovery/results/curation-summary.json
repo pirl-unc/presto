@@ -1,0 +1,101 @@
+{
+  "policy": "presto.measurement-curation.v1",
+  "screen": {
+    "min_panel_rows": 20,
+    "min_heap_rows": 5,
+    "min_heap_fraction": 0.1,
+    "inference_heap_fraction": 0.2,
+    "min_qualitative_agreement": 0.8,
+    "min_distinct_values": 3,
+    "floor_gap_ratio": 4.0
+  },
+  "scope": "frozen TRAIN physical cohort only; original validation/test unchanged",
+  "source_sha256": "c76aeafbb47c66b7fa904c191502de95f8812d45275cdfe680821838a37200b1",
+  "catalog_sha256": "ddc3493c64f4328de174a6c2cda1f007ec2f93a1ef649add25d2ef9c1720add1",
+  "dispositions": {
+    "admitted:unspecified_assumed_exact": 103400,
+    "admitted:reported": 89353,
+    "deferred:suspected_assay_limit_requires_review": 618,
+    "admitted:reported_qualitative_binary": 40460,
+    "admitted:inferred_panel_limit": 506
+  },
+  "counts": {
+    "I:kd_via_ec50:=->=:unspecified_assumed_exact": 436,
+    "I:kd_via_ic50:=->=:unspecified_assumed_exact": 47583,
+    "I:kd_via_ec50:>->>:reported": 25710,
+    "I:kd_via_ec50:=->=:reported": 9877,
+    "I:kd_via_ic50:>->>:reported": 2583,
+    "II:kd_via_ic50:=->=:unspecified_assumed_exact": 18375,
+    "II:kd_via_ic50:>->>:reported": 2371,
+    "II:ic50:=->=:reported": 4972,
+    "II:ic50:>->>:reported": 3935,
+    "II:ic50:=->=:unspecified_assumed_exact": 27251,
+    "II:qualitative_binding:=->=:reported_qualitative_binary": 18279,
+    "I:kd_via_ic50:=->=:reported": 744,
+    "I:ic50:=->=:reported": 11578,
+    "I:ic50:>->>:reported": 884,
+    "I:ic50:=->=:unspecified_assumed_exact": 5827,
+    "II:half_life:=->=:unspecified_assumed_exact": 17,
+    "I:kd_via_ic50:>=->>=:reported": 2,
+    "I:qualitative_binding:=->=:reported_qualitative_binary": 22181,
+    "I:half_life:=->=:unspecified_assumed_exact": 3312,
+    "I:kd_via_ic50:=->>=:inferred_panel_limit": 240,
+    "I:td50:=->=:unspecified_assumed_exact": 395,
+    "II:ic50:=->>=:inferred_panel_limit": 18,
+    "II:kd_via_ic50:=->>=:inferred_panel_limit": 120,
+    "I:kd:=->=:reported": 4252,
+    "I:kd:>->>:reported": 12056,
+    "II:kd_via_ic50:=->=:reported": 583,
+    "II:kd:=->=:reported": 1252,
+    "II:td50:=->=:reported": 2,
+    "I:td50:=->=:reported": 66,
+    "II:half_life:=->=:reported": 119,
+    "II:half_life:>->>:reported": 1,
+    "II:td50:=->=:unspecified_assumed_exact": 5,
+    "I:koff:=->=:unspecified_assumed_exact": 6,
+    "I:kd_via_ec50:=->>=:inferred_panel_limit": 56,
+    "I:ic50:>=->>=:reported": 175,
+    "II:ec50:>->>:reported": 13,
+    "II:ec50:=->=:unspecified_assumed_exact": 55,
+    "I:half_life:=->=:reported": 5272,
+    "II:ic50:>=->>=:reported": 10,
+    "II:kd_via_ec50:=->=:reported": 2157,
+    "I:ec50:=->=:unspecified_assumed_exact": 115,
+    "I:kd:=->=:unspecified_assumed_exact": 22,
+    "I:ic50:=-><=:inferred_panel_limit": 14,
+    "II:kd_via_ec50:>->>:reported": 433,
+    "I:ic50:=->>=:inferred_panel_limit": 48,
+    "I:half_life:>->>:reported": 8,
+    "II:ec50:=->=:reported": 29,
+    "II:kd_via_ic50:>=->>=:reported": 2,
+    "II:kd:=->=:unspecified_assumed_exact": 1,
+    "II:kd:>->>:reported": 230,
+    "II:kd_via_ic50:=-><=:inferred_panel_limit": 10,
+    "II:koff:=->=:reported": 2,
+    "I:td50:>->>:reported": 31,
+    "I:td50:>=->>=:reported": 4
+  },
+  "decision_status_counts": {
+    "needs_review": 618,
+    "inferred_panel_limit": 506
+  },
+  "panel_count": 71,
+  "seconds": 141.748601041,
+  "cpu": 4,
+  "memory_mib": 16384,
+  "requested_gpu": null,
+  "files": {
+    "decisions.jsonl.gz": {
+      "sha256": "0c741d1bf755394f7449eb5dd78c6a38f34846396480d47dbcb3850b7dd301e8",
+      "bytes": 58177
+    },
+    "panels.json": {
+      "sha256": "a0d12ce4c17fcfaa6ed204a1876a58e46358e5cc9e6f6e47d2dd5a7389f927cc",
+      "bytes": 64037
+    },
+    "train.jsonl.gz": {
+      "sha256": "15a842746bd2fb2cf9af872d8c9fb0a3d241e2dddc7f6ff019e7205993baaa6e",
+      "bytes": 30944394
+    }
+  }
+}

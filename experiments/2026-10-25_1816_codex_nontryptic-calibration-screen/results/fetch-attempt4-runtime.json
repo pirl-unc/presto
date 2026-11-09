@@ -1,0 +1,58 @@
+{
+  "stage": "fetch",
+  "attempt": 4,
+  "started_utc": "2026-10-25T18:30:59.585143+00:00",
+  "status": "passed",
+  "child_launched": true,
+  "exit_code": 0,
+  "resource_violation": null,
+  "memory_admission": {
+    "metric": "macos_free_plus_speculative",
+    "bytes": 7399784448
+  },
+  "disk_free_before_bytes": 14724362240,
+  "request_set_sha256": "da44798be6466cf06c1e51ab2fc15e458c00dfebafb0559a4c44cd836bd1ca23",
+  "request_set": {
+    "phase": "processed",
+    "requests": [
+      {
+        "name": "pnas.2111173118.sd06.xlsx",
+        "url": "https://pmc-oa-opendata.s3.amazonaws.com/PMC8449407.1/pnas.2111173118.sd06.xlsx",
+        "expected_kind": "xlsx",
+        "expected_md5": "2e26b265c98938ab320d5e39bfc38f49",
+        "discovery_provenance": "Supplementary Methods p2 assigns isotope identities to S6A; p3 assigns trigger acquisition metadata to S6B/C. Completes original form/protocol qualification; no fitted model."
+      }
+    ]
+  },
+  "environment": {
+    "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "versions": {
+      "requests": "2.34.2",
+      "psutil": "7.2.2"
+    },
+    "overrides": {
+      "PYTHONSAFEPATH": "1",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUNBUFFERED": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    }
+  },
+  "child_pid": 68290,
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "-B",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/code/fetch.py",
+    "--requests",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/requests/processed-2.json"
+  ],
+  "elapsed_seconds": 0.5116510419757105,
+  "peak_observed_process_tree_rss_bytes": 45367296,
+  "peak_child_process_rss_bytes": 45465600,
+  "rss_poll_interval_seconds": 0.05,
+  "disk_free_after_bytes": 14724300800
+}

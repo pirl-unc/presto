@@ -1,0 +1,42 @@
+{
+  "verified": true,
+  "comparisons": 6,
+  "exact_parity": [
+    "scalers",
+    "admission report",
+    "partitions",
+    "trainable indices",
+    "weighted epoch order",
+    "RNG state"
+  ],
+  "normalizations": {
+    "baseline": 90000,
+    "candidate": 30000
+  },
+  "metadata_code_bytes": 60000,
+  "metadata_categories": 10,
+  "peak_rss_bytes": {
+    "baseline": [
+      3317559296,
+      3317559296,
+      3317559296
+    ],
+    "candidate": [
+      3317559296,
+      3317559296,
+      3317559296
+    ]
+  },
+  "raw_artifacts_sha256": {
+    "candidate-2.json": "2d301a5f0f86789be1ba0a8b5edf19a2064bff2cd1c1398c112f41d4ca85b331",
+    "summary.json": "60bae87196bf91b6114f3b4881880feb2f900b37ba2e1b7930c95cafd4bcceca",
+    "baseline-2.json": "7a5c478371cabe7e2485e71434dda7f1ff1ebb4d41bfac77ab30c8b3651e8830",
+    "software-parity.json": "a4e216252091d057709695b30d3dda25f223e7207b4b55a6c99ad1a9c0dd3e1c",
+    "baseline-0.json": "8cceef125baea53eeac8415eb907842e8511e427e6d33c476afb0155b9fcad68",
+    "inputs.json": "cbe0d6c28d188d3129e9fab920133e4c5a5b239785ee1083ff3c6ca6b83451e2",
+    "manifest.json": "e108caa701eec17f01763f5add841ec4991ed2e4b2ef5d445b28b0f2297bc90c",
+    "baseline-1.json": "1c90cb4af9806aef3987b37322449f507fb94d439d51686593869e840318e85b",
+    "candidate-0.json": "7ef7860247e08fe007ff5d8256094b65de8e721ef45afcd4eb88a6f3d5928ee5",
+    "candidate-1.json": "56db68990f6996527cfd376ad983b1ce9c711f5e6380324a90bd7e263284e8f1"
+  }
+}

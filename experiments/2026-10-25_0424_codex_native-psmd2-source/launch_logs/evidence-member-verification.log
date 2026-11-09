@@ -1,0 +1,42 @@
+{
+  "passed": true,
+  "n_members": 2,
+  "members": [
+    {
+      "name": "Hi20S_txt/evidence.txt",
+      "flags": 0,
+      "method": 8,
+      "crc32": 1891855479,
+      "compressed_bytes": 4868280,
+      "uncompressed_bytes": 18452018,
+      "local_header_offset": 93940793,
+      "directory_offset": 167388277,
+      "directory_record_bytes": 104,
+      "retained_range": "Hi20S_txt.evidence-modified.range",
+      "sha256": "5d079d5120a1efd75b0bf9179d31772aa131bca7e651733c8c400ecb4f4aea83"
+    },
+    {
+      "name": "Hi20S_txt/modificationSpecificPeptides.txt",
+      "flags": 0,
+      "method": 8,
+      "crc32": 2887880692,
+      "compressed_bytes": 1353989,
+      "uncompressed_bytes": 3999287,
+      "local_header_offset": 98809240,
+      "directory_offset": 167388600,
+      "directory_record_bytes": 124,
+      "retained_range": "Hi20S_txt.evidence-modified.range",
+      "sha256": "5e16d09d1594725fd4247e8651bc7b2919aa77c512766f8bd329988d0617272e"
+    }
+  ],
+  "argv": [
+    "code/extract_members.py",
+    "--evidence"
+  ],
+  "source_sha256": "a7a983aeb055d47c9293d418862f2cbed849c2730485b94d4767c882b1eb200d",
+  "original_central_and_local_headers_verified": true,
+  "independent_zipfile_bytes_and_crcs_equal": true,
+  "full_original_archive_checksum_verified": false,
+  "seconds": 0.1203981660073623,
+  "peak_rss_bytes": 136921088
+}

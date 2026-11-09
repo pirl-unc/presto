@@ -1,0 +1,17 @@
+{
+  "cpu": "Apple M1 Pro",
+  "cpu_cores": 10,
+  "gpu": "Apple M1 Pro",
+  "gpu_cores": 16,
+  "unified_memory_bytes": 34359738368,
+  "mps_sandbox_available": false,
+  "mps_unsandboxed_available": true,
+  "cpu_and_mps_finite_forward_backward": true,
+  "packages": {
+    "torch": "2.14.1",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "scikit-learn": "1.9.1",
+    "psutil": "7.2.2"
+  }
+}

@@ -1,0 +1,286 @@
+{
+  "status": "completed",
+  "launch": {
+    "utc": "2026-10-27T01:10:05.371739+00:00",
+    "agent_model": "Codex / GPT-6",
+    "git_commit": "2ed1bd8cdd36c94236d55c3fdd9927f6f79d4780",
+    "dirty_status": " M experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/fit-native101-1793047384363865000.json\n M experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/logistic-controller-state.json\n M experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/native-controller-state.json\n M tasks/todo.md\n M training/modular_resume.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/compare.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/continue_remaining.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/continue_streaming.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/logistic_controls_streaming.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/streaming_recovery.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/test_compare.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/comparison-launch.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/comparison-plan.md\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/comparison.sh\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/evaluation-recovery-original.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/native102-preflight-preservation.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/remaining-arms-plan.md\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/remaining-controller-state.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/remaining-launch.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/remaining.sh\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/serialization-fix/\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/serialization-transition.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/source/compare.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/source/continue_remaining.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/source/continue_streaming.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/source/logistic_controls_streaming.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/source/streaming_recovery.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/source/test_compare.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/streaming-controller-state.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/streaming-fit-native102-1793062870276035000.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/streaming-recovery-launch.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/streaming-recovery.sh\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/streaming-score-native101-1793062656089722000.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/results/failure-attempt01/\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/results/native101-fit-recovered.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/results/native101/\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/results/software-json/\n?? experiments/2026-10-27_0107_codex_mhc2-human-cell-contrast/\n?? experiments/agents/codex/plans/2026-10-27_mhc2-human-cell-contrast.md\n?? tasks/mhc2_json_recovery_spec.md\n?? tests/test_modular_json_streaming.py\n",
+    "plan": "experiments/agents/codex/plans/2026-10-27_mhc2-human-cell-contrast.md",
+    "plan_sha256": "b22159703832d9f80d62e176886e2f953ba90c96e814e91d6526ad13f7a67ea1",
+    "code_sha256": "f46b73a4c97ba8e5a463369625c9fee65d82722bb11a935a7457c1376da29696",
+    "curation_sha256": "e6c68558da6cdb78ae2c3f11ae48fa96a4b9a6b3979cd43ea16abf87148e5afe",
+    "curation_commit": "13b91424295e01286db46e8e9818fcc2fe816834",
+    "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+    "environment": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1"
+    },
+    "network_operations_used": 5,
+    "network_operation_budget": 16,
+    "test_split": {
+      "used": false,
+      "reason": "source qualification only; no predictions or fitted models"
+    },
+    "device": "cpu",
+    "modal_gpu": null,
+    "scope": "projected native source audit plus independent literal count/position replay",
+    "limits": {
+      "seconds": 300,
+      "rss_bytes": 2147483648,
+      "threads": 1
+    },
+    "network_operations": 0,
+    "source_sha256": "a665f37c0b5917fefb6d12eade530d7e2001de1f0ee73479b21d2c393d173ab4",
+    "source_verification": "three-way published1803receipt/bundlechecksum/actualfile match",
+    "source_correction": "audit-source-correction.md"
+  },
+  "source_path": "/Users/iskander/.hitlist/corrected-corpus/public-downloads/v4/bundles/2026-10-16T07-20-43Z/observations.parquet",
+  "source_sha256": "a665f37c0b5917fefb6d12eade530d7e2001de1f0ee73479b21d2c393d173ab4",
+  "rows": 14903,
+  "class_counts": {
+    "I": 3028,
+    "II": 11875
+  },
+  "class_ii_rows": 11875,
+  "distinct_class_ii_peptides": 11875,
+  "projected_columns": [
+    "peptide",
+    "peptide_extended",
+    "pmid",
+    "mhc_class",
+    "mhc_restriction",
+    "mhc_allele_set",
+    "mhc_allele_provenance",
+    "allele_resolution",
+    "assay_comments",
+    "antigen_processing_comments",
+    "provenance_id",
+    "quantitative_value",
+    "response_measured",
+    "measurement_units",
+    "measurement_inequality",
+    "is_ms_observation",
+    "source",
+    "has_ptm",
+    "cell_type",
+    "cell_line_name",
+    "culture_condition",
+    "attributed_sample_label"
+  ],
+  "independent_count_and_position_replay": true,
+  "class_ii_distributions": {
+    "pmid": [
+      {
+        "value": 36215666,
+        "n": 11875
+      }
+    ],
+    "mhc_class": [
+      {
+        "value": "II",
+        "n": 11875
+      }
+    ],
+    "mhc_restriction": [
+      {
+        "value": "HLA class II",
+        "n": 11875
+      }
+    ],
+    "mhc_allele_set": [
+      {
+        "value": "",
+        "n": 11875
+      }
+    ],
+    "mhc_allele_provenance": [
+      {
+        "value": "unmatched",
+        "n": 11875
+      }
+    ],
+    "allele_resolution": [
+      {
+        "value": "class_only",
+        "n": 11875
+      }
+    ],
+    "assay_comments": [
+      {
+        "value": "The epitope was eluted under the following experimental conditions: Mock, siCTRL, siT6BP. The epitope was eluted using the following mAbs: L243, Tu39.",
+        "n": 1705
+      },
+      {
+        "value": "The epitope was eluted under the following experimental conditions: Mock, siCTRL, siT6BP.",
+        "n": 1760
+      },
+      {
+        "value": "The epitope was eluted under the following experimental conditions: Mock, siCTRL. The epitope was eluted using the following mAbs: L243, Tu39.",
+        "n": 141
+      },
+      {
+        "value": "The epitope was eluted under the following experimental conditions: Mock, siCTRL.",
+        "n": 814
+      },
+      {
+        "value": "The epitope was eluted under the following experimental conditions: Mock, siT6BP, siCTRL. The epitope was eluted using the following mAbs: L243, Tu39.",
+        "n": 39
+      },
+      {
+        "value": "The epitope was eluted under the following experimental conditions: Mock, siT6BP. The epitope was eluted using the following mAbs: L243, Tu39.",
+        "n": 137
+      },
+      {
+        "value": "The epitope was eluted under the following experimental conditions: Mock, siT6BP.",
+        "n": 640
+      },
+      {
+        "value": "The epitope was eluted under the following experimental conditions: Mock. The epitope was eluted using the following mAbs: L243, Tu39.",
+        "n": 119
+      },
+      {
+        "value": "The epitope was eluted under the following experimental conditions: Mock.",
+        "n": 2912
+      },
+      {
+        "value": "The epitope was eluted under the following experimental conditions: siCTRL, Mock, siT6BP. The epitope was eluted using the following mAbs: L243, Tu39.",
+        "n": 13
+      },
+      {
+        "value": "The epitope was eluted under the following experimental conditions: siCTRL, Mock. The epitope was eluted using the following mAbs: L243, Tu39.",
+        "n": 15
+      },
+      {
+        "value": "The epitope was eluted under the following experimental conditions: siCTRL, siT6BP, Mock. The epitope was eluted using the following mAbs: L243, Tu39.",
+        "n": 32
+      },
+      {
+        "value": "The epitope was eluted under the following experimental conditions: siCTRL, siT6BP. The epitope was eluted using the following mAbs: L243, Tu39.",
+        "n": 84
+      },
+      {
+        "value": "The epitope was eluted under the following experimental conditions: siCTRL, siT6BP.",
+        "n": 309
+      },
+      {
+        "value": "The epitope was eluted under the following experimental conditions: siCTRL. The epitope was eluted using the following mAbs: L243, Tu39.",
+        "n": 13
+      },
+      {
+        "value": "The epitope was eluted under the following experimental conditions: siCTRL.",
+        "n": 977
+      },
+      {
+        "value": "The epitope was eluted under the following experimental conditions: siT6BP, Mock, siCTRL. The epitope was eluted using the following mAbs: L243, Tu39.",
+        "n": 74
+      },
+      {
+        "value": "The epitope was eluted under the following experimental conditions: siT6BP, Mock. The epitope was eluted using the following mAbs: L243, Tu39.",
+        "n": 39
+      },
+      {
+        "value": "The epitope was eluted under the following experimental conditions: siT6BP, siCTRL. The epitope was eluted using the following mAbs: L243, Tu39.",
+        "n": 93
+      },
+      {
+        "value": "The epitope was eluted under the following experimental conditions: siT6BP. The epitope was eluted using the following mAbs: L243, Tu39.",
+        "n": 52
+      },
+      {
+        "value": "The epitope was eluted under the following experimental conditions: siT6BP.",
+        "n": 1907
+      }
+    ],
+    "antigen_processing_comments": [
+      {
+        "value": "HeLa cells were used for ligand elution using the following experimental conditions: mock treated (Mock), transfected with control siRNA (siCTRL), or transfected with Autophagy Receptor TAX1BP1 siRNA (siT6BP).",
+        "n": 11875
+      }
+    ],
+    "quantitative_value": [
+      {
+        "value": null,
+        "n": 11875
+      }
+    ],
+    "response_measured": [
+      {
+        "value": "ligand presentation",
+        "n": 11875
+      }
+    ],
+    "measurement_units": [
+      {
+        "value": "",
+        "n": 11875
+      }
+    ],
+    "measurement_inequality": [
+      {
+        "value": "",
+        "n": 11875
+      }
+    ],
+    "is_ms_observation": [
+      {
+        "value": true,
+        "n": 11875
+      }
+    ],
+    "source": [
+      {
+        "value": "iedb",
+        "n": 11875
+      }
+    ],
+    "has_ptm": [
+      {
+        "value": false,
+        "n": 11875
+      }
+    ],
+    "cell_type": [
+      {
+        "value": "Epithelial cell",
+        "n": 11875
+      }
+    ],
+    "cell_line_name": [
+      {
+        "value": "HeLa",
+        "n": 11875
+      }
+    ],
+    "culture_condition": [
+      {
+        "value": "Cell Line / Clone",
+        "n": 11875
+      }
+    ],
+    "attributed_sample_label": [
+      {
+        "value": "",
+        "n": 11875
+      }
+    ]
+  },
+  "literal_curated_membership": {
+    "[[\"hela_ciita_control_sirna\"]]": 990,
+    "[[\"hela_ciita_mock\"]]": 3031,
+    "[[\"hela_ciita_control_sirna\", \"hela_ciita_mock\", \"hela_ciita_t6bp_sirna\"]]": 3623,
+    "[[\"hela_ciita_control_sirna\", \"hela_ciita_mock\"]]": 970,
+    "[[\"hela_ciita_mock\", \"hela_ciita_t6bp_sirna\"]]": 816,
+    "[[\"hela_ciita_control_sirna\", \"hela_ciita_t6bp_sirna\"]]": 486,
+    "[[\"hela_ciita_t6bp_sirna\"]]": 1959
+  },
+  "pride_file_count": 81,
+  "pride_file_extensions": {
+    ".msf": 40,
+    ".raw": 40,
+    ".tsv": 1
+  },
+  "native_rows_sha256": "87c6d9ec87bc9a8164feb791d4fe6bae8485c41798fcf76d5e3256f11336fc47",
+  "elapsed_seconds": 6.769538584001566,
+  "peak_rss_bytes": 386514944
+}

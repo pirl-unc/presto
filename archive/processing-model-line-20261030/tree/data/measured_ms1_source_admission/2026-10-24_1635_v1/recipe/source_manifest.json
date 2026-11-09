@@ -1,0 +1,83 @@
+{
+  "catalog_schema_version": 28,
+  "files": {
+    "proteometools_ms1/assets.json": {
+      "sha256": "c4adaee78d088979578a14a77e7b75be89fd3a28ea95ccf93c89a8089d5f3e54",
+      "size_bytes": 1786
+    },
+    "proteometools_ms1/source_assets/HLA1-first-DDA.zip": {
+      "sha256": "42b18e4ad3f689b84ad2b905757404fafd5f2f13ef2cd8bc2f4499610a52d8c6",
+      "size_bytes": 21615641
+    },
+    "proteometools_ms1/source_assets/HLA2-first-DDA.zip": {
+      "sha256": "8a13aa401da31517e402d515fe47742bb07eb35c77c5d0bffad8d82bdab93cd6",
+      "size_bytes": 30881033
+    },
+    "proteometools_ms1/source_assets/PXD021013-README.txt": {
+      "sha256": "05e1ef9569e6d48f3d3024821fb7a4dca44a20233e1a250771865e852a6b33a7",
+      "size_bytes": 628502
+    },
+    "proteometools_ms1/source_assets/PXD021013-sdrf.tsv": {
+      "sha256": "820934b3c7faaf7010f7b168919dac8953d0b3b77922c24bca6f542808e017d0",
+      "size_bytes": 661043
+    },
+    "proteometools_ms1/source_assets/article-2021-planned-peptides.xlsx": {
+      "sha256": "14987fc732f84b827120103dda7a9f9fc1f82995b861fea2b8b0f8195ac7ca77",
+      "size_bytes": 63188883
+    },
+    "proteometools_ms1/source_assets/article-2021.xml": {
+      "sha256": "f8850eea101b78586c1d9b5b7eed72a575712ce6eaad228493a05b0e2fd5ed8c",
+      "size_bytes": 154377
+    },
+    "proteometools_ms1/typed/assets.parquet": {
+      "sha256": "d0b261332c66782fa0bd21d76a5bd389cbd2aa5513edd24333776a9d796447cb",
+      "size_bytes": 3839
+    },
+    "proteometools_ms1/typed/contexts.parquet": {
+      "sha256": "10cc71a93cf4b0bf8cd4ff3f30b5261aa40c063bb2353995d7e9877af25f19cd",
+      "size_bytes": 5391
+    },
+    "proteometools_ms1/typed/forms.parquet": {
+      "sha256": "b122a92db9e9bf5b8c22676d32e0c6b98d7b31320a1feab3a58a2e6fe4fb514b",
+      "size_bytes": 518892
+    },
+    "proteometools_ms1/typed/peptides.parquet": {
+      "sha256": "98fcb4dd901b64d28c02b2464c2ed9219899a7fced0c4c6d0bd9a9b15d1f2192",
+      "size_bytes": 379854
+    },
+    "proteometools_ms1/typed/planned_products.parquet": {
+      "sha256": "617a0aec8260788195a50cd5eeddecbf3b522a335d58d75b2dce365b6b8f8ffa",
+      "size_bytes": 14776921
+    },
+    "proteometools_ms1/typed/runs.parquet": {
+      "sha256": "5eef1d308d9866f37647566dc93a0194989f62c015693664221ab17daecac607",
+      "size_bytes": 6873
+    },
+    "proteometools_ms1/typed/source_records.parquet": {
+      "sha256": "44b56252c8d0a3ba7263e21529f98b4d1d3f4baef408418b6bc29d557b65658e",
+      "size_bytes": 1268495
+    }
+  },
+  "hitlist_version": "2.0.26",
+  "package_family": "proteometools_ms1",
+  "reconciliation": {
+    "n_assets_rows": 6,
+    "n_contexts_rows": 1,
+    "n_forms_rows": 3738,
+    "n_peptides_rows": 3649,
+    "n_planned_products_rows": 305331,
+    "n_runs_rows": 2,
+    "n_source_records_rows": 12247
+  },
+  "revision": "pxd021013_ms1_v1",
+  "schema_version": 23,
+  "source_registry": {
+    "pxd021013": {
+      "archive_hash_authority": "caller_pinned_acquisition_receipt_not_remote_signature",
+      "quantity_scope": "synthesis_handling_LC_MS_response_not_pure_detector_or_APC_concentration",
+      "source_role": "non_MHC_synthesis_pool_MS1",
+      "source_url": "https://doi.org/10.1038/s41467-021-23713-9",
+      "training_status": "registered_relative_response_recipe"
+    }
+  }
+}

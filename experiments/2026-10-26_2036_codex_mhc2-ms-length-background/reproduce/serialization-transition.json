@@ -1,0 +1,60 @@
+{
+  "utc": "2026-10-27T00:45:15.719372+00:00",
+  "agent_model": "Codex / GPT-6",
+  "original_runtime_hashes": {
+    "cli/training_sources.py": "2e70ddf79a30cbb01a039aa26b2093b3083b78c96e53fbbff8a5264312745471",
+    "data/modular.py": "688dbc2dc49098abc7e66f186d5889fcd76e3ae2729d3b29b4e5b732237f13e8",
+    "data/modular_auxiliary.py": "7e2f6e9f560fe62650809ec6be6a781c5d3040270c73b8ec02cfa4bdb4cdb34f",
+    "data/modular_context.py": "4bb7e5a2432462e33e9c2632e85a78445282a604c095b0bff2ee6596b6617dc0",
+    "data/modular_lineage.py": "c10e7151af1a4f76fbc106a6621db69b024750ac042488df93a7a7d11e0cc4b9",
+    "data/modular_preparation.py": "e0268e9a9f5a531af378158f164ef5bce99361f6923be74f39bcd1f97bfc6962",
+    "data/modular_quantitative.py": "751a66c8aa68fd697d395ec3fc63951e262278a0fb6c3f26c185e8963f7d148d",
+    "data/modular_sources.py": "1f179c5f3b7791f6c79df7e77aa1ceafe4940ae1fcda50fd6e43e9fb4d886edf",
+    "data/vocab.py": "ecc2e1c5154d25d80cddae4f0708317e2cf40e39c171d9eaeb777ad88541e4f7",
+    "models/encoders.py": "c49f2461052b308f89289a3c44072c62edd09a1c1d41fb55426a5679db2b14c2",
+    "models/modular.py": "df5464f933796bf8f101fdb7d50a522e423339477b06df358d38cdeda50f2a37",
+    "models/modular_dependencies.py": "17918102c6d7965e48b7c2c367e371da46d858624725fd81193d3a726a2b07a0",
+    "models/modular_support.py": "d3cb1cb165d5cee236409c51c8d0e93eaa7bb9ef430dd682e726d72889e9619d",
+    "scripts/train_iedb.py": "efb1fee90dfb7f9b475ea1fc6f5c7b8711c719681ee64dc3a43fc017d6f83704",
+    "training/modular.py": "aab95991b75b0460baeb2be60d43096fb1c278953c260ea8d86662f7d9b3ade6",
+    "training/modular_evaluation.py": "ca75a674691a27e8c34ddf195ff31c29b76d134ec852320fa09aeeb9e69789ab",
+    "training/modular_resume.py": "5887626321ad2ead4b48c4032d34cfb013b14a2a0a716dc35bb0f7e443d32bfb",
+    "training/modular_run.py": "132b09b19ce911ad96a04bc2f8894fb1f26de5293146f35feb1d3f3c133339a6"
+  },
+  "recovery_runtime_hashes": {
+    "cli/training_sources.py": "2e70ddf79a30cbb01a039aa26b2093b3083b78c96e53fbbff8a5264312745471",
+    "data/modular.py": "688dbc2dc49098abc7e66f186d5889fcd76e3ae2729d3b29b4e5b732237f13e8",
+    "data/modular_auxiliary.py": "7e2f6e9f560fe62650809ec6be6a781c5d3040270c73b8ec02cfa4bdb4cdb34f",
+    "data/modular_context.py": "4bb7e5a2432462e33e9c2632e85a78445282a604c095b0bff2ee6596b6617dc0",
+    "data/modular_lineage.py": "c10e7151af1a4f76fbc106a6621db69b024750ac042488df93a7a7d11e0cc4b9",
+    "data/modular_preparation.py": "e0268e9a9f5a531af378158f164ef5bce99361f6923be74f39bcd1f97bfc6962",
+    "data/modular_quantitative.py": "751a66c8aa68fd697d395ec3fc63951e262278a0fb6c3f26c185e8963f7d148d",
+    "data/modular_sources.py": "1f179c5f3b7791f6c79df7e77aa1ceafe4940ae1fcda50fd6e43e9fb4d886edf",
+    "data/vocab.py": "ecc2e1c5154d25d80cddae4f0708317e2cf40e39c171d9eaeb777ad88541e4f7",
+    "models/encoders.py": "c49f2461052b308f89289a3c44072c62edd09a1c1d41fb55426a5679db2b14c2",
+    "models/modular.py": "df5464f933796bf8f101fdb7d50a522e423339477b06df358d38cdeda50f2a37",
+    "models/modular_dependencies.py": "17918102c6d7965e48b7c2c367e371da46d858624725fd81193d3a726a2b07a0",
+    "models/modular_support.py": "d3cb1cb165d5cee236409c51c8d0e93eaa7bb9ef430dd682e726d72889e9619d",
+    "scripts/train_iedb.py": "efb1fee90dfb7f9b475ea1fc6f5c7b8711c719681ee64dc3a43fc017d6f83704",
+    "training/modular.py": "aab95991b75b0460baeb2be60d43096fb1c278953c260ea8d86662f7d9b3ade6",
+    "training/modular_evaluation.py": "ca75a674691a27e8c34ddf195ff31c29b76d134ec852320fa09aeeb9e69789ab",
+    "training/modular_resume.py": "7712ab92a892987b194067757b2b7ac16748a563d8e354c1114436f5b2694dad",
+    "training/modular_run.py": "132b09b19ce911ad96a04bc2f8894fb1f26de5293146f35feb1d3f3c133339a6"
+  },
+  "changed_runtime_files": [
+    "training/modular_resume.py"
+  ],
+  "changed_functions": [
+    "atomic_json",
+    "digest"
+  ],
+  "all_other_module_ast_equal": true,
+  "preserved_resume_contract_check": true,
+  "original_native101_optimizer_updates": 2592,
+  "allowed_additional_native101_updates": 0,
+  "software_tests": {
+    "before": "2 memory tests failed,6passed; persistence peak12677545bytes/digest10580100bytes for fixture",
+    "after": "50passed including all resume,continuation,training and JSON tests"
+  },
+  "old_and_new_hash_values": "byte/hash compatibility tests pass; no saved execution contract modified"
+}

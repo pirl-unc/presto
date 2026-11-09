@@ -1,0 +1,73 @@
+{
+  "agent_model": "Codex / GPT-5",
+  "command": [
+    "PRESTO_EXPERIMENT_DIR=/private/tmp/presto-post-pr153-20261108/experiments/2026-11-08_1740_codex_netmhc-ba-parity-projection",
+    "/Users/iskander/code/shared-virtual-env/bin/modal",
+    "run",
+    "--detach",
+    "code/reproject_v2.py"
+  ],
+  "created_utc": "2026-11-08T23:47:36Z",
+  "experiment": "2026-11-08_1740_codex_netmhc-ba-parity-projection",
+  "git": {
+    "branch": "codex/post-pr153-unified-retraining-20261108",
+    "dirty": false,
+    "source_commit": "477196db03967443bc8e0ff7f7a8e90453d97613"
+  },
+  "inputs": {
+    "netmhcpan42_v1": {
+      "bytes": 114297607,
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared/netmhcpan42-ba-train.jsonl",
+      "sha256": "4491918763c1cf1c64825af0228357f43516293d1b6ea73ef8a6a7554d4635df"
+    },
+    "netmhciipan43_v1": {
+      "bytes": 91225030,
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared/netmhciipan43-ba-train.jsonl",
+      "sha256": "153a51f8997093c0b8cf724dc8ff649a676ee3ee2e516c52dff810bb18d00ee2"
+    },
+    "parent_summary": {
+      "bytes": 5622,
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared/summary.json",
+      "sha256": "9411e528a8b5ce7a4aa527835d6a2750d9cfc1b36198e711ef3241f064002576"
+    },
+    "presentation_development": {
+      "bytes": 218542980,
+      "path": "2026-11-07_1915_codex_unified-presentation/prepared-v2/presentation-val.jsonl",
+      "sha256": "0313b2d6b394320da7dcf6aa9144cbc44b73abe48b16380e03c1b27a9559fc52"
+    }
+  },
+  "policy": {
+    "affinity_development_embargo": "inherited v1 exact peptide plus shared 9-mer core",
+    "continuation": "annotate or remove independently verified v1 admitted rows; never add or relabel rows",
+    "locked_confirmation_accessed": false,
+    "measurement_lineage": "namespace=archive SHA-256; measurement_id=SHA-256(archive, peptide, archive identity, archive context); empty replicate_id",
+    "model_loaded": false,
+    "predictions": false,
+    "presentation_development_embargo": "exact peptide plus shared 8-mer core plus same-length Hamming distance one",
+    "test_accessed": false,
+    "training_role": "comparator-parity TRAIN only"
+  },
+  "runtime": {
+    "block_network": true,
+    "cpu": 4,
+    "memory_mib": 16384,
+    "observed_gpu": null,
+    "python": "3.12",
+    "requested_gpu": null,
+    "timeout_seconds": 3600
+  },
+  "schema": "presto.netmhc_ba_projection_continuation_launch.v2",
+  "source_sha256": {
+    "code/reproject_v2.py": "fc2fe845cb363e5b31e4ded9c5f6b2ba68e475f156b06a72c8b6574f614dddda",
+    "data/netmhc_training.py": "8480bf8f3980d2401170622a90b7954082e663763c081527d71dcc94591c1757",
+    "reproduce/v2/collect.sh": "e2ffdf2004be207a92b829f73930d22ad8ff2efe1e9eca88635cba97a4fbc6a7",
+    "reproduce/v2/launch.sh": "6bd81f66dd1e3b7ac708be535c5e537d195f7589af9623e53fbadfa74527a3e1",
+    "reproduce/v2/source/collect.py": "bab21c113d3eb6a1d133b7171c05acb40d36897f76daaaa889c1b396c7986940",
+    "reproduce/v2/verify.sh": "e50d438f0e099f63cbc2507309a1b1fc5c3f90dfc5a93569a30c6a98e8da5700"
+  },
+  "storage": {
+    "git_payload": "scripts, frozen contracts, hashes, summaries and receipts only",
+    "large_outputs": "presto-checkpoints Modal volume",
+    "output_directory": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared-v2"
+  }
+}

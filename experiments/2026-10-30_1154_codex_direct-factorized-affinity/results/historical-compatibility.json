@@ -1,0 +1,41 @@
+{
+  "status": "bitwise_equal_cpu_predictions",
+  "checkpoint_sha256": "4f7deee80dfc03a1018c6530f674007bd9de1b5c090e53f435f16fb2b412bc20",
+  "cells": 4,
+  "reference_runtime": "/Users/iskander/code/presto/artifacts/2026-10-29_2303_codex_assay-measurement-layer/runtime",
+  "reader_runtime": "/Users/iskander/code/presto/.worktrees/shared-training",
+  "comparison": [
+    {
+      "id": "temporal:binding.parquet:139192",
+      "prediction": 1.0835480690002441,
+      "panel": {
+        "ic50/purified/competitive/radioactivity": 1.0835480690002441,
+        "ic50/purified/competitive/fluorescence": 1.0835480690002441
+      }
+    },
+    {
+      "id": "temporal:binding.parquet:222806",
+      "prediction": 0.9720603823661804,
+      "panel": {
+        "ic50/purified/competitive/radioactivity": 0.9720603823661804,
+        "ic50/purified/competitive/fluorescence": 0.9720603823661804
+      }
+    },
+    {
+      "id": "temporal:binding.parquet:183303",
+      "prediction": -0.060100674629211426,
+      "panel": {
+        "ic50/purified/competitive/radioactivity": -0.060100674629211426,
+        "ic50/purified/competitive/fluorescence": -0.060100674629211426
+      }
+    },
+    {
+      "id": "temporal:binding.parquet:64327",
+      "prediction": -0.16890038549900055,
+      "panel": {
+        "ic50/purified/competitive/radioactivity": -0.16890038549900055,
+        "ic50/purified/competitive/fluorescence": -0.16890038549900055
+      }
+    }
+  ]
+}

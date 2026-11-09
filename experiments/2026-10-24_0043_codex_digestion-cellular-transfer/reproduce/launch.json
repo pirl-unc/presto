@@ -1,0 +1,76 @@
+{
+  "registered_at": "2026-10-24T00:43:46.650392-04:00",
+  "agent_model": "Codex / GPT-6",
+  "source_commit": "5b888cccf97796d205e519f6371c7556076cf4f2",
+  "dirty_status": " M tasks/todo.md\n",
+  "dataset_path": "/private/tmp/presto-modular-model/data/availability_recipes/2026-10-22-mapp-captured-composition-min2-v1",
+  "dataset_manifest_sha256": "df78d02f8200809c659e43adfae29866c48b712122b740379106994622f4ac80",
+  "digestion_family": "/private/tmp/presto-modular-model/experiments/2026-10-23_2358_codex_sequence-context",
+  "digestion_recipe": "/private/tmp/hitlist-digestion-209-review-candidate",
+  "source_hashes": {
+    "/private/tmp/presto-modular-model/data/availability_recipes/2026-10-22-mapp-captured-composition-min2-v1/manifest.json": "df78d02f8200809c659e43adfae29866c48b712122b740379106994622f4ac80",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_2358_codex_sequence-context/results/features.json": "59e8e24554b360987a56c16b234329d8d25220c7a9c1148322f646d7319cfd56",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_2358_codex_sequence-context/results/base/checkpoint.pt": "83a950e343ad090827e94fa1785feb5174b1e2732c5be7eadcde72ffd8005b86",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_2358_codex_sequence-context/results/rate_context/checkpoint.pt": "06d5a8440a971261c182e547427b29c0a0fac358fcfed13e2a7f86d3ca8ac1ef",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_2358_codex_sequence-context/results/base/independent-verification.json": "26d250dcecefc3de1df7ab4f671edb9b865ad6ec7f1cbf56fcb88f701b72e05e",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_2358_codex_sequence-context/results/rate_context/independent-verification.json": "033d3da61cb090c212f8cfe48d47ceedfa54ddd03ed854356577299c7aff97b2",
+    "/private/tmp/hitlist-digestion-209-review-candidate/examples.json": "8b89735c3a0f4fe11d863dd886118e64b2ff1fb8570b4e01f4d209e5078f3d8c",
+    "/private/tmp/hitlist-digestion-209-review-candidate/manifest.json": "5f616170b5514cb4d8f0c7b7843d232959e9514eebbca6483f976e17b0846615",
+    "/private/tmp/presto-modular-model/experiments/agents/codex/plans/digestion-to-mapp-transfer.md": "00221603a9ff65eccee06cdf5df0bb21bcde74ef3dc97cdda9d1d3887fcaa622"
+  },
+  "allowed_splits": [
+    "train",
+    "validation"
+  ],
+  "exact_arms": [
+    "uniform_rates",
+    "adjacent_rates",
+    "wider_rates"
+  ],
+  "hybrid_arm": "wider_hybrid",
+  "steps": 2000,
+  "initial_delta": 0.01,
+  "learning_rate": 0.03,
+  "betas": [
+    0.9,
+    0.999
+  ],
+  "epsilon": 1e-08,
+  "seed": 42,
+  "sample_count": 512,
+  "gradient_groups": 16,
+  "near_zero_gradient": 1e-06,
+  "near_zero_mean_absolute_error": 2e-07,
+  "near_zero_rms_absolute_error": 5e-07,
+  "mean_relative_gate": 0.2,
+  "rms_relative_gate": 0.5,
+  "math_tolerances": {
+    "value_relative": 1e-08,
+    "value_absolute": 1e-10,
+    "gradient_relative": 1e-06,
+    "gradient_absolute": 1e-08,
+    "residue_relative": 1e-09,
+    "toy_gradient_absolute": 1e-10,
+    "toy_draws": 65536,
+    "toy_max_standard_errors": 6
+  },
+  "preflight": {
+    "repetitions": 3,
+    "loss": "sequence-derived centered logF squared, no measured target",
+    "exact_cap_floor_seconds": 120,
+    "exact_cap_ceiling_seconds": 900,
+    "hybrid_cap_floor_seconds": 600,
+    "hybrid_cap_ceiling_seconds": 7200,
+    "cost_margin": 3,
+    "qualification_seconds": 900,
+    "peak_rss_bytes": 4294967296
+  },
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "MPLCONFIGDIR": "/private/tmp/presto-boundary-matplotlib"
+  },
+  "test_policy": "Historical test excluded from targets/fitting/evaluation; development already inspected; no blind or concentration claim"
+}

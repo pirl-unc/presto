@@ -1,0 +1,18 @@
+{
+  "hitlist_commit": "96b923283de3250883244098067a2601a6f074e4",
+  "format": "./format.sh passes255files",
+  "lint": "./lint.sh passes",
+  "focused_tests": {
+    "command": "PYTHONPATH=/private/tmp/hitlist-ms-calibration /Users/iskander/code/shared-virtual-env/bin/python -m pytest tests/test_ms_calibration_response.py tests/test_ms_calibration_evidence.py tests/test_evidence_recipes.py tests/test_evidence_store.py tests/test_evidence_catalog.py tests/test_external_successor.py -q",
+    "result": "61passed1.05s"
+  },
+  "full_tests": {
+    "command": "PATH=/private/tmp/presto-pr66-tools/bin:/Users/iskander/code/shared-virtual-env/bin:$PATH PYTHONPATH=/private/tmp/hitlist-ms-calibration TEST_SH_MAX=1 ./test.sh",
+    "result": "Normal memory guard refused0.30/2.5GiB before pytest; not bypassed"
+  },
+  "strict_docs": {
+    "command": "PYTHONPATH=/private/tmp/hitlist-ms-calibration /Users/iskander/code/shared-virtual-env/bin/python -m mkdocs build --strict",
+    "result": "pass"
+  },
+  "cwd": "/private/tmp/hitlist-ms-calibration"
+}

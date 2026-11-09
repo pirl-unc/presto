@@ -1,0 +1,129 @@
+{
+  "registered_at": "2026-10-23T20:00:28.892080-04:00",
+  "agent_model": "Codex / GPT-6",
+  "git_commit": "2c6cb9748b5804450a02b60bc7c4b5a96ad31d48",
+  "dirty": " M tasks/todo.md\n",
+  "plan_sha256": "6818c13e216149dec4599e8a23f82f69b1e74dfedda4b3ec2a5de49a519c5b93",
+  "scope": "Single-change state-adaptive boundary proposal; same physical law, target matrix, counts, seeds and gates",
+  "rates_per_hour": [
+    0.02,
+    0.07,
+    0.11,
+    0.03,
+    0.15
+  ],
+  "eta": [
+    -1.0,
+    0.0,
+    1.0
+  ],
+  "times_hours": [
+    0.5,
+    2.0,
+    8.0
+  ],
+  "targets": [
+    [
+      0,
+      6
+    ],
+    [
+      0,
+      3
+    ],
+    [
+      3,
+      6
+    ],
+    [
+      1,
+      5
+    ],
+    [
+      2,
+      3
+    ]
+  ],
+  "counts": [
+    256,
+    2048,
+    16384
+  ],
+  "groups": 16,
+  "seed_base": 73000,
+  "seed_rule": "base+1000000*state_index+10000*count_index+group_index; state order eta,time,target",
+  "gates": {
+    "primary_count": 16384,
+    "maximum_mean_relative_count_error": 0.05,
+    "maximum_abs_mean_log_error": 0.02,
+    "maximum_mean_log_gradient_relative_error": 0.05,
+    "maximum_rms_log_gradient_relative_error": 0.25
+  },
+  "rare_cases": [
+    {
+      "name": "internal_100",
+      "rates": [
+        0.02,
+        7.0,
+        11.0,
+        3.0,
+        0.15
+      ],
+      "eta": 0.0,
+      "time": 8.0,
+      "target": [
+        1,
+        5
+      ]
+    },
+    {
+      "name": "internal_1000",
+      "rates": [
+        0.02,
+        70.0,
+        110.0,
+        30.0,
+        0.15
+      ],
+      "eta": 0.0,
+      "time": 8.0,
+      "target": [
+        1,
+        5
+      ]
+    },
+    {
+      "name": "fast_boundaries",
+      "rates": [
+        2.0,
+        0.07,
+        0.11,
+        0.03,
+        15.0
+      ],
+      "eta": 0.0,
+      "time": 8.0,
+      "target": [
+        1,
+        5
+      ]
+    }
+  ],
+  "rare_scope": "Fixed stress diagnostics; gates before biological use unchanged, no adaptive seed/count rescue",
+  "rare_seed_rule": "base+50000000+1000000*case_index+10000*count_index+group_index",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "PYTHONPATH": "/private/tmp/presto-modular-imports"
+  },
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "device": "CPU",
+  "dtype": "float64",
+  "prior_family": "experiments/2026-10-23_1909_codex_boundary-importance",
+  "primary_estimator": "proposal_score_leave_one_out_control",
+  "proposal": "truncated_exponential",
+  "source_targets_loaded": false,
+  "prior_reference": "experiments/2026-10-23_1920_codex_boundary-exponential",
+  "prior_qualification_sha256": "217a869fb771c9df24a4374305430807702f9499694de6fbe7a8bcbd3b9b7193"
+}

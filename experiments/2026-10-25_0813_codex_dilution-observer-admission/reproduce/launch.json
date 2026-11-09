@@ -1,0 +1,37 @@
+{
+  "registered_utc": "2026-10-25T08:14:02.624680+00:00",
+  "agent": "Codex",
+  "model": "GPT-6 (system identity)",
+  "git_commit": "869b2acfffb6a15ac914b9a335dfef66f8ad507e",
+  "dirty": true,
+  "dirty_scope": "Preserved unrelated tasks/todo.md edits and untracked historical evidence; this new source family is frozen before retrieval.",
+  "source_directory": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/dilution_observer_sources/2026-10-25_0813_codex_dilution-observer-admission",
+  "source_sha256": "0a781ac9c1e4722caf091ad46767b0c1759e97162abc89e172d8141ad94b1fb1",
+  "plan_sha256": "347e6a1de536c97753d5e38d25098f37b208e41a55afda275b8331397e25d16a",
+  "max_bytes_per_asset": 4194304,
+  "wall_time_limit_seconds": 240,
+  "per_request_timeout_seconds": 60,
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "non_default_environment_overrides": {
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "metadata_assets": [
+    {
+      "name": "project.json",
+      "kind": "json",
+      "url": "https://www.ebi.ac.uk/pride/ws/archive/v2/projects/PXD024809"
+    },
+    {
+      "name": "files-page0.json",
+      "kind": "json",
+      "url": "https://www.ebi.ac.uk/pride/ws/archive/v2/files/byProject?accession=PXD024809&pageSize=100&page=0"
+    },
+    {
+      "name": "article.xml",
+      "kind": "xml",
+      "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12406853/fullTextXML"
+    }
+  ],
+  "fitting": false,
+  "outer_partitions_accessed": false
+}

@@ -1,0 +1,15 @@
+{
+  "format": "passed",
+  "lint": "passed",
+  "focused_tests": 21,
+  "normal_suite_tests": 3236,
+  "normal_suite_warnings": 10,
+  "normal_suite_seconds": 320.81,
+  "normal_suite_exit_code": 0,
+  "normal_suite_workers": 1,
+  "memory_at_admission_gib": 3.89,
+  "minimum_worker_memory_gib": 2.5,
+  "initial_refusal_gib": 0.77,
+  "command": "PATH=/private/tmp/presto-pr66-tools/bin:/Users/iskander/code/shared-virtual-env/bin:$PATH PYTHONPATH=/private/tmp/hitlist-mapp-source TEST_SH_MAX=2 ./test.sh",
+  "normal_suite_integration_tests": "excluded by normal test.sh default; full indexed-corpus CI remains separate"
+}

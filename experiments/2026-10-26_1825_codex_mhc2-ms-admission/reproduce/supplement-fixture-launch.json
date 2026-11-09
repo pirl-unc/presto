@@ -1,0 +1,14 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "closure_utc": "2026-10-26T19:16:48.130751+00:00",
+  "fixture_kind": "artificial software fixture, not scientific data",
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "command": "python experiments/2026-10-26_1825_codex_mhc2-ms-admission/code/check_supplement_chemistry.py",
+  "environment_overrides": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "script_sha256": "1935d85f060ca9a8543a0834b0784efe529138c32d2b8d2e6bef6c04010d4309",
+  "result": "results/supplement-chemistry-fixture.json"
+}

@@ -1,0 +1,110 @@
+{
+  "model": {
+    "acquisition_features": [],
+    "acquisition_units": {},
+    "auxiliary_context": [],
+    "cell_types": [],
+    "component_activity_units": {},
+    "components": [],
+    "context_species": [],
+    "cytokine_dose_units": {},
+    "cytokine_duration_features": [],
+    "cytokines": [],
+    "d_ff": 512,
+    "d_model": 128,
+    "dropout": 0.1,
+    "endpoints": [
+      "ec50",
+      "half_life",
+      "ic50",
+      "kd",
+      "kd_via_ec50",
+      "kd_via_ic50"
+    ],
+    "enzymes": [],
+    "identity_tasks": [],
+    "identity_threshold": 0.8,
+    "interventions": [],
+    "machinery_profiles": {},
+    "machinery_references": [],
+    "max_length": 512,
+    "mhc_classes": [
+      "I",
+      "II"
+    ],
+    "n_heads": 4,
+    "n_layers": 2,
+    "observation_features": [],
+    "observation_units": {},
+    "ordinal_scales": {},
+    "peptide_context": "shared_core_context_v2",
+    "preparation_features": [],
+    "preparation_units": {},
+    "processing_pathways": [],
+    "quantity_domains": {},
+    "register_pooling": true,
+    "source_categories": [],
+    "source_context": false,
+    "species": [
+      "human"
+    ],
+    "species_defaults": true
+  },
+  "scales": {
+    "ec50": {
+      "exact_count": 307,
+      "floor": 0.001,
+      "mean": 2.930938559963711,
+      "scale": 1.191499378091058
+    },
+    "half_life": {
+      "exact_count": 7662,
+      "floor": 0.001,
+      "mean": 1.518467852578532,
+      "scale": 1.2137568923820146
+    },
+    "ic50": {
+      "exact_count": 21636,
+      "floor": 0.001,
+      "mean": 2.768232837778882,
+      "scale": 1.3434766242663534
+    },
+    "kd": {
+      "exact_count": 4447,
+      "floor": 0.001,
+      "mean": 1.8951630861943234,
+      "scale": 1.308855946710753
+    },
+    "kd_via_ec50": {
+      "exact_count": 20420,
+      "floor": 0.001,
+      "mean": 2.3225514744481233,
+      "scale": 1.0396661710227353
+    },
+    "kd_via_ic50": {
+      "exact_count": 40721,
+      "floor": 0.001,
+      "mean": 2.8040396340930025,
+      "scale": 1.4139555027197765
+    }
+  },
+  "training": {
+    "balance_by": [],
+    "batch_size": 64,
+    "checkpoint_every_steps": 100,
+    "coverage_exception_reason": null,
+    "coverage_policy": "required",
+    "identity_batch_size": 64,
+    "identity_weight": 0,
+    "learning_rate": 0.0003,
+    "max_epochs": 10000,
+    "max_steps": 6000,
+    "min_epochs": 10000,
+    "no_test_reason": null,
+    "patience": 10000,
+    "seed": 42,
+    "test_policy": "evaluate_selected_once",
+    "validation_every_steps": 500,
+    "weight_decay": 0.0001
+  }
+}

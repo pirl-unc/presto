@@ -1,0 +1,84 @@
+{
+  "registered_utc": "2026-10-25T07:47:09.778338+00:00",
+  "agent": "Codex",
+  "model": "GPT-6 (system identity)",
+  "git_commit": "68218543c1dd54082b66f8097ab52882354e560e",
+  "dirty": true,
+  "dirty_scope": "Pre-existing unrelated tasks/todo.md edits (346 additions/4 deletions) and untracked prior evidence; new experiment code frozen before execution. Primary checkout untouched.",
+  "package": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/native_contrast_recipes/2026-10-25_0612_codex_native-contrast-admission",
+  "manifest_sha256": "5f1f388876e2b5b3f65d254ff4939d2559077c2e6af1dffe603b05a1283b836a",
+  "plan_sha256": "5530cc65e68703959f6206c8ff1492c4dfd600cb0b1f0aa8081deaf55cedaae0",
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "stages": [
+    "qualify",
+    "support",
+    "prepare",
+    "fit",
+    "evaluate",
+    "replay"
+  ],
+  "representations": [
+    "zero",
+    "length",
+    "sequence",
+    "boundary"
+  ],
+  "outer_namespace": "pxd018722-boundary-dev-v1",
+  "inner_namespace": "pxd018722-boundary-inner-v1",
+  "alpha_grid": [
+    0.01,
+    0.1,
+    1,
+    10,
+    100
+  ],
+  "bootstrap_draws": 2000,
+  "bootstrap_seed": 202610250726,
+  "expected_n_contrasts": 158,
+  "expected_n_components": 55,
+  "expected_n_parents": 56,
+  "non_default_environment_overrides": {
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "MPLBACKEND": "Agg"
+  },
+  "limits": {
+    "stage_seconds": 1200,
+    "rss_bytes": 3221225472,
+    "disk_floor_bytes": 1073741824,
+    "start_margin_bytes": 33554432
+  },
+  "coefficient_prediction_rtol": 2e-09,
+  "coefficient_prediction_atol": 2e-10,
+  "metric_rtol": 2e-09,
+  "metric_atol": 2e-10,
+  "training_only": true,
+  "new_outer_test": false,
+  "feature_contract": "61 original features plus 4 outside positions x (20AA,OTHER,BOUNDARY)=149; average all overlapping literal occurrences; peptide minus reference",
+  "source_feature_sha256": "828b4b9577651cd92b61bc90f620c3c6b4e28c68e3a4af99e4b9b1d9e04ecabb",
+  "reference_family": "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0726_codex_native-boundary-context",
+  "reference_artifact_sha256": {
+    "results/models.json": "ddf261f898e20ac93fe7d820624f06cd53b83c413adc6c74fcca01e84ea18cfd",
+    "results/development-oof-predictions.parquet": "58d878a3eb1eb27d8399fb6bc41e347ee265426296febbe3fb456246e2cbd16a",
+    "results/endpoint-contexts.json": "ee62358fcb5b216556ecbd20b05d2673a1c6bfc234415474c7702762c43283cf",
+    "results/features.npz": "fef2782f2446758514f0a98a3dab4860b15db6c3fe23494ec8e4a774dd2410cc",
+    "results/preparation.json": "4769fc3e276425277f301b1e96acac0ce014b32d49e9c3604cee4671f2b97ee5",
+    "results/replay.json": "7a88eb50be0b89b66f431b505a49e74c30e8f1d63da3b685aa9c9f8d45a2f32d",
+    "code/core.py": "f1d04f47923f89dc25481a979cf696631744c791d89490eeea2f232cc898f235",
+    "code/features.py": "828b4b9577651cd92b61bc90f620c3c6b4e28c68e3a4af99e4b9b1d9e04ecabb",
+    "code/context.py": "0865605307108f93820aa5c07f99d6af082d52fdd97f8e463728e11bc276f3bd"
+  },
+  "training_objectives": [
+    "reference",
+    "all_pairs"
+  ],
+  "evaluation_spaces": [
+    "reference",
+    "all_pairs"
+  ],
+  "original_models_reused": true,
+  "decision_contract": "all-pair boundary >=5%gain versus own3controls and reference-trainedboundary on samepairspace;spread>=.25;4of5folds versusreferenceboundary;positive pairedCI lowerbound;else stop response-only expansion"
+}

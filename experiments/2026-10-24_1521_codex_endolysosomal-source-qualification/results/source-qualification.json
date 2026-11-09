@@ -1,0 +1,102 @@
+{
+  "decision": "no quantitative peptide cohort admitted from inspected public assets",
+  "scope": "official article/XML, five listed supplements, pinned linked repository",
+  "assets": [
+    {
+      "name": "supplement-1.pdf",
+      "url": "https://public-pages-files-2025.frontiersin.org/articles/1936335/file/Data_Sheet_1.pdf/1936335_data-sheet_1/1",
+      "sha256": "373338bdc7dfeccb06c5551fce6b8edd772964d5755253e3f8c7374bdf76ba0f",
+      "bytes": 128463,
+      "pages": 1,
+      "attachments": 0,
+      "evidence_class": "reporter-activity graph; not peptide-product quantities",
+      "admitted_peptide_quantity_rows": 0
+    },
+    {
+      "name": "supplement-2.pdf",
+      "url": "https://public-pages-files-2025.frontiersin.org/articles/1936335/file/Data_Sheet_2.pdf/1936335_data-sheet_2/1",
+      "sha256": "e5af182458e46c35094072425c22f9df9da35a533f4a5f8024b512f1cf119595",
+      "bytes": 107089,
+      "pages": 1,
+      "attachments": 0,
+      "evidence_class": "protein-depletion half-life graph and aggregate table; not peptide products",
+      "admitted_peptide_quantity_rows": 0
+    },
+    {
+      "name": "supplement-3.pdf",
+      "url": "https://public-pages-files-2025.frontiersin.org/articles/1936335/file/Data_Sheet_3.pdf/1936335_data-sheet_3/1",
+      "sha256": "3d3ee49ecfeab7851d3a3827f6c0af88f0dbf30b4491de771ece5fc9ac07000b",
+      "bytes": 11494865,
+      "pages": 1,
+      "attachments": 0,
+      "evidence_class": "Bet v 1 peptide span/intensity-color map; not original numeric sample rows",
+      "admitted_peptide_quantity_rows": 0
+    },
+    {
+      "name": "supplement-4.pdf",
+      "url": "https://public-pages-files-2025.frontiersin.org/articles/1936335/file/Data_Sheet_4.pdf/1936335_data-sheet_4/1",
+      "sha256": "8f427ac3ccea9153116a599afb8cb5a56b797329b81cec4e583de30754e83c8c",
+      "bytes": 2975530,
+      "pages": 1,
+      "attachments": 0,
+      "evidence_class": "Aes h 1 peptide span/intensity-color map; not original numeric sample rows",
+      "admitted_peptide_quantity_rows": 0
+    },
+    {
+      "name": "supplement-5.pdf",
+      "url": "https://public-pages-files-2025.frontiersin.org/articles/1936335/file/Data_Sheet_5.pdf/1936335_data-sheet_5/1",
+      "sha256": "51f0d30d019274abfa962a1ac225a28530f6adb1cd2508f534edb191278a293f",
+      "bytes": 99192,
+      "pages": 1,
+      "attachments": 0,
+      "evidence_class": "Aes h 1 peptide intensity time-course graph; not original numeric sample rows",
+      "admitted_peptide_quantity_rows": 0
+    }
+  ],
+  "aggregate_protein_half_life_table": {
+    "Number of values": [
+      7,
+      4
+    ],
+    "Mean": [
+      1,
+      16
+    ],
+    "Std. Deviation": [
+      0.28,
+      3.3
+    ],
+    "Std. Error of Mean": [
+      0.1,
+      1.6
+    ]
+  },
+  "aggregate_table_columns": [
+    "Bet v 1",
+    "Aes h 1"
+  ],
+  "aggregate_table_is_training_data": false,
+  "repository": {
+    "commit": "18dd99da4a619abd8a28c7622e0809eb2c03e0ff",
+    "entries": 61,
+    "only_spreadsheet": {
+      "path": "sample_data/Example_degradome.xlsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "25483941a9862785f8765091e62d1e8e373ed1ec",
+      "size": 31541,
+      "url": "https://api.github.com/repos/oztemiz-elif/peptide-studio/git/blobs/25483941a9862785f8765091e62d1e8e373ed1ec"
+    },
+    "synthetic_excluded": true
+  },
+  "limitations": [
+    "Not an exhaustive absence statement about author-held or unlinked files",
+    "Figshare metadata query failed; cannot infer deposit absence from HTTP404",
+    "Pypdf text extraction warned about form-XObject limits on S3/S4; use Poppler/render review",
+    "Numeric graph colors and coordinates were not converted into training labels",
+    "Protein-depletion aggregate measurements do not label peptide abundances",
+    "Isolated murine JAWSII preparation, not intact APC peptide concentrations",
+    "Search length filtering omits short products; omission is not a biological negative",
+    "Reduction/alkylation is observation preparation, not an inferred processing intervention"
+  ]
+}

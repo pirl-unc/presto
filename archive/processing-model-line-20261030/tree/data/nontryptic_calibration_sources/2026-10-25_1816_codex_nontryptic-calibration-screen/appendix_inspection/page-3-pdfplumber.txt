@@ -1,0 +1,44 @@
+lysis buffer, cleared by centrifugation (5000 g for 5 min at 4 °C), and protein concentration was
+measured by BCA assay.
+Peptide MHCs were isolated from 5 mg of cell lysate (7.5e6 cells) or tumor lysate (amount
+specificized in Dataset S5) by immunoprecipitation (IP) and size exclusion filtration, as previously
+described.1 Briefly, for each condition 0.25 mg of pan-specific anti-human MHC Class I (HLA-A, HLA-B,
+HLA-C) antibody (clone W6/32, Bio X Cell [cat # BE0079]) was bound to 20 μL FastFlow Protein A
+Sepharose bead slurry (GE Healthcare) for 3 hours rotating at 4 °C. Beads were washed 2x with IP
+buffer (20 nM Tris-HCl pH 8.0, 150 mM NaCl) prior to lysate and isotopologue hipMHC addition, and
+incubated rotating overnight at 4 °C to isolate pMHCs. Beads were washed with 1x TBS and water, and
+pMHCs were eluted in 10% formic acid for 20 minutes at room temperature (RT). Peptides were
+isolated from antibody and MHC molecules using a passivated 10K molecule weight cutoff filter (PALL
+Life Science), lyophilized, and stored at -80 °C.
+SureQuant-IsoMHC: Prior to analysis, 250 fmol of each 4H trigger peptide was exogenously
+added to the peptide mixture, with the exception of GLFDQHFRL and AMLGTHTMEV, where 2.5 pmol
+was added due to poor intensity response.
+Multiplexed MHC: Lyophilized peptides were labeled with TMT and combined as previously
+described.1
+Mass spectrometry data acquisition
+For all SureQuant-IsoMHC analyses and tumor analyses, samples were analyzed using an
+Orbitrap Exploris 480 mass spectrometer (Thermo Scientific) coupled with an UltiMate 3000 RSLC
+Nano LC system (Dionex), Nanospray Flex ion source (Thermo Scientific), and column oven heater
+(Sonation). The injection volume of pMHC sample was directly loaded onto a 10-15 cm analytical
+capillary chromatography column with an integrated electrospray tip (~1 μm orifice), prepared and
+packed in house (50 μm ID & 1.9 μM C18 beads, ReproSil-Pur).
+Survey analyses: Peptides were eluted using a gradient with 6-25% buffer B (70% Acetonitrile,
+0.1% formic acid) for 53 minutes, 25-45% for 12 minutes, 45-97% for 3 minutes, and 97% to 3% for 1
+minute. Standard mass spectrometry parameters were as follows: spray voltage, 2.0 kV; no sheath or
+auxiliary gas flow; heated capillary temperature, 275 °C. The Exploris was operated in data dependent
+acquisition (DDA) mode with an inclusion list. Full scan mass spectra (300-1500 m/z, 120,000
+resolution) were detected in the orbitrap analyzer after accumulation of 3e6 ions (normalized AGC
+target of 300%) or 50 ms. For every full scan, up to 20 ions were subsequently isolated if the m/z was
+within +/- 5 ppm of targets on the inclusion list (4H peptide precursor ions, Dataset S6B) and reached a
+minimum intensity threshold of 1e6. Ions were collected with a maximum injection time of 10s,
+normalized AGC target = 1000%, and fragmented by higher energy collisional dissociation (HCD) with
+a collision energy (CE): 30%.
+SureQuant-IsoMHC targeted analyses: The custom SureQuant acquisition template available in
+Thermo Orbitrap Exploris Series 2.0 was utilized for this method build. All the acquisition parameters for
+each series of isotopologues are located within a distinct 4-node branch stemming from a full scan
+node, therefore 18 branches are included in the method (SI Appendix, Fig. S3). In each branch, the
+peptide m/z and intensity thresholds are defined in the “Targeted Mass” filter node. Next, parameters
+for the low resolution, IS peptide MS2 scan are defined, followed by the “Targeted Mass Trigger” filter
+node, which defines the 6 product ions used for pseudo-spectral matching (Dataset S6C) To connect
+each set of product ions within the targeted mass trigger node to a given precursor mass, we utilize the
+group ID feature to define the precursor m/z associated with each group of product ions. Finally, along

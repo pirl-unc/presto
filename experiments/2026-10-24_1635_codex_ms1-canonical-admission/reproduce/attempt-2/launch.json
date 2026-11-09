@@ -1,0 +1,21 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "argv": [
+    "experiments/2026-10-24_1635_codex_ms1-canonical-admission/code/launch.py"
+  ],
+  "environment": {
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PYTHONPATH": "/private/tmp/hitlist-proteometools-ms1"
+  },
+  "hitlist_commit": "bafa4fa87e0a3d5ece9093a285a9c02f06d57148",
+  "hitlist_status": "M hitlist/distribution_recipe.py\n M hitlist/evidence_bindings.py\n M hitlist/evidence_catalog.py\n M hitlist/evidence_package.py\n M hitlist/evidence_recipe.py\n M hitlist/evidence_store.py\n M hitlist/version.py\n M tasks/todo.md\n M tests/test_evidence_catalog.py\n?? hitlist/data/evidence_revisions/proteometools_ms1_core.json\n?? hitlist/proteometools_ms1.py\n?? hitlist/proteometools_response.py\n?? tasks/proteometools-ms1-spec.md\n?? tests/test_proteometools_ms1.py",
+  "output_directory": "/private/tmp/presto-modular-model/data/measured_ms1_source_admission/2026-10-24_1635_v1",
+  "phase": "source_admission_no_predictive_fit",
+  "presto_commit": "a39d527bedf16bade33bd615bd5c227b44e5b821",
+  "presto_tracked_status": "M experiments/agents/codex/todo.md\n M tasks/todo.md",
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "python_version": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "source_directory": "/private/tmp/presto-modular-model/data/measured_ms1_source_qualification/2026-10-24_1546_v1"
+}

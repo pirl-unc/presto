@@ -1,0 +1,8 @@
+Fit complete exact training KL 0.5319195063262355
+Fit complete reinforce32_seed20261023 training KL 0.543842545160699
+Fit complete reinforce32_seed20261024 training KL 0.5375662125554403
+Fit complete reinforce32_seed20261025 training KL 0.536346102120727
+Fit complete reinforce128_seed20261023 training KL 0.5329468853424505
+Fit complete reinforce128_seed20261024 training KL 0.5352305415133309
+Fit complete reinforce128_seed20261025 training KL 0.5407342349116004
+{"decision": "no_predictive_candidate;advance_known_substrate_kinetics_without_test_tuning", "environment": {"device": "CPU", "dtype": "float64", "numpy": "2.5.4", "platform": "macOS-26.5-arm64-arm-64bit", "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]", "torch": "2.14.1", "torch_threads": 1}, "n_closed_form_ridge_fits": 1, "n_controls": 2, "n_policy_fits": 7, "n_predictions": 870, "optimizer_updates": 14000, "passed_execution": true, "peak_rss_bytes": 355270656, "predictive_gates": {"common_shift": false, "exact": false, "no_change": false, "reinforce128_seed20261023": false, "reinforce128_seed20261024": false, "reinforce128_seed20261025": false, "reinforce32_seed20261023": false, "reinforce32_seed20261024": false, "reinforce32_seed20261025": false, "ridge": false}, "scope": "selected captured_MS_response_given_observed_untreated_baseline;not_unobserved_products_or_concentration", "wall_seconds": 2.8659604999702424}

@@ -1,0 +1,36 @@
+{
+  "utc": "2026-10-27T01:12:04.309857+00:00",
+  "status": "completed",
+  "url": "https://www.ebi.ac.uk/pride/ws/archive/v2/projects/PXD024417/files?pageSize=100",
+  "logical_operation": 9,
+  "total_operation_budget": 16,
+  "prior_operations": "operations1-8:four issue reads,one challenged PMC open,one primary XML fetch,two issue searches",
+  "argv": [
+    "experiments/2026-10-27_0107_codex_mhc2-human-cell-contrast/code/fetch_metadata.py"
+  ],
+  "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "agent_model": "Codex / GPT-6",
+  "git_commit": "2ed1bd8cdd36c94236d55c3fdd9927f6f79d4780",
+  "dirty_status": " M experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/fit-native101-1793047384363865000.json\n M experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/logistic-controller-state.json\n M experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/native-controller-state.json\n M tasks/todo.md\n M training/modular_resume.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/compare.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/continue_remaining.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/continue_streaming.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/logistic_controls_streaming.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/streaming_recovery.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/test_compare.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/comparison-launch.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/comparison-plan.md\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/comparison.sh\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/evaluation-recovery-original.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/native102-preflight-preservation.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/remaining-arms-plan.md\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/remaining-controller-state.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/remaining-launch.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/remaining.sh\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/serialization-fix/\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/serialization-transition.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/source/compare.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/source/continue_remaining.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/source/continue_streaming.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/source/logistic_controls_streaming.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/source/streaming_recovery.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/source/test_compare.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/streaming-controller-state.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/streaming-fit-native102-1793062870276035000.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/streaming-recovery-launch.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/streaming-recovery.sh\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/streaming-score-native101-1793062656089722000.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/results/failure-attempt01/\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/results/native101-fit-recovered.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/results/native101/\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/results/software-json/\n?? experiments/2026-10-27_0107_codex_mhc2-human-cell-contrast/\n?? experiments/agents/codex/plans/2026-10-27_mhc2-human-cell-contrast.md\n?? tasks/mhc2_json_recovery_spec.md\n?? tests/test_modular_json_streaming.py\n",
+  "source_sha256": "8127e39b13d85e45ca3feb53b7ca9d6fb64b9e86f9f20e391fe2b6fccd737f07",
+  "environment": {
+    "PYTHONPATH": null,
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1"
+  },
+  "limits": {
+    "seconds": 60,
+    "bytes": 15728640,
+    "rss_bytes": 2147483648,
+    "start_ram_bytes": 13958643712,
+    "floor_ram_bytes": 10737418240
+  },
+  "http_status": 200,
+  "content_type": "application/json",
+  "path": "/private/tmp/presto-mhc2-20261026/human-cell-contrast/pride/PXD024417-files.json",
+  "bytes": 95407,
+  "sha256": "5fd333187d76f91adc672fa8e1e98083760f70d43cea22862fcd9e9d65b1c75f",
+  "elapsed_seconds": 2.5686731669993605,
+  "peak_rss_bytes": 34947072
+}

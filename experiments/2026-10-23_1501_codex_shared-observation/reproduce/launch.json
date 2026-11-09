@@ -1,0 +1,31 @@
+{
+  "registered_at": "2026-10-23T15:01:10.936321-04:00",
+  "agent_model": "Codex / GPT-6",
+  "presto_commit": "ce86bdb29b4ac45f08dda7147c8833333f0bd8b4",
+  "presto_dirty": " M tasks/todo.md\n?? data/availability_recipes/\n?? experiments/agents/codex/plans/full-ic50-fitting.md\n?? tasks/modular_model/trajectory-sampling-issue.md\n",
+  "recipe_directory": "/private/tmp/hitlist-digestion-209-review-candidate",
+  "recipe_manifest_sha256": "5f616170b5514cb4d8f0c7b7843d232959e9514eebbca6483f976e17b0846615",
+  "source_package": "/private/tmp/hitlist-v2-digestion-208-unit-candidate",
+  "source_package_manifest_sha256": "ad62414d511b74a6aa1e4da457fdff68d9f4527874d1a2e385c65e5b98df41e8",
+  "hitlist_root": "/private/tmp/hitlist-digestion-recipe",
+  "hitlist_commit": "61baed9970f8661833e706c68a2adf2d0457e353",
+  "hitlist_dirty": "",
+  "allowed_splits": [
+    "train",
+    "val"
+  ],
+  "test_policy": "Original test parents excluded before targets/context aggregation. Existing validation strata are development only; no new untouched test.",
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "PYTHONPATH": "/private/tmp/presto-modular-imports:/private/tmp/hitlist-digestion-recipe"
+  },
+  "argv": [
+    "sh",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_1501_codex_shared-observation/reproduce/launch.sh"
+  ],
+  "stage": "Canonical query and aggregate-scope preflight; training settings must be frozen after qualification",
+  "prior_ratio_family": "/private/tmp/presto-modular-model/experiments/2026-10-23_1202_codex_biological-cut-rates"
+}

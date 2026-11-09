@@ -1,0 +1,26 @@
+{
+  "scope": "Tool-mediated documentation discovery only; no processed scientific data retrieved",
+  "queries": [
+    "\"SBEAMS\" \"PASS_View\" github",
+    "\"PASS05890\" \"download\""
+  ],
+  "page_opens": [
+    {
+      "url": "https://peptideatlas.org/software.php",
+      "calls": 2,
+      "finding": "Names SBEAMS as database/query software; no supported scientific file URL found."
+    },
+    {
+      "url": "https://tools.proteomecenter.org/wiki/peptideatlas_software.html",
+      "calls": 1,
+      "finding": "Tool returned 502 Internal Error."
+    },
+    {
+      "url": "https://www.sbeams.org/",
+      "calls": 1,
+      "finding": "Clicked official software link; tool returned Cache miss."
+    }
+  ],
+  "protocol_deviation": "Six tool-mediated discovery operations (2 search queries and 4 opens/clicks), plus one guarded inventory fetch, exceed the plan's six-request ceiling under an inclusive interpretation. The external browsing tool does not expose per-operation byte/time receipts. Do not claim all discovery met the frozen fetch bounds. No more network discovery in this family. No private credentials or TLS-validation bypass used.",
+  "conclusion": "No supported alternative download route learned; not evidence of global unavailability."
+}

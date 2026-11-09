@@ -1,0 +1,18 @@
+{
+  "phase": "processed",
+  "scope": "Individual small supplements explicitly linked by PMC; preserve original files, inspect XLSX source fields and descriptions without fitting. Unchanged size and archive-safety limits.",
+  "requests": [
+    {
+      "name": "michaud2018-data1.xlsx",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/instance/6123701/bin/42003_2018_87_MOESM3_ESM.xlsx",
+      "expected_kind": "xlsx",
+      "discovery_provenance": "Exact Supplementary Data1 href on https://pmc.ncbi.nlm.nih.gov/articles/PMC6123701/; published size66.3KB."
+    },
+    {
+      "name": "michaud2018-descriptions.docx",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/instance/6123701/bin/42003_2018_87_MOESM2_ESM.docx",
+      "expected_kind": "zip",
+      "discovery_provenance": "Exact Description of Additional Supplementary Files href on the same PMC page; published size16.2KB."
+    }
+  ]
+}

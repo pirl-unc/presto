@@ -1,0 +1,425 @@
+{
+  "status": "passed",
+  "distinct_source_sets": {
+    "wide-ic50": {
+      "admission": {
+        "census": {
+          "train:ic50:=": 17421,
+          "train:ic50:>": 1443,
+          "train:ic50:>=": 113,
+          "validation:ic50:=": 2056,
+          "validation:ic50:>": 181,
+          "validation:ic50:>=": 10,
+          "test:ic50:=": 2159,
+          "test:ic50:>": 117,
+          "test:ic50:>=": 12
+        },
+        "training_labels": {
+          "ic50": 18977
+        },
+        "component_states": {},
+        "manifest_sha256": "d36281f792b4db0915921856c98343ce24b56422715a59d195c9341e24183975",
+        "module_pruning": [],
+        "source_label_values": {},
+        "cell_types": [],
+        "ordinal_levels": {},
+        "cytokine_states": {},
+        "cytokine_numeric": {},
+        "context_assertion_states": {
+          "pathway": {},
+          "intervention": {}
+        },
+        "observed_numeric_features": {
+          "acquisition": [],
+          "observation": [],
+          "preparation": []
+        },
+        "frozen_targets": [],
+        "frozen_parameters": [],
+        "inherited_scalers": []
+      },
+      "training": {
+        "balance_by": [],
+        "stratum_weights": [],
+        "seed": 42,
+        "batch_size": 64,
+        "max_epochs": 10000,
+        "max_steps": 6000,
+        "learning_rate": 0.0003,
+        "weight_decay": 0.0001,
+        "identity_weight": 0,
+        "patience": 10000,
+        "min_epochs": 10000,
+        "identity_batch_size": 64,
+        "test_policy": "evaluate_selected_once",
+        "no_test_reason": null,
+        "coverage_policy": "required",
+        "coverage_exception_reason": null,
+        "checkpoint_every_steps": 100,
+        "validation_every_steps": 500,
+        "selection_endpoint": "ic50"
+      },
+      "scales": {
+        "ic50": {
+          "mean": 2.7783075195209537,
+          "scale": 1.3320785714587942,
+          "exact_count": 17421,
+          "floor": 0.001
+        }
+      },
+      "partitions": {
+        "train:assay": 18977,
+        "validation:assay": 2247,
+        "test:assay": 2288
+      }
+    },
+    "wide-six-primary-matched": {
+      "admission": {
+        "census": {
+          "train:ic50:=": 17421,
+          "train:ic50:>": 1443,
+          "train:ic50:>=": 113,
+          "train:kd:=": 3591,
+          "train:kd:>": 8336,
+          "train:ec50:=": 260,
+          "train:kd_via_ic50:=": 32500,
+          "train:kd_via_ic50:>": 1833,
+          "train:kd_via_ic50:>=": 4,
+          "train:kd_via_ec50:=": 16211,
+          "train:kd_via_ec50:>": 19268,
+          "train:half_life:=": 6146,
+          "train:half_life:>": 6,
+          "validation:ic50:=": 2056,
+          "validation:ic50:>": 181,
+          "validation:ic50:>=": 10,
+          "validation:kd:=": 416,
+          "validation:kd:>": 1147,
+          "validation:ec50:=": 18,
+          "validation:kd_via_ic50:=": 4058,
+          "validation:kd_via_ic50:>": 237,
+          "validation:kd_via_ec50:=": 2026,
+          "validation:kd_via_ec50:>": 2575,
+          "validation:half_life:=": 701,
+          "test:ic50:=": 2159,
+          "test:ic50:>": 117,
+          "test:ic50:>=": 12,
+          "test:kd:=": 440,
+          "test:kd:>": 1251,
+          "test:ec50:=": 29,
+          "test:kd_via_ic50:=": 4163,
+          "test:kd_via_ic50:>": 249,
+          "test:kd_via_ec50:=": 2183,
+          "test:kd_via_ec50:>": 2583,
+          "test:half_life:=": 815,
+          "test:half_life:>": 3
+        },
+        "training_labels": {
+          "ic50": 18977,
+          "kd": 11927,
+          "ec50": 260,
+          "kd_via_ic50": 34337,
+          "kd_via_ec50": 35479,
+          "half_life": 6152
+        },
+        "component_states": {},
+        "manifest_sha256": "d21efbd627ad93253c1d0a4877dd51723443fd12542a2cb214fd0c4da31c284e",
+        "module_pruning": [],
+        "source_label_values": {},
+        "cell_types": [],
+        "ordinal_levels": {},
+        "cytokine_states": {},
+        "cytokine_numeric": {},
+        "context_assertion_states": {
+          "pathway": {},
+          "intervention": {}
+        },
+        "observed_numeric_features": {
+          "acquisition": [],
+          "observation": [],
+          "preparation": []
+        },
+        "frozen_targets": [],
+        "frozen_parameters": [],
+        "inherited_scalers": []
+      },
+      "training": {
+        "balance_by": [
+          "endpoint"
+        ],
+        "stratum_weights": [
+          {
+            "values": [
+              "ic50"
+            ],
+            "weight": 1.0
+          },
+          {
+            "values": [
+              "kd"
+            ],
+            "weight": 0.13529578583177357
+          },
+          {
+            "values": [
+              "ec50"
+            ],
+            "weight": 0.002949350575690545
+          },
+          {
+            "values": [
+              "kd_via_ic50"
+            ],
+            "weight": 0.3895071181441779
+          },
+          {
+            "values": [
+              "kd_via_ec50"
+            ],
+            "weight": 0.4024615733650956
+          },
+          {
+            "values": [
+              "half_life"
+            ],
+            "weight": 0.06978617208326243
+          }
+        ],
+        "seed": 42,
+        "batch_size": 128,
+        "max_epochs": 10000,
+        "max_steps": 6000,
+        "learning_rate": 0.0003,
+        "weight_decay": 0.0001,
+        "identity_weight": 0,
+        "patience": 10000,
+        "min_epochs": 10000,
+        "identity_batch_size": 64,
+        "test_policy": "evaluate_selected_once",
+        "no_test_reason": null,
+        "coverage_policy": "required",
+        "coverage_exception_reason": null,
+        "checkpoint_every_steps": 100,
+        "validation_every_steps": 500,
+        "selection_endpoint": "ic50"
+      },
+      "scales": {
+        "ec50": {
+          "mean": 2.9979446540214068,
+          "scale": 1.1989459724093223,
+          "exact_count": 260,
+          "floor": 0.001
+        },
+        "half_life": {
+          "mean": 1.5186611654099018,
+          "scale": 1.2070404792686031,
+          "exact_count": 6146,
+          "floor": 0.001
+        },
+        "ic50": {
+          "mean": 2.7783075195209537,
+          "scale": 1.3320785714587942,
+          "exact_count": 17421,
+          "floor": 0.001
+        },
+        "kd": {
+          "mean": 1.8938664198652226,
+          "scale": 1.3024414560563329,
+          "exact_count": 3591,
+          "floor": 0.001
+        },
+        "kd_via_ec50": {
+          "mean": 2.3217528354549084,
+          "scale": 1.0351600929996747,
+          "exact_count": 16211,
+          "floor": 0.001
+        },
+        "kd_via_ic50": {
+          "mean": 2.8061312049049474,
+          "scale": 1.4114454777360723,
+          "exact_count": 32500,
+          "floor": 0.001
+        }
+      },
+      "partitions": {
+        "train:assay": 107132,
+        "validation:assay": 13425,
+        "test:assay": 14004
+      }
+    },
+    "wide-six-primary-shuffled": {
+      "admission": {
+        "census": {
+          "train:ic50:=": 17421,
+          "train:ic50:>": 1443,
+          "train:ic50:>=": 113,
+          "train:kd:=": 3591,
+          "train:kd:>": 8336,
+          "train:ec50:=": 260,
+          "train:kd_via_ic50:=": 32500,
+          "train:kd_via_ic50:>": 1833,
+          "train:kd_via_ic50:>=": 4,
+          "train:kd_via_ec50:=": 16211,
+          "train:kd_via_ec50:>": 19268,
+          "train:half_life:=": 6146,
+          "train:half_life:>": 6,
+          "validation:ic50:=": 2056,
+          "validation:ic50:>": 181,
+          "validation:ic50:>=": 10,
+          "validation:kd:=": 416,
+          "validation:kd:>": 1147,
+          "validation:ec50:=": 18,
+          "validation:kd_via_ic50:=": 4058,
+          "validation:kd_via_ic50:>": 237,
+          "validation:kd_via_ec50:=": 2026,
+          "validation:kd_via_ec50:>": 2575,
+          "validation:half_life:=": 701,
+          "test:ic50:=": 2159,
+          "test:ic50:>": 117,
+          "test:ic50:>=": 12,
+          "test:kd:=": 440,
+          "test:kd:>": 1251,
+          "test:ec50:=": 29,
+          "test:kd_via_ic50:=": 4163,
+          "test:kd_via_ic50:>": 249,
+          "test:kd_via_ec50:=": 2183,
+          "test:kd_via_ec50:>": 2583,
+          "test:half_life:=": 815,
+          "test:half_life:>": 3
+        },
+        "training_labels": {
+          "ic50": 18977,
+          "kd": 11927,
+          "ec50": 260,
+          "kd_via_ic50": 34337,
+          "kd_via_ec50": 35479,
+          "half_life": 6152
+        },
+        "component_states": {},
+        "manifest_sha256": "95833e5f8c08bbffce1c1cc3e338316a539eb4540be695f549bceec53aca76aa",
+        "module_pruning": [],
+        "source_label_values": {},
+        "cell_types": [],
+        "ordinal_levels": {},
+        "cytokine_states": {},
+        "cytokine_numeric": {},
+        "context_assertion_states": {
+          "pathway": {},
+          "intervention": {}
+        },
+        "observed_numeric_features": {
+          "acquisition": [],
+          "observation": [],
+          "preparation": []
+        },
+        "frozen_targets": [],
+        "frozen_parameters": [],
+        "inherited_scalers": []
+      },
+      "training": {
+        "balance_by": [
+          "endpoint"
+        ],
+        "stratum_weights": [
+          {
+            "values": [
+              "ic50"
+            ],
+            "weight": 1.0
+          },
+          {
+            "values": [
+              "kd"
+            ],
+            "weight": 0.13529578583177357
+          },
+          {
+            "values": [
+              "ec50"
+            ],
+            "weight": 0.002949350575690545
+          },
+          {
+            "values": [
+              "kd_via_ic50"
+            ],
+            "weight": 0.3895071181441779
+          },
+          {
+            "values": [
+              "kd_via_ec50"
+            ],
+            "weight": 0.4024615733650956
+          },
+          {
+            "values": [
+              "half_life"
+            ],
+            "weight": 0.06978617208326243
+          }
+        ],
+        "seed": 42,
+        "batch_size": 128,
+        "max_epochs": 10000,
+        "max_steps": 6000,
+        "learning_rate": 0.0003,
+        "weight_decay": 0.0001,
+        "identity_weight": 0,
+        "patience": 10000,
+        "min_epochs": 10000,
+        "identity_batch_size": 64,
+        "test_policy": "evaluate_selected_once",
+        "no_test_reason": null,
+        "coverage_policy": "required",
+        "coverage_exception_reason": null,
+        "checkpoint_every_steps": 100,
+        "validation_every_steps": 500,
+        "selection_endpoint": "ic50"
+      },
+      "scales": {
+        "ec50": {
+          "mean": 2.9979446540214085,
+          "scale": 1.1989459724093225,
+          "exact_count": 260,
+          "floor": 0.001
+        },
+        "half_life": {
+          "mean": 1.5186611654099071,
+          "scale": 1.207040479268606,
+          "exact_count": 6146,
+          "floor": 0.001
+        },
+        "ic50": {
+          "mean": 2.7783075195209537,
+          "scale": 1.3320785714587942,
+          "exact_count": 17421,
+          "floor": 0.001
+        },
+        "kd": {
+          "mean": 1.8938664198652235,
+          "scale": 1.302441456056331,
+          "exact_count": 3591,
+          "floor": 0.001
+        },
+        "kd_via_ec50": {
+          "mean": 2.321752835454904,
+          "scale": 1.03516009299967,
+          "exact_count": 16211,
+          "floor": 0.001
+        },
+        "kd_via_ic50": {
+          "mean": 2.806131204904976,
+          "scale": 1.4114454777360752,
+          "exact_count": 32500,
+          "floor": 0.001
+        }
+      },
+      "partitions": {
+        "train:assay": 107132,
+        "validation:assay": 13425,
+        "test:assay": 14004
+      }
+    }
+  },
+  "seconds": 109.59631545799493,
+  "capacity_and_all_sampler_configurations": "validated by frozen initial hashes, sampler-prefix simulations and common trainer tests"
+}

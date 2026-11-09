@@ -1,0 +1,25 @@
+{
+  "status": "passed",
+  "raw_rows_and_dispositions_replayed": 814268,
+  "admitted_original_measurements_replayed": 29283,
+  "used_catalog_names_replayed": 84,
+  "original_measurements_unique": true,
+  "independent_disagreeing_inputs_retained": 1002,
+  "raw_units": {
+    "nM": 29283
+  },
+  "unclipped_measurements_above_50000_nM": {
+    "train": 1577,
+    "validation": 214,
+    "test": 188
+  },
+  "partitions": {
+    "test": 2803,
+    "train": 23555,
+    "validation": 2925
+  },
+  "peptide_groups": 9908,
+  "paired_conditions_differ_only_by_training_censors": true,
+  "historical_assignments_and_memorization_exposure_preserved": true,
+  "limitations": "source/target/split replay, not homology/study/donor independence or predictive evaluation"
+}

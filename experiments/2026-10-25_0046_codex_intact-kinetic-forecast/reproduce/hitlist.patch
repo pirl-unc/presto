@@ -1,0 +1,60 @@
+diff --git a/hitlist/distribution_recipe.py b/hitlist/distribution_recipe.py
+index 46c4a97..dddd3dd 100644
+--- a/hitlist/distribution_recipe.py
++++ b/hitlist/distribution_recipe.py
+@@ -37,6 +37,7 @@ def describe_registered_recipes(store):
+     from .goldberg_candidates import describe as describe_goldberg
+     from .goldberg_composition import describe as describe_goldberg_composition
+     from .hap1_response_recipe import describe as describe_hap1_response
++    from .intact_kinetics import describe as describe_intact_kinetics
+     from .lymph_composition import describe as describe_lymph
+     from .mapp_controlled_recipe import describe as describe_controlled
+     from .ms_calibration_response import describe
+@@ -57,6 +58,7 @@ def describe_registered_recipes(store):
+         describe_native_response(store),
+         describe_precursor(store),
+         describe_hap1_response(store),
++        describe_intact_kinetics(store),
+         describe_proteometools(store),
+         describe_lymph(store),
+         describe_goldberg(store),
+diff --git a/hitlist/evidence_recipe.py b/hitlist/evidence_recipe.py
+index d53195d..e307b8f 100644
+--- a/hitlist/evidence_recipe.py
++++ b/hitlist/evidence_recipe.py
+@@ -527,6 +527,8 @@ def materialize_recipe(store, recipe, destination):
+         from .goldberg_composition import materialize_composition
+         from .hap1_response_recipe import RECIPE_ID as HAP1_RESPONSE_ID
+         from .hap1_response_recipe import materialize_responses as materialize_hap1_responses
++        from .intact_kinetics import RECIPE_ID as INTACT_KINETICS_ID
++        from .intact_kinetics import materialize_kinetics
+         from .lymph_composition import RECIPE_ID as LYMPH_ID
+         from .lymph_composition import materialize_response as materialize_lymph
+         from .mapp_controlled_recipe import CONTRAST_ID as CONTROLLED_CONTRAST_ID
+@@ -540,6 +542,8 @@ def materialize_recipe(store, recipe, destination):
+         from .tmab_response_recipe import RECIPE_ID as NATIVE_RESPONSE_ID
+         from .tmab_response_recipe import materialize_responses
+ 
++        if recipe["registered_recipe"] == INTACT_KINETICS_ID:
++            return materialize_kinetics(store, recipe, destination)
+         if recipe["registered_recipe"] == PBMC_COMPOSITION_ID:
+             return materialize_pbmc(store, recipe, destination)
+         if recipe["registered_recipe"] == GOLDBERG_COMPOSITION_ID:
+@@ -796,6 +800,10 @@ def verify_recipe_package(directory, *, source_package=None):
+         from .pbmc_composition import verify_composition_contents
+ 
+         return verify_composition_contents(directory, manifest, source_package)
++    if output_kind == "registered_intact_kinetics":
++        from .intact_kinetics import verify_kinetic_contents
++
++        return verify_kinetic_contents(directory, manifest, source_package)
+     if output_kind == "registered_goldberg_composition":
+         from .goldberg_composition import verify_composition_contents
+ 
+diff --git a/hitlist/version.py b/hitlist/version.py
+index 0406064..dcf2853 100644
+--- a/hitlist/version.py
++++ b/hitlist/version.py
+@@ -1 +1 @@
+-__version__ = "2.0.33"
++__version__ = "2.0.34"

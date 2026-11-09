@@ -1,0 +1,12 @@
+{
+  "agent_model": "Codex / GPT-5",
+  "command": "presto-report --manifest experiments/2026-11-08_2210_codex_unified-state-report-v1/report_manifest.json --output-root experiments/2026-11-08_2210_codex_unified-state-report-v1/reports",
+  "experiment_id": "2026-11-08_2210_codex_unified-state-report-v1",
+  "git_commit": "4935bd7f6676a6a3fa003b8411062eb3c70ae010",
+  "git_dirty": false,
+  "input_manifest": "../report_manifest.json",
+  "non_default_environment": {},
+  "report_hardware": "local CPU",
+  "schema": "presto.experiment_launch.v1",
+  "source_training_hardware": "requested H100!; observed NVIDIA H100 80GB HBM3"
+}

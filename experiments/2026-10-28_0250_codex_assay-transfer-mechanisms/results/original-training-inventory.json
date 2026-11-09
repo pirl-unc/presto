@@ -1,0 +1,2689 @@
+{
+  "observations": 134561,
+  "unique_peptides": 24792,
+  "unique_pmhc_contexts": 117834,
+  "groove_pairs": 146,
+  "by_endpoint_class_qualifier": [
+    {
+      "endpoint": "ec50",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 288
+    },
+    {
+      "endpoint": "ec50",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 19
+    },
+    {
+      "endpoint": "half_life",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 7650
+    },
+    {
+      "endpoint": "half_life",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 9
+    },
+    {
+      "endpoint": "half_life",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 12
+    },
+    {
+      "endpoint": "ic50",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 14375
+    },
+    {
+      "endpoint": "ic50",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 737
+    },
+    {
+      "endpoint": "ic50",
+      "mhc_class": "I",
+      "qualifier": ">=",
+      "n": 134
+    },
+    {
+      "endpoint": "ic50",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 7261
+    },
+    {
+      "endpoint": "ic50",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 1004
+    },
+    {
+      "endpoint": "ic50",
+      "mhc_class": "II",
+      "qualifier": ">=",
+      "n": 1
+    },
+    {
+      "endpoint": "kd",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 4097
+    },
+    {
+      "endpoint": "kd",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 10662
+    },
+    {
+      "endpoint": "kd",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 350
+    },
+    {
+      "endpoint": "kd",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 72
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 9113
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 21515
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 11307
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 2911
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 39835
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 2103
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "I",
+      "qualifier": ">=",
+      "n": 2
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 886
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 216
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "II",
+      "qualifier": ">=",
+      "n": 2
+    }
+  ],
+  "species": [
+    {
+      "partner1": "human",
+      "partner2": "human",
+      "n": 134561
+    }
+  ],
+  "genes": [
+    {
+      "mhc_class": "I",
+      "genes": "HLA-A",
+      "n": 73984
+    },
+    {
+      "mhc_class": "I",
+      "genes": "HLA-B",
+      "n": 34908
+    },
+    {
+      "mhc_class": "II",
+      "genes": "HLA-DQA1 / HLA-DQB1",
+      "n": 10815
+    },
+    {
+      "mhc_class": "II",
+      "genes": "HLA-DRA / HLA-DRB1",
+      "n": 5687
+    },
+    {
+      "mhc_class": "II",
+      "genes": "HLA-DPA1 / HLA-DPB1",
+      "n": 4284
+    },
+    {
+      "mhc_class": "II",
+      "genes": "HLA-DRA / HLA-DRB3",
+      "n": 1981
+    },
+    {
+      "mhc_class": "I",
+      "genes": "HLA-C",
+      "n": 1628
+    },
+    {
+      "mhc_class": "II",
+      "genes": "HLA-DRA / HLA-DRB4",
+      "n": 659
+    },
+    {
+      "mhc_class": "II",
+      "genes": "HLA-DRA / HLA-DRB5",
+      "n": 615
+    }
+  ],
+  "lengths": [
+    {
+      "mhc_class": "I",
+      "length": 7,
+      "n": 1
+    },
+    {
+      "mhc_class": "I",
+      "length": 8,
+      "n": 519
+    },
+    {
+      "mhc_class": "I",
+      "length": 9,
+      "n": 86240
+    },
+    {
+      "mhc_class": "I",
+      "length": 10,
+      "n": 22730
+    },
+    {
+      "mhc_class": "I",
+      "length": 11,
+      "n": 920
+    },
+    {
+      "mhc_class": "I",
+      "length": 12,
+      "n": 40
+    },
+    {
+      "mhc_class": "I",
+      "length": 13,
+      "n": 4
+    },
+    {
+      "mhc_class": "I",
+      "length": 14,
+      "n": 19
+    },
+    {
+      "mhc_class": "I",
+      "length": 15,
+      "n": 19
+    },
+    {
+      "mhc_class": "I",
+      "length": 16,
+      "n": 6
+    },
+    {
+      "mhc_class": "I",
+      "length": 18,
+      "n": 5
+    },
+    {
+      "mhc_class": "I",
+      "length": 20,
+      "n": 10
+    },
+    {
+      "mhc_class": "I",
+      "length": 21,
+      "n": 5
+    },
+    {
+      "mhc_class": "I",
+      "length": 28,
+      "n": 1
+    },
+    {
+      "mhc_class": "I",
+      "length": 30,
+      "n": 1
+    },
+    {
+      "mhc_class": "II",
+      "length": 12,
+      "n": 27
+    },
+    {
+      "mhc_class": "II",
+      "length": 13,
+      "n": 141
+    },
+    {
+      "mhc_class": "II",
+      "length": 14,
+      "n": 70
+    },
+    {
+      "mhc_class": "II",
+      "length": 15,
+      "n": 21483
+    },
+    {
+      "mhc_class": "II",
+      "length": 16,
+      "n": 606
+    },
+    {
+      "mhc_class": "II",
+      "length": 17,
+      "n": 986
+    },
+    {
+      "mhc_class": "II",
+      "length": 18,
+      "n": 106
+    },
+    {
+      "mhc_class": "II",
+      "length": 19,
+      "n": 42
+    },
+    {
+      "mhc_class": "II",
+      "length": 20,
+      "n": 163
+    },
+    {
+      "mhc_class": "II",
+      "length": 21,
+      "n": 391
+    },
+    {
+      "mhc_class": "II",
+      "length": 22,
+      "n": 3
+    },
+    {
+      "mhc_class": "II",
+      "length": 24,
+      "n": 11
+    },
+    {
+      "mhc_class": "II",
+      "length": 33,
+      "n": 2
+    },
+    {
+      "mhc_class": "II",
+      "length": 39,
+      "n": 10
+    }
+  ],
+  "source_study": [
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1006442",
+      "n": 17998
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1000994",
+      "n": 12024
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1014017",
+      "n": 7143
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1022551",
+      "n": 7031
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1022588",
+      "n": 6688
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1000425",
+      "n": 6268
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1019527",
+      "n": 5686
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1013510",
+      "n": 4741
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1014192",
+      "n": 3204
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1013512",
+      "n": 2572
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1000945",
+      "n": 2299
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1014194",
+      "n": 1447
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1005810",
+      "n": 1377
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1022822",
+      "n": 1315
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1000741",
+      "n": 1298
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1000735",
+      "n": 1050
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1000396",
+      "n": 925
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1019516",
+      "n": 893
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1022590",
+      "n": 891
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1019515",
+      "n": 861
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1019513",
+      "n": 847
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028293",
+      "n": 827
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1019521",
+      "n": 806
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1019354",
+      "n": 787
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028285",
+      "n": 787
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1019523",
+      "n": 783
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1019509",
+      "n": 780
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1019514",
+      "n": 777
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1019518",
+      "n": 761
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1019507",
+      "n": 758
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1019522",
+      "n": 750
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1019520",
+      "n": 750
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1019517",
+      "n": 749
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1019510",
+      "n": 747
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1019511",
+      "n": 742
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1019508",
+      "n": 735
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1019519",
+      "n": 732
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1019512",
+      "n": 716
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028245",
+      "n": 713
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028247",
+      "n": 696
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028243",
+      "n": 694
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028242",
+      "n": 689
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028246",
+      "n": 688
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028252",
+      "n": 688
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028244",
+      "n": 684
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028249",
+      "n": 681
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028248",
+      "n": 672
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028250",
+      "n": 671
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028239",
+      "n": 664
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028711",
+      "n": 663
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028717",
+      "n": 660
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028253",
+      "n": 659
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028251",
+      "n": 622
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028713",
+      "n": 615
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028254",
+      "n": 611
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028238",
+      "n": 608
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028714",
+      "n": 597
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1021091",
+      "n": 553
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028288",
+      "n": 541
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200155",
+      "n": 501
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028291",
+      "n": 479
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028292",
+      "n": 477
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1022823",
+      "n": 476
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028289",
+      "n": 466
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028712",
+      "n": 450
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028715",
+      "n": 450
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028287",
+      "n": 450
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028716",
+      "n": 447
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200136",
+      "n": 421
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1044682",
+      "n": 420
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1042751",
+      "n": 410
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1019524",
+      "n": 406
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1000395",
+      "n": 400
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028790",
+      "n": 375
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200059",
+      "n": 357
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1031894",
+      "n": 351
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1019353",
+      "n": 350
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1000743",
+      "n": 340
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1024516",
+      "n": 330
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1026840",
+      "n": 324
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1000402",
+      "n": 321
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1000410",
+      "n": 296
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1023025",
+      "n": 295
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028237",
+      "n": 282
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1000983",
+      "n": 273
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028554",
+      "n": 248
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1000456",
+      "n": 245
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1000416",
+      "n": 240
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028294",
+      "n": 239
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028290",
+      "n": 204
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1033071",
+      "n": 189
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200133",
+      "n": 183
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028234",
+      "n": 173
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1039423",
+      "n": 166
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200073",
+      "n": 165
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1001254",
+      "n": 164
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1013714",
+      "n": 159
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1025099",
+      "n": 158
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028282",
+      "n": 156
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200072",
+      "n": 155
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1037812",
+      "n": 155
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1036599",
+      "n": 152
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028235",
+      "n": 152
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200060",
+      "n": 151
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028230",
+      "n": 142
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028231",
+      "n": 141
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028286",
+      "n": 141
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028228",
+      "n": 131
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028229",
+      "n": 126
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1037619",
+      "n": 126
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1019788",
+      "n": 121
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1038983",
+      "n": 115
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028553",
+      "n": 113
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1026371",
+      "n": 110
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028232",
+      "n": 107
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1002221",
+      "n": 102
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/931",
+      "n": 97
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200084",
+      "n": 94
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1007769",
+      "n": 92
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200074",
+      "n": 90
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1020882",
+      "n": 90
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200080",
+      "n": 90
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1000405",
+      "n": 90
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1036897",
+      "n": 88
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1037895",
+      "n": 87
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200048",
+      "n": 84
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1000738",
+      "n": 84
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1037971",
+      "n": 84
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200106",
+      "n": 80
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200126",
+      "n": 80
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200145",
+      "n": 78
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1006339",
+      "n": 78
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1022144",
+      "n": 77
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1000278",
+      "n": 75
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1031253",
+      "n": 74
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1003942",
+      "n": 73
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1031072",
+      "n": 72
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1000734",
+      "n": 72
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028233",
+      "n": 71
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1000415",
+      "n": 70
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/859",
+      "n": 68
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200045",
+      "n": 67
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1030412",
+      "n": 66
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1004898",
+      "n": 66
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200029",
+      "n": 64
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1039348",
+      "n": 62
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200065",
+      "n": 59
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1007465",
+      "n": 59
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1037506",
+      "n": 58
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1003536",
+      "n": 56
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200025",
+      "n": 55
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1039545",
+      "n": 54
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200040",
+      "n": 53
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1034868",
+      "n": 53
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1029957",
+      "n": 52
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1034875",
+      "n": 50
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/329",
+      "n": 50
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1024170",
+      "n": 49
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1000737",
+      "n": 47
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200022",
+      "n": 46
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1021194",
+      "n": 45
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200046",
+      "n": 44
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1014134",
+      "n": 43
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1499",
+      "n": 42
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200095",
+      "n": 42
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200131",
+      "n": 42
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1015813",
+      "n": 42
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1015058",
+      "n": 41
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1022297",
+      "n": 41
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1002097",
+      "n": 40
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1031258",
+      "n": 40
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1000418",
+      "n": 40
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200077",
+      "n": 40
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1039752",
+      "n": 38
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200098",
+      "n": 36
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1039591",
+      "n": 36
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200100",
+      "n": 35
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200058",
+      "n": 34
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1035763",
+      "n": 33
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200023",
+      "n": 32
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200047",
+      "n": 32
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200075",
+      "n": 32
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200132",
+      "n": 32
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1025101",
+      "n": 32
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1044853",
+      "n": 32
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1021189",
+      "n": 32
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200052",
+      "n": 31
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1039602",
+      "n": 31
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1033357",
+      "n": 30
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1020898",
+      "n": 30
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028443",
+      "n": 28
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1015975",
+      "n": 27
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200038",
+      "n": 26
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1016566",
+      "n": 26
+    },
+    {
+      "source": "hitlist-v4-cedar",
+      "study": "http://www.iedb.org/reference/1045240",
+      "n": 26
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1043769",
+      "n": 26
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200092",
+      "n": 25
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200055",
+      "n": 24
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200118",
+      "n": 24
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200150",
+      "n": 23
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200088",
+      "n": 23
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1031250",
+      "n": 23
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/315463",
+      "n": 23
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1003940",
+      "n": 22
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1030414",
+      "n": 22
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1031481",
+      "n": 22
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1000733",
+      "n": 22
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1027578",
+      "n": 22
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200061",
+      "n": 21
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1021345",
+      "n": 21
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200068",
+      "n": 20
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200094",
+      "n": 20
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1003945",
+      "n": 20
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1005692",
+      "n": 20
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1013407",
+      "n": 20
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1029061",
+      "n": 20
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1000406",
+      "n": 20
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200027",
+      "n": 19
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1016058",
+      "n": 19
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028932",
+      "n": 19
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1030030",
+      "n": 19
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1017786",
+      "n": 19
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/315209",
+      "n": 19
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1027629",
+      "n": 18
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028018",
+      "n": 18
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1036068",
+      "n": 18
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1039432",
+      "n": 18
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1024927",
+      "n": 18
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200107",
+      "n": 18
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1001012",
+      "n": 18
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1041090",
+      "n": 18
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1029829",
+      "n": 18
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1035929",
+      "n": 17
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1029818",
+      "n": 17
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1000747",
+      "n": 16
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1024928",
+      "n": 16
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200090",
+      "n": 16
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200101",
+      "n": 16
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1000450",
+      "n": 16
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1029406",
+      "n": 16
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200066",
+      "n": 15
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1014664",
+      "n": 15
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1030792",
+      "n": 15
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200085",
+      "n": 15
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200079",
+      "n": 15
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1003550",
+      "n": 15
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1043979",
+      "n": 15
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200021",
+      "n": 14
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1005282",
+      "n": 14
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1007463",
+      "n": 14
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1036684",
+      "n": 14
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1033236",
+      "n": 14
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200043",
+      "n": 13
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1019763",
+      "n": 13
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1021191",
+      "n": 13
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1036600",
+      "n": 13
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/315470",
+      "n": 13
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1013511",
+      "n": 13
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1003499",
+      "n": 12
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/315129",
+      "n": 12
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1013643",
+      "n": 12
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1032880",
+      "n": 12
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1037140",
+      "n": 12
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1029673",
+      "n": 12
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1447",
+      "n": 11
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200042",
+      "n": 11
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1013935",
+      "n": 11
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1022468",
+      "n": 11
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/435",
+      "n": 11
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028559",
+      "n": 11
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1034789",
+      "n": 11
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1034991",
+      "n": 11
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1000739",
+      "n": 11
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1035074",
+      "n": 11
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200036",
+      "n": 10
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/315167",
+      "n": 10
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1005381",
+      "n": 10
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1030978",
+      "n": 10
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200134",
+      "n": 10
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1029531",
+      "n": 10
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1042595",
+      "n": 10
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1007943",
+      "n": 9
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1037874",
+      "n": 9
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200099",
+      "n": 9
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1013509",
+      "n": 9
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1026941",
+      "n": 9
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1024949",
+      "n": 9
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1355",
+      "n": 8
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200109",
+      "n": 8
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200146",
+      "n": 8
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1003616",
+      "n": 8
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1007658",
+      "n": 8
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1034283",
+      "n": 8
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1004972",
+      "n": 8
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028840",
+      "n": 8
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1029952",
+      "n": 8
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1011874",
+      "n": 7
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1022535",
+      "n": 7
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1026050",
+      "n": 7
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1037260",
+      "n": 7
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1039424",
+      "n": 7
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1021579",
+      "n": 7
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200105",
+      "n": 7
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200139",
+      "n": 7
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200024",
+      "n": 7
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1026955",
+      "n": 7
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1010862",
+      "n": 6
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1012803",
+      "n": 6
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1023028",
+      "n": 6
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1022980",
+      "n": 6
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1024522",
+      "n": 6
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028168",
+      "n": 6
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1031051",
+      "n": 6
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200112",
+      "n": 6
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200119",
+      "n": 6
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200096",
+      "n": 6
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200151",
+      "n": 6
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1000403",
+      "n": 6
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1000417",
+      "n": 6
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1020267",
+      "n": 6
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1043345",
+      "n": 6
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1036009",
+      "n": 6
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1032898",
+      "n": 6
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200049",
+      "n": 5
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1021967",
+      "n": 5
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1026340",
+      "n": 5
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1029024",
+      "n": 5
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1024133",
+      "n": 5
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200078",
+      "n": 5
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200102",
+      "n": 5
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200121",
+      "n": 5
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200124",
+      "n": 5
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200141",
+      "n": 5
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200148",
+      "n": 5
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1000420",
+      "n": 5
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1443",
+      "n": 4
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/315465",
+      "n": 4
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/315054",
+      "n": 4
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1002516",
+      "n": 4
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/315047",
+      "n": 4
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1026752",
+      "n": 4
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1032172",
+      "n": 4
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1032897",
+      "n": 4
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1036089",
+      "n": 4
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1040863",
+      "n": 4
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1039848",
+      "n": 4
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1000732",
+      "n": 4
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1008795",
+      "n": 4
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1027438",
+      "n": 4
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1040639",
+      "n": 4
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1030466",
+      "n": 4
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1032128",
+      "n": 4
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1032297",
+      "n": 4
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1036816",
+      "n": 4
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1040089",
+      "n": 4
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/732",
+      "n": 3
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1001708",
+      "n": 3
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/315374",
+      "n": 3
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1022200",
+      "n": 3
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1024498",
+      "n": 3
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1025672",
+      "n": 3
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028309",
+      "n": 3
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1028339",
+      "n": 3
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1032160",
+      "n": 3
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1000802",
+      "n": 3
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1020397",
+      "n": 3
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200037",
+      "n": 3
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200044",
+      "n": 3
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1014975",
+      "n": 3
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1019663",
+      "n": 3
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1031123",
+      "n": 3
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1006879",
+      "n": 2
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1017604",
+      "n": 2
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1019711",
+      "n": 2
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/315241",
+      "n": 2
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/315335",
+      "n": 2
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/315189",
+      "n": 2
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1020300",
+      "n": 2
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1022281",
+      "n": 2
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1022710",
+      "n": 2
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1022885",
+      "n": 2
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1038973",
+      "n": 2
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1042653",
+      "n": 2
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/200057",
+      "n": 2
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1006043",
+      "n": 2
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1013704",
+      "n": 2
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1000464",
+      "n": 2
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1032718",
+      "n": 2
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1013519",
+      "n": 2
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1006346",
+      "n": 2
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1026469",
+      "n": 2
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1013349",
+      "n": 2
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1039788",
+      "n": 2
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1020388",
+      "n": 1
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1018511",
+      "n": 1
+    },
+    {
+      "source": "hitlist-v4-cedar",
+      "study": "http://www.iedb.org/reference/1045270",
+      "n": 1
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1025182",
+      "n": 1
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1001013",
+      "n": 1
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1043765",
+      "n": 1
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1044167",
+      "n": 1
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1013533",
+      "n": 1
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1013344",
+      "n": 1
+    },
+    {
+      "source": "hitlist-v4-iedb",
+      "study": "http://www.iedb.org/reference/1031814",
+      "n": 1
+    }
+  ],
+  "original_admission": {
+    "excluded:outside_supported_purified_quantitative_assay": 586064,
+    "candidate:kd_via_ec50": 56190,
+    "deferred:missing_explicit_mhc_partner": 55371,
+    "excluded:not_explicit_purified_mhc": 9696,
+    "excluded:not_explicit_human_restriction": 16957,
+    "original_ic50_outcome_retained": 27364,
+    "deferred:unresolved_catalog_name": 1832,
+    "candidate:kd_via_ic50": 53947,
+    "excluded:modified_or_unspecified_peptidoform": 1519,
+    "candidate:ic50": 1919,
+    "candidate:half_life": 9575,
+    "excluded:nonpositive_or_nonfinite_measurement": 870,
+    "candidate:kd": 18817,
+    "candidate:ec50": 388,
+    "excluded:unsupported_peptide_or_class": 247,
+    "excluded:non_peptide_ligand": 39,
+    "candidate:koff": 10
+  },
+  "allele_concentration": {
+    "I": {
+      "observations": 110520,
+      "groove_pairs": 98,
+      "top10": [
+        {
+          "groove_id": "0cb442f73c6eb25e480e5f07306a9d29f931af75529f8020ba2ffaa2c43952f6",
+          "mhc_class": "I",
+          "catalog_names": "HLA-A*02:01",
+          "observations": 13723,
+          "unique_peptides": 9146,
+          "exact": 11593,
+          "ic50": 4797,
+          "kd": 910,
+          "ec50": 59,
+          "kd_via_ic50": 4481,
+          "kd_via_ec50": 1735,
+          "half_life": 1741
+        },
+        {
+          "groove_id": "56284860fb4f3cbad5f8456151fea07f0fd240dc77e7370a24117601fae4099d",
+          "mhc_class": "I",
+          "catalog_names": "HLA-A*03:01",
+          "observations": 5988,
+          "unique_peptides": 5145,
+          "exact": 4338,
+          "ic50": 562,
+          "kd": 426,
+          "ec50": 4,
+          "kd_via_ic50": 2469,
+          "kd_via_ec50": 1753,
+          "half_life": 774
+        },
+        {
+          "groove_id": "e6addec6f12bd7fdb3b992cbba50cc3f00b82fa4913b4875a3bf50fa8a8f816b",
+          "mhc_class": "I",
+          "catalog_names": "HLA-A*11:01",
+          "observations": 5362,
+          "unique_peptides": 4458,
+          "exact": 4229,
+          "ic50": 606,
+          "kd": 210,
+          "ec50": 3,
+          "kd_via_ic50": 2408,
+          "kd_via_ec50": 1393,
+          "half_life": 742
+        },
+        {
+          "groove_id": "a4cd06ca0b129c3e6cc35ed54c6dd1de81a88413fcc905451f9441f3be3d2564",
+          "mhc_class": "I",
+          "catalog_names": "HLA-A*02:03",
+          "observations": 4622,
+          "unique_peptides": 3284,
+          "exact": 4008,
+          "ic50": 1577,
+          "kd": 367,
+          "ec50": 0,
+          "kd_via_ic50": 2329,
+          "kd_via_ec50": 349,
+          "half_life": 0
+        },
+        {
+          "groove_id": "c6a0437a2204e8999dba51b0803c2aa17636ba5311c189e9a3560e29130bab5c",
+          "mhc_class": "I",
+          "catalog_names": "HLA-A*68:02",
+          "observations": 4450,
+          "unique_peptides": 3320,
+          "exact": 3654,
+          "ic50": 1254,
+          "kd": 318,
+          "ec50": 0,
+          "kd_via_ic50": 2387,
+          "kd_via_ec50": 489,
+          "half_life": 2
+        },
+        {
+          "groove_id": "7e86717b3ea5bc14d521a08d15afc44806a664e6c60069aac0a309e4bdc489a1",
+          "mhc_class": "I",
+          "catalog_names": "HLA-B*15:01",
+          "observations": 4148,
+          "unique_peptides": 3327,
+          "exact": 2815,
+          "ic50": 240,
+          "kd": 671,
+          "ec50": 13,
+          "kd_via_ic50": 567,
+          "kd_via_ec50": 1583,
+          "half_life": 1074
+        },
+        {
+          "groove_id": "eff8d191f8b9d406fc2c4cf6267ff0095117f1f84cd98596cfa450c65184d1c9",
+          "mhc_class": "I",
+          "catalog_names": "HLA-A*02:06",
+          "observations": 4013,
+          "unique_peptides": 2800,
+          "exact": 3912,
+          "ic50": 1433,
+          "kd": 211,
+          "ec50": 0,
+          "kd_via_ic50": 2323,
+          "kd_via_ec50": 46,
+          "half_life": 0
+        },
+        {
+          "groove_id": "84d50c4d930bfdc97b6554bf2acbd4f5d2b1454d63d247257192845afa520733",
+          "mhc_class": "I",
+          "catalog_names": "HLA-A*31:01",
+          "observations": 3881,
+          "unique_peptides": 3703,
+          "exact": 2819,
+          "ic50": 91,
+          "kd": 279,
+          "ec50": 0,
+          "kd_via_ic50": 2363,
+          "kd_via_ec50": 1148,
+          "half_life": 0
+        },
+        {
+          "groove_id": "b1a1279e89da4e10675b66536864bd53bbfd7ddfcd0ed09659d7539b5f9ce83d",
+          "mhc_class": "I",
+          "catalog_names": "HLA-B*07:02",
+          "observations": 3770,
+          "unique_peptides": 3068,
+          "exact": 2631,
+          "ic50": 545,
+          "kd": 170,
+          "ec50": 18,
+          "kd_via_ic50": 794,
+          "kd_via_ec50": 1521,
+          "half_life": 722
+        },
+        {
+          "groove_id": "51feb6f733a81c9fc05eb21dbb29e44848d6e25d05a8cb1a7070bf26302d7f43",
+          "mhc_class": "I",
+          "catalog_names": "HLA-A*02:02",
+          "observations": 3649,
+          "unique_peptides": 2322,
+          "exact": 3604,
+          "ic50": 1569,
+          "kd": 0,
+          "ec50": 0,
+          "kd_via_ic50": 2080,
+          "kd_via_ec50": 0,
+          "half_life": 0
+        }
+      ]
+    },
+    "II": {
+      "observations": 24041,
+      "groove_pairs": 48,
+      "top10": [
+        {
+          "groove_id": "e8e6a999c68cf317185bea374a9a0669f7f950459499cb3d89ece4777910da0d",
+          "mhc_class": "II",
+          "catalog_names": "HLA-DQA1*05:01 / HLA-DQB1*02:01",
+          "observations": 1142,
+          "unique_peptides": 1100,
+          "exact": 1049,
+          "ic50": 981,
+          "kd": 35,
+          "ec50": 1,
+          "kd_via_ic50": 122,
+          "kd_via_ec50": 0,
+          "half_life": 3
+        },
+        {
+          "groove_id": "ffbd977747331b328557020e101cde7582f3e807c5491990e79ac4799e502e7a",
+          "mhc_class": "II",
+          "catalog_names": "HLA-DQA1*03:01 / HLA-DQB1*03:02",
+          "observations": 1016,
+          "unique_peptides": 976,
+          "exact": 909,
+          "ic50": 854,
+          "kd": 35,
+          "ec50": 9,
+          "kd_via_ic50": 118,
+          "kd_via_ec50": 0,
+          "half_life": 0
+        },
+        {
+          "groove_id": "e3dae6aac281519504b6f6fad047bfc9986d845e42fa26497dbeed89daf6c3cc",
+          "mhc_class": "II",
+          "catalog_names": "HLA-DQA1*01:01 / HLA-DQB1*05:01",
+          "observations": 896,
+          "unique_peptides": 827,
+          "exact": 632,
+          "ic50": 731,
+          "kd": 70,
+          "ec50": 0,
+          "kd_via_ic50": 95,
+          "kd_via_ec50": 0,
+          "half_life": 0
+        },
+        {
+          "groove_id": "c3b47f34dd780ffc85a5e7d5efdcba2834ca60382a67aa25551c0910df5491e0",
+          "mhc_class": "II",
+          "catalog_names": "HLA-DQA1*05:01 / HLA-DQB1*03:01; HLA-DQA1*05:05 / HLA-DQB1*03:01",
+          "observations": 866,
+          "unique_peptides": 827,
+          "exact": 842,
+          "ic50": 736,
+          "kd": 35,
+          "ec50": 0,
+          "kd_via_ic50": 95,
+          "kd_via_ec50": 0,
+          "half_life": 0
+        },
+        {
+          "groove_id": "0eb380c992a42b6e0a9aad9c9584fa9f8170eb7909e7d78ab51c4c6e3f40345e",
+          "mhc_class": "II",
+          "catalog_names": "HLA-DQA1*01:02 / HLA-DQB1*06:02",
+          "observations": 861,
+          "unique_peptides": 816,
+          "exact": 815,
+          "ic50": 735,
+          "kd": 0,
+          "ec50": 0,
+          "kd_via_ic50": 115,
+          "kd_via_ec50": 11,
+          "half_life": 0
+        },
+        {
+          "groove_id": "1ffef5f23cf4d0b249cef930a58e4466c4720c07ead30cc4c521e9911b7235d9",
+          "mhc_class": "II",
+          "catalog_names": "HLA-DPA1*01:03 / HLA-DPB1*04:01",
+          "observations": 849,
+          "unique_peptides": 816,
+          "exact": 678,
+          "ic50": 725,
+          "kd": 35,
+          "ec50": 0,
+          "kd_via_ic50": 89,
+          "kd_via_ec50": 0,
+          "half_life": 0
+        },
+        {
+          "groove_id": "8192cca25595d81e10ec2f97346dc11dabc3be0287dfffd6b5ff2f8cefba2984",
+          "mhc_class": "II",
+          "catalog_names": "HLA-DPA1*03:01 / HLA-DPB1*04:02",
+          "observations": 828,
+          "unique_peptides": 789,
+          "exact": 721,
+          "ic50": 704,
+          "kd": 35,
+          "ec50": 0,
+          "kd_via_ic50": 89,
+          "kd_via_ec50": 0,
+          "half_life": 0
+        },
+        {
+          "groove_id": "ed54e1458a44e415858ff3a31f2a5b033303636d4da196e9a13cc28b4b386ad8",
+          "mhc_class": "II",
+          "catalog_names": "HLA-DPA1*02:01 / HLA-DPB1*05:01",
+          "observations": 827,
+          "unique_peptides": 789,
+          "exact": 653,
+          "ic50": 703,
+          "kd": 35,
+          "ec50": 0,
+          "kd_via_ic50": 89,
+          "kd_via_ec50": 0,
+          "half_life": 0
+        },
+        {
+          "groove_id": "d2feae3eac8af71dd6f9998774507847c95721afe94f63d4a3c21740799ba3b8",
+          "mhc_class": "II",
+          "catalog_names": "HLA-DPA1*02:01 / HLA-DPB1*01:01",
+          "observations": 825,
+          "unique_peptides": 786,
+          "exact": 734,
+          "ic50": 701,
+          "kd": 35,
+          "ec50": 0,
+          "kd_via_ic50": 89,
+          "kd_via_ec50": 0,
+          "half_life": 0
+        },
+        {
+          "groove_id": "a875758222688718453472ff29bdf01f71e2c10c544a09f3c0b26bdd1610330e",
+          "mhc_class": "II",
+          "catalog_names": "HLA-DRA*01:01 / HLA-DRB1*08:01",
+          "observations": 717,
+          "unique_peptides": 717,
+          "exact": 597,
+          "ic50": 4,
+          "kd": 0,
+          "ec50": 0,
+          "kd_via_ic50": 0,
+          "kd_via_ec50": 713,
+          "half_life": 0
+        }
+      ]
+    }
+  }
+}

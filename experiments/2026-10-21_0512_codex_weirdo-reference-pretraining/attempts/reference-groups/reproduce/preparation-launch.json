@@ -1,0 +1,44 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "argv": [
+    "experiments/2026-10-21_0512_codex_weirdo-reference-pretraining/code/prepare.py",
+    "--output",
+    "experiments/2026-10-21_0512_codex_weirdo-reference-pretraining/attempts/reference-groups",
+    "--reconstruct-missing-groups"
+  ],
+  "cwd": "/private/tmp/presto-modular-model",
+  "device": "cpu",
+  "environment": {
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PYTHONPATH": "/private/tmp/presto-modular-imports"
+  },
+  "executable": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "git_commit": "de3cdfc4a14930be15c7960d93abb4671f939520",
+  "git_status": "",
+  "gpu": null,
+  "pins": {
+    "archive": "99b21eb93196cf2b0a0b1ae4bbb63066224a6864e48dd3a8d47fe67bd34fcf79",
+    "metadata": "571356e92fd1da71cf173be9f5e59c6aa128467f347de37aa30815d78923fc1f",
+    "reference": "e9c44a34fcd3f8fb1f4151d489985dd5578a947eda3e62213d5109ace36e115d"
+  },
+  "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "selection": {
+    "limits": {
+      "test": 1000,
+      "train": 5000,
+      "validation": 1000
+    },
+    "seeds": {
+      "test": 44,
+      "train": 42,
+      "validation": 43
+    }
+  },
+  "versions": {
+    "numpy": "2.5.4",
+    "scikit-learn": "1.9.1",
+    "torch": "2.14.1"
+  }
+}

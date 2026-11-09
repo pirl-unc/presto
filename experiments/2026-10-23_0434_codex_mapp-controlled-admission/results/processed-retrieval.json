@@ -1,0 +1,52 @@
+[
+  {
+    "path": "PXD009508/search.tar.gz",
+    "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2018/10/PXD009508/search.tar.gz",
+    "expected_size_bytes": 386079581,
+    "expected_sha1": "d2a715024497a083af0c86c0c45d1a866a71c6b3",
+    "magic_hex": "1f8b",
+    "metadata_sha256": "826a2c36d2c9be44bb11502f504fb504773bed4505f24069dfe9b8915c51dfdf",
+    "started_utc": "2026-10-23T08:43:40.398501+00:00",
+    "http_status": 200,
+    "content_type": "application/x-gzip",
+    "final_url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2018/10/PXD009508/search.tar.gz",
+    "size_bytes": 16510976,
+    "sha256": "f43acc0293cd52798ec9dd1a6c31b17a8afc55f3d3e7b60dceb403f0d8733ee3",
+    "sha1": "b47d38d174b1362d4d79001b8e3872cdc1abcd7b",
+    "passed": false,
+    "error": "AssertionError: PRIDE byte count differs",
+    "wall_seconds": 145.75534491694998
+  },
+  {
+    "path": "PXD007263/search.tar.gz",
+    "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2018/10/PXD007263/search.tar.gz",
+    "expected_size_bytes": 205717009,
+    "expected_sha1": "13d131409b009bea62def66a56294c23511899cf",
+    "magic_hex": "1f8b",
+    "metadata_sha256": "63b9ad9f1e25a36677c81b520208dd1a59f0bf8b9996a1caba8e5cda22d029bb",
+    "started_utc": "2026-10-23T08:43:40.398800+00:00",
+    "http_status": 200,
+    "content_type": "application/x-gzip",
+    "final_url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2018/10/PXD007263/search.tar.gz",
+    "size_bytes": 22343728,
+    "sha256": "44f0948a2859fcdd8588e2d004a98de279c5ac9e4d5b9d4115116c564fe0cbc0",
+    "sha1": "f98635014eee88dc024db9f616d64108a18c3bed",
+    "passed": false,
+    "error": "AssertionError: PRIDE byte count differs",
+    "wall_seconds": 146.0570342920255
+  },
+  {
+    "path": "author-manuscript.pdf",
+    "url": "https://weizmann.elsevierpure.com/ws/files/111310290/ym_NatBio_RevealingTheCellularDegradomeByMassSpectrometry_AM2018.pdf",
+    "magic_hex": "25504446",
+    "started_utc": "2026-10-23T08:46:06.152365+00:00",
+    "http_status": 200,
+    "content_type": "application/pdf",
+    "final_url": "https://weizmann.elsevierpure.com/ws/files/111310290/ym_NatBio_RevealingTheCellularDegradomeByMassSpectrometry_AM2018.pdf",
+    "size_bytes": 1389772,
+    "sha256": "30f49c7282460b7decec82d13f2d8c73c0d3924978904d76bf68f6404072789a",
+    "sha1": "e3261e02b008303deaed18ef7ec9c71d64ee03a4",
+    "passed": true,
+    "wall_seconds": 1.3275707080028951
+  }
+]

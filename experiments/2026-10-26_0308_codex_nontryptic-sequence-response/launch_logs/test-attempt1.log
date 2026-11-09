@@ -1,0 +1,3 @@
+{'n_fits': 78, 'relative_rmse_improvement': -0.041297412263121336, 'gates': {'rmse_reduction_at_least_10_percent': False, 'all_outer_learned_dose_slopes_positive': True, 'dose_adjusted_sd_at_least_25_percent': True}}
+{'n_fits': 78, 'relative_rmse_improvement': -0.059659258410877714, 'gates': {'rmse_reduction_at_least_10_percent': False, 'all_outer_learned_dose_slopes_positive': True, 'dose_adjusted_sd_at_least_25_percent': True}}
+{'status': 'passed', 'fixture': 'synthetic_software_only_no_biological_source_access', 'checks': ['known_slope', 'unit_slope', 'equal_peptide_dose_weight', 'duplicate_slot_invariance', 'finite_ridge_and_active_columns', 'invalid_quantity_rejection', 'full_runner_outer_target_mutation_invariance', 'inner_and_outer_gene_exclusion']}

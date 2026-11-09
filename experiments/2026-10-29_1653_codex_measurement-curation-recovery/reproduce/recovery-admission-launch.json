@@ -1,0 +1,30 @@
+{
+  "argv": [
+    "python",
+    "-m",
+    "modal",
+    "run",
+    "--detach",
+    "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/admit_recovery.py"
+  ],
+  "git_commit": "858f5383094ad1a8e840ddb1b4df8233b189b2df",
+  "git_dirty": " M data/modular_hitlist.py\n M experiments/2026-10-28_1540_codex_temporal-multi-output/analysis/verify_predictions.py\n M experiments/agents/codex/ideas.md\n M experiments/experiment_log.md\n M tasks/lessons.md\n M tasks/todo.md\n M tests/test_modular_hitlist.py\n?? data/measurement_curation.py\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/reproduce/analysis-1793296663715070000/\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/baseline-comparison.csv\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/baseline-comparison.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/cluster-uncertainty.csv\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/cluster-uncertainty.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/failure-strata.csv\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/failure-strata.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/input-feature-coverage.csv\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/input-feature-coverage.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/output-class-support.csv\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/output-class-support.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/parameter-coordinate-coverage.csv\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/parameter-coordinate-coverage.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/performance-comparison.pdf\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/performance-comparison.png\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/prediction-verification.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/register-diagnostics.csv\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/register-diagnostics.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/reporting-receipt.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/runtime-and-exposure.csv\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/runtime-and-exposure.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/stratified-metrics.csv\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/stratified-metrics.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/summary.md\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/validation-decision.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/wide-multi-s42-receipt.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/wide-multi-s42/\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/wide-multi-s43-receipt.json\n?? experiments/2026-10-28_1540_codex_temporal-multi-output/results/wide-multi-s43/\n?? experiments/2026-10-29_1653_codex_measurement-curation-recovery/\n?? experiments/agents/codex/plans/2026-10-29_measurement-curation-recovery.md\n?? tests/test_measurement_curation.py\n",
+  "started_unix": 1793298056.159701,
+  "source_hashes": {
+    "recover_strazar.py": "4d713f13e5dc7ec84e42b5221895cefe824479388e39451de887d8bb05356b9b",
+    "assay_measurement_reviews.json": "d1d1ae11d51314da292e9b37b41f9e8241d34bc50555d33ac6b3a243070cd829",
+    "modular_ordinal.py": "530667626cca2ba535585e1bd5aa0b1dbf5c77b8be0540b1da911e27be1b9520",
+    "assay_reviews.py": "9172bb5223e684bd76fde2e821e2d15355c64f2ad9f6d03fdb5985a9fa469c39",
+    "modular_quantitative.py": "751a66c8aa68fd697d395ec3fc63951e262278a0fb6c3f26c185e8963f7d148d",
+    "measurement_curation.py": "971f749c4c73f13ae1003eafe628cace6c5605046043146b75688573df89e1a5",
+    "modular_hitlist.py": "2fa78f04811e5dd273f23c47330b9ca1f65c2df43d88285fd94c8374bb96528d",
+    "admit_recovery.py": "dfc4a85459620b7b7b553a2e948e135b462055acc86f079376aaa4294bf410f1",
+    "modular.py": "eac93c31b8a536becf7ee13dca4eeef71dfb4b92043a28a07f64ec072ca7d942",
+    "modular_hitlist_ms.py": "fb3ee8f1ed666e9e961f2285a3410df247c1addc47555839a751398d7141b235"
+  },
+  "wheel_sha256": "844b1ad9c99e278240eb6aa5083c6949af8a5227462256e716306ff898f94b3d",
+  "source_csv_sha256": "bfb0b3b75a70aeceb7870c2ec7c78a2c072c12a6324f6dec4f7ad9ba0277c4c6",
+  "requested_gpu": null,
+  "cpu": 4,
+  "memory_mib": 16384
+}

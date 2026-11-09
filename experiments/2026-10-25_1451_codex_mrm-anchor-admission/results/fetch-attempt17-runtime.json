@@ -1,0 +1,64 @@
+{
+  "stage": "fetch",
+  "attempt": 17,
+  "started_utc": "2026-10-25T15:19:29.240934+00:00",
+  "status": "passed",
+  "child_launched": true,
+  "exit_code": 0,
+  "resource_violation": null,
+  "memory_admission": {
+    "metric": "macos_free_plus_speculative",
+    "bytes": 6606405632
+  },
+  "disk_free_before_bytes": 19421421568,
+  "request_set_sha256": "f0e8ce28c8243761a28e56702af2f11446ca5c5f9b33c5f210a32852c28c64cd",
+  "request_set": {
+    "phase": "metadata",
+    "scope": "Final two metadata requests in the registered20-request budget: exact fallback Panorama link and official PASSEL accession viewer; anonymous access only.",
+    "requests": [
+      {
+        "name": "panorama-sobsey-response-peptide.html",
+        "url": "https://panoramaweb.org/CPTAC%20Assay%20Portal/McGill_Sobsey/McGill_Sobsey_052323/ResponseCurve/targetedms-showPeptide.view?id=52499769",
+        "expected_kind": "html",
+        "discovery_provenance": "Exact McGill_Sobsey View Peptide link for the selected non-CPTAC-6077 assay in archived CPTAC HTML, distinct from other laboratories aggregated on the same page."
+      },
+      {
+        "name": "pass05890-sbeams.html",
+        "url": "https://db.systemsbiology.net/sbeams/cgi/PeptideAtlas/PASS_View?identifier=PASS05890",
+        "expected_kind": "html",
+        "encoding": "latin-1",
+        "discovery_provenance": "PASS05890 from archived Sobsey2025 Data Availability Statement; documented official accession viewer, no credentials."
+      }
+    ]
+  },
+  "environment": {
+    "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "versions": {
+      "requests": "2.34.2",
+      "psutil": "7.2.2"
+    },
+    "overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUNBUFFERED": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    }
+  },
+  "child_pid": 98387,
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "-B",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1451_codex_mrm-anchor-admission/code/fetch_v4.py",
+    "--requests",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1451_codex_mrm-anchor-admission/reproduce/requests/metadata-12.json"
+  ],
+  "elapsed_seconds": 12.541446582996286,
+  "peak_observed_process_tree_rss_bytes": 46284800,
+  "peak_child_process_rss_bytes": 46448640,
+  "rss_poll_interval_seconds": 0.05,
+  "disk_free_after_bytes": 19420831744
+}

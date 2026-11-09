@@ -1,0 +1,15 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "/private/tmp/presto-flank-benchmark-20261027/presto/experiments/2026-10-27_1835_codex_cross-class-flank-benchmark/analysis/continue_after_ram.py"
+  ],
+  "cwd": "/private/tmp/presto-flank-benchmark-20261027/presto",
+  "minimum_available_gib": 8,
+  "original_controller_sha256": "eb14a1786530d0686875124eaff7c035fbbea7938401b5a46e81a7bfda0d0a63",
+  "original_launch": "/private/tmp/presto-flank-benchmark-20261027/presto/experiments/2026-10-27_1835_codex_cross-class-flank-benchmark/reproduce/launch.json",
+  "reason": "first profile admission failed before any optimizer update",
+  "source_sha256": "12521a3e7e279870eb7e80ff72b212139d60bdbeffb283e3b2a42304ff137549",
+  "stable_seconds": 60,
+  "wait_limit_seconds": 1200
+}

@@ -1,0 +1,96 @@
+{
+  "manifest": "experiments/2026-10-24_1829_codex_lymph-source-qualification/reproduce/metadata.json",
+  "assets": [
+    {
+      "name": "pmc-cloud-list.xml",
+      "url": "https://pmc-oa-opendata.s3.amazonaws.com/?list-type=2&prefix=PMC11233987.&max-keys=1000",
+      "started_utc": "2026-10-24T18:29:17.815345+00:00",
+      "status_code": 200,
+      "final_url": "https://pmc-oa-opendata.s3.amazonaws.com/?list-type=2&prefix=PMC11233987.&max-keys=1000",
+      "headers": {
+        "Content-Type": "application/xml"
+      },
+      "status": "retrieved",
+      "bytes": 7393,
+      "sha256": "990731a79a4a9df8a9643c3f7f1563c57319276a14f50a676f9ac728cc57acf3",
+      "path": "/private/tmp/presto-modular-model/data/lymph_source_qualification/2026-10-24_1829_v1/pmc-cloud-list.xml",
+      "seconds": 0.2541821660124697
+    },
+    {
+      "name": "PXD051024-descriptor.xml",
+      "url": "https://proteomecentral.proteomexchange.org/cgi/GetDataset?ID=PXD051024&outputMode=XML",
+      "started_utc": "2026-10-24T18:29:18.070063+00:00",
+      "status_code": 200,
+      "final_url": "https://proteomecentral.proteomexchange.org/cgi/GetDataset?ID=PXD051024&outputMode=XML",
+      "headers": {
+        "Content-Type": "text/plain; charset=UTF-8"
+      },
+      "status": "retrieved",
+      "bytes": 7880,
+      "sha256": "6866b8301a3cb63bf8791b324b1e4776db6aa7b8ac22bf7f8b4bf1ae631b6fbc",
+      "path": "/private/tmp/presto-modular-model/data/lymph_source_qualification/2026-10-24_1829_v1/PXD051024-descriptor.xml",
+      "seconds": 2.6923349170247093
+    },
+    {
+      "name": "PXD044801-descriptor.xml",
+      "url": "https://proteomecentral.proteomexchange.org/cgi/GetDataset?ID=PXD044801&outputMode=XML",
+      "started_utc": "2026-10-24T18:29:20.763067+00:00",
+      "status_code": 200,
+      "final_url": "https://proteomecentral.proteomexchange.org/cgi/GetDataset?ID=PXD044801&outputMode=XML",
+      "headers": {
+        "Content-Type": "text/plain; charset=UTF-8"
+      },
+      "status": "retrieved",
+      "bytes": 10928,
+      "sha256": "46c45f0c3fdec0fdd6f870ebf4cf5267f435679af2fe332fc2711d53f37170f3",
+      "path": "/private/tmp/presto-modular-model/data/lymph_source_qualification/2026-10-24_1829_v1/PXD044801-descriptor.xml",
+      "seconds": 2.6506594169768505
+    },
+    {
+      "name": "PXD044885-descriptor.xml",
+      "url": "https://proteomecentral.proteomexchange.org/cgi/GetDataset?ID=PXD044885&outputMode=XML",
+      "started_utc": "2026-10-24T18:29:23.414375+00:00",
+      "status_code": 200,
+      "final_url": "https://proteomecentral.proteomexchange.org/cgi/GetDataset?ID=PXD044885&outputMode=XML",
+      "headers": {
+        "Content-Type": "text/plain; charset=UTF-8"
+      },
+      "status": "retrieved",
+      "bytes": 23392,
+      "sha256": "1ea4ed74069923d3bd8d33dc56a1b136ad98b2c805daac4407fb5626e6c62eed",
+      "path": "/private/tmp/presto-modular-model/data/lymph_source_qualification/2026-10-24_1829_v1/PXD044885-descriptor.xml",
+      "seconds": 2.781603083014488
+    },
+    {
+      "name": "PXD051618-descriptor.xml",
+      "url": "https://proteomecentral.proteomexchange.org/cgi/GetDataset?ID=PXD051618&outputMode=XML",
+      "started_utc": "2026-10-24T18:29:26.196598+00:00",
+      "status_code": 200,
+      "final_url": "https://proteomecentral.proteomexchange.org/cgi/GetDataset?ID=PXD051618&outputMode=XML",
+      "headers": {
+        "Content-Type": "text/plain; charset=UTF-8"
+      },
+      "status": "retrieved",
+      "bytes": 6336,
+      "sha256": "b197d36e6655d5bfcfb5977d004ec825667adc89c23a9861889e56db68b45e26",
+      "path": "/private/tmp/presto-modular-model/data/lymph_source_qualification/2026-10-24_1829_v1/PXD051618-descriptor.xml",
+      "seconds": 2.5427032499574125
+    },
+    {
+      "name": "PXD052267-descriptor.xml",
+      "url": "https://proteomecentral.proteomexchange.org/cgi/GetDataset?ID=PXD052267&outputMode=XML",
+      "started_utc": "2026-10-24T18:29:28.740053+00:00",
+      "status_code": 200,
+      "final_url": "https://proteomecentral.proteomexchange.org/cgi/GetDataset?ID=PXD052267&outputMode=XML",
+      "headers": {
+        "Content-Type": "text/plain; charset=UTF-8"
+      },
+      "status": "retrieved",
+      "bytes": 6578,
+      "sha256": "883148089578add9204bc7d1e2d999a58115867661c18cff3927dc7f1aba983b",
+      "path": "/private/tmp/presto-modular-model/data/lymph_source_qualification/2026-10-24_1829_v1/PXD052267-descriptor.xml",
+      "seconds": 2.009001625003293
+    }
+  ],
+  "total_stored_bytes": 62507
+}

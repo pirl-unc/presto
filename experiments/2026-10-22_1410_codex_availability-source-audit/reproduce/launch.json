@@ -1,0 +1,22 @@
+{
+  "agent": "Codex",
+  "bootstrap_note": "source-paths reuses already downloaded originals only; same URL/size/hash verification. Omit flag to retrieve exact pinned public assets. API drift intentionally fails.",
+  "command": "AUDIT_PYTHON=/Users/iskander/code/shared-virtual-env/bin/python bash experiments/2026-10-22_1410_codex_availability-source-audit/reproduce/launch.sh --source-paths /private/tmp/presto-audit-source-paths.json",
+  "dirty_status": " M experiments/agents/codex/plans/biological-source-admission.md\n M experiments/experiment_log.md\n M tasks/todo.md\n?? data/availability_sources/\n?? experiments/2026-10-22_1410_codex_availability-source-audit/\n?? experiments/agents/codex/plans/full-ic50-fitting.md\n?? tasks/modular_model/trajectory-sampling-issue.md\n",
+  "environment_overrides": {
+    "AUDIT_PYTHON": "/Users/iskander/code/shared-virtual-env/bin/python"
+  },
+  "final_command": "AUDIT_PYTHON=/Users/iskander/code/shared-virtual-env/bin/python bash experiments/2026-10-22_1410_codex_availability-source-audit/reproduce/launch.sh",
+  "git_commit": "932ccefceda4aa82e98a43fbe01ebb8896e9dfec",
+  "git_dirty": true,
+  "gpu": null,
+  "inspection_revision": 4,
+  "losses": null,
+  "model": "GPT-6",
+  "pretraining": null,
+  "registered_at": "2026-10-22T14:10:00Z",
+  "revision_note": "Explicit LF in generated CSV; original source bytes unchanged.",
+  "source_snapshot_sha256": "4dbc201729cbbcdc8fae0ae5756cb84aa07e9c1c15b24b160a951fda6ab3d214",
+  "splits": null,
+  "training": null
+}

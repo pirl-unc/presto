@@ -1,0 +1,13 @@
+{
+  "registered_at": "2026-10-24T11:29:33.095207+00:00",
+  "agent": "Codex / GPT-6",
+  "plan": "reproduce/plan.md",
+  "presto_commit": "6045dd27511b96782c9c2422ca2f1a8b81df5b7d",
+  "hitlist_commit": "2f4bbe0df02b128a041a9b79d46505fdebbda461",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "no_outer_test": "Reserved for frozen physical model comparison; baseline development uses five inner component folds."
+}

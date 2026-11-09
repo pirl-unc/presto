@@ -1,0 +1,66 @@
+{
+  "cell_types": [],
+  "census": {
+    "test:identity:=": 1000,
+    "train:identity:=": 5000,
+    "validation:identity:=": 1000
+  },
+  "component_states": {},
+  "cytokine_numeric": {},
+  "cytokine_states": {},
+  "frozen_parameters": [],
+  "frozen_targets": [],
+  "inherited_scalers": [],
+  "manifest_sha256": "ca008ea769c6dc5332cb14f4ef1d7bd125c79064223692596608588b8e4cff8f",
+  "module_pruning": [],
+  "observed_numeric_features": {
+    "acquisition": [],
+    "observation": [],
+    "preparation": []
+  },
+  "source_label_values": {
+    "archaea": [
+      "absent",
+      "present"
+    ],
+    "bacteria": [
+      "absent",
+      "present"
+    ],
+    "fungi": [
+      "absent",
+      "present"
+    ],
+    "human": [
+      "absent",
+      "present"
+    ],
+    "invertebrates": [
+      "absent",
+      "present"
+    ],
+    "mammals": [
+      "absent",
+      "present"
+    ],
+    "plants": [
+      "absent",
+      "present"
+    ],
+    "rodents": [
+      "absent",
+      "present"
+    ],
+    "vertebrates": [
+      "absent",
+      "present"
+    ],
+    "viruses": [
+      "absent",
+      "present"
+    ]
+  },
+  "training_labels": {
+    "peptide_source": 50000
+  }
+}

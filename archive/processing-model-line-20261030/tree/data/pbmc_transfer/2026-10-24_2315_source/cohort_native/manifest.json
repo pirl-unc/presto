@@ -1,0 +1,673 @@
+{
+  "artifacts": {
+    "contributors": {
+      "file": "contributors.parquet",
+      "sha256": "dfbe4bfcd96cc5e07772497201c1c12ad9b4aac620dd92f090aa5de3723b0b8e",
+      "size_bytes": 2066297045
+    },
+    "identities": {
+      "file": "identities.parquet",
+      "sha256": "6020667400ae4834f9a800479142b54f7c225f9e37ebb972a5a0a168b9c82001",
+      "size_bytes": 141119541
+    },
+    "lineage": {
+      "file": "lineage.json",
+      "sha256": "75858cf562f65013aaae2325ea95deb70f826ea07f2373d394e8182ce459a1a5",
+      "size_bytes": 31901
+    },
+    "training": {
+      "file": "training.parquet",
+      "sha256": "f902341e90c1c57defc93f4bc540ffcbea1b41061afb4492ddd8aaa7642c65bd",
+      "size_bytes": 188175209
+    }
+  },
+  "coverage": {
+    "lineage": {
+      "acquisition": {
+        "n_distinct_resolved_identities": 0,
+        "n_resolved_observations": 0,
+        "n_unresolved_observations": 4071463
+      },
+      "donor": {
+        "n_distinct_resolved_identities": 0,
+        "n_resolved_observations": 0,
+        "n_unresolved_observations": 4071463
+      },
+      "experimental_origin": {
+        "n_distinct_resolved_identities": 17,
+        "n_resolved_observations": 57188,
+        "n_unresolved_observations": 4014275
+      },
+      "specimen": {
+        "n_distinct_resolved_identities": 0,
+        "n_resolved_observations": 0,
+        "n_unresolved_observations": 4071463
+      }
+    },
+    "n_contributor_links": 7646178,
+    "n_observations": 4071463,
+    "n_observations_with_contributors": 4071463,
+    "n_source_records": 7605968,
+    "n_unresolved_contributor_links": 0
+  },
+  "dependency_versions": {
+    "PyYAML": "6.0.3",
+    "mhcgnomes": "3.64.5",
+    "numpy": "2.5.4",
+    "pandas": "3.0.6",
+    "pyarrow": "26.0.0",
+    "pyensembl": "2.27.3"
+  },
+  "hitlist_version": "1.78.0",
+  "input_validation": {
+    "mapping_settings": null,
+    "mappings": "not_used",
+    "observations": "current",
+    "require_current_indexes": true,
+    "scope": "Index freshness only; not label, coverage or partition certification."
+  },
+  "inputs": {
+    "build_metadata": {
+      "artifact_version": 10,
+      "mhcgnomes_version": "3.64.5",
+      "n_alleles": 977,
+      "n_binding_peptides": 182182,
+      "n_binding_rows": 814268,
+      "n_bulk_peptide_rows": 2047003,
+      "n_bulk_protein_rows": 222285,
+      "n_bulk_rows": 2269288,
+      "n_line_expression_lines": 2,
+      "n_line_expression_rows": 42909,
+      "n_other_assay_rows": 26537,
+      "n_peptides": 1326412,
+      "n_rows": 4486991,
+      "n_species": 13,
+      "parquets": {
+        "binding": {
+          "mtime": 1792133465.0243928,
+          "size": 17096569
+        },
+        "bulk_proteomics": {
+          "mtime": 1792133476.3257332,
+          "size": 45394459
+        },
+        "contributors": {
+          "mtime": 1792133424.4551027,
+          "size": 628447260
+        },
+        "line_expression": {
+          "mtime": 1792133509.198768,
+          "size": 730671
+        },
+        "observations": {
+          "mtime": 1792133462.5778084,
+          "size": 145685701
+        },
+        "other_assays": {
+          "mtime": 1792133465.1493325,
+          "size": 1259717
+        }
+      },
+      "provenance": {
+        "contributors": {
+          "file": "observation_contributors.parquet",
+          "sha256": "41ff93e08bc6ea4af692fee16044726af26c4e20ec650ec6c7cd851974b71db1",
+          "size_bytes": 628447260
+        },
+        "indexes": {
+          "binding": {
+            "sha256": "2b3f6ea2dd647e7fc54d214eef420feaebc4e81fab97ffc0565a2de1f8695ba0",
+            "size_bytes": 17096569
+          },
+          "observations": {
+            "sha256": "a665f37c0b5917fefb6d12eade530d7e2001de1f0ee73479b21d2c393d173ab4",
+            "size_bytes": 145685701
+          },
+          "other_assays": {
+            "sha256": "c40f5227ded408830885ecba8336dbdd701172df9573b0d32e5e8a5f8fc947c2",
+            "size_bytes": 1259717
+          }
+        },
+        "n_contributor_links": 9381101,
+        "schema_version": 1,
+        "sources": {
+          "cedar": {
+            "locator_basis": "ingested_csv_logical_data_row_1_based",
+            "path": "/__modal/volumes/vo-7SKL6RGQSFF0wCIXJQg0a2/hitlist-qualification/runs/a6933c31825caf35475ba38ae243551bb815d65ba03ee93d9ddb768869e4b5a0/inputs/bundles/2026-10-16T06-03-43Z/cedar",
+            "sha256": "3b137c99686c0df9f930a4e287995e818e289f7df47c6eeb56dbcb1c7f39d8e6",
+            "size_bytes": 6945931753,
+            "upstream_description": "",
+            "upstream_record_locator_status": "assay_iri_when_reported"
+          },
+          "iedb": {
+            "locator_basis": "ingested_csv_logical_data_row_1_based",
+            "path": "/__modal/volumes/vo-7SKL6RGQSFF0wCIXJQg0a2/hitlist-qualification/runs/a6933c31825caf35475ba38ae243551bb815d65ba03ee93d9ddb768869e4b5a0/inputs/bundles/2026-10-16T06-03-43Z/iedb",
+            "sha256": "957337189072a918fe38a216cfa4893cb08a74c35027ce0489252dd446eb6ad8",
+            "size_bytes": 7773476136,
+            "upstream_description": "",
+            "upstream_record_locator_status": "assay_iri_when_reported"
+          },
+          "supplement:abelin_2019_dr_tissue.csv": {
+            "locator_basis": "ingested_csv_logical_data_row_1_based",
+            "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/abelin_2019_dr_tissue.csv",
+            "sha256": "f95bb24097fc26a3272b3fb9942ae7dc8e4800b5a6cea2d9a6d92530d33b073c",
+            "size_bytes": 210368,
+            "upstream_description": "Immunity 2019 Table S1B, sheet DataS1B",
+            "upstream_record_locator_status": "not_available"
+          },
+          "supplement:abelin_2019_maptac_class1.csv": {
+            "locator_basis": "ingested_csv_logical_data_row_1_based",
+            "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/abelin_2019_maptac_class1.csv",
+            "sha256": "74ec46e105ae406d89971fe2c87d3e03b36c8f650f8d78695425dd467bca9c42",
+            "size_bytes": 246822,
+            "upstream_description": "Immunity 2019 Table S1B, sheet DataS1B",
+            "upstream_record_locator_status": "not_available"
+          },
+          "supplement:abelin_2019_maptac_class2.csv": {
+            "locator_basis": "ingested_csv_logical_data_row_1_based",
+            "path": "/data/hitlist-qualification/runs/a6933c31825caf35475ba38ae243551bb815d65ba03ee93d9ddb768869e4b5a0/cache/hitlist/abelin_2019_maptac_class2.csv",
+            "sha256": "a9b6454f05c24c11113bde92d35f3222d60eb0746ef8e6ac34ed2b0b6daa1c47",
+            "size_bytes": 1638237,
+            "upstream_description": "Immunity 2019 Table S1B, sheet DataS1B",
+            "upstream_record_locator_status": "not_available"
+          },
+          "supplement:gomez_zepeda_2024_hela.csv": {
+            "locator_basis": "ingested_csv_logical_data_row_1_based",
+            "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/gomez_zepeda_2024_hela.csv",
+            "sha256": "56ea133ccd210f4267b366756d2693279349b962b95087e787f2c00cdc8f6709",
+            "size_bytes": 261764,
+            "upstream_description": "Nature Comms S3+S4 (method comparison)",
+            "upstream_record_locator_status": "not_available"
+          },
+          "supplement:gomez_zepeda_2024_jy.csv": {
+            "locator_basis": "ingested_csv_logical_data_row_1_based",
+            "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/gomez_zepeda_2024_jy.csv",
+            "sha256": "9eecfa2a8deeb75dc504caecfe659fb8cbbb58625180046ab2a68782d7cfa8b2",
+            "size_bytes": 577082,
+            "upstream_description": "Nature Comms S5+S6 (deep profiling) + S3+S4 (method comparison)",
+            "upstream_record_locator_status": "not_available"
+          },
+          "supplement:gomez_zepeda_2024_plasma.csv": {
+            "locator_basis": "ingested_csv_logical_data_row_1_based",
+            "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/gomez_zepeda_2024_plasma.csv",
+            "sha256": "133fa549b65cd962a10648e72c4185dd5be1e2706b1f6388067d7ffbc6048718",
+            "size_bytes": 33847,
+            "upstream_description": "Nature Comms S3+S4 (method comparison)",
+            "upstream_record_locator_status": "not_available"
+          },
+          "supplement:gomez_zepeda_2024_raji.csv": {
+            "locator_basis": "ingested_csv_logical_data_row_1_based",
+            "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/gomez_zepeda_2024_raji.csv",
+            "sha256": "6e9b2d322aec33ff69a20050c842ce97111521576d0b012c206ec5507110c672",
+            "size_bytes": 668528,
+            "upstream_description": "Nature Comms S5+S6 (deep profiling)",
+            "upstream_record_locator_status": "not_available"
+          },
+          "supplement:gomez_zepeda_2024_skmel37.csv": {
+            "locator_basis": "ingested_csv_logical_data_row_1_based",
+            "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/gomez_zepeda_2024_skmel37.csv",
+            "sha256": "c2d04f556f1bc39cee8856fc753a03739b5baf344e478cd973c7339496a1d207",
+            "size_bytes": 286030,
+            "upstream_description": "Nature Comms S3+S4 (method comparison)",
+            "upstream_record_locator_status": "not_available"
+          },
+          "supplement:shapiro_2025_hap1_b2m_ko.csv": {
+            "locator_basis": "ingested_csv_logical_data_row_1_based",
+            "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/shapiro_2025_hap1_b2m_ko.csv",
+            "sha256": "5d32d27ba14100925f3647644e6cb8c9ee2024e2dd4512b5e03b685c451c4364",
+            "size_bytes": 7650,
+            "upstream_description": "MCP supplementary mmc6.csv (PMC12090245)",
+            "upstream_record_locator_status": "not_available"
+          },
+          "supplement:shapiro_2025_hap1_calr_ko.csv": {
+            "locator_basis": "ingested_csv_logical_data_row_1_based",
+            "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/shapiro_2025_hap1_calr_ko.csv",
+            "sha256": "6246a14486388806dc20f0bc7150be19653498f1fedffb6e7e45a51e4a4a0a69",
+            "size_bytes": 232191,
+            "upstream_description": "MCP supplementary mmc6.csv (PMC12090245)",
+            "upstream_record_locator_status": "not_available"
+          },
+          "supplement:shapiro_2025_hap1_canx_ko.csv": {
+            "locator_basis": "ingested_csv_logical_data_row_1_based",
+            "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/shapiro_2025_hap1_canx_ko.csv",
+            "sha256": "8672e8c0d7bc0fd637a22a5b9d19f5b3020ff5d9c5d4f8fa1eecfbe36186d96b",
+            "size_bytes": 217182,
+            "upstream_description": "MCP supplementary mmc6.csv (PMC12090245)",
+            "upstream_record_locator_status": "not_available"
+          },
+          "supplement:shapiro_2025_hap1_erap1_ko.csv": {
+            "locator_basis": "ingested_csv_logical_data_row_1_based",
+            "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/shapiro_2025_hap1_erap1_ko.csv",
+            "sha256": "596a10f1eadeee71d2c24f4fa1b512862775672b2bc4999b5a726624d1d8a170",
+            "size_bytes": 125926,
+            "upstream_description": "MCP supplementary mmc6.csv (PMC12090245)",
+            "upstream_record_locator_status": "not_available"
+          },
+          "supplement:shapiro_2025_hap1_ganab_ko.csv": {
+            "locator_basis": "ingested_csv_logical_data_row_1_based",
+            "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/shapiro_2025_hap1_ganab_ko.csv",
+            "sha256": "5b6cec7cafafe17e823ca9789d5859ac2877f9120fdbe18c7621a330605bf2d2",
+            "size_bytes": 151604,
+            "upstream_description": "MCP supplementary mmc6.csv (PMC12090245)",
+            "upstream_record_locator_status": "not_available"
+          },
+          "supplement:shapiro_2025_hap1_irf2_ko.csv": {
+            "locator_basis": "ingested_csv_logical_data_row_1_based",
+            "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/shapiro_2025_hap1_irf2_ko.csv",
+            "sha256": "91836f74a6868cac49b5638add348792d1920521b2e701be66ced1d5adfbdab5",
+            "size_bytes": 70407,
+            "upstream_description": "MCP supplementary mmc6.csv (PMC12090245)",
+            "upstream_record_locator_status": "not_available"
+          },
+          "supplement:shapiro_2025_hap1_pdia3_ko.csv": {
+            "locator_basis": "ingested_csv_logical_data_row_1_based",
+            "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/shapiro_2025_hap1_pdia3_ko.csv",
+            "sha256": "a24382e88da5dc06c877a5e1027db6ab26a765911840ffc173613fc2560ab608",
+            "size_bytes": 95826,
+            "upstream_description": "MCP supplementary mmc6.csv (PMC12090245)",
+            "upstream_record_locator_status": "not_available"
+          },
+          "supplement:shapiro_2025_hap1_sppl3_ko.csv": {
+            "locator_basis": "ingested_csv_logical_data_row_1_based",
+            "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/shapiro_2025_hap1_sppl3_ko.csv",
+            "sha256": "38d66d6ca3dd12f1e13e0e448cf06cac6b9c229ccf2682f440fe8a8fb74da4a8",
+            "size_bytes": 199225,
+            "upstream_description": "MCP supplementary mmc6.csv (PMC12090245)",
+            "upstream_record_locator_status": "not_available"
+          },
+          "supplement:shapiro_2025_hap1_tap1_ko.csv": {
+            "locator_basis": "ingested_csv_logical_data_row_1_based",
+            "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/shapiro_2025_hap1_tap1_ko.csv",
+            "sha256": "babd57cb0fad48365369bbcb64f6c4fcb8a372f7bce6fd1e08e9d987c0e5bb38",
+            "size_bytes": 120243,
+            "upstream_description": "MCP supplementary mmc6.csv (PMC12090245)",
+            "upstream_record_locator_status": "not_available"
+          },
+          "supplement:shapiro_2025_hap1_tap2_ko.csv": {
+            "locator_basis": "ingested_csv_logical_data_row_1_based",
+            "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/shapiro_2025_hap1_tap2_ko.csv",
+            "sha256": "d0163b980196dd24fbb6f8a24d026d410f049a2cd9bf7e572c97d1896ed33867",
+            "size_bytes": 42720,
+            "upstream_description": "MCP supplementary mmc6.csv (PMC12090245)",
+            "upstream_record_locator_status": "not_available"
+          },
+          "supplement:shapiro_2025_hap1_tapbp_ko.csv": {
+            "locator_basis": "ingested_csv_logical_data_row_1_based",
+            "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/shapiro_2025_hap1_tapbp_ko.csv",
+            "sha256": "86773579291c8fa0d51e8b5b0dbc57a2bf07646695f2eb21449f27bdcc154766",
+            "size_bytes": 59337,
+            "upstream_description": "MCP supplementary mmc6.csv (PMC12090245)",
+            "upstream_record_locator_status": "not_available"
+          },
+          "supplement:shapiro_2025_hap1_wildtype.csv": {
+            "locator_basis": "ingested_csv_logical_data_row_1_based",
+            "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/shapiro_2025_hap1_wildtype.csv",
+            "sha256": "ee2fe18ad0b10382d400670e3d2215c71714aad9234ac95b89bb9410055bdafb",
+            "size_bytes": 250548,
+            "upstream_description": "MCP supplementary mmc6.csv (PMC12090245)",
+            "upstream_record_locator_status": "not_available"
+          },
+          "supplement:strazar_2023_hla2.csv": {
+            "locator_basis": "ingested_csv_logical_data_row_1_based",
+            "path": "/data/hitlist-qualification/runs/a6933c31825caf35475ba38ae243551bb815d65ba03ee93d9ddb768869e4b5a0/cache/hitlist/strazar_2023_hla2.csv",
+            "sha256": "3dc547ae7cd4cfd735794e30c52430bb33f52d3960644d24bf07e44d6496e085",
+            "size_bytes": 13932615,
+            "upstream_description": "Immunity 2023 Table S2 / ST_ligands_merged.csv (mmc3.zip)",
+            "upstream_record_locator_status": "not_available"
+          }
+        }
+      },
+      "sources": {
+        "cedar": {
+          "mtime": 1792130597.36009,
+          "path": "/__modal/volumes/vo-7SKL6RGQSFF0wCIXJQg0a2/hitlist-qualification/runs/a6933c31825caf35475ba38ae243551bb815d65ba03ee93d9ddb768869e4b5a0/inputs/bundles/2026-10-16T06-03-43Z/cedar",
+          "size": 6945931753
+        },
+        "curation:cell_lines.yaml": {
+          "mtime": 1792130530.7069056,
+          "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/cell_lines.yaml",
+          "sha256": "763e87f3de212ee61a7c6afc165a97a6fb229418ffa9ed52f230caf4af043434",
+          "size": 69063
+        },
+        "curation:monoallelic_lines.yaml": {
+          "mtime": 1792130530.7098665,
+          "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/monoallelic_lines.yaml",
+          "sha256": "64718f81eb949ab85099722007f3059057d1ec939f5dacad50280534d6713569",
+          "size": 2236
+        },
+        "curation:peptide_attributions/connelley_2022_bola_a19.csv": {
+          "mtime": 1792130530.7287571,
+          "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/peptide_attributions/connelley_2022_bola_a19.csv",
+          "sha256": "69cfe31da459776ace3e040f1e2c576e72d90fa28244555f8a38079504b7b1e7",
+          "size": 179
+        },
+        "curation:peptide_attributions/sarkizova_2020_patient_cohort.csv": {
+          "mtime": 1792130530.7338874,
+          "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/peptide_attributions/sarkizova_2020_patient_cohort.csv",
+          "sha256": "f37af217074c08f23a9521c791bba5230a4cf849bf2871bfc20bed1aaaef0729",
+          "size": 1073141
+        },
+        "curation:pmid_overrides.yaml": {
+          "mtime": 1792130530.7138863,
+          "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/pmid_overrides.yaml",
+          "sha256": "5223fc63d0a0a563f469641b2abb58578a359b9bfac32218ce2611aa9cc8ef27",
+          "size": 745987
+        },
+        "curation:tissue_categories.yaml": {
+          "mtime": 1792130530.718482,
+          "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/tissue_categories.yaml",
+          "sha256": "5f3b53cb82aa3f4556bf858ccb42f55f286e2fd3d99d1e14e912031f46f6ba7c",
+          "size": 2474
+        },
+        "iedb": {
+          "mtime": 1792130609.2864196,
+          "path": "/__modal/volumes/vo-7SKL6RGQSFF0wCIXJQg0a2/hitlist-qualification/runs/a6933c31825caf35475ba38ae243551bb815d65ba03ee93d9ddb768869e4b5a0/inputs/bundles/2026-10-16T06-03-43Z/iedb",
+          "size": 7773476136
+        },
+        "line_expression_index": {
+          "build_version": 1,
+          "packaged_inputs": "25f1800039c26fbf9cce4e8cc89f732b32499b2093c2574e63f1b013a26b73ed"
+        },
+        "supplementary_csv:abelin_2019_dr_tissue.csv": {
+          "mtime": 1792130530.7359552,
+          "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/abelin_2019_dr_tissue.csv",
+          "size": 210368
+        },
+        "supplementary_csv:abelin_2019_maptac_class1.csv": {
+          "mtime": 1792130530.7381213,
+          "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/abelin_2019_maptac_class1.csv",
+          "size": 246822
+        },
+        "supplementary_csv:gomez_zepeda_2024_hela.csv": {
+          "mtime": 1792130530.7408879,
+          "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/gomez_zepeda_2024_hela.csv",
+          "size": 261764
+        },
+        "supplementary_csv:gomez_zepeda_2024_jy.csv": {
+          "mtime": 1792130530.7448883,
+          "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/gomez_zepeda_2024_jy.csv",
+          "size": 577082
+        },
+        "supplementary_csv:gomez_zepeda_2024_plasma.csv": {
+          "mtime": 1792130530.7463844,
+          "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/gomez_zepeda_2024_plasma.csv",
+          "size": 33847
+        },
+        "supplementary_csv:gomez_zepeda_2024_raji.csv": {
+          "mtime": 1792130530.7498887,
+          "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/gomez_zepeda_2024_raji.csv",
+          "size": 668528
+        },
+        "supplementary_csv:gomez_zepeda_2024_skmel37.csv": {
+          "mtime": 1792130530.7518888,
+          "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/gomez_zepeda_2024_skmel37.csv",
+          "size": 286030
+        },
+        "supplementary_csv:shapiro_2025_hap1_b2m_ko.csv": {
+          "mtime": 1792130530.7528887,
+          "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/shapiro_2025_hap1_b2m_ko.csv",
+          "size": 7650
+        },
+        "supplementary_csv:shapiro_2025_hap1_calr_ko.csv": {
+          "mtime": 1792130530.7548888,
+          "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/shapiro_2025_hap1_calr_ko.csv",
+          "size": 232191
+        },
+        "supplementary_csv:shapiro_2025_hap1_canx_ko.csv": {
+          "mtime": 1792130530.757889,
+          "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/shapiro_2025_hap1_canx_ko.csv",
+          "size": 217182
+        },
+        "supplementary_csv:shapiro_2025_hap1_erap1_ko.csv": {
+          "mtime": 1792130530.7588892,
+          "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/shapiro_2025_hap1_erap1_ko.csv",
+          "size": 125926
+        },
+        "supplementary_csv:shapiro_2025_hap1_ganab_ko.csv": {
+          "mtime": 1792130530.7608893,
+          "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/shapiro_2025_hap1_ganab_ko.csv",
+          "size": 151604
+        },
+        "supplementary_csv:shapiro_2025_hap1_irf2_ko.csv": {
+          "mtime": 1792130530.7628894,
+          "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/shapiro_2025_hap1_irf2_ko.csv",
+          "size": 70407
+        },
+        "supplementary_csv:shapiro_2025_hap1_pdia3_ko.csv": {
+          "mtime": 1792130530.7638896,
+          "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/shapiro_2025_hap1_pdia3_ko.csv",
+          "size": 95826
+        },
+        "supplementary_csv:shapiro_2025_hap1_sppl3_ko.csv": {
+          "mtime": 1792130530.7668896,
+          "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/shapiro_2025_hap1_sppl3_ko.csv",
+          "size": 199225
+        },
+        "supplementary_csv:shapiro_2025_hap1_tap1_ko.csv": {
+          "mtime": 1792130530.7678897,
+          "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/shapiro_2025_hap1_tap1_ko.csv",
+          "size": 120243
+        },
+        "supplementary_csv:shapiro_2025_hap1_tap2_ko.csv": {
+          "mtime": 1792130530.76889,
+          "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/shapiro_2025_hap1_tap2_ko.csv",
+          "size": 42720
+        },
+        "supplementary_csv:shapiro_2025_hap1_tapbp_ko.csv": {
+          "mtime": 1792130530.7698898,
+          "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/shapiro_2025_hap1_tapbp_ko.csv",
+          "size": 59337
+        },
+        "supplementary_csv:shapiro_2025_hap1_wildtype.csv": {
+          "mtime": 1792130530.77289,
+          "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary/shapiro_2025_hap1_wildtype.csv",
+          "size": 250548
+        },
+        "supplementary_manifest": {
+          "mtime": 1792130530.7175243,
+          "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/supplementary.yaml",
+          "size": 15474
+        }
+      },
+      "with_flanking": false,
+      "with_mappings": true
+    },
+    "current_curation": {
+      "curation:cell_lines.yaml": {
+        "mtime": 1792130530.7069056,
+        "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/cell_lines.yaml",
+        "sha256": "763e87f3de212ee61a7c6afc165a97a6fb229418ffa9ed52f230caf4af043434",
+        "size": 69063
+      },
+      "curation:monoallelic_lines.yaml": {
+        "mtime": 1792130530.7098665,
+        "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/monoallelic_lines.yaml",
+        "sha256": "64718f81eb949ab85099722007f3059057d1ec939f5dacad50280534d6713569",
+        "size": 2236
+      },
+      "curation:peptide_attributions/connelley_2022_bola_a19.csv": {
+        "mtime": 1792130530.7287571,
+        "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/peptide_attributions/connelley_2022_bola_a19.csv",
+        "sha256": "69cfe31da459776ace3e040f1e2c576e72d90fa28244555f8a38079504b7b1e7",
+        "size": 179
+      },
+      "curation:peptide_attributions/sarkizova_2020_patient_cohort.csv": {
+        "mtime": 1792130530.7338874,
+        "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/peptide_attributions/sarkizova_2020_patient_cohort.csv",
+        "sha256": "f37af217074c08f23a9521c791bba5230a4cf849bf2871bfc20bed1aaaef0729",
+        "size": 1073141
+      },
+      "curation:pmid_overrides.yaml": {
+        "mtime": 1792130530.7138863,
+        "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/pmid_overrides.yaml",
+        "sha256": "5223fc63d0a0a563f469641b2abb58578a359b9bfac32218ce2611aa9cc8ef27",
+        "size": 745987
+      },
+      "curation:tissue_categories.yaml": {
+        "mtime": 1792130530.718482,
+        "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/tissue_categories.yaml",
+        "sha256": "5f3b53cb82aa3f4556bf858ccb42f55f286e2fd3d99d1e14e912031f46f6ba7c",
+        "size": 2474
+      }
+    },
+    "files": {
+      ".datacache-manifest.json": {
+        "path": "/data/hitlist-qualification/runs/a6933c31825caf35475ba38ae243551bb815d65ba03ee93d9ddb768869e4b5a0/hitlist/dataset/bundles/2026-10-16T07-07-53Z/.datacache-manifest.json",
+        "sha256": "0dbb59b60d226f97595ef3920079a4d4c08de879452f5b0dc635ba0f1aa54731",
+        "size_bytes": 8109
+      },
+      "README.md": {
+        "path": "/data/hitlist-qualification/runs/a6933c31825caf35475ba38ae243551bb815d65ba03ee93d9ddb768869e4b5a0/hitlist/dataset/bundles/2026-10-16T07-07-53Z/README.md",
+        "sha256": "300cf56e6f910e9dbdc1a99d30e0b64b4b955415a7f4c979f166e808effed85a",
+        "size_bytes": 7773
+      },
+      "binding.parquet": {
+        "path": "/data/hitlist-qualification/runs/a6933c31825caf35475ba38ae243551bb815d65ba03ee93d9ddb768869e4b5a0/hitlist/dataset/bundles/2026-10-16T07-07-53Z/binding.parquet",
+        "sha256": "2b3f6ea2dd647e7fc54d214eef420feaebc4e81fab97ffc0565a2de1f8695ba0",
+        "size_bytes": 17096569
+      },
+      "curation:cell_lines.yaml": {
+        "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/cell_lines.yaml",
+        "sha256": "763e87f3de212ee61a7c6afc165a97a6fb229418ffa9ed52f230caf4af043434",
+        "size_bytes": 69063
+      },
+      "curation:monoallelic_lines.yaml": {
+        "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/monoallelic_lines.yaml",
+        "sha256": "64718f81eb949ab85099722007f3059057d1ec939f5dacad50280534d6713569",
+        "size_bytes": 2236
+      },
+      "curation:peptide_attributions/connelley_2022_bola_a19.csv": {
+        "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/peptide_attributions/connelley_2022_bola_a19.csv",
+        "sha256": "69cfe31da459776ace3e040f1e2c576e72d90fa28244555f8a38079504b7b1e7",
+        "size_bytes": 179
+      },
+      "curation:peptide_attributions/sarkizova_2020_patient_cohort.csv": {
+        "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/peptide_attributions/sarkizova_2020_patient_cohort.csv",
+        "sha256": "f37af217074c08f23a9521c791bba5230a4cf849bf2871bfc20bed1aaaef0729",
+        "size_bytes": 1073141
+      },
+      "curation:pmid_overrides.yaml": {
+        "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/pmid_overrides.yaml",
+        "sha256": "5223fc63d0a0a563f469641b2abb58578a359b9bfac32218ce2611aa9cc8ef27",
+        "size_bytes": 745987
+      },
+      "curation:tissue_categories.yaml": {
+        "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/tissue_categories.yaml",
+        "sha256": "5f3b53cb82aa3f4556bf858ccb42f55f286e2fd3d99d1e14e912031f46f6ba7c",
+        "size_bytes": 2474
+      },
+      "line_expression.parquet": {
+        "path": "/data/hitlist-qualification/runs/a6933c31825caf35475ba38ae243551bb815d65ba03ee93d9ddb768869e4b5a0/hitlist/dataset/bundles/2026-10-16T07-07-53Z/line_expression.parquet",
+        "sha256": "d2a2cbf00fdd5cbd285bcd88ed06c511f09ed3404c4b705e5108af407b3feddf",
+        "size_bytes": 730671
+      },
+      "line_expression:ensembl_gene_id_symbol.csv": {
+        "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/line_expression/ensembl_gene_id_symbol.csv",
+        "sha256": "cd5a8f42cd45137ffd3de580f395d42107e6ff4b77a80b0a746b9508c0f4c0e2",
+        "size_bytes": 257327
+      },
+      "line_expression:gm12878_encode_rnaseq_tpm.csv.gz": {
+        "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/line_expression/gm12878_encode_rnaseq_tpm.csv.gz",
+        "sha256": "b3d605f3426d283ecf166bd6a38006dc40d4d3aa9c4050c40f7f2101ff60d8ab",
+        "size_bytes": 271557
+      },
+      "line_expression:hap1_depmap24q4_gene_tpm.csv.gz": {
+        "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/line_expression/hap1_depmap24q4_gene_tpm.csv.gz",
+        "sha256": "9c91022631272fdd626369b03b848162da30062004295cc7249fc3140d149918",
+        "size_bytes": 253816
+      },
+      "line_expression:line_expression_anchors.yaml": {
+        "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/line_expression_anchors.yaml",
+        "sha256": "b736261a977b416b40623848a410b2b9ff16c56527bea392592996480f8f678e",
+        "size_bytes": 13122
+      },
+      "line_expression:sources.yaml": {
+        "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/line_expression/sources.yaml",
+        "sha256": "7e3ea4f05481ae1d810cf8bbbf2f0cb1e7b41b4f7c779629a413525a7b013ea2",
+        "size_bytes": 7621
+      },
+      "observation_contributors.parquet": {
+        "path": "/data/hitlist-qualification/runs/a6933c31825caf35475ba38ae243551bb815d65ba03ee93d9ddb768869e4b5a0/hitlist/dataset/bundles/2026-10-16T07-07-53Z/observation_contributors.parquet",
+        "sha256": "41ff93e08bc6ea4af692fee16044726af26c4e20ec650ec6c7cd851974b71db1",
+        "size_bytes": 628447260
+      },
+      "observations.parquet": {
+        "path": "/data/hitlist-qualification/runs/a6933c31825caf35475ba38ae243551bb815d65ba03ee93d9ddb768869e4b5a0/hitlist/dataset/bundles/2026-10-16T07-07-53Z/observations.parquet",
+        "sha256": "a665f37c0b5917fefb6d12eade530d7e2001de1f0ee73479b21d2c393d173ab4",
+        "size_bytes": 145685701
+      },
+      "observations_meta.json": {
+        "path": "/data/hitlist-qualification/runs/a6933c31825caf35475ba38ae243551bb815d65ba03ee93d9ddb768869e4b5a0/hitlist/dataset/bundles/2026-10-16T07-07-53Z/observations_meta.json",
+        "sha256": "e85875f450789ed67b6eb981aa4290a8873ed61664f04d1f473d897a5a2f9217",
+        "size_bytes": 20295
+      },
+      "other_assays.parquet": {
+        "path": "/data/hitlist-qualification/runs/a6933c31825caf35475ba38ae243551bb815d65ba03ee93d9ddb768869e4b5a0/hitlist/dataset/bundles/2026-10-16T07-07-53Z/other_assays.parquet",
+        "sha256": "c40f5227ded408830885ecba8336dbdd701172df9573b0d32e5e8a5f8fc947c2",
+        "size_bytes": 1259717
+      },
+      "peptide_mappings.parquet": {
+        "path": "/data/hitlist-qualification/runs/a6933c31825caf35475ba38ae243551bb815d65ba03ee93d9ddb768869e4b5a0/hitlist/dataset/bundles/2026-10-16T07-07-53Z/peptide_mappings.parquet",
+        "sha256": "057c9f01da3aea46816aa9d164c24951e45b42c4cf5d8dc84f44ab201ec1fcc9",
+        "size_bytes": 176051509
+      },
+      "peptide_mappings_meta.json": {
+        "path": "/data/hitlist-qualification/runs/a6933c31825caf35475ba38ae243551bb815d65ba03ee93d9ddb768869e4b5a0/hitlist/dataset/bundles/2026-10-16T07-07-53Z/peptide_mappings_meta.json",
+        "sha256": "9001b1edb365253ef53d2a8ab32c2c4a9df3d984787a60f41722935ea1d163bf",
+        "size_bytes": 90652
+      },
+      "specimen_lineage.yaml": {
+        "path": "/usr/local/lib/python3.12/site-packages/hitlist/data/specimen_lineage.yaml",
+        "sha256": "03300e7732c49a6c5359c211a9c8703beba0927003900c98881a25f3f34da276",
+        "size_bytes": 25870
+      }
+    }
+  },
+  "n_rows": 4071463,
+  "randomness": {
+    "seed": null,
+    "used": false
+  },
+  "schema_version": 1,
+  "split_policy": "report_only",
+  "training_options": {
+    "acquisition_mode": null,
+    "assay_method": null,
+    "cancer_type_backend": null,
+    "columns": null,
+    "exclude_chimeric": false,
+    "exclude_class_label_implausible": false,
+    "exclude_class_label_suspect": false,
+    "exclude_non_peptide_ligand": true,
+    "explode_mappings": null,
+    "gene": null,
+    "gene_id": null,
+    "gene_name": null,
+    "has_quantitative_value": null,
+    "host_species": null,
+    "include_evidence": "both",
+    "instrument_type": null,
+    "is_mono_allelic": null,
+    "length_max": 25,
+    "length_min": 8,
+    "map_source_proteins": false,
+    "measurement_units": null,
+    "mhc_allele": null,
+    "mhc_allele_in_set": null,
+    "mhc_allele_provenance": null,
+    "mhc_class": null,
+    "min_allele_resolution": null,
+    "peptide": null,
+    "proteome_release": 112,
+    "quantitative_value_max": null,
+    "quantitative_value_min": null,
+    "response_measured": null,
+    "restriction_evidence": null,
+    "serotype": null,
+    "serotype_source": null,
+    "source": null,
+    "source_species": "Homo sapiens",
+    "species": "Homo sapiens",
+    "with_peptide_origin": false
+  }
+}

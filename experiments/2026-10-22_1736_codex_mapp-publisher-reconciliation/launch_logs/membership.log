@@ -1,0 +1,40 @@
+{
+  "status": "completed",
+  "conditions": {
+    "UT": {
+      "source_eligible_without_unique_group_restriction": 4983,
+      "publisher_present": 4983,
+      "source_only": [],
+      "publisher_only": [],
+      "distinct_nonempty_leading_razor_labels": 1022,
+      "multiple_group_id_rows": 559,
+      "multiple_protein_id_rows": 3298,
+      "empty_leading_razor_labels": 0
+    },
+    "TNF+IFN": {
+      "source_eligible_without_unique_group_restriction": 5311,
+      "publisher_present": 5311,
+      "source_only": [],
+      "publisher_only": [],
+      "distinct_nonempty_leading_razor_labels": 1031,
+      "multiple_group_id_rows": 604,
+      "multiple_protein_id_rows": 3520,
+      "empty_leading_razor_labels": 0
+    }
+  },
+  "membership_rows": 10294,
+  "data3_rows": 131,
+  "data3_positive_numeric_cells": 524,
+  "data3_headers": [
+    "Gene Name",
+    "Proteomics Protein Intensity- T+I",
+    "Proteomics Protein Intensity -UT",
+    "MAPP Protein Intensity- T+I",
+    "MAPP Protein Intensity- UT"
+  ],
+  "data3_unique_gene_labels": 131,
+  "specimen_map_status": "No specimen/acquisition identifiers in Data3's five-column gene/intensity table; no run map assigned",
+  "assignment_scope": "Leading razor labels are source assignments, not unique-origin evidence",
+  "script_sha256": "71f9e73d39d6578ec83e134c32e5595f1ab16198a1e9e1b009b9c6e097445eaf",
+  "seconds": 0.4162914580083452
+}

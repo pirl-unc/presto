@@ -1,0 +1,40 @@
+[
+  {
+    "operation": 1,
+    "tool": "web.search_query",
+    "query": "\"Fusaro\" \"Prediction of high-responding peptides\"",
+    "result": "Primary bibliography DOI10.1038/nbt.1524, PMID19169245, PMC2753399; article and supplements identified. Search evidence only."
+  },
+  {
+    "operation": 2,
+    "tool": "web.open",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2753399/",
+    "result": "Browser challenge, not full article."
+  },
+  {
+    "operation": 3,
+    "tool": "web.open",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC2753399/fullTextXML",
+    "result": "Web tool says inaccessible via this tool; no local HTTP status yet."
+  },
+  {
+    "operation": 4,
+    "tool": "frozen_local_fetch",
+    "request_file": "reproduce/requests/metadata-4.json",
+    "status": "HTTP500,150-byte JSON error, not article XML; no retry"
+  },
+  {
+    "operation": 5,
+    "tool": "frozen_local_fetch",
+    "request_file": "reproduce/requests/metadata-5.json",
+    "status": "HTTP200 inventory has3 keys: article JSON/TXT/XML.",
+    "reason": "Official current PMC S3 API already documented and used by family1451; find actual source keys for this primary PMC ID."
+  },
+  {
+    "operation": 6,
+    "tool": "frozen_local_fetch",
+    "request_file": "reproduce/requests/metadata-6.json",
+    "status": "HTTP200 original metadata retrieved; discovery budget exhausted at6.",
+    "reason": "Exact614-byte JSON key in validated official inventory; final discovery operation."
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "phase": "metadata",
+  "scope": "Follow the already observed public Browse FTP upload area link; inspect only displayed file/download links.",
+  "requests": [
+    {
+      "name": "pass05890-upload-index.html",
+      "url": "https://db.systemsbiology.net/sbeams/cgi/PeptideAtlas/PASS_View?identifier=PASS05890&browseArea=upload&path=/",
+      "expected_kind": "html",
+      "encoding": "latin-1",
+      "discovery_provenance": "Exact public href in parent family1451 archived pass05890-sbeams.html and extracted links; this was not fetched in that family."
+    }
+  ]
+}

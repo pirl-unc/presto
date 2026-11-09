@@ -1,0 +1,57 @@
+{
+  "registered_utc": "2026-10-24T22:11:06.133363+00:00",
+  "agent": "Codex",
+  "model": "GPT-6",
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "presto_head": "a8d5ff0074495826bfc7ba3d7f028787dddfff50",
+  "presto_dirty": true,
+  "hitlist_head": "9583aeb346e3181e800afa3e0293e51492b4c181",
+  "hitlist_dirty": true,
+  "frozen_files_sha256": {
+    "hitlist/goldberg_mapp.py": "b083f98c68cbd812e7558c360069cbf0bc44e153a06ea35173da070f92608b90",
+    "hitlist/goldberg_workbooks.py": "cbd00641df3356f2c49ce10031a7e08277ed6ad01d04420b5da182a4d055dfe1",
+    "hitlist/evidence_catalog.py": "a07c3b42b66dc6e021ced062370788b4b862adf4674c247ff12f0026f56121cc",
+    "hitlist/evidence_bindings.py": "e796f678c0447c0d52bea04f469d3f546a75fef497f5dfe96514bc267ebec422",
+    "hitlist/evidence_package.py": "0ab6bf03f7d00cbb3a1a3a224dfae2bb9c03a9e8853400425d0da5c4f9bea07b",
+    "hitlist/evidence_store.py": "6b32b9019b541b93287e1902c77d577b7beb3a4696732b0d81e5f30238462ff8",
+    "hitlist/version.py": "e9e932acec6d0ada519d364d7cf9daa1ed51a1701dc65b0aca777a0df8e412d8",
+    "hitlist/mapp_evidence.py": "fc52a0cdfab9f1498a0de2a3ae21dabfa5a35f1374304a23703b858f6a213045",
+    "hitlist/material_context.py": "b3fd95e4815fd36c974605fff9e0b44cbfed30babceb1bbb687a5997fb0aa786",
+    "hitlist/evidence_snapshot.py": "2945129a0f48375e90082066ce8336ebfff2d55d2809d91f7cde751fb585e71c",
+    "hitlist/provenance.py": "55f36174cc24a9646cf3e747c7a38ce64896008c0fbc8fcc020e99675e12fa1c",
+    "hitlist/data/evidence_revisions/goldberg_mapp.json": "c7c140aa77d1557574df4e62f43f6662dc9e17a3657715806f33b6c37999dfa8",
+    "tests/test_goldberg_mapp.py": "40cecd1a809b8b5e4aa40da72896e17858cab823dc707a79f65ec78956b9834a"
+  },
+  "environment_overrides": {
+    "PYTHONPATH": "/private/tmp/hitlist-mapp2025-20261024",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1"
+  },
+  "versions": {
+    "pyarrow": "26.0.0",
+    "pandas": "3.1.0",
+    "numpy": "2.5.4",
+    "openpyxl": "3.1.5",
+    "psutil": "7.2.2"
+  },
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_2210_codex_mapp2025-canonical-admission/code/build.py"
+  ],
+  "resources": {
+    "process_rss_limit_bytes": 6442450944,
+    "build_including_internal_replay_seconds": 1200,
+    "package_plus_audit_limit_bytes": 10737418240
+  },
+  "testing_before_launch": {
+    "focused_tests_passed": 26,
+    "initial_failures": [
+      "Missing new source_field catalog declaration corrected before compilation",
+      "Fixture expected absent XML value; actual original has an empty value element. Literal-preserving reader unchanged."
+    ],
+    "lint_and_format": "pass"
+  }
+}

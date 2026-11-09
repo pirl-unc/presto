@@ -1,0 +1,180 @@
+{
+  "scope": "Interim worker-reported IC50 training/validation summaries from original archives. No test scores accessed for analysis; independent checks pending. No fitting or model-selection changes.",
+  "observed_unix": 1793165721.4352949,
+  "conditions": {
+    "small-ic50-s42": {
+      "archive_sha256": "bfaedc62f9d1219a0855bf88ace751c4625f56f307b885ce43de7ee3bb2189c1",
+      "scores": {
+        "train": {
+          "I": {
+            "n": 11466,
+            "spearman": 0.803302730110565,
+            "rmse": 0.8245188024397722
+          },
+          "II": {
+            "n": 5955,
+            "spearman": 0.7178013509138224,
+            "rmse": 0.6702253399855408
+          }
+        },
+        "validation": {
+          "I": {
+            "n": 1433,
+            "spearman": 0.6499897747512056,
+            "rmse": 1.0945062392078584
+          },
+          "II": {
+            "n": 623,
+            "spearman": 0.63257714111987,
+            "rmse": 0.8173024707711767
+          }
+        }
+      }
+    },
+    "wide-ic50-s42": {
+      "archive_sha256": "c75de0b6a921f39ff365aa3a1d496d987b3362f16e1f85658665696ebdc34374",
+      "scores": {
+        "train": {
+          "I": {
+            "n": 11466,
+            "spearman": 0.850318077982311,
+            "rmse": 0.7326558355186972
+          },
+          "II": {
+            "n": 5955,
+            "spearman": 0.7558192458154924,
+            "rmse": 0.6279174015943702
+          }
+        },
+        "validation": {
+          "I": {
+            "n": 1433,
+            "spearman": 0.6818755219867916,
+            "rmse": 1.061300921928975
+          },
+          "II": {
+            "n": 623,
+            "spearman": 0.6538116620530479,
+            "rmse": 0.8038152702141611
+          }
+        }
+      }
+    },
+    "wide-six-natural-s42": {
+      "archive_sha256": "f21b7b9264f8e655dbd62667aab7b963f12535ede82295f1e8295a70a20ff494",
+      "scores": {
+        "train": {
+          "I": {
+            "n": 11466,
+            "spearman": 0.7296990368379229,
+            "rmse": 0.9547658457229127
+          },
+          "II": {
+            "n": 5955,
+            "spearman": 0.5815951195467689,
+            "rmse": 0.7758939113574211
+          }
+        },
+        "validation": {
+          "I": {
+            "n": 1433,
+            "spearman": 0.6918352827887108,
+            "rmse": 1.0390056355142452
+          },
+          "II": {
+            "n": 623,
+            "spearman": 0.5334821063019055,
+            "rmse": 0.8535145293933499
+          }
+        }
+      }
+    },
+    "wide-six-class-balanced-s42": {
+      "archive_sha256": "7de42dc8c0c5dc965fc6ef0e08432e770001d5104730d841a5ddddec5b7f9cf0",
+      "scores": {
+        "train": {
+          "I": {
+            "n": 11466,
+            "spearman": 0.6417119708703093,
+            "rmse": 1.0685789196811752
+          },
+          "II": {
+            "n": 5955,
+            "spearman": 0.6660262982424037,
+            "rmse": 0.7441017349687252
+          }
+        },
+        "validation": {
+          "I": {
+            "n": 1433,
+            "spearman": 0.618878965658123,
+            "rmse": 1.108532917455563
+          },
+          "II": {
+            "n": 623,
+            "spearman": 0.5823936895565297,
+            "rmse": 0.8692844415022316
+          }
+        }
+      }
+    },
+    "wide-six-primary-matched-s42": {
+      "archive_sha256": "2032db143ca71e0eecfb3f3ef609ab680520bde58081a308dd5b41ef3d4d61b3",
+      "scores": {
+        "train": {
+          "I": {
+            "n": 11466,
+            "spearman": 0.8537494597684689,
+            "rmse": 0.7168247774048365
+          },
+          "II": {
+            "n": 5955,
+            "spearman": 0.7409601208315061,
+            "rmse": 0.6409630277203318
+          }
+        },
+        "validation": {
+          "I": {
+            "n": 1433,
+            "spearman": 0.7258696874634464,
+            "rmse": 0.9859447122284456
+          },
+          "II": {
+            "n": 623,
+            "spearman": 0.6347176823074424,
+            "rmse": 0.8059705704379887
+          }
+        }
+      }
+    },
+    "wide-six-primary-shuffled-s42": {
+      "archive_sha256": "01b5bb751354122cf401487a15c0dcb37bd1a6c90555320fe5c0ffb7807829ed",
+      "scores": {
+        "train": {
+          "I": {
+            "n": 11466,
+            "spearman": 0.8467424059659606,
+            "rmse": 0.7254282408037352
+          },
+          "II": {
+            "n": 5955,
+            "spearman": 0.7448027779015906,
+            "rmse": 0.6299389157759958
+          }
+        },
+        "validation": {
+          "I": {
+            "n": 1433,
+            "spearman": 0.7008868688346251,
+            "rmse": 1.0131366997508717
+          },
+          "II": {
+            "n": 623,
+            "spearman": 0.6306329992077816,
+            "rmse": 0.8098811812013736
+          }
+        }
+      }
+    }
+  }
+}

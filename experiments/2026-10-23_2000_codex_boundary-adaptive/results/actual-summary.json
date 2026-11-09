@@ -1,0 +1,2568 @@
+{
+  "cases": [
+    {
+      "case_id": 0,
+      "input_index": 0,
+      "condition": "soh2024_digestion:condition:aSPIRE_FFH_12p5",
+      "eta": -1.0,
+      "n_residues": 453,
+      "targets": [
+        [
+          226,
+          227
+        ],
+        [
+          222,
+          231
+        ],
+        [
+          206,
+          246
+        ]
+      ],
+      "status": "completed",
+      "reference": {
+        "eligible": true,
+        "positive_targets": true,
+        "maximum_log_agreement": 1.7763568394002505e-15,
+        "log_probability": [
+          -3.1328079660519177,
+          -7.121886845832817,
+          -8.952605578302709
+        ],
+        "gradient": [
+          1.709334740652778,
+          6.935886081545385e-05,
+          -0.1290028652641141,
+          0.010969564603397947,
+          0.021644920215479587,
+          0.511850199777748,
+          -0.000372686156667945,
+          0.006791968752061572,
+          0.15547819078014616,
+          0.02564092741116452,
+          0.15435978868095737,
+          -0.261645836003417,
+          -0.0030797727279115346,
+          0.4722941923857958,
+          0.018073716943145204,
+          0.001847305723039048,
+          0.08636161759011955,
+          0.1619952589059783,
+          0.0,
+          0.0027409640830226576,
+          6.826483938408833e-05,
+          0.5036910315063708,
+          0.007427610737322778,
+          0.00598413338977224,
+          0.09564893677022948,
+          -0.000564073865295537,
+          0.01259324694594121,
+          0.013391898061681316,
+          0.1861098960814353,
+          0.2230897400346356,
+          0.1210444147915049,
+          -0.0010347638370482477,
+          0.6464672508065753,
+          0.012238395297762869,
+          0.0025819336512978718,
+          -0.1268628910133197,
+          -0.00291753443633276,
+          0.0,
+          0.004885081965802967,
+          1.1848205561166378,
+          0.188395619062483
+        ],
+        "seconds": 0.005430541990790516,
+        "minimum_full_count_two": 0.0,
+        "minimum_full_count_four": 0.0,
+        "scope": "Empirical two/four-step target precision, not an override of complete-output positivity failure",
+        "previous_construction_seconds": 9.999474458047189,
+        "reused_by_hash": true,
+        "reference_artifact": {
+          "case_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-00.json",
+          "case_sha256": "05aa8f0b7f0a3a6d3008b187862e580bd934e120fd49b2f096e8029fa5d8b168",
+          "array_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-00-reference.npz",
+          "array_sha256": "63abfe331402ae7a34a72860099e4e821457d63538b4a4179e03279e6d868d13"
+        }
+      },
+      "intact_log_probability": -7.837138262162358,
+      "intact_maximum_log_error": 0.0,
+      "intact_maximum_score_error": 3.552713678800501e-15,
+      "seconds": 26.699935458018444,
+      "conditional_sampling_seconds": 26.574808625795413,
+      "peak_rss_bytes": 309084160,
+      "primary": [
+        {
+          "count": 512,
+          "primary": true,
+          "gate_pass": false,
+          "reference_eligible": true,
+          "minimum_ess": 44.157574531254106,
+          "mean_ess": 94.27033812360793,
+          "mean_relative_probability_error": [
+            0.019364901498224098,
+            -0.014533011283806314,
+            0.0023942027922663964
+          ],
+          "mean_log_probability_bias": [
+            0.015148896026367042,
+            -0.020588677824206814,
+            -0.0016386509632531077
+          ],
+          "mean_absolute_log_probability_error": [
+            0.07080224485845721,
+            0.10135873089132219,
+            0.06957139593798867
+          ],
+          "mean_gradient_relative_error": 0.14229341432977657,
+          "rms_gradient_relative_error": 0.8151619063513825,
+          "plain_mean_gradient_relative_error": 0.1383339953263715,
+          "plain_rms_gradient_relative_error": 0.866258414081836
+        }
+      ]
+    },
+    {
+      "case_id": 1,
+      "input_index": 1,
+      "condition": "soh2024_digestion:condition:aSPIRE_FFH_6p25",
+      "eta": -1.0,
+      "n_residues": 453,
+      "targets": [
+        [
+          226,
+          227
+        ],
+        [
+          222,
+          231
+        ],
+        [
+          206,
+          246
+        ]
+      ],
+      "status": "completed",
+      "reference": {
+        "eligible": true,
+        "positive_targets": true,
+        "maximum_log_agreement": 1.7763568394002505e-15,
+        "log_probability": [
+          -3.0538209542280828,
+          -7.101109914035732,
+          -8.974321788136683
+        ],
+        "gradient": [
+          1.702545475750985,
+          6.846538924647022e-05,
+          -0.1281733543891129,
+          0.010491542809599071,
+          0.02049333788755843,
+          0.5093383102894168,
+          -0.0005356812014425544,
+          0.006444429105388911,
+          0.15524797583124458,
+          0.024377126290471493,
+          0.1553487218152928,
+          -0.2616483742327049,
+          -0.0034352411103091467,
+          0.46908712308890654,
+          0.017872866325897727,
+          0.0016637344705864616,
+          0.0865838980795682,
+          0.15988949325270763,
+          0.0,
+          0.002707375400989258,
+          6.73859970876387e-05,
+          0.5002022301721818,
+          0.006826228672811966,
+          0.005081121684852669,
+          0.0960763917971145,
+          -0.0008763665073412258,
+          0.012296757760458321,
+          0.01322073309520877,
+          0.18417785416098512,
+          0.22500212009818335,
+          0.12164023253184021,
+          -0.0012852230361908906,
+          0.6441387576668555,
+          0.012106041947590481,
+          0.0023937629118302188,
+          -0.1257859124514364,
+          -0.004437687445789408,
+          0.0,
+          0.004825543294590883,
+          2.360229192583773,
+          0.15858705381368032
+        ],
+        "seconds": 0.005553332972340286,
+        "minimum_full_count_two": 0.0,
+        "minimum_full_count_four": 0.0,
+        "scope": "Empirical two/four-step target precision, not an override of complete-output positivity failure",
+        "previous_construction_seconds": 9.400403541978449,
+        "reused_by_hash": true,
+        "reference_artifact": {
+          "case_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-01.json",
+          "case_sha256": "fd218a970e15548c4b11b07dd852f2604d316d141a016791d36f01b095ec01fd",
+          "array_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-01-reference.npz",
+          "array_sha256": "99ed60609d1a59810f3cf5fbe9df431e3c1ddb57a7dcc2b17cb875897259bbdb"
+        }
+      },
+      "intact_log_probability": -8.004732384952687,
+      "intact_maximum_log_error": 0.0,
+      "intact_maximum_score_error": 3.552713678800501e-15,
+      "seconds": 27.843132874986622,
+      "conditional_sampling_seconds": 27.717203465057537,
+      "peak_rss_bytes": 306987008,
+      "primary": [
+        {
+          "count": 512,
+          "primary": true,
+          "gate_pass": false,
+          "reference_eligible": true,
+          "minimum_ess": 41.54757276738402,
+          "mean_ess": 93.26389589711421,
+          "mean_relative_probability_error": [
+            0.14002098087205692,
+            0.06406518643730305,
+            0.014590464341916815
+          ],
+          "mean_log_probability_bias": [
+            0.1229641624291623,
+            0.0588138165075166,
+            0.012686397072711353
+          ],
+          "mean_absolute_log_probability_error": [
+            0.15053840257757523,
+            0.0781164191753666,
+            0.04874354576218054
+          ],
+          "mean_gradient_relative_error": 0.2527324902049328,
+          "rms_gradient_relative_error": 0.6340070142651064,
+          "plain_mean_gradient_relative_error": 0.2735778709472757,
+          "plain_rms_gradient_relative_error": 0.6644896200886671
+        }
+      ]
+    },
+    {
+      "case_id": 2,
+      "input_index": 2,
+      "condition": "soh2024_digestion:condition:aSPIRE_H2A",
+      "eta": -1.0,
+      "n_residues": 130,
+      "targets": [
+        [
+          64,
+          65
+        ],
+        [
+          60,
+          69
+        ],
+        [
+          45,
+          85
+        ]
+      ],
+      "status": "completed",
+      "reference": {
+        "eligible": true,
+        "positive_targets": true,
+        "maximum_log_agreement": 8.881784197001252e-16,
+        "log_probability": [
+          -0.8219818686035802,
+          -7.486238438440912,
+          -9.541639267384129
+        ],
+        "gradient": [
+          0.9741301016393793,
+          0.0,
+          2.6547388773601015e-05,
+          0.4716036379466376,
+          0.0006889329322782875,
+          0.20331820127565978,
+          -0.014024212413802896,
+          0.1981994833458961,
+          -0.00021176850440568574,
+          0.4686423640863188,
+          1.820469845714269e-05,
+          -0.2519236439291262,
+          -0.009261884540919158,
+          0.13690428851995923,
+          -0.008085704151662642,
+          0.0006847177781401707,
+          -0.26575613927187325,
+          -0.035798392755251825,
+          0.0,
+          -0.04812785058095828,
+          0.0,
+          0.001198532563140664,
+          0.3995648347768414,
+          0.0009065901349818473,
+          0.060796578056516705,
+          -0.008226552264233713,
+          0.08666910353796449,
+          -0.0002481351478049823,
+          0.6389034385497435,
+          0.0,
+          0.07213303986359204,
+          -0.008000117569094588,
+          -0.00972176371843215,
+          0.0023599939123279145,
+          0.0008581199584874992,
+          -0.003225857259533906,
+          -0.006238517257114976,
+          0.0,
+          -0.024522392536168506,
+          -1.350431066899818,
+          -0.4511265467687866
+        ],
+        "seconds": 0.004378082987386733,
+        "minimum_full_count_two": 0.0,
+        "minimum_full_count_four": 0.0,
+        "scope": "Empirical two/four-step target precision, not an override of complete-output positivity failure",
+        "previous_construction_seconds": 1.798150499991607,
+        "reused_by_hash": true,
+        "reference_artifact": {
+          "case_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-02.json",
+          "case_sha256": "2ca7aee0e44df9b1a0ff32dc6b529fe40ab760cbf7cfe357e0e8c82feb0a41da",
+          "array_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-02-reference.npz",
+          "array_sha256": "cce6ba948d3ce7344dc53e6e794667e2cb8aebe3494c9872a3f27ac8b3c6da66"
+        }
+      },
+      "intact_log_probability": -6.841805791342778,
+      "intact_maximum_log_error": 0.0,
+      "intact_maximum_score_error": 3.552713678800501e-15,
+      "seconds": 3.857014958979562,
+      "conditional_sampling_seconds": 3.790871165052522,
+      "peak_rss_bytes": 251789312,
+      "primary": [
+        {
+          "count": 512,
+          "primary": true,
+          "gate_pass": false,
+          "reference_eligible": true,
+          "minimum_ess": 94.05734862428704,
+          "mean_ess": 163.79704801313088,
+          "mean_relative_probability_error": [
+            -0.03649542556318918,
+            -0.014074800141775494,
+            -0.02674334056521171
+          ],
+          "mean_log_probability_bias": [
+            -0.03839659342008131,
+            -0.019628787039702722,
+            -0.02811430607228127
+          ],
+          "mean_absolute_log_probability_error": [
+            0.0477164452855707,
+            0.0901551896112891,
+            0.04183486134450032
+          ],
+          "mean_gradient_relative_error": 0.13658895764662646,
+          "rms_gradient_relative_error": 0.37263405595009563,
+          "plain_mean_gradient_relative_error": 0.11649944712466484,
+          "plain_rms_gradient_relative_error": 0.44988595494640377
+        }
+      ]
+    },
+    {
+      "case_id": 3,
+      "input_index": 3,
+      "condition": "soh2024_digestion:condition:aSPIRE_H2B",
+      "eta": -1.0,
+      "n_residues": 123,
+      "targets": [
+        [
+          61,
+          62
+        ],
+        [
+          57,
+          66
+        ],
+        [
+          41,
+          81
+        ]
+      ],
+      "status": "completed",
+      "reference": {
+        "eligible": true,
+        "positive_targets": true,
+        "maximum_log_agreement": 1.7763568394002505e-15,
+        "log_probability": [
+          -1.8781138739910361,
+          -6.950247185051975,
+          -9.808570379626758
+        ],
+        "gradient": [
+          1.4880461810148844,
+          0.0,
+          -0.26342036454874096,
+          -0.007325461015599521,
+          0.23209177173081114,
+          -0.005983709650391372,
+          -0.009503455311966176,
+          0.19957588864170284,
+          0.1456486796300451,
+          -0.013032578406519946,
+          0.025186308412529668,
+          0.5023849398336091,
+          -0.002246332941027439,
+          -0.0058496050697067516,
+          -0.02265177764801938,
+          0.4334544968336898,
+          0.0031834494959723713,
+          0.13026245977684697,
+          0.0,
+          0.14679601792368652,
+          0.0,
+          0.04818447221798132,
+          -0.007383801134522686,
+          0.3737939601039589,
+          -0.004862776137194675,
+          -0.01640206754079034,
+          0.05618759889657666,
+          0.0014111969261558681,
+          -0.04846776988278308,
+          0.2120141984968109,
+          0.5605370214311348,
+          -0.0014147327138716351,
+          -0.0013256909221586151,
+          -0.0016677204956626328,
+          0.21575499817873225,
+          0.0024271991489626535,
+          0.11746671001130106,
+          0.0,
+          0.002597955815354722,
+          -2.062870029826923,
+          -0.9814432673906012
+        ],
+        "seconds": 0.004107167012989521,
+        "minimum_full_count_two": 0.0,
+        "minimum_full_count_four": 0.0,
+        "scope": "Empirical two/four-step target precision, not an override of complete-output positivity failure",
+        "previous_construction_seconds": 1.6826372500509024,
+        "reused_by_hash": true,
+        "reference_artifact": {
+          "case_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-03.json",
+          "case_sha256": "747bb98d4492816c3a8de479c6a6a3fe71a7fc64266319d876cfe1d0cf768355",
+          "array_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-03-reference.npz",
+          "array_sha256": "8f89e47309850a0032ce6b268271ff50229d181999f7709da1a6c4988e923ae2"
+        }
+      },
+      "intact_log_probability": -5.806994196828827,
+      "intact_maximum_log_error": 0.0,
+      "intact_maximum_score_error": 1.7763568394002505e-15,
+      "seconds": 2.803257375024259,
+      "conditional_sampling_seconds": 2.7444262501085177,
+      "peak_rss_bytes": 252772352,
+      "primary": [
+        {
+          "count": 512,
+          "primary": true,
+          "gate_pass": false,
+          "reference_eligible": true,
+          "minimum_ess": 90.51466915445845,
+          "mean_ess": 156.6665683487382,
+          "mean_relative_probability_error": [
+            -0.015009218026073076,
+            0.020773265980160473,
+            -0.006252449012857912
+          ],
+          "mean_log_probability_bias": [
+            -0.018610480557878034,
+            0.017039682352861907,
+            -0.007026068326912327
+          ],
+          "mean_absolute_log_probability_error": [
+            0.0694329413765725,
+            0.05823350510740177,
+            0.03282828014903272
+          ],
+          "mean_gradient_relative_error": 0.060036767457649666,
+          "rms_gradient_relative_error": 0.20755313932586614,
+          "plain_mean_gradient_relative_error": 0.03611019947713951,
+          "plain_rms_gradient_relative_error": 0.23425628346705563
+        }
+      ]
+    },
+    {
+      "case_id": 4,
+      "input_index": 4,
+      "condition": "soh2024_digestion:condition:aSPIRE_IL37b",
+      "eta": -1.0,
+      "n_residues": 173,
+      "targets": [
+        [
+          86,
+          87
+        ],
+        [
+          82,
+          91
+        ],
+        [
+          66,
+          106
+        ]
+      ],
+      "status": "completed",
+      "reference": {
+        "eligible": true,
+        "positive_targets": true,
+        "maximum_log_agreement": 1.7763568394002505e-15,
+        "log_probability": [
+          -2.6212765369753988,
+          -7.842834801826872,
+          -8.506307292488946
+        ],
+        "gradient": [
+          1.3440819635013375,
+          -0.015893309957478716,
+          0.005112222610607034,
+          -0.020531075023476283,
+          0.003217654176314516,
+          -0.2587663735512366,
+          0.09599472668556162,
+          0.014465171697900833,
+          -0.2862105305976712,
+          0.33557187820216977,
+          -0.0007404571907738568,
+          0.004565465591943129,
+          0.526057873354926,
+          0.32911194980404873,
+          0.14220842136124362,
+          0.48821003163160515,
+          0.0005025904791782857,
+          -0.004371318346920395,
+          0.003922003839238006,
+          -0.0018600686937614496,
+          -0.02340160987288667,
+          0.003004750118527962,
+          -0.004986744964818619,
+          -0.0010891225244021548,
+          0.14609677772366392,
+          0.08675375057254879,
+          0.013777030476584967,
+          -0.21347187383841779,
+          0.643375776185406,
+          -0.019138194224414647,
+          0.004877754666832217,
+          0.0995348680574515,
+          -0.10212309969866534,
+          0.13016378144221838,
+          0.6031276341556873,
+          0.0008560700244186366,
+          -0.0029956361226123407,
+          0.001580951515618281,
+          -0.004393057932721573,
+          2.1632164694779226,
+          -0.4930040079360956
+        ],
+        "seconds": 0.004360916966106743,
+        "minimum_full_count_two": 0.0,
+        "minimum_full_count_four": 0.0,
+        "scope": "Empirical two/four-step target precision, not an override of complete-output positivity failure",
+        "previous_construction_seconds": 2.460512290999759,
+        "reused_by_hash": true,
+        "reference_artifact": {
+          "case_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-04.json",
+          "case_sha256": "e03ab82217c498bd2415aa3911a4f67338a76291d64ea339fc6336956f633c8f",
+          "array_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-04-reference.npz",
+          "array_sha256": "80e1c799f894cf43c11715fdff11b2f362e83f3b979bbf0361769976745656b3"
+        }
+      },
+      "intact_log_probability": -7.3071758214253375,
+      "intact_maximum_log_error": 2.6645352591003757e-15,
+      "intact_maximum_score_error": 7.105427357601002e-15,
+      "seconds": 6.2533707080292515,
+      "conditional_sampling_seconds": 6.177152124873828,
+      "peak_rss_bytes": 266174464,
+      "primary": [
+        {
+          "count": 512,
+          "primary": true,
+          "gate_pass": false,
+          "reference_eligible": true,
+          "minimum_ess": 79.06404308473374,
+          "mean_ess": 154.58250698022258,
+          "mean_relative_probability_error": [
+            -0.013952458289301698,
+            -0.005718391961620698,
+            -0.011860134694146193
+          ],
+          "mean_log_probability_bias": [
+            -0.020925169551677003,
+            -0.007713033425732818,
+            -0.013687026497809729
+          ],
+          "mean_absolute_log_probability_error": [
+            0.10389883294272195,
+            0.05527285283866534,
+            0.048235286534228816
+          ],
+          "mean_gradient_relative_error": 0.19200694637422522,
+          "rms_gradient_relative_error": 0.38931445791295927,
+          "plain_mean_gradient_relative_error": 0.3007081211647833,
+          "plain_rms_gradient_relative_error": 0.47796343213763687
+        }
+      ]
+    },
+    {
+      "case_id": 5,
+      "input_index": 5,
+      "condition": "soh2024_digestion:condition:aSPIRE_LEDGF",
+      "eta": -1.0,
+      "n_residues": 533,
+      "targets": [
+        [
+          266,
+          267
+        ],
+        [
+          262,
+          271
+        ],
+        [
+          246,
+          286
+        ]
+      ],
+      "status": "completed",
+      "reference": {
+        "eligible": true,
+        "positive_targets": true,
+        "maximum_log_agreement": 1.7763568394002505e-15,
+        "log_probability": [
+          -3.088709713119952,
+          -8.087173879207675,
+          -9.79089264208511
+        ],
+        "gradient": [
+          1.5126405057247279,
+          0.002000717387558002,
+          0.012500408983421179,
+          0.22666086847669067,
+          0.01222516962835168,
+          -0.22907217932374843,
+          0.00560331730896778,
+          0.010473830368167058,
+          0.3550337278287749,
+          0.5010022229916674,
+          0.024953279233500908,
+          0.49500261136033713,
+          0.006192571051159482,
+          0.025286205740868116,
+          0.1049614840131125,
+          -0.2549990987383209,
+          0.06934627231006646,
+          0.05238412532307333,
+          0.00042623782320010405,
+          0.0009321462870379014,
+          0.002101271071037935,
+          0.02037866165994362,
+          0.08278428830548766,
+          0.009534286952859026,
+          0.20836963328986682,
+          0.006141910691026529,
+          0.012623471026085107,
+          -0.08934892219956397,
+          0.5070248282902122,
+          0.01444862238684113,
+          0.10495018327085989,
+          0.15404631274658442,
+          0.023112791547767287,
+          0.07467080498153666,
+          0.028179509813818483,
+          0.0697133873576739,
+          -0.22593118211835625,
+          0.0005567183479395929,
+          0.0007942453702562756,
+          0.0,
+          1.4483890913692425
+        ],
+        "seconds": 0.006057624996174127,
+        "minimum_full_count_two": 0.0,
+        "minimum_full_count_four": 0.0,
+        "scope": "Empirical two/four-step target precision, not an override of complete-output positivity failure",
+        "previous_construction_seconds": 12.408103666035458,
+        "reused_by_hash": true,
+        "reference_artifact": {
+          "case_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-05.json",
+          "case_sha256": "a3fa6c06d5dcb646ebf88d8c87a8fc4c85827b42e20b341741ec56bb4226deed",
+          "array_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-05-reference.npz",
+          "array_sha256": "2cba0c2d1802e8b97a4e2b1f55cfe5add19f54ce9fccb893e358505597fb4e56"
+        }
+      },
+      "intact_log_probability": -5.567197987992653,
+      "intact_maximum_log_error": 0.0,
+      "intact_maximum_score_error": 3.552713678800501e-15,
+      "seconds": 17.517131291970145,
+      "conditional_sampling_seconds": 17.40782845497597,
+      "peak_rss_bytes": 322912256,
+      "primary": [
+        {
+          "count": 512,
+          "primary": true,
+          "gate_pass": false,
+          "reference_eligible": true,
+          "minimum_ess": 7.956022129636468,
+          "mean_ess": 88.95063539885147,
+          "mean_relative_probability_error": [
+            0.09913252145455947,
+            -0.023477210581852904,
+            0.009834050543207736
+          ],
+          "mean_log_probability_bias": [
+            0.08991401473841337,
+            -0.028779686916849068,
+            0.008462998224706197
+          ],
+          "mean_absolute_log_probability_error": [
+            0.10859706555399923,
+            0.07745800051902996,
+            0.04888208919636927
+          ],
+          "mean_gradient_relative_error": 0.3524754828199355,
+          "rms_gradient_relative_error": 0.7419722960060466,
+          "plain_mean_gradient_relative_error": 0.37256891251638863,
+          "plain_rms_gradient_relative_error": 0.7854069725488945
+        }
+      ]
+    },
+    {
+      "case_id": 6,
+      "input_index": 6,
+      "condition": "soh2024_digestion:condition:aSPIRE_hTau",
+      "eta": -1.0,
+      "n_residues": 441,
+      "targets": [
+        [
+          220,
+          221
+        ],
+        [
+          216,
+          225
+        ],
+        [
+          200,
+          240
+        ]
+      ],
+      "status": "completed",
+      "reference": {
+        "eligible": true,
+        "positive_targets": true,
+        "maximum_log_agreement": 0.0,
+        "log_probability": [
+          -3.8975487650763054,
+          -7.574013667192496,
+          -10.082153673491705
+        ],
+        "gradient": [
+          1.5250418521073008,
+          0.001589176998001522,
+          0.02157439168462428,
+          0.11423520933759802,
+          0.0012777064697973948,
+          0.028404016325213645,
+          0.004231245165319667,
+          0.01403006903637512,
+          -0.06970660704217571,
+          0.037871095912410405,
+          0.006464992837294434,
+          0.01309789324847858,
+          0.07807530933682835,
+          0.015763286381497692,
+          0.5368682845395698,
+          0.04356972793139027,
+          0.5926894493526286,
+          0.04796142916254919,
+          0.0,
+          0.008269131308542217,
+          0.0011015324172952774,
+          0.018062891018627996,
+          0.510491290940695,
+          0.0009802313764061172,
+          0.1690847349509708,
+          0.003936664153262023,
+          0.017048458115034585,
+          0.07796834700662135,
+          0.05750807093357131,
+          0.00853452145641764,
+          0.014726380417085934,
+          0.2469206768538785,
+          0.01788033085353933,
+          0.5457274269570257,
+          0.17700658624506185,
+          -0.15862176256155533,
+          -0.23092210339597916,
+          0.0,
+          0.007671786379811333,
+          0.0,
+          1.2070479436342012
+        ],
+        "seconds": 0.005503499996848404,
+        "minimum_full_count_two": 0.0,
+        "minimum_full_count_four": 0.0,
+        "scope": "Empirical two/four-step target precision, not an override of complete-output positivity failure",
+        "previous_construction_seconds": 9.213465457956772,
+        "reused_by_hash": true,
+        "reference_artifact": {
+          "case_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-06.json",
+          "case_sha256": "28e746ddd7a10bb4306d507b98242409f6a290a58b96020ca5be51f31bf4dde8",
+          "array_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-06-reference.npz",
+          "array_sha256": "929c2697c98028d994e350bc4b8459da9a0b93200436b06e93e31007d011b26d"
+        }
+      },
+      "intact_log_probability": -4.830273321814389,
+      "intact_maximum_log_error": 8.881784197001252e-16,
+      "intact_maximum_score_error": 6.938893903907228e-18,
+      "seconds": 10.814512792043388,
+      "conditional_sampling_seconds": 10.722234033979475,
+      "peak_rss_bytes": 307347456,
+      "primary": [
+        {
+          "count": 512,
+          "primary": true,
+          "gate_pass": false,
+          "reference_eligible": true,
+          "minimum_ess": 14.625916751300483,
+          "mean_ess": 90.88606047387515,
+          "mean_relative_probability_error": [
+            0.05699445878890414,
+            -0.010626673094199679,
+            -0.01150849517341366
+          ],
+          "mean_log_probability_bias": [
+            0.036805114138922346,
+            -0.021540657387225992,
+            -0.012061740977053148
+          ],
+          "mean_absolute_log_probability_error": [
+            0.17552316935073303,
+            0.13199690299430278,
+            0.02837756447255302
+          ],
+          "mean_gradient_relative_error": 0.3599267413436986,
+          "rms_gradient_relative_error": 0.8005919926968097,
+          "plain_mean_gradient_relative_error": 0.34572082654749847,
+          "plain_rms_gradient_relative_error": 0.8445664786434568
+        }
+      ]
+    },
+    {
+      "case_id": 7,
+      "input_index": 0,
+      "condition": "soh2024_digestion:condition:aSPIRE_FFH_12p5",
+      "eta": 0.0,
+      "n_residues": 453,
+      "targets": [
+        [
+          226,
+          227
+        ],
+        [
+          222,
+          231
+        ],
+        [
+          206,
+          246
+        ]
+      ],
+      "status": "completed",
+      "reference": {
+        "eligible": true,
+        "positive_targets": true,
+        "maximum_log_agreement": 2.1316282072803006e-14,
+        "log_probability": [
+          -3.3164431925511355,
+          -6.241453405036665,
+          -17.293422535166332
+        ],
+        "gradient": [
+          -0.6280048134403315,
+          -1.2392938789321501e-18,
+          -0.2550637359138667,
+          -0.08613223582399353,
+          -0.2495914608537608,
+          0.5197592872677221,
+          -0.03321545873796369,
+          -0.05675917920313976,
+          0.11247287071403092,
+          -0.2286283450309653,
+          0.055994117786922266,
+          -0.34199657674842093,
+          -0.08644019015575069,
+          0.48993684254526165,
+          -6.760791591816941e-16,
+          -0.03271570645632989,
+          -0.10421608570575686,
+          -0.288230450317871,
+          0.0,
+          -8.491317394322761e-17,
+          -6.861406560569901e-19,
+          0.4678056936337686,
+          -0.12013135228212979,
+          -0.22780564507512113,
+          -3.615911018240813e-16,
+          -0.06217073836116606,
+          -0.03271570645633006,
+          -0.021402607054252218,
+          -0.17499782272591297,
+          0.10394239000600995,
+          -0.13689244516464735,
+          -0.05841611408578775,
+          0.6848703226305491,
+          -4.356450843807993e-16,
+          -0.03191778624775246,
+          -0.3117709742770465,
+          -0.36002771937393113,
+          0.0,
+          -1.474397036258277e-16,
+          -0.43529976581424024,
+          -2.583395459078411
+        ],
+        "seconds": 0.005397166998591274,
+        "minimum_full_count_two": 0.0,
+        "minimum_full_count_four": 0.0,
+        "scope": "Empirical two/four-step target precision, not an override of complete-output positivity failure",
+        "previous_construction_seconds": 9.91052125004353,
+        "reused_by_hash": true,
+        "reference_artifact": {
+          "case_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-07.json",
+          "case_sha256": "f4dda97fad5bbcf8f001f6bbf6127d589002ed03378ef750d3aafb797d4545b0",
+          "array_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-07-reference.npz",
+          "array_sha256": "75fdbec4356ee518d3ebbe97460dc32d23edf58e8c58c633a5eaa8e4a1781d69"
+        }
+      },
+      "intact_log_probability": -177.51118163797742,
+      "intact_maximum_log_error": 2.842170943040401e-14,
+      "intact_maximum_score_error": 1.1368683772161603e-13,
+      "seconds": 29.392268750001676,
+      "conditional_sampling_seconds": 29.24712412513327,
+      "peak_rss_bytes": 310722560,
+      "primary": [
+        {
+          "count": 512,
+          "primary": true,
+          "gate_pass": true,
+          "reference_eligible": true,
+          "minimum_ess": 511.99999999999955,
+          "mean_ess": 511.99999999999983,
+          "mean_relative_probability_error": [
+            4.440892098500627e-16,
+            -8.881784197001248e-16,
+            7.105427357601027e-15
+          ],
+          "mean_log_probability_bias": [
+            1.1102230246251565e-16,
+            -6.661338147750939e-16,
+            5.773159728050814e-15
+          ],
+          "mean_absolute_log_probability_error": [
+            1.1102230246251565e-16,
+            6.661338147750939e-16,
+            5.773159728050814e-15
+          ],
+          "mean_gradient_relative_error": 0.0010467502380279408,
+          "rms_gradient_relative_error": 0.009533366291868038,
+          "plain_mean_gradient_relative_error": 0.05086615370178349,
+          "plain_rms_gradient_relative_error": 0.2587157571662923
+        }
+      ]
+    },
+    {
+      "case_id": 8,
+      "input_index": 1,
+      "condition": "soh2024_digestion:condition:aSPIRE_FFH_6p25",
+      "eta": 0.0,
+      "n_residues": 453,
+      "targets": [
+        [
+          226,
+          227
+        ],
+        [
+          222,
+          231
+        ],
+        [
+          206,
+          246
+        ]
+      ],
+      "status": "completed",
+      "reference": {
+        "eligible": true,
+        "positive_targets": true,
+        "maximum_log_agreement": 1.7763568394002505e-14,
+        "log_probability": [
+          -3.2786657357855606,
+          -6.260359725904593,
+          -17.57767201848503
+        ],
+        "gradient": [
+          -0.6593127704605936,
+          -2.7385365538045254e-19,
+          -0.2544340404074631,
+          -0.08797413984865284,
+          -0.2549288761880917,
+          0.5186806106856131,
+          -0.03392575827384699,
+          -0.05797295195164088,
+          0.11182642323230803,
+          -0.23351747236912335,
+          0.057191529997605114,
+          -0.34321239280542926,
+          -0.08828867966281016,
+          0.4882774191009713,
+          -3.139565195928236e-16,
+          -0.03341531898600609,
+          -0.10644470575560601,
+          -0.29707255501728874,
+          0.0,
+          -4.4584441639666925e-17,
+          8.007999227460889e-19,
+          0.4656730042645844,
+          -0.12270031405514577,
+          -0.23267717929793477,
+          -1.742280694267778e-16,
+          -0.0635002351762435,
+          -0.033415318986006165,
+          -0.021860293397748275,
+          -0.18141849216953837,
+          0.1061651571808472,
+          -0.1398198363240905,
+          -0.05966531973580073,
+          0.6842708450379804,
+          -1.9876632529341037e-16,
+          -0.032600335567244086,
+          -0.3123404276998192,
+          -0.36772677071005244,
+          0.0,
+          -7.166541570854934e-17,
+          -0.9140015759038527,
+          -2.63721396152576
+        ],
+        "seconds": 0.0056037919712252915,
+        "minimum_full_count_two": 0.0,
+        "minimum_full_count_four": 0.0,
+        "scope": "Empirical two/four-step target precision, not an override of complete-output positivity failure",
+        "previous_construction_seconds": 8.905017332988791,
+        "reused_by_hash": true,
+        "reference_artifact": {
+          "case_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-08.json",
+          "case_sha256": "63911de180f31db809aea9e9b84c9ee11d140ab4ae7f5e317fac80db4843add7",
+          "array_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-08-reference.npz",
+          "array_sha256": "d5cb7de5f886f991b0ef09184a8475d84e717ca26333c189af2e0b6bcf989544"
+        }
+      },
+      "intact_log_probability": -181.30718851917837,
+      "intact_maximum_log_error": 0.0,
+      "intact_maximum_score_error": 2.220446049250313e-16,
+      "seconds": 29.78952750004828,
+      "conditional_sampling_seconds": 29.64131324586924,
+      "peak_rss_bytes": 309018624,
+      "primary": [
+        {
+          "count": 512,
+          "primary": true,
+          "gate_pass": true,
+          "reference_eligible": true,
+          "minimum_ess": 511.99999999999955,
+          "mean_ess": 511.99999999999983,
+          "mean_relative_probability_error": [
+            -1.5543122344752072e-14,
+            0.0,
+            0.0
+          ],
+          "mean_log_probability_bias": [
+            -1.5709655798445965e-14,
+            -6.661338147750939e-16,
+            -8.881784197001252e-16
+          ],
+          "mean_absolute_log_probability_error": [
+            1.5709655798445965e-14,
+            6.661338147750939e-16,
+            4.440892098500626e-15
+          ],
+          "mean_gradient_relative_error": 0.0013624971350012485,
+          "rms_gradient_relative_error": 0.008962411284809523,
+          "plain_mean_gradient_relative_error": 0.08042508820807055,
+          "plain_rms_gradient_relative_error": 0.2743104992024246
+        }
+      ]
+    },
+    {
+      "case_id": 9,
+      "input_index": 2,
+      "condition": "soh2024_digestion:condition:aSPIRE_H2A",
+      "eta": 0.0,
+      "n_residues": 130,
+      "targets": [
+        [
+          64,
+          65
+        ],
+        [
+          60,
+          69
+        ],
+        [
+          45,
+          85
+        ]
+      ],
+      "status": "completed",
+      "reference": {
+        "eligible": true,
+        "positive_targets": true,
+        "maximum_log_agreement": 7.105427357601002e-15,
+        "log_probability": [
+          -1.4611510886968215,
+          -7.044533140384026,
+          -17.83805253425953
+        ],
+        "gradient": [
+          -0.6103181166454226,
+          0.0,
+          -0.03520710319090263,
+          0.4878103745829524,
+          -1.0316680938892938e-17,
+          0.13381806844710642,
+          -0.07164484941985294,
+          0.028177862510215458,
+          -0.02227843718479046,
+          0.33155552050435966,
+          -1.2204652967352179e-17,
+          -0.30144686519460295,
+          -0.04948211863046579,
+          0.09807186839728563,
+          -0.1664273908042089,
+          -1.442079343384393e-17,
+          -0.3172934813267546,
+          -0.25146074062449925,
+          0.0,
+          -0.31611023440988684,
+          0.0,
+          -0.05079100110984325,
+          0.47866142670624784,
+          -1.3752227469521844e-17,
+          -4.341005592907418e-17,
+          -0.047167822809625275,
+          -0.06303492377364947,
+          -0.023639492447600156,
+          0.13356244741697224,
+          0.0,
+          -0.00018278248578152174,
+          -0.046985982092669486,
+          -0.05261627731013607,
+          -0.10377464232421624,
+          -2.4400364217685576e-17,
+          -0.05861425606150182,
+          -0.06768575911099785,
+          0.0,
+          -0.1408924368453722,
+          0.8460805635948605,
+          -2.642730312868896
+        ],
+        "seconds": 0.004155749978963286,
+        "minimum_full_count_two": 0.0,
+        "minimum_full_count_four": 0.0,
+        "scope": "Empirical two/four-step target precision, not an override of complete-output positivity failure",
+        "previous_construction_seconds": 1.7791249580332078,
+        "reused_by_hash": true,
+        "reference_artifact": {
+          "case_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-09.json",
+          "case_sha256": "e26d5259c2f450c83ac44bdd612e0dcbafaa6b87372649e1891af42832b731a4",
+          "array_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-09-reference.npz",
+          "array_sha256": "e4568756108b22b5b38e3078fe71a36126c2b1ac467b3edff3ea81a9737f9ad1"
+        }
+      },
+      "intact_log_probability": -44.471737643728055,
+      "intact_maximum_log_error": 7.105427357601002e-15,
+      "intact_maximum_score_error": 1.4210854715202004e-14,
+      "seconds": 2.836560791998636,
+      "conditional_sampling_seconds": 2.7726768768043257,
+      "peak_rss_bytes": 256081920,
+      "primary": [
+        {
+          "count": 512,
+          "primary": true,
+          "gate_pass": true,
+          "reference_eligible": true,
+          "minimum_ess": 511.9999999999996,
+          "mean_ess": 511.99999999999983,
+          "mean_relative_probability_error": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "mean_log_probability_bias": [
+            -8.326672684688674e-17,
+            1.1102230246251565e-16,
+            -4.440892098500626e-16
+          ],
+          "mean_absolute_log_probability_error": [
+            3.608224830031759e-16,
+            1.1102230246251565e-16,
+            4.440892098500626e-16
+          ],
+          "mean_gradient_relative_error": 0.0005510810875397177,
+          "rms_gradient_relative_error": 0.009593357615301326,
+          "plain_mean_gradient_relative_error": 0.0388312775403204,
+          "plain_rms_gradient_relative_error": 0.10110117464705984
+        }
+      ]
+    },
+    {
+      "case_id": 10,
+      "input_index": 3,
+      "condition": "soh2024_digestion:condition:aSPIRE_H2B",
+      "eta": 0.0,
+      "n_residues": 123,
+      "targets": [
+        [
+          61,
+          62
+        ],
+        [
+          57,
+          66
+        ],
+        [
+          41,
+          81
+        ]
+      ],
+      "status": "completed",
+      "reference": {
+        "eligible": true,
+        "positive_targets": true,
+        "maximum_log_agreement": 7.105427357601002e-15,
+        "log_probability": [
+          -3.2313654279118458,
+          -6.452213296094175,
+          -17.311434965897988
+        ],
+        "gradient": [
+          -0.2765709014502787,
+          0.0,
+          -0.3051955730579294,
+          -0.10127932156518593,
+          -0.012034258463360342,
+          -0.06604382882542592,
+          -0.0517845038029634,
+          0.02106450705918722,
+          0.09682509750938247,
+          -0.10532809053604147,
+          -0.18943085130567378,
+          0.5795126717467568,
+          -0.021479645353151982,
+          -0.04205886221018495,
+          -0.20408959406223492,
+          0.50401844934226,
+          -0.019705967195532508,
+          -0.27070663360227565,
+          0.0,
+          0.10614516489378037,
+          0.0,
+          0.007070804954247216,
+          -0.14829224755499126,
+          0.3986785435077179,
+          -0.05034626387333481,
+          -0.09520217860057115,
+          -0.07224830388946638,
+          -0.043489307844463296,
+          -0.3033852304597644,
+          -0.001920994547321711,
+          0.29197661130146085,
+          -0.01604132559492873,
+          -0.015127846821475504,
+          -0.07866244047833211,
+          0.18521414687950338,
+          -0.018537290311671267,
+          -0.09097297571904667,
+          0.0,
+          -0.035743178208034666,
+          0.3834086811303665,
+          -2.787347096474486
+        ],
+        "seconds": 0.004339959006756544,
+        "minimum_full_count_two": 0.0,
+        "minimum_full_count_four": 0.0,
+        "scope": "Empirical two/four-step target precision, not an override of complete-output positivity failure",
+        "previous_construction_seconds": 1.7164134169579484,
+        "reused_by_hash": true,
+        "reference_artifact": {
+          "case_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-10.json",
+          "case_sha256": "b0da542b1743cc52f5eb0d49c4a56dd1f7e30772263b5559ce3841965bcc2b53",
+          "array_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-10-reference.npz",
+          "array_sha256": "765a9674303d7254de9c034bd171e030c34b0672c114d6a24fcaa82e18b9bfbc"
+        }
+      },
+      "intact_log_probability": -35.713014310497286,
+      "intact_maximum_log_error": 0.0,
+      "intact_maximum_score_error": 2.842170943040401e-14,
+      "seconds": 2.3893117919797078,
+      "conditional_sampling_seconds": 2.3290302481036633,
+      "peak_rss_bytes": 253444096,
+      "primary": [
+        {
+          "count": 512,
+          "primary": true,
+          "gate_pass": true,
+          "reference_eligible": true,
+          "minimum_ess": 511.9999999999995,
+          "mean_ess": 511.9999999999997,
+          "mean_relative_probability_error": [
+            0.0,
+            0.0,
+            3.552713678800507e-15
+          ],
+          "mean_log_probability_bias": [
+            -1.1102230246251565e-16,
+            -4.440892098500626e-16,
+            2.220446049250313e-15
+          ],
+          "mean_absolute_log_probability_error": [
+            4.440892098500626e-16,
+            4.440892098500626e-16,
+            2.220446049250313e-15
+          ],
+          "mean_gradient_relative_error": 0.0032597044259486457,
+          "rms_gradient_relative_error": 0.015602957163487079,
+          "plain_mean_gradient_relative_error": 0.07068155595638377,
+          "plain_rms_gradient_relative_error": 0.12868664038005592
+        }
+      ]
+    },
+    {
+      "case_id": 11,
+      "input_index": 4,
+      "condition": "soh2024_digestion:condition:aSPIRE_IL37b",
+      "eta": 0.0,
+      "n_residues": 173,
+      "targets": [
+        [
+          86,
+          87
+        ],
+        [
+          82,
+          91
+        ],
+        [
+          66,
+          106
+        ]
+      ],
+      "status": "completed",
+      "reference": {
+        "eligible": true,
+        "positive_targets": true,
+        "maximum_log_agreement": 2.6645352591003757e-15,
+        "log_probability": [
+          -3.132864831536937,
+          -7.102412103944879,
+          -15.158456096467326
+        ],
+        "gradient": [
+          -0.4608783357095171,
+          -0.16753040517554432,
+          -0.028521259896698653,
+          -0.1571324324359728,
+          -0.12481690975283005,
+          -0.3519507000634855,
+          0.017577446487797365,
+          -1.4042305440562453e-16,
+          -0.4917861630987914,
+          -0.13217498760684135,
+          -0.040426574182177134,
+          -8.735251737698294e-17,
+          0.554399716685837,
+          0.12156131679714605,
+          0.11212538177305809,
+          0.49666300007841085,
+          -7.834404008540703e-18,
+          -0.051963603921401286,
+          2.0624684408041967e-17,
+          -0.0780896748678173,
+          -0.2029065846206471,
+          -0.06554133281659894,
+          -0.08367508832165589,
+          -0.09781023232315343,
+          0.08708578130677555,
+          0.023177068296040985,
+          -1.6991934762962767e-16,
+          -0.37728014728276904,
+          0.3981879880268813,
+          -0.17008664803818277,
+          -8.311199825371108e-17,
+          0.01757744648779732,
+          -0.26492864649556624,
+          0.06006833528288043,
+          0.49836035932888667,
+          -7.275961959469293e-18,
+          -0.03101754670275486,
+          1.606990769418499e-17,
+          -0.09217943533924762,
+          -0.7417550665104273,
+          -2.1332343315568156
+        ],
+        "seconds": 0.0050923749804496765,
+        "minimum_full_count_two": 0.0,
+        "minimum_full_count_four": 0.0,
+        "scope": "Empirical two/four-step target precision, not an override of complete-output positivity failure",
+        "previous_construction_seconds": 2.5230013330001384,
+        "reused_by_hash": true,
+        "reference_artifact": {
+          "case_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-11.json",
+          "case_sha256": "f31bffcb10fbde8511a7531d5d3ea20703e21a3eff3c7aa7488579e542b48a5c",
+          "array_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-11-reference.npz",
+          "array_sha256": "658406f248091c97874db480c8842915b3799e1ec9046ce5d9550225c054f7d8"
+        }
+      },
+      "intact_log_probability": -63.207070855329185,
+      "intact_maximum_log_error": 0.0,
+      "intact_maximum_score_error": 2.220446049250313e-16,
+      "seconds": 4.913552207988687,
+      "conditional_sampling_seconds": 4.835515497892629,
+      "peak_rss_bytes": 260521984,
+      "primary": [
+        {
+          "count": 512,
+          "primary": true,
+          "gate_pass": true,
+          "reference_eligible": true,
+          "minimum_ess": 511.99999999999943,
+          "mean_ess": 511.9999999999997,
+          "mean_relative_probability_error": [
+            -8.881784197001248e-16,
+            0.0,
+            0.0
+          ],
+          "mean_log_probability_bias": [
+            -1.1102230246251565e-15,
+            -1.1102230246251565e-16,
+            8.881784197001252e-16
+          ],
+          "mean_absolute_log_probability_error": [
+            1.1102230246251565e-15,
+            1.1102230246251565e-16,
+            1.3322676295501878e-15
+          ],
+          "mean_gradient_relative_error": 0.0019973539195420084,
+          "rms_gradient_relative_error": 0.017353738523647372,
+          "plain_mean_gradient_relative_error": 0.04825736748807958,
+          "plain_rms_gradient_relative_error": 0.19123019721188045
+        }
+      ]
+    },
+    {
+      "case_id": 12,
+      "input_index": 5,
+      "condition": "soh2024_digestion:condition:aSPIRE_LEDGF",
+      "eta": 0.0,
+      "n_residues": 533,
+      "targets": [
+        [
+          266,
+          267
+        ],
+        [
+          262,
+          271
+        ],
+        [
+          246,
+          286
+        ]
+      ],
+      "status": "completed",
+      "reference": {
+        "eligible": true,
+        "positive_targets": true,
+        "maximum_log_agreement": 1.2434497875801753e-14,
+        "log_probability": [
+          -1.7311944891747175,
+          -6.201197471242718,
+          -12.4695908155458
+        ],
+        "gradient": [
+          -0.02922113407252776,
+          1.0219440204979151e-17,
+          -0.08300029485390248,
+          -0.16357948807755238,
+          1.2782402980299162e-16,
+          -0.3269233627275217,
+          3.682842946711312e-17,
+          7.871157100579529e-17,
+          0.11025178702563679,
+          0.5084945596755701,
+          9.643783857569213e-17,
+          0.5065812043321204,
+          -0.049232508101566326,
+          -0.048920274147161914,
+          3.205042379610983e-16,
+          -0.3560892659908291,
+          -0.01963778684437618,
+          -0.12812020759783355,
+          1.2693650741776567e-17,
+          1.3357937044543161e-17,
+          6.175108269446064e-18,
+          -0.09968017662723223,
+          -0.3397387967641526,
+          1.2246870966675082e-16,
+          0.0776573086654397,
+          2.894356258985311e-17,
+          6.070858438398174e-17,
+          -0.31118507713042914,
+          0.5065812043321206,
+          2.0048566468534593e-17,
+          0.02593411320203089,
+          0.11049115837145411,
+          -0.022350808796277422,
+          -0.004150300064655758,
+          -0.0942509312452917,
+          -0.05072652443543491,
+          -0.3362968632556695,
+          1.3778921382280724e-17,
+          7.767983698000266e-18,
+          0.0,
+          -1.2701900414434075
+        ],
+        "seconds": 0.006299041968304664,
+        "minimum_full_count_two": 0.0,
+        "minimum_full_count_four": 0.0,
+        "scope": "Empirical two/four-step target precision, not an override of complete-output positivity failure",
+        "previous_construction_seconds": 11.674195875006262,
+        "reused_by_hash": true,
+        "reference_artifact": {
+          "case_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-12.json",
+          "case_sha256": "803e35a7de4070baf2c3f4c4144c9ee2473533ac69c820c7b27ef0133f23535a",
+          "array_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-12-reference.npz",
+          "array_sha256": "5b54ec47a7074b481f9cdeecef520c6bd4c661b4461403d85a915c89c5d3e7d1"
+        }
+      },
+      "intact_log_probability": -148.36582638000422,
+      "intact_maximum_log_error": 2.842170943040401e-14,
+      "intact_maximum_score_error": 5.684341886080802e-14,
+      "seconds": 30.88403441698756,
+      "conditional_sampling_seconds": 30.737559168192092,
+      "peak_rss_bytes": 322732032,
+      "primary": [
+        {
+          "count": 512,
+          "primary": true,
+          "gate_pass": true,
+          "reference_eligible": true,
+          "minimum_ess": 511.99999999999943,
+          "mean_ess": 511.9999999999997,
+          "mean_relative_probability_error": [
+            2.2204460492503136e-16,
+            -1.7763568394002489e-15,
+            1.776356839400252e-15
+          ],
+          "mean_log_probability_bias": [
+            0.0,
+            -9.992007221626409e-16,
+            1.7763568394002505e-15
+          ],
+          "mean_absolute_log_probability_error": [
+            5.551115123125783e-17,
+            9.992007221626409e-16,
+            1.7763568394002505e-15
+          ],
+          "mean_gradient_relative_error": 0.0017311978736245814,
+          "rms_gradient_relative_error": 0.009224372774754446,
+          "plain_mean_gradient_relative_error": 0.14334901018700674,
+          "plain_rms_gradient_relative_error": 0.3951641627496349
+        }
+      ]
+    },
+    {
+      "case_id": 13,
+      "input_index": 6,
+      "condition": "soh2024_digestion:condition:aSPIRE_hTau",
+      "eta": 0.0,
+      "n_residues": 441,
+      "targets": [
+        [
+          220,
+          221
+        ],
+        [
+          216,
+          225
+        ],
+        [
+          200,
+          240
+        ]
+      ],
+      "status": "completed",
+      "reference": {
+        "eligible": true,
+        "positive_targets": true,
+        "maximum_log_agreement": 1.4210854715202004e-14,
+        "log_probability": [
+          -2.611335226877639,
+          -5.56033624472982,
+          -12.126289997899532
+        ],
+        "gradient": [
+          -0.009659921734012679,
+          4.480647571989813e-18,
+          -2.5790140531706346e-16,
+          0.02677876837817369,
+          -5.658932284086048e-17,
+          -0.05952263136506241,
+          -3.9645052297521633e-17,
+          -7.271933630348271e-17,
+          -0.15510849368553484,
+          -0.03938621228480801,
+          -2.0579877307804597e-16,
+          -2.4791577743251298e-17,
+          -0.20391071231152547,
+          -1.9248783288810861e-16,
+          0.39960127151252856,
+          -0.1942838922650737,
+          0.5100842674999113,
+          -0.22714289102481322,
+          0.0,
+          -6.326528445666965e-17,
+          -3.327756471659037e-18,
+          -2.911417371214958e-16,
+          0.5159919666308973,
+          -4.228337130342704e-17,
+          0.09978046344414329,
+          -6.664808495366555e-17,
+          -9.688216112027487e-17,
+          -0.011367910253198258,
+          -0.06344578656770697,
+          -1.8792954869631157e-16,
+          -3.387001006342956e-17,
+          -0.07285678703075821,
+          -1.2111328295277432e-16,
+          0.4065726865979603,
+          -0.010507599564824688,
+          -0.36549974256358475,
+          -0.4045728735662055,
+          0.0,
+          -3.8910494577291655e-17,
+          0.0,
+          -1.1324968398603574
+        ],
+        "seconds": 0.005565583007410169,
+        "minimum_full_count_two": 0.0,
+        "minimum_full_count_four": 0.0,
+        "scope": "Empirical two/four-step target precision, not an override of complete-output positivity failure",
+        "previous_construction_seconds": 8.787610042025335,
+        "reused_by_hash": true,
+        "reference_artifact": {
+          "case_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-13.json",
+          "case_sha256": "3f76f43dc068bd1dbdf7639a03c7c1d0248a09eed6ba99386c8eeb7685fd686f",
+          "array_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-13-reference.npz",
+          "array_sha256": "7c8d982b3900b0f8c18f930e9b4ae23b8f5374fec25c22d2b54dba4074d321b5"
+        }
+      },
+      "intact_log_probability": -106.50752674600727,
+      "intact_maximum_log_error": 0.0,
+      "intact_maximum_score_error": 5.684341886080802e-14,
+      "seconds": 19.7772770000156,
+      "conditional_sampling_seconds": 19.654553999193013,
+      "peak_rss_bytes": 309002240,
+      "primary": [
+        {
+          "count": 512,
+          "primary": true,
+          "gate_pass": true,
+          "reference_eligible": true,
+          "minimum_ess": 511.99999999999943,
+          "mean_ess": 511.9999999999997,
+          "mean_relative_probability_error": [
+            4.440892098500627e-16,
+            0.0,
+            3.552713678800507e-15
+          ],
+          "mean_log_probability_bias": [
+            1.1102230246251565e-16,
+            -2.220446049250313e-16,
+            3.3306690738754696e-15
+          ],
+          "mean_absolute_log_probability_error": [
+            1.1102230246251565e-16,
+            4.440892098500626e-16,
+            3.3306690738754696e-15
+          ],
+          "mean_gradient_relative_error": 0.008050283727278432,
+          "rms_gradient_relative_error": 0.021197564938399305,
+          "plain_mean_gradient_relative_error": 0.14717677978358956,
+          "plain_rms_gradient_relative_error": 0.3559446782253112
+        }
+      ]
+    },
+    {
+      "case_id": 14,
+      "input_index": 0,
+      "condition": "soh2024_digestion:condition:aSPIRE_FFH_12p5",
+      "eta": 1.0,
+      "n_residues": 453,
+      "targets": [
+        [
+          226,
+          227
+        ],
+        [
+          222,
+          231
+        ],
+        [
+          206,
+          246
+        ]
+      ],
+      "status": "completed",
+      "reference": {
+        "eligible": true,
+        "positive_targets": true,
+        "maximum_log_agreement": 1.7763568394002505e-15,
+        "log_probability": [
+          -4.3010494279432265,
+          -5.829821304149874,
+          -33.73157014469823
+        ],
+        "gradient": [
+          -3.4745678201583714,
+          1.6294589309186626e-06,
+          -0.3819102263503432,
+          -0.1756580500071842,
+          -0.564905865939261,
+          0.4649551695443119,
+          -0.07053764458114685,
+          -0.1134659784423313,
+          0.08203551605163022,
+          -0.4910414373846852,
+          -0.053108983298329436,
+          -0.4515826603904589,
+          -0.18820551008162656,
+          0.3898880120589808,
+          0.004611942946819183,
+          -0.07007540547858965,
+          -0.3114991458898514,
+          -0.7159159047440974,
+          0.0,
+          0.0003720609299731779,
+          1.6141638591083974e-06,
+          0.34506676048631857,
+          -0.25940240602766584,
+          -0.516756733374466,
+          -0.06894018428360225,
+          -0.13200473912869679,
+          -0.056173868490520945,
+          -0.041268001939416384,
+          -0.4567962517136488,
+          -0.10140905136075949,
+          -0.5152865918721186,
+          -0.12746389889600973,
+          0.6581981059366226,
+          0.0034627034589798282,
+          -0.06784329800715232,
+          -0.5634235708803741,
+          -0.7962819162052119,
+          0.0,
+          0.0006967413724314391,
+          -2.4083868882070902,
+          -3.6107112119339253
+        ],
+        "seconds": 0.0064070000080391765,
+        "minimum_full_count_two": -8.09621082142654e-95,
+        "minimum_full_count_four": -2.9560865446723035e-188,
+        "scope": "Empirical two/four-step target precision, not an override of complete-output positivity failure",
+        "previous_construction_seconds": 10.166188000002876,
+        "reused_by_hash": true,
+        "reference_artifact": {
+          "case_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-14.json",
+          "case_sha256": "67b1396b8b2ee119208ce482784872729e79948396f8e28425e3816725aa7928",
+          "array_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-14-reference.npz",
+          "array_sha256": "3a29aff8f718fe6ae43b2fdbb00f05b525573e5dfafb59a22f4eba9bf079c00c"
+        }
+      },
+      "intact_log_probability": -4020.6282641001876,
+      "intact_maximum_log_error": 0.0,
+      "intact_maximum_score_error": 1.8189894035458565e-12,
+      "seconds": 21.799539000028744,
+      "conditional_sampling_seconds": 21.667050750169437,
+      "peak_rss_bytes": 309248000,
+      "primary": [
+        {
+          "count": 512,
+          "primary": true,
+          "gate_pass": false,
+          "reference_eligible": true,
+          "minimum_ess": 118.9754386776704,
+          "mean_ess": 174.53240685653273,
+          "mean_relative_probability_error": [
+            -0.013723724423029889,
+            -0.012529157645886487,
+            -0.006388712373154824
+          ],
+          "mean_log_probability_bias": [
+            -0.016589914020530894,
+            -0.013442464011522937,
+            -0.008603386989200601
+          ],
+          "mean_absolute_log_probability_error": [
+            0.061069687781679316,
+            0.03652919286814216,
+            0.05537547157098288
+          ],
+          "mean_gradient_relative_error": 0.025997118484398854,
+          "rms_gradient_relative_error": 0.140925045294676,
+          "plain_mean_gradient_relative_error": 0.03485864939399606,
+          "plain_rms_gradient_relative_error": 0.1534214468945393
+        }
+      ]
+    },
+    {
+      "case_id": 15,
+      "input_index": 1,
+      "condition": "soh2024_digestion:condition:aSPIRE_FFH_6p25",
+      "eta": 1.0,
+      "n_residues": 453,
+      "targets": [
+        [
+          226,
+          227
+        ],
+        [
+          222,
+          231
+        ],
+        [
+          206,
+          246
+        ]
+      ],
+      "status": "completed",
+      "reference": {
+        "eligible": true,
+        "positive_targets": true,
+        "maximum_log_agreement": 1.7763568394002505e-15,
+        "log_probability": [
+          -4.277675969336946,
+          -5.834319499096447,
+          -34.35478385689988
+        ],
+        "gradient": [
+          -3.5571024365244606,
+          1.6337303885585594e-06,
+          -0.38379582034483817,
+          -0.17914418477666444,
+          -0.5755138721823271,
+          0.46288246473941774,
+          -0.07196259170157807,
+          -0.11572706637385449,
+          0.08092200941047527,
+          -0.5006803667956419,
+          -0.054311024887566436,
+          -0.4547148685327556,
+          -0.19188732029686886,
+          0.3864901865670234,
+          0.004625234738409312,
+          -0.07147645854401903,
+          -0.31746391261563417,
+          -0.7316258619104435,
+          0.0,
+          0.0003730938391397072,
+          1.618397928810558e-06,
+          0.3407082480804152,
+          -0.26446695636709555,
+          -0.5264702914359497,
+          -0.07035380303884185,
+          -0.13467487717492221,
+          -0.05741619743888038,
+          -0.04205627128387508,
+          -0.46744776478168404,
+          -0.10347468568645297,
+          -0.5249134129686878,
+          -0.12994887545809997,
+          0.6572691131698021,
+          0.0034726356333196523,
+          -0.06921080819628968,
+          -0.5688589648285953,
+          -0.8117205661738035,
+          0.0,
+          0.0006986800510515596,
+          -4.93119104967969,
+          -3.6834450938038827
+        ],
+        "seconds": 0.005353457992896438,
+        "minimum_full_count_two": -6.779755126196702e-95,
+        "minimum_full_count_four": -2.5318544378359945e-188,
+        "scope": "Empirical two/four-step target precision, not an override of complete-output positivity failure",
+        "previous_construction_seconds": 9.692206917039584,
+        "reused_by_hash": true,
+        "reference_artifact": {
+          "case_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-15.json",
+          "case_sha256": "081770e02a6dd6a42ba2e3b963d7df4e7b130c6f34af692d8f99345119aab186",
+          "array_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-15-reference.npz",
+          "array_sha256": "8e4aaa813fb527357be3e3ccb5f0efe46a058d73792c7b13d70fd7ef33c8c850"
+        }
+      },
+      "intact_log_probability": -4106.607819959389,
+      "intact_maximum_log_error": 9.094947017729282e-13,
+      "intact_maximum_score_error": 1.8189894035458565e-12,
+      "seconds": 21.523037332983222,
+      "conditional_sampling_seconds": 21.395343044016045,
+      "peak_rss_bytes": 308789248,
+      "primary": [
+        {
+          "count": 512,
+          "primary": true,
+          "gate_pass": false,
+          "reference_eligible": true,
+          "minimum_ess": 70.4846491985477,
+          "mean_ess": 159.9710780914869,
+          "mean_relative_probability_error": [
+            -0.0034285932532948427,
+            -0.00586040988573511,
+            -0.0094080283662633
+          ],
+          "mean_log_probability_bias": [
+            -0.0060279221142734984,
+            -0.009521232155293657,
+            -0.015554809984791973
+          ],
+          "mean_absolute_log_probability_error": [
+            0.0590348371320083,
+            0.07453252390366638,
+            0.09504600153971232
+          ],
+          "mean_gradient_relative_error": 0.03512157670570785,
+          "rms_gradient_relative_error": 0.1361243688553237,
+          "plain_mean_gradient_relative_error": 0.038607025712571144,
+          "plain_rms_gradient_relative_error": 0.1763423678402751
+        }
+      ]
+    },
+    {
+      "case_id": 16,
+      "input_index": 2,
+      "condition": "soh2024_digestion:condition:aSPIRE_H2A",
+      "eta": 1.0,
+      "n_residues": 130,
+      "targets": [
+        [
+          64,
+          65
+        ],
+        [
+          60,
+          69
+        ],
+        [
+          45,
+          85
+        ]
+      ],
+      "status": "completed",
+      "reference": {
+        "eligible": true,
+        "positive_targets": true,
+        "maximum_log_agreement": 2.6645352591003757e-15,
+        "log_probability": [
+          -2.3834575766299446,
+          -6.33287668848312,
+          -34.893563110441136
+        ],
+        "gradient": [
+          -3.626522105441933,
+          0.0,
+          -0.08323813576522884,
+          0.1554645219512338,
+          0.00047162409108430787,
+          0.016276086823499864,
+          -0.15421339548393356,
+          -0.29379142183566687,
+          -0.049717249516308716,
+          -0.21161997366510638,
+          7.357353936275525e-06,
+          -0.3804702544862519,
+          -0.10668923573088902,
+          0.08901074390079948,
+          -0.3577286365010129,
+          0.0003017141082837227,
+          -0.4036556437148319,
+          -0.5206856838446735,
+          0.0,
+          -0.6933234547713891,
+          0.0,
+          -0.12294976520102818,
+          0.21065316756236835,
+          0.0005961900600590048,
+          -0.09127066612361967,
+          -0.10142590744677568,
+          -0.3327440997569029,
+          -0.05413646308809304,
+          -0.9092495958788125,
+          0.0,
+          -0.1231491242944661,
+          -0.10115394296280267,
+          -0.11263560039605632,
+          -0.22654024946183374,
+          0.0003623261478583939,
+          -0.13467221098139712,
+          -0.12735882041669375,
+          0.0,
+          -0.3054037100289415,
+          5.027427145250784,
+          -3.7948334785911144
+        ],
+        "seconds": 0.005408834025729448,
+        "minimum_full_count_two": -7.144094808052586e-95,
+        "minimum_full_count_four": 0.0,
+        "scope": "Empirical two/four-step target precision, not an override of complete-output positivity failure",
+        "previous_construction_seconds": 2.161337708996143,
+        "reused_by_hash": true,
+        "reference_artifact": {
+          "case_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-16.json",
+          "case_sha256": "a5f68822203a5d596f3675fa170316bc2bdfd13d65a36a2c315ad898e2d35811",
+          "array_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-16-reference.npz",
+          "array_sha256": "59b50b9947cbe9119d7c005aa397a24f4c4e1298047a774cd9efb9dca2248e4e"
+        }
+      },
+      "intact_log_probability": -289.0662946842324,
+      "intact_maximum_log_error": 1.1368683772161603e-13,
+      "intact_maximum_score_error": 2.2737367544323206e-13,
+      "seconds": 2.3599025000003166,
+      "conditional_sampling_seconds": 2.2949652500101365,
+      "peak_rss_bytes": 254722048,
+      "primary": [
+        {
+          "count": 512,
+          "primary": true,
+          "gate_pass": false,
+          "reference_eligible": true,
+          "minimum_ess": 97.68212900317265,
+          "mean_ess": 174.06738629016027,
+          "mean_relative_probability_error": [
+            0.006979161881490559,
+            -0.01493757144287409,
+            -0.006853756626974026
+          ],
+          "mean_log_probability_bias": [
+            0.00614408869743438,
+            -0.018841255760876474,
+            -0.009475051438374571
+          ],
+          "mean_absolute_log_probability_error": [
+            0.035641169842812015,
+            0.06612926277914355,
+            0.06328891355058897
+          ],
+          "mean_gradient_relative_error": 0.018133253974513187,
+          "rms_gradient_relative_error": 0.05282358651248653,
+          "plain_mean_gradient_relative_error": 0.020599365538055553,
+          "plain_rms_gradient_relative_error": 0.06480765746428206
+        }
+      ]
+    },
+    {
+      "case_id": 17,
+      "input_index": 3,
+      "condition": "soh2024_digestion:condition:aSPIRE_H2B",
+      "eta": 1.0,
+      "n_residues": 123,
+      "targets": [
+        [
+          61,
+          62
+        ],
+        [
+          57,
+          66
+        ],
+        [
+          41,
+          81
+        ]
+      ],
+      "status": "completed",
+      "reference": {
+        "eligible": true,
+        "positive_targets": true,
+        "maximum_log_agreement": 8.881784197001252e-16,
+        "log_probability": [
+          -4.404573603825465,
+          -5.798609177991617,
+          -33.48220909975262
+        ],
+        "gradient": [
+          -3.3104207812683826,
+          0.0,
+          -0.37710606195049357,
+          -0.22346112833379594,
+          -0.4084293051481133,
+          -0.1499579765489111,
+          -0.11306848082304995,
+          -0.29909740433040144,
+          0.05122129201922221,
+          -0.22535455080304642,
+          -0.5471497327644947,
+          0.5010530903076726,
+          -0.04829644041417592,
+          -0.09186716472148083,
+          -0.4357078601334339,
+          0.31460765731610374,
+          -0.03877008612954418,
+          -0.8894719893225634,
+          0.0,
+          0.12884198888281248,
+          0.0,
+          -0.07957762349032398,
+          -0.3378948428124756,
+          0.16900689363595411,
+          -0.11315531440604204,
+          -0.20914412857538017,
+          -0.2667185692774392,
+          -0.07948481194940017,
+          -0.6547445801667447,
+          -0.38639747198193497,
+          -0.15101795226320844,
+          -0.03550522550312147,
+          -0.032083049173116794,
+          -0.16641349087626683,
+          -0.033296143353804736,
+          -0.03614246012046998,
+          -0.42578445084489536,
+          0.0,
+          -0.05445227608745294,
+          4.58921766200646,
+          -3.6550423474633025
+        ],
+        "seconds": 0.004558500018902123,
+        "minimum_full_count_two": 0.0,
+        "minimum_full_count_four": 0.0,
+        "scope": "Empirical two/four-step target precision, not an override of complete-output positivity failure",
+        "previous_construction_seconds": 1.8465667080017738,
+        "reused_by_hash": true,
+        "reference_artifact": {
+          "case_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-17.json",
+          "case_sha256": "d4dbed427b192e6ce45c1e89080d179a9704770dd340864c26736eefa6a3d96d",
+          "array_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-17-reference.npz",
+          "array_sha256": "104c41d52fe609a76ef86355aadf01c46a389c6f1f4d96052d2b61e980a921bf"
+        }
+      },
+      "intact_log_probability": -219.63503800955834,
+      "intact_maximum_log_error": 5.684341886080802e-14,
+      "intact_maximum_score_error": 8.881784197001252e-16,
+      "seconds": 1.8469051250140183,
+      "conditional_sampling_seconds": 1.7882848780718632,
+      "peak_rss_bytes": 254443520,
+      "primary": [
+        {
+          "count": 512,
+          "primary": true,
+          "gate_pass": false,
+          "reference_eligible": true,
+          "minimum_ess": 61.372605271880126,
+          "mean_ess": 135.1947033296245,
+          "mean_relative_probability_error": [
+            -0.012481238043001334,
+            -0.013078478340067054,
+            0.0011933695111998343
+          ],
+          "mean_log_probability_bias": [
+            -0.015707586020795694,
+            -0.014616248264179177,
+            -0.0027780118663240927
+          ],
+          "mean_absolute_log_probability_error": [
+            0.06604414407436787,
+            0.03696436174025619,
+            0.0775502278526865
+          ],
+          "mean_gradient_relative_error": 0.025614355828200992,
+          "rms_gradient_relative_error": 0.09434498322650965,
+          "plain_mean_gradient_relative_error": 0.026778093766765272,
+          "plain_rms_gradient_relative_error": 0.08968288993962106
+        }
+      ]
+    },
+    {
+      "case_id": 18,
+      "input_index": 4,
+      "condition": "soh2024_digestion:condition:aSPIRE_IL37b",
+      "eta": 1.0,
+      "n_residues": 173,
+      "targets": [
+        [
+          86,
+          87
+        ],
+        [
+          82,
+          91
+        ],
+        [
+          66,
+          106
+        ]
+      ],
+      "status": "completed",
+      "reference": {
+        "eligible": true,
+        "positive_targets": true,
+        "maximum_log_agreement": 3.552713678800501e-15,
+        "log_probability": [
+          -3.905873442213044,
+          -6.692113661876071,
+          -29.233813403255528
+        ],
+        "gradient": [
+          -2.9693658306649295,
+          -0.3796546770670775,
+          -0.07203886099020526,
+          -0.3439619141412482,
+          -0.25652036155630703,
+          -0.4748734189577859,
+          -0.03042741048053415,
+          0.01706530701295791,
+          -0.7741809807166576,
+          -0.7394419593288828,
+          -0.08783843065905785,
+          0.0012599536260570073,
+          0.5411497629625357,
+          -0.2156773523948308,
+          0.11061344899503144,
+          0.3180072002962206,
+          0.0001027253877650079,
+          -0.11071184270326317,
+          0.001363300329096446,
+          -0.17789968729068162,
+          -0.45548067538536735,
+          -0.15868845591847497,
+          -0.18300888245400715,
+          -0.20076625607593454,
+          0.0306951904097085,
+          -0.037205812304769714,
+          0.014413427835574599,
+          -0.6269763033023998,
+          -0.15014498016734312,
+          -0.3796640111454507,
+          0.0014321525995341386,
+          -0.02122519718273189,
+          -0.48290377086949765,
+          -0.008477601876169251,
+          0.30007226088921907,
+          0.00017881862212213584,
+          -0.06567896120525765,
+          0.0006155356533309449,
+          -0.2030937734597718,
+          -4.779009943758514,
+          -3.134342429119851
+        ],
+        "seconds": 0.00478329200996086,
+        "minimum_full_count_two": -7.349107771760268e-95,
+        "minimum_full_count_four": -2.1890203051954492e-188,
+        "scope": "Empirical two/four-step target precision, not an override of complete-output positivity failure",
+        "previous_construction_seconds": 2.7588584999903105,
+        "reused_by_hash": true,
+        "reference_artifact": {
+          "case_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-18.json",
+          "case_sha256": "70a2d060ee1b145c7cd6b218c57333f3e7b1315f65dd43d14a4bf75c5336b4db",
+          "array_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-18-reference.npz",
+          "array_sha256": "cf668b72ec403ddd8f40226719b285d5b5dc1d09d8bf07417be5621cb6dfe195"
+        }
+      },
+      "intact_log_probability": -546.7411628985974,
+      "intact_maximum_log_error": 1.1368683772161603e-13,
+      "intact_maximum_score_error": 1.7763568394002505e-15,
+      "seconds": 3.80927258299198,
+      "conditional_sampling_seconds": 3.7346708332188427,
+      "peak_rss_bytes": 271663104,
+      "primary": [
+        {
+          "count": 512,
+          "primary": true,
+          "gate_pass": false,
+          "reference_eligible": true,
+          "minimum_ess": 91.45225963856826,
+          "mean_ess": 189.07026407278912,
+          "mean_relative_probability_error": [
+            0.0015597862580442746,
+            0.05379841034894232,
+            0.04118636884643388
+          ],
+          "mean_log_probability_bias": [
+            0.001202049558212015,
+            0.05056708744976046,
+            0.03926053128178575
+          ],
+          "mean_absolute_log_probability_error": [
+            0.023315487198176776,
+            0.0718948714070945,
+            0.05325333043750158
+          ],
+          "mean_gradient_relative_error": 0.024721916850554145,
+          "rms_gradient_relative_error": 0.06869671219395478,
+          "plain_mean_gradient_relative_error": 0.04910518576085074,
+          "plain_rms_gradient_relative_error": 0.10598785283102585
+        }
+      ]
+    },
+    {
+      "case_id": 19,
+      "input_index": 5,
+      "condition": "soh2024_digestion:condition:aSPIRE_LEDGF",
+      "eta": 1.0,
+      "n_residues": 533,
+      "targets": [
+        [
+          266,
+          267
+        ],
+        [
+          262,
+          271
+        ],
+        [
+          246,
+          286
+        ]
+      ],
+      "status": "completed",
+      "reference": {
+        "eligible": true,
+        "positive_targets": true,
+        "maximum_log_agreement": 3.552713678800501e-15,
+        "log_probability": [
+          -2.1815887710713544,
+          -5.880668908167589,
+          -21.749967784719395
+        ],
+        "gradient": [
+          -1.798292786562599,
+          0.000124486937538534,
+          -0.18658100565825636,
+          -0.5482993746876751,
+          0.0019694766472458086,
+          -0.42332249822659024,
+          0.000626560274205355,
+          0.0006594647360837045,
+          -0.15566721712832382,
+          0.39945405973831505,
+          0.002086287675613349,
+          0.39861304837330025,
+          -0.11201411605812285,
+          -0.10558776521092138,
+          -0.09114455145326428,
+          -0.48192116148934216,
+          -0.13058640230071,
+          -0.3345005157121053,
+          5.9563166847022835e-06,
+          1.1066862499798289e-05,
+          0.00012433211319896239,
+          -0.2216010102662816,
+          -0.7853659838041087,
+          0.001792913126637004,
+          -0.06945759700006712,
+          0.000790896891271487,
+          0.000718521959258956,
+          -0.5314822461918289,
+          0.39794039217940963,
+          0.0010450254123747782,
+          -0.03562404955893733,
+          0.07337592370406067,
+          -0.04554097389004055,
+          -0.08381310071981347,
+          -0.24136535169318118,
+          -0.1899875006852563,
+          -0.47016945567755863,
+          7.748147693669587e-06,
+          9.31346643703996e-06,
+          0.0,
+          -2.0725518374526932
+        ],
+        "seconds": 0.006354000011924654,
+        "minimum_full_count_two": -5.175141871285936e-95,
+        "minimum_full_count_four": -1.8672995721942062e-188,
+        "scope": "Empirical two/four-step target precision, not an override of complete-output positivity failure",
+        "previous_construction_seconds": 11.78770954097854,
+        "reused_by_hash": true,
+        "reference_artifact": {
+          "case_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-19.json",
+          "case_sha256": "f1ecc4185fa296f15318e4813f191beadc5dd564ab1723ed65c0d38c63d470d0",
+          "array_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-19-reference.npz",
+          "array_sha256": "06b89d4b51c7e13381a4ef9e3bc6909d23c8f59ac9fb1b3ff3f877b8134fba05"
+        }
+      },
+      "intact_log_probability": -3953.949273027112,
+      "intact_maximum_log_error": 4.547473508864641e-13,
+      "intact_maximum_score_error": 7.105427357601002e-15,
+      "seconds": 26.288921958010178,
+      "conditional_sampling_seconds": 26.14751416008221,
+      "peak_rss_bytes": 261144576,
+      "primary": [
+        {
+          "count": 512,
+          "primary": true,
+          "gate_pass": false,
+          "reference_eligible": true,
+          "minimum_ess": 88.5318475731752,
+          "mean_ess": 179.9938841265688,
+          "mean_relative_probability_error": [
+            0.006567908741672482,
+            -0.015467754464602301,
+            0.017848951089475505
+          ],
+          "mean_log_probability_bias": [
+            0.0061903135348823635,
+            -0.01754523033951627,
+            0.013686239530919853
+          ],
+          "mean_absolute_log_probability_error": [
+            0.02348149670257088,
+            0.05119935621121097,
+            0.0747825274052949
+          ],
+          "mean_gradient_relative_error": 0.08490814690803918,
+          "rms_gradient_relative_error": 0.21348351820060274,
+          "plain_mean_gradient_relative_error": 0.12083289748528106,
+          "plain_rms_gradient_relative_error": 0.28430502502673627
+        }
+      ]
+    },
+    {
+      "case_id": 20,
+      "input_index": 6,
+      "condition": "soh2024_digestion:condition:aSPIRE_hTau",
+      "eta": 1.0,
+      "n_residues": 441,
+      "targets": [
+        [
+          220,
+          221
+        ],
+        [
+          216,
+          225
+        ],
+        [
+          200,
+          240
+        ]
+      ],
+      "status": "completed",
+      "reference": {
+        "eligible": true,
+        "positive_targets": true,
+        "maximum_log_agreement": 3.552713678800501e-15,
+        "log_probability": [
+          -3.0788965554518324,
+          -5.381895742683258,
+          -20.346658378386774
+        ],
+        "gradient": [
+          -1.623912362714025,
+          6.56552649229378e-05,
+          0.004288456936033529,
+          -0.03678130375909208,
+          2.3209265572065333e-05,
+          -0.13114833398182632,
+          0.00020600265682035234,
+          0.0010340050469066903,
+          -0.23667295043177694,
+          -0.10325944271241763,
+          0.0011826797259877387,
+          0.0013345257875006593,
+          -0.4750849011258477,
+          0.002760548113151317,
+          0.1605279109642577,
+          -0.4618175895270982,
+          0.35633117427117034,
+          -0.557074312546066,
+          0.0,
+          0.008633177823506947,
+          4.6392361018902584e-05,
+          0.0027514874241727225,
+          0.4289558215811653,
+          1.9019389499105646e-05,
+          0.051692788541736874,
+          0.0001754939727989098,
+          0.001346000583527704,
+          -0.09752940766439039,
+          -0.15370109666626008,
+          0.0016517009011297005,
+          0.0014224396707136187,
+          -0.3961141143756843,
+          0.005380723738497293,
+          0.17321630737993504,
+          -0.20240262477858684,
+          -0.579930617048892,
+          -0.6138473040104527,
+          0.0,
+          0.005129885288029901,
+          0.0,
+          -1.861035029590478
+        ],
+        "seconds": 0.009901791985612363,
+        "minimum_full_count_two": -3.712826789284678e-95,
+        "minimum_full_count_four": -3.057520634484901e-188,
+        "scope": "Empirical two/four-step target precision, not an override of complete-output positivity failure",
+        "previous_construction_seconds": 8.775085750035942,
+        "reused_by_hash": true,
+        "reference_artifact": {
+          "case_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-20.json",
+          "case_sha256": "9b51f95b4c074360498a56f63a0db974eb7f38b454490383e539aff8e1df10a2",
+          "array_path": "experiments/2026-10-23_1920_codex_boundary-exponential/results/actual-20-reference.npz",
+          "array_sha256": "ece3cdb5cf2651ff176c8f8b525cafe58d3f0bef16eb5ec53f48a0e3e707ecbf"
+        }
+      },
+      "intact_log_probability": -2348.4909647494605,
+      "intact_maximum_log_error": 4.547473508864641e-13,
+      "intact_maximum_score_error": 1.8189894035458565e-12,
+      "seconds": 17.307285624963697,
+      "conditional_sampling_seconds": 17.165122873906512,
+      "peak_rss_bytes": 285753344,
+      "primary": [
+        {
+          "count": 512,
+          "primary": true,
+          "gate_pass": false,
+          "reference_eligible": true,
+          "minimum_ess": 74.26247378698385,
+          "mean_ess": 170.12399605128428,
+          "mean_relative_probability_error": [
+            0.00020425616427720107,
+            0.04277096661338002,
+            -0.008618786593953138
+          ],
+          "mean_log_probability_bias": [
+            -0.0007278957342328751,
+            0.038634341987692666,
+            -0.010707065926755632
+          ],
+          "mean_absolute_log_probability_error": [
+            0.03860571448115507,
+            0.06668954377665415,
+            0.052532974102395436
+          ],
+          "mean_gradient_relative_error": 0.07524750479177247,
+          "rms_gradient_relative_error": 0.2289544218440536,
+          "plain_mean_gradient_relative_error": 0.10531387254091612,
+          "plain_rms_gradient_relative_error": 0.2915797514872511
+        }
+      ]
+    }
+  ],
+  "complete": true,
+  "seconds": 333.97788566700183
+}

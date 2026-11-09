@@ -17,13 +17,13 @@ class TestPrestoModel:
     """Test full Presto model."""
 
     def test_model_init(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         assert model is not None
 
     def test_model_init_scales_latent_queries_and_embeddings(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         query_norms = []
@@ -42,7 +42,7 @@ class TestPrestoModel:
 
     def test_model_forward_pmhc_only(self):
         """Forward pass with just pMHC (no TCR)."""
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
@@ -127,7 +127,7 @@ class TestPrestoModel:
 
     def test_model_forward_receptor_free(self):
         """Forward pass stays receptor-free under canonical contract."""
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
@@ -152,7 +152,7 @@ class TestPrestoModel:
 
     def test_model_forward_class_ii(self):
         """Forward pass for MHC Class II."""
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
@@ -173,7 +173,7 @@ class TestPrestoModel:
 
     def test_model_forward_without_class_label(self):
         """Model can infer class directly from MHC sequences."""
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
@@ -195,7 +195,7 @@ class TestPrestoModel:
         assert "presentation_logit" in outputs
 
     def test_model_forward_supports_mhcflurry_affinity_target_encoding(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(
             d_model=64,
@@ -232,7 +232,7 @@ class TestPrestoModel:
         """
         import torch
 
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
@@ -260,7 +260,7 @@ class TestPrestoModel:
         )
 
     def test_forward_affinity_only_ignores_binding_context(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(
             d_model=64,
@@ -311,7 +311,7 @@ class TestPrestoModel:
             )
 
     def test_forward_affinity_only_supports_dag_method_leaf_mode(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(
             d_model=64,
@@ -350,7 +350,7 @@ class TestPrestoModel:
         peptide_pos_mode: str,
         groove_pos_mode: str,
     ):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(
             d_model=64,
@@ -376,7 +376,7 @@ class TestPrestoModel:
         assert outputs["assays"]["IC50_nM"].shape[0] == 2
 
     def test_forward_affinity_only_matches_full_forward(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
@@ -419,13 +419,13 @@ class TestPrestoModel:
         )
 
     def test_model_rejects_noncanonical_affinity_assay_mode(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         with pytest.raises(TypeError):
             Presto(d_model=64, n_layers=2, n_heads=4, affinity_assay_mode="legacy")
 
     def test_triple_plus_abs_positions_and_segment_residual_forward(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(
             d_model=64,
@@ -456,7 +456,7 @@ class TestPrestoModel:
         assert out["assays"]["IC50_nM"].shape == (2, 1)
 
     def test_split_kd_forward_without_assay_selector_inputs(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(
             d_model=64,
@@ -490,7 +490,7 @@ class TestPrestoModel:
         assert out["assays"]["KD_proxy_ec50_nM"].shape == (2, 1)
 
     def test_forward_mhc_only_returns_aux_logits(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
@@ -509,7 +509,7 @@ class TestPrestoModel:
 
     def test_model_forward_under_cpu_bf16_autocast(self):
         """Autocast forward should not hit mixed-dtype indexed writes."""
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=1, n_heads=4)
         model.eval()
@@ -536,7 +536,7 @@ class TestPrestoModel:
 
     def test_model_forward_tolerates_bf16_positional_segment_source(self):
         """Segment positional assembly should not rely on fp32 slice writes."""
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         class _BFloat16Wrap(torch.nn.Module):
             def __init__(self, inner: torch.nn.Module):
@@ -574,7 +574,7 @@ class TestPrestoGradients:
     """Test gradient flow through full model."""
 
     def test_full_model_is_differentiable(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
 
@@ -602,7 +602,7 @@ class TestPrestoWithProcessingFlanks:
     """Test model with processing context (flanks)."""
 
     def test_with_flanks(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
@@ -630,7 +630,7 @@ class TestPrestoOutputConsistency:
     """Test output consistency."""
 
     def test_deterministic_eval(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
@@ -647,7 +647,7 @@ class TestPrestoOutputConsistency:
         assert torch.allclose(out1["presentation_logit"], out2["presentation_logit"])
 
     def test_binding_logit_matches_kd_calibration(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
         from presto.models.affinity import binding_logit_from_kd_log10
         import torch.nn.functional as F
 
@@ -685,7 +685,7 @@ class TestPrestoOutputConsistency:
         assert torch.allclose(out["binding_logit"], expected_mixed, atol=1e-5)
 
     def test_kd_soft_cap_not_hard_clamped_in_forward(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         class _ZeroBias(torch.nn.Module):
             def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -721,7 +721,7 @@ class TestPrestoOutputConsistency:
         assert torch.all(kd < model.max_log10_nM + 1e-6)
 
     def test_presentation_logits_are_readouts_of_class_specific_vectors(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
@@ -746,7 +746,7 @@ class TestPrestoOutputConsistency:
         assert torch.allclose(out["presentation_logit"], expected, atol=1e-5)
 
     def test_ic50_ec50_share_kd_latent_calibration(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
@@ -769,7 +769,7 @@ class TestPrestoOutputConsistency:
         assert torch.allclose(out["assays"]["EC50_nM"], derived["EC50_nM"], atol=1e-5)
 
     def test_elution_head_receives_presentation_and_ms_detectability(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
@@ -791,7 +791,7 @@ class TestPrestoOutputConsistency:
 
     def test_binding_latent_does_not_see_flank_tokens(self):
         """Binding latent segments exclude flanks (design S7.5)."""
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         assert "nflank" not in Presto.LATENT_SEGMENTS["pmhc_interaction"]
         assert "cflank" not in Presto.LATENT_SEGMENTS["pmhc_interaction"]
@@ -806,7 +806,7 @@ class TestMultiAlleleForward:
     """Test forward pass with multiple alleles (MS/EL scenario)."""
 
     def test_multi_allele_aggregation(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
         from presto.models.pmhc import stable_noisy_or
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
@@ -840,7 +840,7 @@ class TestPrestoConfig:
     """Test model configuration options."""
 
     def test_different_model_sizes(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         small = Presto(d_model=64, n_layers=2, n_heads=2)
         large = Presto(d_model=256, n_layers=6, n_heads=8)
@@ -851,7 +851,7 @@ class TestPrestoConfig:
         assert large_params > small_params
 
     def test_model_save_load(self, tmp_path):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
 
@@ -888,7 +888,7 @@ class TestDesignAlignment:
 
     def test_latent_order_has_refactored_core_latents(self):
         """Phase 1 refactor: cross-attention DAG is reduced to shared core concepts."""
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         assert Presto.LATENT_ORDER == [
             "processing",
@@ -900,13 +900,13 @@ class TestDesignAlignment:
 
     def test_ms_detectability_in_latent_order(self):
         """Design S7.1: ms_detectability is the 11th latent."""
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         assert "ms_detectability" in Presto.LATENT_ORDER
 
     def test_presentation_uses_mlp_not_cross_attention(self):
         """Presentation is derived from class-specific MLPs, not a latent query."""
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         assert "presentation" not in Presto.CROSS_ATTN_LATENTS
@@ -915,13 +915,13 @@ class TestDesignAlignment:
 
     def test_recognition_latents_see_peptide_only(self):
         """Design S7.5: recognition latents see only peptide tokens."""
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         assert Presto.LATENT_SEGMENTS["recognition"] == ["peptide"]
 
     def test_immunogenicity_uses_mlp_not_cross_attention(self):
         """Immunogenicity uses lineage-specific MLPs over interaction + recognition."""
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         assert "immunogenicity" not in Presto.CROSS_ATTN_LATENTS
@@ -930,19 +930,19 @@ class TestDesignAlignment:
 
     def test_ms_detectability_is_peptide_only(self):
         """Design S7.5: ms_detectability sees only peptide."""
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         assert Presto.LATENT_SEGMENTS["ms_detectability"] == ["peptide"]
 
     def test_recognition_depends_on_foreignness(self):
         """Recognition latents depend on peptide-attended foreignness signal."""
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         assert Presto.LATENT_DEPS["recognition"] == ["foreignness"]
 
     def test_pmhc_interaction_is_the_only_mhc_aware_cross_attention_latent(self):
         """Phase 1 refactor: MHC sequence enters the DAG through pmhc_interaction."""
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         assert Presto.LATENT_SEGMENTS["pmhc_interaction"] == ["peptide", "mhc_a", "mhc_b"]
         assert "nflank" not in Presto.LATENT_SEGMENTS["pmhc_interaction"]
@@ -956,7 +956,7 @@ class TestDesignAlignment:
         expanded one, so iterating `Presto.CROSS_ATTN_LATENTS` here checked
         names the model no longer has once expanded became the default.
         """
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         for name in model.CROSS_ATTN_LATENTS:
@@ -964,7 +964,7 @@ class TestDesignAlignment:
 
     def test_per_chain_mhc_inference(self):
         """Design S5.1-S5.2: per-chain type and species classification."""
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
@@ -989,7 +989,7 @@ class TestDesignAlignment:
 
     def test_ms_detectability_output(self):
         """Design S7.4: ms_detectability produces a readout logit."""
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
@@ -1007,7 +1007,7 @@ class TestDesignAlignment:
 
     def test_pmhc_vec_is_interaction_vec(self):
         """pmhc_vec is now a direct alias for interaction_vec (no projection)."""
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
@@ -1022,7 +1022,7 @@ class TestDesignAlignment:
         assert torch.allclose(out["pmhc_vec"], out["latent_vecs"]["pmhc_interaction"], atol=1e-5)
 
     def test_binding_kinetic_input_modes_forward(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         pep_tok = torch.randint(4, 24, (2, 10))
         mhc_a_tok = torch.randint(4, 24, (2, 50))
@@ -1043,7 +1043,7 @@ class TestDesignAlignment:
             assert out["binding_kinetic_input_mode"] == mode
 
     def test_binding_direct_segment_modes_forward(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         pep_tok = torch.randint(4, 24, (2, 10))
         mhc_a_tok = torch.randint(4, 24, (2, 50))
@@ -1073,14 +1073,14 @@ class TestDesignAlignment:
                 assert out["binding_direct_stability_vec"].shape == (2, 64)
 
     def test_apc_cell_type_context_alias_exists(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         assert hasattr(model, "apc_cell_type_context_proj")
 
     def test_segment_specific_positional_encoding(self):
         """Design S3.2.3: segment-specific positional encoding tables exist."""
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         assert hasattr(model, "pep_nterm_pos")
@@ -1094,7 +1094,7 @@ class TestDesignAlignment:
 
     def test_metadata_is_not_globally_embedded(self):
         """Sequence encoding excludes cross-segment presence and metadata."""
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         assert not hasattr(model, "species_cond_embed")
@@ -1104,7 +1104,7 @@ class TestDesignAlignment:
 
     def test_missing_segment_uses_dedicated_missing_token(self):
         """Missing optional segments should map to <MISSING>, not <UNK>."""
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
         from presto.data.vocab import AA_TO_IDX
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
@@ -1128,7 +1128,7 @@ class TestDesignAlignment:
         protein-boundary pad, which makes pinning it doubly wrong.
         """
         from presto.data.vocab import AA_TO_IDX
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         for symbol in ("X", "?"):
@@ -1151,7 +1151,7 @@ class TestDesignAlignment:
     def test_pad_is_still_pinned(self):
         """Unpinning X must not have unpinned padding, which genuinely should
         contribute nothing."""
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         with torch.no_grad():
@@ -1162,14 +1162,14 @@ class TestDesignAlignment:
     def test_stream_builder_has_no_class_embedding_input(self):
         """Class is no longer a token-stream conditioning input."""
         import inspect
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         sig = inspect.signature(model._build_single_stream)
         assert "mhc_class_id" not in sig.parameters
 
     def test_forward_can_emit_binding_attention_support_stats(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
@@ -1191,7 +1191,7 @@ class TestDesignAlignment:
         assert torch.all(out["binding_mhc_attention_effective_residues"] >= 0)
 
     def test_groove_vec_is_invariant_to_class_override(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
@@ -1221,7 +1221,7 @@ class TestDesignAlignment:
         )
 
     def test_core_window_enumeration_respects_short_and_long_peptides(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
@@ -1255,7 +1255,7 @@ class TestDesignAlignment:
         assert torch.all(out["core_start_prob"].sum(dim=1) > 0.999)
 
     def test_triple_groove_positions_and_variable_core_lengths_forward(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(
             d_model=64,
@@ -1309,7 +1309,7 @@ class TestDesignAlignment:
         only ever described the collapsed graph -- it passed by accident while
         collapsed was the default.
         """
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=1, n_heads=4, latent_topology="collapsed")
         model.train()
@@ -1343,7 +1343,7 @@ class TestDesignAlignment:
         assert float(h2_grad.abs().max().item()) > 0.0
 
     def test_recognition_only_uses_peptide_and_foreignness(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
@@ -1385,7 +1385,7 @@ class TestDesignAlignment:
         )
 
     def test_species_of_origin_override_controls_foreignness_and_recognition(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
@@ -1419,7 +1419,7 @@ class TestDesignAlignment:
         )
 
     def test_split_mixed_outputs_match_class_weighted_mixtures(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
@@ -1449,7 +1449,7 @@ class TestDesignAlignment:
         )
 
     def test_mhc_species_override_conditions_processing_path(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
@@ -1478,7 +1478,7 @@ class TestDesignAlignment:
         )
 
     def test_core_position_embedding_does_not_leak_into_processing_or_ms(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
@@ -1508,7 +1508,7 @@ class TestDesignAlignment:
         )
 
     def test_groove_context_does_not_leak_into_processing(self):
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()

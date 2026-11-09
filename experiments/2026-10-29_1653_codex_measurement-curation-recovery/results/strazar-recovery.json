@@ -1,0 +1,68 @@
+{
+  "status": "partial_source_recovery",
+  "accepted_ligand_set_sha256": "3dc547ae7cd4cfd735794e30c52430bb33f52d3960644d24bf07e44d6496e085",
+  "counts": {
+    "psm:unmodified": 47474,
+    "outside_published_ligand_set": 25726,
+    "psm:modified": 19438,
+    "published_pmhc:modified": 5734,
+    "published_pmhc:unmodified": 14187
+  },
+  "sources": [
+    {
+      "path": "/Users/iskander/code/presto/artifacts/2026-10-29_1653_codex_measurement-curation-recovery/sources/strazar-psm-DQB0301_DQA0303_1hr.PSMexport.1/DQB0301_DQA0303_1hr.PSMexport.1.ssv",
+      "sha256": "8443b343940c5e49f237235e04c743b41587314b41f6e226fdf07b61c7108d27"
+    },
+    {
+      "path": "/Users/iskander/code/presto/artifacts/2026-10-29_1653_codex_measurement-curation-recovery/sources/strazar-psm-DQB0301_DQA0303_3hr.PSMexport.1/DQB0301_DQA0303_3hr.PSMexport.1.ssv",
+      "sha256": "320d4ad9194fccb5e4afded054757d0b1892b03d792dce0d94bd175550ad73a2"
+    },
+    {
+      "path": "/Users/iskander/code/presto/artifacts/2026-10-29_1653_codex_measurement-curation-recovery/sources/strazar-psm-DQB0301_DQA0303_overnight.PSMexport.1/DQB0301_DQA0303_overnight.PSMexport.1.ssv",
+      "sha256": "2667d4c762ddef174b014c7753be69016696e3958a387255633d82b5a1900972"
+    },
+    {
+      "path": "/Users/iskander/code/presto/artifacts/2026-10-29_1653_codex_measurement-curation-recovery/sources/strazar-psm-DPB0101_DPA0201_1hr.PSMexport.2/DPB0101_DPA0201_1hr.PSMexport.2.ssv",
+      "sha256": "335ef937585e8d754c59d9399dec646e049c69980fc0521b65402978f253ffca"
+    },
+    {
+      "path": "/Users/iskander/code/presto/artifacts/2026-10-29_1653_codex_measurement-curation-recovery/sources/strazar-psm-DPB0101_DPA0201_3hr.PSMexport.1/DPB0101_DPA0201_3hr.PSMexport.1.ssv",
+      "sha256": "e0a185b68550a5d475a1a94dcdfb960edd29dac8867e5aab4023508baa0f8ad3"
+    },
+    {
+      "path": "/Users/iskander/code/presto/artifacts/2026-10-29_1653_codex_measurement-curation-recovery/sources/strazar-psm-DPB0101_DPA0201_overnight.PSMexport.1/DPB0101_DPA0201_overnight.PSMexport.1.ssv",
+      "sha256": "b5d8bb18df7eee262f2c5bdf644fca20eb491e9a066a867c4aa1f721f8c38458"
+    },
+    {
+      "path": "/Users/iskander/code/presto/artifacts/2026-10-29_1653_codex_measurement-curation-recovery/sources/strazar-psm-DPB0201_DPA0202_1hr.PSMexport.1/DPB0201_DPA0202_1hr.PSMexport.1.ssv",
+      "sha256": "6c64c2033d819793a54a5a1a613a1dd5a74980b6562cc2f2485133178985db59"
+    },
+    {
+      "path": "/Users/iskander/code/presto/artifacts/2026-10-29_1653_codex_measurement-curation-recovery/sources/strazar-psm-DPB0201_DPA0202_3hr.PSMexport.1/DPB0201_DPA0202_3hr.PSMexport.1.ssv",
+      "sha256": "fb1bf6c1ad2417a8fdcee317f82e7473d4ff39f0e62c54499e71b735b1268aad"
+    },
+    {
+      "path": "/Users/iskander/code/presto/artifacts/2026-10-29_1653_codex_measurement-curation-recovery/sources/strazar-psm-DPB0201_DPA0202_overnight.PSMexport.1/DPB0201_DPA0202_overnight.PSMexport.1.ssv",
+      "sha256": "4f511ca36c1c32e94baa3a8c6fa59b3066cc2932c5239447c83ffa1ae088fe1a"
+    },
+    {
+      "path": "/Users/iskander/code/presto/artifacts/2026-10-29_1653_codex_measurement-curation-recovery/sources/strazar-psm-DPB0202_DPA0202_1hr.PSMexport.1/DPB0202_DPA0202_1hr.PSMexport.1.ssv",
+      "sha256": "f27fe51e4e28959f665deea30fc2e0cadbc3afd3d65cf05eb507b6613a6d16ef"
+    },
+    {
+      "path": "/Users/iskander/code/presto/artifacts/2026-10-29_1653_codex_measurement-curation-recovery/sources/strazar-psm-DPB0202_DPA0202_3hr.PSMexport.1/DPB0202_DPA0202_3hr.PSMexport.1.ssv",
+      "sha256": "7208659a040ee6ad7ce9cba628bf05d396bbce919918e4300145a9b9930fdc4f"
+    }
+  ],
+  "output": {
+    "path": "/Users/iskander/code/presto/artifacts/2026-10-29_1653_codex_measurement-curation-recovery/recovered/strazar_2023_recovered_unmodified.csv",
+    "sha256": "bfb0b3b75a70aeceb7870c2ec7c78a2c072c12a6324f6dec4f7ad9ba0277c4c6"
+  },
+  "evidence": {
+    "path": "/Users/iskander/code/presto/artifacts/2026-10-29_1653_codex_measurement-curation-recovery/recovered/source-evidence.jsonl",
+    "sha256": "a69833dbd4b163ceeb49aed6ea82da1e8fcbbd84693c90fe956a6c2b7f98b202"
+  },
+  "policy": "exact published ligand/MHC intersection; explicit native terminal groups + no variable/fixed modifications; human source support; preserve co-observed modified forms separately",
+  "seconds": 5.1431805829925,
+  "limitations": "Only successfully downloaded PSM files reviewed; no negative chemistry claim for remaining ligand rows. No model/test outcomes consulted."
+}

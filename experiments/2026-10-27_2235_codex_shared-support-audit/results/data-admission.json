@@ -1,0 +1,477 @@
+{
+  "status": "admitted",
+  "raw_rows": 840805,
+  "candidate_rows": 140846,
+  "partition_admitted": 140846,
+  "deduplicated_new_rows": 140846,
+  "total_rows": 168210,
+  "counts": {
+    "excluded:outside_supported_purified_quantitative_assay": 586064,
+    "candidate:kd_via_ec50": 56190,
+    "deferred:missing_explicit_mhc_partner": 55371,
+    "excluded:not_explicit_purified_mhc": 9696,
+    "excluded:not_explicit_human_restriction": 16957,
+    "original_ic50_outcome_retained": 27364,
+    "deferred:unresolved_catalog_name": 1832,
+    "candidate:kd_via_ic50": 53947,
+    "excluded:modified_or_unspecified_peptidoform": 1519,
+    "candidate:ic50": 1919,
+    "candidate:half_life": 9575,
+    "excluded:nonpositive_or_nonfinite_measurement": 870,
+    "candidate:kd": 18817,
+    "candidate:ec50": 388,
+    "excluded:unsupported_peptide_or_class": 247,
+    "excluded:non_peptide_ligand": 39,
+    "candidate:koff": 10
+  },
+  "census": [
+    {
+      "endpoint": "ec50",
+      "split": "test",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 47
+    },
+    {
+      "endpoint": "ec50",
+      "split": "train",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 288
+    },
+    {
+      "endpoint": "ec50",
+      "split": "train",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 19
+    },
+    {
+      "endpoint": "ec50",
+      "split": "validation",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 31
+    },
+    {
+      "endpoint": "ec50",
+      "split": "validation",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 3
+    },
+    {
+      "endpoint": "half_life",
+      "split": "test",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 934
+    },
+    {
+      "endpoint": "half_life",
+      "split": "test",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 2
+    },
+    {
+      "endpoint": "half_life",
+      "split": "train",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 7650
+    },
+    {
+      "endpoint": "half_life",
+      "split": "train",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 9
+    },
+    {
+      "endpoint": "half_life",
+      "split": "train",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 12
+    },
+    {
+      "endpoint": "half_life",
+      "split": "validation",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 968
+    },
+    {
+      "endpoint": "ic50",
+      "split": "test",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 10
+    },
+    {
+      "endpoint": "ic50",
+      "split": "test",
+      "mhc_class": "I",
+      "qualifier": ">=",
+      "n": 1
+    },
+    {
+      "endpoint": "ic50",
+      "split": "test",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 10
+    },
+    {
+      "endpoint": "ic50",
+      "split": "test",
+      "mhc_class": "II",
+      "qualifier": ">=",
+      "n": 1
+    },
+    {
+      "endpoint": "ic50",
+      "split": "train",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 737
+    },
+    {
+      "endpoint": "ic50",
+      "split": "train",
+      "mhc_class": "I",
+      "qualifier": ">=",
+      "n": 134
+    },
+    {
+      "endpoint": "ic50",
+      "split": "train",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 1004
+    },
+    {
+      "endpoint": "ic50",
+      "split": "train",
+      "mhc_class": "II",
+      "qualifier": ">=",
+      "n": 1
+    },
+    {
+      "endpoint": "ic50",
+      "split": "validation",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 6
+    },
+    {
+      "endpoint": "ic50",
+      "split": "validation",
+      "mhc_class": "I",
+      "qualifier": ">=",
+      "n": 3
+    },
+    {
+      "endpoint": "ic50",
+      "split": "validation",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 12
+    },
+    {
+      "endpoint": "kd",
+      "split": "test",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 561
+    },
+    {
+      "endpoint": "kd",
+      "split": "test",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 1045
+    },
+    {
+      "endpoint": "kd",
+      "split": "test",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 82
+    },
+    {
+      "endpoint": "kd",
+      "split": "test",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 14
+    },
+    {
+      "endpoint": "kd",
+      "split": "train",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 4097
+    },
+    {
+      "endpoint": "kd",
+      "split": "train",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 10662
+    },
+    {
+      "endpoint": "kd",
+      "split": "train",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 350
+    },
+    {
+      "endpoint": "kd",
+      "split": "train",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 72
+    },
+    {
+      "endpoint": "kd",
+      "split": "validation",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 567
+    },
+    {
+      "endpoint": "kd",
+      "split": "validation",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 1331
+    },
+    {
+      "endpoint": "kd",
+      "split": "validation",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 32
+    },
+    {
+      "endpoint": "kd",
+      "split": "validation",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 4
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "split": "test",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 1154
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "split": "test",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 2665
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "split": "test",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 1231
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "split": "test",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 339
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "split": "train",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 9113
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "split": "train",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 21515
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "split": "train",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 11307
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "split": "train",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 2911
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "split": "validation",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 1175
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "split": "validation",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 2845
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "split": "validation",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 1529
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "split": "validation",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 406
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "split": "test",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 4808
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "split": "test",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 261
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "split": "test",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 123
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "split": "test",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 45
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "split": "train",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 39835
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "split": "train",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 2103
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "split": "train",
+      "mhc_class": "I",
+      "qualifier": ">=",
+      "n": 2
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "split": "train",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 886
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "split": "train",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 216
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "split": "train",
+      "mhc_class": "II",
+      "qualifier": ">=",
+      "n": 2
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "split": "validation",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 5182
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "split": "validation",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 277
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "split": "validation",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 183
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "split": "validation",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 24
+    },
+    {
+      "endpoint": "koff",
+      "split": "train",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 10
+    }
+  ],
+  "endpoints": [
+    "ec50",
+    "half_life",
+    "ic50",
+    "kd",
+    "kd_via_ec50",
+    "kd_via_ic50",
+    "koff"
+  ],
+  "cohort": "/Users/iskander/code/presto/.worktrees/shared-training/presto/data/modular_cohorts/2026-10-27-purified-multi-assay",
+  "manifest_sha256": "8bfb2db9b6e491ef1710d878053170e3f9a927661dc4770ea43e0559eee27eb3",
+  "source_hashes": {
+    "binding.parquet": "2b3f6ea2dd647e7fc54d214eef420feaebc4e81fab97ffc0565a2de1f8695ba0",
+    "other_assays.parquet": "c40f5227ded408830885ecba8336dbdd701172df9573b0d32e5e8a5f8fc947c2"
+  },
+  "source_catalog_sha256": "ddc3493c64f4328de174a6c2cda1f007ec2f93a1ef649add25d2ef9c1720add1",
+  "historical_membership_sha256": "8959e60c0d9b8049aec25095b9c354d456b48f97ba8fb31d7b786e2861113e99",
+  "seconds": 719.2005566669977,
+  "synthetic_labels": 0,
+  "pretraining": false,
+  "original_ic50_files_byte_identical": true
+}

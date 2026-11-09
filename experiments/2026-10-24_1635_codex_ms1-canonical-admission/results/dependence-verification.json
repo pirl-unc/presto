@@ -1,0 +1,33 @@
+{
+  "status": "passed",
+  "n_unchanged_examples": 1147,
+  "n_intended_components": 2,
+  "n_shared_observed_sequences": 106,
+  "n_shared_observed_sequences_intended_in_either_pool": 0,
+  "seconds": 9.892551833007019,
+  "peak_rss_gib": 1.116180419921875,
+  "recipe_manifest": {
+    "sha256": "181ea4fb2e25a8c2035495dc7ee361da58d3a6c0754f9ed291ce77672aa221f5",
+    "size_bytes": 3336
+  },
+  "invocation": "PYTHONPATH=/private/tmp/hitlist-proteometools-ms1 /Users/iskander/code/shared-virtual-env/bin/python /private/tmp/presto-modular-model/experiments/2026-10-24_1635_codex_ms1-canonical-admission/analysis/refine_groups.py",
+  "hitlist_commit": "bafa4fa87e0a3d5ece9093a285a9c02f06d57148",
+  "frozen_source": {
+    "reproduce/final-grouping-source/hitlist/proteometools_response.py": {
+      "sha256": "703756029cfafae4a5c0a9e7fe94220d503b36ea51bfc02b0267d0c1b8df96ed",
+      "size_bytes": 15101
+    },
+    "reproduce/final-grouping-source/refine_groups.py": {
+      "sha256": "a66125eb3464637a6c6def0fb597eef2c9389e67e50f4f7ab43c126de664bc63",
+      "size_bytes": 3932
+    },
+    "reproduce/final-grouping-source/tasks/proteometools-ms1-spec.md": {
+      "sha256": "fdfae516a57225276bd9be663cf8f57ee4830652ebb8c1fdcb8806682eb20905",
+      "size_bytes": 7071
+    },
+    "reproduce/final-grouping-source/tests/test_proteometools_ms1.py": {
+      "sha256": "5ae5c26d432fd0616fa6f29500ed524a0d040b7b7404a7c7aaa3777e3bf76917",
+      "size_bytes": 14534
+    }
+  }
+}

@@ -1,0 +1,653 @@
+{
+  "scope": "TRAIN ONLY; exact pMHC match; means over independent observations. Assay conditions are not matched. Descriptive association, not endpoint equivalence or a predictive evaluation.",
+  "rows": [
+    {
+      "mhc_class": "I",
+      "endpoint_a": "ec50",
+      "endpoint_b": "ec50",
+      "shared_exact_training_contexts": 283,
+      "exact_training_contexts_a": 283,
+      "exact_training_contexts_b": 283,
+      "spearman_of_context_means": 1.0
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "ec50",
+      "endpoint_b": "half_life",
+      "shared_exact_training_contexts": 269,
+      "exact_training_contexts_a": 283,
+      "exact_training_contexts_b": 7461,
+      "spearman_of_context_means": 0.2081173348017698
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "ec50",
+      "endpoint_b": "ic50",
+      "shared_exact_training_contexts": 8,
+      "exact_training_contexts_a": 283,
+      "exact_training_contexts_b": 13280,
+      "spearman_of_context_means": -0.09523809523809526
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "ec50",
+      "endpoint_b": "kd",
+      "shared_exact_training_contexts": 3,
+      "exact_training_contexts_a": 283,
+      "exact_training_contexts_b": 4097,
+      "spearman_of_context_means": -0.5
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "ec50",
+      "endpoint_b": "kd_via_ec50",
+      "shared_exact_training_contexts": 3,
+      "exact_training_contexts_a": 283,
+      "exact_training_contexts_b": 7760,
+      "spearman_of_context_means": 0.5
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "ec50",
+      "endpoint_b": "kd_via_ic50",
+      "shared_exact_training_contexts": 3,
+      "exact_training_contexts_a": 283,
+      "exact_training_contexts_b": 38855,
+      "spearman_of_context_means": -1.0
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "half_life",
+      "endpoint_b": "ec50",
+      "shared_exact_training_contexts": 269,
+      "exact_training_contexts_a": 7461,
+      "exact_training_contexts_b": 283,
+      "spearman_of_context_means": 0.20811733480176983
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "half_life",
+      "endpoint_b": "half_life",
+      "shared_exact_training_contexts": 7461,
+      "exact_training_contexts_a": 7461,
+      "exact_training_contexts_b": 7461,
+      "spearman_of_context_means": 0.9999999999999998
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "half_life",
+      "endpoint_b": "ic50",
+      "shared_exact_training_contexts": 2421,
+      "exact_training_contexts_a": 7461,
+      "exact_training_contexts_b": 13280,
+      "spearman_of_context_means": -0.1506029641930052
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "half_life",
+      "endpoint_b": "kd",
+      "shared_exact_training_contexts": 777,
+      "exact_training_contexts_a": 7461,
+      "exact_training_contexts_b": 4097,
+      "spearman_of_context_means": -0.36157800756659253
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "half_life",
+      "endpoint_b": "kd_via_ec50",
+      "shared_exact_training_contexts": 1576,
+      "exact_training_contexts_a": 7461,
+      "exact_training_contexts_b": 7760,
+      "spearman_of_context_means": -0.2863157650460447
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "half_life",
+      "endpoint_b": "kd_via_ic50",
+      "shared_exact_training_contexts": 291,
+      "exact_training_contexts_a": 7461,
+      "exact_training_contexts_b": 38855,
+      "spearman_of_context_means": -0.4831456123098712
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "ic50",
+      "endpoint_b": "ec50",
+      "shared_exact_training_contexts": 8,
+      "exact_training_contexts_a": 13280,
+      "exact_training_contexts_b": 283,
+      "spearman_of_context_means": -0.09523809523809526
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "ic50",
+      "endpoint_b": "half_life",
+      "shared_exact_training_contexts": 2421,
+      "exact_training_contexts_a": 13280,
+      "exact_training_contexts_b": 7461,
+      "spearman_of_context_means": -0.1506029641930052
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "ic50",
+      "endpoint_b": "ic50",
+      "shared_exact_training_contexts": 13280,
+      "exact_training_contexts_a": 13280,
+      "exact_training_contexts_b": 13280,
+      "spearman_of_context_means": 0.9999999999999999
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "ic50",
+      "endpoint_b": "kd",
+      "shared_exact_training_contexts": 69,
+      "exact_training_contexts_a": 13280,
+      "exact_training_contexts_b": 4097,
+      "spearman_of_context_means": 0.39050552240396286
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "ic50",
+      "endpoint_b": "kd_via_ec50",
+      "shared_exact_training_contexts": 90,
+      "exact_training_contexts_a": 13280,
+      "exact_training_contexts_b": 7760,
+      "spearman_of_context_means": 0.5252833533531803
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "ic50",
+      "endpoint_b": "kd_via_ic50",
+      "shared_exact_training_contexts": 6676,
+      "exact_training_contexts_a": 13280,
+      "exact_training_contexts_b": 38855,
+      "spearman_of_context_means": 0.9629893161109456
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "kd",
+      "endpoint_b": "ec50",
+      "shared_exact_training_contexts": 3,
+      "exact_training_contexts_a": 4097,
+      "exact_training_contexts_b": 283,
+      "spearman_of_context_means": -0.5
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "kd",
+      "endpoint_b": "half_life",
+      "shared_exact_training_contexts": 777,
+      "exact_training_contexts_a": 4097,
+      "exact_training_contexts_b": 7461,
+      "spearman_of_context_means": -0.3615780075665925
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "kd",
+      "endpoint_b": "ic50",
+      "shared_exact_training_contexts": 69,
+      "exact_training_contexts_a": 4097,
+      "exact_training_contexts_b": 13280,
+      "spearman_of_context_means": 0.39050552240396286
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "kd",
+      "endpoint_b": "kd",
+      "shared_exact_training_contexts": 4097,
+      "exact_training_contexts_a": 4097,
+      "exact_training_contexts_b": 4097,
+      "spearman_of_context_means": 1.0
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "kd",
+      "endpoint_b": "kd_via_ec50",
+      "shared_exact_training_contexts": 135,
+      "exact_training_contexts_a": 4097,
+      "exact_training_contexts_b": 7760,
+      "spearman_of_context_means": 0.7710947904426894
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "kd",
+      "endpoint_b": "kd_via_ic50",
+      "shared_exact_training_contexts": 82,
+      "exact_training_contexts_a": 4097,
+      "exact_training_contexts_b": 38855,
+      "spearman_of_context_means": 0.310786328944775
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "kd_via_ec50",
+      "endpoint_b": "ec50",
+      "shared_exact_training_contexts": 3,
+      "exact_training_contexts_a": 7760,
+      "exact_training_contexts_b": 283,
+      "spearman_of_context_means": 0.5
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "kd_via_ec50",
+      "endpoint_b": "half_life",
+      "shared_exact_training_contexts": 1576,
+      "exact_training_contexts_a": 7760,
+      "exact_training_contexts_b": 7461,
+      "spearman_of_context_means": -0.2863157650460447
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "kd_via_ec50",
+      "endpoint_b": "ic50",
+      "shared_exact_training_contexts": 90,
+      "exact_training_contexts_a": 7760,
+      "exact_training_contexts_b": 13280,
+      "spearman_of_context_means": 0.5252833533531803
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "kd_via_ec50",
+      "endpoint_b": "kd",
+      "shared_exact_training_contexts": 135,
+      "exact_training_contexts_a": 7760,
+      "exact_training_contexts_b": 4097,
+      "spearman_of_context_means": 0.7710947904426894
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "kd_via_ec50",
+      "endpoint_b": "kd_via_ec50",
+      "shared_exact_training_contexts": 7760,
+      "exact_training_contexts_a": 7760,
+      "exact_training_contexts_b": 7760,
+      "spearman_of_context_means": 1.0
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "kd_via_ec50",
+      "endpoint_b": "kd_via_ic50",
+      "shared_exact_training_contexts": 214,
+      "exact_training_contexts_a": 7760,
+      "exact_training_contexts_b": 38855,
+      "spearman_of_context_means": 0.44721599040116355
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "kd_via_ic50",
+      "endpoint_b": "ec50",
+      "shared_exact_training_contexts": 3,
+      "exact_training_contexts_a": 38855,
+      "exact_training_contexts_b": 283,
+      "spearman_of_context_means": -1.0
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "kd_via_ic50",
+      "endpoint_b": "half_life",
+      "shared_exact_training_contexts": 291,
+      "exact_training_contexts_a": 38855,
+      "exact_training_contexts_b": 7461,
+      "spearman_of_context_means": -0.4831456123098712
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "kd_via_ic50",
+      "endpoint_b": "ic50",
+      "shared_exact_training_contexts": 6676,
+      "exact_training_contexts_a": 38855,
+      "exact_training_contexts_b": 13280,
+      "spearman_of_context_means": 0.9629893161109455
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "kd_via_ic50",
+      "endpoint_b": "kd",
+      "shared_exact_training_contexts": 82,
+      "exact_training_contexts_a": 38855,
+      "exact_training_contexts_b": 4097,
+      "spearman_of_context_means": 0.310786328944775
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "kd_via_ic50",
+      "endpoint_b": "kd_via_ec50",
+      "shared_exact_training_contexts": 214,
+      "exact_training_contexts_a": 38855,
+      "exact_training_contexts_b": 7760,
+      "spearman_of_context_means": 0.4472159904011636
+    },
+    {
+      "mhc_class": "I",
+      "endpoint_a": "kd_via_ic50",
+      "endpoint_b": "kd_via_ic50",
+      "shared_exact_training_contexts": 38855,
+      "exact_training_contexts_a": 38855,
+      "exact_training_contexts_b": 38855,
+      "spearman_of_context_means": 1.0
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "ec50",
+      "endpoint_b": "ec50",
+      "shared_exact_training_contexts": 19,
+      "exact_training_contexts_a": 19,
+      "exact_training_contexts_b": 19,
+      "spearman_of_context_means": 0.9999999999999999
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "ec50",
+      "endpoint_b": "half_life",
+      "shared_exact_training_contexts": 0,
+      "exact_training_contexts_a": 19,
+      "exact_training_contexts_b": 12,
+      "spearman_of_context_means": null
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "ec50",
+      "endpoint_b": "ic50",
+      "shared_exact_training_contexts": 0,
+      "exact_training_contexts_a": 19,
+      "exact_training_contexts_b": 6945,
+      "spearman_of_context_means": null
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "ec50",
+      "endpoint_b": "kd",
+      "shared_exact_training_contexts": 0,
+      "exact_training_contexts_a": 19,
+      "exact_training_contexts_b": 323,
+      "spearman_of_context_means": null
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "ec50",
+      "endpoint_b": "kd_via_ec50",
+      "shared_exact_training_contexts": 0,
+      "exact_training_contexts_a": 19,
+      "exact_training_contexts_b": 11307,
+      "spearman_of_context_means": null
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "ec50",
+      "endpoint_b": "kd_via_ic50",
+      "shared_exact_training_contexts": 0,
+      "exact_training_contexts_a": 19,
+      "exact_training_contexts_b": 877,
+      "spearman_of_context_means": null
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "half_life",
+      "endpoint_b": "ec50",
+      "shared_exact_training_contexts": 0,
+      "exact_training_contexts_a": 12,
+      "exact_training_contexts_b": 19,
+      "spearman_of_context_means": null
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "half_life",
+      "endpoint_b": "half_life",
+      "shared_exact_training_contexts": 12,
+      "exact_training_contexts_a": 12,
+      "exact_training_contexts_b": 12,
+      "spearman_of_context_means": 1.0
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "half_life",
+      "endpoint_b": "ic50",
+      "shared_exact_training_contexts": 9,
+      "exact_training_contexts_a": 12,
+      "exact_training_contexts_b": 6945,
+      "spearman_of_context_means": -0.8166666666666667
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "half_life",
+      "endpoint_b": "kd",
+      "shared_exact_training_contexts": 0,
+      "exact_training_contexts_a": 12,
+      "exact_training_contexts_b": 323,
+      "spearman_of_context_means": null
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "half_life",
+      "endpoint_b": "kd_via_ec50",
+      "shared_exact_training_contexts": 0,
+      "exact_training_contexts_a": 12,
+      "exact_training_contexts_b": 11307,
+      "spearman_of_context_means": null
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "half_life",
+      "endpoint_b": "kd_via_ic50",
+      "shared_exact_training_contexts": 0,
+      "exact_training_contexts_a": 12,
+      "exact_training_contexts_b": 877,
+      "spearman_of_context_means": null
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "ic50",
+      "endpoint_b": "ec50",
+      "shared_exact_training_contexts": 0,
+      "exact_training_contexts_a": 6945,
+      "exact_training_contexts_b": 19,
+      "spearman_of_context_means": null
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "ic50",
+      "endpoint_b": "half_life",
+      "shared_exact_training_contexts": 9,
+      "exact_training_contexts_a": 6945,
+      "exact_training_contexts_b": 12,
+      "spearman_of_context_means": -0.8166666666666667
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "ic50",
+      "endpoint_b": "ic50",
+      "shared_exact_training_contexts": 6945,
+      "exact_training_contexts_a": 6945,
+      "exact_training_contexts_b": 6945,
+      "spearman_of_context_means": 1.0
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "ic50",
+      "endpoint_b": "kd",
+      "shared_exact_training_contexts": 0,
+      "exact_training_contexts_a": 6945,
+      "exact_training_contexts_b": 323,
+      "spearman_of_context_means": null
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "ic50",
+      "endpoint_b": "kd_via_ec50",
+      "shared_exact_training_contexts": 1,
+      "exact_training_contexts_a": 6945,
+      "exact_training_contexts_b": 11307,
+      "spearman_of_context_means": null
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "ic50",
+      "endpoint_b": "kd_via_ic50",
+      "shared_exact_training_contexts": 2,
+      "exact_training_contexts_a": 6945,
+      "exact_training_contexts_b": 877,
+      "spearman_of_context_means": null
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "kd",
+      "endpoint_b": "ec50",
+      "shared_exact_training_contexts": 0,
+      "exact_training_contexts_a": 323,
+      "exact_training_contexts_b": 19,
+      "spearman_of_context_means": null
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "kd",
+      "endpoint_b": "half_life",
+      "shared_exact_training_contexts": 0,
+      "exact_training_contexts_a": 323,
+      "exact_training_contexts_b": 12,
+      "spearman_of_context_means": null
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "kd",
+      "endpoint_b": "ic50",
+      "shared_exact_training_contexts": 0,
+      "exact_training_contexts_a": 323,
+      "exact_training_contexts_b": 6945,
+      "spearman_of_context_means": null
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "kd",
+      "endpoint_b": "kd",
+      "shared_exact_training_contexts": 323,
+      "exact_training_contexts_a": 323,
+      "exact_training_contexts_b": 323,
+      "spearman_of_context_means": 1.0
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "kd",
+      "endpoint_b": "kd_via_ec50",
+      "shared_exact_training_contexts": 0,
+      "exact_training_contexts_a": 323,
+      "exact_training_contexts_b": 11307,
+      "spearman_of_context_means": null
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "kd",
+      "endpoint_b": "kd_via_ic50",
+      "shared_exact_training_contexts": 0,
+      "exact_training_contexts_a": 323,
+      "exact_training_contexts_b": 877,
+      "spearman_of_context_means": null
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "kd_via_ec50",
+      "endpoint_b": "ec50",
+      "shared_exact_training_contexts": 0,
+      "exact_training_contexts_a": 11307,
+      "exact_training_contexts_b": 19,
+      "spearman_of_context_means": null
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "kd_via_ec50",
+      "endpoint_b": "half_life",
+      "shared_exact_training_contexts": 0,
+      "exact_training_contexts_a": 11307,
+      "exact_training_contexts_b": 12,
+      "spearman_of_context_means": null
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "kd_via_ec50",
+      "endpoint_b": "ic50",
+      "shared_exact_training_contexts": 1,
+      "exact_training_contexts_a": 11307,
+      "exact_training_contexts_b": 6945,
+      "spearman_of_context_means": null
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "kd_via_ec50",
+      "endpoint_b": "kd",
+      "shared_exact_training_contexts": 0,
+      "exact_training_contexts_a": 11307,
+      "exact_training_contexts_b": 323,
+      "spearman_of_context_means": null
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "kd_via_ec50",
+      "endpoint_b": "kd_via_ec50",
+      "shared_exact_training_contexts": 11307,
+      "exact_training_contexts_a": 11307,
+      "exact_training_contexts_b": 11307,
+      "spearman_of_context_means": 0.9999999999999999
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "kd_via_ec50",
+      "endpoint_b": "kd_via_ic50",
+      "shared_exact_training_contexts": 0,
+      "exact_training_contexts_a": 11307,
+      "exact_training_contexts_b": 877,
+      "spearman_of_context_means": null
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "kd_via_ic50",
+      "endpoint_b": "ec50",
+      "shared_exact_training_contexts": 0,
+      "exact_training_contexts_a": 877,
+      "exact_training_contexts_b": 19,
+      "spearman_of_context_means": null
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "kd_via_ic50",
+      "endpoint_b": "half_life",
+      "shared_exact_training_contexts": 0,
+      "exact_training_contexts_a": 877,
+      "exact_training_contexts_b": 12,
+      "spearman_of_context_means": null
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "kd_via_ic50",
+      "endpoint_b": "ic50",
+      "shared_exact_training_contexts": 2,
+      "exact_training_contexts_a": 877,
+      "exact_training_contexts_b": 6945,
+      "spearman_of_context_means": null
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "kd_via_ic50",
+      "endpoint_b": "kd",
+      "shared_exact_training_contexts": 0,
+      "exact_training_contexts_a": 877,
+      "exact_training_contexts_b": 323,
+      "spearman_of_context_means": null
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "kd_via_ic50",
+      "endpoint_b": "kd_via_ec50",
+      "shared_exact_training_contexts": 0,
+      "exact_training_contexts_a": 877,
+      "exact_training_contexts_b": 11307,
+      "spearman_of_context_means": null
+    },
+    {
+      "mhc_class": "II",
+      "endpoint_a": "kd_via_ic50",
+      "endpoint_b": "kd_via_ic50",
+      "shared_exact_training_contexts": 877,
+      "exact_training_contexts_a": 877,
+      "exact_training_contexts_b": 877,
+      "spearman_of_context_means": 1.0
+    }
+  ]
+}

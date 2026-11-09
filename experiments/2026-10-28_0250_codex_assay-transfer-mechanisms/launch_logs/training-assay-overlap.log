@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-28_0250_codex_assay-transfer-mechanisms/analysis/training_assay_overlap.py", line 53, in <module>
+    main()
+  File "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-28_0250_codex_assay-transfer-mechanisms/analysis/training_assay_overlap.py", line 18, in main
+    if source["split"] != "train":
+       ~~~~~~^^^^^^^^^
+KeyError: 'split'

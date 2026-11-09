@@ -1,0 +1,17 @@
+{
+  "sources": [
+    {
+      "id": "netmhcpan-4.2-training",
+      "url": "https://services.healthtech.dtu.dk/services/NetMHCpan-4.2/training_data/NetMHCpan_train.tar.gz",
+      "kind": "published_training_archive",
+      "scope": "BA and EL only; other members not used",
+      "training_eligibility": "BA needs quantity/censor/study provenance; EL needs sample/PTM/background review"
+    },
+    {
+      "id": "netmhcstabpan-stability",
+      "url": "https://services.healthtech.dtu.dk/suppl/immunology/NetMHCstabpan-1.0/Stability.txt",
+      "kind": "published_stability_measurements",
+      "training_eligibility": "hours; rounded zeros and apparent limits require source review"
+    }
+  ]
+}

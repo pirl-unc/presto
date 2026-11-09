@@ -1,0 +1,52 @@
+{
+  "absolute_quantity_claim": false,
+  "by_censoring_status": {
+    "exact": 34763,
+    "missing_signal": 11330,
+    "overlapping_peak": 60,
+    "source_declared_bound": 15753,
+    "unresolved_text": 2
+  },
+  "by_eligibility_status": {
+    "candidate_censored": 4662,
+    "candidate_exact": 7933,
+    "deferred_control_or_derived_average": 30954,
+    "deferred_nonquantifiable": 2399,
+    "deferred_tentative": 135,
+    "deferred_unidentified": 15798,
+    "deferred_unresolved_annotation": 27
+  },
+  "by_identification_status": {
+    "reported_sequence": 29988,
+    "tentative": 270,
+    "unidentified": 31596,
+    "unresolved_annotation": 54
+  },
+  "by_source_file": {
+    "dasgupta_s1.xlsx": 6073,
+    "dasgupta_s2.xlsx": 73,
+    "gelman_s1.xlsx": 4245,
+    "gelman_s2.xlsx": 173
+  },
+  "by_value_status": {
+    "missing_source_value": 4113,
+    "reported_bound": 15753,
+    "reported_exact": 34763,
+    "reported_nonnumeric": 2,
+    "reported_not_detected": 7217,
+    "reported_overlap": 60
+  },
+  "n_candidate_cross_paper_row_groups": 830,
+  "n_candidate_row_groups_with_equal_experiment_labels": 552,
+  "n_contexts": 36,
+  "n_deferred_heatmap_rows": 246,
+  "n_lineage_rows": 61908,
+  "n_measurements": 61908,
+  "n_possible_cross_paper_reuse_groups": 4980,
+  "n_primary_ratio_rows": 10318,
+  "n_source_assets": 4,
+  "n_source_rows": 10564,
+  "native_rows_preserved": true,
+  "processing_or_MHC_label_claim": false,
+  "source_assets_snapshotted": true
+}

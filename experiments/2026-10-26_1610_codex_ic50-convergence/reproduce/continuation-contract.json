@@ -1,0 +1,23 @@
+{
+  "source_hashes": {
+    "code/launch.py": "076ec847fb438bfe9c87c4197ea153d38952a0732cebabbff3693e8bec243153",
+    "code/verify.py": "4dd77e02fe91632d92d28bdb9224a0105521521f02d9e5bc5f7604bd49a46e31",
+    "code/report.py": "cf28e31868110b14dd1fb8234c24f98757cb35876f06f39e7e1134322ce50fc4",
+    "code/continue.py": "a772996b33804d3f990f90f552e3e2417b33072bd6cc0fd448c3dfcb98ffe5db"
+  },
+  "condition_order": [
+    "seed42",
+    "seed43",
+    "seed44",
+    "permuted42"
+  ],
+  "first_condition_receipt": "reproduce/seed42-1793031157825971000.json",
+  "first_condition_pid": 12942,
+  "test_rescore": false,
+  "automatic_retry": false,
+  "automatic_merge": false,
+  "resource_contract": "reproduce/launch.json",
+  "stop_on_execution_or_verification_failure": true,
+  "attempt": "attempt02",
+  "process_probe": "none; terminal receipt plus original six-hour limit and 120-second finalization allowance"
+}

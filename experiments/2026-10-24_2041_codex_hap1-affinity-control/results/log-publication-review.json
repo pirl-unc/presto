@@ -1,0 +1,54 @@
+{
+  "reviewed_at_utc": "2026-10-24T20:59:01.631524+00:00",
+  "review": "Every complete raw log was read before compression. Contents are public HAP1-derived aggregate metrics, numerical diagnostics, resource measurements, source hashes, local script path and a Matplotlib font-cache message. No credentials, auth headers, environment dump, patient identity or private communication.",
+  "logs": [
+    {
+      "raw_path": "experiments/2026-10-24_2041_codex_hap1-affinity-control/launch_logs/fit.log",
+      "raw_sha256": "19ed30f20289d9eaa39d8b8b5c8b9dd16f54f141acf36b45744446c27a486668",
+      "raw_bytes": 4079,
+      "published_path": "launch_logs/fit.log.gz",
+      "published_sha256": "342903b10cfcf01ee3739295e53a2e2bc56d187ecbdf57f560208029275cd8ae",
+      "roundtrip_equal": true
+    },
+    {
+      "raw_path": "experiments/2026-10-24_2041_codex_hap1-affinity-control/launch_logs/qualify.log",
+      "raw_sha256": "067125f8d0a5ab9899c0a65f925575ad11c79846c32dabe1dff6efdbaa9c1a91",
+      "raw_bytes": 1186,
+      "published_path": "launch_logs/qualify.log.gz",
+      "published_sha256": "9cc2758ed07a1db985a96e48d21445c9d5920e80fee78fc3a28adb6642d0eb41",
+      "roundtrip_equal": true
+    },
+    {
+      "raw_path": "experiments/2026-10-24_2041_codex_hap1-affinity-control/launch_logs/report-export.log",
+      "raw_sha256": "8aa419ccb7a0942bcb29effd04a12f26440584de3b4e3bea08c1d3650ee61008",
+      "raw_bytes": 772,
+      "published_path": "launch_logs/report-export.log.gz",
+      "published_sha256": "c83258c545b17ec60c0bca012102fa7c6d055813aa43e962366a90accfa163cc",
+      "roundtrip_equal": true
+    },
+    {
+      "raw_path": "experiments/2026-10-24_2041_codex_hap1-affinity-control/launch_logs/report-final.log",
+      "raw_sha256": "8aa419ccb7a0942bcb29effd04a12f26440584de3b4e3bea08c1d3650ee61008",
+      "raw_bytes": 772,
+      "published_path": "launch_logs/report-final.log.gz",
+      "published_sha256": "c83258c545b17ec60c0bca012102fa7c6d055813aa43e962366a90accfa163cc",
+      "roundtrip_equal": true
+    },
+    {
+      "raw_path": "experiments/2026-10-24_2041_codex_hap1-affinity-control/launch_logs/report.log",
+      "raw_sha256": "eb3d50685320a6bd08b530da61a617cc22861c4dca472f78be811c12ba9cd504",
+      "raw_bytes": 835,
+      "published_path": "launch_logs/report.log.gz",
+      "published_sha256": "b5f60d6e5f61a1032b6f567268f5ab960e0a47d0ca14b906e3a28cd42a372377",
+      "roundtrip_equal": true
+    },
+    {
+      "raw_path": "experiments/2026-10-24_2041_codex_hap1-affinity-control/launch_logs/verify.log",
+      "raw_sha256": "ca5319fdcb69dda019f5bbb597db498c63b3549f45b9d51db1e75ccd71ea9f38",
+      "raw_bytes": 3430,
+      "published_path": "launch_logs/verify.log.gz",
+      "published_sha256": "9312420ddb6faae0e0fd2b77c28d75c90cb291697214a0f18cb69c3e1d80c293",
+      "roundtrip_equal": true
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "hitlist_code_commit": "b94289d104291c887618bf7d8086d2f984e0a4d6",
+  "hitlist_documentation_followup": "d9b929c",
+  "focused_tests_passed": 20,
+  "local_full_suite": "refused twice by unchanged memory preflight; no workers launched",
+  "unit_ci_python": [
+    "3.10",
+    "3.11",
+    "3.12",
+    "3.13",
+    "3.14"
+  ],
+  "unit_ci_3_11": {
+    "passed": 3247,
+    "skipped": 2,
+    "warnings": 397,
+    "seconds": 217.11,
+    "job_url": "https://github.com/pirl-unc/hitlist/actions/runs/39902804644/job/120247941935"
+  },
+  "integration_ci": {
+    "passed": 96,
+    "deselected": 3249,
+    "warnings": 7,
+    "seconds": 1080.84,
+    "job_url": "https://github.com/pirl-unc/hitlist/actions/runs/39902804644/job/120247942245"
+  },
+  "code_commit_checks": "all pass except intentionally skipped deploy",
+  "docs_commit_checks": "pending at report closure",
+  "presto_checks": "nine experiment source files pass isolated Ruff; strict MkDocs pass; independent source/gradient/prediction/archive replays pass"
+}

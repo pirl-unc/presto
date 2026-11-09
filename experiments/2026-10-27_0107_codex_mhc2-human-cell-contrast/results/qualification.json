@@ -1,0 +1,227 @@
+{
+  "status": "source_audit_complete_not_admitted_for_paired_condition_fitting",
+  "agent_model": "Codex / GPT-6",
+  "source_export": {
+    "path": "/Users/iskander/.hitlist/corrected-corpus/public-downloads/v4/bundles/2026-10-16T07-20-43Z/observations.parquet",
+    "sha256": "a665f37c0b5917fefb6d12eade530d7e2001de1f0ee73479b21d2c393d173ab4"
+  },
+  "code_sha256": "0015ce87052bb37c6b21126cb4a1ff094201d951a1631b9e637d280e788510b3",
+  "primary_xml_sha256": "a72f553a3e04b46a5388c0ba3a065f45bb9f9a0ef5456fe95e0ef00415fd3d50",
+  "pride_inventory_sha256": "5fd333187d76f91adc672fa8e1e98083760f70d43cea22862fcd9e9d65b1c75f",
+  "sdrf_sha256": "793eeb55d34226b7bc42c692590d5fe79bbc469518ba423a09082931d2ea235a",
+  "current_curation_github_blob": "97b951a201686104f8acc1c1482e86494dfaa80b",
+  "current_curation_line_content_equal": true,
+  "class_ii_rows": 11875,
+  "single_condition_rows": 5980,
+  "shared_condition_rows": 5895,
+  "all_class_ii_restrictions": "class_only; no candidate alpha/beta allele set",
+  "quantitative_class_ii_values": 0,
+  "samples": [
+    {
+      "source_name": "HeLa-CIITA_Mock1_classI",
+      "biological_replicate_labels": [
+        "1"
+      ],
+      "technical_replicates": 5,
+      "raw_files": [
+        "Hela_Mock1_W632_replicate1.raw",
+        "Hela_Mock1_W632_replicate2.raw",
+        "Hela_Mock1_W632_replicate3.raw",
+        "Hela_Mock1_W632_replicate4.raw",
+        "Hela_Mock1_W632_replicate5.raw"
+      ],
+      "capture_annotations": [
+        "W6/32"
+      ],
+      "mhc_typing_annotations_unverified": [
+        "HLA-A*68:02;HLA-B*15:03;HLA-C*12:03"
+      ],
+      "mhc_typing_method": [
+        "not available"
+      ]
+    },
+    {
+      "source_name": "HeLa-CIITA_Mock1_classII",
+      "biological_replicate_labels": [
+        "1"
+      ],
+      "technical_replicates": 5,
+      "raw_files": [
+        "Hela_Mock1_Tue39_replicate1.raw",
+        "Hela_Mock1_Tue39_replicate2.raw",
+        "Hela_Mock1_Tue39_replicate3.raw",
+        "Hela_Mock1_Tue39_replicate4.raw",
+        "Hela_Mock1_Tue39_replicate5.raw"
+      ],
+      "capture_annotations": [
+        "Tue39"
+      ],
+      "mhc_typing_annotations_unverified": [
+        "HLA-DRB1*01:02;HLA-DQA1*01:02;HLA-DQB1*05:01"
+      ],
+      "mhc_typing_method": [
+        "not available"
+      ]
+    },
+    {
+      "source_name": "HeLa-CIITA_Mock2_classI",
+      "biological_replicate_labels": [
+        "2"
+      ],
+      "technical_replicates": 5,
+      "raw_files": [
+        "Hela_Mock2_W632_replicate1.raw",
+        "Hela_Mock2_W632_replicate2.raw",
+        "Hela_Mock2_W632_replicate3.raw",
+        "Hela_Mock2_W632_replicate4.raw",
+        "Hela_Mock2_W632_replicate5.raw"
+      ],
+      "capture_annotations": [
+        "W6/32"
+      ],
+      "mhc_typing_annotations_unverified": [
+        "HLA-A*68:02;HLA-B*15:03;HLA-C*12:03"
+      ],
+      "mhc_typing_method": [
+        "not available"
+      ]
+    },
+    {
+      "source_name": "HeLa-CIITA_Mock2_classII",
+      "biological_replicate_labels": [
+        "2"
+      ],
+      "technical_replicates": 5,
+      "raw_files": [
+        "Hela_Mock2_Tue39_replicate1.raw",
+        "Hela_Mock2_Tue39_replicate2.raw",
+        "Hela_Mock2_Tue39_replicate3.raw",
+        "Hela_Mock2_Tue39_replicate4.raw",
+        "Hela_Mock2_Tue39_replicate5.raw"
+      ],
+      "capture_annotations": [
+        "Tue39"
+      ],
+      "mhc_typing_annotations_unverified": [
+        "HLA-DRB1*01:02;HLA-DQA1*01:02;HLA-DQB1*05:01"
+      ],
+      "mhc_typing_method": [
+        "not available"
+      ]
+    },
+    {
+      "source_name": "HeLa-CIITA_siCTRL_classI",
+      "biological_replicate_labels": [
+        "1"
+      ],
+      "technical_replicates": 5,
+      "raw_files": [
+        "Hela_siCTRL_W632_replicate1.raw",
+        "Hela_siCTRL_W632_replicate2.raw",
+        "Hela_siCTRL_W632_replicate3.raw",
+        "Hela_siCTRL_W632_replicate4.raw",
+        "Hela_siCTRL_W632_replicate5.raw"
+      ],
+      "capture_annotations": [
+        "W6/32"
+      ],
+      "mhc_typing_annotations_unverified": [
+        "HLA-A*68:02;HLA-B*15:03;HLA-C*12:03"
+      ],
+      "mhc_typing_method": [
+        "not available"
+      ]
+    },
+    {
+      "source_name": "HeLa-CIITA_siCTRL_classII",
+      "biological_replicate_labels": [
+        "1"
+      ],
+      "technical_replicates": 5,
+      "raw_files": [
+        "Hela_siCTRL_Tue39_replicate1.raw",
+        "Hela_siCTRL_Tue39_replicate2.raw",
+        "Hela_siCTRL_Tue39_replicate3.raw",
+        "Hela_siCTRL_Tue39_replicate4.raw",
+        "Hela_siCTRL_Tue39_replicate5.raw"
+      ],
+      "capture_annotations": [
+        "Tue39"
+      ],
+      "mhc_typing_annotations_unverified": [
+        "HLA-DRB1*01:02;HLA-DQA1*01:02;HLA-DQB1*05:01"
+      ],
+      "mhc_typing_method": [
+        "not available"
+      ]
+    },
+    {
+      "source_name": "HeLa-CIITA_siT6BP_classI",
+      "biological_replicate_labels": [
+        "1"
+      ],
+      "technical_replicates": 5,
+      "raw_files": [
+        "Hela_siT6BP_W632_replicate1.raw",
+        "Hela_siT6BP_W632_replicate2.raw",
+        "Hela_siT6BP_W632_replicate3.raw",
+        "Hela_siT6BP_W632_replicate4.raw",
+        "Hela_siT6BP_W632_replicate5.raw"
+      ],
+      "capture_annotations": [
+        "W6/32"
+      ],
+      "mhc_typing_annotations_unverified": [
+        "HLA-A*68:02;HLA-B*15:03;HLA-C*12:03"
+      ],
+      "mhc_typing_method": [
+        "not available"
+      ]
+    },
+    {
+      "source_name": "HeLa-CIITA_siT6BP_classII",
+      "biological_replicate_labels": [
+        "1"
+      ],
+      "technical_replicates": 5,
+      "raw_files": [
+        "Hela_siT6BP_Tue39__replicat1.raw",
+        "Hela_siT6BP_Tue39__replicat2.raw",
+        "Hela_siT6BP_Tue39__replicat3.raw",
+        "Hela_siT6BP_Tue39__replicat4.raw",
+        "Hela_siT6BP_Tue39__replicat5.raw"
+      ],
+      "capture_annotations": [
+        "Tue39"
+      ],
+      "mhc_typing_annotations_unverified": [
+        "HLA-DRB1*01:02;HLA-DQA1*01:02;HLA-DQB1*05:01"
+      ],
+      "mhc_typing_method": [
+        "not available"
+      ]
+    }
+  ],
+  "file_categories": {
+    "SEARCH": 40,
+    "RAW": 40,
+    "EXPERIMENTAL DESIGN": 1
+  },
+  "paper_evidence": {
+    "reference": "PMC9724678, immunopeptidome Results/Methods and Data availability",
+    "capture": "pan class II; expressed DRB1*01:02 does not uniquely assign each ligand",
+    "binding_estimates": "computational estimates; not measured affinity labels",
+    "quantities": "core-epitope relative intensities aggregate peptide MS signals",
+    "replicates": "five technical runs; paper reports two siRNA biological experiments; SDRF maps one source per siRNA arm and two Mock sources",
+    "search": "human proteome; II length12-25; methionine oxidation allowed; FDR5%"
+  },
+  "unresolved": [
+    "Merged export lacks per-run quantities, units and original measurement IDs.",
+    "Community SDRF extended MHC typing lacks established primary provenance.",
+    "Complete MHC candidates, biological replicates and precursor amounts are unresolved.",
+    "Shared memberships are not independent measurements; missing is not negative."
+  ],
+  "next": "Qualify primary measurements, complete MHC candidates and replicate metadata.",
+  "prediction_metrics": null,
+  "test_split_reason": "source qualification only; no model or predictive partition"
+}

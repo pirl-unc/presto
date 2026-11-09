@@ -1,0 +1,27 @@
+{
+  "started_unix": 1793163300.632123,
+  "conditions": [
+    "small-ic50-s42",
+    "wide-ic50-s42",
+    "wide-six-natural-s42",
+    "wide-six-class-balanced-s42",
+    "wide-six-primary-matched-s42",
+    "wide-six-primary-shuffled-s42",
+    "small-ic50-s43",
+    "wide-ic50-s43",
+    "wide-six-natural-s43",
+    "wide-six-class-balanced-s43",
+    "wide-six-primary-matched-s43",
+    "wide-six-primary-shuffled-s43"
+  ],
+  "source_sha256": "16b307e1eb638ea441da735fe82936581330a1f80eaf6fa0ca84adb6eb9c606a",
+  "requested_gpu": null,
+  "cpu": 1,
+  "memory_mib": 1024,
+  "argv": [
+    "modal",
+    "run",
+    "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-28_0250_codex_assay-transfer-mechanisms/analysis/readback_modal.py",
+    "--watch"
+  ]
+}

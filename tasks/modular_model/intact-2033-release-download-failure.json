@@ -1,0 +1,26 @@
+{
+  "observed_utc": "2026-10-25T01:59:20.546749+00:00",
+  "successful_build_run": 40149903223,
+  "source_commit": "18bbf81d34084e6118b49a1cc4727ea4aec8a422",
+  "artifact_id": 12581794747,
+  "archive_bytes": 6742505,
+  "download_directory": "/private/tmp/hitlist-tested-release-2033-20261025",
+  "download_exit_code": 1,
+  "failure": "sdist extraction write failed: no space left on device",
+  "verifier_and_upload_executed": false,
+  "partial_download_preserved": true,
+  "files": [
+    {
+      "filename": "hitlist-2.0.33-py3-none-any.whl",
+      "size_bytes": 3160950,
+      "sha256": "63d2a0fcf9a2de3753e95da559efe81a6106f75194662e324f65de9fe7b4d9b4"
+    },
+    {
+      "filename": "hitlist-2.0.33.tar.gz",
+      "size_bytes": 1376256,
+      "sha256": "a2a6dbf937850f77af65a360748e39dc3b3cf30a389f2a1a0439c2da6f3bdcae"
+    }
+  ],
+  "next_action": "Keep partial bytes; fresh download and full artifact verification after shared disk stabilizes.",
+  "shared_environment_changed": false
+}

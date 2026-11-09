@@ -1,0 +1,138 @@
+{
+  "accession" : "PXD007263",
+  "title" : "Defining the cellular proteolytic landscape cross time points",
+  "additionalAttributes" : [ ],
+  "projectDescription" : "Mass spectrometry analysis of cellular targets of protein degradation",
+  "sampleProcessingProtocol" : "Samples are reversibly cross-linked together with immunoprecipitation of cellular proteasomes prior to reverse-phase isolation and elution of captured peptides. The method inhibits proteases throughout sample processing to ensure retention of native peptide characteristics",
+  "dataProcessingProtocol" : "The acquired raw spectra were analyzed using MaxQuant software (version 1.5.3.30) with the default parameters for the analysis of proteins and peptides (LFQ) minimum ratio count of 1, minimum peptide length for unspecific search of 6, maximum peptide length for unspecific search of 40, peptide FDR was set to 0.01 and match between runs enabled. Masses were searched against the human proteome database from UniprotKB",
+  "projectTags" : [ "Biological" ],
+  "keywords" : [ "Degradation", "Degradome", "Ubiquitin" ],
+  "doi" : "",
+  "submissionType" : "PARTIAL",
+  "license" : "EBI terms of use",
+  "submissionDate" : "2018-03-12",
+  "publicationDate" : "2018-10-11",
+  "submitters" : [ {
+    "title" : "Mr",
+    "firstName" : "Assaf",
+    "lastName" : "Kacen",
+    "identifier" : "98210109",
+    "affiliation" : "Weizmann Institute of Science",
+    "email" : "assaf.kacen@weizmann.ac.il",
+    "country" : "Israel",
+    "orcid" : "",
+    "name" : "Assaf Kacen",
+    "id" : "98210109"
+  } ],
+  "labPIs" : [ {
+    "title" : "Dr",
+    "firstName" : "Yifat",
+    "lastName" : "Merbl",
+    "identifier" : "97540100",
+    "affiliation" : "Weizmann Institute of Science",
+    "email" : "yifat.merbl@weizmann.ac.il",
+    "country" : "",
+    "orcid" : "",
+    "name" : "Yifat Merbl",
+    "id" : "97540100"
+  } ],
+  "instruments" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "MS",
+    "accession" : "MS:1001911",
+    "name" : "Q Exactive",
+    "value" : ""
+  } ],
+  "softwares" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "MS",
+    "accession" : "MS:1001583",
+    "name" : "MaxQuant"
+  } ],
+  "experimentTypes" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "PRIDE",
+    "accession" : "PRIDE:0000429",
+    "name" : "Shotgun proteomics"
+  } ],
+  "quantificationMethods" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "PRIDE",
+    "accession" : "PRIDE:0000312",
+    "name" : "Label free"
+  } ],
+  "countries" : [ "Israel" ],
+  "sampleAttributes" : [ {
+    "@type" : "Tuple",
+    "key" : {
+      "cvLabel" : "EFO",
+      "accession" : "EFO:0000635",
+      "name" : "organism part"
+    },
+    "value" : [ {
+      "cvLabel" : "BTO",
+      "accession" : "BTO:0000214",
+      "name" : "cell culture",
+      "value" : ""
+    }, {
+      "cvLabel" : "CL",
+      "accession" : "CL:0000066",
+      "name" : "epithelial cell",
+      "value" : ""
+    } ]
+  }, {
+    "@type" : "Tuple",
+    "key" : {
+      "cvLabel" : "EFO",
+      "accession" : "OBI:0100026",
+      "name" : "organism"
+    },
+    "value" : [ {
+      "cvLabel" : "NEWT",
+      "accession" : "NEWT:9606",
+      "name" : "Homo sapiens (Human)",
+      "value" : ""
+    } ]
+  } ],
+  "organisms" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "NEWT",
+    "accession" : "NEWT:9606",
+    "name" : "Homo sapiens (human)",
+    "value" : ""
+  } ],
+  "organismParts" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "CL",
+    "accession" : "CL:0000066",
+    "name" : "Epithelial cell",
+    "value" : ""
+  }, {
+    "@type" : "CvParam",
+    "cvLabel" : "BTO",
+    "accession" : "BTO:0000214",
+    "name" : "Cell culture",
+    "value" : ""
+  } ],
+  "diseases" : [ ],
+  "references" : [ {
+    "referenceLine" : "Wolf-Levy H, Javitt A, Eisenberg-Lerner A, Kacen A, Ulman A, Sheban D, Dassa B, Fishbain-Yoskovitz V, Carmona-Rivera C, Kramer MP, Nudel N, Regev I, Zahavi L, Elinger D, Kaplan MJ, Morgenstern D, Levin Y, Merbl Y. Revealing the cellular degradome by mass spectrometry analysis of proteasome-cleaved peptides. Nat Biotechnol. 2018",
+    "pubmedID" : 30346940,
+    "doi" : "10.1038/nbt.4279"
+  } ],
+  "identifiedPTMStrings" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "MOD",
+    "accession" : "MOD:00425",
+    "name" : "monohydroxylated residue",
+    "value" : ""
+  }, {
+    "@type" : "CvParam",
+    "cvLabel" : "MOD",
+    "accession" : "MOD:00408",
+    "name" : "mono N-acetylated residue",
+    "value" : ""
+  } ],
+  "totalFileDownloads" : 907,
+  "otherOmicsLinks" : [ "pride.project:PXD009092", "pride.project:PXD009438", "pride.project:PXD009181", "pride.project:PXD009112", "pride.project:PXD009508", "pride.project:PXD009360" ]
+}

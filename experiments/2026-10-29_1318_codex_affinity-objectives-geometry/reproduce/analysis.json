@@ -1,0 +1,22 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "commands": [
+    "python experiments/2026-10-29_1318_codex_affinity-objectives-geometry/analysis/collect_audit.py",
+    "MPLCONFIGDIR=/private/tmp/presto-assay-mpl python experiments/2026-10-29_1318_codex_affinity-objectives-geometry/analysis/summarize_audit.py",
+    "python -m pytest -q experiments/2026-10-29_1318_codex_affinity-objectives-geometry/analysis/test_assay_agreement.py"
+  ],
+  "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "environment": {
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "matplotlib": "3.11.2",
+    "modal": "1.6.1",
+    "pytest": "9.1.1"
+  },
+  "source_hashes": {
+    "collect_audit.py": "29746160a4efcaa4584de0068d794794e8b401f3945818bc3fd5992d3a72d4c6",
+    "summarize_audit.py": "77dca72b250c566c7c59164906005f2b7719ee62cf83d919ee84da9b721d9688",
+    "test_assay_agreement.py": "25ccc54f668665e267d406cdcd4fed3b6658eb6f2a8bb9845cba66607218d521"
+  },
+  "validation_test_used": false
+}

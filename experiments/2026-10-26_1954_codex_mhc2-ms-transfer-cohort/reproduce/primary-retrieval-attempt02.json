@@ -1,0 +1,33 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "utc": "2026-10-26T20:03:15.110144+00:00",
+  "argv": [
+    "experiments/2026-10-26_1954_codex_mhc2-ms-transfer-cohort/code/retrieve_atlas.py"
+  ],
+  "git_commit": "aa5eb5ed41e2916b8f94c9e4a30e9d069bf3a5fc",
+  "dirty_status": " M tasks/todo.md\n?? experiments/2026-10-26_1954_codex_mhc2-ms-transfer-cohort/\n?? experiments/agents/codex/plans/2026-10-26_mhc2-ms-transfer-cohort.md\n",
+  "script_sha256": "89f1bb182d37121990f9ac24441bdd4707a0d270d96c48fbb5376f6fd55dac27",
+  "prior_network_operations": 23,
+  "max_network_operations": 24,
+  "requests": [
+    {
+      "pmid": "33858848",
+      "pmc": "PMC8054196",
+      "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8054196/fullTextXML",
+      "status": "verified_original_xml",
+      "http_status": 200,
+      "final_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8054196/fullTextXML",
+      "path": "/private/tmp/presto-mhc2-20261026/ms-transfer-cohort/primary-attempt02/PMC8054196.xml",
+      "bytes": 167469,
+      "sha256": "1d901f85a12c3772d785688b84473044d34c699d8d339af005b43d97c6dd7edb",
+      "article_ids": {
+        "pmcid": "PMC8054196",
+        "pmcaid": "8054196",
+        "pmcaiid": "8054196",
+        "pmid": "33858848",
+        "doi": "10.1136/jitc-2020-002071"
+      },
+      "elapsed_seconds": 1.9410326249999343
+    }
+  ]
+}

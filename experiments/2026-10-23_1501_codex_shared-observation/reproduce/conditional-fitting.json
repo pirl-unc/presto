@@ -1,0 +1,46 @@
+{
+  "initial_fits_path": "/private/tmp/presto-modular-model/experiments/2026-10-23_1202_codex_biological-cut-rates/results/fits.json",
+  "initial_fits_sha256": "2400f214141b6ab421cc0b5168ec08b3209507b62b7cf0a590fd719937bd267f",
+  "steps": 2000,
+  "learning_rate": 0.03,
+  "betas": [
+    0.9,
+    0.999
+  ],
+  "epsilon": 1e-08,
+  "penalty": 0.01,
+  "sample_count": 512,
+  "sample_seed": 42,
+  "log10_rate_scale_shifts": [
+    -2,
+    -1,
+    0,
+    1,
+    2
+  ],
+  "registered_at": "2026-10-23T17:58:12.564878-04:00",
+  "presto_commit": "ce86bdb29b4ac45f08dda7147c8833333f0bd8b4",
+  "presto_dirty": " M tasks/todo.md\n?? data/availability_recipes/\n?? experiments/2026-10-23_1501_codex_shared-observation/\n?? experiments/agents/codex/plans/full-ic50-fitting.md\n?? tasks/modular_model/trajectory-sampling-issue.md\n",
+  "proposal": "gradient_mixture_90_10",
+  "replay_steps": [
+    1,
+    100,
+    500,
+    1000,
+    2000
+  ],
+  "runtime": "Local CPU float64, one thread. May overlap verification; no isolated timing claim.",
+  "source_hashes": {
+    "code/conditional_fit.py": "c7c2ca2bad6cad2163551d151a2d19e2d4d3094e46fd9f69e831e40c7a165cc2",
+    "code/conditional.py": "34974908a5270f91c95f6d4040909f478b2d25da8661bff6d335608e403d996e",
+    "code/fit.py": "91a43a32345bbfad42b79b392cd628f7aeb224791ecf21d36049ba32e67d30ec",
+    "code/observation.py": "bf612679f2280bee81bdcfaddd02771bada80f1db0978a86925ab48f9b07420f",
+    "code/qualify.py": "8b586248fda2784cb9ad3cee5cc0faa7c14d421cbd1a949f58686835324f0f86"
+  },
+  "artifact_hashes": {
+    "results/conditional-qualification.json": "06b58d536442608f7747851b406475dfc4016365a48be702585c0176bf9a3e49",
+    "results/conditional-gradient-probes.json": "a2cc0f73551569e36b92887b1d0ac5dbe41e19981989df701cf111dba9458582",
+    "results/response-feature-basis.json": "a5d71ad7d163c98b4d4222f4937cd24d2d99e93d7a7f5ba4a933101d59bfd458",
+    "results/context-summary.json": "050c284cc04b0e11286b4a10e28573648bc9e8426ae68bbb9da54fa9332a50df"
+  }
+}

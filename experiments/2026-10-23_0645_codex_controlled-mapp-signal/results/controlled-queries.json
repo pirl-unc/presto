@@ -1,0 +1,315 @@
+{
+  "processing_channel": {
+    "artifact": "external/wolflevy2018_controlled/typed/channels.parquet",
+    "canonical_rows_sha256": "74faa5b1bc3b99ac424f830cb38ece6539975983b5fd2dbd3ad2d09bc17ed652",
+    "fields": [
+      "native.channel_id",
+      "native.source_record_id",
+      "native.experiment_raw",
+      "native.raw_file",
+      "native.condition",
+      "native.condition_role",
+      "native.measured_species",
+      "native.measured_cell",
+      "native.measured_pool",
+      "native.material_link_precision",
+      "native.search_enzyme_mode_raw",
+      "native.replicate_label",
+      "native.source_dataset",
+      "native.capture_label_raw",
+      "native.capture_role",
+      "native.capture_target_gene",
+      "native.treatment_label_raw",
+      "native.treatment_kind",
+      "native.treatment_name",
+      "native.treatment_context_status",
+      "native.treatment_dose_unit",
+      "native.measured_cell_scope",
+      "native.measured_species_scope",
+      "native.specimen_id",
+      "native.aliquot_id",
+      "native.pair_id",
+      "native.treatment_dose",
+      "native.duration_hours",
+      "native.time_hours"
+    ],
+    "n_rows": 30
+  },
+  "processing_derivation_input": {
+    "artifact": "external/wolflevy2018_controlled/typed/derivation_inputs.parquet",
+    "canonical_rows_sha256": "a9a769bd892d51df4ae29ef402a368809cf7c7a6ce71c7a4ddb58913dee01a8e",
+    "fields": [
+      "native.derived_measurement_id",
+      "native.input_measurement_id",
+      "native.input_role",
+      "native.source_dataset"
+    ],
+    "n_rows": 193609
+  },
+  "processing_group": {
+    "artifact": "external/wolflevy2018_controlled/typed/groups.parquet",
+    "canonical_rows_sha256": "7953275f2867591f4f3002c879658ce3df219bd430f0de772b33b6ff78eda221",
+    "fields": [
+      "native.group_record_id",
+      "native.source_record_id",
+      "native.group_id_raw",
+      "native.protein_ids_raw",
+      "native.peptide_ids_raw",
+      "native.status",
+      "native.reverse",
+      "native.potential_contaminant",
+      "native.source_dataset"
+    ],
+    "n_rows": 1791
+  },
+  "processing_identification": {
+    "artifact": "external/wolflevy2018_controlled/typed/evidence.parquet",
+    "canonical_rows_sha256": "7c4ed3b694fb560b925b60e98953555cfcf613d203fbbc33b09a0cb68fbcc730",
+    "fields": [
+      "native.evidence_id",
+      "native.source_record_id",
+      "native.peptide_row_id",
+      "native.channel_id",
+      "native.sequence_raw",
+      "native.modified_sequence_raw",
+      "native.modifications_raw",
+      "native.type_raw",
+      "native.group_ids_raw",
+      "native.pep_raw",
+      "native.pep_status",
+      "native.intensity_raw",
+      "native.intensity_status",
+      "native.msms_count",
+      "native.intensity",
+      "native.pep",
+      "native.reverse",
+      "native.potential_contaminant",
+      "native.source_dataset"
+    ],
+    "n_rows": 46777
+  },
+  "processing_label_alias": {
+    "artifact": "external/wolflevy2018_controlled/typed/label_aliases.parquet",
+    "canonical_rows_sha256": "c68e9189d886ac7763bc313877d90b510e958aa8c82685b8f5703b093a3e27d5",
+    "fields": [
+      "native.source_dataset",
+      "native.alias_id",
+      "native.channel_id",
+      "native.quantity_column_raw",
+      "native.summary_experiment_raw",
+      "native.match_rule",
+      "native.source_locator"
+    ],
+    "n_rows": 30
+  },
+  "processing_peptide": {
+    "artifact": "external/wolflevy2018_controlled/typed/peptide_rows.parquet",
+    "canonical_rows_sha256": "afbd5a09b4b81b91ef6c24192e115f70f8e52275d07b66f68f2ab20d3dcc79c2",
+    "fields": [
+      "native.peptide_row_id",
+      "native.source_record_id",
+      "native.peptide_id_raw",
+      "native.sequence_raw",
+      "native.pep_raw",
+      "native.pep_status",
+      "native.parent_labels_raw",
+      "native.leading_parent_raw",
+      "native.group_ids_raw",
+      "native.n_flank_raw",
+      "native.c_flank_raw",
+      "native.measured_pool",
+      "native.material_link_precision",
+      "native.start_1based_reported",
+      "native.end_1based_reported",
+      "native.pep",
+      "native.reverse",
+      "native.potential_contaminant",
+      "native.source_dataset"
+    ],
+    "n_rows": 9206
+  },
+  "processing_peptide_parent_occurrence": {
+    "artifact": "external/wolflevy2018_controlled/typed/peptide_reference_occurrences.parquet",
+    "canonical_rows_sha256": "238ed3ff03baf704e5173ccb686da136609caee52ff80a7b35dd70912e3f73a7",
+    "fields": [
+      "native.occurrence_id",
+      "native.peptide_row_id",
+      "native.reference_id",
+      "native.reference_record_id",
+      "native.n_flank",
+      "native.c_flank",
+      "native.start_1based",
+      "native.end_1based",
+      "native.source_listed_resolved",
+      "native.source_leading_resolved"
+    ],
+    "n_rows": 40539
+  },
+  "processing_peptide_reference_coverage": {
+    "artifact": "external/wolflevy2018_controlled/typed/peptide_reference_coverage.parquet",
+    "canonical_rows_sha256": "0238fa25f5656a734ff12b6c8ae167a74354074d6984675b71dd7cd5b8bfdfbb",
+    "fields": [
+      "native.peptide_row_id",
+      "native.reference_id",
+      "native.mapping_status",
+      "native.shared_sequence_component_id",
+      "native.n_source_claims",
+      "native.n_missing_claims",
+      "native.n_source_resolved_records",
+      "native.n_source_matched_records",
+      "native.n_reference_records",
+      "native.n_reference_sequences",
+      "native.n_occurrences",
+      "native.n_additional_records",
+      "native.leading_has_occurrence",
+      "native.leading_coordinate_match",
+      "native.leading_coordinate_flanks_match",
+      "native.leading_coordinate_conflict"
+    ],
+    "n_rows": 18412
+  },
+  "processing_quantity_measurement": {
+    "artifact": "external/wolflevy2018_controlled/typed/quantity_measurements.parquet",
+    "canonical_rows_sha256": "7870ddee0c3c47e30bdff50e9ee51fda9e44323967811c4d4cb756299cb57d56",
+    "fields": [
+      "native.measurement_id",
+      "native.result_id",
+      "native.peptide_row_id",
+      "native.representation",
+      "native.value_status",
+      "native.unit",
+      "native.quantity_scale",
+      "native.source_locator",
+      "native.derivation_rule",
+      "native.value",
+      "native.recomputed_value",
+      "native.absolute_replay_error",
+      "native.source_dataset"
+    ],
+    "n_rows": 293664
+  },
+  "processing_quantity_result": {
+    "artifact": "external/wolflevy2018_controlled/typed/quantity_results.parquet",
+    "canonical_rows_sha256": "1eedf412ea1adc0da1c9cecc16390fe4ba705692409ac6fe8982710f3762d305",
+    "fields": [
+      "native.result_id",
+      "native.peptide_row_id",
+      "native.channel_id",
+      "native.measured_pool",
+      "native.endpoint",
+      "native.material_link_precision",
+      "native.source_dataset",
+      "native.n_source_evidence",
+      "native.n_numeric_evidence",
+      "native.n_direct_msms_evidence",
+      "native.n_positive_direct_msms_evidence",
+      "native.n_matched_evidence"
+    ],
+    "n_rows": 146832
+  },
+  "processing_reference_accession": {
+    "artifact": "external/wolflevy2018_controlled/typed/reference_accessions.parquet",
+    "canonical_rows_sha256": "c2e9ea172db72e82010db701d6482e1217e2a5dd6b35343a20205816c97567fa",
+    "fields": [
+      "native.reference_id",
+      "native.reference_record_id",
+      "native.accession_raw",
+      "native.accession_role"
+    ],
+    "n_rows": 133414
+  },
+  "processing_reference_protein": {
+    "artifact": "external/wolflevy2018_controlled/typed/reference_proteins.parquet",
+    "canonical_rows_sha256": "ece744483b40c178718bd7fe6800a86d11dc5b8e2697613400482cda9746a02e",
+    "fields": [
+      "native.reference_record_id",
+      "native.reference_id",
+      "native.accession",
+      "native.sequence",
+      "native.sequence_sha256",
+      "native.header_raw",
+      "native.metadata_json",
+      "native.sequence_length",
+      "native.sequence_version"
+    ],
+    "n_rows": 62984
+  },
+  "processing_sequence_reference": {
+    "artifact": "external/wolflevy2018_controlled/typed/sequence_references.parquet",
+    "canonical_rows_sha256": "c842cb62036de8aa45db1bf1a8de18e5832eb5ae2218d812aff370e30b1cfe2f",
+    "fields": [
+      "native.reference_id",
+      "native.asset_path",
+      "native.asset_sha256",
+      "native.source_url",
+      "native.reference_format",
+      "native.generation_label",
+      "native.reference_role",
+      "native.organism_scope",
+      "native.license",
+      "native.original_reference_status",
+      "native.asset_size_bytes"
+    ],
+    "n_rows": 2
+  },
+  "processing_source_assertion": {
+    "artifact": "external/wolflevy2018_controlled/typed/source_assertions.parquet",
+    "canonical_rows_sha256": "19931520309872f6adb011d274cd4b0a27abece28362c45932d2bcec7615485e",
+    "fields": [
+      "native.assertion_id",
+      "native.subject_id",
+      "native.predicate",
+      "native.value_raw",
+      "native.normalized_value",
+      "native.assertion_status",
+      "native.source_locator",
+      "native.scope",
+      "native.source_dataset"
+    ],
+    "n_rows": 141
+  },
+  "processing_source_parent_claim": {
+    "artifact": "external/wolflevy2018_controlled/typed/source_parent_claims.parquet",
+    "canonical_rows_sha256": "c4dc280e48601fe2a0cbf0bff067be627de09875f4784935e39695d5d164a733",
+    "fields": [
+      "native.claim_id",
+      "native.peptide_row_id",
+      "native.reference_id",
+      "native.source_accession_raw",
+      "native.resolution_status",
+      "native.n_candidate_records",
+      "native.listed_in_source",
+      "native.source_leading"
+    ],
+    "n_rows": 63894
+  },
+  "processing_source_parent_resolution": {
+    "artifact": "external/wolflevy2018_controlled/typed/source_parent_resolutions.parquet",
+    "canonical_rows_sha256": "c70894b21ab2f48809f5f75b861683bed7d20bdcfaf1b64f79663574ff32e120",
+    "fields": [
+      "native.claim_id",
+      "native.reference_record_id",
+      "native.accession_role",
+      "native.occurrence_status",
+      "native.coordinate_status",
+      "native.n_exact_occurrences",
+      "native.coordinate_in_range",
+      "native.coordinate_peptide_equal",
+      "native.coordinate_left_equal",
+      "native.coordinate_right_equal"
+    ],
+    "n_rows": 29636
+  },
+  "processing_source_record": {
+    "artifact": "external/wolflevy2018_controlled/typed/source_records.parquet",
+    "canonical_rows_sha256": "ef62e00d89ffb0677e140bf3aa4cc0bfde0ebcb951f07a90dc1beaa6d704ff65",
+    "fields": [
+      "native.source_record_id",
+      "native.asset_path",
+      "native.fields_json",
+      "native.row_1based",
+      "native.source_dataset"
+    ],
+    "n_rows": 57954
+  }
+}

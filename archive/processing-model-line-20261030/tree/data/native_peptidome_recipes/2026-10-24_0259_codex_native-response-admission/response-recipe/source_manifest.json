@@ -1,0 +1,128 @@
+{
+  "catalog_schema_version": 22,
+  "files": {
+    "tmab/coverage.json": {
+      "sha256": "7ab03b65ec5193b9ff41213b41690a9f69d7d61cf85a5129d246109fbe02806b",
+      "size_bytes": 1459
+    },
+    "tmab/lineage.parquet": {
+      "sha256": "3b0718507a89776bfad6755e228abf11773f65d47f2d41f08c68f34e855a1892",
+      "size_bytes": 2016065
+    },
+    "tmab/measurements.parquet": {
+      "sha256": "fd6cf5a9599006c04d6a03ee61c27f7e7ce6496f6adb6d626b061afc232882b7",
+      "size_bytes": 2691397
+    },
+    "tmab/protocol_context.parquet": {
+      "sha256": "f478fe2a2e2b855237ecf8267b703e2d70b26adc486c3c41f777afaf6e26d81f",
+      "size_bytes": 18761
+    },
+    "tmab/source_assets.parquet": {
+      "sha256": "01a9dff2babfb828b858efc5f6d81ab16c8438da7cac11a277d04c640edca4c6",
+      "size_bytes": 3137
+    },
+    "tmab/source_assets/dasgupta_s1.xlsx": {
+      "sha256": "dbdd837f2f7d40be8aa69c6f3ce845d2a7babc6c38432b539aabcebe3ed9b8a2",
+      "size_bytes": 1028093
+    },
+    "tmab/source_assets/dasgupta_s2.xlsx": {
+      "sha256": "3c722c0e4fdb1e1aeff35648ade3ca3fef18020b111abe0f90a34e6c64ad924b",
+      "size_bytes": 47865
+    },
+    "tmab/source_assets/gelman_s1.xlsx": {
+      "sha256": "5f2a7c922a4fc86cfdc4ca3dff853f895f52ae9fe15a0f1fd9866314d1c7de70",
+      "size_bytes": 608788
+    },
+    "tmab/source_assets/gelman_s2.xlsx": {
+      "sha256": "9ebd25dfeb8d5539adb1f99cc7a29b794d3f84edb71638c27e66c32d7783f081",
+      "size_bytes": 64457
+    },
+    "tmab/source_rows.parquet": {
+      "sha256": "425717b15b64ed760358a519abc973c4dd84895e4af78a25a81b475cc9d16281",
+      "size_bytes": 737441
+    }
+  },
+  "hitlist_version": "2.0.17",
+  "limitations": [
+    "native_cellular_extract_not_MHC_elution",
+    "relative_ratio_not_absolute_concentration",
+    "treatment_is_not_genetic_perturbation",
+    "cross_paper_reuse_and_specimen_independence_unresolved",
+    "heatmap_republications_deferred_from_training"
+  ],
+  "package_family": "tmab_peptidomics",
+  "reconciliation": {
+    "absolute_quantity_claim": false,
+    "by_censoring_status": {
+      "exact": 34763,
+      "missing_signal": 11330,
+      "overlapping_peak": 60,
+      "source_declared_bound": 15753,
+      "unresolved_text": 2
+    },
+    "by_eligibility_status": {
+      "candidate_censored": 4662,
+      "candidate_exact": 7933,
+      "deferred_control_or_derived_average": 30954,
+      "deferred_nonquantifiable": 2399,
+      "deferred_tentative": 135,
+      "deferred_unidentified": 15798,
+      "deferred_unresolved_annotation": 27
+    },
+    "by_identification_status": {
+      "reported_sequence": 29988,
+      "tentative": 270,
+      "unidentified": 31596,
+      "unresolved_annotation": 54
+    },
+    "by_source_file": {
+      "dasgupta_s1.xlsx": 6073,
+      "dasgupta_s2.xlsx": 73,
+      "gelman_s1.xlsx": 4245,
+      "gelman_s2.xlsx": 173
+    },
+    "by_value_status": {
+      "missing_source_value": 4113,
+      "reported_bound": 15753,
+      "reported_exact": 34763,
+      "reported_nonnumeric": 2,
+      "reported_not_detected": 7217,
+      "reported_overlap": 60
+    },
+    "n_candidate_cross_paper_row_groups": 1383,
+    "n_candidate_row_groups_with_equal_experiment_labels": 971,
+    "n_contexts": 36,
+    "n_deferred_heatmap_rows": 246,
+    "n_lineage_rows": 61908,
+    "n_measurements": 61908,
+    "n_possible_cross_paper_reuse_groups": 8298,
+    "n_primary_ratio_rows": 10318,
+    "n_source_assets": 4,
+    "n_source_rows": 10564,
+    "native_rows_preserved": true,
+    "processing_or_MHC_label_claim": false,
+    "source_assets_snapshotted": true
+  },
+  "revision": "tmab_native_peptidomics_v3",
+  "schema_version": 17,
+  "source_registry": {
+    "dasgupta_2014": {
+      "cells": "HEK293T and SH-SY5Y",
+      "doi": "10.1371/journal.pone.0103604",
+      "protocol_instrument": "Waters Synapt G2",
+      "protocol_section": "s2b2",
+      "source_role": "native_cellular_peptidomics",
+      "treatment_section": "s2b1",
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0103604"
+    },
+    "gelman_2013": {
+      "cells": "HEK293T and SH-SY5Y",
+      "doi": "10.1371/journal.pone.0053263",
+      "protocol_instrument": "Waters Synapt G1",
+      "protocol_section": "s2d",
+      "source_role": "native_cellular_peptidomics",
+      "treatment_section": "s2c",
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0053263"
+    }
+  }
+}

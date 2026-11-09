@@ -1,0 +1,31 @@
+{
+  "first_run": {
+    "passed": 2923,
+    "skipped": 4,
+    "setup_errors": 6,
+    "reason": "Hitlist provenance scratch reserve: 0.341 GiB available < 1 GiB reserve",
+    "log": "/private/tmp/presto-preparation-throughput-full-pytest.log"
+  },
+  "targeted_retry": {
+    "file": "tests/test_coverage_preflight.py",
+    "passed": 23,
+    "log": "/private/tmp/presto-preparation-setup-error.log"
+  },
+  "cleanup": {
+    "removed": "/var/folders/qm/qf74v01n2s12j3w0h1yrx4l00000gn/T/pytest-of-iskander/pytest-1137",
+    "ownership": "completed full-suite temporary directory cited in original traceback",
+    "before_free_bytes": 9966235648,
+    "after_free_bytes": 11413524480,
+    "time": 1793381749.7838268
+  },
+  "clean_rerun": {
+    "passed": 2929,
+    "skipped": 4,
+    "seconds": 389.71,
+    "log": "full-suite-clean-rerun.txt",
+    "command": "PYTHONPATH=/Users/iskander/code/presto/.worktrees/shared-training /Users/iskander/code/shared-virtual-env/bin/python -m pytest -q --basetemp=/private/tmp/presto-preparation-throughput-tests-20261030",
+    "source_changes_between_runs": false,
+    "lint": "passed",
+    "strict_docs": "passed"
+  }
+}

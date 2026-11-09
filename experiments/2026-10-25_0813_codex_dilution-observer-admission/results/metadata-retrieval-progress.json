@@ -1,0 +1,79 @@
+[
+  {
+    "name": "project.json",
+    "kind": "json",
+    "url": "https://www.ebi.ac.uk/pride/ws/archive/v2/projects/PXD024809",
+    "started_utc": "2026-10-25T08:14:33.729978+00:00",
+    "status": 200,
+    "final_url": "https://www.ebi.ac.uk/pride/ws/archive/v2/projects/PXD024809",
+    "headers": {
+      "Vary": "Origin",
+      "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+      "Content-Type": "text/plain;charset=UTF-8",
+      "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+      "Expires": "0",
+      "Pragma": "no-cache",
+      "X-XSS-Protection": "0",
+      "X-Content-Type-Options": "nosniff",
+      "Connection": "close",
+      "X-Frame-Options": "DENY",
+      "Referrer-Policy": "no-referrer",
+      "Content-Length": "7300"
+    },
+    "bytes": 7300,
+    "sha256": "3f3c061802f8f2517b9cdc3ab48157d688c220fe97b7e86b95b80e7f627b0fd7",
+    "json_root_type": "dict",
+    "passed": true,
+    "elapsed_seconds": 0.9501435419660993
+  },
+  {
+    "name": "files-page0.json",
+    "kind": "json",
+    "url": "https://www.ebi.ac.uk/pride/ws/archive/v2/files/byProject?accession=PXD024809&pageSize=100&page=0",
+    "started_utc": "2026-10-25T08:14:34.680606+00:00",
+    "status": 200,
+    "final_url": "https://www.ebi.ac.uk/pride/ws/archive/v2/files/byProject?accession=PXD024809&pageSize=100&page=0",
+    "headers": {
+      "Vary": "Origin",
+      "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+      "Content-Type": "application/json",
+      "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+      "Expires": "0",
+      "Pragma": "no-cache",
+      "X-XSS-Protection": "0",
+      "X-Content-Type-Options": "nosniff",
+      "Connection": "close",
+      "X-Frame-Options": "DENY",
+      "Referrer-Policy": "no-referrer",
+      "Content-Length": "0"
+    },
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "passed": false,
+    "error_type": "JSONDecodeError",
+    "error": "Expecting value: line 1 column 1 (char 0)",
+    "elapsed_seconds": 0.41999625001335517
+  },
+  {
+    "name": "article.xml",
+    "kind": "xml",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12406853/fullTextXML",
+    "started_utc": "2026-10-25T08:14:35.101015+00:00",
+    "status": 200,
+    "final_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12406853/fullTextXML",
+    "headers": {
+      "Vary": "Origin",
+      "Content-Type": "application/xml",
+      "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+      "Date": "Sun, 25 Oct 2026 08:14:35 GMT",
+      "Transfer-Encoding": "chunked",
+      "Connection": "close",
+      "Set-Cookie": "JSESSIONID=DDB3C2CD08E3E5CEA068FF9026BC06E0; Path=/europepmc/webservices/rest; Secure; HttpOnly"
+    },
+    "bytes": 80140,
+    "sha256": "1f0f06ae0ac20ecb0edd84ca8244e5ce080770e1d99791fedb3c83b58060389d",
+    "xml_root": "article",
+    "passed": true,
+    "elapsed_seconds": 0.7518846659804694
+  }
+]

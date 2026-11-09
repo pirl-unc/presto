@@ -1,0 +1,81 @@
+{
+  "utc": "2026-10-26T20:27:41.967351+00:00",
+  "status": "inventory_verified_source_policy_qualified",
+  "agent_model": "Codex / GPT-6",
+  "no_model_fit": true,
+  "no_test_reason": "source/dependency inventory only; predictive metrics/dumps required in next family",
+  "executed_source_hashes": {
+    "retrieve_primary.py": "7ace7dbe7bafdbbf8b0ca560276396809063d36c21185094d55eefe630cce4df",
+    "audit_current-attempt01.py": "4b50661ed34c61046b9ae0c040d2468be01cb7b461cedd9da3ea219571833c56",
+    "retrieve_atlas.py": "89f1bb182d37121990f9ac24441bdd4707a0d270d96c48fbb5376f6fd55dac27",
+    "verify.py": "62725c572c8a144683fedfa9c990791584d483d42d5e246b6d72df08a62b259c",
+    "audit_current_v2.py": "e6576ec499fd7ace3029dc1301368083e0f1dd83b9a5c9af45e040c6c1102f77",
+    "inventory.py": "9bd277ed94c10383f10cb9ccd9cff98189ab0baae343b8f983f011f886422879"
+  },
+  "verification": "results/independent-verification.json",
+  "current_replay": "results/current-source-qualification.json",
+  "logs": [
+    {
+      "original": "/private/tmp/presto-mhc2-ms-inventory-01.log",
+      "published": "results/logs/presto-mhc2-ms-inventory-01.log.gz",
+      "original_sha256": "f3eb0e0b2554fcf0ec4d73030b138cd72655bde2cebf72c2f7c087f81257e5ed",
+      "bytes": 795
+    },
+    {
+      "original": "/private/tmp/presto-mhc2-ms-inventory-verification-01.log",
+      "published": "results/logs/presto-mhc2-ms-inventory-verification-01.log.gz",
+      "original_sha256": "c4f288572aa69dbc5d77042d1f41ffc3c43492cde53bfbb5b23f6ada3b7e4263",
+      "bytes": 442
+    },
+    {
+      "original": "/private/tmp/presto-mhc2-ms-current-replay-01.log",
+      "published": "results/logs/presto-mhc2-ms-current-replay-01.log.gz",
+      "original_sha256": "39768b2757c344406f3dd60c3f2d01904a87e2075ad244a7a6e951161c6fa797",
+      "bytes": 484
+    },
+    {
+      "original": "/private/tmp/presto-mhc2-ms-current-replay-02.log",
+      "published": "results/logs/presto-mhc2-ms-current-replay-02.log.gz",
+      "original_sha256": "48f54ea098c4a65ea32732add338f8717b2b92829f069de016d502d870978d7d",
+      "bytes": 823
+    },
+    {
+      "original": "/private/tmp/presto-mhc2-ms-current-replay-03.log",
+      "published": "results/logs/presto-mhc2-ms-current-replay-03.log.gz",
+      "original_sha256": "9fc2a84afb387552a53a346ee92570dcb741a2f8dd92821c024e42a4904ad8fe",
+      "bytes": 139
+    },
+    {
+      "original": "/private/tmp/presto-mhc2-ms-primary-retrieval-01.log",
+      "published": "results/logs/presto-mhc2-ms-primary-retrieval-01.log.gz",
+      "original_sha256": "ed6af87d9e0ea8dbb5576a4262acdde58f8c83716a06b1b77149ad9dd0f3e41e",
+      "bytes": 636
+    },
+    {
+      "original": "/private/tmp/presto-mhc2-ms-primary-retrieval-02.log",
+      "published": "results/logs/presto-mhc2-ms-primary-retrieval-02.log.gz",
+      "original_sha256": "be0d47eae85ee27419d6ec1d0bf27f73dcb878a78d2ce1536e96f2dfee9c0c93",
+      "bytes": 108
+    }
+  ],
+  "issues": [
+    {
+      "number": 855,
+      "url": "https://github.com/pirl-unc/hitlist/issues/855",
+      "body": "results/atlas-issue.md",
+      "readback_verified": true
+    },
+    {
+      "number": 856,
+      "url": "https://github.com/pirl-unc/hitlist/issues/856",
+      "body": "results/dp-issue.md",
+      "readback_verified": true
+    }
+  ],
+  "invocations": {
+    "inventory": "reproduce/launch.sh",
+    "verify": "env PYTHONPATH=/private/tmp/presto-mhc2-20261026:/private/tmp/presto-pr-completion-20261026/dependencies OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 /Users/iskander/code/shared-virtual-env/bin/python /private/tmp/presto-mhc2-20261026/presto/experiments/2026-10-26_1954_codex_mhc2-ms-transfer-cohort/code/verify.py",
+    "current_replay": "env PYTHONPATH=/private/tmp/presto-mhc2-20261026/hitlist-current:/private/tmp/presto-pr-completion-20261026/dependencies OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 /Users/iskander/code/shared-virtual-env/bin/python /private/tmp/presto-mhc2-20261026/presto/experiments/2026-10-26_1954_codex_mhc2-ms-transfer-cohort/code/audit_current_v2.py"
+  },
+  "publication_note": "No source or prediction bytes changed; reviewed logs compressed with exact round-trip checks; original failures retained."
+}

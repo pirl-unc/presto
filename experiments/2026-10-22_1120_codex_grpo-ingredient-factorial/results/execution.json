@@ -1,0 +1,27 @@
+{
+  "argv": [
+    "/private/tmp/presto-modular-model/experiments/2026-10-22_1120_codex_grpo-ingredient-factorial/reproduce/source/launch.py",
+    "run",
+    "--output",
+    "/private/tmp/presto-modular-model/experiments/2026-10-22_1120_codex_grpo-ingredient-factorial/results/run"
+  ],
+  "git_commit": "4a31eaa097e5494d490a2a5101bc612ec84348ce",
+  "git_status": "M tasks/todo.md\n?? experiments/agents/codex/plans/full-ic50-fitting.md\n?? tasks/modular_model/trajectory-sampling-issue.md",
+  "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "torch": "2.14.1",
+  "numpy": "2.5.4",
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "device": "cpu",
+  "modal_gpu": null,
+  "threads": 1,
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "PYTHONHASHSEED": "0"
+  },
+  "sources": {
+    "launch.py": "893ca18d317ea726daaeb34c8ff45c222ab4d70de0ab95bed49ad6a7cb81b5da",
+    "base.py": "e66c3a5cffc0d512989094ad653ba7ea4f3ff56778d3b298fecb8e809eee5945"
+  }
+}

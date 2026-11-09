@@ -1,0 +1,140 @@
+{
+  "network_receipt_argv": [
+    [
+      "code/fetch.py",
+      "--url",
+      "https://ftp.pride.ebi.ac.uk/pride/data/archive/2021/11/PXD018722/HUMAN_NS3_Cyclin.fasta",
+      "--name",
+      "HUMAN_NS3_Cyclin.fasta",
+      "--size",
+      "33003906",
+      "--sha1",
+      "ebfe21f8f804ceb7679d4c41c001fde25cea2a96"
+    ],
+    [
+      "code/fetch.py",
+      "--url",
+      "https://ftp.pride.ebi.ac.uk/pride/data/archive/2021/11/PXD018722/Hi20S_txt.zip",
+      "--name",
+      "Hi20S_txt.evidence-modified.range",
+      "--size",
+      "6222508",
+      "--range",
+      "93940793:100163300",
+      "--object-size",
+      "167389796"
+    ],
+    [
+      "code/fetch.py",
+      "--url",
+      "https://ftp.pride.ebi.ac.uk/pride/data/archive/2021/11/PXD018722/Hi20S_txt.zip",
+      "--name",
+      "Hi20S_txt.parameters-peptides.range",
+      "--size",
+      "1677846",
+      "--range",
+      "165030948:166708793",
+      "--object-size",
+      "167389796"
+    ],
+    [
+      "code/fetch.py",
+      "--url",
+      "https://ftp.pride.ebi.ac.uk/pride/data/archive/2021/11/PXD018722/Hi20S_txt.zip",
+      "--name",
+      "Hi20S_txt.zip.tail",
+      "--size",
+      "65557",
+      "--range",
+      "167324239:167389795",
+      "--object-size",
+      "167389796"
+    ]
+  ],
+  "local_stages": [
+    {
+      "stage": "index_zip",
+      "argv": [
+        "sh",
+        "reproduce/launch.sh",
+        "index_zip"
+      ],
+      "log": "zip-directory.log"
+    },
+    {
+      "stage": "extract_members",
+      "argv": [
+        "sh",
+        "reproduce/launch.sh",
+        "extract_members"
+      ],
+      "log": "member-verification.log"
+    },
+    {
+      "stage": "extract_evidence",
+      "argv": [
+        "sh",
+        "reproduce/launch.sh",
+        "extract_members",
+        "--evidence"
+      ],
+      "log": "evidence-member-verification.log"
+    },
+    {
+      "stage": "reconcile",
+      "argv": [
+        "sh",
+        "reproduce/launch.sh",
+        "reconcile"
+      ],
+      "log": "source-reconciliation.log"
+    },
+    {
+      "stage": "reference",
+      "argv": [
+        "sh",
+        "reproduce/launch.sh",
+        "reference"
+      ],
+      "log": "reference-mapping.log"
+    },
+    {
+      "stage": "verify_reconciliation_failed",
+      "argv": [
+        "sh",
+        "reproduce/launch.sh",
+        "verify_reconciliation"
+      ],
+      "log": "independent-reconciliation.log"
+    },
+    {
+      "stage": "verify_reconciliation_retry",
+      "argv": [
+        "sh",
+        "reproduce/launch.sh",
+        "verify_reconciliation"
+      ],
+      "log": "independent-reconciliation-retry1.log"
+    },
+    {
+      "stage": "support",
+      "argv": [
+        "sh",
+        "reproduce/launch.sh",
+        "support"
+      ],
+      "log": "descriptive-support.log"
+    },
+    {
+      "stage": "close_source",
+      "argv": [
+        "sh",
+        "reproduce/launch.sh",
+        "close_source"
+      ],
+      "log": "source-closure.log"
+    }
+  ],
+  "failed_verifier_source": "reproduce/source/verify_reconciliation-initial-failed.py",
+  "initial_member_extractor": "reproduce/source/extract_members-initial.py"
+}

@@ -1,0 +1,15 @@
+{
+  "stage": "independent source-cell verification after time-format serialization correction",
+  "command": "OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 /Users/iskander/code/shared-virtual-env/bin/python experiments/2026-10-24_1829_codex_lymph-source-qualification/analysis/verify_workbooks.py > experiments/2026-10-24_1829_codex_lymph-source-qualification/launch_logs/verification-time-format.log 2>&1",
+  "exit_code": 0,
+  "ruff_check": "passed --isolated",
+  "ruff_format": "unchanged --isolated",
+  "files": {
+    "analysis/verify_workbooks.py": "024fa11a9b0a56390d4217da936377b89a52348b12163b6341f57c80bab01d38",
+    "reproduce/source/verify_workbooks.py": "024fa11a9b0a56390d4217da936377b89a52348b12163b6341f57c80bab01d38",
+    "results/independent-verification.json": "58fbcc3b94d8d35ee08461c5d750403e6239d72d9ddbcca52c42038a64534663",
+    "launch_logs/verification-time-format.log": "58fbcc3b94d8d35ee08461c5d750403e6239d72d9ddbcca52c42038a64534663"
+  },
+  "scientific_changes": false,
+  "training_or_predictions": false
+}

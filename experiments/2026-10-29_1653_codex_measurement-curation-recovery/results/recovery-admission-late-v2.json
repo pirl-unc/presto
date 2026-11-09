@@ -1,0 +1,70 @@
+{
+  "archive": "2026-10-29_1653_codex_measurement-curation-recovery/recovered-admission-late-v2.tar.gz",
+  "sha256": "6d855faeefc8ad45577c2f7eefedd730e639156f3810edae4072daccaf298a2b",
+  "summary": {
+    "status": "verified_candidate_cohort",
+    "counts": {
+      "common_adapter_admitted": 33235,
+      "excluded:unsupported_peptide": 448,
+      "pmhc_not_seen_in_prior_admitted_positives": 32534,
+      "heldout_peptide_embargo": 607,
+      "pmhc_seen_in_other_studies": 94
+    },
+    "train_observations": 32628,
+    "source_sha256": "711636451ee1ff8c16e25b487164dcedaafa7a2766a7bbcb3540b0d4888e4560",
+    "source_evidence_sha256": "552dd2b7da37ae97830d79874a534f85ba8f82753c39c911526a017b4f525f4a",
+    "catalog_sha256": "ddc3493c64f4328de174a6c2cda1f007ec2f93a1ef649add25d2ef9c1720add1",
+    "wheel_sha256": "0c35fc4bf578dfe97e2d624ec140f204636fc729c66590ecf93cfe608c518734",
+    "batch": "late",
+    "heldout_source_hashes": {
+      "hitlist-v4-iedb-test.jsonl": "0bfcabe1c2b0765fcf912460d76699ef0196f4c66c866950b613897564304d67",
+      "hitlist-v4-iedb-validation.jsonl": "cc93d281fd2138cc7a7af1c262f694dd0a28012da22e91098a76e36bbda27fd5",
+      "hitlist_ligand_background-test.jsonl": "c1c1cf95caf66903721d2226caa9744d062acabed44cae9052f929b0f08911a9",
+      "hitlist_ligand_background-validation.jsonl": "0f32d0f097e0a691be50b66689deba2a473c629ae73552d7d48ce3dcc8a1795d",
+      "hitlist_native_ms-test.jsonl": "a1a3507783cc1a258c24f455691837b039d1e03028e364ad57ba3ad2e59e6d05",
+      "hitlist_native_ms-validation.jsonl": "0023355b4b6b695223e12031b7fbe4bee752704be7c0e8184fe10a26800d3923"
+    },
+    "environment": {
+      "hitlist": "2.1.3",
+      "pandas": "3.1.0",
+      "mhcgnomes": "3.64.6"
+    },
+    "catalog_provider": "mhcseqs catalogue artifact; reader does not import the package",
+    "contributor_metadata": {
+      "schema_version": 1,
+      "sources": {
+        "supplement:strazar_2023_recovered_unmodified.csv": {
+          "path": "/bundle/strazar_2023_recovered_unmodified.csv",
+          "sha256": "711636451ee1ff8c16e25b487164dcedaafa7a2766a7bbcb3540b0d4888e4560",
+          "size_bytes": 4442795,
+          "upstream_description": "Source-reviewed human monoallelic PSM intersection with published Stra\u017ear 2023 ligand set; see linked evidence ledger",
+          "locator_basis": "ingested_csv_logical_data_row_1_based",
+          "upstream_record_locator_status": "not_available"
+        }
+      },
+      "contributors": {
+        "file": "contributors.parquet",
+        "sha256": "f8ab1ac19b72ab8fe5b2bd9e28f22429524f7e6099e8afd56c1db32370eaff58",
+        "size_bytes": 3700665
+      },
+      "n_contributor_links": 33683
+    },
+    "seconds": 61.60045096,
+    "requested_gpu": null,
+    "files": {
+      "contributors.parquet": {
+        "sha256": "f8ab1ac19b72ab8fe5b2bd9e28f22429524f7e6099e8afd56c1db32370eaff58",
+        "bytes": 3700665
+      },
+      "observations.parquet": {
+        "sha256": "ab42d727b3f6cbdef8faf57dc179c48609255f826bf20322ec03138f5019c0d2",
+        "bytes": 2528106
+      },
+      "train.jsonl.gz": {
+        "sha256": "75b7f1a7645ab7ca1658d2a364a8050a7599211c3146316dc2093852cf8d61ef",
+        "bytes": 4476734
+      }
+    },
+    "limitations": "Only acquired and source-reviewed forms; no generated negatives and no retraining in this curation family. Existing fits remain unchanged. Any subsequent combined cohort still requires background-conflict review."
+  }
+}

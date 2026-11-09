@@ -1,0 +1,46 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "argv": [
+    "experiments/2026-10-22_2330_codex_mapp-biological-comparison/code/train.py"
+  ],
+  "batch_size": 8,
+  "device": "CPU",
+  "environment_overrides": {
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "4",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PYTHONHASHSEED": "0",
+    "PYTHONPATH": "/private/tmp/presto-modular-imports:/private/tmp/hitlist-mapp-recipe"
+  },
+  "epochs": 40,
+  "git_commit": "8242200fa1d1e8a3361fc343dffb1e491d728d45",
+  "git_dirty": " M tasks/todo.md\n?? data/availability_recipes/\n?? experiments/2026-10-22_2330_codex_mapp-biological-comparison/reproduce/source/training/\n?? experiments/agents/codex/plans/full-ic50-fitting.md\n?? tasks/modular_model/trajectory-sampling-issue.md\n",
+  "learning_rate": 0.003,
+  "loss": "equal protein-condition reverse KL on admitted observed candidates",
+  "numpy": "2.5.4",
+  "optimizer": "Adam",
+  "output": "/private/tmp/presto-modular-model/artifacts/2026-10-22_2330_codex_mapp-biological-comparison",
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "pretraining": null,
+  "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "recipe_manifest_sha256": "df78d02f8200809c659e43adfae29866c48b712122b740379106994622f4ac80",
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "source_hashes": {
+    "learning.py": "4e058b9037e9f23f60221d45b14259d50511c5097751dfff7c600e9a569241d8",
+    "peptide_availability.py": "6c1260d04c24d191d7d760145e626fe95d015e590feb7dbfb734da1ec8e9809a",
+    "train.py": "82d0f1584de89646ede2b34ef679f240748b24177d94913f9d691d976d004540"
+  },
+  "source_manifest_sha256": "55f7a3d50df5d162e55bf1d66fbcf413a35fc927fd08c266f90d981068a053c2",
+  "torch": "2.14.1",
+  "torch_interop_threads": 1,
+  "torch_intraop_threads": 4,
+  "variants": [
+    "exact-context",
+    "reinforce64-context",
+    "exact-no-context"
+  ]
+}

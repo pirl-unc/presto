@@ -12,7 +12,7 @@ from presto.data.bulk_ms import BulkMSRecord
 from presto.data.collate import PrestoCollator, PrestoSample, TCR_EVIDENCE_METHOD_BINS
 from presto.data.label_provenance import record_target_provenance
 from presto.data.loaders import PrestoDataset
-from presto.models.presto import Presto
+from presto.legacy.presto import Presto
 from presto.training.data_support import audit_split_support
 from presto.training.output_contract import (
     RESIDUAL_MODES,

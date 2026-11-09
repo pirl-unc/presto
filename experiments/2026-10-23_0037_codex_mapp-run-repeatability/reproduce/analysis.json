@@ -1,0 +1,17 @@
+{
+  "argv": [
+    "experiments/2026-10-23_0037_codex_mapp-run-repeatability/code/analyze.py"
+  ],
+  "environment_overrides": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1"
+  },
+  "git_commit": "dccafe1204359282cf32ded23d8ea5bf7d2af9ee",
+  "git_dirty": " M tasks/todo.md\n?? data/availability_recipes/\n?? experiments/2026-10-23_0037_codex_mapp-run-repeatability/\n?? experiments/agents/codex/plans/full-ic50-fitting.md\n?? experiments/agents/codex/plans/mapp-run-repeatability.md\n?? tasks/modular_model/trajectory-sampling-issue.md\n",
+  "numpy": "2.5.4",
+  "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "recipe_manifest_sha256": "23bcfeb4067fa4f47f0b1db702d6ae79f97a9c32a1366ff3de322c99f210b9bf",
+  "source_sha256": "edd57250296644e1f77238fbff6493683023e451bbb84b66dfd45951e3ea7015",
+  "test_scope": "previously observed source/development strata; no new blind test",
+  "training": null
+}

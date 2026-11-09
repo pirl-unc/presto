@@ -1,0 +1,64 @@
+{
+  "status": "closed_support_gate_failed_no_model_scoring",
+  "n_F3_acquisitions": 44,
+  "n_F3_assignments": 4198,
+  "n_assignment_decisions_replayed": 8138,
+  "n_admitted_examples": 0,
+  "support_passed": false,
+  "root_cause": "All original F3 assignment rows lack column-K Unlocalized Mod cells; canonical null is faithful and does not satisfy prespecified explicit-unmodified contract.",
+  "n_frozen_model_input_files": 31,
+  "models_fitted": 0,
+  "models_scored": 0,
+  "validation_metrics": null,
+  "test_metrics": null,
+  "reason_no_prediction_dumps": "Zero eligible cohort; frozen support stop before model scoring.",
+  "successful_stage_seconds": 19.561191916000098,
+  "maximum_child_rss_bytes": 781959168,
+  "attempts": [
+    {
+      "stage": "fetch",
+      "attempt": 1,
+      "status": "passed",
+      "seconds": 0.4974978330428712,
+      "refusal": null
+    },
+    {
+      "stage": "fetch",
+      "attempt": 2,
+      "status": "passed",
+      "seconds": 0.365889040986076,
+      "refusal": null
+    },
+    {
+      "stage": "fetch",
+      "attempt": 3,
+      "status": "passed",
+      "seconds": 0.6195225829724222,
+      "refusal": null
+    },
+    {
+      "stage": "inspect",
+      "attempt": 2,
+      "status": "preflight_refused",
+      "seconds": null,
+      "refusal": "startup_memory_floor"
+    },
+    {
+      "stage": "inspect",
+      "attempt": 3,
+      "status": "passed",
+      "seconds": 8.775580917019397,
+      "refusal": null
+    },
+    {
+      "stage": "verify",
+      "attempt": 1,
+      "status": "passed",
+      "seconds": 9.302701541979332,
+      "refusal": null
+    }
+  ],
+  "hitlist_issue": "https://github.com/pirl-unc/hitlist/issues/847",
+  "hitlist_pr": "https://github.com/pirl-unc/hitlist/pull/848",
+  "full_goal_achieved": false
+}

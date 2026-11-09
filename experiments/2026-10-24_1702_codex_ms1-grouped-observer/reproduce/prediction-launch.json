@@ -1,0 +1,37 @@
+{
+  "registered_utc": "2026-10-24T17:34:46.435444+00:00",
+  "git_commit": "1606976b3b684d2f4c4dfe5f1b91b7d83a25530a",
+  "tracked_git_status": " M experiments/agents/codex/todo.md\n M tasks/todo.md\n",
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "python_version": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "source_sha256": {
+    "experiments/2026-10-24_1702_codex_ms1-grouped-observer/code/admit.py": "b2ff912b156ffcb403792eff218e5d2ff849216bb5e44b94b9b6b6f2ac57fb29",
+    "experiments/2026-10-24_1702_codex_ms1-grouped-observer/code/fit.py": "0160387aedffa20fb04d645a2ff3869a6316e7bc210baea1abf08978f23f1ff9",
+    "experiments/2026-10-24_1702_codex_ms1-grouped-observer/code/model.py": "c4e515d607d3846f973a4ed6f7a4cbe84116a0b3a7ddec4a3b5e0cf637f80498",
+    "experiments/2026-10-24_1702_codex_ms1-grouped-observer/code/evaluate.py": "3148f4f624a9dcac48ae9c4a83831c3044619a1eb28d003cd44f3a3095e73dfd",
+    "experiments/2026-10-24_1702_codex_ms1-grouped-observer/analysis/verify_admission.py": "5d97aa9bc69c651603dbd7a7969868b40febd57e068bac53cf50222fd545a144",
+    "experiments/2026-10-24_1702_codex_ms1-grouped-observer/analysis/verify_predictions.py": "08765e95b5fca6d354de0877e84554e6df03e5c17fe45a252ac474280d3aa611",
+    "experiments/2026-10-24_1702_codex_ms1-grouped-observer/analysis/plot_results.py": "1dfe658496cf39fa060595d7cc6c9055fd3c9c177b07365ace5eb7cdd4d76132",
+    "experiments/2026-10-24_1702_codex_ms1-grouped-observer/analysis/test_math.py": "9e3bd8407543d2ed56c6a428ae342367c48b10e58917826f56503a4960a94c2d"
+  },
+  "source_dependency": {
+    "repository": "pirl-unc/hitlist",
+    "commit": "b9b10470058e32e679652c6fd405cc834b649bf3",
+    "PYTHONPATH": "/private/tmp/hitlist-proteometools-ms1"
+  },
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "phases": [
+    "code/admit.py",
+    "analysis/verify_admission.py",
+    "code/fit.py",
+    "code/evaluate.py",
+    "analysis/verify_predictions.py",
+    "analysis/plot_results.py"
+  ],
+  "no_test_outcome_selection": true
+}

@@ -1,0 +1,26 @@
+{
+  "status": "passed",
+  "observed_unix": 1793161885.993814,
+  "cause": "Synchronous archive download blocked the original controller polling loop while remote fits continued.",
+  "archive_bytes": 225755015,
+  "remote_fits_finished": 4,
+  "local_archives_downloaded": 2,
+  "http_worker_poll_errors": {},
+  "http_test_cells_hidden": true,
+  "original_controller_alive": true,
+  "no_fit_restarts": true,
+  "original_status_by_condition": {
+    "small-ic50-s42": "completed",
+    "wide-ic50-s42": "completed",
+    "wide-six-natural-s42": "packaging",
+    "wide-six-class-balanced-s42": "training"
+  },
+  "independent_status_by_condition": {
+    "wide-ic50-s42": "completed",
+    "small-ic50-s42": "completed",
+    "wide-six-class-balanced-s42": "completed",
+    "wide-six-natural-s42": "completed",
+    "wide-six-primary-matched-s42": "training",
+    "wide-six-primary-shuffled-s42": "training"
+  }
+}

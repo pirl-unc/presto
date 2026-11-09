@@ -1,0 +1,27 @@
+F........                                                                [100%]
+=================================== FAILURES ===================================
+____ test_steady_matches_complete_partition_generator_and_residue_mass[0.1] ____
+
+removal = 0.1
+
+    @pytest.mark.parametrize("removal", [0.1, 1.0, 10.0])
+    def test_steady_matches_complete_partition_generator_and_residue_mass(removal):
+        theta = torch.tensor([0.2, 0.7, 1.4], dtype=torch.float64).log().requires_grad_()
+        internal, left, right, starts, ends, states, generator = _small_chain(theta)
+        delta = theta.new_tensor(removal)
+        initial = theta.new_zeros(8)
+        initial[0] = 1.0
+        occupancy = torch.linalg.solve((delta * torch.eye(8) - generator).T, initial)
+        expected = occupancy @ partition_contains(states, starts, ends).double()
+        actual = log_steady_fragment_amount(internal, left, right, delta).exp()
+>       torch.testing.assert_close(actual, expected, atol=1e-12, rtol=1e-11)
+E       AssertionError: Tensor-likes are not close!
+E       
+E       Mismatched elements: 10 / 10 (100.0%)
+E       Greatest absolute difference: 1.483493292653293e-07 at index (9,) (up to 1e-12 allowed)
+E       Greatest relative difference: 2.0511674096306684e-08 at index (4,) (up to 1e-11 allowed)
+
+tests/test_steady_processing.py:46: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_steady_processing.py::test_steady_matches_complete_partition_generator_and_residue_mass[0.1]
+1 failed, 8 passed in 3.12s

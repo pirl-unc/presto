@@ -1,0 +1,59 @@
+{
+  "argv": [
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-26_0236_codex_nontryptic-source-package/code/launch.py",
+    "inspect",
+    "--attempt",
+    "1",
+    "--requests",
+    "experiments/2026-10-26_0236_codex_nontryptic-source-package/reproduce/requests/inspect-1.json"
+  ],
+  "configuration": {
+    "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+    "limits": {
+      "stage_seconds": 1200,
+      "rss_bytes": 3221225472,
+      "startup_memory_bytes": 3221225472,
+      "disk_floor_bytes": 1073741824,
+      "start_margin_bytes": 33554432
+    },
+    "environment_overrides": {
+      "PYTHONSAFEPATH": "1",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUNBUFFERED": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    },
+    "experiment_id": "2026-10-26_0236_codex_nontryptic-source-package",
+    "agent_model": "Codex/GPT-6",
+    "presto_commit": "155f719b85130367bff37f7d514c60dcb3a66502",
+    "dirty_tracked": true,
+    "source_scope": "shared nominal-MS2 package from ten already qualified original assets",
+    "new_network_requests": 0,
+    "model_fits": 0,
+    "validation_test_split": null,
+    "reason_no_predictions": "source package qualification; no model evaluation",
+    "plan_sha256": "273acf91da379a3efbd7eb970ecf18dd8c1e5de017bd567cfc40173fbb1538d9",
+    "frozen_code_sha256": {
+      "code/launch.py": "337b0957f12bced683299134c33465d6b26145fbaa4d9bc1e233832b437a9e27",
+      "reproduce/source/launch.py": "337b0957f12bced683299134c33465d6b26145fbaa4d9bc1e233832b437a9e27",
+      "reproduce/launch.sh": "cbf4f1ac284f9ba76320e7db26e27ff3cf92a2efaa20bee24f34ad4d23754076"
+    }
+  },
+  "request_set": {
+    "hitlist_checkout": "/Users/iskander/code/presto/.worktrees/hitlist-nontryptic-calibration",
+    "panel": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/nontryptic_calibration_sources/2026-10-25_1816_codex_nontryptic-calibration-screen/pnas.2111173118.sd01.xlsx",
+    "source_sha256": {
+      "code/inspect.py": "840f712d34fd6d22b4c6985a26a3d0eea595e294961993fad1d6c2b84a22d3b8",
+      "reproduce/source/inspect.py": "840f712d34fd6d22b4c6985a26a3d0eea595e294961993fad1d6c2b84a22d3b8",
+      "reproduce/amendment-1.md": "7fc4f870bb776b8986ab209c506105cde4c7eb3e71eb1e72dcdf224a18a42f54"
+    },
+    "input_sha256": {
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/nontryptic_calibration_sources/2026-10-25_1816_codex_nontryptic-calibration-screen/pnas.2111173118.sd01.xlsx": "71f8bd65d178d78014faf8d4e01a227fbb20ee90eee9ee8e9fbe6c5d311d0d2c",
+      "/Users/iskander/code/presto/.worktrees/hitlist-nontryptic-calibration/hitlist/nontryptic_workbooks.py": "d6665fad51361f2c08dbaf08c259d91ff464a0d56937bd35b9c18f50675c39f8"
+    }
+  },
+  "request_set_sha256": "0cb6dbcbff39f4e032557a7aa0acd0e31c5bcb271957735b76724dbbfa95ee6e"
+}

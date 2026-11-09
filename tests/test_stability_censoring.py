@@ -3,7 +3,7 @@
 import torch
 
 from presto.data.collate import PrestoCollator, PrestoSample
-from presto.scripts.train_synthetic import LOSS_TASK_NAME_TO_SPEC
+from presto.legacy.scripts.train_synthetic import LOSS_TASK_NAME_TO_SPEC
 
 MHC_A = "GSHSMRYFYT" * 4
 MHC_B = "IQRTPKIQVY" * 4

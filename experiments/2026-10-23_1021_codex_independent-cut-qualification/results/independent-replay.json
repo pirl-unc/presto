@@ -1,0 +1,30 @@
+{
+  "constant_control_analytic_ties": {
+    "test": {
+      "canonical_spearman": 0.8571058513762922,
+      "enumerated_spearman": 0.8573058058335619,
+      "n_analytic_classes": 50,
+      "raw_spearman": 0.8591426442575838
+    },
+    "train": {
+      "canonical_spearman": 0.8082646613698518,
+      "enumerated_spearman": 0.808748670357468,
+      "n_analytic_classes": 50,
+      "raw_spearman": 0.8104958283511092
+    },
+    "validation": {
+      "canonical_spearman": 0.7823458557609229,
+      "enumerated_spearman": 0.7873190665145766,
+      "n_analytic_classes": 40,
+      "raw_spearman": 0.7851670678768845
+    }
+  },
+  "implementation": "NumPy cut-state enumeration, analytic score derivatives and independently implemented Adam; Torch only for exact uniform RNG stream",
+  "max_log_rate_checkpoint_error": 3.4638958368304884e-14,
+  "max_metric_error": 1.925543058334256e-15,
+  "noninitial_checkpoints": 30,
+  "passed": true,
+  "prediction_values": 2940,
+  "updates": 10000,
+  "wall_seconds": 1.1786665419931524
+}

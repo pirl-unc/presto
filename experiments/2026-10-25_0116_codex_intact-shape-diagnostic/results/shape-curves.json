@@ -1,0 +1,5061 @@
+[
+  {
+    "peptide_sequence": "AAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVH",
+    "times": [
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.8078745139871555,
+      -2.5740430437980537
+    ],
+    "time_weight": [
+      0.005208333333333333,
+      0.005208333333333333
+    ],
+    "increasing": [
+      -2.8078745139871555,
+      -2.5740430437980537
+    ],
+    "increasing_concave": [
+      -2.8078745139871555,
+      -2.5740430437980537
+    ],
+    "slope_per_minute": 0.011691573509455086,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "AEKTKEQVTNVGGAVVTGVTAVAQKTVE",
+    "times": [
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.235630897288779,
+      -2.3180285616054688,
+      -1.8467244664220408
+    ],
+    "time_weight": [
+      0.003472222222222222,
+      0.003472222222222222,
+      0.003472222222222222
+    ],
+    "increasing": [
+      -2.276829729447124,
+      -2.276829729447124,
+      -1.8467244664220408
+    ],
+    "increasing_concave": [
+      -2.3279145238721317,
+      -2.133461308438763,
+      -1.9390080930053937
+    ],
+    "slope_per_minute": 0.009722660771668454,
+    "monotone_kkt": {
+      "active": [
+        0
+      ],
+      "multipliers": [
+        0.2746588810556329,
+        0.0
+      ],
+      "kkt_max_residual": 8.673617379884035e-18,
+      "weighted_error": 0.0011315625141409863
+    },
+    "concave_kkt": {
+      "active": [
+        2
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.615224177222353
+      ],
+      "kkt_max_residual": 5.551115123125783e-17,
+      "weighted_error": 0.017032535470751425
+    },
+    "independent_prediction_error": 2.220446049250313e-16
+  },
+  {
+    "peptide_sequence": "AEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQE",
+    "times": [
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.254281583699429,
+      -1.8285142460818584,
+      -1.5327418174422414
+    ],
+    "time_weight": [
+      0.003472222222222222,
+      0.003472222222222222,
+      0.003472222222222222
+    ],
+    "increasing": [
+      -2.254281583699429,
+      -1.8285142460818584,
+      -1.5327418174422414
+    ],
+    "increasing_concave": [
+      -2.254281583699429,
+      -1.8285142460818584,
+      -1.5327418174422414
+    ],
+    "slope_per_minute": 0.018038494156429698,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "AGKTKEGVLYVGSKTKEGVVH",
+    "times": [
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.750853484205149,
+      -2.28808728167105
+    ],
+    "time_weight": [
+      0.005208333333333333,
+      0.005208333333333333
+    ],
+    "increasing": [
+      -2.750853484205149,
+      -2.28808728167105
+    ],
+    "increasing_concave": [
+      -2.750853484205149,
+      -2.28808728167105
+    ],
+    "slope_per_minute": 0.023138310126704944,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "AGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLG",
+    "times": [
+      20.0,
+      60.0
+    ],
+    "replicate_means": [
+      -3.0941476136076895,
+      -3.073854112870162
+    ],
+    "time_weight": [
+      0.005208333333333333,
+      0.005208333333333333
+    ],
+    "increasing": [
+      -3.0941476136076895,
+      -3.073854112870162
+    ],
+    "increasing_concave": [
+      -3.0941476136076895,
+      -3.073854112870162
+    ],
+    "slope_per_minute": 0.000507337518438189,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "AGSIAAATGFVKKDQL",
+    "times": [
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.8009322296854635,
+      -2.574264863656317,
+      -2.2217174733427516
+    ],
+    "time_weight": [
+      0.003472222222222222,
+      0.003472222222222222,
+      0.003472222222222222
+    ],
+    "increasing": [
+      -2.8009322296854635,
+      -2.574264863656317,
+      -2.2217174733427516
+    ],
+    "increasing_concave": [
+      -2.8219122337328666,
+      -2.532304855561511,
+      -2.2426974773901547
+    ],
+    "slope_per_minute": 0.014480368908567801,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [
+        2
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.1398666936493539
+      ],
+      "kkt_max_residual": 5.204170427930421e-18,
+      "weighted_error": 0.0008803211396580991
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "AGSIAAATGFVKKDQLGKNEEGAPQE",
+    "times": [
+      20.0,
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.3479718627956543,
+      -1.914461052008485,
+      -1.662317819314165,
+      -1.4082974122550131
+    ],
+    "time_weight": [
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665
+    ],
+    "increasing": [
+      -2.3479718627956543,
+      -1.914461052008485,
+      -1.662317819314165,
+      -1.4082974122550131
+    ],
+    "increasing_concave": [
+      -2.3479718627956543,
+      -1.9147739144026237,
+      -1.6616920945258875,
+      -1.4086102746491518
+    ],
+    "slope_per_minute": 0.015355832921581186,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [
+        4
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0015643119706934547
+      ],
+      "kkt_max_residual": 2.7755575615628914e-17,
+      "weighted_error": 1.4682431649930782e-07
+    },
+    "independent_prediction_error": 2.220446049250313e-16
+  },
+  {
+    "peptide_sequence": "AQKTVEGAGSIAAATGFVKKD",
+    "times": [
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -3.2948051243482137,
+      -2.956271130406979,
+      -2.112876521786541
+    ],
+    "time_weight": [
+      0.003472222222222222,
+      0.003472222222222222,
+      0.003472222222222222
+    ],
+    "increasing": [
+      -3.2948051243482137,
+      -2.956271130406979,
+      -2.112876521786541
+    ],
+    "increasing_concave": [
+      -3.378948560128081,
+      -2.7879842588472448,
+      -2.1970199575664084
+    ],
+    "slope_per_minute": 0.029548215064041816,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [
+        2
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.5609562385324485
+      ],
+      "kkt_max_residual": 7.632783294297951e-17,
+      "weighted_error": 0.014160235569681281
+    },
+    "independent_prediction_error": 4.440892098500626e-16
+  },
+  {
+    "peptide_sequence": "AQKTVEGAGSIAAATGFVKKDQL",
+    "times": [
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.3356111147018828,
+      -2.0750993481063156,
+      -1.8012274474406518
+    ],
+    "time_weight": [
+      0.003472222222222222,
+      0.003472222222222222,
+      0.003472222222222222
+    ],
+    "increasing": [
+      -2.3356111147018828,
+      -2.0750993481063156,
+      -1.8012274474406518
+    ],
+    "increasing_concave": [
+      -2.3378378037135654,
+      -2.0706459700829503,
+      -1.8034541364523344
+    ],
+    "slope_per_minute": 0.013359591681530779,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [
+        2
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.014844593411218278
+      ],
+      "kkt_max_residual": 5.551115123125783e-17,
+      "weighted_error": 9.91628790949659e-06
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "AQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQE",
+    "times": [
+      20.0,
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.133331130403029,
+      -1.734377973752736,
+      -1.3885650910348428,
+      -1.0514667610529858
+    ],
+    "time_weight": [
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665
+    ],
+    "increasing": [
+      -2.133331130403029,
+      -1.734377973752736,
+      -1.3885650910348428,
+      -1.0514667610529858
+    ],
+    "increasing_concave": [
+      -2.133331130403029,
+      -1.734377973752736,
+      -1.3885650910348428,
+      -1.0514667610529858
+    ],
+    "slope_per_minute": 0.017957029953840086,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "AQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGIL",
+    "times": [
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.4980548089510837,
+      -2.2098189705471167
+    ],
+    "time_weight": [
+      0.005208333333333333,
+      0.005208333333333333
+    ],
+    "increasing": [
+      -2.4980548089510837,
+      -2.2098189705471167
+    ],
+    "increasing_concave": [
+      -2.4980548089510837,
+      -2.2098189705471167
+    ],
+    "slope_per_minute": 0.014411791920198359,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "AQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVD",
+    "times": [
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.1092018644650965,
+      -1.731816431466433,
+      -1.3820734552163498
+    ],
+    "time_weight": [
+      0.003472222222222222,
+      0.003472222222222222,
+      0.003472222222222222
+    ],
+    "increasing": [
+      -2.1092018644650965,
+      -1.731816431466433,
+      -1.3820734552163498
+    ],
+    "increasing_concave": [
+      -2.1092018644650965,
+      -1.731816431466433,
+      -1.3820734552163498
+    ],
+    "slope_per_minute": 0.018178210231218673,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "AQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVDPDNEAYEMPSEEGYQDYEPEA",
+    "times": [
+      20.0,
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.1632810428096736,
+      -1.7108753659177558,
+      -1.356734097972989,
+      -0.9626126533226894
+    ],
+    "time_weight": [
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665
+    ],
+    "increasing": [
+      -2.1632810428096736,
+      -1.7108753659177558,
+      -1.356734097972989,
+      -0.9626126533226894
+    ],
+    "increasing_concave": [
+      -2.1632810428096736,
+      -1.7175387287020112,
+      -1.3434073724044782,
+      -0.9692760161069448
+    ],
+    "slope_per_minute": 0.019780732182028575,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [
+        4
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.033316813921277035
+      ],
+      "kkt_max_residual": 9.107298248878237e-18,
+      "weighted_error": 6.66006053918996e-05
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "ATGFVKKDQLGKNEEGAPQE",
+    "times": [
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.5261261372386508,
+      -2.2443618718011655,
+      -1.8462268651728642
+    ],
+    "time_weight": [
+      0.003472222222222222,
+      0.003472222222222222,
+      0.003472222222222222
+    ],
+    "increasing": [
+      -2.5261261372386508,
+      -2.2443618718011655,
+      -1.8462268651728642
+    ],
+    "increasing_concave": [
+      -2.5455212607704536,
+      -2.20557162473756,
+      -1.865621988704667
+    ],
+    "slope_per_minute": 0.016997481801644662,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [
+        2
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.12930082354535175
+      ],
+      "kkt_max_residual": 5.0306980803327406e-17,
+      "weighted_error": 0.0007523416336277843
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "DPDNEAYEMPSEEGYQDYEPE",
+    "times": [
+      20.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.245749439012166,
+      -2.2463838544209174
+    ],
+    "time_weight": [
+      0.005208333333333333,
+      0.005208333333333333
+    ],
+    "increasing": [
+      -2.2460666467165415,
+      -2.246066646716542
+    ],
+    "increasing_concave": [
+      -2.2460666467165415,
+      -2.246066646716542
+    ],
+    "slope_per_minute": -1.0573590145875519e-05,
+    "monotone_kkt": {
+      "active": [
+        0
+      ],
+      "multipliers": [
+        0.00951623113126382
+      ],
+      "kkt_max_residual": 4.163336342344337e-17,
+      "weighted_error": 1.006207277150968e-07
+    },
+    "concave_kkt": {
+      "active": [
+        0
+      ],
+      "multipliers": [
+        0.00951623113126382
+      ],
+      "kkt_max_residual": 4.163336342344337e-17,
+      "weighted_error": 1.006207277150968e-07
+    },
+    "independent_prediction_error": 4.440892098500626e-16
+  },
+  {
+    "peptide_sequence": "DPDNEAYEMPSEEGYQDYEPEA",
+    "times": [
+      0.0,
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -1.832699975388382,
+      -1.701527092962125,
+      -1.8024497586525987,
+      -1.7914328017644123
+    ],
+    "time_weight": [
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665
+    ],
+    "increasing": [
+      -1.832699975388382,
+      -1.7651365511263786,
+      -1.7651365511263786,
+      -1.7651365511263788
+    ],
+    "increasing_concave": [
+      -1.832699975388382,
+      -1.7651365511263786,
+      -1.7651365511263786,
+      -1.7651365511263788
+    ],
+    "slope_per_minute": 0.0003549256902126844,
+    "monotone_kkt": {
+      "active": [
+        1,
+        2
+      ],
+      "multipliers": [
+        0.0,
+        0.3180472908212684,
+        0.13148125319016785
+      ],
+      "kkt_max_residual": 1.3877787807814457e-17,
+      "weighted_error": 0.001532482855365747
+    },
+    "concave_kkt": {
+      "active": [
+        1,
+        2
+      ],
+      "multipliers": [
+        0.0,
+        0.3180472908212684,
+        0.13148125319016785,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 1.3877787807814457e-17,
+      "weighted_error": 0.001532482855365747
+    },
+    "independent_prediction_error": 2.220446049250313e-16
+  },
+  {
+    "peptide_sequence": "DVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGI",
+    "times": [
+      0.0,
+      20.0,
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.2501857833471757,
+      -2.1072266190598334,
+      -2.0361960156958943,
+      -2.140945598215043,
+      -2.1218646734228104
+    ],
+    "time_weight": [
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333
+    ],
+    "increasing": [
+      -2.2501857833471757,
+      -2.1072266190598334,
+      -2.0996687624445824,
+      -2.0996687624445824,
+      -2.0996687624445824
+    ],
+    "increasing_concave": [
+      -2.2501857833471757,
+      -2.1072266190598334,
+      -2.0996687624445824,
+      -2.0996687624445824,
+      -2.0996687624445824
+    ],
+    "slope_per_minute": 0.0011146162034676053,
+    "monotone_kkt": {
+      "active": [
+        2,
+        3
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.25389098699475326,
+        0.08878364391291119
+      ],
+      "kkt_max_residual": 3.8163916471489756e-17,
+      "weighted_error": 0.0012450450430396224
+    },
+    "concave_kkt": {
+      "active": [
+        2,
+        3
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.25389098699475326,
+        0.08878364391291119,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 3.8163916471489756e-17,
+      "weighted_error": 0.0012450450430396224
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "DVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGIL",
+    "times": [
+      0.0,
+      20.0,
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -1.4730394185946647,
+      -1.554239273960489,
+      -1.5902133625831494,
+      -1.4694053401517557,
+      -1.6994636333701814
+    ],
+    "time_weight": [
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333
+    ],
+    "increasing": [
+      -1.557272205732048,
+      -1.5572722057320478,
+      -1.557272205732048,
+      -1.5572722057320483,
+      -1.557272205732048
+    ],
+    "increasing_concave": [
+      -1.5572722057320478,
+      -1.5572722057320478,
+      -1.5572722057320483,
+      -1.557272205732048,
+      -1.557272205732048
+    ],
+    "slope_per_minute": -0.0018400724787114963,
+    "monotone_kkt": {
+      "active": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "multipliers": [
+        0.3369311485495339,
+        0.34906287563576893,
+        0.21729824823136387,
+        0.5687657105525337
+      ],
+      "kkt_max_residual": 2.42861286636753e-17,
+      "weighted_error": 0.007225693815885446
+    },
+    "concave_kkt": {
+      "active": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.9032922724166645,
+        0.5687657105525333,
+        0.3369311485495328,
+        0.685994024185301,
+        0.0
+      ],
+      "kkt_max_residual": 5.551115123125783e-17,
+      "weighted_error": 0.007225693815885428
+    },
+    "independent_prediction_error": 2.220446049250313e-16
+  },
+  {
+    "peptide_sequence": "DVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVDPDNEAYEMPSEEGYQDYEP",
+    "times": [
+      20.0,
+      60.0
+    ],
+    "replicate_means": [
+      -2.4341225035228824,
+      -2.771174836345128
+    ],
+    "time_weight": [
+      0.005208333333333333,
+      0.005208333333333333
+    ],
+    "increasing": [
+      -2.6026486699340055,
+      -2.602648669934005
+    ],
+    "increasing_concave": [
+      -2.6026486699340055,
+      -2.602648669934005
+    ],
+    "slope_per_minute": -0.008426308320556145,
+    "monotone_kkt": {
+      "active": [
+        0
+      ],
+      "multipliers": [
+        3.370523328222457
+      ],
+      "kkt_max_residual": 9.71445146547012e-17,
+      "weighted_error": 0.02840106876522954
+    },
+    "concave_kkt": {
+      "active": [
+        0
+      ],
+      "multipliers": [
+        3.370523328222457
+      ],
+      "kkt_max_residual": 9.71445146547012e-17,
+      "weighted_error": 0.02840106876522954
+    },
+    "independent_prediction_error": 4.440892098500626e-16
+  },
+  {
+    "peptide_sequence": "DVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVDPDNEAYEMPSEEGYQDYEPEA",
+    "times": [
+      0.0,
+      20.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.5064980710841622,
+      -2.757760289932336,
+      -2.09084088594952,
+      -2.0541137486808494
+    ],
+    "time_weight": [
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665
+    ],
+    "increasing": [
+      -2.632129180508249,
+      -2.632129180508249,
+      -2.09084088594952,
+      -2.0541137486808494
+    ],
+    "increasing_concave": [
+      -2.6735614770383287,
+      -2.5071651810010867,
+      -2.174372588926603,
+      -2.0541137486808494
+    ],
+    "slope_per_minute": 0.00785844024394721,
+    "monotone_kkt": {
+      "active": [
+        0
+      ],
+      "multipliers": [
+        0.6281555471204346,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 6.938893903907228e-18,
+      "weighted_error": 0.007891587827563454
+    },
+    "concave_kkt": {
+      "active": [
+        3
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0,
+        0.8353170297708321,
+        0.0
+      ],
+      "kkt_max_residual": 5.204170427930421e-17,
+      "weighted_error": 0.024421408907880762
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "DYEPEA",
+    "times": [
+      0.0,
+      20.0,
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -1.5971967092491632,
+      -1.676179336441896,
+      -1.665588928013348,
+      -1.6078212840938346,
+      -1.6459350746031955
+    ],
+    "time_weight": [
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333
+    ],
+    "increasing": [
+      -1.646321657901469,
+      -1.646321657901469,
+      -1.646321657901469,
+      -1.6268781793485152,
+      -1.6268781793485152
+    ],
+    "increasing_concave": [
+      -1.6385442664802872,
+      -1.6385442664802872,
+      -1.6385442664802874,
+      -1.6385442664802878,
+      -1.6385442664802878
+    ],
+    "slope_per_minute": -0.00014559339180001738,
+    "monotone_kkt": {
+      "active": [
+        0,
+        1,
+        3
+      ],
+      "multipliers": [
+        0.19649979460922323,
+        0.07706908044751566,
+        0.0,
+        0.07622758101872185
+      ],
+      "kkt_max_residual": 2.2551405187698492e-17,
+      "weighted_error": 0.0008804599517949968
+    },
+    "concave_kkt": {
+      "active": [
+        0,
+        3,
+        4,
+        5
+      ],
+      "multipliers": [
+        0.0869114809483734,
+        0.0,
+        0.0,
+        0.029563232491630773,
+        0.07847874797612202,
+        0.09332869705418215,
+        0.0
+      ],
+      "kkt_max_residual": 2.7755575615628914e-17,
+      "weighted_error": 0.0009711916777724041
+    },
+    "independent_prediction_error": 4.440892098500626e-16
+  },
+  {
+    "peptide_sequence": "EAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKD",
+    "times": [
+      0.0,
+      20.0,
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.3179836626546027,
+      -2.341651764072437,
+      -2.1920447609127884,
+      -2.4620118297211238,
+      -2.180721094106702
+    ],
+    "time_weight": [
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333
+    ],
+    "increasing": [
+      -2.32981771336352,
+      -2.3298177133635196,
+      -2.327028295316956,
+      -2.327028295316956,
+      -2.180721094106702
+    ],
+    "increasing_concave": [
+      -2.3319377433129493,
+      -2.313743602755743,
+      -2.295549462198537,
+      -2.2829105884663203,
+      -2.2702717147341036
+    ],
+    "slope_per_minute": 0.0007708253572355749,
+    "monotone_kkt": {
+      "active": [
+        0,
+        2
+      ],
+      "multipliers": [
+        0.04733620283566886,
+        0.0,
+        0.5399341376166705,
+        0.0
+      ],
+      "kkt_max_residual": 3.903127820947816e-17,
+      "weighted_error": 0.007344239726568938
+    },
+    "concave_kkt": {
+      "active": [
+        4,
+        6
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.05581632263338739,
+        0.0,
+        0.3582024825096066
+      ],
+      "kkt_max_residual": 3.122502256758253e-17,
+      "weighted_error": 0.010356674659422877
+    },
+    "independent_prediction_error": 4.440892098500626e-16
+  },
+  {
+    "peptide_sequence": "EEGYQDYEPEA",
+    "times": [
+      0.0,
+      20.0,
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -1.1928248712253229,
+      -1.2887001983206303,
+      -1.184679225457196,
+      -1.112089345982508,
+      -1.1539199402579663
+    ],
+    "time_weight": [
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333
+    ],
+    "increasing": [
+      -1.2407625347729765,
+      -1.2407625347729767,
+      -1.184679225457196,
+      -1.1330046431202372,
+      -1.1330046431202372
+    ],
+    "increasing_concave": [
+      -1.2451804057939804,
+      -1.2125483560466161,
+      -1.179916306299252,
+      -1.1472842565518875,
+      -1.1472842565518875
+    ],
+    "slope_per_minute": 0.0012721035713641748,
+    "monotone_kkt": {
+      "active": [
+        0,
+        3
+      ],
+      "multipliers": [
+        0.1917506541906147,
+        0.0,
+        0.0,
+        0.08366118855091642
+      ],
+      "kkt_max_residual": 1.3877787807814457e-17,
+      "weighted_error": 0.0010941876963070148
+    },
+    "concave_kkt": {
+      "active": [
+        3,
+        4,
+        5
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0,
+        0.026542734824314806,
+        0.20942213827462974,
+        0.11423690745320322,
+        0.0
+      ],
+      "kkt_max_residual": 2.2551405187698492e-17,
+      "weighted_error": 0.0019691209017670135
+    },
+    "independent_prediction_error": 2.220446049250313e-16
+  },
+  {
+    "peptide_sequence": "EGAGSIAAATGFVKKDQLGKNEEGAPQE",
+    "times": [
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.280743554466231,
+      -2.068924965465057,
+      -1.8044797554772545
+    ],
+    "time_weight": [
+      0.003472222222222222,
+      0.003472222222222222,
+      0.003472222222222222
+    ],
+    "increasing": [
+      -2.280743554466231,
+      -2.068924965465057,
+      -1.8044797554772545
+    ],
+    "increasing_concave": [
+      -2.2895146579640024,
+      -2.051382758469514,
+      -1.813250858975026
+    ],
+    "slope_per_minute": 0.01190659497472441,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [
+        2
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.058474023318476794
+      ],
+      "kkt_max_residual": 1.9081958235744878e-17,
+      "weighted_error": 0.00015386451313724057
+    },
+    "independent_prediction_error": 2.220446049250313e-16
+  },
+  {
+    "peptide_sequence": "EGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAP",
+    "times": [
+      0.0,
+      20.0,
+      40.0,
+      60.0
+    ],
+    "replicate_means": [
+      -2.742192153909274,
+      -3.1681696355749547,
+      -2.39762828520424,
+      -2.724746821454001
+    ],
+    "time_weight": [
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665
+    ],
+    "increasing": [
+      -2.9551808947421145,
+      -2.955180894742114,
+      -2.5611875533291206,
+      -2.5611875533291206
+    ],
+    "increasing_concave": [
+      -2.9300029837113675,
+      -2.792547975970767,
+      -2.6550929682301674,
+      -2.6550929682301674
+    ],
+    "slope_per_minute": 0.004114386738682665,
+    "monotone_kkt": {
+      "active": [
+        0,
+        2
+      ],
+      "multipliers": [
+        1.064943704164202,
+        0.0,
+        0.8177963406244027
+      ],
+      "kkt_max_residual": 5.551115123125783e-17,
+      "weighted_error": 0.03605791895555275
+    },
+    "concave_kkt": {
+      "active": [
+        2,
+        3
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.3482692661191683,
+        0.9390541490104687,
+        0.0
+      ],
+      "kkt_max_residual": 5.551115123125783e-17,
+      "weighted_error": 0.061876065307330926
+    },
+    "independent_prediction_error": 4.440892098500626e-16
+  },
+  {
+    "peptide_sequence": "EGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGS",
+    "times": [
+      0.0,
+      20.0,
+      60.0
+    ],
+    "replicate_means": [
+      -2.6621141768153302,
+      -2.723125711050902,
+      -2.89399993210815
+    ],
+    "time_weight": [
+      0.003472222222222222,
+      0.003472222222222222,
+      0.003472222222222222
+    ],
+    "increasing": [
+      -2.7597466066581275,
+      -2.7597466066581275,
+      -2.7597466066581275
+    ],
+    "increasing_concave": [
+      -2.7597466066581275,
+      -2.7597466066581275,
+      -2.7597466066581275
+    ],
+    "slope_per_minute": -0.003922918722244738,
+    "monotone_kkt": {
+      "active": [
+        0,
+        1
+      ],
+      "multipliers": [
+        0.6508828656186478,
+        1.7900443393336367
+      ],
+      "kkt_max_residual": 7.28583859910259e-17,
+      "weighted_error": 0.009632378915491246
+    },
+    "concave_kkt": {
+      "active": [
+        0,
+        1
+      ],
+      "multipliers": [
+        0.6508828656186478,
+        1.7900443393336367,
+        0.0
+      ],
+      "kkt_max_residual": 7.28583859910259e-17,
+      "weighted_error": 0.009632378915491246
+    },
+    "independent_prediction_error": 4.440892098500626e-16
+  },
+  {
+    "peptide_sequence": "EGYQDYEPEA",
+    "times": [
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -1.395334848376265,
+      -1.3839911500573452,
+      -1.1883880863595613
+    ],
+    "time_weight": [
+      0.003472222222222222,
+      0.003472222222222222,
+      0.003472222222222222
+    ],
+    "increasing": [
+      -1.395334848376265,
+      -1.3839911500573452,
+      -1.1883880863595613
+    ],
+    "increasing_concave": [
+      -1.4260447426060756,
+      -1.322571361597724,
+      -1.2190979805893718
+    ],
+    "slope_per_minute": 0.005173669050417594,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [
+        2
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.2047326281987375
+      ],
+      "kkt_max_residual": 3.642919299551295e-17,
+      "weighted_error": 0.0018861952072123077
+    },
+    "independent_prediction_error": 2.220446049250313e-16
+  },
+  {
+    "peptide_sequence": "EMPSEEGYQDYEPEA",
+    "times": [
+      0.0,
+      20.0,
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -1.6302037393833704,
+      -1.6663219846600066,
+      -1.742028775336771,
+      -1.6336539994343133,
+      -1.9123845384451925
+    ],
+    "time_weight": [
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333
+    ],
+    "increasing": [
+      -1.7169186074519307,
+      -1.7169186074519307,
+      -1.7169186074519307,
+      -1.7169186074519307,
+      -1.7169186074519307
+    ],
+    "increasing_concave": [
+      -1.7169186074519307,
+      -1.7169186074519307,
+      -1.7169186074519307,
+      -1.7169186074519307,
+      -1.7169186074519307
+    ],
+    "slope_per_minute": -0.002658468064489757,
+    "monotone_kkt": {
+      "active": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "multipliers": [
+        0.34685947227424174,
+        0.5492459634419385,
+        0.4488052919025777,
+        0.781863723973047
+      ],
+      "kkt_max_residual": 2.42861286636753e-17,
+      "weighted_error": 0.011169986448138202
+    },
+    "concave_kkt": {
+      "active": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "multipliers": [
+        0.34685947227424174,
+        0.5492459634419385,
+        0.4488052919025777,
+        0.781863723973047,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 2.42861286636753e-17,
+      "weighted_error": 0.011169986448138202
+    },
+    "independent_prediction_error": 2.220446049250313e-16
+  },
+  {
+    "peptide_sequence": "FMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVDPD",
+    "times": [
+      0.0,
+      20.0,
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -1.0557270436784891,
+      -1.0615089738574053,
+      -1.0992569957844536,
+      -1.0434726114723871,
+      -1.1146292871283567
+    ],
+    "time_weight": [
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333
+    ],
+    "increasing": [
+      -1.0749189823842182,
+      -1.0749189823842185,
+      -1.0749189823842185,
+      -1.0749189823842185,
+      -1.0749189823842182
+    ],
+    "increasing_concave": [
+      -1.0749189823842182,
+      -1.0749189823842185,
+      -1.0749189823842185,
+      -1.0749189823842185,
+      -1.0749189823842185
+    ],
+    "slope_per_minute": -0.0004988406225735853,
+    "monotone_kkt": {
+      "active": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "multipliers": [
+        0.07676775482291687,
+        0.13040778893016935,
+        0.033055735329228564,
+        0.15884121897655357
+      ],
+      "kkt_max_residual": 2.2551405187698492e-17,
+      "weighted_error": 0.000741256056528102
+    },
+    "concave_kkt": {
+      "active": [
+        0,
+        2,
+        3,
+        5
+      ],
+      "multipliers": [
+        0.07676775482291669,
+        0.0,
+        0.16346352425939736,
+        0.15884121897655343,
+        0.0,
+        0.130407788930169,
+        0.0
+      ],
+      "kkt_max_residual": 1.9949319973733282e-17,
+      "weighted_error": 0.0007412560565280984
+    },
+    "independent_prediction_error": 2.220446049250313e-16
+  },
+  {
+    "peptide_sequence": "GAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVD",
+    "times": [
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.1714016559021774,
+      -1.9701014089060844
+    ],
+    "time_weight": [
+      0.005208333333333333,
+      0.005208333333333333
+    ],
+    "increasing": [
+      -2.1714016559021774,
+      -1.9701014089060844
+    ],
+    "increasing_concave": [
+      -2.1714016559021774,
+      -1.9701014089060844
+    ],
+    "slope_per_minute": 0.010065012349804638,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "GFVKKDQLGKNEEGAPQEGILEDMPVDPDNEAYEMPSEEGYQDYEPEA",
+    "times": [
+      0.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.228629428622952,
+      -2.078450848294193,
+      -1.751160944608976
+    ],
+    "time_weight": [
+      0.003472222222222222,
+      0.003472222222222222,
+      0.003472222222222222
+    ],
+    "increasing": [
+      -2.228629428622952,
+      -2.078450848294193,
+      -1.751160944608976
+    ],
+    "increasing_concave": [
+      -2.260617549035525,
+      -1.9504983666439017,
+      -1.8471253058466943
+    ],
+    "slope_per_minute": 0.005168653039860388,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [
+        2
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.6397624082514554
+      ],
+      "kkt_max_residual": 5.204170427930421e-17,
+      "weighted_error": 0.008868078678586876
+    },
+    "independent_prediction_error": 2.220446049250313e-16
+  },
+  {
+    "peptide_sequence": "GILEDMPVD",
+    "times": [
+      20.0,
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -0.957212097157404,
+      -0.5181381033333765,
+      -0.27640121042974464,
+      0.04303744656693276
+    ],
+    "time_weight": [
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665
+    ],
+    "increasing": [
+      -0.957212097157404,
+      -0.5181381033333765,
+      -0.27640121042974464,
+      0.04303744656693276
+    ],
+    "increasing_concave": [
+      -0.957212097157404,
+      -0.5310883973488841,
+      -0.25050062239872944,
+      0.030087152551425172
+    ],
+    "slope_per_minute": 0.0162124276203832,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [
+        4
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06475147007753793
+      ],
+      "kkt_max_residual": 9.540979117872439e-18,
+      "weighted_error": 0.0002515651726321379
+    },
+    "independent_prediction_error": 3.469446951953614e-18
+  },
+  {
+    "peptide_sequence": "GILEDMPVDPDNEAYEMPSEEGYQDYEPEA",
+    "times": [
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.5156992145697865,
+      -2.087362964870837,
+      -1.6568544141944421
+    ],
+    "time_weight": [
+      0.003472222222222222,
+      0.003472222222222222,
+      0.003472222222222222
+    ],
+    "increasing": [
+      -2.5156992145697865,
+      -2.087362964870837,
+      -1.6568544141944421
+    ],
+    "increasing_concave": [
+      -2.516061264732694,
+      -2.086638864545022,
+      -1.6572164643573497
+    ],
+    "slope_per_minute": 0.021471120009383615,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [
+        2
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.002413667752717501
+      ],
+      "kkt_max_residual": 3.08455518072126e-17,
+      "weighted_error": 2.6216064092280894e-07
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "GKNEEGAPQEGILEDMPVD",
+    "times": [
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.01580756398365,
+      -1.7298506917367267
+    ],
+    "time_weight": [
+      0.005208333333333333,
+      0.005208333333333333
+    ],
+    "increasing": [
+      -2.01580756398365,
+      -1.7298506917367267
+    ],
+    "increasing_concave": [
+      -2.01580756398365,
+      -1.7298506917367267
+    ],
+    "slope_per_minute": 0.014297843612346173,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "GKNEEGAPQEGILEDMPVDPDNEAYEMPSEEGYQDYEPEA",
+    "times": [
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.169147792895797,
+      -1.8834913261613127,
+      -1.5244156598533358
+    ],
+    "time_weight": [
+      0.003472222222222222,
+      0.003472222222222222,
+      0.003472222222222222
+    ],
+    "increasing": [
+      -2.169147792895797,
+      -1.8834913261613127,
+      -1.5244156598533358
+    ],
+    "increasing_concave": [
+      -2.181384326158046,
+      -1.8590182596368152,
+      -1.5366521931155845
+    ],
+    "slope_per_minute": 0.016118303326061536,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [
+        2
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.08157688841499174
+      ],
+      "kkt_max_residual": 2.949029909160572e-17,
+      "weighted_error": 0.0002994654925562384
+    },
+    "independent_prediction_error": 2.220446049250313e-16
+  },
+  {
+    "peptide_sequence": "GKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAV",
+    "times": [
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.4560832004225457,
+      -2.3756530980967843,
+      -2.0767291178671363
+    ],
+    "time_weight": [
+      0.003472222222222222,
+      0.003472222222222222,
+      0.003472222222222222
+    ],
+    "increasing": [
+      -2.4560832004225457,
+      -2.3756530980967843,
+      -2.0767291178671363
+    ],
+    "increasing_concave": [
+      -2.49249884673986,
+      -2.3028218054621554,
+      -2.1131447641844505
+    ],
+    "slope_per_minute": 0.009483852063885233,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [
+        2
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.24277097544876264
+      ],
+      "kkt_max_residual": 6.765421556309548e-17,
+      "weighted_error": 0.0026521985934154597
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "GVATVAEKTKEQVTNVGGAVVTGVTAV",
+    "times": [
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -1.889410251886689,
+      -2.064063535884135,
+      -2.0793288515588544
+    ],
+    "time_weight": [
+      0.003472222222222222,
+      0.003472222222222222,
+      0.003472222222222222
+    ],
+    "increasing": [
+      -2.0109342131098926,
+      -2.0109342131098926,
+      -2.0109342131098926
+    ],
+    "increasing_concave": [
+      -2.0109342131098926,
+      -2.0109342131098926,
+      -2.0109342131098926
+    ],
+    "slope_per_minute": -0.004747964991804128,
+    "monotone_kkt": {
+      "active": [
+        0,
+        1
+      ],
+      "multipliers": [
+        0.8101597414880244,
+        0.4559642563264107
+      ],
+      "kkt_max_residual": 4.85722573273506e-17,
+      "weighted_error": 0.007422874886130828
+    },
+    "concave_kkt": {
+      "active": [
+        0,
+        1
+      ],
+      "multipliers": [
+        0.8101597414880244,
+        0.4559642563264107,
+        0.0
+      ],
+      "kkt_max_residual": 4.85722573273506e-17,
+      "weighted_error": 0.007422874886130828
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "GYQDYEPEA",
+    "times": [
+      0.0,
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -1.2854316664458507,
+      -1.2773182891355108,
+      -1.3523838492030347,
+      -1.2371810154232636
+    ],
+    "time_weight": [
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665
+    ],
+    "increasing": [
+      -1.3050446015947987,
+      -1.3050446015947987,
+      -1.3050446015947987,
+      -1.2371810154232636
+    ],
+    "increasing_concave": [
+      -1.2963577170818148,
+      -1.2889985952774592,
+      -1.2853190343752818,
+      -1.281639473473104
+    ],
+    "slope_per_minute": 0.00018397804510888297,
+    "monotone_kkt": {
+      "active": [
+        0,
+        1
+      ],
+      "multipliers": [
+        0.19612935148948055,
+        0.23669623804117945,
+        0.0
+      ],
+      "kkt_max_residual": 1.9949319973733282e-17,
+      "weighted_error": 0.0008486049979651942
+    },
+    "concave_kkt": {
+      "active": [
+        3,
+        4
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0,
+        0.10926050635963991,
+        0.22229229024920186
+      ],
+      "kkt_max_residual": 2.211772431870429e-17,
+      "weighted_error": 0.0016825130035298705
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "KEGVLYVGSKTKEGVVHGVATVAEK",
+    "times": [
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.288349061032853,
+      -1.9821406136751099
+    ],
+    "time_weight": [
+      0.005208333333333333,
+      0.005208333333333333
+    ],
+    "increasing": [
+      -2.288349061032853,
+      -1.9821406136751099
+    ],
+    "increasing_concave": [
+      -2.288349061032853,
+      -1.9821406136751099
+    ],
+    "slope_per_minute": 0.015310422367887166,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "KEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKN",
+    "times": [
+      0.0,
+      40.0
+    ],
+    "replicate_means": [
+      -2.9732290100851833,
+      -2.995303569383646
+    ],
+    "time_weight": [
+      0.005208333333333333,
+      0.005208333333333333
+    ],
+    "increasing": [
+      -2.9842662897344145,
+      -2.9842662897344145
+    ],
+    "increasing_concave": [
+      -2.9842662897344145,
+      -2.9842662897344145
+    ],
+    "slope_per_minute": -0.0005518639824615735,
+    "monotone_kkt": {
+      "active": [
+        0
+      ],
+      "multipliers": [
+        0.220745592984628
+      ],
+      "kkt_max_residual": 5.551115123125783e-17,
+      "weighted_error": 0.0001218215420553352
+    },
+    "concave_kkt": {
+      "active": [
+        0
+      ],
+      "multipliers": [
+        0.220745592984628
+      ],
+      "kkt_max_residual": 5.551115123125783e-17,
+      "weighted_error": 0.0001218215420553352
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "KTVEGAGSIAAATGFVKKDQLGKNEEGAPQE",
+    "times": [
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.57894789080033,
+      -2.346520959076206
+    ],
+    "time_weight": [
+      0.005208333333333333,
+      0.005208333333333333
+    ],
+    "increasing": [
+      -2.57894789080033,
+      -2.346520959076206
+    ],
+    "increasing_concave": [
+      -2.57894789080033,
+      -2.346520959076206
+    ],
+    "slope_per_minute": 0.011621346586206208,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "LEDMPVD",
+    "times": [
+      40.0,
+      80.0
+    ],
+    "replicate_means": [
+      -1.8113124918309231,
+      -1.188505493028265
+    ],
+    "time_weight": [
+      0.005208333333333333,
+      0.005208333333333333
+    ],
+    "increasing": [
+      -1.8113124918309231,
+      -1.188505493028265
+    ],
+    "increasing_concave": [
+      -1.8113124918309231,
+      -1.188505493028265
+    ],
+    "slope_per_minute": 0.015570174970066452,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "LSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVDPDNEA",
+    "times": [
+      0.0,
+      20.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.4458688161777866,
+      -2.8496348163192935,
+      -2.65191736631636
+    ],
+    "time_weight": [
+      0.003472222222222222,
+      0.003472222222222222,
+      0.003472222222222222
+    ],
+    "increasing": [
+      -2.6491403329378134,
+      -2.6491403329378134,
+      -2.6491403329378134
+    ],
+    "increasing_concave": [
+      -2.6491403329378134,
+      -2.6491403329378134,
+      -2.6491403329378134
+    ],
+    "slope_per_minute": -0.0012207843282442219,
+    "monotone_kkt": {
+      "active": [
+        0,
+        1
+      ],
+      "multipliers": [
+        1.3551434450668454,
+        0.0555406675709344
+      ],
+      "kkt_max_residual": 3.241764495731658e-17,
+      "weighted_error": 0.027175019768904667
+    },
+    "concave_kkt": {
+      "active": [
+        0,
+        1
+      ],
+      "multipliers": [
+        1.3551434450668454,
+        0.0555406675709344,
+        0.0
+      ],
+      "kkt_max_residual": 3.241764495731658e-17,
+      "weighted_error": 0.027175019768904667
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "LSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVDPDNEAYEMPSEEGYQ",
+    "times": [
+      0.0,
+      20.0,
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -1.3603530089289289,
+      -1.3480787837900277,
+      -1.3329204347052817,
+      -1.2917024006731284,
+      -1.4431999246812515
+    ],
+    "time_weight": [
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333
+    ],
+    "increasing": [
+      -1.3603530089289289,
+      -1.3539753859624224,
+      -1.3539753859624222,
+      -1.3539753859624222,
+      -1.3539753859624222
+    ],
+    "increasing_concave": [
+      -1.3603530089289289,
+      -1.3539753859624222,
+      -1.3539753859624224,
+      -1.3539753859624224,
+      -1.3539753859624224
+    ],
+    "slope_per_minute": -0.0005465872419387279,
+    "monotone_kkt": {
+      "active": [
+        1,
+        2,
+        3
+      ],
+      "multipliers": [
+        0.0,
+        0.023586408689578703,
+        0.1078062137181412,
+        0.35689815487531684
+      ],
+      "kkt_max_residual": 2.0816681711721685e-17,
+      "weighted_error": 0.002463404779209705
+    },
+    "concave_kkt": {
+      "active": [
+        2,
+        3,
+        5
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.1313926224077186,
+        0.3568981548753166,
+        0.0,
+        0.02358640868957791,
+        0.0
+      ],
+      "kkt_max_residual": 1.3877787807814457e-17,
+      "weighted_error": 0.002463404779209704
+    },
+    "independent_prediction_error": 2.220446049250313e-16
+  },
+  {
+    "peptide_sequence": "MDVFMKGLSKA",
+    "times": [
+      20.0,
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -3.1199774295978258,
+      -2.4317748074030465,
+      -2.194455526821417,
+      -2.0091126059495763
+    ],
+    "time_weight": [
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665
+    ],
+    "increasing": [
+      -3.1199774295978258,
+      -2.4317748074030465,
+      -2.194455526821417,
+      -2.0091126059495763
+    ],
+    "increasing_concave": [
+      -3.1199774295978258,
+      -2.4317748074030465,
+      -2.194455526821417,
+      -2.0091126059495763
+    ],
+    "slope_per_minute": 0.01784956875763185,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "MDVFMKGLSKAKEGVVA",
+    "times": [
+      20.0,
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.1514825657339287,
+      -1.9724587211011069,
+      -1.9522387890767854,
+      -1.3958417072582496
+    ],
+    "time_weight": [
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665
+    ],
+    "increasing": [
+      -2.1514825657339287,
+      -1.9724587211011069,
+      -1.9522387890767854,
+      -1.3958417072582496
+    ],
+    "increasing_concave": [
+      -2.2110768219102215,
+      -1.9823625711650856,
+      -1.7536483204199496,
+      -1.524934069674814
+    ],
+    "slope_per_minute": 0.011435712537256762,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [
+        3,
+        4
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0,
+        0.29797128088146374,
+        0.6454618120828213
+      ],
+      "kkt_max_residual": 2.7755575615628914e-17,
+      "weighted_error": 0.014938143472731664
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKT",
+    "times": [
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.658932197412941,
+      -2.3649841019468014,
+      -2.1128882074515687
+    ],
+    "time_weight": [
+      0.003472222222222222,
+      0.003472222222222222,
+      0.003472222222222222
+    ],
+    "increasing": [
+      -2.658932197412941,
+      -2.3649841019468014,
+      -2.1128882074515687
+    ],
+    "increasing_concave": [
+      -2.658932197412941,
+      -2.3649841019468014,
+      -2.1128882074515687
+    ],
+    "slope_per_minute": 0.013651099749034305,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAE",
+    "times": [
+      20.0,
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -3.1021825298215755,
+      -2.623583781128313,
+      -2.308285699292924,
+      -2.10111650170855
+    ],
+    "time_weight": [
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665
+    ],
+    "increasing": [
+      -3.1021825298215755,
+      -2.623583781128313,
+      -2.308285699292924,
+      -2.10111650170855
+    ],
+    "increasing_concave": [
+      -3.1021825298215755,
+      -2.623583781128313,
+      -2.308285699292924,
+      -2.10111650170855
+    ],
+    "slope_per_minute": 0.016592480830872287,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEA",
+    "times": [
+      20.0,
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.0798703984356224,
+      -1.5972724809868428,
+      -1.33438093645047,
+      -1.097909900586393
+    ],
+    "time_weight": [
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665
+    ],
+    "increasing": [
+      -2.0798703984356224,
+      -1.5972724809868428,
+      -1.33438093645047,
+      -1.097909900586393
+    ],
+    "increasing_concave": [
+      -2.0798703984356224,
+      -1.5972724809868428,
+      -1.33438093645047,
+      -1.097909900586393
+    ],
+    "slope_per_minute": 0.01604386519042028,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAA",
+    "times": [
+      20.0,
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.6964143024826948,
+      -2.1258490928677567,
+      -1.7104056593248589,
+      -1.4612632919352606
+    ],
+    "time_weight": [
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665
+    ],
+    "increasing": [
+      -2.6964143024826948,
+      -2.1258490928677567,
+      -1.7104056593248589,
+      -1.4612632919352606
+    ],
+    "increasing_concave": [
+      -2.6964143024826948,
+      -2.1258490928677567,
+      -1.7104056593248589,
+      -1.4612632919352606
+    ],
+    "slope_per_minute": 0.020604482325925967,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKE",
+    "times": [
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.933273900895985,
+      -2.38304514343999
+    ],
+    "time_weight": [
+      0.005208333333333333,
+      0.005208333333333333
+    ],
+    "increasing": [
+      -2.933273900895985,
+      -2.38304514343999
+    ],
+    "increasing_concave": [
+      -2.933273900895985,
+      -2.38304514343999
+    ],
+    "slope_per_minute": 0.027511437872799756,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEG",
+    "times": [
+      20.0,
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.5991286298636482,
+      -1.8025420653882218,
+      -1.534698709061079,
+      -1.326168156363828
+    ],
+    "time_weight": [
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665
+    ],
+    "increasing": [
+      -2.5991286298636482,
+      -1.8025420653882218,
+      -1.534698709061079,
+      -1.326168156363828
+    ],
+    "increasing_concave": [
+      -2.5991286298636482,
+      -1.8025420653882218,
+      -1.534698709061079,
+      -1.326168156363828
+    ],
+    "slope_per_minute": 0.020433623884132987,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYV",
+    "times": [
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.164350091829983,
+      -1.9313015136501874
+    ],
+    "time_weight": [
+      0.005208333333333333,
+      0.005208333333333333
+    ],
+    "increasing": [
+      -2.164350091829983,
+      -1.9313015136501874
+    ],
+    "increasing_concave": [
+      -2.164350091829983,
+      -1.9313015136501874
+    ],
+    "slope_per_minute": 0.011652428908989775,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVG",
+    "times": [
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.4354859571103864,
+      -2.212513490886469
+    ],
+    "time_weight": [
+      0.005208333333333333,
+      0.005208333333333333
+    ],
+    "increasing": [
+      -2.4354859571103864,
+      -2.212513490886469
+    ],
+    "increasing_concave": [
+      -2.4354859571103864,
+      -2.212513490886469
+    ],
+    "slope_per_minute": 0.011148623311195871,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGS",
+    "times": [
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.8921192239523434,
+      -2.4670970502926104,
+      -2.2043411395695673
+    ],
+    "time_weight": [
+      0.003472222222222222,
+      0.003472222222222222,
+      0.003472222222222222
+    ],
+    "increasing": [
+      -2.8921192239523434,
+      -2.4670970502926104,
+      -2.2043411395695673
+    ],
+    "increasing_concave": [
+      -2.8921192239523434,
+      -2.4670970502926104,
+      -2.2043411395695673
+    ],
+    "slope_per_minute": 0.017194452109569405,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVH",
+    "times": [
+      20.0,
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.311683034796396,
+      -1.7931981889341817,
+      -1.5277233147727571,
+      -1.3794716118100252
+    ],
+    "time_weight": [
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665
+    ],
+    "increasing": [
+      -2.311683034796396,
+      -1.7931981889341817,
+      -1.5277233147727571,
+      -1.3794716118100252
+    ],
+    "increasing_concave": [
+      -2.311683034796396,
+      -1.7931981889341817,
+      -1.5277233147727571,
+      -1.3794716118100252
+    ],
+    "slope_per_minute": 0.015310545715602655,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHG",
+    "times": [
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.4934436536687716,
+      -2.1725216660683335,
+      -1.9754808306215033
+    ],
+    "time_weight": [
+      0.003472222222222222,
+      0.003472222222222222,
+      0.003472222222222222
+    ],
+    "increasing": [
+      -2.4934436536687716,
+      -2.1725216660683335,
+      -1.9754808306215033
+    ],
+    "increasing_concave": [
+      -2.4934436536687716,
+      -2.1725216660683335,
+      -1.9754808306215033
+    ],
+    "slope_per_minute": 0.012949070576181708,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 2.220446049250313e-16
+  },
+  {
+    "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGV",
+    "times": [
+      40.0,
+      60.0
+    ],
+    "replicate_means": [
+      -2.9373894769024433,
+      -2.7302777762163584
+    ],
+    "time_weight": [
+      0.005208333333333333,
+      0.005208333333333333
+    ],
+    "increasing": [
+      -2.9373894769024433,
+      -2.7302777762163584
+    ],
+    "increasing_concave": [
+      -2.9373894769024433,
+      -2.7302777762163584
+    ],
+    "slope_per_minute": 0.010355585034304041,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATV",
+    "times": [
+      20.0,
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.372919752495304,
+      -1.697198499582685,
+      -1.3655418548180231,
+      -1.1805869957307635
+    ],
+    "time_weight": [
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665
+    ],
+    "increasing": [
+      -2.372919752495304,
+      -1.697198499582685,
+      -1.3655418548180231,
+      -1.1805869957307635
+    ],
+    "increasing_concave": [
+      -2.372919752495304,
+      -1.697198499582685,
+      -1.3655418548180231,
+      -1.1805869957307635
+    ],
+    "slope_per_minute": 0.019543274575291387,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVA",
+    "times": [
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.0999117523642767,
+      -1.770318378578247,
+      -1.5692143273781882
+    ],
+    "time_weight": [
+      0.003472222222222222,
+      0.003472222222222222,
+      0.003472222222222222
+    ],
+    "increasing": [
+      -2.0999117523642767,
+      -1.770318378578247,
+      -1.5692143273781882
+    ],
+    "increasing_concave": [
+      -2.0999117523642767,
+      -1.770318378578247,
+      -1.5692143273781882
+    ],
+    "slope_per_minute": 0.013267435624652216,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 2.220446049250313e-16
+  },
+  {
+    "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAE",
+    "times": [
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.5424945792200395,
+      -2.2734714474960973
+    ],
+    "time_weight": [
+      0.005208333333333333,
+      0.005208333333333333
+    ],
+    "increasing": [
+      -2.5424945792200395,
+      -2.2734714474960973
+    ],
+    "increasing_concave": [
+      -2.5424945792200395,
+      -2.2734714474960973
+    ],
+    "slope_per_minute": 0.013451156586197121,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQ",
+    "times": [
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.5057233976519226,
+      -2.1788312435251567,
+      -1.883233465508573
+    ],
+    "time_weight": [
+      0.003472222222222222,
+      0.003472222222222222,
+      0.003472222222222222
+    ],
+    "increasing": [
+      -2.5057233976519226,
+      -2.1788312435251567,
+      -1.883233465508573
+    ],
+    "increasing_concave": [
+      -2.5057233976519226,
+      -2.1788312435251567,
+      -1.883233465508573
+    ],
+    "slope_per_minute": 0.015562248303583746,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 2.220446049250313e-16
+  },
+  {
+    "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQV",
+    "times": [
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.5320352338819516,
+      -2.335117467851083
+    ],
+    "time_weight": [
+      0.005208333333333333,
+      0.005208333333333333
+    ],
+    "increasing": [
+      -2.5320352338819516,
+      -2.335117467851083
+    ],
+    "increasing_concave": [
+      -2.5320352338819516,
+      -2.335117467851083
+    ],
+    "slope_per_minute": 0.009845888301543431,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNV",
+    "times": [
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.4864169663554287,
+      -2.472711923937478
+    ],
+    "time_weight": [
+      0.005208333333333333,
+      0.005208333333333333
+    ],
+    "increasing": [
+      -2.4864169663554287,
+      -2.472711923937478
+    ],
+    "increasing_concave": [
+      -2.4864169663554287,
+      -2.472711923937478
+    ],
+    "slope_per_minute": 0.0006852521208975305,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTA",
+    "times": [
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.365663378416034,
+      -1.9995957768214774
+    ],
+    "time_weight": [
+      0.005208333333333333,
+      0.005208333333333333
+    ],
+    "increasing": [
+      -2.365663378416034,
+      -1.9995957768214774
+    ],
+    "increasing_concave": [
+      -2.365663378416034,
+      -1.9995957768214774
+    ],
+    "slope_per_minute": 0.018303380079727843,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAV",
+    "times": [
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -1.6320853658917587,
+      -1.3397509964737377,
+      -1.1411764586822961
+    ],
+    "time_weight": [
+      0.003472222222222222,
+      0.003472222222222222,
+      0.003472222222222222
+    ],
+    "increasing": [
+      -1.6320853658917587,
+      -1.3397509964737377,
+      -1.1411764586822961
+    ],
+    "increasing_concave": [
+      -1.6320853658917587,
+      -1.3397509964737377,
+      -1.1411764586822961
+    ],
+    "slope_per_minute": 0.012272722680236565,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQ",
+    "times": [
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.355866210368263,
+      -2.125681365389678,
+      -1.9648531389784696
+    ],
+    "time_weight": [
+      0.003472222222222222,
+      0.003472222222222222,
+      0.003472222222222222
+    ],
+    "increasing": [
+      -2.355866210368263,
+      -2.125681365389678,
+      -1.9648531389784696
+    ],
+    "increasing_concave": [
+      -2.355866210368263,
+      -2.125681365389678,
+      -1.9648531389784696
+    ],
+    "slope_per_minute": 0.009775326784744843,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVE",
+    "times": [
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.0309650571522258,
+      -1.8822097492509524
+    ],
+    "time_weight": [
+      0.005208333333333333,
+      0.005208333333333333
+    ],
+    "increasing": [
+      -2.0309650571522258,
+      -1.8822097492509524
+    ],
+    "increasing_concave": [
+      -2.0309650571522258,
+      -1.8822097492509524
+    ],
+    "slope_per_minute": 0.007437765395063677,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQE",
+    "times": [
+      20.0,
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -1.5372665475273,
+      -1.152837765753817,
+      -1.036173655179268,
+      -0.9814211729257777
+    ],
+    "time_weight": [
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665
+    ],
+    "increasing": [
+      -1.5372665475273,
+      -1.152837765753817,
+      -1.036173655179268,
+      -0.9814211729257777
+    ],
+    "increasing_concave": [
+      -1.5372665475273,
+      -1.152837765753817,
+      -1.036173655179268,
+      -0.9814211729257777
+    ],
+    "slope_per_minute": 0.008921001171895562,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVD",
+    "times": [
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -1.9922910659062023,
+      -1.8735743814311454,
+      -1.719415953556692
+    ],
+    "time_weight": [
+      0.003472222222222222,
+      0.003472222222222222,
+      0.003472222222222222
+    ],
+    "increasing": [
+      -1.9922910659062023,
+      -1.8735743814311454,
+      -1.719415953556692
+    ],
+    "increasing_concave": [
+      -1.9981980231394352,
+      -1.86176046696468,
+      -1.7253229107899248
+    ],
+    "slope_per_minute": 0.0068218778087377595,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [
+        2
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.03937971488821856
+      ],
+      "kkt_max_residual": 2.8189256484623115e-17,
+      "weighted_error": 6.978428751048244e-05
+    },
+    "independent_prediction_error": 2.220446049250313e-16
+  },
+  {
+    "peptide_sequence": "MPSEEGYQDY",
+    "times": [
+      0.0,
+      20.0
+    ],
+    "replicate_means": [
+      -2.3337495853298083,
+      -2.154172745342544
+    ],
+    "time_weight": [
+      0.005208333333333333,
+      0.005208333333333333
+    ],
+    "increasing": [
+      -2.3337495853298083,
+      -2.154172745342544
+    ],
+    "increasing_concave": [
+      -2.3337495853298083,
+      -2.154172745342544
+    ],
+    "slope_per_minute": 0.008978841999363205,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "MPSEEGYQDYEPEA",
+    "times": [
+      0.0,
+      20.0,
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -1.0987103922180277,
+      -1.0936838531015391,
+      -1.0985593708581352,
+      -1.066818022867525,
+      -1.0254478663737723
+    ],
+    "time_weight": [
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333
+    ],
+    "increasing": [
+      -1.0987103922180277,
+      -1.0961216119798372,
+      -1.0961216119798372,
+      -1.066818022867525,
+      -1.0254478663737723
+    ],
+    "increasing_concave": [
+      -1.1113220774683048,
+      -1.0939829892760524,
+      -1.0766439010837998,
+      -1.0593048128915474,
+      -1.0419657246992948
+    ],
+    "slope_per_minute": 0.0008669544096126258,
+    "monotone_kkt": {
+      "active": [
+        1
+      ],
+      "multipliers": [
+        0.0,
+        0.009751035513192174,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 8.294146619514109e-18,
+      "weighted_error": 2.377067339488293e-06
+    },
+    "concave_kkt": {
+      "active": [
+        4,
+        5,
+        6
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.05044674100110884,
+        0.10209002670027043,
+        0.06607143330209049
+      ],
+      "kkt_max_residual": 1.8648277366750676e-17,
+      "weighted_error": 0.0001937439741075859
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "NEAYEM",
+    "times": [
+      20.0,
+      40.0
+    ],
+    "replicate_means": [
+      -2.1801785430479703,
+      -1.8805649760247474
+    ],
+    "time_weight": [
+      0.005208333333333333,
+      0.005208333333333333
+    ],
+    "increasing": [
+      -2.1801785430479703,
+      -1.8805649760247474
+    ],
+    "increasing_concave": [
+      -2.1801785430479703,
+      -1.8805649760247474
+    ],
+    "slope_per_minute": 0.014980678351161155,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "NEAYEMPSEE",
+    "times": [
+      0.0,
+      20.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -0.9058251482521767,
+      -0.9717979675541456,
+      -1.0484899999362334,
+      -1.183844575449727
+    ],
+    "time_weight": [
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665
+    ],
+    "increasing": [
+      -1.0274894227980709,
+      -1.0274894227980707,
+      -1.0274894227980707,
+      -1.0274894227980707
+    ],
+    "increasing_concave": [
+      -1.02748942279807,
+      -1.0274894227980704,
+      -1.027489422798071,
+      -1.0274894227980713
+    ],
+    "slope_per_minute": -0.0031636544338859442,
+    "monotone_kkt": {
+      "active": [
+        0,
+        1,
+        2
+      ],
+      "multipliers": [
+        0.6083213727294701,
+        1.7735572978981913,
+        0.781775763258282
+      ],
+      "kkt_max_residual": 2.7755575615628914e-17,
+      "weighted_error": 0.01069792297220588
+    },
+    "concave_kkt": {
+      "active": [
+        2,
+        3,
+        4
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        3.163654433885928,
+        0.6083213727294667,
+        2.3818786706276485
+      ],
+      "kkt_max_residual": 6.611041354985937e-17,
+      "weighted_error": 0.010697922972205764
+    },
+    "independent_prediction_error": 6.661338147750939e-16
+  },
+  {
+    "peptide_sequence": "NVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLG",
+    "times": [
+      40.0,
+      60.0
+    ],
+    "replicate_means": [
+      -3.0888780885363274,
+      -2.6072504235574145
+    ],
+    "time_weight": [
+      0.005208333333333333,
+      0.005208333333333333
+    ],
+    "increasing": [
+      -3.0888780885363274,
+      -2.6072504235574145
+    ],
+    "increasing_concave": [
+      -3.0888780885363274,
+      -2.6072504235574145
+    ],
+    "slope_per_minute": 0.024081383248945428,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "PDNEAY",
+    "times": [
+      20.0,
+      40.0
+    ],
+    "replicate_means": [
+      -3.1307546399571744,
+      -2.744700060429279
+    ],
+    "time_weight": [
+      0.005208333333333333,
+      0.005208333333333333
+    ],
+    "increasing": [
+      -3.1307546399571744,
+      -2.744700060429279
+    ],
+    "increasing_concave": [
+      -3.1307546399571744,
+      -2.744700060429279
+    ],
+    "slope_per_minute": 0.01930272897639479,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "PDNEAYEMPSEEGYQDYEPEA",
+    "times": [
+      20.0,
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -1.5989186061409317,
+      -1.289633191032546,
+      -1.094102197590541,
+      -0.7387699643838369
+    ],
+    "time_weight": [
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665
+    ],
+    "increasing": [
+      -1.5989186061409317,
+      -1.289633191032546,
+      -1.094102197590541,
+      -0.7387699643838369
+    ],
+    "increasing_concave": [
+      -1.5989186061409317,
+      -1.3162667309933291,
+      -1.0408351176689747,
+      -0.76540350434462
+    ],
+    "slope_per_minute": 0.013879884593566429,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [
+        4
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.13316769980391574
+      ],
+      "kkt_max_residual": 2.2551405187698492e-17,
+      "weighted_error": 0.0010640181762639458
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "PSEEGYQDYEPEA",
+    "times": [
+      0.0,
+      20.0,
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -0.645515350497672,
+      -0.6437664162040726,
+      -0.7067306239210348,
+      -0.6683132243856729,
+      -0.6440015660010977
+    ],
+    "time_weight": [
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333
+    ],
+    "increasing": [
+      -0.6660814037521131,
+      -0.666081403752113,
+      -0.6660814037521131,
+      -0.666081403752113,
+      -0.6440015660010977
+    ],
+    "increasing_concave": [
+      -0.66166543620191,
+      -0.66166543620191,
+      -0.66166543620191,
+      -0.66166543620191,
+      -0.66166543620191
+    ],
+    "slope_per_minute": -0.00010759619594225833,
+    "monotone_kkt": {
+      "active": [
+        0,
+        1,
+        2
+      ],
+      "multipliers": [
+        0.08226421301776447,
+        0.17152416320992622,
+        0.008927282534239299,
+        0.0
+      ],
+      "kkt_max_residual": 9.540979117872439e-18,
+      "weighted_error": 0.0005156522678831124
+    },
+    "concave_kkt": {
+      "active": [
+        0,
+        2,
+        5,
+        6
+      ],
+      "multipliers": [
+        0.06460034281695225,
+        0.0,
+        0.021476613936854922,
+        0.0,
+        0.0,
+        0.13619642280830177,
+        0.07065548080324927
+      ],
+      "kkt_max_residual": 7.806255641895632e-18,
+      "weighted_error": 0.0005936553455008994
+    },
+    "independent_prediction_error": 1.1102230246251565e-16
+  },
+  {
+    "peptide_sequence": "PVDPDNE",
+    "times": [
+      40.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.5936075008175123,
+      -2.0052039913603457
+    ],
+    "time_weight": [
+      0.005208333333333333,
+      0.005208333333333333
+    ],
+    "increasing": [
+      -2.5936075008175123,
+      -2.0052039913603457
+    ],
+    "increasing_concave": [
+      -2.5936075008175123,
+      -2.0052039913603457
+    ],
+    "slope_per_minute": 0.01471008773642917,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "PVDPDNEAYEMPSEEGYQDYEPEA",
+    "times": [
+      0.0,
+      20.0,
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -1.557607150152171,
+      -1.556775111511517,
+      -1.4956023566225887,
+      -1.5419494861333323,
+      -1.5378973852713824
+    ],
+    "time_weight": [
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333
+    ],
+    "increasing": [
+      -1.557607150152171,
+      -1.556775111511517,
+      -1.5251497426757679,
+      -1.5251497426757679,
+      -1.5251497426757679
+    ],
+    "increasing_concave": [
+      -1.5633808995637513,
+      -1.5452276126883564,
+      -1.5270743258129613,
+      -1.527074325812961,
+      -1.527074325812961
+    ],
+    "slope_per_minute": 0.00027122577569881344,
+    "monotone_kkt": {
+      "active": [
+        2,
+        3
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.11818954421271677,
+        0.05099057038245868
+      ],
+      "kkt_max_residual": 2.211772431870429e-17,
+      "weighted_error": 0.00026355635891222266
+    },
+    "concave_kkt": {
+      "active": [
+        2,
+        3,
+        4
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.10279287911516943,
+        0.043292237833685014,
+        0.02309499764632101,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 2.7755575615628914e-17,
+      "weighted_error": 0.0002991149533311299
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "QDYEPEA",
+    "times": [
+      0.0,
+      20.0,
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -1.4460745308688816,
+      -1.7505247937472062,
+      -1.3816134931484352,
+      -1.250433453805023,
+      -1.0081893112639957
+    ],
+    "time_weight": [
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333
+    ],
+    "increasing": [
+      -1.5982996623080439,
+      -1.5982996623080439,
+      -1.3816134931484352,
+      -1.250433453805023,
+      -1.0081893112639957
+    ],
+    "increasing_concave": [
+      -1.6425394723970994,
+      -1.5049532944819037,
+      -1.3673671165667083,
+      -1.2297809386515128,
+      -1.0921947607363174
+    ],
+    "slope_per_minute": 0.006879308895759775,
+    "monotone_kkt": {
+      "active": [
+        0
+      ],
+      "multipliers": [
+        0.6089005257566493,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 1.0408340855860843e-17,
+      "weighted_error": 0.009268996256668093
+    },
+    "concave_kkt": {
+      "active": [
+        4,
+        5,
+        6
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.7858597661128712,
+        0.5894335351645328,
+        0.33602179788928677
+      ],
+      "kkt_max_residual": 6.938893903907228e-18,
+      "weighted_error": 0.02131804713400312
+    },
+    "independent_prediction_error": 2.220446049250313e-16
+  },
+  {
+    "peptide_sequence": "QKTVEGAGSIAAATGFVKKDQLGKNEEGAPQE",
+    "times": [
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.897883405062797,
+      -2.5683319355364325,
+      -2.3131747705109666
+    ],
+    "time_weight": [
+      0.003472222222222222,
+      0.003472222222222222,
+      0.003472222222222222
+    ],
+    "increasing": [
+      -2.897883405062797,
+      -2.5683319355364325,
+      -2.3131747705109666
+    ],
+    "increasing_concave": [
+      -2.897883405062797,
+      -2.5683319355364325,
+      -2.3131747705109666
+    ],
+    "slope_per_minute": 0.014617715863795757,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "QLGKNEEGAPQE",
+    "times": [
+      20.0,
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -3.3596039481756557,
+      -2.3179283975350313,
+      -2.471266159588741,
+      -2.2148549847562107
+    ],
+    "time_weight": [
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665
+    ],
+    "increasing": [
+      -3.3596039481756557,
+      -2.394597278561886,
+      -2.394597278561886,
+      -2.2148549847562107
+    ],
+    "increasing_concave": [
+      -3.3596039481756557,
+      -2.3862198870160714,
+      -2.3346831806266612,
+      -2.2831464742372507
+    ],
+    "slope_per_minute": 0.01640454564102308,
+    "monotone_kkt": {
+      "active": [
+        1
+      ],
+      "multipliers": [
+        0.0,
+        0.38334440513427337,
+        0.0
+      ],
+      "kkt_max_residual": 2.0816681711721685e-17,
+      "weighted_error": 0.002939058658955005
+    },
+    "concave_kkt": {
+      "active": [
+        4
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.3414574474051995
+      ],
+      "kkt_max_residual": 4.85722573273506e-17,
+      "weighted_error": 0.006995591303308471
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "SEEGYQDYE",
+    "times": [
+      0.0,
+      40.0
+    ],
+    "replicate_means": [
+      -1.9636870994474853,
+      -1.847015896067253
+    ],
+    "time_weight": [
+      0.005208333333333333,
+      0.005208333333333333
+    ],
+    "increasing": [
+      -1.9636870994474853,
+      -1.847015896067253
+    ],
+    "increasing_concave": [
+      -1.9636870994474853,
+      -1.847015896067253
+    ],
+    "slope_per_minute": 0.0029167800845058107,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "SKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATG",
+    "times": [
+      0.0,
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.8623767347554883,
+      -2.9483410869919946,
+      -2.888307305928484,
+      -2.6868700103793395
+    ],
+    "time_weight": [
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665,
+      0.0026041666666666665
+    ],
+    "increasing": [
+      -2.9053589108737414,
+      -2.9053589108737414,
+      -2.888307305928484,
+      -2.6868700103793395
+    ],
+    "increasing_concave": [
+      -2.9259771944006485,
+      -2.8553074967234733,
+      -2.819972647884886,
+      -2.7846377990462985
+    ],
+    "slope_per_minute": 0.0017667424419293748,
+    "monotone_kkt": {
+      "active": [
+        0
+      ],
+      "multipliers": [
+        0.4298217611825305,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 2.7755575615628914e-17,
+      "weighted_error": 0.0009237337319302664
+    },
+    "concave_kkt": {
+      "active": [
+        3,
+        4
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0,
+        0.6360045964516016,
+        0.4888389433347959
+      ],
+      "kkt_max_residual": 5.551115123125783e-17,
+      "weighted_error": 0.006732108344022347
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "TAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQE",
+    "times": [
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.453997604815679,
+      -2.284177117373172
+    ],
+    "time_weight": [
+      0.005208333333333333,
+      0.005208333333333333
+    ],
+    "increasing": [
+      -2.453997604815679,
+      -2.284177117373172
+    ],
+    "increasing_concave": [
+      -2.453997604815679,
+      -2.284177117373172
+    ],
+    "slope_per_minute": 0.008491024372125337,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "TGFVKKDQLGKNEEGAPQE",
+    "times": [
+      40.0,
+      80.0
+    ],
+    "replicate_means": [
+      -3.249017454538584,
+      -2.467505111165439
+    ],
+    "time_weight": [
+      0.005208333333333333,
+      0.005208333333333333
+    ],
+    "increasing": [
+      -3.249017454538584,
+      -2.467505111165439
+    ],
+    "increasing_concave": [
+      -3.249017454538584,
+      -2.467505111165439
+    ],
+    "slope_per_minute": 0.019537808584328617,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "TKEGVVHGVATVAEKTKE",
+    "times": [
+      20.0,
+      40.0
+    ],
+    "replicate_means": [
+      -2.595136605576462,
+      -2.4927282434210243
+    ],
+    "time_weight": [
+      0.005208333333333333,
+      0.005208333333333333
+    ],
+    "increasing": [
+      -2.595136605576462,
+      -2.4927282434210243
+    ],
+    "increasing_concave": [
+      -2.595136605576462,
+      -2.4927282434210243
+    ],
+    "slope_per_minute": 0.0051204181077718946,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "VAEAAGKTKEGVLYVGS",
+    "times": [
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.4871706229122914,
+      -2.5357602545740487
+    ],
+    "time_weight": [
+      0.005208333333333333,
+      0.005208333333333333
+    ],
+    "increasing": [
+      -2.51146543874317,
+      -2.51146543874317
+    ],
+    "increasing_concave": [
+      -2.51146543874317,
+      -2.51146543874317
+    ],
+    "slope_per_minute": -0.0024294815830878673,
+    "monotone_kkt": {
+      "active": [
+        0
+      ],
+      "multipliers": [
+        0.24294815830878666
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0005902380762563128
+    },
+    "concave_kkt": {
+      "active": [
+        0
+      ],
+      "multipliers": [
+        0.24294815830878666
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0005902380762563128
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "VAQKTVEGAGSIAAATGFVKKDQL",
+    "times": [
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.9689934640621454,
+      -2.470727691755626,
+      -2.0463408012655604
+    ],
+    "time_weight": [
+      0.003472222222222222,
+      0.003472222222222222,
+      0.003472222222222222
+    ],
+    "increasing": [
+      -2.9689934640621454,
+      -2.470727691755626,
+      -2.0463408012655604
+    ],
+    "increasing_concave": [
+      -2.9689934640621454,
+      -2.470727691755626,
+      -2.0463408012655604
+    ],
+    "slope_per_minute": 0.023066316569914626,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "VFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPV",
+    "times": [
+      0.0,
+      20.0,
+      40.0
+    ],
+    "replicate_means": [
+      -2.5149930995258947,
+      -2.543351277419127,
+      -2.5910486741248118
+    ],
+    "time_weight": [
+      0.003472222222222222,
+      0.003472222222222222,
+      0.003472222222222222
+    ],
+    "increasing": [
+      -2.5497976836899445,
+      -2.549797683689944,
+      -2.5497976836899445
+    ],
+    "increasing_concave": [
+      -2.5497976836899445,
+      -2.549797683689944,
+      -2.5497976836899445
+    ],
+    "slope_per_minute": -0.0019013893649728975,
+    "monotone_kkt": {
+      "active": [
+        0,
+        1
+      ],
+      "multipliers": [
+        0.23203056109366693,
+        0.2750066028991144
+      ],
+      "kkt_max_residual": 6.245004513516506e-17,
+      "weighted_error": 0.0009848531481661221
+    },
+    "concave_kkt": {
+      "active": [
+        0,
+        1
+      ],
+      "multipliers": [
+        0.23203056109366693,
+        0.2750066028991144,
+        0.0
+      ],
+      "kkt_max_residual": 6.245004513516506e-17,
+      "weighted_error": 0.0009848531481661221
+    },
+    "independent_prediction_error": 4.440892098500626e-16
+  },
+  {
+    "peptide_sequence": "VFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVDPDNEAYEMP",
+    "times": [
+      0.0,
+      20.0,
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -1.3543524639428752,
+      -1.4158936823980561,
+      -1.3728294656297955,
+      -1.2811671780829597,
+      -1.4090510381843036
+    ],
+    "time_weight": [
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333,
+      0.0020833333333333333
+    ],
+    "increasing": [
+      -1.3851230731704656,
+      -1.3851230731704658,
+      -1.3728294656297955,
+      -1.3451091081336315,
+      -1.3451091081336317
+    ],
+    "increasing_concave": [
+      -1.3845850790393777,
+      -1.3746260160439445,
+      -1.3646669530485114,
+      -1.3547078900530782,
+      -1.3547078900530782
+    ],
+    "slope_per_minute": 0.00012664677916119637,
+    "monotone_kkt": {
+      "active": [
+        0,
+        3
+      ],
+      "multipliers": [
+        0.12308243691036169,
+        0.0,
+        0.0,
+        0.25576772020268757
+      ],
+      "kkt_max_residual": 1.6479873021779667e-17,
+      "weighted_error": 0.0020141603243368313
+    },
+    "concave_kkt": {
+      "active": [
+        3,
+        4,
+        5
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0,
+        0.21737259252490115,
+        0.12093046038600962,
+        0.07679025535557285,
+        0.0
+      ],
+      "kkt_max_residual": 1.5612511283791264e-17,
+      "weighted_error": 0.0022090143958822805
+    },
+    "independent_prediction_error": 2.220446049250313e-16
+  },
+  {
+    "peptide_sequence": "VLYVGSKTKEGVVHGVATV",
+    "times": [
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.493828086309289,
+      -2.375204871138968,
+      -2.318356727818368
+    ],
+    "time_weight": [
+      0.003472222222222222,
+      0.003472222222222222,
+      0.003472222222222222
+    ],
+    "increasing": [
+      -2.493828086309289,
+      -2.375204871138968,
+      -2.318356727818368
+    ],
+    "increasing_concave": [
+      -2.493828086309289,
+      -2.375204871138968,
+      -2.318356727818368
+    ],
+    "slope_per_minute": 0.004386783962273025,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 0.0
+  },
+  {
+    "peptide_sequence": "VLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAV",
+    "times": [
+      40.0,
+      60.0,
+      80.0
+    ],
+    "replicate_means": [
+      -2.468969126958514,
+      -2.0080831474999425,
+      -1.6803678749862638
+    ],
+    "time_weight": [
+      0.003472222222222222,
+      0.003472222222222222,
+      0.003472222222222222
+    ],
+    "increasing": [
+      -2.468969126958514,
+      -2.0080831474999425,
+      -1.6803678749862638
+    ],
+    "increasing_concave": [
+      -2.468969126958514,
+      -2.0080831474999425,
+      -1.6803678749862638
+    ],
+    "slope_per_minute": 0.019715031299306258,
+    "monotone_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "concave_kkt": {
+      "active": [],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "kkt_max_residual": 0.0,
+      "weighted_error": 0.0
+    },
+    "independent_prediction_error": 2.220446049250313e-16
+  },
+  {
+    "peptide_sequence": "YQDYEPEA",
+    "times": [
+      0.0,
+      20.0,
+      40.0
+    ],
+    "replicate_means": [
+      -1.7341248551622923,
+      -2.0438584510188176,
+      -2.0118467030339686
+    ],
+    "time_weight": [
+      0.003472222222222222,
+      0.003472222222222222,
+      0.003472222222222222
+    ],
+    "increasing": [
+      -1.9299433364050262,
+      -1.9299433364050262,
+      -1.9299433364050262
+    ],
+    "increasing_concave": [
+      -1.9299433364050262,
+      -1.9299433364050262,
+      -1.9299433364050262
+    ],
+    "slope_per_minute": -0.006943046196791889,
+    "monotone_kkt": {
+      "active": [
+        0,
+        1
+      ],
+      "multipliers": [
+        1.3054565416182258,
+        0.5460224441929499
+      ],
+      "kkt_max_residual": 3.8163916471489756e-17,
+      "weighted_error": 0.019343230799613035
+    },
+    "concave_kkt": {
+      "active": [
+        0,
+        1
+      ],
+      "multipliers": [
+        1.3054565416182258,
+        0.5460224441929499,
+        0.0
+      ],
+      "kkt_max_residual": 3.8163916471489756e-17,
+      "weighted_error": 0.019343230799613035
+    },
+    "independent_prediction_error": 2.220446049250313e-16
+  },
+  {
+    "peptide_sequence": "YVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILE",
+    "times": [
+      0.0,
+      20.0,
+      60.0
+    ],
+    "replicate_means": [
+      -2.7230449916434454,
+      -2.838222769693181,
+      -2.273276284197603
+    ],
+    "time_weight": [
+      0.003472222222222222,
+      0.003472222222222222,
+      0.003472222222222222
+    ],
+    "increasing": [
+      -2.7806338806683133,
+      -2.7806338806683133,
+      -2.273276284197603
+    ],
+    "increasing_concave": [
+      -2.836659569014167,
+      -2.667800903637099,
+      -2.3300835728829634
+    ],
+    "slope_per_minute": 0.008442933268853398,
+    "monotone_kkt": {
+      "active": [
+        0
+      ],
+      "multipliers": [
+        0.38392592683245125,
+        0.0
+      ],
+      "kkt_max_residual": 7.28583859910259e-17,
+      "weighted_error": 0.002210986759412368
+    },
+    "concave_kkt": {
+      "active": [
+        2
+      ],
+      "multipliers": [
+        0.0,
+        0.0,
+        0.7574305158048099
+      ],
+      "kkt_max_residual": 6.591949208711867e-17,
+      "weighted_error": 0.015059650889648918
+    },
+    "independent_prediction_error": 0.0
+  }
+]

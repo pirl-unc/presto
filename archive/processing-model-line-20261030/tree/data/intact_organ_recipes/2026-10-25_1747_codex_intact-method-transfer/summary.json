@@ -1,0 +1,55 @@
+{
+  "cohort_support": {
+    "test": {
+      "Brain": {
+        "n_sequences": 20,
+        "n_observations": 92,
+        "n_acquisitions": 6
+      },
+      "Liver": {
+        "n_sequences": 23,
+        "n_observations": 79,
+        "n_acquisitions": 5
+      },
+      "Spleen": {
+        "n_sequences": 21,
+        "n_observations": 65,
+        "n_acquisitions": 5
+      }
+    },
+    "extrapolation": {
+      "Brain": {
+        "n_sequences": 19,
+        "n_observations": 74,
+        "n_acquisitions": 6
+      },
+      "Liver": {
+        "n_sequences": 17,
+        "n_observations": 60,
+        "n_acquisitions": 5
+      },
+      "Spleen": {
+        "n_sequences": 16,
+        "n_observations": 55,
+        "n_acquisitions": 6
+      }
+    }
+  },
+  "support_passed": true,
+  "reason_counts": {
+    "ambiguous_mass_assignment": 2060,
+    "input_link_or_quantity_conflict": 38,
+    "multiple_masses_for_sequence_acquisition": 26,
+    "no_eligible_zero_baseline": 1383,
+    "no_unique_admitted_intact_substrate": 79,
+    "outside_organs_view": 3940
+  },
+  "output_counts": {
+    "n_decisions_rows": 8138,
+    "n_examples_rows": 425,
+    "n_covariates_rows": 425,
+    "n_baselines_rows": 155,
+    "n_trajectories_rows": 517,
+    "n_search_policies_rows": 1
+  }
+}

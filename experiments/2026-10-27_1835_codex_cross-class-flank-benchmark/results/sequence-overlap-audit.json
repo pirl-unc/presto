@@ -1,0 +1,64 @@
+{
+  "scope": "sequence-only audit before predictive fitting; original splits retained",
+  "nine_mer_definition": "any contiguous 9aa substring, not an experimentally assigned binding core",
+  "training_shared_exact_peptides_between_classes": 0,
+  "training_shared_nine_mer_substrings_between_classes": 22,
+  "subsets": {
+    "I-train_to_I-validation": {
+      "observations": 2051,
+      "exact_peptide_seen": 0,
+      "any_nine_mer_seen": 592,
+      "any_nine_mer_fraction": 0.2886396879570941,
+      "mhc_pair_seen": 2051
+    },
+    "II-train_to_I-validation": {
+      "observations": 2051,
+      "exact_peptide_seen": 0,
+      "any_nine_mer_seen": 10,
+      "any_nine_mer_fraction": 0.0048756704046806435,
+      "mhc_pair_seen": 0
+    },
+    "I-train_to_II-validation": {
+      "observations": 874,
+      "exact_peptide_seen": 0,
+      "any_nine_mer_seen": 9,
+      "any_nine_mer_fraction": 0.010297482837528604,
+      "mhc_pair_seen": 0
+    },
+    "II-train_to_II-validation": {
+      "observations": 874,
+      "exact_peptide_seen": 0,
+      "any_nine_mer_seen": 714,
+      "any_nine_mer_fraction": 0.816933638443936,
+      "mhc_pair_seen": 874
+    },
+    "I-train_to_I-test": {
+      "observations": 1845,
+      "exact_peptide_seen": 0,
+      "any_nine_mer_seen": 502,
+      "any_nine_mer_fraction": 0.2720867208672087,
+      "mhc_pair_seen": 1845
+    },
+    "II-train_to_I-test": {
+      "observations": 1845,
+      "exact_peptide_seen": 0,
+      "any_nine_mer_seen": 8,
+      "any_nine_mer_fraction": 0.004336043360433604,
+      "mhc_pair_seen": 0
+    },
+    "I-train_to_II-test": {
+      "observations": 958,
+      "exact_peptide_seen": 0,
+      "any_nine_mer_seen": 1,
+      "any_nine_mer_fraction": 0.0010438413361169101,
+      "mhc_pair_seen": 0
+    },
+    "II-train_to_II-test": {
+      "observations": 958,
+      "exact_peptide_seen": 0,
+      "any_nine_mer_seen": 814,
+      "any_nine_mer_fraction": 0.8496868475991649,
+      "mhc_pair_seen": 958
+    }
+  }
+}

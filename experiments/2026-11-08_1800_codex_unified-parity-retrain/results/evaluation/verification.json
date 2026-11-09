@@ -1,0 +1,34 @@
+{
+  "affinity_long_rows": 9205,
+  "binary_long_rows": 388240,
+  "comparisons": 110,
+  "endpoint_census": {
+    "ec50": 69,
+    "ic50": 1597,
+    "kd_via_ec50": 528,
+    "kd_via_ic50": 342
+  },
+  "implementation": "SciPy correlations plus scikit-learn AUROC/AUPRC",
+  "inputs": {
+    "predictions/matched-affinity.jsonl.gz": {
+      "bytes": 229009,
+      "sha256": "64e5b859252e98cbf803da9c17601518506d7b2420eb6c951ba18fe3beedcfa4"
+    },
+    "predictions/matched-presentation-processing.jsonl.gz": {
+      "bytes": 7581339,
+      "sha256": "f26cfefe6b33c35b44a0e4a1f89d65c6f43a7bffe3c54d398997792993836540"
+    },
+    "tables/metrics.json": {
+      "bytes": 97050,
+      "sha256": "fcf9cfca54788a14c88eb88b10af42dd05322f0b2509ef5e9833491cf8a54ac0"
+    },
+    "tables/study-bootstrap.json": {
+      "bytes": 22527,
+      "sha256": "1eba7758402dca33622f959e9c210b49bf993cd645ca8dffacd5feb6f5fa6001"
+    }
+  },
+  "maximum_absolute_delta": 3.3306690738754696e-16,
+  "schema": "presto.unified_parity_evaluation_verification.v1",
+  "status": "passed",
+  "tolerance": 1e-12
+}

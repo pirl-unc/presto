@@ -1,0 +1,36 @@
+{
+  "cwd": "/private/tmp/presto-modular-model",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "successful_analysis": [
+    {
+      "argv": [
+        "/Users/iskander/code/shared-virtual-env/bin/python",
+        "experiments/2026-10-24_2338_codex_intact-degradomics-source/code/inventory.py"
+      ],
+      "executed_snapshot": "experiments/2026-10-24_2338_codex_intact-degradomics-source/reproduce/source/inventory-shared-formula.py",
+      "stdout_stderr": "experiments/2026-10-24_2338_codex_intact-degradomics-source/launch_logs/inventory-shared-formula.log"
+    },
+    {
+      "argv": [
+        "/Users/iskander/code/shared-virtual-env/bin/python",
+        "experiments/2026-10-24_2338_codex_intact-degradomics-source/code/quantities.py"
+      ],
+      "executed_snapshot": "experiments/2026-10-24_2338_codex_intact-degradomics-source/reproduce/source/quantities-layout-qualified.py",
+      "stdout_stderr": "experiments/2026-10-24_2338_codex_intact-degradomics-source/launch_logs/quantities-layout-qualified.log"
+    },
+    {
+      "argv": [
+        "/Users/iskander/code/shared-virtual-env/bin/python",
+        "experiments/2026-10-24_2338_codex_intact-degradomics-source/code/close_source.py"
+      ],
+      "executed_snapshot": "experiments/2026-10-24_2338_codex_intact-degradomics-source/reproduce/source/close_source.py",
+      "stdout_stderr": "experiments/2026-10-24_2338_codex_intact-degradomics-source/launch_logs/source-closure.log"
+    }
+  ],
+  "publication_helper": false
+}

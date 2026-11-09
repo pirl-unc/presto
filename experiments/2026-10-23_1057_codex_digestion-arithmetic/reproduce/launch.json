@@ -1,0 +1,28 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "device": "local CPU only",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1"
+  },
+  "frozen_at": "2026-10-23T11:00:11.324185-04:00",
+  "package": "/private/tmp/hitlist-v2-digestion-208-candidate",
+  "package_manifest_sha256": "b3cfffc444f922803625735bd1e712a2f734513fc4bd8e83f8fd83759f55410c",
+  "predictive_split": "none; source integrity audit, no model evaluated",
+  "presto_commit": "5a10094a66a7db25673d5c2c58e93576935764e6",
+  "presto_dirty": " M tasks/todo.md\n?? data/availability_recipes/\n?? experiments/2026-10-23_1057_codex_digestion-arithmetic/\n?? experiments/agents/codex/plans/digestion-arithmetic.md\n?? experiments/agents/codex/plans/full-ic50-fitting.md\n?? tasks/modular_model/trajectory-sampling-issue.md\n",
+  "reference_algorithm": "aSPIRE1.0 c3d6c9112b2fd88d7e9453b1f23dc338f52c172b, not guaranteed producer",
+  "registered_at": "2026-10-23T10:57:25.203509-04:00",
+  "source_hashes": {
+    "/private/tmp/presto-digestion-assets/aspire-1.0/src/getQuant.R": "ef2aae03641b6ded869c1c7a7f420b20a4d850f3303c320f040a0b2461921d37",
+    "/private/tmp/presto-digestion-assets/aspire-1.0/src/mapRemSynErr.R": "8c0122435448f170674956b7ec7b1a16d883b8951931e445d05cfd2309ac367c",
+    "/private/tmp/presto-digestion-assets/aspire-1.0/src/postprocessing.R": "448bdc0d611676f9aa9363fe4c85ed3c251c6702057469772f3aa3701ce8fa5b",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_1057_codex_digestion-arithmetic/code/replay.py": "137f5324a4908b4d08185685ef157878e5cb13b63c0457e1e1c3aa137c6f6c13"
+  },
+  "tolerances": {
+    "final": 1e-10,
+    "means": 1e-11,
+    "raw": 1e-11
+  },
+  "training_pretraining_losses": "none; source arithmetic audit"
+}

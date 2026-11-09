@@ -1,0 +1,51 @@
+{
+  "goal_status": "active_unachieved",
+  "previous_turn_classification": "Resource-status-only turn: no scientific progress; capacity revalidated before this continuation.",
+  "current_turn_classification": "progress: verified two studies supporting data, identified exact processed Skyline file, independently checked75000+source cell positions, published source audit and updated upstream owner",
+  "family": "experiments/2026-10-25_1451_codex_mrm-anchor-admission",
+  "published_commit": "d40f51d00d68d928e342d2ce9c937b61f3c63b77",
+  "pr": {
+    "url": "https://github.com/pirl-unc/presto/pull/131",
+    "body_sha256": "533432aaf3857993afa3629ee8d9c4591ba2c37f16ef7f42f8a84e66122bd5a9",
+    "verified": true,
+    "head_sha": "d40f51d00d68d928e342d2ce9c937b61f3c63b77",
+    "draft": true
+  },
+  "hitlist": {
+    "url": "https://github.com/pirl-unc/hitlist/issues/762#issuecomment-6399609459",
+    "body_sha256": "bd7b3be0aafe9c25f7b02f00fd7578eee4a1c556672783aba9612ac0630da43e",
+    "verified": true
+  },
+  "ci": [
+    {
+      "id": 40207995792,
+      "name": "CI",
+      "status": "in_progress",
+      "conclusion": null,
+      "head_sha": "d40f51d00d68d928e342d2ce9c937b61f3c63b77",
+      "html_url": "https://github.com/pirl-unc/presto/actions/runs/40207995792"
+    },
+    {
+      "id": 40207987116,
+      "name": "CI",
+      "status": "in_progress",
+      "conclusion": null,
+      "head_sha": "d40f51d00d68d928e342d2ce9c937b61f3c63b77",
+      "html_url": "https://github.com/pirl-unc/presto/actions/runs/40207987116"
+    }
+  ],
+  "local_sessions": "all terminal; no active scientific job",
+  "next_asset": "PASS05890/CPTAC_Exp1_Curves_CS.sky (listed7.8M)",
+  "access_evidence": "FTP requires TLS; verified FTPS fails hostname check for ftp.peptideatlas.org. Official web hostname resolves differently and no-login TLS probe timed out. No certificate validation disabled; no private credential used.",
+  "next_action": "Qualify repository-supported canonical FTPS hostname or public HTTPS mirror for this exact standalone Skyline asset; public certificate/official documentation inspection is still available. Do not repeat retired NCBI routes, refit nine standards, reopen native outer splits, or treat LLOQ/ratios as absolute response. After actual file admission use shared Hitlist APIs, then fixed simple response and biological-transfer experiments, followed by native exact/RL availability comparison.",
+  "remaining_goal_scope": [
+    "Separate processing/yield/clearance and MS-response identification",
+    "precursor-relative APC quantities, including unobserved and short sub-ligand products",
+    "machinery/species/cell-type conditioning and transport/clearance constraints",
+    "held-out biological prediction and protocol transfer",
+    "matched exact versus discrete/RL availability comparison on admitted real data"
+  ],
+  "unrelated_work_preserved": true,
+  "blocker_streak": 0,
+  "model_fits_this_family": 0
+}

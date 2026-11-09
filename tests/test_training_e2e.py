@@ -15,8 +15,8 @@ def test_e2e_trainer_with_presto_dataset_and_dataloader(tmp_path):
         generate_synthetic_tcr_data,
         generate_synthetic_mhc_sequences,
     )
-    from presto.models.presto import Presto
-    from presto.training.trainer import Trainer
+    from presto.legacy.presto import Presto
+    from presto.legacy.trainer import Trainer
 
     alleles = ["HLA-A*02:01", "HLA-B*07:02"]
     dataset = PrestoDataset(
@@ -60,7 +60,7 @@ def test_e2e_trainer_with_presto_dataset_and_dataloader(tmp_path):
 
 
 def test_e2e_train_synthetic_script_run(tmp_path):
-    from presto.scripts.train_synthetic import run
+    from presto.legacy.scripts.train_synthetic import run
 
     checkpoint = tmp_path / "synthetic.ckpt"
     data_dir = tmp_path / "synthetic_data"
@@ -86,9 +86,9 @@ def test_e2e_train_synthetic_script_run(tmp_path):
 def _train_tiny_model_once(seed: int):
     """One initialization: returns (objective improved, n heads improved)."""
     from presto.data.collate import PrestoSample, PrestoCollator
-    from presto.models.presto import Presto
+    from presto.legacy.presto import Presto
     from presto.training.losses import censor_aware_loss
-    from presto.training.trainer import Trainer
+    from presto.legacy.trainer import Trainer
 
     def _as_train_batch(collated_batch):
         batch = {

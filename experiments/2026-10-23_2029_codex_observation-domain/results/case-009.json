@@ -1,0 +1,71 @@
+{
+  "case_id": 9,
+  "block_id": 3,
+  "eta": -1.0,
+  "status": "completed",
+  "accepted": true,
+  "condition": "soh2024_digestion:condition:aSPIRE_FFH_12p5",
+  "time_hours": 24.0,
+  "n_residues": 453,
+  "n_required_spans": 2350,
+  "n_measurements": 4700,
+  "phase": "complete",
+  "forwards": [
+    {
+      "substeps": 2,
+      "seconds": 1.1491694590076804,
+      "required_nonpositive": 0,
+      "required_nonfinite": 0,
+      "full_negative_count": 0,
+      "full_zero_count": 0,
+      "full_minimum": 1.0476941615147142e-08,
+      "full_mass": 453.0000000000026,
+      "required_minimum": 2.085286594944927e-05,
+      "required_maximum": 0.03724137936720872
+    },
+    {
+      "substeps": 4,
+      "seconds": 2.229573916993104,
+      "required_nonpositive": 0,
+      "required_nonfinite": 0,
+      "full_negative_count": 0,
+      "full_zero_count": 0,
+      "full_minimum": 1.0476941615147123e-08,
+      "full_mass": 453.0000000000026,
+      "required_minimum": 2.085286594944926e-05,
+      "required_maximum": 0.03724137936720875
+    },
+    {
+      "substeps": 8,
+      "seconds": 4.370035334024578,
+      "required_nonpositive": 0,
+      "required_nonfinite": 0,
+      "full_negative_count": 0,
+      "full_zero_count": 0,
+      "full_minimum": 1.0476941615147207e-08,
+      "full_mass": 453.0000000000041,
+      "required_minimum": 2.085286594944932e-05,
+      "required_maximum": 0.03724137936720868
+    }
+  ],
+  "required_positive_finite": true,
+  "max_log_disagreement": 7.105427357601002e-15,
+  "n_unresolved_precision": 0,
+  "forward_pass": true,
+  "autograd_seconds": 6.620892000035383,
+  "independent_fd_seconds": 8.976451708993409,
+  "gradient_error": [
+    3.7970131813030994e-11,
+    7.019090387042071e-12,
+    6.686689830309733e-11
+  ],
+  "gradient_tolerance": [
+    1.000003267034976e-05,
+    1.00014435322028e-05,
+    1.0004767257207051e-05
+  ],
+  "gradient_pass": true,
+  "gradient_status": "evaluated",
+  "seconds": 23.720911625016015,
+  "peak_rss_bytes": 1809760256
+}

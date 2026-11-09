@@ -1,0 +1,157 @@
+{
+  "external_reference_source_mapping": {
+    "select": [
+      "native.peptide_row_id",
+      "native.sequence_id",
+      "native.sequence_raw",
+      "native.component",
+      "native.table_number",
+      "native.row_1based",
+      "native.asset_path",
+      "native.sequence_cell",
+      "native.parent_label_cell",
+      "native.parent_label_raw",
+      "native.parent_mapping_status",
+      "native.source_parent_status",
+      "native.source_parent_positions_start1",
+      "native.additional_parent_identities",
+      "native.reference_identity_count",
+      "native.reference_full_sequence_count",
+      "native.reference_occurrence_count",
+      "native.measured_pool",
+      "native.measured_population",
+      "native.partner_population",
+      "native.material_link_precision",
+      "native.selection_scope"
+    ],
+    "limit": null
+  },
+  "external_reference_sequence": {
+    "select": [
+      "native.sequence_id",
+      "native.sequence",
+      "native.length",
+      "native.reference_identity_count",
+      "native.reference_full_sequence_count",
+      "native.reference_occurrence_count",
+      "native.component"
+    ],
+    "limit": null
+  },
+  "external_reference_occurrence": {
+    "select": [
+      "native.sequence_id",
+      "native.peptide_sequence",
+      "native.component",
+      "native.accession",
+      "native.start1",
+      "native.end1",
+      "native.left",
+      "native.right",
+      "native.parent_sequence_sha256"
+    ],
+    "limit": null
+  },
+  "external_reference_parent": {
+    "select": [
+      "native.accession",
+      "native.entry",
+      "native.length",
+      "native.sequence_sha256",
+      "native.sequence",
+      "native.taxonomy",
+      "native.aliases",
+      "native.reference_status"
+    ],
+    "limit": null
+  },
+  "external_reference_result_context": {
+    "select": [
+      "native.result_id",
+      "native.peptide_row_id",
+      "native.source_dataset",
+      "native.sequence_id",
+      "native.component",
+      "native.source_parent_status",
+      "native.reference_identity_count",
+      "native.reference_full_sequence_count",
+      "native.reference_occurrence_count",
+      "native.table_number",
+      "native.measured_pool",
+      "native.measured_population",
+      "native.partner_population",
+      "native.material_link_precision",
+      "native.specimen_status",
+      "native.organism_taxon_id",
+      "native.organism_source_scope"
+    ],
+    "limit": null
+  },
+  "external_assay_channel": {
+    "select": [
+      "native.channel_id",
+      "native.table_number",
+      "native.channel_column",
+      "native.channel_label_raw",
+      "native.sample_label_raw",
+      "native.channel_label_cell",
+      "native.sample_label_cell",
+      "native.is_control_for_table",
+      "native.measured_population",
+      "native.partner_population",
+      "native.partner_loss_status",
+      "native.material_link_precision",
+      "native.intensity_total_over_retained_rows",
+      "native.normalization_policy"
+    ],
+    "limit": null
+  },
+  "external_contrast": {
+    "select": [
+      "native.contrast_id",
+      "native.table_number",
+      "native.treated_channel_id",
+      "native.control_channel_ids_json",
+      "native.reported_fc_column",
+      "native.normalization_policy",
+      "native.normalization_universe",
+      "native.operation_order",
+      "native.method_source_locator"
+    ],
+    "limit": null
+  },
+  "external_derivation_input": {
+    "select": [
+      "native.derived_measurement_id",
+      "native.input_measurement_id",
+      "native.input_role",
+      "native.control_ordinal"
+    ],
+    "limit": null
+  },
+  "external_context_assertion": {
+    "select": [
+      "native.assertion_id",
+      "native.subject_id",
+      "native.predicate",
+      "native.value_raw",
+      "native.normalized_value",
+      "native.assertion_status",
+      "native.source_locator",
+      "native.scope"
+    ],
+    "limit": null
+  },
+  "external_source_asset": {
+    "select": [
+      "native.asset_id",
+      "native.relative_path",
+      "native.sha256",
+      "native.size_bytes",
+      "native.original_url",
+      "native.license_raw",
+      "native.license_status"
+    ],
+    "limit": null
+  }
+}

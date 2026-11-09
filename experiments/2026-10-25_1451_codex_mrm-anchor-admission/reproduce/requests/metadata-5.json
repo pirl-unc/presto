@@ -1,0 +1,20 @@
+{
+  "phase": "metadata",
+  "scope": "Public experiment-directory listing only; reversible Latin-1 metadata view, no files or credentials requested.",
+  "requests": [
+    {
+      "name": "pass01163-experiment1.html",
+      "url": "https://db.systemsbiology.net/sbeams/cgi/PeptideAtlas/PASS_View?identifier=PASS01163&browseArea=&path=/Mouse_500_Assays_CPTAC_Experiment1",
+      "expected_kind": "html",
+      "encoding": "latin-1",
+      "discovery_provenance": "Exact public directory href in archived pass01163-sbeams.html, recovered with byte-reversible Latin-1 decoding; see metadata-decoding-amendment.md."
+    },
+    {
+      "name": "pass01163-experiment2.html",
+      "url": "https://db.systemsbiology.net/sbeams/cgi/PeptideAtlas/PASS_View?identifier=PASS01163&browseArea=&path=/Mouse_500_Assays_CPTAC_Experiment2",
+      "expected_kind": "html",
+      "encoding": "latin-1",
+      "discovery_provenance": "Exact public directory href in archived pass01163-sbeams.html, recovered with byte-reversible Latin-1 decoding; see metadata-decoding-amendment.md."
+    }
+  ]
+}

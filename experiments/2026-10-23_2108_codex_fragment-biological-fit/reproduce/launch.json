@@ -1,0 +1,44 @@
+{
+  "registered_at": "2026-10-24T01:08:28.726334+00:00",
+  "agent": "Codex / GPT-6",
+  "git_commit": "120d55ac26b1906c0d22c465254c4ab0051470da",
+  "git_dirty": true,
+  "stage": "objective_qualification_only",
+  "biological_fit_allowed": false,
+  "source_hashes": {
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_2029_codex_observation-domain/results/summary.json": "ab6464a3a62b4e2b460854d56ab71a18b613359a544c9dc0aee0e018a72a930e",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_2029_codex_observation-domain/reproduce/training-support.json": "10f1dd0cff572dd80088ab1b8b6354f9fb692714e07435b8c4a5f86fe1db25a8",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_2029_codex_observation-domain/code/rational.py": "dd67d8450d89d8faa04964c322abc79411338ed3785f297768ad7c655a377bb0",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_1501_codex_shared-observation/code/observation.py": "bf612679f2280bee81bdcfaddd02771bada80f1db0978a86925ab48f9b07420f",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_1501_codex_shared-observation/reproduce/launch.json": "cfc71e045b633a9e3b1633903257425d4d9e8329acb0efd1dc8cac1af82b7012",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_1501_codex_shared-observation/results/context-summary.json": "050c284cc04b0e11286b4a10e28573648bc9e8426ae68bbb9da54fa9332a50df",
+    "/private/tmp/hitlist-digestion-209-review-candidate/manifest.json": "5f616170b5514cb4d8f0c7b7843d232959e9514eebbca6483f976e17b0846615",
+    "/private/tmp/hitlist-digestion-209-review-candidate/examples.json": "8b89735c3a0f4fe11d863dd886118e64b2ff1fb8570b4e01f4d209e5078f3d8c",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_1202_codex_biological-cut-rates/results/fits.json": "2400f214141b6ab421cc0b5168ec08b3209507b62b7cf0a590fd719937bd267f",
+    "/private/tmp/presto-modular-model/models/independent_cut.py": "6b6a2afa884ed3d0fa4ba553a1f6c94d884e9299f3ece68d62cd34bcc6f3771f"
+  },
+  "observation_family": "/private/tmp/presto-modular-model/experiments/2026-10-23_1501_codex_shared-observation",
+  "admission_family": "/private/tmp/presto-modular-model/experiments/2026-10-23_2029_codex_observation-domain",
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "PYTHONPATH": "/private/tmp/presto-modular-imports"
+  },
+  "qualified_training_measurements": 90630,
+  "development_measurements": 14822,
+  "test_policy": "Original test parents excluded; development not a new blind test. Objective qualification uses only training quantities.",
+  "actual_parity_block": "First sorted training condition at its minimum positive time; fixed before losses inspected.",
+  "gates": {
+    "algebra_atol": 1e-09,
+    "algebra_rtol": 1e-08,
+    "fragment_log_max_abs": 1e-05,
+    "nonzero_fixture_eta_gradient_min_abs": 1e-10
+  },
+  "optimizer_updates": 0,
+  "argv": [
+    "sh",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_2108_codex_fragment-biological-fit/reproduce/qualify.sh"
+  ]
+}

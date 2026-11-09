@@ -1,0 +1,38 @@
+{
+  "steps": 6000,
+  "examples": 383938,
+  "optimizer_seconds": 951.7581497840438,
+  "class_examples": {
+    "I": 315454,
+    "II": 68484
+  },
+  "endpoint_examples": {
+    "kd_via_ec50": 127843,
+    "kd_via_ic50": 122893,
+    "half_life": 21860,
+    "ic50": 67141,
+    "kd": 43313,
+    "ec50": 888
+  },
+  "endpoint_class_examples": {
+    "kd_via_ec50:I": 87366,
+    "kd_via_ic50:I": 119746,
+    "half_life:I": 21825,
+    "kd_via_ec50:II": 40477,
+    "ic50:I": 43575,
+    "kd:I": 42109,
+    "ic50:II": 23566,
+    "kd_via_ic50:II": 3147,
+    "kd:II": 1204,
+    "ec50:II": 55,
+    "ec50:I": 833,
+    "half_life:II": 35
+  },
+  "peak_rss": 5945405440,
+  "latest_training_loss": 0.5674167275428772,
+  "elapsed_seconds": 1366.070930684,
+  "rss": 5945405440,
+  "updated_unix": 1793148810.746536,
+  "gpu_allocated": 752452608,
+  "gpu_reserved": 1832910848
+}

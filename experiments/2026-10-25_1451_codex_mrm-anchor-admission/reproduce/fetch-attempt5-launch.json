@@ -1,0 +1,95 @@
+{
+  "argv": [
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1451_codex_mrm-anchor-admission/code/launch.py",
+    "fetch",
+    "--attempt",
+    "5",
+    "--requests",
+    "experiments/2026-10-25_1451_codex_mrm-anchor-admission/reproduce/requests/metadata-4.json"
+  ],
+  "configuration": {
+    "agent_model": "Codex / GPT-6",
+    "created_utc": "2026-10-25T14:54:41.644897+00:00",
+    "experiment_id": "2026-10-25_1451_codex_mrm-anchor-admission",
+    "presto_commit": "22241241daaae1b223d4ed6e0543f8fa1afcad9a",
+    "dirty_tracked": true,
+    "dirty_scope": "Preserved unrelated task changes and this newly registered source audit; all executed source frozen",
+    "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+    "data_directory": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/mrm_anchor_sources/2026-10-25_1451_codex_mrm-anchor-admission",
+    "public_hosts": [
+      "assays.cancer.gov",
+      "panoramaweb.org",
+      "www.ebi.ac.uk",
+      "europepmc.org",
+      "pmc.ncbi.nlm.nih.gov",
+      "www.ncbi.nlm.nih.gov",
+      "www.peptideatlas.org",
+      "db.systemsbiology.net",
+      "peptideatlas.org",
+      "ftp.peptideatlas.org",
+      "pubs.acs.org",
+      "acs.figshare.com",
+      "api.figshare.com",
+      "www.nature.com",
+      "static-content.springer-cdn.com",
+      "ftp.ncbi.nlm.nih.gov"
+    ],
+    "limits": {
+      "stage_seconds": 1200,
+      "rss_bytes": 3221225472,
+      "startup_memory_bytes": 3221225472,
+      "disk_floor_bytes": 1073741824,
+      "start_margin_bytes": 33554432
+    },
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUNBUFFERED": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    },
+    "frozen_code_sha256": {
+      "code/fetch.py": "4bd1e7a00dac4e3cca64a422c7b2156b382a5bdba8a25d5eb92af7b4ea36e566",
+      "code/launch.py": "269256f34e97d6c3d9124eb536c527cf01a32e305a67d9ac3cd32ecaea3e4acf",
+      "reproduce/source/fetch.py": "4bd1e7a00dac4e3cca64a422c7b2156b382a5bdba8a25d5eb92af7b4ea36e566",
+      "reproduce/source/launch.py": "269256f34e97d6c3d9124eb536c527cf01a32e305a67d9ac3cd32ecaea3e4acf",
+      "reproduce/launch.sh": "af09263c9fe4d2a90b55a8dd40ec25147d9da4d4c2d4c1f7c1461a657d64b8f8"
+    },
+    "plan_sha256": "b7e6242fdafa0d07f78687a3a91a3e6011dc88940f676892a99ba40b03cd6423",
+    "input_sha256": {},
+    "network_limits": {
+      "metadata_requests": 20,
+      "metadata_bytes_each": 5242880,
+      "processed_bytes_each": 268435456,
+      "total_bytes": 536870912,
+      "connect_seconds": 10,
+      "read_seconds": 30,
+      "request_wall_seconds": 120
+    },
+    "training_contract": null,
+    "test_split": null,
+    "reason_no_predictions": "Public source access/schema/semantic admission only; no model fitting or outer-data access.",
+    "extension_policy": "Every discovered request set is an immutable JSON file under reproduce/requests, citing observed source links/API documentation and its stage/scope before execution."
+  },
+  "request_set": {
+    "phase": "metadata",
+    "scope": "Use the established official PeptideAtlas SBEAMS accession viewer after the www.peptideatlas.org host failed TLS hostname validation. Keep TLS validation enabled, use no credentials, and inspect metadata only.",
+    "requests": [
+      {
+        "name": "pass01163-sbeams.html",
+        "url": "https://db.systemsbiology.net/sbeams/cgi/PeptideAtlas/PASS_View?identifier=PASS01163",
+        "expected_kind": "html",
+        "discovery_provenance": "Primary study DOI10.1038/s42003-018-0087-6 names PASS01163. Official SBEAMS PASS_View?identifier= accession route is explicitly linked in primary deposited-data statements, including https://pmc.ncbi.nlm.nih.gov/articles/PMC5923262/. Only the original study accession is queried."
+      },
+      {
+        "name": "pass01200-sbeams.html",
+        "url": "https://db.systemsbiology.net/sbeams/cgi/PeptideAtlas/PASS_View?identifier=PASS01200",
+        "expected_kind": "html",
+        "discovery_provenance": "Same documented official accession route as the preceding request, scoped to the primary study's second accession PASS01200."
+      }
+    ]
+  },
+  "request_set_sha256": "2465d09143e18e43449c027ef7f8c740ffc29bda10a4d8f906da1554b30bbb64"
+}

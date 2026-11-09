@@ -1,0 +1,57 @@
+{
+  "admission_script_sha256": "36211a1d376e2b376d2bd1bf261b584b0bbbad510183d9ff35083c8951111e9f",
+  "agent_model": "Codex / GPT-6",
+  "checks": [
+    "source receipt and nested CRCs",
+    "all original/typed row and value states",
+    "raw time joins and conflicts",
+    "all predecessor bytes and canonical catalog queries",
+    "R decoding provenance"
+  ],
+  "device": "local CPU; no Modal/GPU",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PATH": "/opt/homebrew/bin:/Users/iskander/code/shared-virtual-env/bin:/usr/bin:/bin",
+    "PYTHONPATH": "/private/tmp/hitlist-digestion-source"
+  },
+  "held_out": "No model or predictive evaluation; no test split or prediction dump applies",
+  "hitlist_commit": "b1c5de4a72f561c5eefd01030dfcc5c5011e2401",
+  "hitlist_dirty": "M hitlist/evidence_bindings.py\n M hitlist/evidence_catalog.py\n M hitlist/external_evidence.py\n M hitlist/external_successor.py\n M hitlist/version.py\n M tasks/todo.md\n M tests/test_external_successor.py\n?? hitlist/data/evidence_revisions/digestion_assets.json\n?? hitlist/data/evidence_revisions/digestion_contract.json\n?? hitlist/digestion_evidence.py\n?? tasks/digestion-source-spec.md\n?? tests/test_digestion_evidence.py",
+  "hitlist_root": "/private/tmp/hitlist-digestion-source",
+  "old_manifest_sha256": "48b211da703275fb97f5a7ad472ab7656a13d719460b7d9b901ed80c919a74f2",
+  "old_package": "/private/tmp/hitlist-v2-controlled-207-reviewed-candidate",
+  "output_package": "/private/tmp/hitlist-v2-digestion-208-candidate",
+  "parent_manifest_sha256": "8f35dc5529b376f1b2e3b25f91dd2f2dc57d0a53c4d8a76c094294193708c9b6",
+  "parent_package": "/private/tmp/hitlist-v2-adjudication-204-reviewed",
+  "presto_commit": "12dc30e575189a2590c10f156adbd2a3ac1aa92a",
+  "presto_dirty": "M tasks/todo.md\n?? data/availability_recipes/\n?? experiments/agents/codex/plans/full-ic50-fitting.md\n?? experiments/agents/codex/plans/shared-digestion-admission.md\n?? tasks/modular_model/trajectory-sampling-issue.md",
+  "purpose": "Shared original digestion evidence; no model fit or predictive split",
+  "registered_at": "2026-10-23T10:18:05.271379-04:00",
+  "source_contract": "All 18 immutable MSV000092631/PXD044463 assets; 17 conditions, 15 literal constructs; all typed stages, no training selection; RF1 conflicts retained and ineligible pending reconciliation",
+  "source_hashes": {
+    "hitlist/data/evidence_revisions/digestion_assets.json": "f15e37aa9d445d29d498f556c17c1ee71adc16d158546b835442ac8e7c2dde8a",
+    "hitlist/data/evidence_revisions/digestion_contract.json": "d572f5a03e9f9edc27fb68f1ff23e4dc33a8e218c55815dcc39c255398e0ffbf",
+    "hitlist/digestion_evidence.py": "c7cd78131f7dca0fa2952a76f49141caf7a0106196db794cbf59f5a51208939d",
+    "hitlist/evidence_bindings.py": "44f50e0730f6484bb8de5850ca4d5b0797d4e4cf794f1a08d6a863a65243a2b8",
+    "hitlist/evidence_catalog.py": "870c5762f5e1bf37b9c84b0be569283f5fd18b3092c13afc934eb73de8e59fb1",
+    "hitlist/evidence_snapshot.py": "2945129a0f48375e90082066ce8336ebfff2d55d2809d91f7cde751fb585e71c",
+    "hitlist/evidence_store.py": "340a57a89a7db80293b1c8484337a22eef6c4cbb64057f94594f970b2cc4458a",
+    "hitlist/external_evidence.py": "2689b5edcd96d69bdaa38f5572f38c632fdb6ff1031987b20ffdebfa2d306463",
+    "hitlist/external_successor.py": "c0d3af9793568b798c7d5ce903cafd93388f6aa9d940d882f23f8e9a7bd4b89d",
+    "hitlist/mapp_controlled_evidence.py": "1c5026d0cd8a1fed5b4942ee76593efb21a9c4c375d63728d380d8e3c3f0e5c9",
+    "hitlist/mapp_evidence.py": "ac731d54b2c85c9c1fdd7aff7846c8ca5d32b063a93f0a143c885bffc6bd5afe",
+    "hitlist/ms_calibration_evidence.py": "35d34fa30631084f69de94dc84a8f25b8650e5a7807c7b10045ff0b32befda27",
+    "hitlist/provenance.py": "55f36174cc24a9646cf3e747c7a38ce64896008c0fbc8fcc020e99675e12fa1c",
+    "hitlist/sequence_reference_evidence.py": "e9e68fc59b5e3ef8685f169fa0e363c710b315b2c673d03d23c03162cd56cc04",
+    "hitlist/version.py": "a156e5e882cfe5dc8166d9b6894cccfd04d4852cb70b7db96868034e117b3ffe",
+    "tests/test_digestion_evidence.py": "944fccdd87f03d3fde31a61ee77055f40be3ca61ada6db3101aac2a8307ae87c"
+  },
+  "source_roots": {
+    "pxd004886": "/private/tmp/hitlist-v2-controlled-207-reviewed-candidate/external/pxd004886/assets",
+    "pxd009092": "/private/tmp/hitlist-v2-controlled-207-reviewed-candidate/external/pxd009092/assets",
+    "soh2024_digestion": "/private/tmp/presto-digestion-assets",
+    "wolflevy2018_controlled": "/private/tmp/hitlist-v2-controlled-207-reviewed-candidate/external/wolflevy2018_controlled/assets"
+  },
+  "training_pretraining_losses": "none"
+}

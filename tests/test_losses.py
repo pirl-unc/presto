@@ -258,7 +258,7 @@ class TestPCGrad:
     """Test projected conflicting gradient updates."""
 
     def test_pcgrad_conflicting_gradients_cancel(self):
-        from presto.training.losses import PCGrad
+        from presto.legacy.pcgrad import PCGrad
 
         w = torch.nn.Parameter(torch.tensor(1.0))
         optim = torch.optim.SGD([w], lr=0.1)
@@ -273,7 +273,7 @@ class TestPCGrad:
         assert abs(w.item() - 1.0) < 1e-6
 
     def test_pcgrad_non_conflicting_updates_parameter(self):
-        from presto.training.losses import PCGrad
+        from presto.legacy.pcgrad import PCGrad
 
         w = torch.nn.Parameter(torch.tensor(1.0))
         optim = torch.optim.SGD([w], lr=0.1)

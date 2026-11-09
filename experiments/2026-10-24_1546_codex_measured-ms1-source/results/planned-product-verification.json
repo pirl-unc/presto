@@ -1,0 +1,93 @@
+{
+  "status": "pass",
+  "source_sha256": "14987fc732f84b827120103dda7a9f9fc1f82995b861fea2b8b0f8195ac7ca77",
+  "method": "OOXML cell/string decoding compared with independent openpyxl reader, all populated map cells",
+  "sheets": [
+    {
+      "sheet": "HLA Class I",
+      "declared_dimension_rows": 911894,
+      "last_populated_row": 168689,
+      "mapping_rows": 168688,
+      "unique_sequences": 168688,
+      "pools": 178,
+      "populated_cells_verified": 337378,
+      "literal_pair_sha256": "c06911c99d8bf615d06a5f562bb41696d7bd9ba058ae78b29cc1f10e7e9aaa11"
+    },
+    {
+      "sheet": "HLA Class II",
+      "declared_dimension_rows": 816670,
+      "last_populated_row": 73465,
+      "mapping_rows": 73464,
+      "unique_sequences": 73464,
+      "pools": 158,
+      "populated_cells_verified": 146930,
+      "literal_pair_sha256": "4b29c6bb00f577fb0e4db99e78b1790d28769430e122e7c451e511f5a8610474"
+    },
+    {
+      "sheet": "AspN",
+      "declared_dimension_rows": 774950,
+      "last_populated_row": 31745,
+      "mapping_rows": 31744,
+      "unique_sequences": 31744,
+      "pools": 41,
+      "populated_cells_verified": 63490,
+      "literal_pair_sha256": "decedad7eb0328773302aaed5cca8bef901276bec9bbc25b88e7ad29deae3eed"
+    },
+    {
+      "sheet": "LysN",
+      "declared_dimension_rows": 774641,
+      "last_populated_row": 31436,
+      "mapping_rows": 31435,
+      "unique_sequences": 31435,
+      "pools": 44,
+      "populated_cells_verified": 62872,
+      "literal_pair_sha256": "21070a4a179e9f4779143cdf2f328f96a845b075c32f95e74352aec658588964"
+    }
+  ],
+  "populated_mapping_cells_verified": 610670,
+  "sampled_pool_eligibility": [
+    {
+      "pool": "TUM_HLA_1",
+      "archive": "HLA1-first-DDA.zip",
+      "planned_unique_sequences": 1000,
+      "planned_mapping_rows": 1000,
+      "observed_peptide_rows": 1961,
+      "planned_in_this_pool": 860,
+      "positive": 1931,
+      "pep_lt_0_01": 1377,
+      "reverse": 1,
+      "contaminant": 11,
+      "planned_positive_quality": 759,
+      "planned_sequences_not_in_peptides_table": 140,
+      "observed_sequences_not_planned_in_this_pool": 1101,
+      "unmodified_positive_quality_form_rows_for_candidate_sequences": 677,
+      "missing_planned_sequence_interpretation": "not observed here; synthesis/solubility/LC/MS/identification unresolved",
+      "nominal_load_assignment": "primary protocol estimates200or500fmol; per-run choice not reconciled",
+      "individual_synthesis_purity_or_molar_amount": "not established by the planned sequence table"
+    },
+    {
+      "pool": "TUM_HLA2_1",
+      "archive": "HLA2-first-DDA.zip",
+      "planned_unique_sequences": 500,
+      "planned_mapping_rows": 500,
+      "observed_peptide_rows": 1688,
+      "planned_in_this_pool": 491,
+      "positive": 1659,
+      "pep_lt_0_01": 1280,
+      "reverse": 0,
+      "contaminant": 3,
+      "planned_positive_quality": 484,
+      "planned_sequences_not_in_peptides_table": 9,
+      "observed_sequences_not_planned_in_this_pool": 1197,
+      "unmodified_positive_quality_form_rows_for_candidate_sequences": 470,
+      "missing_planned_sequence_interpretation": "not observed here; synthesis/solubility/LC/MS/identification unresolved",
+      "nominal_load_assignment": "primary protocol estimates200or500fmol; per-run choice not reconciled",
+      "individual_synthesis_purity_or_molar_amount": "not established by the planned sequence table"
+    }
+  ],
+  "uninspected_scope": "Legend and aggregate Identifications sheet not quantitatively audited; other biological supplements excluded",
+  "admitted_training_rows": 0,
+  "canonical_hitlist_recipe_required": true,
+  "seconds": 26.579332541965414,
+  "peak_gib": 0.4361572265625
+}

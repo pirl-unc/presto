@@ -1,0 +1,73 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "argv": [
+    "experiments/2026-10-22_1938_codex_variable-span-computation/code/launch.py"
+  ],
+  "assay_labels": null,
+  "conditions": [
+    [
+      "exact",
+      0
+    ],
+    [
+      "dense",
+      8
+    ],
+    [
+      "lazy",
+      8
+    ],
+    [
+      "dense",
+      64
+    ],
+    [
+      "lazy",
+      64
+    ]
+  ],
+  "context": [
+    0.25,
+    -0.5
+  ],
+  "cwd": "/private/tmp/presto-modular-model",
+  "device": "local CPU",
+  "dtype": "float32",
+  "environment_overrides": {
+    "MKL_NUM_THREADS": "4",
+    "OMP_NUM_THREADS": "4",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PYTHONHASHSEED": "0",
+    "PYTHONPATH": "/private/tmp/presto-modular-imports"
+  },
+  "executable": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "git_commit": "24f1d2b582393dfcc48fecdc90983d8c96989dc0",
+  "git_status": " M experiments/experiment_log.md\n M tasks/todo.md\n?? experiments/2026-10-22_1938_codex_variable-span-computation/\n?? experiments/agents/codex/plans/full-ic50-fitting.md\n?? experiments/agents/codex/plans/variable-span-computation.md\n?? experiments/agents/codex/plans/variable-span-policy.md\n?? models/peptide_availability.py\n?? tasks/modular_model/trajectory-sampling-issue.md\n?? tests/test_peptide_availability.py\n",
+  "gradient_draws": 128,
+  "launcher_sha256": "89fd5b83c9dfaec068f59bbf0d606c4c0fd92dc56479247e2ca2daaef5b9c6b8",
+  "measured": 12,
+  "model_code_sha256": "6c1260d04c24d191d7d760145e626fe95d015e590feb7dbfb734da1ec8e9809a",
+  "model_seed": 42,
+  "no_prediction_dump_reason": "fixed-weight computational experiment; full mathematical reference arrays and draw traces are retained",
+  "numpy": "2.5.4",
+  "optimizer": null,
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "predictive_split": null,
+  "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "supports": [
+    [
+      1,
+      40
+    ],
+    [
+      1,
+      53
+    ]
+  ],
+  "synthetic_contract": "fixed span energy, not biological labels",
+  "torch": "2.14.1",
+  "torch_interop_threads": 1,
+  "torch_threads": 4,
+  "training_updates": 0,
+  "warmup": 4
+}

@@ -1,0 +1,70 @@
+{
+  "registered_utc": "2026-10-25T01:43:29.754602+00:00",
+  "agent": "Codex",
+  "model": "GPT-6",
+  "presto_commit": "d67fb48488960882481627c6f3a8bdaeb6e58bd3",
+  "tracked_dirty_status": " M tasks/lessons.md\n M tasks/modular_model/intact-kinetic-dependencies.json\n M tasks/todo.md\n",
+  "prior_family": "/private/tmp/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast",
+  "inputs": {
+    "/private/tmp/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/data/train/covariates.parquet": "5ca7dedbdbbae542506c451717140a1d5a365d676b46e270f08983bf8d755214",
+    "/private/tmp/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/data/train/outcomes.parquet": "538c9a0100adf243901aee67b4567c555d709e122768b6a997eccdb808f23c10",
+    "/private/tmp/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/independent-admission.json": "1d16cf8177a1d33e6ce8bf0ba1aeab8305448b66c3c985ab8aadcaafb449b227",
+    "/private/tmp/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/code/model.py": "3823a48e22adba2cd6906272a47f2ac1844656d713c58957a4b43c706eb35a83"
+  },
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "python_version": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "environment_overrides": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "limits": {
+    "free_disk_floor_bytes": 1073741824,
+    "rss_bytes": 3221225472,
+    "stage_seconds": 1200,
+    "new_logical_bytes": 33554432
+  },
+  "stages": [
+    "prepare",
+    "qualify",
+    "fit",
+    "evaluate",
+    "replay",
+    "closure"
+  ],
+  "commands": [
+    "sh reproduce/launch.sh prepare",
+    "sh reproduce/launch.sh qualify",
+    "sh reproduce/launch.sh fit",
+    "sh reproduce/launch.sh evaluate",
+    "sh reproduce/launch.sh replay",
+    "sh reproduce/launch.sh closure"
+  ],
+  "heldout_original_outcomes_authorized": false,
+  "primary_scope": "nested_CV_on_previously_inspected_original_training_peptides",
+  "starts": [
+    {
+      "rate": 0.001,
+      "tau": 10
+    },
+    {
+      "rate": 1e-05,
+      "tau": 60
+    },
+    {
+      "rate": 0.0001,
+      "tau": 30
+    }
+  ],
+  "alpha_grid": [
+    0.001,
+    0.01,
+    0.1,
+    1.0
+  ],
+  "outer_salt": "intact-temporal-representation-v1|",
+  "inner_salt": "intact-temporal-inner-v1|",
+  "status_at_registration": "prepared_not_launched_disk_reserve_not_met",
+  "free_bytes_at_registration": 1051713536
+}

@@ -1,0 +1,36 @@
+{
+  "requested_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12090245/fullTextXML",
+  "started_at": "2026-10-24T10:13:08.981394+00:00",
+  "command": [
+    "experiments/2026-10-24_0612_codex_hap1-quantitative-admission/code/launch.py",
+    "europepmc-xml",
+    "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12090245/fullTextXML"
+  ],
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "presto_head": "c7d538cfc64f2295e70c2bf693e333f08d1f34b6",
+  "launcher_sha256": "86c54f88a4c9edc743467e5a9acc2fd49d9fcdf57786562ac2f3b24a28eb1e4d",
+  "body_path": "/private/tmp/presto-modular-model/data/hap1_quantitative_source_admission/2026-10-24_0612_codex_hap1-quantitative-admission/retrieval/europepmc-xml/body",
+  "purpose": "source-discovery-only; not a curated training observation",
+  "status_code": 200,
+  "final_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12090245/fullTextXML",
+  "content_type": "application/xml",
+  "response_headers": {
+    "Vary": "Origin, Access-Control-Request-Method, Access-Control-Request-Headers",
+    "Content-Type": "application/xml",
+    "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+    "Date": "Sat, 24 Oct 2026 10:13:09 GMT",
+    "Transfer-Encoding": "chunked",
+    "Connection": "keep-alive",
+    "Set-Cookie": "JSESSIONID=1C00531ECDE6D617A1554E3C384E94B4; Path=/europepmc/webservices/rest; Secure; HttpOnly"
+  },
+  "redirects": [],
+  "n_bytes": 144026,
+  "sha256": "cd648ff45478c7f826aa3f52fac7d708b49aef8b4e108e74f80a9c5012ec74c4",
+  "elapsed_seconds": 1.2202731249853969
+}

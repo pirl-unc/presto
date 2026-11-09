@@ -1,0 +1,14 @@
+{
+  "unix": 1793150505.997756,
+  "reason": "Original verification bundle lacked public inference; full same-commit package contains 210 files and preserves all 207 original runtime file hashes. No fitting or heldout inference; same 512 training probes and tolerance.",
+  "source_commit": "0c4c984b2628fecf54ef29e756fdfc0a74963dc4",
+  "command": "PRESTO_MODAL_GPU=H100! /Users/iskander/code/shared-virtual-env/bin/modal run experiments/2026-10-27_2255_codex_shared-multi-assay-scale/analysis/replay_modal.py",
+  "source_sha256": {
+    "analysis/prepare_replay.py": "0e76f2c3dece5eb3bac251547cca52d902e446cfded41382a5e09dc83706cc44",
+    "analysis/replay_modal.py": "e65b358d073ce7fc1d29b8f960e4cfdcb955048a8544bda1f1ddcc48f8f30b56",
+    "analysis/replay_remote.py": "656e349a23b09c854aca889d86b67da00f2f89fe261e569a0a1937655d400a28",
+    "reproduce/serving-runtime.json": "c496685e43a97d0344092e3c2c88dcd6fc89ea7e0669a0903bd90df329c36d28"
+  },
+  "original_failure": "launch_logs/gpu-training-replay.log",
+  "recovery_log": "launch_logs/gpu-training-replay-recovery.log"
+}

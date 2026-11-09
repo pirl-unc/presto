@@ -1,0 +1,2407 @@
+✓ Initialized. View run at 
+https://modal.com/apps/iskandr/main/ap-HrFmNHxianqmmgLgNDREvT
+✓ Created objects.
+├── ✓ Uploaded 
+│   /Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/20
+│   26-10-28_0250_codex_assay-transfer-mechanisms/analysis/readback_modal.py
+└── ✓ Created Function stream_archive.
+{"condition": "wide-six-primary-shuffled-s42", "expected": {"condition": "wide-six-primary-shuffled-s42", "archive": "2026-10-28_0250_codex_assay-transfer-mechanisms/wide-six-primary-shuffled-s42.tar.gz", "sha256": "01b5bb751354122cf401487a15c0dcb37bd1a6c90555320fe5c0ffb7807829ed", "bytes": 247939920}, "method": "CPU-only mounted filesystem and 256KiB function-result stream", "requested_gpu": null, "cpu": 1, "memory_mib": 1024, "source_sha256": "66d2b8698abb06e8d974fb98fef7a3179deb3cbc12af64309df4561840972d8f", "status": "passed", "path": "/Users/iskander/code/presto/.worktrees/shared-training/presto/artifacts/2026-10-28_0250_codex_assay-transfer-mechanisms/readback-downloads/wide-six-primary-shuffled-s42.tar.gz", "bytes_received": 247939920, "seconds": 17.55296366600669}
+{"condition": "small-ic50-s43", "expected": {"condition": "small-ic50-s43", "archive": "2026-10-28_0250_codex_assay-transfer-mechanisms/small-ic50-s43.tar.gz", "sha256": "d74ff53d8c1af372e3a59183816b60104f8d5050d27f5422a9893f403e37450e", "bytes": 56284326}, "method": "CPU-only mounted filesystem and 256KiB function-result stream", "requested_gpu": null, "cpu": 1, "memory_mib": 1024, "source_sha256": "66d2b8698abb06e8d974fb98fef7a3179deb3cbc12af64309df4561840972d8f", "status": "passed", "path": "/Users/iskander/code/presto/.worktrees/shared-training/presto/artifacts/2026-10-28_0250_codex_assay-transfer-mechanisms/readback-downloads/small-ic50-s43.tar.gz", "bytes_received": 56284326, "seconds": 9.798154000003706}
+{"condition": "wide-ic50-s43", "expected": {"condition": "wide-ic50-s43", "archive": "2026-10-28_0250_codex_assay-transfer-mechanisms/wide-ic50-s43.tar.gz", "sha256": "2e7d1f92fecc1bac2e02fa868d0bf3e5eb5cb6b4043b0e23c3a8499a69da73b1", "bytes": 110936589}, "method": "CPU-only mounted filesystem and 256KiB function-result stream", "requested_gpu": null, "cpu": 1, "memory_mib": 1024, "source_sha256": "66d2b8698abb06e8d974fb98fef7a3179deb3cbc12af64309df4561840972d8f", "status": "passed", "path": "/Users/iskander/code/presto/.worktrees/shared-training/presto/artifacts/2026-10-28_0250_codex_assay-transfer-mechanisms/readback-downloads/wide-ic50-s43.tar.gz", "bytes_received": 110936589, "seconds": 15.497104458991089}
+[modal-client] 2026-10-28T02:07:11-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 748, in __connect__
+    self._protocol = await self._create_connection()
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 146, in _create_connection
+    protocol = await self._open_connection()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 168, in _open_connection
+    return await super()._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 725, in _create_connection
+    _, protocol = await self._loop.create_connection(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1079, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1455, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 901, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:08:11-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 748, in __connect__
+    self._protocol = await self._create_connection()
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 146, in _create_connection
+    protocol = await self._open_connection()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 168, in _open_connection
+    return await super()._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 725, in _create_connection
+    _, protocol = await self._loop.create_connection(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1079, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1455, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 901, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/socket.py", line 976, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno 8] nodename nor servname provided, or not known
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: [Errno 8] nodename nor servname provided, or not known
+[modal-client] 2026-10-28T02:08:27-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 748, in __connect__
+    self._protocol = await self._create_connection()
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 146, in _create_connection
+    protocol = await self._open_connection()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 168, in _open_connection
+    return await super()._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 725, in _create_connection
+    _, protocol = await self._loop.create_connection(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1079, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1455, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 901, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/socket.py", line 976, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno 8] nodename nor servname provided, or not known
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: [Errno 8] nodename nor servname provided, or not known
+[modal-client] 2026-10-28T02:08:43-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 748, in __connect__
+    self._protocol = await self._create_connection()
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 146, in _create_connection
+    protocol = await self._open_connection()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 168, in _open_connection
+    return await super()._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 725, in _create_connection
+    _, protocol = await self._loop.create_connection(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1079, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1455, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 901, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/socket.py", line 976, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno 8] nodename nor servname provided, or not known
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: [Errno 8] nodename nor servname provided, or not known
+[modal-client] 2026-10-28T02:08:58-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 748, in __connect__
+    self._protocol = await self._create_connection()
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 146, in _create_connection
+    protocol = await self._open_connection()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 168, in _open_connection
+    return await super()._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 725, in _create_connection
+    _, protocol = await self._loop.create_connection(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1079, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1455, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 901, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/socket.py", line 976, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno 8] nodename nor servname provided, or not known
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: [Errno 8] nodename nor servname provided, or not known
+[modal-client] 2026-10-28T02:09:14-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 748, in __connect__
+    self._protocol = await self._create_connection()
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 146, in _create_connection
+    protocol = await self._open_connection()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 168, in _open_connection
+    return await super()._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 725, in _create_connection
+    _, protocol = await self._loop.create_connection(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1079, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1455, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 901, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/socket.py", line 976, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno 8] nodename nor servname provided, or not known
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: [Errno 8] nodename nor servname provided, or not known
+[modal-client] 2026-10-28T02:10:30-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 748, in __connect__
+    self._protocol = await self._create_connection()
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 146, in _create_connection
+    protocol = await self._open_connection()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 168, in _open_connection
+    return await super()._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 725, in _create_connection
+    _, protocol = await self._loop.create_connection(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1079, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1455, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 901, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:11:46-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 744, in __connect__
+    async with self._connect_lock:
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 14, in __aenter__
+    await self.acquire()
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 113, in acquire
+    await fut
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:13:03-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 748, in __connect__
+    self._protocol = await self._create_connection()
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 146, in _create_connection
+    protocol = await self._open_connection()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 168, in _open_connection
+    return await super()._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 725, in _create_connection
+    _, protocol = await self._loop.create_connection(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1079, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1455, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 901, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:14:19-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 744, in __connect__
+    async with self._connect_lock:
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 14, in __aenter__
+    await self.acquire()
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 113, in acquire
+    await fut
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:15:35-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 748, in __connect__
+    self._protocol = await self._create_connection()
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 146, in _create_connection
+    protocol = await self._open_connection()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 168, in _open_connection
+    return await super()._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 725, in _create_connection
+    _, protocol = await self._loop.create_connection(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1079, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1455, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 901, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:16:51-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 744, in __connect__
+    async with self._connect_lock:
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 14, in __aenter__
+    await self.acquire()
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 113, in acquire
+    await fut
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:18:07-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 748, in __connect__
+    self._protocol = await self._create_connection()
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 146, in _create_connection
+    protocol = await self._open_connection()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 168, in _open_connection
+    return await super()._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 725, in _create_connection
+    _, protocol = await self._loop.create_connection(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1079, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1455, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 901, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:19:23-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 744, in __connect__
+    async with self._connect_lock:
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 14, in __aenter__
+    await self.acquire()
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 113, in acquire
+    await fut
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:20:39-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 748, in __connect__
+    self._protocol = await self._create_connection()
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 146, in _create_connection
+    protocol = await self._open_connection()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 168, in _open_connection
+    return await super()._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 725, in _create_connection
+    _, protocol = await self._loop.create_connection(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1079, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1455, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 901, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:21:55-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 744, in __connect__
+    async with self._connect_lock:
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 14, in __aenter__
+    await self.acquire()
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 113, in acquire
+    await fut
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:23:12-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 748, in __connect__
+    self._protocol = await self._create_connection()
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 146, in _create_connection
+    protocol = await self._open_connection()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 168, in _open_connection
+    return await super()._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 725, in _create_connection
+    _, protocol = await self._loop.create_connection(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1079, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1455, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 901, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:24:28-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 744, in __connect__
+    async with self._connect_lock:
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 14, in __aenter__
+    await self.acquire()
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 113, in acquire
+    await fut
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:25:44-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 748, in __connect__
+    self._protocol = await self._create_connection()
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 146, in _create_connection
+    protocol = await self._open_connection()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 168, in _open_connection
+    return await super()._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 725, in _create_connection
+    _, protocol = await self._loop.create_connection(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1079, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1455, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 901, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:27:00-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 744, in __connect__
+    async with self._connect_lock:
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 14, in __aenter__
+    await self.acquire()
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 113, in acquire
+    await fut
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:28:16-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 748, in __connect__
+    self._protocol = await self._create_connection()
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 146, in _create_connection
+    protocol = await self._open_connection()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 168, in _open_connection
+    return await super()._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 725, in _create_connection
+    _, protocol = await self._loop.create_connection(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1079, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1455, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 901, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:29:32-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 744, in __connect__
+    async with self._connect_lock:
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 14, in __aenter__
+    await self.acquire()
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 113, in acquire
+    await fut
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:30:48-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 748, in __connect__
+    self._protocol = await self._create_connection()
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 146, in _create_connection
+    protocol = await self._open_connection()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 168, in _open_connection
+    return await super()._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 725, in _create_connection
+    _, protocol = await self._loop.create_connection(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1079, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1455, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 901, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:32:04-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 744, in __connect__
+    async with self._connect_lock:
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 14, in __aenter__
+    await self.acquire()
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 113, in acquire
+    await fut
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:33:21-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 748, in __connect__
+    self._protocol = await self._create_connection()
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 146, in _create_connection
+    protocol = await self._open_connection()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 168, in _open_connection
+    return await super()._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 725, in _create_connection
+    _, protocol = await self._loop.create_connection(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1079, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1455, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 901, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:34:37-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 744, in __connect__
+    async with self._connect_lock:
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 14, in __aenter__
+    await self.acquire()
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 113, in acquire
+    await fut
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:35:53-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 748, in __connect__
+    self._protocol = await self._create_connection()
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 146, in _create_connection
+    protocol = await self._open_connection()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 168, in _open_connection
+    return await super()._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 725, in _create_connection
+    _, protocol = await self._loop.create_connection(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1079, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1455, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 901, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:37:09-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 744, in __connect__
+    async with self._connect_lock:
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 14, in __aenter__
+    await self.acquire()
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 113, in acquire
+    await fut
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:38:25-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 748, in __connect__
+    self._protocol = await self._create_connection()
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 146, in _create_connection
+    protocol = await self._open_connection()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 168, in _open_connection
+    return await super()._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 725, in _create_connection
+    _, protocol = await self._loop.create_connection(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1079, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1455, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 901, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:39:41-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 744, in __connect__
+    async with self._connect_lock:
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 14, in __aenter__
+    await self.acquire()
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 113, in acquire
+    await fut
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:40:57-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 748, in __connect__
+    self._protocol = await self._create_connection()
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 146, in _create_connection
+    protocol = await self._open_connection()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 168, in _open_connection
+    return await super()._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 725, in _create_connection
+    _, protocol = await self._loop.create_connection(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1079, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1455, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 901, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:42:14-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 744, in __connect__
+    async with self._connect_lock:
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 14, in __aenter__
+    await self.acquire()
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 113, in acquire
+    await fut
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:43:30-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 748, in __connect__
+    self._protocol = await self._create_connection()
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 146, in _create_connection
+    protocol = await self._open_connection()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 168, in _open_connection
+    return await super()._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 725, in _create_connection
+    _, protocol = await self._loop.create_connection(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1079, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1455, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 901, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:44:46-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 744, in __connect__
+    async with self._connect_lock:
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 14, in __aenter__
+    await self.acquire()
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 113, in acquire
+    await fut
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:46:02-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 748, in __connect__
+    self._protocol = await self._create_connection()
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 146, in _create_connection
+    protocol = await self._open_connection()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 168, in _open_connection
+    return await super()._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 725, in _create_connection
+    _, protocol = await self._loop.create_connection(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1079, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1455, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 901, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:47:18-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 744, in __connect__
+    async with self._connect_lock:
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 14, in __aenter__
+    await self.acquire()
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 113, in acquire
+    await fut
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:48:34-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 748, in __connect__
+    self._protocol = await self._create_connection()
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 146, in _create_connection
+    protocol = await self._open_connection()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 168, in _open_connection
+    return await super()._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 725, in _create_connection
+    _, protocol = await self._loop.create_connection(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1079, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1455, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 901, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:49:50-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 744, in __connect__
+    async with self._connect_lock:
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 14, in __aenter__
+    await self.acquire()
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 113, in acquire
+    await fut
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:51:06-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 748, in __connect__
+    self._protocol = await self._create_connection()
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 146, in _create_connection
+    protocol = await self._open_connection()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 168, in _open_connection
+    return await super()._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 725, in _create_connection
+    _, protocol = await self._loop.create_connection(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1079, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1455, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 901, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+[modal-client] 2026-10-28T02:52:23-0400 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 174, in send_request
+    protocol = await self._channel.__connect__()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/grpc_utils.py", line 136, in __connect__
+    return await super().__connect__()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 744, in __connect__
+    async with self._connect_lock:
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 14, in __aenter__
+    await self.acquire()
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 113, in acquire
+    await fut
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_grpc_client.py", line 164, in direct
+    return await self.client._call_unary(self.wrapped_method, req, timeout=timeout, metadata=metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 533, in _call_unary
+    return await self._call_safely(coro, grpclib_method.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/client.py", line 489, in _call_safely
+    return await request_task
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 912, in __call__
+    await stream.send_message(message, end=True)
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 242, in send_message
+    await self.send_request()
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/client.py", line 173, in send_request
+    with self._wrapper:
+         ^^^^^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/grpclib/utils.py", line 70, in __exit__
+    raise self._error
+TimeoutError: Deadline exceeded
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 588, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/runner.py", line 66, in _heartbeat
+    await client._stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConnectionError: Deadline exceeded
+Stopping app - local client disconnected. Use `modal run --detach` to keep apps running even if your local client disconnects.
+{"condition": "wide-six-natural-s43", "expected": {"condition": "wide-six-natural-s43", "archive": "2026-10-28_0250_codex_assay-transfer-mechanisms/wide-six-natural-s43.tar.gz", "sha256": "c9ad22b317eb64a9eacf8211d7425e0cdbd716ebf9be8de395c29f6ab20d6aa3", "bytes": 225585993}, "method": "CPU-only mounted filesystem and 256KiB function-result stream", "requested_gpu": null, "cpu": 1, "memory_mib": 1024, "source_sha256": "66d2b8698abb06e8d974fb98fef7a3179deb3cbc12af64309df4561840972d8f", "status": "failed", "error": "ConflictError('function fu-SNzO5JrcmjgxuvRjfJ2KgJ is stopped')", "path": "/Users/iskander/code/presto/.worktrees/shared-training/presto/artifacts/2026-10-28_0250_codex_assay-transfer-mechanisms/readback-downloads/wide-six-natural-s43.tar.partial", "bytes_received": 0, "seconds": 0.28208945799269713}
+╭───────────────────── Traceback (most recent call last) ──────────────────────╮
+│ /Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/20 │
+│ 26-10-28_0250_codex_assay-transfer-mechanisms/analysis/readback_modal.py:172 │
+│  in main                                                                     │
+│                                                                              │
+│   171 │   │   │   else:                                                      │
+│ ❱ 172 │   │   │   │   ready[name] = retrieve(name, family, expected)         │
+│   173 │   │   │   atomic(                                                    │
+│                                                                              │
+│ /Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/20 │
+│ 26-10-28_0250_codex_assay-transfer-mechanisms/analysis/readback_modal.py:79  │
+│ in retrieve                                                                  │
+│                                                                              │
+│    78 │   │   with destination.open("xb") as output:                         │
+│ ❱  79 │   │   │   for item in stream_archive.remote_gen(                     │
+│    80 │   │   │   │   condition, expected["sha256"], expected["bytes"]       │
+│                                                                              │
+│ /Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_ │
+│ object.py:61 in wrapped                                                      │
+│                                                                              │
+│    60 │   │   async with aclosing(method(self, *args, **kwargs)) as stream:  │
+│ ❱  61 │   │   │   async for item in stream:                                  │
+│    62 │   │   │   │   yield item                                             │
+│                                                                              │
+│ /Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_ │
+│ functions.py:2088 in remote_gen                                              │
+│                                                                              │
+│   2087 │   │   │   )                                                         │
+│ ❱ 2088 │   │   async for item in self._call_generator(args, kwargs):         │
+│   2089 │   │   │   yield item                                                │
+│                                                                              │
+│ /Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_ │
+│ object.py:61 in wrapped                                                      │
+│                                                                              │
+│    60 │   │   async with aclosing(method(self, *args, **kwargs)) as stream:  │
+│ ❱  61 │   │   │   async for item in stream:                                  │
+│    62 │   │   │   │   yield item                                             │
+│                                                                              │
+│ /Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_ │
+│ functions.py:2028 in _call_generator                                         │
+│                                                                              │
+│   2027 │   │   if self._input_plane_url:                                     │
+│ ❱ 2028 │   │   │   invocation = await _InputPlaneInvocation.create(          │
+│   2029 │   │   │   │   self,                                                 │
+│                                                                              │
+│ /Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_ │
+│ functions.py:464 in create                                                   │
+│                                                                              │
+│    463 │   │   metadata = await client.get_input_plane_metadata(input_plane_ │
+│ ❱  464 │   │   response = await stub.AttemptStart(request, metadata=metadata │
+│    465 │   │   attempt_token = response.attempt_token                        │
+╰──────────────────────────────────────────────────────────────────────────────╯
+ConflictError: function fu-SNzO5JrcmjgxuvRjfJ2KgJ is stopped

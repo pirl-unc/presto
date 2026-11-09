@@ -1,0 +1,286 @@
+{
+  "status": "frozen",
+  "family": "2026-10-29_1956_codex_curated-data-retrain",
+  "frozen_unix": 1793305389.559701,
+  "parent_family": "2026-10-28_1540_codex_temporal-multi-output",
+  "prepared_record_sha256": "43eacd7a1656dca4ba39380598dc1336e045965f2d946f69f5dbd3124ec14ad0",
+  "manifests": {
+    "curated-multi-s42": {
+      "path": "/runs/2026-10-29_1956_codex_curated-data-retrain/prepared/curated-multi-s42.json",
+      "sha256": "230b99994cb147e9448777818df60ed2b2e5e998fb1b1308790ffcc62b0e59b7",
+      "seed": 42,
+      "max_steps": 51471
+    },
+    "curated-multi-s43": {
+      "path": "/runs/2026-10-29_1956_codex_curated-data-retrain/prepared/curated-multi-s43.json",
+      "sha256": "9fc817405b99cd0bd0277c2b059141d6a64b1085e8a174d58407899afa2a1788",
+      "seed": 43,
+      "max_steps": 51471
+    }
+  },
+  "model": {
+    "endpoints": [
+      "ec50",
+      "elution_observation",
+      "half_life",
+      "ic50",
+      "kd",
+      "kd_via_ec50",
+      "kd_via_ic50",
+      "koff",
+      "qualitative_binding",
+      "td50"
+    ],
+    "mhc_classes": [
+      "I",
+      "II"
+    ],
+    "d_model": 192,
+    "n_layers": 3,
+    "n_heads": 6,
+    "d_ff": 768,
+    "dropout": 0.1,
+    "source_context": false
+  },
+  "counts": {
+    "test:ec50:I:=": 70,
+    "test:ec50:II:=": 107,
+    "test:elution_observation:I:=": 31510,
+    "test:elution_observation:II:=": 39656,
+    "test:half_life:I:=": 62,
+    "test:half_life:II:=": 148,
+    "test:ic50:I:=": 100,
+    "test:ic50:II:=": 267,
+    "test:ic50:II:>": 111,
+    "test:ic50:II:>=": 1,
+    "test:kd:I:=": 386,
+    "test:kd:I:>": 63,
+    "test:kd:II:=": 21,
+    "test:kd:II:>": 9,
+    "test:kd_via_ec50:I:=": 66,
+    "test:kd_via_ec50:II:=": 149,
+    "test:kd_via_ec50:II:>": 190,
+    "test:kd_via_ic50:I:=": 604,
+    "test:kd_via_ic50:II:=": 55,
+    "test:qualitative_binding:I:=": 290,
+    "test:qualitative_binding:II:=": 151,
+    "test:td50:I:=": 140,
+    "train:elution_observation:I:=": 2673253,
+    "train:elution_observation:II:=": 612605,
+    "validation:ec50:I:=": 69,
+    "validation:elution_observation:I:=": 10328,
+    "validation:elution_observation:II:=": 4164,
+    "validation:half_life:I:=": 71,
+    "validation:ic50:I:=": 141,
+    "validation:ic50:II:=": 1129,
+    "validation:kd:I:=": 151,
+    "validation:kd:I:>": 381,
+    "validation:kd_via_ec50:I:=": 106,
+    "validation:kd_via_ec50:II:=": 352,
+    "validation:kd_via_ec50:II:>": 70,
+    "validation:kd_via_ic50:I:=": 83,
+    "validation:kd_via_ic50:I:>": 13,
+    "validation:kd_via_ic50:II:=": 246,
+    "validation:qualitative_binding:I:=": 689,
+    "validation:qualitative_binding:II:=": 446,
+    "validation:td50:I:=": 145,
+    "train:kd_via_ec50:I:=": 10313,
+    "train:kd_via_ic50:I:=": 48327,
+    "train:kd_via_ec50:I:>": 25710,
+    "train:kd_via_ic50:I:>": 2583,
+    "train:kd_via_ic50:II:=": 18958,
+    "train:kd_via_ic50:II:>": 2371,
+    "train:ic50:II:=": 32223,
+    "train:ic50:II:>": 3935,
+    "train:qualitative_binding:II:=": 18279,
+    "train:ic50:I:=": 17405,
+    "train:ic50:I:>": 884,
+    "train:half_life:II:=": 136,
+    "train:kd_via_ic50:I:>=": 242,
+    "train:qualitative_binding:I:=": 22181,
+    "train:half_life:I:=": 8584,
+    "train:td50:I:=": 461,
+    "train:ic50:II:>=": 28,
+    "train:kd_via_ic50:II:>=": 122,
+    "train:kd:I:=": 4274,
+    "train:kd:I:>": 12056,
+    "train:kd:II:=": 1253,
+    "train:td50:II:=": 7,
+    "train:half_life:II:>": 1,
+    "train:koff:I:=": 6,
+    "train:kd_via_ec50:I:>=": 56,
+    "train:ic50:I:>=": 223,
+    "train:ec50:II:>": 13,
+    "train:ec50:II:=": 84,
+    "train:kd_via_ec50:II:=": 2157,
+    "train:ec50:I:=": 115,
+    "train:ic50:I:<=": 14,
+    "train:kd_via_ec50:II:>": 433,
+    "train:half_life:I:>": 8,
+    "train:kd:II:>": 230,
+    "train:kd_via_ic50:II:<=": 10,
+    "train:koff:II:=": 2,
+    "train:td50:I:>": 31,
+    "train:td50:I:>=": 4
+  },
+  "train_strata": {
+    "ec50:I": 115,
+    "ec50:II": 97,
+    "elution_observation:I": 2673253,
+    "elution_observation:II": 612605,
+    "half_life:I": 8592,
+    "half_life:II": 137,
+    "ic50:I": 18526,
+    "ic50:II": 36186,
+    "kd:I": 16330,
+    "kd:II": 1483,
+    "kd_via_ec50:I": 36079,
+    "kd_via_ec50:II": 2590,
+    "kd_via_ic50:I": 51152,
+    "kd_via_ic50:II": 21461,
+    "koff:I": 6,
+    "koff:II": 2,
+    "qualitative_binding:I": 22181,
+    "qualitative_binding:II": 18279,
+    "td50:I": 496,
+    "td50:II": 7
+  },
+  "epoch_quotas": {
+    "ec50:I": 11353,
+    "ec50:II": 10426,
+    "elution_observation:I": 2673253,
+    "elution_observation:II": 1279707,
+    "half_life:I": 98124,
+    "half_life:II": 12391,
+    "ic50:I": 549575,
+    "ic50:II": 768079,
+    "kd:I": 135276,
+    "kd:II": 40766,
+    "kd_via_ec50:I": 201073,
+    "kd_via_ec50:II": 53874,
+    "kd_via_ic50:I": 239418,
+    "kd_via_ic50:II": 155078,
+    "koff:I": 2593,
+    "koff:II": 1498,
+    "qualitative_binding:I": 172668,
+    "qualitative_binding:II": 156746,
+    "td50:I": 23576,
+    "td50:II": 2801
+  },
+  "max_steps": 51471,
+  "weighted_epoch_examples": 6588275,
+  "background_contract": {
+    "train_ratio": 1,
+    "evaluation_ratio": 5,
+    "seed": 20261028,
+    "with_replacement": true,
+    "positive_blacklist": "all canonical known positive peptides, including held-out sources; conservative exclusion only",
+    "proteome": {
+      "path": "/Users/iskander/Library/Caches/pyensembl/GRCh38/ensembl112/7fa50041eebe6c62f62f5f3f009bb956e10e294d7eb748bae30f40ffc7ecf070-Homo_sapiens.GRCh38.pep.all.fa.gz",
+      "sha256": "2868236131342d14afbfa8dbd8a5e3fb56ba85210fdca196b65db3e17c7ece83",
+      "source": "Ensembl release 112 human GRCh38 all peptide FASTA",
+      "url": "https://ftp.ensembl.org/pub/release-112/fasta/homo_sapiens/pep/Homo_sapiens.GRCh38.pep.all.fa.gz"
+    },
+    "primary_evaluation": "same-protein; fallback proteome reported separately",
+    "new_recovered_backgrounds": {
+      "synthetic_same_protein": 13546,
+      "synthetic_reference_proteome": 3
+    }
+  },
+  "verification": {
+    "status": "passed",
+    "original_nonphysical_sources_unchanged_except_declared_background_removals": true,
+    "validation_test_bytes_unchanged": true,
+    "exact_physical_delta_verified": true,
+    "recovered_source_forms_verified": true,
+    "known_positive_and_heldout_exclusions_verified": true,
+    "canonical_preflight": "pending_in_trainers",
+    "input_receipts": {
+      "hitlist-v4-iedb-test.jsonl": {
+        "before_sha256": "0bfcabe1c2b0765fcf912460d76699ef0196f4c66c866950b613897564304d67",
+        "after_sha256": "0bfcabe1c2b0765fcf912460d76699ef0196f4c66c866950b613897564304d67"
+      },
+      "hitlist-v4-iedb-train.jsonl": {
+        "before_sha256": "c76aeafbb47c66b7fa904c191502de95f8812d45275cdfe680821838a37200b1",
+        "after_sha256": "17a6c65cfbe566efca0c85ffccd3a9d5e4f2392fb74d7b393a3f3104afe83fd0"
+      },
+      "hitlist-v4-iedb-validation.jsonl": {
+        "before_sha256": "cc93d281fd2138cc7a7af1c262f694dd0a28012da22e91098a76e36bbda27fd5",
+        "after_sha256": "cc93d281fd2138cc7a7af1c262f694dd0a28012da22e91098a76e36bbda27fd5"
+      },
+      "hitlist_ligand_background-test.jsonl": {
+        "before_sha256": "c1c1cf95caf66903721d2226caa9744d062acabed44cae9052f929b0f08911a9",
+        "after_sha256": "c1c1cf95caf66903721d2226caa9744d062acabed44cae9052f929b0f08911a9"
+      },
+      "hitlist_ligand_background-train.jsonl": {
+        "before_sha256": "6c264dcdc771a400fe73a7730fe2149b205984ce24f21638e78faeb4f7e60b1d",
+        "after_sha256": "1455517c5034c06446ef2f27799618ae26afc931ddfb8b4a2bb8c29077a2fca3"
+      },
+      "hitlist_ligand_background-validation.jsonl": {
+        "before_sha256": "0f32d0f097e0a691be50b66689deba2a473c629ae73552d7d48ce3dcc8a1795d",
+        "after_sha256": "0f32d0f097e0a691be50b66689deba2a473c629ae73552d7d48ce3dcc8a1795d"
+      },
+      "hitlist_native_ms-test.jsonl": {
+        "before_sha256": "a1a3507783cc1a258c24f455691837b039d1e03028e364ad57ba3ad2e59e6d05",
+        "after_sha256": "a1a3507783cc1a258c24f455691837b039d1e03028e364ad57ba3ad2e59e6d05"
+      },
+      "hitlist_native_ms-train.jsonl": {
+        "before_sha256": "bc709276b36bd456a09451deba140aeb618c9614a79505981e7567d1a0b0e203",
+        "after_sha256": "bc709276b36bd456a09451deba140aeb618c9614a79505981e7567d1a0b0e203"
+      },
+      "hitlist_native_ms-validation.jsonl": {
+        "before_sha256": "0023355b4b6b695223e12031b7fbe4bee752704be7c0e8184fe10a26800d3923",
+        "after_sha256": "0023355b4b6b695223e12031b7fbe4bee752704be7c0e8184fe10a26800d3923"
+      }
+    }
+  },
+  "source_review": {
+    "revision": "source-review-v2",
+    "curation_family": "2026-10-29_1653_codex_measurement-curation-recovery",
+    "removed_rows": 618,
+    "inferred_bounds": {
+      ">=": 482,
+      "<=": 24
+    },
+    "recovered_positive_rows": 13549,
+    "added_background_rows": 13549,
+    "removed_generated_training_rows": 35,
+    "additional_recovered_holdout_embargo": 1,
+    "new_blacklist_sequences": 292,
+    "suspect_generated_test_rows": 3,
+    "blacklist_audit_sha256": "6d4a542901a1809874a20d145bd01de20526988579d96b0b8844a0857e45f861",
+    "recovered_positive_blacklist_verified": true,
+    "recovered_holdout_embargo_verified": true,
+    "recovery_verification": {
+      "status": "passed",
+      "reviewed_source_observations": 14187,
+      "train_observations": 13550,
+      "short_observations": 289,
+      "short_length_counts": {
+        "8": 157,
+        "7": 132
+      },
+      "source_sha256": "bfb0b3b75a70aeceb7870c2ec7c78a2c072c12a6324f6dec4f7ad9ba0277c4c6",
+      "evidence_sha256": "a69833dbd4b163ceeb49aed6ea82da1e8fcbbd84693c90fe956a6c2b7f98b202"
+    },
+    "parent_family": "2026-10-28_1540_codex_temporal-multi-output",
+    "previous_test_inspection": true,
+    "new_background_populations": {
+      "synthetic_same_protein": 13546,
+      "synthetic_reference_proteome": 3
+    }
+  },
+  "canonical_preflight": "pending_in_trainers",
+  "runtime_pins_sha256": "5a01dbca655a71745c23be0e806da3ea2a2446af89b98033ca2ee552c033d719",
+  "runtime_changes_from_parent": [
+    "data/measurement_curation.py",
+    "data/modular_hitlist.py",
+    "data/modular_sources.py"
+  ],
+  "requested_gpu": "H100!",
+  "max_concurrent_gpus": 2,
+  "seed_selection": "minimum equal-endpoint validation loss; seed breaks ties",
+  "test_used_for_selection": false,
+  "pretraining": false,
+  "interpretation": "Repeated fixed previously inspected holdouts; data revision and recomputed complete-epoch quotas; identical model/optimizer/loss"
+}

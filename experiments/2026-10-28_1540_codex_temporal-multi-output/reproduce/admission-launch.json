@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "modal",
+    "run",
+    "--detach",
+    "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-28_1540_codex_temporal-multi-output/code/admit.py",
+    "--recovery-snapshot",
+    "admission-attempt5-recovery"
+  ],
+  "source_sha256": "35ed35bf922d8717fa532b4648e062a9a5820957a3e0aa4bfa7a162719e7bb47",
+  "dependency_call_id": "fc-01M61PCE8NKKG3HS0EKYJ6CDFG",
+  "requirements": [
+    "hitlist==2.0.40",
+    "torch==2.14.1",
+    "mhcseqs==2.6.13",
+    "numpy==2.5.4",
+    "psutil==7.2.2"
+  ],
+  "requested_gpu": null,
+  "cpu": 8,
+  "memory_mib": 98304,
+  "ephemeral_disk_mib": 524288,
+  "recovery_snapshot": "admission-attempt5-recovery",
+  "started_unix": 1793213862.310117
+}

@@ -1,0 +1,29 @@
+{
+  "conditions": {
+    "parity": {
+      "partitions": {
+        "train:assay": 1652917,
+        "validation:assay": 51066
+      },
+      "rows": 1703983,
+      "status": "passed"
+    },
+    "reference": {
+      "partitions": {
+        "train:assay": 1509704,
+        "validation:assay": 51066
+      },
+      "rows": 1560770,
+      "status": "passed"
+    }
+  },
+  "experiment": "2026-11-08_1800_codex_unified-parity-retrain",
+  "independent_verification": true,
+  "receipt": {
+    "bytes": 26182,
+    "path": "2026-11-08_1800_codex_unified-parity-retrain/preflight-v2-verification-r2/receipt.json",
+    "sha256": "fdce01321abedf12f0e3aa961f0bd8ab93bade1896a101bc65530d6015178326"
+  },
+  "schema": "presto.unified_parity_preflight.v2",
+  "status": "failed"
+}

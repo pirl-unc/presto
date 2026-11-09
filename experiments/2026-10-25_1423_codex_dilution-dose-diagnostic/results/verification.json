@@ -1,0 +1,420 @@
+{
+  "coefficient_prediction_metric_tolerance": 2e-10,
+  "fits_replayed": 24,
+  "full_goal_achieved": false,
+  "maximum_absolute_error": 2.6645352591003757e-14,
+  "numeric_checks": 4075,
+  "passed": true,
+  "predictions_replayed": 696,
+  "rank_arithmetic_sensitivity": [
+    {
+      "arm": "constant",
+      "reported_centered_spearman": -0.9947874899759422,
+      "scalar_centered_spearman": -0.9947874899759422,
+      "scope": "overall"
+    },
+    {
+      "arm": "constant",
+      "reported_centered_spearman": -0.9978858350951374,
+      "scalar_centered_spearman": -0.9978858350951374,
+      "scope": "method:1"
+    },
+    {
+      "arm": "constant",
+      "reported_centered_spearman": -0.9921473874962247,
+      "scalar_centered_spearman": -0.9921473874962247,
+      "scope": "method:2"
+    },
+    {
+      "arm": "constant",
+      "reported_centered_spearman": -1.0,
+      "scalar_centered_spearman": -1.0,
+      "scope": "standard_id:pxd024809:standard:0400d658f589d2185f1e4f0567d22d7f7e8b99b3e3d6e4c97127971ea64a8596"
+    },
+    {
+      "arm": "constant",
+      "reported_centered_spearman": -1.0,
+      "scalar_centered_spearman": -1.0,
+      "scope": "standard_id:pxd024809:standard:35102c7af9828a3afba96907e458e92f1523c95842ed5968d1a6545816cdd781"
+    },
+    {
+      "arm": "constant",
+      "reported_centered_spearman": -1.0,
+      "scalar_centered_spearman": -1.0,
+      "scope": "standard_id:pxd024809:standard:5b521c7d6c191bd8a776c41ff0e6f9beff1daed2e5c5076599a236ac7c9fcf08"
+    },
+    {
+      "arm": "constant",
+      "reported_centered_spearman": -0.9642857142857143,
+      "scalar_centered_spearman": -0.9642857142857143,
+      "scope": "standard_id:pxd024809:standard:5c112f617a585fa7ee5b891bbd9fdabbedded46284116c80226e8a0ac6640ef0"
+    },
+    {
+      "arm": "constant",
+      "reported_centered_spearman": -1.0,
+      "scalar_centered_spearman": -1.0,
+      "scope": "standard_id:pxd024809:standard:82601bbf06edda2044f0740309f6d6c9e7ee44322aba5fac402add7145dac6d0"
+    },
+    {
+      "arm": "constant",
+      "reported_centered_spearman": -1.0,
+      "scalar_centered_spearman": -1.0,
+      "scope": "standard_id:pxd024809:standard:91956b2b6c94758d83ac4510b30e60e8d495626bff4ce9ed30aae964fbeee6bd"
+    },
+    {
+      "arm": "constant",
+      "reported_centered_spearman": -1.0,
+      "scalar_centered_spearman": -1.0,
+      "scope": "standard_id:pxd024809:standard:cd2b006bcc667688f55510c675b781cacb3107a18688ae09ed98cba6c4f377d8"
+    },
+    {
+      "arm": "constant",
+      "reported_centered_spearman": -1.0,
+      "scalar_centered_spearman": -1.0,
+      "scope": "standard_id:pxd024809:standard:e07d5c85b312a8ddc51c707e131412dddc85859928c44ee070372e730ace8946"
+    },
+    {
+      "arm": "constant",
+      "reported_centered_spearman": -1.0,
+      "scalar_centered_spearman": -1.0,
+      "scope": "standard_id:pxd024809:standard:e707ab550d9ceaf519d949666571b5131210aadccbd380408ec2e215abe3fa24"
+    },
+    {
+      "arm": "constant",
+      "reported_centered_spearman": null,
+      "scalar_centered_spearman": null,
+      "scope": "nominal_level_id:pxd024809:level:4af09b366e67d940c9bf2ac700517cd5a201d1c97d51f4ef8997aab939318b90"
+    },
+    {
+      "arm": "constant",
+      "reported_centered_spearman": null,
+      "scalar_centered_spearman": null,
+      "scope": "nominal_level_id:pxd024809:level:4b250f443d565f6f2d6e04263b832e7df1262a1e9b2768a1888190bd01cb31f8"
+    },
+    {
+      "arm": "constant",
+      "reported_centered_spearman": null,
+      "scalar_centered_spearman": null,
+      "scope": "nominal_level_id:pxd024809:level:73ba715f5675928febae2e7ff6810e1e052ef6227df616b59646f10f97bce0f9"
+    },
+    {
+      "arm": "constant",
+      "reported_centered_spearman": null,
+      "scalar_centered_spearman": null,
+      "scope": "nominal_level_id:pxd024809:level:aceb4ac4e72b8a0f55d12b1096ccb44dae9b5565e4c83b4d74fdcc6fdeae3174"
+    },
+    {
+      "arm": "constant",
+      "reported_centered_spearman": null,
+      "scalar_centered_spearman": null,
+      "scope": "nominal_level_id:pxd024809:level:bc363c35ceccce7827c886d735153bae25cc4ff43326f2da37ccac0874ba0360"
+    },
+    {
+      "arm": "method_slope",
+      "reported_centered_spearman": 0.8446271050521251,
+      "scalar_centered_spearman": 0.8446271050521251,
+      "scope": "overall"
+    },
+    {
+      "arm": "method_slope",
+      "reported_centered_spearman": 0.8283298097251586,
+      "scalar_centered_spearman": 0.8283298097251586,
+      "scope": "method:1"
+    },
+    {
+      "arm": "method_slope",
+      "reported_centered_spearman": 0.8471760797342193,
+      "scalar_centered_spearman": 0.8471760797342193,
+      "scope": "method:2"
+    },
+    {
+      "arm": "method_slope",
+      "reported_centered_spearman": 0.8909090909090909,
+      "scalar_centered_spearman": 0.8909090909090909,
+      "scope": "standard_id:pxd024809:standard:0400d658f589d2185f1e4f0567d22d7f7e8b99b3e3d6e4c97127971ea64a8596"
+    },
+    {
+      "arm": "method_slope",
+      "reported_centered_spearman": 0.3939393939393939,
+      "scalar_centered_spearman": 0.3939393939393939,
+      "scope": "standard_id:pxd024809:standard:35102c7af9828a3afba96907e458e92f1523c95842ed5968d1a6545816cdd781"
+    },
+    {
+      "arm": "method_slope",
+      "reported_centered_spearman": 0.9636363636363636,
+      "scalar_centered_spearman": 0.9636363636363636,
+      "scope": "standard_id:pxd024809:standard:5b521c7d6c191bd8a776c41ff0e6f9beff1daed2e5c5076599a236ac7c9fcf08"
+    },
+    {
+      "arm": "method_slope",
+      "reported_centered_spearman": 0.8214285714285714,
+      "scalar_centered_spearman": 0.8214285714285714,
+      "scope": "standard_id:pxd024809:standard:5c112f617a585fa7ee5b891bbd9fdabbedded46284116c80226e8a0ac6640ef0"
+    },
+    {
+      "arm": "method_slope",
+      "reported_centered_spearman": 0.9636363636363636,
+      "scalar_centered_spearman": 0.9636363636363636,
+      "scope": "standard_id:pxd024809:standard:82601bbf06edda2044f0740309f6d6c9e7ee44322aba5fac402add7145dac6d0"
+    },
+    {
+      "arm": "method_slope",
+      "reported_centered_spearman": 0.9757575757575757,
+      "scalar_centered_spearman": 0.9757575757575757,
+      "scope": "standard_id:pxd024809:standard:91956b2b6c94758d83ac4510b30e60e8d495626bff4ce9ed30aae964fbeee6bd"
+    },
+    {
+      "arm": "method_slope",
+      "reported_centered_spearman": 0.8545454545454545,
+      "scalar_centered_spearman": 0.8545454545454545,
+      "scope": "standard_id:pxd024809:standard:cd2b006bcc667688f55510c675b781cacb3107a18688ae09ed98cba6c4f377d8"
+    },
+    {
+      "arm": "method_slope",
+      "reported_centered_spearman": 0.9757575757575757,
+      "scalar_centered_spearman": 0.9757575757575757,
+      "scope": "standard_id:pxd024809:standard:e07d5c85b312a8ddc51c707e131412dddc85859928c44ee070372e730ace8946"
+    },
+    {
+      "arm": "method_slope",
+      "reported_centered_spearman": 0.9636363636363636,
+      "scalar_centered_spearman": 0.9636363636363636,
+      "scope": "standard_id:pxd024809:standard:e707ab550d9ceaf519d949666571b5131210aadccbd380408ec2e215abe3fa24"
+    },
+    {
+      "arm": "method_slope",
+      "reported_centered_spearman": null,
+      "scalar_centered_spearman": null,
+      "scope": "nominal_level_id:pxd024809:level:4af09b366e67d940c9bf2ac700517cd5a201d1c97d51f4ef8997aab939318b90"
+    },
+    {
+      "arm": "method_slope",
+      "reported_centered_spearman": null,
+      "scalar_centered_spearman": null,
+      "scope": "nominal_level_id:pxd024809:level:4b250f443d565f6f2d6e04263b832e7df1262a1e9b2768a1888190bd01cb31f8"
+    },
+    {
+      "arm": "method_slope",
+      "reported_centered_spearman": null,
+      "scalar_centered_spearman": null,
+      "scope": "nominal_level_id:pxd024809:level:73ba715f5675928febae2e7ff6810e1e052ef6227df616b59646f10f97bce0f9"
+    },
+    {
+      "arm": "method_slope",
+      "reported_centered_spearman": null,
+      "scalar_centered_spearman": null,
+      "scope": "nominal_level_id:pxd024809:level:aceb4ac4e72b8a0f55d12b1096ccb44dae9b5565e4c83b4d74fdcc6fdeae3174"
+    },
+    {
+      "arm": "method_slope",
+      "reported_centered_spearman": null,
+      "scalar_centered_spearman": null,
+      "scope": "nominal_level_id:pxd024809:level:bc363c35ceccce7827c886d735153bae25cc4ff43326f2da37ccac0874ba0360"
+    },
+    {
+      "arm": "shared_slope",
+      "reported_centered_spearman": 0.8379018735875191,
+      "scalar_centered_spearman": 0.8379018735875191,
+      "scope": "overall"
+    },
+    {
+      "arm": "shared_slope",
+      "reported_centered_spearman": 0.8283298097251586,
+      "scalar_centered_spearman": 0.8283298097251586,
+      "scope": "method:1"
+    },
+    {
+      "arm": "shared_slope",
+      "reported_centered_spearman": 0.8474781032920568,
+      "scalar_centered_spearman": 0.8474781032920568,
+      "scope": "method:2"
+    },
+    {
+      "arm": "shared_slope",
+      "reported_centered_spearman": 0.8545454545454545,
+      "scalar_centered_spearman": 0.8545454545454545,
+      "scope": "standard_id:pxd024809:standard:0400d658f589d2185f1e4f0567d22d7f7e8b99b3e3d6e4c97127971ea64a8596"
+    },
+    {
+      "arm": "shared_slope",
+      "reported_centered_spearman": 0.3575757575757576,
+      "scalar_centered_spearman": 0.3575757575757576,
+      "scope": "standard_id:pxd024809:standard:35102c7af9828a3afba96907e458e92f1523c95842ed5968d1a6545816cdd781"
+    },
+    {
+      "arm": "shared_slope",
+      "reported_centered_spearman": 0.9393939393939394,
+      "scalar_centered_spearman": 0.9393939393939394,
+      "scope": "standard_id:pxd024809:standard:5b521c7d6c191bd8a776c41ff0e6f9beff1daed2e5c5076599a236ac7c9fcf08"
+    },
+    {
+      "arm": "shared_slope",
+      "reported_centered_spearman": 0.8214285714285714,
+      "scalar_centered_spearman": 0.8214285714285714,
+      "scope": "standard_id:pxd024809:standard:5c112f617a585fa7ee5b891bbd9fdabbedded46284116c80226e8a0ac6640ef0"
+    },
+    {
+      "arm": "shared_slope",
+      "reported_centered_spearman": 0.9393939393939394,
+      "scalar_centered_spearman": 0.9393939393939394,
+      "scope": "standard_id:pxd024809:standard:82601bbf06edda2044f0740309f6d6c9e7ee44322aba5fac402add7145dac6d0"
+    },
+    {
+      "arm": "shared_slope",
+      "reported_centered_spearman": 0.9393939393939394,
+      "scalar_centered_spearman": 0.9393939393939394,
+      "scope": "standard_id:pxd024809:standard:91956b2b6c94758d83ac4510b30e60e8d495626bff4ce9ed30aae964fbeee6bd"
+    },
+    {
+      "arm": "shared_slope",
+      "reported_centered_spearman": 0.8424242424242424,
+      "scalar_centered_spearman": 0.8424242424242424,
+      "scope": "standard_id:pxd024809:standard:cd2b006bcc667688f55510c675b781cacb3107a18688ae09ed98cba6c4f377d8"
+    },
+    {
+      "arm": "shared_slope",
+      "reported_centered_spearman": 0.9393939393939394,
+      "scalar_centered_spearman": 0.9393939393939394,
+      "scope": "standard_id:pxd024809:standard:e07d5c85b312a8ddc51c707e131412dddc85859928c44ee070372e730ace8946"
+    },
+    {
+      "arm": "shared_slope",
+      "reported_centered_spearman": 0.9393939393939394,
+      "scalar_centered_spearman": 0.9393939393939394,
+      "scope": "standard_id:pxd024809:standard:e707ab550d9ceaf519d949666571b5131210aadccbd380408ec2e215abe3fa24"
+    },
+    {
+      "arm": "shared_slope",
+      "reported_centered_spearman": null,
+      "scalar_centered_spearman": null,
+      "scope": "nominal_level_id:pxd024809:level:4af09b366e67d940c9bf2ac700517cd5a201d1c97d51f4ef8997aab939318b90"
+    },
+    {
+      "arm": "shared_slope",
+      "reported_centered_spearman": null,
+      "scalar_centered_spearman": null,
+      "scope": "nominal_level_id:pxd024809:level:4b250f443d565f6f2d6e04263b832e7df1262a1e9b2768a1888190bd01cb31f8"
+    },
+    {
+      "arm": "shared_slope",
+      "reported_centered_spearman": null,
+      "scalar_centered_spearman": null,
+      "scope": "nominal_level_id:pxd024809:level:73ba715f5675928febae2e7ff6810e1e052ef6227df616b59646f10f97bce0f9"
+    },
+    {
+      "arm": "shared_slope",
+      "reported_centered_spearman": null,
+      "scalar_centered_spearman": null,
+      "scope": "nominal_level_id:pxd024809:level:aceb4ac4e72b8a0f55d12b1096ccb44dae9b5565e4c83b4d74fdcc6fdeae3174"
+    },
+    {
+      "arm": "shared_slope",
+      "reported_centered_spearman": null,
+      "scalar_centered_spearman": null,
+      "scope": "nominal_level_id:pxd024809:level:bc363c35ceccce7827c886d735153bae25cc4ff43326f2da37ccac0874ba0360"
+    },
+    {
+      "arm": "unit_slope",
+      "reported_centered_spearman": 0.8243056061821098,
+      "scalar_centered_spearman": 0.8243056061821098,
+      "scope": "overall"
+    },
+    {
+      "arm": "unit_slope",
+      "reported_centered_spearman": 0.8022551092318534,
+      "scalar_centered_spearman": 0.8022551092318534,
+      "scope": "method:1"
+    },
+    {
+      "arm": "unit_slope",
+      "reported_centered_spearman": 0.8477801268498943,
+      "scalar_centered_spearman": 0.8477801268498943,
+      "scope": "method:2"
+    },
+    {
+      "arm": "unit_slope",
+      "reported_centered_spearman": 0.8545454545454545,
+      "scalar_centered_spearman": 0.8545454545454545,
+      "scope": "standard_id:pxd024809:standard:0400d658f589d2185f1e4f0567d22d7f7e8b99b3e3d6e4c97127971ea64a8596"
+    },
+    {
+      "arm": "unit_slope",
+      "reported_centered_spearman": 0.3575757575757576,
+      "scalar_centered_spearman": 0.3575757575757576,
+      "scope": "standard_id:pxd024809:standard:35102c7af9828a3afba96907e458e92f1523c95842ed5968d1a6545816cdd781"
+    },
+    {
+      "arm": "unit_slope",
+      "reported_centered_spearman": 0.9393939393939394,
+      "scalar_centered_spearman": 0.9393939393939394,
+      "scope": "standard_id:pxd024809:standard:5b521c7d6c191bd8a776c41ff0e6f9beff1daed2e5c5076599a236ac7c9fcf08"
+    },
+    {
+      "arm": "unit_slope",
+      "reported_centered_spearman": 0.8214285714285714,
+      "scalar_centered_spearman": 0.8214285714285714,
+      "scope": "standard_id:pxd024809:standard:5c112f617a585fa7ee5b891bbd9fdabbedded46284116c80226e8a0ac6640ef0"
+    },
+    {
+      "arm": "unit_slope",
+      "reported_centered_spearman": 0.9393939393939394,
+      "scalar_centered_spearman": 0.9393939393939394,
+      "scope": "standard_id:pxd024809:standard:82601bbf06edda2044f0740309f6d6c9e7ee44322aba5fac402add7145dac6d0"
+    },
+    {
+      "arm": "unit_slope",
+      "reported_centered_spearman": 0.9393939393939394,
+      "scalar_centered_spearman": 0.9393939393939394,
+      "scope": "standard_id:pxd024809:standard:91956b2b6c94758d83ac4510b30e60e8d495626bff4ce9ed30aae964fbeee6bd"
+    },
+    {
+      "arm": "unit_slope",
+      "reported_centered_spearman": 0.8424242424242424,
+      "scalar_centered_spearman": 0.8424242424242424,
+      "scope": "standard_id:pxd024809:standard:cd2b006bcc667688f55510c675b781cacb3107a18688ae09ed98cba6c4f377d8"
+    },
+    {
+      "arm": "unit_slope",
+      "reported_centered_spearman": 0.9393939393939394,
+      "scalar_centered_spearman": 0.9393939393939394,
+      "scope": "standard_id:pxd024809:standard:e07d5c85b312a8ddc51c707e131412dddc85859928c44ee070372e730ace8946"
+    },
+    {
+      "arm": "unit_slope",
+      "reported_centered_spearman": 0.9393939393939394,
+      "scalar_centered_spearman": 0.9393939393939394,
+      "scope": "standard_id:pxd024809:standard:e707ab550d9ceaf519d949666571b5131210aadccbd380408ec2e215abe3fa24"
+    },
+    {
+      "arm": "unit_slope",
+      "reported_centered_spearman": null,
+      "scalar_centered_spearman": null,
+      "scope": "nominal_level_id:pxd024809:level:4af09b366e67d940c9bf2ac700517cd5a201d1c97d51f4ef8997aab939318b90"
+    },
+    {
+      "arm": "unit_slope",
+      "reported_centered_spearman": null,
+      "scalar_centered_spearman": null,
+      "scope": "nominal_level_id:pxd024809:level:4b250f443d565f6f2d6e04263b832e7df1262a1e9b2768a1888190bd01cb31f8"
+    },
+    {
+      "arm": "unit_slope",
+      "reported_centered_spearman": null,
+      "scalar_centered_spearman": null,
+      "scope": "nominal_level_id:pxd024809:level:73ba715f5675928febae2e7ff6810e1e052ef6227df616b59646f10f97bce0f9"
+    },
+    {
+      "arm": "unit_slope",
+      "reported_centered_spearman": null,
+      "scalar_centered_spearman": null,
+      "scope": "nominal_level_id:pxd024809:level:aceb4ac4e72b8a0f55d12b1096ccb44dae9b5565e4c83b4d74fdcc6fdeae3174"
+    },
+    {
+      "arm": "unit_slope",
+      "reported_centered_spearman": null,
+      "scalar_centered_spearman": null,
+      "scope": "nominal_level_id:pxd024809:level:bc363c35ceccce7827c886d735153bae25cc4ff43326f2da37ccac0874ba0360"
+    }
+  ],
+  "scientific_scope": "conditional nominal-dose development only"
+}

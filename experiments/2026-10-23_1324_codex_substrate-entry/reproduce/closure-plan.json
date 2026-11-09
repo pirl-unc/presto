@@ -1,0 +1,19 @@
+{
+  "registered_at": "2026-10-23T13:49:14.563928-04:00",
+  "sources": {
+    "code/independent.py": "78e86f17cf93d57a921eff0598bcad759bc308ba3fa8d73c948e2706eb9df581",
+    "code/verify_closure.py": "0aa1e74bf9739f98f0edf37ca11a49106dc93864f696c60486ffedbe561ee259",
+    "code/close_results.py": "a022007dd49a8b0f1cc30e58a0b9fd178ef73c802155a48b5d4bc477475fc084"
+  },
+  "reference": "Independent original recipe reconstruction, SciPy128-node integration and analytic continuous-process score derivatives; no training implementation imports",
+  "predictions": "All train/development-validation final predictions for five frozen variants; test remains excluded",
+  "sampled_verification": "Replay all2000Adam steps from recorded gradients; independently reconstruct sampled gradients at1/100/500/1000/2000using only Torch uniform RNG stream",
+  "precision": {
+    "prediction_absolute": 1e-06,
+    "gradient_absolute": 1e-05,
+    "sampled_gradient_absolute": 1e-06,
+    "sampled_optimizer_absolute": 1e-10
+  },
+  "rank_reporting": "Group exact structural signatures, maximum allowed prediction shift1e-10; retain raw predictions and metrics",
+  "limitation": "No independent replay of every exact-entry update or every sampled gradient; final independent forward/gradient checks and selected sampled gradient replay are explicit"
+}

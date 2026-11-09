@@ -1,0 +1,18 @@
+{
+  "phase": "metadata",
+  "scope": "Fixed fallback Sobsey2025 after the primary supplements proved insufficient for separate raw isotope areas. Retrieve article XML and article-specific public supplement inventory only.",
+  "requests": [
+    {
+      "name": "sobsey2025.xml",
+      "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC11812018/fullTextXML",
+      "expected_kind": "xml",
+      "discovery_provenance": "Fallback PMCID11812018 and DOI10.1021/acs.jproteome.4c00576 prespecified in the original family plan; documented Europe PMC fullTextXML endpoint."
+    },
+    {
+      "name": "sobsey2025-s3-inventory.xml",
+      "url": "https://pmc-oa-opendata.s3.amazonaws.com/?list-type=2&prefix=PMC11812018.&max-keys=100",
+      "expected_kind": "xml",
+      "discovery_provenance": "Same current official per-article ListObjectsV2 route qualified for the primary study; fixed fallback PMCID, no whole-bucket scan."
+    }
+  ]
+}

@@ -1,0 +1,225 @@
+{
+  "status": "passed",
+  "teacher_rows": 576,
+  "original_artifact_hashes": 99,
+  "condition_splits": [
+    {
+      "condition": "exact-seed42",
+      "split": "train",
+      "status": "passed"
+    },
+    {
+      "condition": "exact-seed42",
+      "split": "validation",
+      "status": "passed"
+    },
+    {
+      "condition": "exact-seed42",
+      "split": "test",
+      "status": "passed"
+    },
+    {
+      "condition": "exact-seed43",
+      "split": "train",
+      "status": "passed"
+    },
+    {
+      "condition": "exact-seed43",
+      "split": "validation",
+      "status": "passed"
+    },
+    {
+      "condition": "exact-seed43",
+      "split": "test",
+      "status": "passed"
+    },
+    {
+      "condition": "exact-seed44",
+      "split": "train",
+      "status": "passed"
+    },
+    {
+      "condition": "exact-seed44",
+      "split": "validation",
+      "status": "passed"
+    },
+    {
+      "condition": "exact-seed44",
+      "split": "test",
+      "status": "passed"
+    },
+    {
+      "condition": "reinforce8-seed42",
+      "split": "train",
+      "status": "passed"
+    },
+    {
+      "condition": "reinforce8-seed42",
+      "split": "validation",
+      "status": "passed"
+    },
+    {
+      "condition": "reinforce8-seed42",
+      "split": "test",
+      "status": "passed"
+    },
+    {
+      "condition": "reinforce8-seed43",
+      "split": "train",
+      "status": "passed"
+    },
+    {
+      "condition": "reinforce8-seed43",
+      "split": "validation",
+      "status": "passed"
+    },
+    {
+      "condition": "reinforce8-seed43",
+      "split": "test",
+      "status": "passed"
+    },
+    {
+      "condition": "reinforce8-seed44",
+      "split": "train",
+      "status": "passed"
+    },
+    {
+      "condition": "reinforce8-seed44",
+      "split": "validation",
+      "status": "passed"
+    },
+    {
+      "condition": "reinforce8-seed44",
+      "split": "test",
+      "status": "passed"
+    },
+    {
+      "condition": "reinforce64-seed42",
+      "split": "train",
+      "status": "passed"
+    },
+    {
+      "condition": "reinforce64-seed42",
+      "split": "validation",
+      "status": "passed"
+    },
+    {
+      "condition": "reinforce64-seed42",
+      "split": "test",
+      "status": "passed"
+    },
+    {
+      "condition": "reinforce64-seed43",
+      "split": "train",
+      "status": "passed"
+    },
+    {
+      "condition": "reinforce64-seed43",
+      "split": "validation",
+      "status": "passed"
+    },
+    {
+      "condition": "reinforce64-seed43",
+      "split": "test",
+      "status": "passed"
+    },
+    {
+      "condition": "reinforce64-seed44",
+      "split": "train",
+      "status": "passed"
+    },
+    {
+      "condition": "reinforce64-seed44",
+      "split": "validation",
+      "status": "passed"
+    },
+    {
+      "condition": "reinforce64-seed44",
+      "split": "test",
+      "status": "passed"
+    },
+    {
+      "condition": "reward_only64-seed42",
+      "split": "train",
+      "status": "passed"
+    },
+    {
+      "condition": "reward_only64-seed42",
+      "split": "validation",
+      "status": "passed"
+    },
+    {
+      "condition": "reward_only64-seed42",
+      "split": "test",
+      "status": "passed"
+    }
+  ],
+  "discrete_samples": [
+    {
+      "condition": "exact-seed42",
+      "draws": 6144,
+      "empirical_noncompatible_mass": 0.7395833333333334,
+      "predicted_noncompatible_mass": 0.7311436057915067
+    },
+    {
+      "condition": "exact-seed43",
+      "draws": 6144,
+      "empirical_noncompatible_mass": 0.7335611979166666,
+      "predicted_noncompatible_mass": 0.7312143106643015
+    },
+    {
+      "condition": "exact-seed44",
+      "draws": 6144,
+      "empirical_noncompatible_mass": 0.73974609375,
+      "predicted_noncompatible_mass": 0.7309705784498436
+    },
+    {
+      "condition": "reinforce8-seed42",
+      "draws": 6144,
+      "empirical_noncompatible_mass": 0.7373046875,
+      "predicted_noncompatible_mass": 0.7307432670609902
+    },
+    {
+      "condition": "reinforce8-seed43",
+      "draws": 6144,
+      "empirical_noncompatible_mass": 0.7317708333333334,
+      "predicted_noncompatible_mass": 0.7303594044718897
+    },
+    {
+      "condition": "reinforce8-seed44",
+      "draws": 6144,
+      "empirical_noncompatible_mass": 0.7410481770833334,
+      "predicted_noncompatible_mass": 0.7312915673986357
+    },
+    {
+      "condition": "reinforce64-seed42",
+      "draws": 6144,
+      "empirical_noncompatible_mass": 0.74072265625,
+      "predicted_noncompatible_mass": 0.7313980270953143
+    },
+    {
+      "condition": "reinforce64-seed43",
+      "draws": 6144,
+      "empirical_noncompatible_mass": 0.7332356770833334,
+      "predicted_noncompatible_mass": 0.730601070386375
+    },
+    {
+      "condition": "reinforce64-seed44",
+      "draws": 6144,
+      "empirical_noncompatible_mass": 0.73876953125,
+      "predicted_noncompatible_mass": 0.7311555026935137
+    },
+    {
+      "condition": "reward_only64-seed42",
+      "draws": 6144,
+      "empirical_noncompatible_mass": 0.7452799479166666,
+      "predicted_noncompatible_mass": 0.7398854978700431
+    }
+  ],
+  "same_initialization_by_seed": true,
+  "python": "3.12.6",
+  "numpy": "2.5.4",
+  "scipy": "1.18.1",
+  "matplotlib": "3.11.2",
+  "source_sha256": "59ff5cd055bf3095b6c1b9bf5efa0a1790ea4c60599139821dc5c41373ebc79f"
+}

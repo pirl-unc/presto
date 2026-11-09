@@ -1,0 +1,42 @@
+{
+  "interpreter": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "verification": {
+    "command": "python experiments/2026-10-22_1120_codex_grpo-ingredient-factorial/analysis/verify.py",
+    "environment": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1"
+    },
+    "log": "../launch_logs/verify.log"
+  },
+  "checkpoint_replay": {
+    "command": "python experiments/2026-10-22_1120_codex_grpo-ingredient-factorial/reproduce/source/launch.py replay --output experiments/2026-10-22_1120_codex_grpo-ingredient-factorial/results/run",
+    "environment": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1"
+    },
+    "log": "../launch_logs/replay.log"
+  },
+  "reference_replay": {
+    "command": "python experiments/2026-10-22_1120_codex_grpo-ingredient-factorial/analysis/check_references.py",
+    "environment": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1"
+    },
+    "log": "../launch_logs/reference-replay.log"
+  },
+  "summary_plot": {
+    "command": "python experiments/2026-10-22_1120_codex_grpo-ingredient-factorial/analysis/plot_summary.py",
+    "environment": {
+      "MPLCONFIGDIR": "/private/tmp/presto-factorial-mpl"
+    },
+    "log": "../launch_logs/plot.log"
+  },
+  "package": {
+    "command": "python experiments/2026-10-22_1120_codex_grpo-ingredient-factorial/analysis/package.py",
+    "log": "../launch_logs/package.log"
+  },
+  "note": "Run analysis scripts from analysis/; source copies are provenance snapshots. No model fitting is performed by the analysis scripts."
+}

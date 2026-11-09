@@ -1,0 +1,50 @@
+{
+  "registered_utc": "2026-10-25T00:22:47.194686+00:00",
+  "agent": "Codex",
+  "model": "GPT-6",
+  "presto_commit": "984aba1f1d6e8a8f481e08a427666c294a5b55db",
+  "presto_dirty_status": " M tasks/todo.md\n",
+  "hitlist": "/private/tmp/hitlist-intact-degradomics-20261024",
+  "hitlist_commit": "edf061a2af4c4538a1f603c0e0357d150bb5b5ec",
+  "hitlist_status": " M docs/evidence-store.md\n M hitlist/evidence_bindings.py\n M hitlist/evidence_catalog.py\n M hitlist/evidence_package.py\n M hitlist/evidence_store.py\n M hitlist/version.py\n M tasks/todo.md\n M tests/test_evidence_catalog.py\n M tests/test_evidence_package.py\n?? docs/intact-degradomics.md\n?? hitlist/data/evidence_revisions/intact_degradomics.json\n?? hitlist/intact_degradomics.py\n?? hitlist/intact_degradomics_schema.py\n?? hitlist/intact_degradomics_workbook.py\n?? tasks/intact-degradomics-source-spec.md\n?? tests/test_intact_degradomics.py\n",
+  "runtime_sha256": {
+    "hitlist/evidence_bindings.py": "485df732ffd36e03369e65ba4556a1607bb1bb94880de51b0e0b508101f620f7",
+    "hitlist/evidence_catalog.py": "02b89491c1e58837f9101422b7f99cb86b5075187a192cf10091e40c9b7054c1",
+    "hitlist/evidence_package.py": "f2e6ff1193d8d7ba0e6d9b50136b68784bfce5213964ba3e98e68e595a14e320",
+    "hitlist/evidence_store.py": "f2b159207526fc1d59e4a984ee75a9ccaf72f1c5be89d73e669275e0e94e8308",
+    "hitlist/version.py": "4c1114b1c216d51520424f4d8b11524fa725254bc02a114d2baed87f726277e8",
+    "hitlist/data/evidence_revisions/intact_degradomics.json": "329458f1fbc36d5fdfd32525f9816ec495503f8734478dca4e788c2d63411c81",
+    "hitlist/intact_degradomics.py": "aaa0907a74426f296106779627d252d806f5b4dab5a2fde6dbbe1c124fb5effa",
+    "hitlist/intact_degradomics_schema.py": "4198c3566c6dd53ed130386406a04966abd02653ee131da1b85c333541f32665",
+    "hitlist/intact_degradomics_workbook.py": "c113d68abb0da1c734364763309c48868e325cce6ccd8bb41f8f9c9993341570"
+  },
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "python_version": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "original_assets": "/private/tmp/presto-modular-model/data/intact_degradomics_source/2026-10-24_2338_codex_intact-degradomics-source",
+  "package": "/private/tmp/presto-modular-model/data/intact_degradomics_canonical/2026-10-25_0021_codex_intact-canonical",
+  "upstream_audit": "/private/tmp/presto-modular-model/experiments/2026-10-24_2338_codex_intact-degradomics-source",
+  "limits": {
+    "free_disk_floor_bytes": 1073741824,
+    "rss_bytes": 3221225472,
+    "stage_seconds": 1200,
+    "new_physical_bytes": 134217728
+  },
+  "environment_overrides": {
+    "PYTHONPATH": "/private/tmp/hitlist-intact-degradomics-20261024",
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1"
+  },
+  "commands": [
+    "sh reproduce/launch.sh build",
+    "sh reproduce/launch.sh audit",
+    "sh reproduce/launch.sh audit-controls",
+    "sh reproduce/launch.sh support"
+  ],
+  "training": null,
+  "validation_test": null,
+  "reason_no_predictions": "Canonical source admission, no model or training selection",
+  "audit_amendment": "reproduce/control-label-amendment.md",
+  "support_plan": "reproduce/kinetic-support-plan.md"
+}

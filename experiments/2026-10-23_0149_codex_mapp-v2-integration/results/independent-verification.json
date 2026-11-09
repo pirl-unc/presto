@@ -1,0 +1,79 @@
+{
+  "n_canonical_query_relations": 18,
+  "n_distribution_target_values_recomputed": 3058,
+  "n_mapp_files_byte_identical": 33,
+  "n_predecessor_files_preserved_and_isolated": 124,
+  "n_query_rows_independently_replayed": 1829008,
+  "n_total_inventory_files": 157,
+  "output_manifest_sha256": "83a21da963d7d938c68a9570d7b868e578107302ba466ac55df09c839309b693",
+  "passed": true,
+  "peak_rss_bytes": 636796928,
+  "recipes": {
+    "mapp_captured_composition_min2_v1": {
+      "manifest_sha256": "02f5bbfc0ba3f3d66fbc73665e1fd7cd50c00ad4a347a3850fdd7e6cd7ce4e50",
+      "n_admitted_peptides": 616,
+      "n_contributors": 1232,
+      "n_examples": 202,
+      "n_parent_sequences": 101,
+      "preserved_files": [
+        "contributors.jsonl",
+        "examples.jsonl",
+        "parents.jsonl",
+        "peptide_dispositions.jsonl",
+        "recipe.json",
+        "summary.json"
+      ]
+    },
+    "mapp_captured_composition_v1": {
+      "manifest_sha256": "bc17f46ccedb4ad9a858573710f09a64465aa57a72c5bf0df810efdf9850392c",
+      "n_admitted_peptides": 544,
+      "n_contributors": 1088,
+      "n_examples": 130,
+      "n_parent_sequences": 65,
+      "preserved_files": [
+        "contributors.jsonl",
+        "examples.jsonl",
+        "parents.jsonl",
+        "peptide_dispositions.jsonl",
+        "recipe.json",
+        "summary.json"
+      ]
+    },
+    "mapp_complete_run_composition_v1": {
+      "manifest_sha256": "be58585cdc18485dbfcfc946f6a6cb4aaeec92687b8f5442c1fb59903597c7a8",
+      "n_admitted_peptides": 369,
+      "n_contributors": 738,
+      "n_examples": 142,
+      "n_parent_sequences": 71,
+      "preserved_files": [
+        "contributors.jsonl",
+        "examples.jsonl",
+        "parents.jsonl",
+        "peptide_dispositions.jsonl",
+        "recipe.json",
+        "run_observations.jsonl",
+        "summary.json"
+      ]
+    }
+  },
+  "seconds": 12.859182332991622,
+  "source_snapshot_hashes": {
+    "cli_evidence_store.py": "1a90a8361e300c62d234efd2d1a252b695188ce6ce7c547be020544b89f114e2",
+    "distribution_recipe.py": "428580c8b2c2eeac511c7f3016e95c1e21af5aa29cce74813c76f7871ee42d2d",
+    "evidence_bindings.py": "3fe5c88623414b68e4f0a2c063aab33eecec69b74e83972e3e36b136915f6ef2",
+    "evidence_catalog.py": "b6e9462e2b164c1edaa15e9d2dddb556fbe387edc5ef7a22afea3744b4e3e4dc",
+    "evidence_recipe.py": "4e8795b27ea739c7add7ecfd8cf2c66082d3a76914b77fc88684fe3fa82ffb27",
+    "evidence_snapshot.py": "2945129a0f48375e90082066ce8336ebfff2d55d2809d91f7cde751fb585e71c",
+    "evidence_store.py": "eded37376ea4315284009018a5ec834f5b861763d0e4e10c41365d1f9f6f0deb",
+    "external_evidence.py": "725753adb9436460e0e0194aff82dd1886ac2105c0ad09879daa34709e2739f6",
+    "external_successor.py": "a859b8b1139c2798a54c4faeeb76e72c6f377bee731c2db5b5ca94708e758375",
+    "launch.py": "3c236aad7d28dffa63ec8beffce326f79c4f7f2dae77490143af39f3f84ad506",
+    "mapp_composition.py": "7f8cd1c9aa5a8019c3573cddbe8827ef0081c99cd1629e385d2054fde1061973",
+    "mapp_evidence.py": "4c3f19bacf1a79cb49e2ee9d3e6c82c4fde96edbb932063462c43b185b7a342f",
+    "reference_evidence.py": "e0fcd7c96ed21183f41f810e5176dde1b2eb629201084e9a1423f67e14837dc7",
+    "sequence_reference_evidence.py": "e9e68fc59b5e3ef8685f169fa0e363c710b315b2c673d03d23c03162cd56cc04",
+    "verify.py": "7176ba4ee139add68f59105d098c597920cdd8833c186e369271389e2b9c1a97",
+    "version.py": "b404ef24ce6c840cdfb291d88dd570a55db0dfe803035d7d3651188b95f69456"
+  },
+  "verifier_sha256": "7176ba4ee139add68f59105d098c597920cdd8833c186e369271389e2b9c1a97"
+}

@@ -1,0 +1,9 @@
+{
+  "scope": "Literal-cell/schema inventory of two original transition exports only",
+  "registered_before_numeric_export_access": true,
+  "files": ["Iso18_DirectSpike_TransitionResults.xlsx", "Iso18_hipMHCspikein_TransitionResults.xlsx"],
+  "checks": ["official byte counts and fetched SHA256", "record opaque inventory checksum and compare with computed SHA1 without asserting a declared algorithm", "independent OOXML/openpyxl agreement on all stored cells", "preserve original headers, forms, quantities, blanks, formulas, merged ranges and coordinates"],
+  "semantic_questions": ["explicit acquisition/dose links", "isotope labels and competing assertions", "raw versus normalized signal", "quantification versus trigger transitions", "aggregation and missingness"],
+  "no_fitting_or_heldout_access": true,
+  "next_step": "Freeze a specific lineage-replay request after schema inspection; no empirical acquisition identities from similar intensities"
+}

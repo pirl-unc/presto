@@ -1,0 +1,61 @@
+{
+  "registered_at": "2026-10-24T14:06:30.988055+00:00",
+  "agent": "Codex / GPT-6",
+  "presto_commit": "0248f11913ac6b75e8df870228a74316471da204",
+  "recipe_directory": "/private/tmp/presto-modular-model/data/hap1_response_recipes/2026-10-24_0730_v1",
+  "recipe_manifest_sha256": "a1eec392c06485966e131663f85e7599dcd9e5ff621841eb0d44eeaafe779309",
+  "baseline_directory": "/private/tmp/presto-modular-model/experiments/2026-10-24_0730_codex_hap1-response-baselines",
+  "steps": 150,
+  "lr": 0.03,
+  "rate_penalty": 0.01,
+  "loss_penalty": 0.01,
+  "seed": 42,
+  "sample_sizes": [
+    512,
+    2048
+  ],
+  "probe_repetitions": 8,
+  "mean_gradient_relative_limit": 0.1,
+  "rms_gradient_relative_limit": 0.25,
+  "resource_limits": {
+    "build_qualification_seconds": 900,
+    "exact_fit_seconds": 600,
+    "sampled_fit_seconds": 1200,
+    "total_fit_seconds": 7200,
+    "peak_gib": 4
+  },
+  "outer_test": "intentionally_unscored_development_family",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "reference_experiment": "/private/tmp/presto-modular-model/experiments/2026-10-24_0810_codex_erap1-trimming",
+  "length_penalty": 0.01,
+  "length_bands": [
+    [
+      1,
+      8
+    ],
+    [
+      9,
+      16
+    ],
+    [
+      17,
+      null
+    ]
+  ],
+  "reference_band": 1,
+  "model_plan": "experiments/agents/codex/plans/erap1-length-response.md",
+  "old_model_absolute_tolerance": 2e-09,
+  "reference_sha256": {
+    "code/core.py": "fffd0a1dd582028f2e4f5843233ea6472e212e02e738cbd3b2ae783f121fedb5",
+    "code/launch.py": "9492ab357b660040a358a9c635419d7797b4602a13bc2a4a5e5f38f9606f93d9",
+    "results/closure.json": "597a070f8f598ba679c5b9a55e254f25573db0c078feaf820c9f812630e6b264",
+    "results/independent-verification.json": "886bb8fdf7b448f3768118689dd729b508f4a57265fb288932ab86f9e2830c4d",
+    "results/fits/summary.json": "a210324fde0f0bb7178a75523b4c42db9e460f76ff7e350faace4bba0e9a672b"
+  },
+  "numerical_attempt": "origin-local-prefix",
+  "recovery_registered_at": "2026-10-24T14:19:59.674201+00:00"
+}

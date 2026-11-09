@@ -1,0 +1,7743 @@
+{
+  "date_utc": "2026-10-21",
+  "limits": [
+    "MHC catalog rows do not establish observed chain pairing.",
+    "Mnemonic-prefix grouping and 20 hash buckets do not establish homology-based independence.",
+    "Existing table_verification fields compare an external k-mer table; they are not a completed selected-row audit."
+  ],
+  "method": "csv.DictReader; raw string-valued field counts without quality filtering or cohort selection; nonempty groove fields indicate availability only",
+  "mhc_groove_availability": [
+    {
+      "chain": "",
+      "groove1_present": false,
+      "groove2_present": false,
+      "mhc_class": "",
+      "rows": 26
+    },
+    {
+      "chain": "B2M",
+      "groove1_present": false,
+      "groove2_present": false,
+      "mhc_class": "I",
+      "rows": 282
+    },
+    {
+      "chain": "B2M",
+      "groove1_present": true,
+      "groove2_present": true,
+      "mhc_class": "I",
+      "rows": 1
+    },
+    {
+      "chain": "alpha",
+      "groove1_present": false,
+      "groove2_present": false,
+      "mhc_class": "I",
+      "rows": 373
+    },
+    {
+      "chain": "alpha",
+      "groove1_present": false,
+      "groove2_present": true,
+      "mhc_class": "I",
+      "rows": 6315
+    },
+    {
+      "chain": "alpha",
+      "groove1_present": true,
+      "groove2_present": false,
+      "mhc_class": "I",
+      "rows": 1079
+    },
+    {
+      "chain": "alpha",
+      "groove1_present": true,
+      "groove2_present": true,
+      "mhc_class": "I",
+      "rows": 26557
+    },
+    {
+      "chain": "alpha",
+      "groove1_present": false,
+      "groove2_present": false,
+      "mhc_class": "II",
+      "rows": 60
+    },
+    {
+      "chain": "alpha",
+      "groove1_present": true,
+      "groove2_present": false,
+      "mhc_class": "II",
+      "rows": 3193
+    },
+    {
+      "chain": "beta",
+      "groove1_present": false,
+      "groove2_present": false,
+      "mhc_class": "II",
+      "rows": 518
+    },
+    {
+      "chain": "beta",
+      "groove1_present": false,
+      "groove2_present": true,
+      "mhc_class": "II",
+      "rows": 17728
+    },
+    {
+      "chain": "unknown",
+      "groove1_present": false,
+      "groove2_present": false,
+      "mhc_class": "unknown",
+      "rows": 308
+    }
+  ],
+  "mhc_quality_flags": [
+    {
+      "groove_status": "",
+      "is_functional": "False",
+      "is_null": "False",
+      "is_pseudogene": "False",
+      "is_questionable": "False",
+      "rows": 334
+    },
+    {
+      "groove_status": "alpha1_only",
+      "is_functional": "False",
+      "is_null": "False",
+      "is_pseudogene": "True",
+      "is_questionable": "False",
+      "rows": 5
+    },
+    {
+      "groove_status": "alpha1_only",
+      "is_functional": "True",
+      "is_null": "False",
+      "is_pseudogene": "False",
+      "is_questionable": "False",
+      "rows": 1040
+    },
+    {
+      "groove_status": "alpha1_only",
+      "is_functional": "True",
+      "is_null": "False",
+      "is_pseudogene": "False",
+      "is_questionable": "True",
+      "rows": 34
+    },
+    {
+      "groove_status": "alpha2_only",
+      "is_functional": "False",
+      "is_null": "False",
+      "is_pseudogene": "True",
+      "is_questionable": "False",
+      "rows": 4
+    },
+    {
+      "groove_status": "alpha2_only",
+      "is_functional": "True",
+      "is_null": "False",
+      "is_pseudogene": "False",
+      "is_questionable": "False",
+      "rows": 6311
+    },
+    {
+      "groove_status": "beta1_only_fallback",
+      "is_functional": "True",
+      "is_null": "False",
+      "is_pseudogene": "False",
+      "is_questionable": "False",
+      "rows": 8666
+    },
+    {
+      "groove_status": "beta1_only_fallback",
+      "is_functional": "True",
+      "is_null": "False",
+      "is_pseudogene": "False",
+      "is_questionable": "True",
+      "rows": 2
+    },
+    {
+      "groove_status": "fragment_fallback",
+      "is_functional": "True",
+      "is_null": "False",
+      "is_pseudogene": "False",
+      "is_questionable": "False",
+      "rows": 2511
+    },
+    {
+      "groove_status": "inferred_from_alpha3",
+      "is_functional": "True",
+      "is_null": "False",
+      "is_pseudogene": "False",
+      "is_questionable": "False",
+      "rows": 67
+    },
+    {
+      "groove_status": "inferred_from_alpha3",
+      "is_functional": "True",
+      "is_null": "False",
+      "is_pseudogene": "False",
+      "is_questionable": "True",
+      "rows": 64
+    },
+    {
+      "groove_status": "missing_groove",
+      "is_functional": "False",
+      "is_null": "False",
+      "is_pseudogene": "False",
+      "is_questionable": "False",
+      "rows": 950
+    },
+    {
+      "groove_status": "missing_groove",
+      "is_functional": "False",
+      "is_null": "False",
+      "is_pseudogene": "False",
+      "is_questionable": "True",
+      "rows": 1
+    },
+    {
+      "groove_status": "not_applicable",
+      "is_functional": "False",
+      "is_null": "False",
+      "is_pseudogene": "False",
+      "is_questionable": "False",
+      "rows": 282
+    },
+    {
+      "groove_status": "ok",
+      "is_functional": "False",
+      "is_null": "False",
+      "is_pseudogene": "True",
+      "is_questionable": "False",
+      "rows": 3
+    },
+    {
+      "groove_status": "ok",
+      "is_functional": "True",
+      "is_null": "False",
+      "is_pseudogene": "False",
+      "is_questionable": "False",
+      "rows": 35873
+    },
+    {
+      "groove_status": "ok",
+      "is_functional": "True",
+      "is_null": "False",
+      "is_pseudogene": "False",
+      "is_questionable": "True",
+      "rows": 284
+    },
+    {
+      "groove_status": "short",
+      "is_functional": "False",
+      "is_null": "False",
+      "is_pseudogene": "False",
+      "is_questionable": "False",
+      "rows": 9
+    }
+  ],
+  "mhc_species_class_chain": [
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 65,
+      "species": "Abramis brama (Freshwater bream) (Cyprinus brama)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Acipenser baerii (Siberian sturgeon)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 10,
+      "species": "Acipenser dabryanus (Yangtze sturgeon) (Dabry's sturgeon)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 22,
+      "species": "Acipenser dabryanus (Yangtze sturgeon) (Dabry's sturgeon)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 21,
+      "species": "Acipenser dabryanus (Yangtze sturgeon) (Dabry's sturgeon)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Acipenser oxyrinchus oxyrinchus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Acipenser oxyrinchus oxyrinchus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 11,
+      "species": "Acipenser sinensis (Chinese sturgeon)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 439,
+      "species": "Acrocephalus arundinaceus (Great reed-warbler)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 7,
+      "species": "Acrocephalus arundinaceus (Great reed-warbler)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 3145,
+      "species": "Acrocephalus schoenobaenus (sedge warbler)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 62,
+      "species": "Acrocephalus scirpaceus (Eurasian reed-warbler)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 4,
+      "species": "Acrocephalus sechellensis"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Aegolius funereus (Boreal owl) (Strix funerea)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Aegypius monachus (Cinereous vulture)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 19,
+      "species": "Agalychnis callidryas (Red-eyed tree frog) (Phyllomedusa callidryas)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 25,
+      "species": "Agelaius phoeniceus (Red-winged blackbird) (Oriolus phoeniceus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 24,
+      "species": "Alauda razae (Razo lark)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 19,
+      "species": "Alca torda (Razorbill)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 8,
+      "species": "Alcedo atthis (Common kingfisher)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 20,
+      "species": "Alouatta pigra"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 7,
+      "species": "Amblyrhynchus cristatus (Galapagos marine iguana)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 8,
+      "species": "Amblyrhynchus cristatus (Galapagos marine iguana)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 60,
+      "species": "Ambystoma mexicanum (Axolotl)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 10,
+      "species": "Ambystoma mexicanum (Axolotl)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 13,
+      "species": "Ambystoma tigrinum (Eastern tiger salamander)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 5,
+      "species": "Ameiva ameiva (Giant ameiva) (South American ground lizard)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 76,
+      "species": "Amphilophus citrinellus (Midas cichlid) (Cichlasoma citrinellum)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 9,
+      "species": "Anabarilius grahami (Kanglang fish) (Barilius grahami)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 6,
+      "species": "Anabarilius grahami (Kanglang fish) (Barilius grahami)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Anabarilius grahami (Kanglang fish) (Barilius grahami)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 40,
+      "species": "Anarhynchus nivosus (Snowy plover)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 6,
+      "species": "Anarhynchus nivosus (Snowy plover)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 170,
+      "species": "Anas platyrhynchos (Mallard) (Anas boschas)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Anas platyrhynchos (Mallard) (Anas boschas)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Anas platyrhynchos platyrhynchos (Northern mallard)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 26,
+      "species": "Andrias davidianus (Chinese giant salamander) (Sieboldia davidiana)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 23,
+      "species": "Andrias davidianus (Chinese giant salamander) (Sieboldia davidiana)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 15,
+      "species": "Andrias davidianus (Chinese giant salamander) (Sieboldia davidiana)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Anoplopoma fimbria (Sablefish)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Anser anser (Domestic goose)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 9,
+      "species": "Anser indicus (Bar-headed goose) (Anas indica)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Anthropoides paradiseus (Blue crane) (Grus paradisea)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Anthropoides virgo (Demoiselle crane) (Grus virgo)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Antigone antigone antigone (Indian Sarus crane)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Antigone canadensis (Sandhill crane) (Grus canadensis)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Antigone canadensis pratensis (Florida sandhill crane)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Antigone vipio (White-naped crane) (Grus vipio)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Aotus azarai"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 5,
+      "species": "Aotus lemurinus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Aotus lemurinus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Aotus lemurinus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 8,
+      "species": "Aotus nancymaae"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 129,
+      "species": "Aotus nancymaae"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 31,
+      "species": "Aotus nigriceps"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 4,
+      "species": "Aotus trivirgatus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 11,
+      "species": "Aotus trivirgatus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Aotus vociferans"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 28,
+      "species": "Aotus vociferans"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 12,
+      "species": "Aphelocoma coerulescens (Florida scrub-jay) (Corvus coerulescens)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Apodemus agrarius"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 60,
+      "species": "Apodemus flavicollis"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 37,
+      "species": "Apodemus speciosus"
+    },
+    {
+      "chain": "unknown",
+      "mhc_class": "unknown",
+      "rows": 3,
+      "species": "Apodemus speciosus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 36,
+      "species": "Apodemus sylvaticus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 14,
+      "species": "Apteryx owenii (Little spotted kiwi)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 12,
+      "species": "Aquarana catesbeiana (American bullfrog) (Rana catesbeiana)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Aquila chrysaetos (Golden eagle)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 14,
+      "species": "Archoplites interruptus (Sacramento perch)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Ardea alba (Great white egret) (Casmerodius albus)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 9,
+      "species": "Ardea cinerea (Grey heron)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Ardeola bacchus (Chinese pond heron)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 7,
+      "species": "Arvicola amphibius"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 16,
+      "species": "Arvicola amphibius"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Asio flammeus (Short-eared owl) (Strix flammea)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Asio otus (Long-eared owl) (Strix otus)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Astur gentilis (Northern goshawk) (Accipiter gentilis)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 21,
+      "species": "Astyanax mexicanus (Blind cave fish) (Astyanax fasciatus mexicanus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Astyanax mexicanus (Blind cave fish) (Astyanax fasciatus mexicanus)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Astyanax mexicanus (Blind cave fish) (Astyanax fasciatus mexicanus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 5,
+      "species": "Ateles belzebuth"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Ateles belzebuth"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 23,
+      "species": "Ateles fusciceps"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Athene noctua (Little owl)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 8,
+      "species": "Aulonocara hansbaenschi (Red shoulder peacock cichlid)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Aulonocara hansbaenschi (Red shoulder peacock cichlid)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Bagarius yarrelli (Goonch) (Bagrus yarrelli)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Balaenoptera acutorostrata"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Balaenoptera acutorostrata"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Balaenoptera edeni"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Balaenoptera edeni"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Balaenoptera musculus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Balaenoptera musculus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Balaenoptera musculus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Balearica pavonina (Black crowned-crane)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Balearica regulorum (Grey crowned-crane) (Anthropoides regulorum)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 10,
+      "species": "Barbus barbus (Barbel) (Cyprinus barbus)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 10,
+      "species": "Blicca bjoerkna (white bream)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 30,
+      "species": "Bos frontalis"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 9,
+      "species": "Bos grunniens"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 14,
+      "species": "Bos grunniens"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 18,
+      "species": "Bos grunniens"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 191,
+      "species": "Bos sp."
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 78,
+      "species": "Bos sp."
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 480,
+      "species": "Bos sp."
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Bos taurus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 27,
+      "species": "Brachyramphus marmoratus (Marbled murrelet)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Bubo africanus (Spotted eagle-owl)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Bubo blakistoni (Blakiston's eagle-owl)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 5,
+      "species": "Bubo bubo (Eurasian eagle-owl) (Strix bubo)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Bubo scandiacus (Snowy owl) (Nyctea scandiaca)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 7,
+      "species": "Bubulcus ibis (Cattle egret) (Ardea ibis)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Bucanetes githagineus (Trumpeter finch)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 17,
+      "species": "Bufo bufo (European toad) (Rana bufo)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 8,
+      "species": "Bufo gargarizans (Asian toad) (Bufo bufo gargarizans)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 3,
+      "species": "Bugeranus carunculatus (Wattled crane) (Grus carunculatus)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Bugeranus carunculatus (Wattled crane) (Grus carunculatus)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Bulweria bulwerii (Bulwer's petrel)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Buteo buteo (Eurasian buzzard)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Cachryx defensor"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 35,
+      "species": "Calidris canutus (Red knot) (Tringa canutus)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 6,
+      "species": "Calidris pugnax (Ruff) (Philomachus pugnax)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 15,
+      "species": "Callicebus moloch"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 126,
+      "species": "Callithrix jacchus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 7,
+      "species": "Callithrix jacchus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 61,
+      "species": "Callithrix jacchus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Callithrix pygmaea"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Calonectris diomedea (Scopoli's shearwater) (Puffinus diomedea)"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Canis lupus familiaris"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 174,
+      "species": "Canis sp."
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 38,
+      "species": "Canis sp."
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 292,
+      "species": "Canis sp."
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 27,
+      "species": "Capra hircus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 7,
+      "species": "Carassius auratus (Goldfish)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 6,
+      "species": "Carassius carassius (Crucian carp)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 30,
+      "species": "Carassius gibelio (Prussian carp) (Cyprinus gibelio)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 4,
+      "species": "Carassius langsdorfii (Japanese silver crucian carp) (Carassius auratus langsdorfii)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 19,
+      "species": "Carduelis carduelis parva"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 37,
+      "species": "Carollia perspicillata (Seba's short-tailed bat)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 29,
+      "species": "Carpodacus erythrinus (Common rosefinch) (Loxia erythrina)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 108,
+      "species": "Castor canadensis"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Castor canadensis"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Castor canadensis"
+    },
+    {
+      "chain": "unknown",
+      "mhc_class": "unknown",
+      "rows": 27,
+      "species": "Castor canadensis"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Casuarius casuarius (Southern cassowary) (Struthio casuarius)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 35,
+      "species": "Cavia porcellus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Cavia porcellus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Cavia porcellus"
+    },
+    {
+      "chain": "unknown",
+      "mhc_class": "unknown",
+      "rows": 8,
+      "species": "Cavia porcellus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 6,
+      "species": "Cebus apella"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 6,
+      "species": "Centrocercus urophasianus (Sage grouse) (Tetrao urophasianus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Cephalorhynchus hectori"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Cephalorhynchus hectori"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 135,
+      "species": "Cercocebus atys"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 7,
+      "species": "Cercopithecus mitis"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 5,
+      "species": "Channa argus (Northern snakehead) (Ophicephalus argus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 9,
+      "species": "Channa argus (Northern snakehead) (Ophicephalus argus)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 5,
+      "species": "Channa argus (Northern snakehead) (Ophicephalus argus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 5,
+      "species": "Chelonia mydas (Green sea-turtle) (Chelonia agassizi)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Chelonia mydas (Green sea-turtle) (Chelonia agassizi)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Chelydra serpentina (Snapping turtle) (Testudo serpentina)"
+    },
+    {
+      "chain": "unknown",
+      "mhc_class": "unknown",
+      "rows": 1,
+      "species": "Chelydra serpentina (Snapping turtle) (Testudo serpentina)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Chersophilus duponti"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 6,
+      "species": "Chiloscyllium plagiosum (whitespotted bambooshark)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 22,
+      "species": "Chinchilla lanigera"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 5,
+      "species": "Chinchilla lanigera"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Chinchilla lanigera"
+    },
+    {
+      "chain": "unknown",
+      "mhc_class": "unknown",
+      "rows": 1,
+      "species": "Chinchilla lanigera"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 38,
+      "species": "Chlorocebus aethiops"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 14,
+      "species": "Chlorocebus aethiops"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 130,
+      "species": "Chlorocebus pygerythrus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 123,
+      "species": "Chlorocebus sabaeus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 8,
+      "species": "Chlorocebus sabaeus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 17,
+      "species": "Chlorocebus sabaeus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 17,
+      "species": "Chondrostoma nasus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 47,
+      "species": "Chroicocephalus scopulinus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Chrysemys picta bellii (Western painted turtle) (Emys bellii)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Chrysemys picta bellii (Western painted turtle) (Emys bellii)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Chrysolophus amherstiae (Lady Amherst's pheasant) (Phasianus amherstiae)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 75,
+      "species": "Chrysolophus pictus (Golden pheasant) (Phasianus pictus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Ciconia boyciana (Oriental stork) (Ciconia ciconia boyciana)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Ciconia boyciana (Oriental stork) (Ciconia ciconia boyciana)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 18,
+      "species": "Ciconia boyciana (Oriental stork) (Ciconia ciconia boyciana)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 5,
+      "species": "Ciconia ciconia (White stork)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Circaetus gallicus (short-toed snake-eagle)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Circus aeruginosus (Western marsh harrier) (Falco aeruginosus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 6,
+      "species": "Clarias batrachus (Walking catfish) (Silurus batrachus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 20,
+      "species": "Clarias gariepinus (North African catfish) (Silurus gariepinus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 26,
+      "species": "Clarias magur (Asian catfish) (Macropteronotus magur)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 14,
+      "species": "Clarias magur (Asian catfish) (Macropteronotus magur)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Clupea harengus (Atlantic herring)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Columba livia (Rock dove)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 5,
+      "species": "Conolophus subcristatus (Galapagos land iguana)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Coregonus sp. CospDXB*01"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Coregonus sp. CospDXB*02"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Coregonus sp. CospDXB*03"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Coregonus sp. CospDXB*04"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Coregonus sp. CospDXB*05"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Coregonus sp. CospDXB*06"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Coregonus sp. CospDXB*07"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Coregonus sp. CospDXB*08"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Coregonus sp. CospDXB*09"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Coregonus sp. CospDXB*10"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Coregonus sp. CospDXB*11"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Coregonus sp. CospDXB*12"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Coregonus sp. CospDXB*13"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Coregonus sp. CospDXB*14"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Coregonus sp. CospDXB*15"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Coregonus sp. CospDXB*16"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Coregonus sp. CospDXB*17"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 20,
+      "species": "Coregonus sp. HwBa"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 14,
+      "species": "Coronella austriaca (Smooth snake) (Coluber austriacus)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Corvus corax (Common raven)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 11,
+      "species": "Coturnix japonica (Japanese quail) (Coturnix coturnix japonica)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Coturnix japonica (Japanese quail) (Coturnix coturnix japonica)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 55,
+      "species": "Coturnix japonica (Japanese quail) (Coturnix coturnix japonica)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 72,
+      "species": "Cricetulus barabensis"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 23,
+      "species": "Cricetulus barabensis"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 22,
+      "species": "Cricetulus barabensis"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 136,
+      "species": "Cricetulus griseus"
+    },
+    {
+      "chain": "unknown",
+      "mhc_class": "unknown",
+      "rows": 10,
+      "species": "Cricetulus griseus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Cricetus cricetus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 14,
+      "species": "Cricetus cricetus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Crithagra citrinelloides (African citril)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Crithagra citrinipectus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Crithagra dorsostriata (white-bellied canary)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Crithagra flaviventris (Yellow canary)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Crithagra mozambica (yellow-fronted canary)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Crocodylus acutus (American crocodile)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Crocodylus acutus (American crocodile)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 6,
+      "species": "Crocodylus acutus (American crocodile)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 5,
+      "species": "Crocodylus intermedius (Orinoco crocodile) (Colombian crocodile)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 5,
+      "species": "Crocodylus johnstoni (Australian freshwater crocodile)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Crocodylus mindorensis (Philippine crocodile) (Crocodylus novaeguineae mindorensis)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Crocodylus mindorensis (Philippine crocodile) (Crocodylus novaeguineae mindorensis)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Crocodylus mindorensis (Philippine crocodile) (Crocodylus novaeguineae mindorensis)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Crocodylus moreletii (Morelet's crocodile)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 8,
+      "species": "Crocodylus moreletii (Morelet's crocodile)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 6,
+      "species": "Crocodylus niloticus (Nile crocodile) (African crocodile)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Crocodylus novaeguineae (New Guinea crocodile)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 3,
+      "species": "Crocodylus palustris (Mugger crocodile)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Crocodylus palustris (Mugger crocodile)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Crocodylus palustris (Mugger crocodile)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 57,
+      "species": "Crocodylus porosus (Saltwater crocodile) (Estuarine crocodile)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Crocodylus porosus (Saltwater crocodile) (Estuarine crocodile)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 10,
+      "species": "Crocodylus porosus (Saltwater crocodile) (Estuarine crocodile)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 6,
+      "species": "Crocodylus rhombifer (Cuban crocodile)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Crocodylus siamensis (Siamese crocodile)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Crocodylus siamensis (Siamese crocodile)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Crossoptilon auritum (Blue-eared pheasant) (Phasianus auritus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Crossoptilon crossoptilon (White-eared pheasant) (Phasianus crossoptilon)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 5,
+      "species": "Cryptomys hottentotus hottentotus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Ctenomys argentinus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 23,
+      "species": "Ctenomys australis"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Ctenomys boliviensis"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Ctenomys bonettoi"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Ctenomys conoveri"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Ctenomys frater"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Ctenomys goodfellowi"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 7,
+      "species": "Ctenomys haigi"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Ctenomys maulinus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Ctenomys mendocinus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Ctenomys opimus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 5,
+      "species": "Ctenomys pearsoni"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Ctenomys porteousi"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Ctenomys rionegrensis"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 6,
+      "species": "Ctenomys sociabilis"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Ctenomys steinbachi"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 45,
+      "species": "Ctenomys talarum"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 7,
+      "species": "Ctenomys torquatus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 102,
+      "species": "Ctenopharyngodon idella (Grass carp) (Leuciscus idella)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 42,
+      "species": "Ctenopharyngodon idella (Grass carp) (Leuciscus idella)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 8,
+      "species": "Ctenophorus decresii (Tawny dragon) (Grammatophora decresii)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Ctenosaura clarki"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 6,
+      "species": "Cyanistes caeruleus (Eurasian blue tit) (Parus caeruleus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 11,
+      "species": "Cyanistes caeruleus caeruleus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Cyclura carinata (Turks and Caicos rock iguana)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Cyclura cornuta (Hispaniolan rhinoceros iguana) (Lacerta cornuta)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Cyclura rileyi (San Salvador iguana)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 167,
+      "species": "Cynoglossus semilaevis (Tongue sole)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 248,
+      "species": "Cynoglossus semilaevis (Tongue sole)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 6,
+      "species": "Cynomys gunnisoni"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Cynomys gunnisoni zuniensis"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 5,
+      "species": "Cynomys ludovicianus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 11,
+      "species": "Cyprinus carpio 'color' (Oujiang color common carp)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 14,
+      "species": "Cyprinus carpio 'color' (Oujiang color common carp)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 149,
+      "species": "Cyprinus carpio 'color' (Oujiang color common carp)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Cyprinus carpio 'wananensis' (glass red common carp)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 6,
+      "species": "Cyprinus carpio 'wananensis' (glass red common carp)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 6,
+      "species": "Cyprinus carpio 'wuyuanensis' (Wuyuan red carp)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Cyprinus carpio 'wuyuanensis' (Wuyuan red carp)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 13,
+      "species": "Cyprinus carpio 'xingguonensis' (Xinguo red carp)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 16,
+      "species": "Cyprinus carpio 'xingguonensis' (Xinguo red carp)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 9,
+      "species": "Cyprinus carpio (Common carp)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Cyprinus carpio (Common carp)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 19,
+      "species": "Cyprinus carpio (Common carp)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 36,
+      "species": "Danio rerio (Zebrafish) (Brachydanio rerio)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 8,
+      "species": "Danio rerio (Zebrafish) (Brachydanio rerio)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 13,
+      "species": "Danio rerio (Zebrafish) (Brachydanio rerio)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Delomys sublineatus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 65,
+      "species": "Delomys sublineatus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Delphinus delphis"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Delphinus delphis"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Dendrocopos major (Great spotted woodpecker) (Picus major)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 30,
+      "species": "Desmodus rotundus (Vampire bat)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 95,
+      "species": "Dicentrarchus labrax (European seabass) (Morone labrax)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 6,
+      "species": "Dicentrarchus labrax (European seabass) (Morone labrax)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Dicentrarchus labrax (European seabass) (Morone labrax)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Diomedea exulans (Wandering albatross)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Diplothrix legata"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 35,
+      "species": "Dipodomys ordii"
+    },
+    {
+      "chain": "unknown",
+      "mhc_class": "unknown",
+      "rows": 2,
+      "species": "Dipodomys ordii"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 8,
+      "species": "Dipodomys spectabilis"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Dromaius novaehollandiae (Emu)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Egernia stokesii"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 16,
+      "species": "Egretta eulophotes (Chinese egret)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 19,
+      "species": "Egretta eulophotes (Chinese egret)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 108,
+      "species": "Egretta eulophotes (Chinese egret)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 60,
+      "species": "Egretta garzetta (Little egret)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 21,
+      "species": "Egretta sacra (Pacific reef-egret)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Elanus caeruleus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 17,
+      "species": "Emberiza cioides (meadow bunting)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 30,
+      "species": "Emberiza jankowskii"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Epidalea calamita (Natterjack toad) (Bufo calamita)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Epinephelus akaara (Hong Kong grouper) (Serranus akaara)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Epinephelus coioides (Orange-spotted grouper) (Epinephelus nebulosus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 9,
+      "species": "Epinephelus coioides (Orange-spotted grouper) (Epinephelus nebulosus)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 267,
+      "species": "Epinephelus coioides (Orange-spotted grouper) (Epinephelus nebulosus)"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Equus caballus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 126,
+      "species": "Equus caballus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 28,
+      "species": "Equus caballus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 42,
+      "species": "Equus caballus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Erithacus rubecula (European robin)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Esox lucius (Northern pike)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Esox lucius (Northern pike)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 12,
+      "species": "Espadarana prosoblepon (Nicaragua giant glass frog) (Hyla prosoblepon)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Espadarana prosoblepon (Nicaragua giant glass frog) (Hyla prosoblepon)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Eubalaena australis"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 15,
+      "species": "Eubalaena australis"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 3,
+      "species": "Eudyptes chrysocome (Western rockhopper penguin) (Aptenodytes chrysocome)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Eudyptes chrysocome (Western rockhopper penguin) (Aptenodytes chrysocome)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Eudyptes filholi (Southern rockhopper penguin)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Eudyptes filholi (Southern rockhopper penguin)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Eudyptes sclateri (Erect-crested penguin)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Eudyptes sclateri (Erect-crested penguin)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Eudyptula minor (Little blue penguin) (Aptenodytes minor)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Eudyptula minor (Little blue penguin) (Aptenodytes minor)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Eudyptula minor (Little blue penguin) (Aptenodytes minor)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Eudyptula minor novaehollandiae (Australian little penguin)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Eudyptula minor novaehollandiae (Australian little penguin)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Eudyptula minor novaehollandiae (Australian little penguin)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 22,
+      "species": "Eurillas virens (Little greenbul)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Falco biarmicus (lanner falcon)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Falco cherrug (Saker falcon)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Falco columbarius (Merlin)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Falco concolor (sooty falcon)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Falco eleonorae"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Falco fasciinucha"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Falco femoralis (Aplomado falcon)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Falco naumanni (Lesser kestrel)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Falco peregrinus (Peregrine falcon)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Falco rusticolus (Gyrfalcon)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Falco subbuteo"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Falco tinnunculus (Common kestrel)"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Felis catus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 33,
+      "species": "Forpus passerinus (Green-rumped parrotlet)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 27,
+      "species": "Fratercula arctica (Atlantic puffin)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Fringilla coelebs (chaffinch)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 22,
+      "species": "Fukomys damarensis"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 5,
+      "species": "Fukomys damarensis"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 267,
+      "species": "Fulica atra (Common coot)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 19,
+      "species": "Gadus morhua (Atlantic cod)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 6,
+      "species": "Gallinula chloropus (Common moorhen)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Gallinula comeri"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Gallus gallus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 27,
+      "species": "Gallus gallus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 351,
+      "species": "Gallus gallus (Chicken)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 13,
+      "species": "Gallus gallus (Chicken)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 217,
+      "species": "Gallus gallus (Chicken)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Gallus gallus murghi"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Gallus lafayettii (Sri Lanka junglefowl)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 13,
+      "species": "Gasterosteus aculeatus (Three-spined stickleback)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Gasterosteus aculeatus (Three-spined stickleback)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Gasterosteus aculeatus (Three-spined stickleback)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 390,
+      "species": "Geothlypis trichas (Common yellowthroat) (Turdus trichas)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1164,
+      "species": "Geothlypis trichas (Common yellowthroat) (Turdus trichas)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 7,
+      "species": "Ginglymostoma cirratum (Nurse shark) (Squalus cirratus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Ginglymostoma cirratum (Nurse shark) (Squalus cirratus)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Glaucidium passerinum (Eurasian pygmy-owl) (Strix passerina)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Globicephala melas"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Globicephala melas"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 40,
+      "species": "Gobio gobio (gudgeon)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Gopherus evgoodei (Goodes thornscrub tortoise)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Gopherus polyphemus (Gopher tortoise) (Testudo polyphemus)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Gopherus polyphemus (Gopher tortoise) (Testudo polyphemus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 3,
+      "species": "Gorilla beringei"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Gorsachius magnificus (Endangered white-eared night-heron) (Nycticorax magnificus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Grus grus (Common crane) (Ardea grus)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Grus grus (Common crane) (Ardea grus)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 6,
+      "species": "Grus japonensis (Japanese crane) (Red-crowned crane)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Grus monacha (Hooded crane)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Grus nigricollis (Black-necked crane)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Gypaetus barbatus (Bearded Vulture)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 10,
+      "species": "Gyps africanus (white-backed vulture)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Gyps coprotheres (Cape vulture) (Vultur coprotheres)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Haemorhous mexicanus (House finch) (Carpodacus mexicanus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 10,
+      "species": "Haliaeetus albicilla (White-tailed sea-eagle) (Falco albicilla)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 17,
+      "species": "Haliaeetus albicilla (White-tailed sea-eagle) (Falco albicilla)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 8,
+      "species": "Halobaena caerulea (Blue petrel)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 5,
+      "species": "Halobaena caerulea (Blue petrel)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Harpyhaliaetus coronatus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 6,
+      "species": "Heliophobius argenteocinereus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 53,
+      "species": "Heterocephalus glaber"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 6,
+      "species": "Heterocephalus glaber"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Heterocephalus glaber"
+    },
+    {
+      "chain": "unknown",
+      "mhc_class": "unknown",
+      "rows": 3,
+      "species": "Heterocephalus glaber"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Heterodontus francisci (Horn shark) (Cestracion francisci)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Hieraaetus pennatus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 20,
+      "species": "Hippocampus abdominalis (Big-bellied seahorse)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 31,
+      "species": "Hippocampus abdominalis (Big-bellied seahorse)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 10,
+      "species": "Hippocampus erectus (Lined seahorse)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 9,
+      "species": "Hippocampus erectus (Lined seahorse)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 35,
+      "species": "Hippolais icterina (icterine warbler)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 4,
+      "species": "Hipposideros armiger (Great Himalayan leaf-nosed bat)"
+    },
+    {
+      "chain": "",
+      "mhc_class": "",
+      "rows": 24,
+      "species": "Homo sapiens"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Homo sapiens"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 18040,
+      "species": "Homo sapiens"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1039,
+      "species": "Homo sapiens"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 7157,
+      "species": "Homo sapiens"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 80,
+      "species": "Hybognathus amarus (Rio Grande silvery minnow)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Hybomys univittatus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 3,
+      "species": "Hylobates lar"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Hylobates lar"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Hypogeomys antimena"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 5,
+      "species": "Hypogeomys antimena"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 44,
+      "species": "Hypophthalmichthys molitrix (Silver carp) (Leuciscus molitrix)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Hypophthalmichthys molitrix (Silver carp) (Leuciscus molitrix)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 30,
+      "species": "Ichthyosaura alpestris (Alpine newt) (Mesotriton alpestris)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Iconisemion striatum"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 5,
+      "species": "Ictalurus punctatus (Channel catfish) (Silurus punctatus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Ictalurus punctatus (Channel catfish) (Silurus punctatus)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Ictalurus punctatus (Channel catfish) (Silurus punctatus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 32,
+      "species": "Ictidomys tridecemlineatus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 5,
+      "species": "Ictidomys tridecemlineatus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Ictidomys tridecemlineatus"
+    },
+    {
+      "chain": "unknown",
+      "mhc_class": "unknown",
+      "rows": 1,
+      "species": "Ictidomys tridecemlineatus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 3,
+      "species": "Iguana iguana (Common iguana)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Isoodon macrourus (Short-nosed bandicoot) (Northern brown bandicoot)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 41,
+      "species": "Ixobrychus cinnamomeus (cinnamon bittern)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Ixobrychus flavicollis (Black bittern) (Dupetor flavicollis)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 13,
+      "species": "Jaculus jaculus"
+    },
+    {
+      "chain": "unknown",
+      "mhc_class": "unknown",
+      "rows": 1,
+      "species": "Jaculus jaculus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Jynx torquilla (Eurasian wryneck)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Kareius bicoloratus (Stone flounder) (Platichthys bicoloratus)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 35,
+      "species": "Kareius bicoloratus (Stone flounder) (Platichthys bicoloratus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 3,
+      "species": "Knipowitschia caucasica (Caucasian dwarf goby) (Pomatoschistus caucasicus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Kogia breviceps"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 21,
+      "species": "Kryptolebias marmoratus (Mangrove killifish) (Rivulus marmoratus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Labeobarbus acutirostris"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 34,
+      "species": "Labeobarbus intermedius (Lake tana barbels) (Barbus intermedius)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Labeobarbus intermedius (Lake tana barbels) (Barbus intermedius)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 5,
+      "species": "Labeobarbus intermedius (Lake tana barbels) (Barbus intermedius)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Ladigesocypris ghigii"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Ladigesocypris ghigii"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Lagenorhynchus obscurus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Lagenorhynchus obscurus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 30,
+      "species": "Lagopus scotica"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 6,
+      "species": "Lanius collaris (Common fiscal)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Lanius senator (Woodchat shrike)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 9,
+      "species": "Larimichthys crocea (Large yellow croaker) (Pseudosciaena crocea)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Larimichthys crocea (Large yellow croaker) (Pseudosciaena crocea)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Laticauda laticaudata (Blue-ringed sea krait) (Blue-lipped sea krait)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Leiocassis longirostris (Chinese longsnout catfish)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 23,
+      "species": "Leiocassis longirostris (Chinese longsnout catfish)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Leiopelma hochstetteri (Hochstetter's frog)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Leontopithecus rosalia"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Leptobrachium leishanense (Leishan spiny toad)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 5,
+      "species": "Leuciscus leuciscus (common dace)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Leucogeranus leucogeranus (Siberian crane) (Grus leucogeranus)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Limosa limosa (Black-tailed godwit) (Scolopax limosa)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 47,
+      "species": "Limosa limosa islandica"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 4,
+      "species": "Liparis tanakae (Tanaka's snailfish)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Liparis tanakae (Tanaka's snailfish)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Liparis tanakae (Tanaka's snailfish)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 14,
+      "species": "Lissotriton vulgaris (Smooth newt) (Triturus vulgaris)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 8,
+      "species": "Lissotriton vulgaris (Smooth newt) (Triturus vulgaris)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 5,
+      "species": "Lithobates chiricahuensis"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 16,
+      "species": "Lithobates clamitans (Green frog) (Rana clamitans)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 9,
+      "species": "Lithobates yavapaiensis (lowland leopard frog)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 33,
+      "species": "Lithobates yavapaiensis (lowland leopard frog)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 29,
+      "species": "Litoria verreauxii"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Lonchura striata (white-rumped munia)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Lonchura striata (white-rumped munia)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Lonchura striata (white-rumped munia)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 4,
+      "species": "Lophura nycthemera (Silver pheasant) (Gennaeus nycthemerus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Luscinia svecica svecica"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Lutjanus peru (Pacific red snapper) (Neomaenis peru)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 13,
+      "species": "Lyrurus tetrix (black grouse)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 19,
+      "species": "Macaca arctoides"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 9,
+      "species": "Macaca arctoides"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 22,
+      "species": "Macaca assamensis"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1551,
+      "species": "Macaca fascicularis"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 202,
+      "species": "Macaca fascicularis"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 509,
+      "species": "Macaca fascicularis"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 27,
+      "species": "Macaca fuscata"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 40,
+      "species": "Macaca leonina"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 30,
+      "species": "Macaca leonina"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 43,
+      "species": "Macaca leonina"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1151,
+      "species": "Macaca mulatta"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 100,
+      "species": "Macaca mulatta"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 364,
+      "species": "Macaca mulatta"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 447,
+      "species": "Macaca nemestrina"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 64,
+      "species": "Macaca nemestrina"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 178,
+      "species": "Macaca nemestrina"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 9,
+      "species": "Macaca silenus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 32,
+      "species": "Macaca thibetana"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 18,
+      "species": "Macaca thibetana"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 67,
+      "species": "Macaca thibetana"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Mandrillus leucophaeus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 41,
+      "species": "Mandrillus sphinx"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 72,
+      "species": "Marmota marmota marmota"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 5,
+      "species": "Marmota marmota marmota"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 5,
+      "species": "Marmota marmota marmota"
+    },
+    {
+      "chain": "unknown",
+      "mhc_class": "unknown",
+      "rows": 7,
+      "species": "Marmota marmota marmota"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 80,
+      "species": "Marmota monax"
+    },
+    {
+      "chain": "unknown",
+      "mhc_class": "unknown",
+      "rows": 11,
+      "species": "Marmota monax"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Mastomys natalensis"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 5,
+      "species": "Mastomys natalensis"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 22,
+      "species": "Mastomys natalensis"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Mecistops cataphractus (African slender-snouted crocodile)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 8,
+      "species": "Mecistops cataphractus (African slender-snouted crocodile)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 43,
+      "species": "Megalobrama amblycephala (Chinese blunt snout bream) (Brema carp)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Megaptera novaeangliae"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 16,
+      "species": "Megaptera novaeangliae"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 11,
+      "species": "Meleagris gallopavo (Wild turkey)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Meleagris gallopavo (Wild turkey)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 13,
+      "species": "Meleagris gallopavo (Wild turkey)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Melospiza melodia melodia"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 8,
+      "species": "Merluccius polli (Benguela hake) (Merluccius cadenati)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 124,
+      "species": "Mesocricetus auratus"
+    },
+    {
+      "chain": "unknown",
+      "mhc_class": "unknown",
+      "rows": 2,
+      "species": "Mesocricetus auratus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Mesoplodon densirostris"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Mesoplodon densirostris"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Mesoplodon europaeus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Mesoplodon grayi"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 8,
+      "species": "Microtus arvalis"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 96,
+      "species": "Microtus ochrogaster"
+    },
+    {
+      "chain": "unknown",
+      "mhc_class": "unknown",
+      "rows": 4,
+      "species": "Microtus ochrogaster"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 33,
+      "species": "Miichthys miiuy (Mi-iuy croaker) (Sciaena miiuy)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 34,
+      "species": "Miichthys miiuy (Mi-iuy croaker) (Sciaena miiuy)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 6,
+      "species": "Milvus milvus (red kite)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 20,
+      "species": "Molossus molossus (Pallas' mastiff bat) (Vespertilio molossus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 253,
+      "species": "Monodelphis domestica (Gray short-tailed opossum)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Monodelphis domestica (Gray short-tailed opossum)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Monodelphis domestica (Gray short-tailed opossum)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Monopterus albus (Swamp eel)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 44,
+      "species": "Monopterus albus (Swamp eel)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Motacilla alba (White wagtail) (Pied wagtail)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 3,
+      "species": "Mus abbotti"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 97,
+      "species": "Mus caroli"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Mus caroli"
+    },
+    {
+      "chain": "unknown",
+      "mhc_class": "unknown",
+      "rows": 3,
+      "species": "Mus caroli"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Mus cervicolor"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Mus cervicolor"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 3,
+      "species": "Mus cookii"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Mus cookii"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 7,
+      "species": "Mus gratus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 6,
+      "species": "Mus macedonicus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Mus macedonicus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 8,
+      "species": "Mus minutoides"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Mus musculus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 10,
+      "species": "Mus musculus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 10,
+      "species": "Mus musculus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 10,
+      "species": "Mus musculus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Mus musculus (Mouse)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 512,
+      "species": "Mus musculus (Mouse)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 69,
+      "species": "Mus musculus (Mouse)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 261,
+      "species": "Mus musculus (Mouse)"
+    },
+    {
+      "chain": "unknown",
+      "mhc_class": "unknown",
+      "rows": 34,
+      "species": "Mus musculus (Mouse)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Mus musculus bactrianus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 4,
+      "species": "Mus musculus castaneus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Mus musculus castaneus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 20,
+      "species": "Mus musculus domesticus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 32,
+      "species": "Mus musculus domesticus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Mus musculus molossinus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Mus musculus musculus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 16,
+      "species": "Mus musculus musculus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Mus musculus musculus x M. m. domesticus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Mus musculus x Mus spretus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 8,
+      "species": "Mus pahari"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 5,
+      "species": "Mus platythrix"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Mus platythrix"
+    },
+    {
+      "chain": "unknown",
+      "mhc_class": "unknown",
+      "rows": 4,
+      "species": "Mus saxicola"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 5,
+      "species": "Mus setulosus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 10,
+      "species": "Mus shortridgei"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Mus sp"
+    },
+    {
+      "chain": "unknown",
+      "mhc_class": "unknown",
+      "rows": 2,
+      "species": "Mus sp"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 64,
+      "species": "Mus spicilegus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Mus spicilegus"
+    },
+    {
+      "chain": "unknown",
+      "mhc_class": "unknown",
+      "rows": 4,
+      "species": "Mus spicilegus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 13,
+      "species": "Mus spretus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Mus spretus"
+    },
+    {
+      "chain": "unknown",
+      "mhc_class": "unknown",
+      "rows": 1,
+      "species": "Mus spretus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 5,
+      "species": "Mus terricolor"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 192,
+      "species": "Myodes glareolus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 92,
+      "species": "Myodes glareolus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 100,
+      "species": "Myodes glareolus"
+    },
+    {
+      "chain": "unknown",
+      "mhc_class": "unknown",
+      "rows": 21,
+      "species": "Myodes glareolus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Myotis lucifugus (Little brown bat)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Myotis lucifugus (Little brown bat)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Myotis lucifugus (Little brown bat)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Myotis vivesi (Fish-eating bat) (Pizonyx vivesi)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Naja naja (Indian cobra)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 20,
+      "species": "Nannospalax galili"
+    },
+    {
+      "chain": "unknown",
+      "mhc_class": "unknown",
+      "rows": 3,
+      "species": "Nannospalax galili"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 65,
+      "species": "Nanorana parkeri"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Neophron percnopterus (Egyptian vulture)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 17,
+      "species": "Neotoma lepida"
+    },
+    {
+      "chain": "unknown",
+      "mhc_class": "unknown",
+      "rows": 14,
+      "species": "Neotoma lepida"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Nerodia sipedon"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Nibea albiflora (Yellow drum) (Corvina albiflora)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Nibea albiflora (Yellow drum) (Corvina albiflora)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Nipponia nippon (Crested ibis) (Ibis nippon)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 5,
+      "species": "Nipponia nippon (Crested ibis) (Ibis nippon)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 26,
+      "species": "Noctilio albiventris (Lesser bulldog bat)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 6,
+      "species": "Noctilio leporinus (Greater bulldog bat)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 3,
+      "species": "Notamacropus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Notamacropus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Notamacropus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 33,
+      "species": "Notamacropus eugenii (Tammar wallaby) (Macropus eugenii)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 50,
+      "species": "Notamacropus eugenii (Tammar wallaby) (Macropus eugenii)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Nothobranchius furzeri (Turquoise killifish)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Nothobranchius kadleci (African annual killifish)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Nothobranchius korthausae"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Nothobranchius kuhntae (Beira killifish)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Nothobranchius pienaari"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Nothobranchius rachovii (bluefin notho)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Numida meleagris (Helmeted guineafowl) (Phasianus meleagris)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 6,
+      "species": "Numida meleagris (Helmeted guineafowl) (Phasianus meleagris)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Nycticorax nycticorax (Black-crowned night-heron) (Ardea nycticorax)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 6,
+      "species": "Oceanodroma castro (Band-rumped storm-petrel) (Hydrobates castro)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 22,
+      "species": "Oceanodroma leucorhoa (Leach's storm-petrel) (Hydrobates leucorhous)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 49,
+      "species": "Oceanodroma leucorhoa (Leach's storm-petrel) (Hydrobates leucorhous)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 5,
+      "species": "Oceanodroma monteiroi (Monteiro's storm-petrel)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 40,
+      "species": "Octodon degus"
+    },
+    {
+      "chain": "unknown",
+      "mhc_class": "unknown",
+      "rows": 3,
+      "species": "Octodon degus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Octodon sp"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Odontobutis potamophilus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Odontobutis potamophilus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Odontobutis potamophilus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 9,
+      "species": "Odorrana margaretae (Chinese frog) (Rana margaratae)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 29,
+      "species": "Odorrana tormota (Concave-eared torrent frog) (Rana tormotus)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 5,
+      "species": "Oncorhynchus gilae gilae"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Oncorhynchus gorbuscha (Pink salmon) (Salmo gorbuscha)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 3,
+      "species": "Oncorhynchus kisutch (Coho salmon) (Salmo kisutch)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 41,
+      "species": "Oncorhynchus mykiss"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Oncorhynchus mykiss"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 19,
+      "species": "Oncorhynchus mykiss"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 5,
+      "species": "Oncorhynchus nerka (Sockeye salmon) (Salmo nerka)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Oncorhynchus tshawytscha (Chinook salmon) (Salmo tshawytscha)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 6,
+      "species": "Ophiophagus hannah (King cobra) (Naja hannah)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Ophiophagus hannah (King cobra) (Naja hannah)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Ophiophagus hannah (King cobra) (Naja hannah)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 37,
+      "species": "Oreochromis niloticus (Nile tilapia) (Tilapia nilotica)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 79,
+      "species": "Oreochromis niloticus (Nile tilapia) (Tilapia nilotica)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 82,
+      "species": "Oreochromis niloticus (Nile tilapia) (Tilapia nilotica)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 19,
+      "species": "Oreochromis niloticus niloticus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Ornithorhynchus anatinus (Duckbill platypus)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Ornithorhynchus anatinus (Duckbill platypus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 13,
+      "species": "Oryctolagus cuniculus (Rabbit)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 43,
+      "species": "Oryctolagus cuniculus (Rabbit)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 23,
+      "species": "Oryctolagus cuniculus (Rabbit)"
+    },
+    {
+      "chain": "unknown",
+      "mhc_class": "unknown",
+      "rows": 9,
+      "species": "Oryctolagus cuniculus (Rabbit)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 8,
+      "species": "Oryzias dancena (Indian ricefish)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 53,
+      "species": "Oryzias latipes (Japanese rice fish) (Japanese killifish)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 11,
+      "species": "Oryzias latipes (Japanese rice fish) (Japanese killifish)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 17,
+      "species": "Oryzias latipes (Japanese rice fish) (Japanese killifish)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 5,
+      "species": "Oryzias luzonensis (Luzon ricefish)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Osmerus mordax (Rainbow smelt) (Atherina mordax)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Osteolaemus tetraspis (African dwarf crocodile)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 9,
+      "species": "Osteolaemus tetraspis (African dwarf crocodile)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Otis tarda (Great bustard)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 53,
+      "species": "Otus elegans (elegant scops-owl)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Otus scops (Eurasian scops owl) (Strix scops)"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Ovis aries"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 32,
+      "species": "Ovis aries"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 29,
+      "species": "Ovis aries"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 178,
+      "species": "Ovis aries"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 10,
+      "species": "Ovis canadensis"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 8,
+      "species": "Ovis canadensis"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 50,
+      "species": "Pachyptila belcheri (Thin-billed prion) (Heteroprion belcheri)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Pachyptila desolata"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Pagodroma nivea (Snow petrel) (Procellaria nivea)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 5,
+      "species": "Pagophila eburnea (Ivory gull)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 74,
+      "species": "Pan paniscus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 13,
+      "species": "Pan paniscus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 182,
+      "species": "Pan troglodytes"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 21,
+      "species": "Pan troglodytes"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 107,
+      "species": "Pan troglodytes"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Pandion haliaetus (Osprey) (Falco haliaetus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 213,
+      "species": "Papio anubis"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 24,
+      "species": "Papio anubis"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 66,
+      "species": "Papio anubis"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 9,
+      "species": "Papio cynocephalus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 23,
+      "species": "Papio ursinus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 42,
+      "species": "Parachondrostoma toxostoma"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 19,
+      "species": "Parachondrostoma toxostoma x Chondrostoma nasus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 122,
+      "species": "Paralichthys olivaceus (Bastard halibut) (Hippoglossus olivaceus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 84,
+      "species": "Paralichthys olivaceus (Bastard halibut) (Hippoglossus olivaceus)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 262,
+      "species": "Paralichthys olivaceus (Bastard halibut) (Hippoglossus olivaceus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 17,
+      "species": "Parus monticolus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 30,
+      "species": "Passer domesticus (House sparrow) (Fringilla domestica)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 18,
+      "species": "Passer hispaniolensis (Spanish sparrow)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 13,
+      "species": "Passer montanus (Eurasian tree sparrow)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Pavo cristatus (Indian peafowl) (Blue peafowl)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 12,
+      "species": "Pavo cristatus (Indian peafowl) (Blue peafowl)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Pelodiscus sinensis (Chinese softshell turtle) (Trionyx sinensis)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Pelodiscus sinensis (Chinese softshell turtle) (Trionyx sinensis)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 10,
+      "species": "Pelophylax nigromaculatus (Black-spotted frog) (Rana nigromaculata)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 33,
+      "species": "Perca fluviatilis (European perch)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 17,
+      "species": "Perdix perdix (Gray partridge) (Perdrix perdrix)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Peromyscus attwateri"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 5,
+      "species": "Peromyscus californicus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 32,
+      "species": "Peromyscus californicus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 18,
+      "species": "Peromyscus eremicus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 29,
+      "species": "Peromyscus leucopus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 44,
+      "species": "Peromyscus maniculatus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 30,
+      "species": "Peromyscus maniculatus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 53,
+      "species": "Peromyscus maniculatus bairdii"
+    },
+    {
+      "chain": "unknown",
+      "mhc_class": "unknown",
+      "rows": 23,
+      "species": "Peromyscus maniculatus bairdii"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 3,
+      "species": "Peromyscus maniculatus rufinus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 4,
+      "species": "Peromyscus pectoralis"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 61,
+      "species": "Phascolarctos cinereus (Koala)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 8,
+      "species": "Phascolarctos cinereus (Koala)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 24,
+      "species": "Phascolarctos cinereus (Koala)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 13,
+      "species": "Phasianus colchicus (Common pheasant)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Philetairus socius (sociable weaver)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Phodopus roborovskii"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Phodopus roborovskii"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Phodopus roborovskii"
+    },
+    {
+      "chain": "unknown",
+      "mhc_class": "unknown",
+      "rows": 4,
+      "species": "Phodopus roborovskii"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 18,
+      "species": "Phoebastria immutabilis (Laysan albatross) (Diomedea immutabilis)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 6,
+      "species": "Phoebastria immutabilis x Phoebastria nigripes"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 22,
+      "species": "Phoebastria nigripes (Black-footed albatross) (Diomedea nigripes)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 84,
+      "species": "Phylloscopus collybita collybita"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 112,
+      "species": "Phylloscopus trochilus trochilus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Phyllostomus discolor (pale spear-nosed bat)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 6,
+      "species": "Pithecia pithecia"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Pithecia pithecia"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Plecoglossus altivelis (Ayu sweetfish) (Salmo altivelis)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Podarcis muralis (Wall lizard) (Lacerta muralis)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Poecilia reticulata (Guppy) (Acanthophacelus reticulatus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 6,
+      "species": "Polyodon spathula (North American paddlefish) (Squalus spathula)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Polyodon spathula (North American paddlefish) (Squalus spathula)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 7,
+      "species": "Polypedates megacephalus (Hong Kong whipping frog)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 27,
+      "species": "Pongo abelii"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 10,
+      "species": "Pongo abelii"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 16,
+      "species": "Pongo abelii"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 58,
+      "species": "Pongo pygmaeus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 10,
+      "species": "Pongo pygmaeus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 19,
+      "species": "Pongo pygmaeus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 5,
+      "species": "Procellaria aequinoctialis (White-chinned petrel)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Pseudonaja textilis (Eastern brown snake)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 16,
+      "species": "Pseudorhodeus tanago (Tokyo bitterling)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Psophia crepitans (common trumpeter)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Pteropus alecto (Black flying fox)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 7,
+      "species": "Pteropus vampyrus (Large flying fox)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Rallus aquaticus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 10,
+      "species": "Rana japonica (Japanese reddish frog)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 28,
+      "species": "Rana ornativentris"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 22,
+      "species": "Rana tagoi tagoi (Tago's brown frog)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Rattus colletti"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Rattus fuscipes"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Rattus fuscipes coracius"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Rattus fuscipes fuscipes"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 36,
+      "species": "Rattus fuscipes greyii"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Rattus leucopus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Rattus leucopus cooktownensis"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Rattus norvegicus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 78,
+      "species": "Rattus norvegicus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 8,
+      "species": "Rattus norvegicus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 8,
+      "species": "Rattus norvegicus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 328,
+      "species": "Rattus norvegicus (Norway rat)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 36,
+      "species": "Rattus norvegicus (Norway rat)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 55,
+      "species": "Rattus norvegicus (Norway rat)"
+    },
+    {
+      "chain": "unknown",
+      "mhc_class": "unknown",
+      "rows": 34,
+      "species": "Rattus norvegicus (Norway rat)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Rattus sp"
+    },
+    {
+      "chain": "unknown",
+      "mhc_class": "unknown",
+      "rows": 2,
+      "species": "Rattus sp"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Rattus sp. 71813"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 4,
+      "species": "Rattus tanezumi"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Rattus tunneyi"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Rattus tunneyi culmorum"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Rattus villosissimus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 13,
+      "species": "Rhinella marina (Cane toad) (Bufo marinus)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 11,
+      "species": "Rhinella marina (Cane toad) (Bufo marinus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 3,
+      "species": "Rhinolophus ferrumequinum (Greater horseshoe bat)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Rhinolophus ferrumequinum (Greater horseshoe bat)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 8,
+      "species": "Rhinolophus ferrumequinum (Greater horseshoe bat)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Rhinolophus macrotis episcopus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 17,
+      "species": "Rhodeus ocellatus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 87,
+      "species": "Rissa tridactyla (Black-legged kittiwake) (Larus tridactyla)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 67,
+      "species": "Rutilus rutilus (Roach) (Cyprinus rutilus)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 23,
+      "species": "Rutilus rutilus x Abramis brama"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 20,
+      "species": "Saccopteryx bilineata (Greater white-lined bat)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 4,
+      "species": "Saguinus fuscicollis"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 8,
+      "species": "Saguinus labiatus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 6,
+      "species": "Saguinus labiatus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 27,
+      "species": "Saguinus oedipus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 5,
+      "species": "Saguinus oedipus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 42,
+      "species": "Saguinus oedipus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Saimiri sciureus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 11,
+      "species": "Saimiri sciureus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Salmo salar"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 48,
+      "species": "Salmo salar"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 21,
+      "species": "Salmo salar"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 42,
+      "species": "Salmo salar"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 32,
+      "species": "Salmo trutta (Brown trout)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 11,
+      "species": "Salmo trutta (Brown trout)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 162,
+      "species": "Salmo trutta (Brown trout)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 41,
+      "species": "Salmo trutta complex sp. LT-2021"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 201,
+      "species": "Salvelinus alpinus (Arctic char) (Salmo alpinus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Salvelinus alpinus (Arctic char) (Salmo alpinus)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 73,
+      "species": "Salvelinus alpinus (Arctic char) (Salmo alpinus)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 6,
+      "species": "Salvelinus fontinalis (Brook trout) (Salmo fontinalis)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Salvelinus leucomaenis japonicus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Salvelinus malma (Dolly Varden)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 6,
+      "species": "Salvelinus malma (Dolly Varden)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Sander vitreus (Walleye) (Perca vitrea)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 28,
+      "species": "Sander vitreus (Walleye) (Perca vitrea)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 67,
+      "species": "Sarcophilus harrisii"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 97,
+      "species": "Sarcophilus harrisii (Tasmanian devil) (Sarcophilus laniarius)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Sarcophilus harrisii (Tasmanian devil) (Sarcophilus laniarius)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 12,
+      "species": "Sarcophilus harrisii (Tasmanian devil) (Sarcophilus laniarius)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 21,
+      "species": "Scatophagus argus (Spotted scat) (Chaetodon argus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 35,
+      "species": "Scatophagus argus (Spotted scat) (Chaetodon argus)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 49,
+      "species": "Scatophagus argus (Spotted scat) (Chaetodon argus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 8,
+      "species": "Sciurus aberti"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 27,
+      "species": "Sciurus carolinensis"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 22,
+      "species": "Sciurus vulgaris"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 5,
+      "species": "Sciurus vulgaris"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 6,
+      "species": "Sciurus vulgaris"
+    },
+    {
+      "chain": "unknown",
+      "mhc_class": "unknown",
+      "rows": 14,
+      "species": "Sciurus vulgaris"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 73,
+      "species": "Scophthalmus maximus (Turbot) (Psetta maxima)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Semnopithecus entellus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Serinus atrogularis"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Serinus citrinella"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Serinus gularis"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Serinus striolatus (streaky seedeater)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Serinus thibetanus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 11,
+      "species": "Sigmodon hispidus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 26,
+      "species": "Sigmodon hispidus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 14,
+      "species": "Silurus asotus (Amur catfish) (Parasilurus asotus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 11,
+      "species": "Smilisca phaeota"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Spalax ehrenbergi"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Sparus aurata (Gilthead sea bream)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 10,
+      "species": "Sparus aurata (Gilthead sea bream)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 51,
+      "species": "Spermophilus dauricus"
+    },
+    {
+      "chain": "unknown",
+      "mhc_class": "unknown",
+      "rows": 41,
+      "species": "Spermophilus dauricus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Sphaerodactylus townsendi"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 25,
+      "species": "Spheniscus humboldti (Humboldt penguin)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 62,
+      "species": "Spheniscus humboldti (Humboldt penguin)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 157,
+      "species": "Spheniscus magellanicus (Magellanic penguin)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Spheniscus mendiculus (Galapagos penguin)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 10,
+      "species": "Sphenodon punctatus (Tuatara) (Hatteria punctata)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 9,
+      "species": "Sphenodon punctatus (Tuatara) (Hatteria punctata)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 16,
+      "species": "Sphenodon punctatus (Tuatara) (Hatteria punctata)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 27,
+      "species": "Spinus atratus (black siskin)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Spinus atriceps (black-capped siskin)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Spinus dominicensis (Antillean siskin)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Spinus lawrencei (Lawrence's goldfinch) (Carduelis lawrencei)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 23,
+      "species": "Spinus pinus pinus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Spinus psaltria (Lesser goldfinch) (Carduelis psaltria)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 119,
+      "species": "Spinus spinus (Eurasian siskin) (Carduelis spinus)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 118,
+      "species": "Squalius cephalus (Chub) (Leuciscus cephalus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Squalus acanthias (Spiny dogfish)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Stenella coeruleoalba"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Steno bredanensis"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Steno bredanensis"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 151,
+      "species": "Sterna hirundo (Common tern)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 55,
+      "species": "Sterna hirundo (Common tern)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Strigops habroptila (Kakapo)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 9,
+      "species": "Strix aluco (Tawny owl)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Strix nebulosa (Great gray owl)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Strix uralensis (Ural owl)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Struthio camelus (Common ostrich)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 5,
+      "species": "Surnia ulula (Northern hawk owl)"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Sus scrofa"
+    },
+    {
+      "chain": "",
+      "mhc_class": "",
+      "rows": 2,
+      "species": "Sus sp."
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 292,
+      "species": "Sus sp."
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 52,
+      "species": "Sus sp."
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 138,
+      "species": "Sus sp."
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 25,
+      "species": "Sylvia borin (Garden warbler)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 4,
+      "species": "Syrmaticus ellioti (Elliot's pheasant) (Phasianus ellioti)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Syrmaticus reevesii (Reeves's pheasant) (Phasianus reevesii)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Tachyglossus aculeatus (Short-beaked echidna) (Myrmecophaga aculeata)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 3,
+      "species": "Tachymarptis melba"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Takifugu rubripes (Japanese pufferfish) (Fugu rubripes)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Tauraco hartlaubi (Hartlaub's turaco)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Terrapene triunguis (Three-toed box turtle)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 4,
+      "species": "Tiliqua adelaidensis"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 14,
+      "species": "Tiliqua rugosa (Shingleback lizard) (Trachydosaurus rugosus)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 5,
+      "species": "Tinca tinca (Tench) (Cyprinus tinca)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Tokudaia muenninki"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Tokudaia osimensis"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 26,
+      "species": "Trachinotus ovatus (Derbio) (Gasterosteus ovatus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 86,
+      "species": "Trachinotus ovatus (Derbio) (Gasterosteus ovatus)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 83,
+      "species": "Trachinotus ovatus (Derbio) (Gasterosteus ovatus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 8,
+      "species": "Tragopan caboti (Cabot's tragopan pheasant)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 4,
+      "species": "Tragopan temminckii (Temminck's tragopan) (Satyra temminckii)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 39,
+      "species": "Triakis scyllium (Banded houndshark) (Hemigaleus pingi)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "Trichosurus vulpecula (Brush-tailed possum)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 5,
+      "species": "Trichosurus vulpecula (Brush-tailed possum)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 7,
+      "species": "Trichosurus vulpecula (Brush-tailed possum)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 4,
+      "species": "Triplophysa tibetana"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Triplophysa tibetana"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Triturus cristatus (Great crested newt) (Warty newt)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 6,
+      "species": "Tropheus sp. T1001"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 6,
+      "species": "Tropheus sp. T1002"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Tropheus sp. T1368"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Tropheus sp. T1373"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Tropheus sp. T1378"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 9,
+      "species": "Turdus atrogularis (black-throated thrush)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 13,
+      "species": "Turdus eunomus (dusky thrush)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 16,
+      "species": "Turdus naumanni (Dusky thrush)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 9,
+      "species": "Turdus ruficollis"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 2,
+      "species": "Tursiops truncatus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Tursiops truncatus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 8,
+      "species": "Tursiops truncatus"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 35,
+      "species": "Tympanuchus cupido (Greater prairie chicken) (Tetrao cupido)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Tympanuchus cupido (Greater prairie chicken) (Tetrao cupido)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Tympanuchus cupido (Greater prairie chicken) (Tetrao cupido)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 3,
+      "species": "Tympanuchus pallidicinctus (Lesser prairie-chicken)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 4,
+      "species": "Tympanuchus phasianellus (Sharp-tailed grouse) (Pedioecetes phasianellus)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 146,
+      "species": "Tyto alba (Barn owl)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 55,
+      "species": "Tyto alba (Barn owl)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 9,
+      "species": "Uria aalge (Common mure) (Colymbus aalge)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 29,
+      "species": "Urocitellus parryii"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 6,
+      "species": "Urocitellus parryii"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 11,
+      "species": "Urocitellus parryii"
+    },
+    {
+      "chain": "unknown",
+      "mhc_class": "unknown",
+      "rows": 11,
+      "species": "Urocitellus parryii"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Vombatus ursinus (Common wombat)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Vombatus ursinus (Common wombat)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 19,
+      "species": "Xenopus laevis (African clawed frog)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 4,
+      "species": "Xenopus laevis (African clawed frog)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 7,
+      "species": "Xenopus laevis (African clawed frog)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 10,
+      "species": "Xenopus tropicalis (Western clawed frog) (Silurana tropicalis)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 7,
+      "species": "Xenopus tropicalis (Western clawed frog) (Silurana tropicalis)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 7,
+      "species": "Xenopus tropicalis (Western clawed frog) (Silurana tropicalis)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 1,
+      "species": "Xiphophorus hellerii (Green swordtail)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Xiphophorus maculatus (Southern platyfish) (Platypoecilus maculatus)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 62,
+      "species": "Xiphophorus multilineatus"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 46,
+      "species": "Xiphophorus pygmaeus (pygmy swordtail)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 23,
+      "species": "Zhangixalus chenfui (Chinese whipping frog)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "I",
+      "rows": 20,
+      "species": "Zhangixalus omeimontis (Omei treefrog) (Rhacophorus omeimontis)"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 162,
+      "species": "Zhangixalus omeimontis (Omei treefrog) (Rhacophorus omeimontis)"
+    },
+    {
+      "chain": "alpha",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Ziphius cavirostris"
+    },
+    {
+      "chain": "beta",
+      "mhc_class": "II",
+      "rows": 2,
+      "species": "Ziphius cavirostris"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "acipenser_baerii"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "acrocephalus_arundinaceus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "aegithalos_caudatus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "agelaius_phoeniceus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "alaudala_cheleensis"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "aleadryas_rufinucha"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "alectura_lathami"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "ameiurus_catus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "ameiurus_natalis"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "amphiprion_ocellaris"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "anabas_testudineus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "anas_platyrhynchos"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "anas_platyrhynchos_platyrhynchos"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "anolis_carolinensis"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "anoplopoma_fimbria"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "anser_brachyrhynchus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "anseranas_semipalmata"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "anthoscopus_minutus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "aphelocoma_coerulescens"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "apteryx_mantelli"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "arenaria_interpres"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "astyanax_mexicanus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "ataeniobius_toweri"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "athene_cunicularia"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "atractosteus_spatula"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "atrichornis_clamosus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "austrofundulus_limnaeus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "aythya_fuligula"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "bagarius_yarrelli"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "bombycilla_garrulus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "brachymystax_lenok"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "brachypodius_melanocephalos"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "bucco_capensis"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "buphagus_erythrorhynchus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "calcarius_ornatus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "callaeas_wilsoni"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "caloenas_nicobarica"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "calyptomena_viridis"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "campylorhamphus_procurvoides"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "carcharhinus_plumbeus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "cardinalis_cardinalis"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "catharus_fuscescens"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "catharus_ustulatus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "cephalopterus_ornatus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "certhia_brachydactyla"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "cettia_cetti"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "chaetorhynchus_papuensis"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "channa_argus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "chanos_chanos"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "chelonoidis_abingdonii"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "chelydra_serpentina"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "chloropsis_cyanopogon"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "chloropsis_hardwickii"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "chrysemys_picta_bellii"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "cinclus_mexicanus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "cisticola_juncidis"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "clarias_magur"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "climacteris_rufus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "cnemophilus_loriae"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "columba_livia"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "copsychus_sechellarum"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "corvus_moneduloides"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "coturnix_japonica"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "crenichthys_baileyi"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "crocodylus_porosus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "ctenopharyngodon_idella"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "cyclopterus_lumpus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "cynoglossus_semilaevis"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "cyprinus_carpio"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "danio_rerio"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "daphoenositta_chrysoptera"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "dasyornis_broadbenti"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "denticeps_clupeoides"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "dicaeum_eximium"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "dicentrarchus_labrax"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "dicrurus_megarhynchus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "donacobius_atricapilla"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "dromaius_novaehollandiae"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "drymodes_brunneopygia"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "elachura_formosa"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "electrophorus_electricus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "emberiza_fucata"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "erithacus_rubecula"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "erpornis_zantholeuca"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "erythrocercus_mccallii"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "esox_lucius"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "eublepharis_macularius"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "eubucco_bourcierii"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "eulacestoma_nigropectus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "eurystomus_gularis"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "falcunculus_frontatus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "ficedula_albicollis"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "furnarius_figulus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "gadus_morhua"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "gallus_gallus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "gekko_japonicus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "geospiza_fortis"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "geotrypetes_seraphini"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "ginglymostoma_cirratum"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "gopherus_evgoodei"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "grallaria_varia"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "grantiella_picta"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "gymnocypris_przewalskii"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "gymnorhina_tibicen"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "heliornis_fulica"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "helopsaltes_ochotensis"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "hippolais_icterina"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "hipposideros_armiger"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "hirundo_rustica"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "horornis_vulcanius"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "hucho_taimen"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "hylia_prasina"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "hypocryptadius_cinnamomeus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "iconisemion_striatum"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "ictalurus_furcatus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "ictalurus_lupus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "ictalurus_pricei"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "ictalurus_punctatus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "ifrita_kowaldi"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "illadopsis_cleaveri"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "ilyodon_furcidens"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "irena_cyanogastra"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "jacana_jacana"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "knipowitschia_caucasica"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "labeobarbus_intermedius"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "lates_calcarifer"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "laticauda_laticaudata"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "leiothrix_lutea"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "lepidothrix_coronata"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "leucopsar_rothschildi"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "liparis_tanakae"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "lonchura_striata"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "loxia_curvirostra"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "loxia_leucoptera"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "machaerirhynchus_nigripectus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "melanocharis_versteri"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "melanogrammus_aeglefinus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "meleagris_gallopavo"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "menura_novaehollandiae"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "merluccius_polli"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "miichthys_miiuy"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "mohoua_ochrocephala"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "molothrus_ater"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "monodelphis_domestica"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "myotis_lucifugus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "naja_naja"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "nesospiza_acunhae"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "nicator_chloris"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "notechis_scutatus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "nothobranchius_furzeri"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "nothobranchius_kadleci"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "nothobranchius_korthausae"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "nothobranchius_kuhntae"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "nothobranchius_pienaari"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "nothobranchius_rachovii"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "nothoprocta_perdicaria"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "notiomystis_cincta"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "notothenia_coriiceps"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "nyctibius_grandis"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "oceanodroma_tethys"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "oenanthe_oenanthe"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "oncorhynchus_masou_formosanus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "ophiophagus_hannah"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "oplegnathus_fasciatus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "oreocharis_arfaki"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "origma_solitaria"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "oriolus_oriolus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "ornithorhynchus_anatinus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "orthonyx_spaldingii"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "oryzias_latipes"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "osmerus_mordax"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "oxyruncus_cristatus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "pagrus_major"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "pantherophis_guttatus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "panurus_biarmicus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "paralichthys_olivaceus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "pardalotus_punctatus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "passerina_amoena"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "patagioenas_fasciata_monilis"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "pelodiscus_sinensis"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "penelope_pileata"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "peucedramus_taeniatus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "phainopepla_nitens"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "phascolarctos_cinereus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "phasianus_colchicus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "pheucticus_melanocephalus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "phyllostomus_discolor"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "picathartes_gymnocephalus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "pimephales_promelas"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "pipra_filicauda"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "piprites_chloris"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "pitta_sordida"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "platysteira_castanea"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "ploceus_nigricollis"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "podarcis_muralis"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "poecile_atricapillus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "pogona_vitticeps"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "polioptila_caerulea"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "polypterus_senegalus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "pomatorhinus_ruficollis"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "pomatostomus_ruficeps"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "promerops_cafer"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "prunella_fulvescens"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "prunella_himalayana"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "pseudonaja_textilis"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "psophia_crepitans"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "pteropus_vampyrus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "pteruthius_melanotis"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "ptilonorhynchus_violaceus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "ptilorrhoa_leucosticta"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "pycnonotus_jocosus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "pygocentrus_nattereri"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "python_bivittatus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "regulus_satrapa"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "rhabdornis_inornatus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "rhagologus_leucostigma"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "rhegmatorhina_hoffmannsi"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "rhinolophus_ferrumequinum"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "rhipidura_dahli"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "rhodinocichla_rosea"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "rostroraja_eglanteria"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "sagittarius_serpentarius"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "sakesphorus_luctuosus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "salvelinus_alpinus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "sapayoa_aenigma"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "scatophagus_argus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "scleropages_formosus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "sclerurus_mexicanus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "scytalopus_superciliaris"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "serilophus_lunatus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "serinus_canaria"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "seriola_quinqueradiata"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "setophaga_kirtlandii"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "sinocyclocheilus_anshuiensis"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "sinocyclocheilus_grahami"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "sinocyclocheilus_rhinocerous"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "sinosuthora_webbiana"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "sitta_europaea"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "sphenodon_punctatus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "spizella_passerina"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "sterrhoptilus_dennistouni"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "strigops_habroptila"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "struthidea_cinerea"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "sylvia_atricapilla"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "sylvia_borin"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "sylvietta_virens"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "tachyglossus_aculeatus_aculeatus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "tachysurus_fulvidraco"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "taeniopygia_guttata"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "takifugu_rubripes"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "terrapene_triunguis"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "thamnophis_sirtalis"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "thinocorus_orbignyianus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "thryothorus_ludovicianus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "tichodroma_muraria"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "todus_mexicanus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "toxostoma_redivivum"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "trachinotus_ovatus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "trichosurus_vulpecula"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "triplophysa_tibetana"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "tychaedon_coryphoeus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "upupa_epops"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "varanus_komodoensis"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "vidua_chalybeata"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "vidua_macroura"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "vombatus_ursinus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "xenoophorus_captivus"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "xenopus_laevis"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "xenopus_tropicalis"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "zonotrichia_albicollis"
+    },
+    {
+      "chain": "B2M",
+      "mhc_class": "I",
+      "rows": 1,
+      "species": "zosterops_hypoxanthus"
+    }
+  ],
+  "mhc_total_rows": 56440,
+  "sources": [
+    {
+      "bytes": 61437179,
+      "path": "/Users/iskander/.cache/mhcseqs/mhc-full-seqs.csv",
+      "sha256": "ddc3493c64f4328de174a6c2cda1f007ec2f93a1ef649add25d2ef9c1720add1"
+    },
+    {
+      "bytes": 221588916,
+      "path": "/Users/iskander/code/weirdo/data/swissprot-sequences.csv",
+      "sha256": "e9c44a34fcd3f8fb1f4151d489985dd5578a947eda3e62213d5109ace36e115d"
+    },
+    {
+      "bytes": 41633225,
+      "path": "/Users/iskander/code/weirdo/data/category-splits/splits.npz",
+      "sha256": "99b21eb93196cf2b0a0b1ae4bbb63066224a6864e48dd3a8d47fe67bd34fcf79"
+    },
+    {
+      "bytes": 1934,
+      "path": "/Users/iskander/code/weirdo/data/category-splits/splits.json",
+      "sha256": "571356e92fd1da71cf173be9f5e59c6aa128467f347de37aa30815d78923fc1f"
+    },
+    {
+      "bytes": 14669,
+      "path": "/Users/iskander/code/weirdo/scripts/category_data.py",
+      "sha256": "2bab15949f2357399c89ec8b67da4d58302ac4da230e0d07b3c704c781d15bb1"
+    }
+  ],
+  "status": "raw_source_inventory_not_admitted_training_or_evaluation",
+  "weirdo_reference_categories": {
+    "archaea": 19708,
+    "bacteria": 335891,
+    "fungi": 36360,
+    "human": 20422,
+    "invertebrates": 29268,
+    "mammals": 20171,
+    "plants": 44402,
+    "rodents": 27095,
+    "vertebrates": 18879,
+    "viruses": 17320
+  },
+  "weirdo_split_metadata": {
+    "categories": [
+      "archaea",
+      "bacteria",
+      "fungi",
+      "human",
+      "invertebrates",
+      "mammals",
+      "plants",
+      "rodents",
+      "vertebrates",
+      "viruses"
+    ],
+    "k": 8,
+    "prevalence": {
+      "all": {
+        "archaea": 0.03925,
+        "bacteria": 0.4049,
+        "fungi": 0.13353,
+        "human": 0.09708,
+        "invertebrates": 0.08732,
+        "mammals": 0.04377,
+        "plants": 0.10439,
+        "rodents": 0.09849,
+        "vertebrates": 0.04473,
+        "viruses": 0.04057
+      },
+      "test": {
+        "archaea": 0.03638,
+        "bacteria": 0.38595,
+        "fungi": 0.14503,
+        "human": 0.10038,
+        "invertebrates": 0.09014,
+        "mammals": 0.04221,
+        "plants": 0.09528,
+        "rodents": 0.10013,
+        "vertebrates": 0.04115,
+        "viruses": 0.03765
+      },
+      "train": {
+        "archaea": 0.03924,
+        "bacteria": 0.40494,
+        "fungi": 0.1318,
+        "human": 0.09449,
+        "invertebrates": 0.08567,
+        "mammals": 0.04169,
+        "plants": 0.10151,
+        "rodents": 0.09685,
+        "vertebrates": 0.04314,
+        "viruses": 0.04356
+      },
+      "val": {
+        "archaea": 0.04132,
+        "bacteria": 0.42117,
+        "fungi": 0.12875,
+        "human": 0.08929,
+        "invertebrates": 0.08558,
+        "mammals": 0.04273,
+        "plants": 0.09452,
+        "rodents": 0.09133,
+        "vertebrates": 0.04311,
+        "viruses": 0.03057
+      }
+    },
+    "proteins": 569516,
+    "salt": "category-predictor-v1",
+    "sample_sizes": {
+      "all": 4000000,
+      "test": 600000,
+      "train": 3000000,
+      "val": 300000
+    },
+    "seed": 0,
+    "sequences": "data/swissprot-sequences.csv",
+    "shared_across_folds": {
+      "test": 1878861,
+      "train": 2965836,
+      "val": 1862198
+    },
+    "table_verification": {
+      "found_fraction": 0.9987766666666666,
+      "label_match_fraction_of_found": 0.9983746783565228,
+      "rows": 300000.0
+    },
+    "universe_sizes": {
+      "all": 105945101,
+      "test": 14582469,
+      "train": 73136147,
+      "val": 15046236
+    }
+  }
+}

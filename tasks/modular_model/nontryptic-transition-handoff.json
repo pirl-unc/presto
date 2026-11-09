@@ -1,0 +1,64 @@
+{
+  "checked_utc": "2026-10-26T02:01:59.847635+00:00",
+  "startup_memory_metric": "macos_free_plus_speculative",
+  "startup_memory_bytes": 4124033024,
+  "required_bytes": 3221225472,
+  "admitted_now": null,
+  "disk_free_bytes": 4371468288,
+  "goal_turn_classification": "progress: mapping audit passed and quantified remaining aggregation/replicate gaps",
+  "source_family": "experiments/2026-10-25_1857_codex_nontryptic-transition-lineage",
+  "source_family_status": "reported standard identities and sums replayed; source faithful shared ingestion pending",
+  "pending_request": null,
+  "next_fetch_attempt": 4,
+  "local_processes": "all launched source stages terminal; no active local fit",
+  "presto_head": "717ed59e0938b10f3bedc2c5fad760ce65d65613",
+  "presto_ci": [
+    {
+      "run": 40223280643,
+      "last_status": "completed",
+      "stage": "all jobs including distributions/docs",
+      "conclusion": "success"
+    },
+    {
+      "run": 40223267837,
+      "last_status": "completed",
+      "stage": "all jobs including distributions/docs",
+      "conclusion": "success"
+    }
+  ],
+  "hitlist_checkout": "/Users/iskander/code/presto/.worktrees/hitlist-nontryptic-calibration",
+  "hitlist_change_scope": "literal reader and synthetic regressions in draft PR850; all hosted software checks pass; original source package and recipe pending",
+  "pypi_approval": "pending; no upload/retry authorized",
+  "full_goal_complete": false,
+  "hitlist_head": "0263dc639fdebe0a1532260f09cf575f99c4bf32",
+  "hitlist_pr": "https://github.com/pirl-unc/hitlist/pull/850",
+  "hitlist_ci": {
+    "run": 40226053061,
+    "head_sha": "0263dc639fdebe0a1532260f09cf575f99c4bf32",
+    "merge_sha": "3fefeb1f7b47b892a0949f984cb7090172963701",
+    "all_eight_jobs": "completed/success",
+    "unit_python311": {
+      "passed": 3621,
+      "skipped": 2,
+      "seconds": 281.95,
+      "reader_line_coverage_percent": 99
+    },
+    "integration": {
+      "passed": 96,
+      "seconds": 672.42
+    },
+    "full_gate_complete": true,
+    "evidence": "tasks/modular_model/nontryptic-reader-ci.json"
+  },
+  "previous_goal_turn_classification": "progress: both official workbooks downloaded and literal/aggregate replay completed",
+  "next_actions": [
+    "Implement typed source package in Hitlist; original headers/grains now qualified",
+    "Preserve S3 values separately from transition sums and retain ambiguous correspondence",
+    "Register peptide-grouped calibration comparison after shared package and recipe qualification"
+  ],
+  "resource_proposal": "experiments/agents/codex/plans/nontryptic-readonly-resource-proposal.md",
+  "resource_proposal_approved": false,
+  "live_workflow_handles": [],
+  "resumed_blocked_audit_turn": 0,
+  "memory_note": "recorded successful launch, not a live capacity guarantee"
+}

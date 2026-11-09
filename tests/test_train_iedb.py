@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 import torch
 
-import presto.scripts.train_iedb as train_iedb_module
+import presto.legacy.scripts.train_iedb as train_iedb_module
 from presto.data import PrestoDataset
 from presto.data.collate import PrestoBatch
 from presto.data.cross_source_dedup import UnifiedRecord
@@ -24,7 +24,7 @@ from presto.data.loaders import (
     StabilityRecord,
     TCellRecord,
 )
-from presto.scripts.train_iedb import (
+from presto.legacy.scripts.train_iedb import (
     _PROP_CHARGED_NEG,
     _PROP_CHARGED_POS,
     _PROP_HYDROPHOBIC,
@@ -781,7 +781,7 @@ def test_generate_mhc_only_samples_defaults_to_mhcseqs_catalog(monkeypatch):
         source="mhcseqs",
     )
     monkeypatch.setattr(
-        "presto.scripts.train_iedb.load_mhcseqs_catalog_inputs",
+        "presto.legacy.scripts.train_iedb.load_mhcseqs_catalog_inputs",
         lambda: {record.allele: record},
     )
 
@@ -998,7 +998,7 @@ def test_resolve_mhc_sequences_from_index_maps_input_alleles(tmp_path, monkeypat
         encoding="utf-8",
     )
     monkeypatch.setattr(
-        "presto.scripts.train_iedb.resolve_exact_mhc_sequences",
+        "presto.legacy.scripts.train_iedb.resolve_exact_mhc_sequences",
         lambda alleles, index_csv, prefer_mhcseqs: (
             {"HLA-A*02:01": "AAAA"},
             {
@@ -1254,10 +1254,10 @@ def test_load_iedb_binding_and_elution_records_fallback_parser(monkeypatch, tmp_
     data_file = tmp_path / "mhc.csv"
     data_file.write_text("unused\n", encoding="utf-8")
 
-    monkeypatch.setattr("presto.scripts.train_iedb.load_iedb_binding", lambda _: iter([]))
-    monkeypatch.setattr("presto.scripts.train_iedb.load_iedb_elution", lambda _: iter([]))
+    monkeypatch.setattr("presto.legacy.scripts.train_iedb.load_iedb_binding", lambda _: iter([]))
+    monkeypatch.setattr("presto.legacy.scripts.train_iedb.load_iedb_elution", lambda _: iter([]))
     monkeypatch.setattr(
-        "presto.scripts.train_iedb.parse_iedb_binding",
+        "presto.legacy.scripts.train_iedb.parse_iedb_binding",
         lambda _: iter(
             [
                 UnifiedRecord(
@@ -1298,10 +1298,10 @@ def test_load_iedb_binding_and_elution_records_zero_limit_means_unlimited(monkey
     data_file = tmp_path / "mhc.csv"
     data_file.write_text("unused\n", encoding="utf-8")
 
-    monkeypatch.setattr("presto.scripts.train_iedb.load_iedb_binding", lambda _: iter([]))
-    monkeypatch.setattr("presto.scripts.train_iedb.load_iedb_elution", lambda _: iter([]))
+    monkeypatch.setattr("presto.legacy.scripts.train_iedb.load_iedb_binding", lambda _: iter([]))
+    monkeypatch.setattr("presto.legacy.scripts.train_iedb.load_iedb_elution", lambda _: iter([]))
     monkeypatch.setattr(
-        "presto.scripts.train_iedb.parse_iedb_binding",
+        "presto.legacy.scripts.train_iedb.parse_iedb_binding",
         lambda _: iter(
             [
                 UnifiedRecord(
@@ -1340,9 +1340,9 @@ def test_load_iedb_tcell_records_fallback_parser(monkeypatch, tmp_path):
     data_file = tmp_path / "tcell.csv"
     data_file.write_text("unused\n", encoding="utf-8")
 
-    monkeypatch.setattr("presto.scripts.train_iedb.load_iedb_tcell", lambda _: iter([]))
+    monkeypatch.setattr("presto.legacy.scripts.train_iedb.load_iedb_tcell", lambda _: iter([]))
     monkeypatch.setattr(
-        "presto.scripts.train_iedb.parse_iedb_tcell",
+        "presto.legacy.scripts.train_iedb.parse_iedb_tcell",
         lambda _: iter(
             [
                 UnifiedRecord(
@@ -1383,9 +1383,9 @@ def test_load_iedb_tcell_records_zero_limit_means_unlimited(monkeypatch, tmp_pat
     data_file = tmp_path / "tcell.csv"
     data_file.write_text("unused\n", encoding="utf-8")
 
-    monkeypatch.setattr("presto.scripts.train_iedb.load_iedb_tcell", lambda _: iter([]))
+    monkeypatch.setattr("presto.legacy.scripts.train_iedb.load_iedb_tcell", lambda _: iter([]))
     monkeypatch.setattr(
-        "presto.scripts.train_iedb.parse_iedb_tcell",
+        "presto.legacy.scripts.train_iedb.parse_iedb_tcell",
         lambda _: iter(
             [
                 UnifiedRecord(
@@ -2202,7 +2202,7 @@ def test_run_fails_fast_when_strict_mhc_resolution_finds_unresolved(tmp_path, mo
         )
 
     monkeypatch.setattr(
-        "presto.scripts.train_iedb.load_records_from_merged_tsv",
+        "presto.legacy.scripts.train_iedb.load_records_from_merged_tsv",
         _fake_load_records_from_merged_tsv,
     )
     # `run()` asserts at startup that `mhcseqs` did not resolve to an empty
@@ -2210,7 +2210,7 @@ def test_run_fails_fast_when_strict_mhc_resolution_finds_unresolved(tmp_path, mo
     # (`~/code`, holding a `mhcseqs/` directory) is on sys.path. This test fakes
     # the whole data layer and is exercising the strict-resolution failure path,
     # not the environment precondition, so opt out of the check.
-    monkeypatch.setattr("presto.scripts.train_iedb._assert_mhcseqs_importable", lambda: None)
+    monkeypatch.setattr("presto.legacy.scripts.train_iedb._assert_mhcseqs_importable", lambda: None)
 
     args = argparse.Namespace(
         data_dir=str(tmp_path),
@@ -2258,9 +2258,9 @@ def test_hitlist_data_source_never_reads_an_available_merged_tsv(
     def _merged_must_not_run(**kwargs):
         raise AssertionError("hitlist source touched merged TSV")
 
-    monkeypatch.setattr("presto.scripts.train_iedb._assert_mhcseqs_importable", lambda: None)
+    monkeypatch.setattr("presto.legacy.scripts.train_iedb._assert_mhcseqs_importable", lambda: None)
     monkeypatch.setattr(
-        "presto.scripts.train_iedb.load_records_from_merged_tsv",
+        "presto.legacy.scripts.train_iedb.load_records_from_merged_tsv",
         _merged_must_not_run,
     )
     monkeypatch.setattr(

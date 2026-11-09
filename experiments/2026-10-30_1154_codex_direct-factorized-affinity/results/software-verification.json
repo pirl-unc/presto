@@ -1,0 +1,19 @@
+{
+  "checked_unix": 1793376897.4148228,
+  "source_revision": "7083bd899a29e8b251924079ca2941238e396784",
+  "full_suite": {
+    "passed": 2896,
+    "skipped": 4,
+    "warnings": 2,
+    "seconds": 402.26,
+    "command": "PYTHONPATH=/Users/iskander/code/presto/.worktrees/shared-training /Users/iskander/code/shared-virtual-env/bin/python -m pytest -q --tb=short"
+  },
+  "focused": {
+    "passed": 82,
+    "command": "pytest -q tests/test_modular_hitlist.py tests/test_shared_assay_measurement.py tests/test_direct_affinity_support.py"
+  },
+  "lint": "passed; ./lint.sh and explicit checks for experiment source",
+  "docs": "passed; mkdocs build --strict",
+  "real_historical_checkpoint": "CPU predictions and panels identical in four class/method cells",
+  "interpretation": "Implementation verification; real-data predictive improvement remains unmeasured"
+}

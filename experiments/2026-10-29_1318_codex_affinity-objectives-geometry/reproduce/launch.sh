@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")/../../.."
+exec python -m modal run --detach experiments/2026-10-29_1318_codex_affinity-objectives-geometry/code/audit.py

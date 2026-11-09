@@ -1,0 +1,149 @@
+{
+  "mapping_policy": "no_expansion",
+  "name": "pxd024809_conditional_nominal_dose_v1",
+  "schema_version": 1,
+  "sources": [
+    {
+      "context_precision": {
+        "allowed": [
+          "matched_identity"
+        ],
+        "field": "feature_link_status",
+        "on_mismatch": "exclude"
+      },
+      "evidence_type": "dilution_feature_links",
+      "grouping": {
+        "fields": [
+          "aligned.acquisition_id"
+        ],
+        "on_missing": "exclude"
+      },
+      "joins": [
+        "aligned",
+        "scored"
+      ],
+      "limit": null,
+      "required_fields": [
+        "aligned.library_precursor_id",
+        "aligned.acquisition_id",
+        "aligned.source_record_id",
+        "aligned.modified_sequence_raw",
+        "aligned.charge_raw",
+        "aligned.quantitative_raw"
+      ],
+      "row_id": "claim_id",
+      "select": [
+        "claim_id",
+        "source_record_id",
+        "measurement_id",
+        "identification_id",
+        "feature_link_status",
+        "n_candidates",
+        "form_agrees",
+        "charge_agrees",
+        "precursor_agrees",
+        "target_agrees",
+        "source_dataset",
+        "source_dataset_precision",
+        "source_panel",
+        "aligned.measurement_id",
+        "aligned.source_record_id",
+        "aligned.acquisition_id",
+        "aligned.peptide_sequence",
+        "aligned.modified_sequence_raw",
+        "aligned.charge_raw",
+        "aligned.decoy_raw",
+        "aligned.native_precursor_id",
+        "aligned.native_feature_id",
+        "aligned.library_precursor_id",
+        "aligned.library_link_status",
+        "aligned.library_label_status",
+        "aligned.value_status",
+        "aligned.measurement_unit",
+        "aligned.observation_kind",
+        "aligned.quantitative_raw",
+        "aligned.dilution_rt_raw",
+        "aligned.dilution_left_width_raw",
+        "aligned.dilution_right_width_raw",
+        "aligned.dilution_peak_rank_raw",
+        "aligned.dilution_m_score_raw",
+        "aligned.native_peptide_id",
+        "aligned.group_label_raw",
+        "aligned.dilution_alignment_rank_raw",
+        "aligned.n_library_candidates",
+        "aligned.quantitative_value",
+        "aligned.dilution_rt",
+        "aligned.dilution_left_width",
+        "aligned.dilution_right_width",
+        "aligned.dilution_peak_rank",
+        "aligned.dilution_m_score",
+        "aligned.dilution_alignment_rank",
+        "aligned.source_dataset",
+        "aligned.source_dataset_precision",
+        "aligned.source_panel",
+        "scored.identification_id",
+        "scored.source_record_id",
+        "scored.acquisition_id",
+        "scored.peptide_sequence",
+        "scored.modified_sequence_raw",
+        "scored.charge_raw",
+        "scored.decoy_raw",
+        "scored.native_precursor_id",
+        "scored.native_feature_id",
+        "scored.library_precursor_id",
+        "scored.library_link_status",
+        "scored.library_label_status",
+        "scored.value_status",
+        "scored.measurement_unit",
+        "scored.observation_kind",
+        "scored.quantitative_raw",
+        "scored.dilution_rt_raw",
+        "scored.dilution_left_width_raw",
+        "scored.dilution_right_width_raw",
+        "scored.dilution_peak_rank_raw",
+        "scored.dilution_m_score_raw",
+        "scored.source_run_id",
+        "scored.dilution_d_score_raw",
+        "scored.n_library_candidates",
+        "scored.quantitative_value",
+        "scored.dilution_rt",
+        "scored.dilution_left_width",
+        "scored.dilution_right_width",
+        "scored.dilution_peak_rank",
+        "scored.dilution_m_score",
+        "scored.dilution_d_score",
+        "scored.source_dataset",
+        "scored.source_dataset_precision",
+        "scored.source_panel"
+      ],
+      "target": {
+        "allowed_statuses": [
+          "positive"
+        ],
+        "allowed_units": [
+          "source_signal_arbitrary_units"
+        ],
+        "field": "aligned.quantitative_value",
+        "mode": "numeric",
+        "status_field": "aligned.value_status",
+        "unit_field": "aligned.measurement_unit"
+      },
+      "where": {
+        "aligned.library_precursor_id": {
+          "op": "in",
+          "value": [
+            "pxd024809:library:1130bddc1549f790d5fac3bc1b88aed498c871262fbcfdb26f54434073fb6467",
+            "pxd024809:library:4814e72c7d8084f6395ac473d3e7538be957b01a0a842ded7c0d24fdcef4099f",
+            "pxd024809:library:60786bd70f2b58953e92c27c76a7b65fb52528671fa902bf4f754f21f3bddc9a",
+            "pxd024809:library:a715f31fc7b609431150bf747b4e0960ae07c4430d3f689beec424543d9e4b5c",
+            "pxd024809:library:a7424760204618209ab9eb8315214db7c13ddabebb4e9c53e5d32f36393a2177",
+            "pxd024809:library:cc78bc2a973e5b076a16fc31ba29502fc89febdf315aff201d1dadbd6439d8c0",
+            "pxd024809:library:e9b0e3c4aa904ca5f783d3d2d0a06740372df793b1d6b47cad690eadd369b073",
+            "pxd024809:library:f3c32fa355757d7578e12b42d2885a21156de0afaa5b2c72177626902dac53e7",
+            "pxd024809:library:f4d15ffa42172ed84aa2b618489231821d45e14fb152150aadf97f99e23075a7"
+          ]
+        }
+      }
+    }
+  ]
+}

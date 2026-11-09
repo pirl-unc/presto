@@ -1,0 +1,40 @@
+{
+  "status": "passed",
+  "archive": "/Users/iskander/code/presto/.worktrees/shared-training/presto/artifacts/2026-10-28_0250_codex_assay-transfer-mechanisms/downloads/wide-six-class-balanced-s42.tar.gz",
+  "archive_sha256": "7de42dc8c0c5dc965fc6ef0e08432e770001d5104730d841a5ddddec5b7f9cf0",
+  "entries": [
+    {
+      "member": "wide-six-class-balanced-s42/raw/evaluations/train.json",
+      "bytes": 1500025897,
+      "sha256": "9438e239ccfd9b22cc2bb0bdd7e1847668318904a080796d515706dae8c6d445"
+    },
+    {
+      "member": "wide-six-class-balanced-s42/raw/train-predictions.jsonl",
+      "bytes": 922405945,
+      "sha256": "1efe88e6e95a755da9ea5d94d4c9ef28c8c9f4cbd700ba82523154baff5c5885"
+    },
+    {
+      "member": "wide-six-class-balanced-s42/raw/evaluations/validation.json",
+      "bytes": 188060931,
+      "sha256": "b9ea8d911a27fb86bfd7082e2e614dbd8a74106f210835ef9fcad7d46c743381"
+    },
+    {
+      "member": "wide-six-class-balanced-s42/raw/validation-predictions.jsonl",
+      "bytes": 115722275,
+      "sha256": "d11656b4851885cbf8a356c4c16c74a5adb6be31db2e24ea94f3fbc655b9080b"
+    },
+    {
+      "member": "wide-six-class-balanced-s42/raw/evaluations/test.json",
+      "bytes": 196195728,
+      "sha256": "6e129defcbd99636feb3787e5eece0dcf6d414281ce158850aeaeece3440b3f9"
+    },
+    {
+      "member": "wide-six-class-balanced-s42/raw/test-predictions.jsonl",
+      "bytes": 120685953,
+      "sha256": "982e359fe9ec0897b297c8147b8ee6fb7cd93fb91a42048d3da7a26c08f4200d"
+    }
+  ],
+  "removed_bytes": 3043096729,
+  "policy": "Remove only byte-identical expanded exports; retain original archive, all checkpoints and gzip predictions. No metric parsing.",
+  "free_after": 14631104512
+}

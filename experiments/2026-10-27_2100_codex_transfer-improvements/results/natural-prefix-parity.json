@@ -1,0 +1,81 @@
+{
+  "status": "numerical_differences_recorded",
+  "results": [
+    {
+      "seed": 42,
+      "initial_weights_exact": true,
+      "scales_exact": true,
+      "comparisons": [
+        {
+          "steps": 339,
+          "training_loss_delta": 9.670371170500403e-10,
+          "class_metrics": {
+            "I": {
+              "spearman": 0.0,
+              "rmse": 8.901210879486143e-10
+            },
+            "II": {
+              "spearman": 0.0,
+              "rmse": 1.0040468456651297e-09
+            }
+          },
+          "label_exposures_exact": true
+        },
+        {
+          "steps": 678,
+          "training_loss_delta": 5.538484670886135e-09,
+          "class_metrics": {
+            "I": {
+              "spearman": 0.0,
+              "rmse": 7.36838368098347e-10
+            },
+            "II": {
+              "spearman": 0.0,
+              "rmse": 2.5292589134195964e-09
+            }
+          },
+          "label_exposures_exact": true
+        }
+      ]
+    },
+    {
+      "seed": 43,
+      "initial_weights_exact": true,
+      "scales_exact": true,
+      "comparisons": [
+        {
+          "steps": 339,
+          "training_loss_delta": 8.791245509343071e-10,
+          "class_metrics": {
+            "I": {
+              "spearman": 0.0,
+              "rmse": 2.8947499952636235e-09
+            },
+            "II": {
+              "spearman": 0.0,
+              "rmse": -2.4963036082681356e-09
+            }
+          },
+          "label_exposures_exact": true
+        },
+        {
+          "steps": 678,
+          "training_loss_delta": 4.3956227546715354e-10,
+          "class_metrics": {
+            "I": {
+              "spearman": 0.0,
+              "rmse": -1.5865485591959327e-08
+            },
+            "II": {
+              "spearman": 0.0,
+              "rmse": -3.5911135176647235e-09
+            }
+          },
+          "label_exposures_exact": true
+        }
+      ]
+    }
+  ],
+  "exact_history_equality_attempt": "seed42 failed only on small float32 differences; not claimed bitwise reproducible training",
+  "scope": "common pre-extension points; no test metrics accessed; same H100/library contract; deterministic algorithms not enabled"
+}

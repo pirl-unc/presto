@@ -1,0 +1,37 @@
+{
+  "argv": [
+    "modal",
+    "run",
+    "--detach",
+    "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-28_1540_codex_temporal-multi-output/code/prepare.py"
+  ],
+  "sources": {
+    "worker.py": "6ace552803545d81bd68fd9f6a7ec9f335119aba99a065d24e3e05991fbd830a",
+    "build_index.py": "c37660a48c75c00ac2c08a699b050bfd53d02c8e3f43b06ca8858a6b4faa1474",
+    "partition.py": "4539b38a5173a6703c55a12e624d0278b624fc6f8c196247a5a6b6ed50badc9a",
+    "acquire.py": "f45694b021894150383bae25c00e0ebdd93dc43d45636af52e5dad877d3652df",
+    "freeze_contract.py": "eb02da0e507821d297c0479a493f8e72ad7a0d2767849debf14dd8446666e9e4",
+    "admit.py": "35ed35bf922d8717fa532b4648e062a9a5820957a3e0aa4bfa7a162719e7bb47",
+    "inventory_2026.py": "b096219685864b82bfff12b9b401fecc2974e0fb35edae4ba1410cddd098e136",
+    "control.py": "792d49c20a6f8fbb6473e7ca1df33612d06c1630888da30c70391613cdf17363",
+    "advance.py": "ae1d1b9e528895048002913cd5ea6c1b164af9e17307e8fe62b2155e539cb75a",
+    "launch.py": "825c2e019cce41477b76912acb52000e7ad8fdee466fc02f343108de720e00b8",
+    "prepare_worker.py": "69a892c5308491d5a7e8e61cd0cee714da786c68b8c148df38896c897a039792",
+    "freeze_runtime.py": "8396b8cf848baa77f037e34563edc0369ad0adb08309debfcf43af9e0ec13d30",
+    "prepare.py": "82704af58a6494dd3d7e9095d5eb85d4ffff083ca397a38a30bdae40c6b410ad"
+  },
+  "dependency_call_id": "fc-01M61Y051TV4HX19H6F0W50P6N",
+  "requirements": [
+    "hitlist==2.0.40",
+    "torch==2.14.1",
+    "mhcseqs==2.6.13",
+    "numpy==2.5.4",
+    "psutil==7.2.2"
+  ],
+  "requested_gpu": null,
+  "cpu": 8,
+  "memory_mib": 98304,
+  "ephemeral_disk_mib": 524288,
+  "storage_policy": "worker-local preparation; durable complete publication",
+  "started_unix": 1793224200.284991
+}

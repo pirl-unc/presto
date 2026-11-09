@@ -1,0 +1,221 @@
+{
+  "checkpoint": "/private/tmp/presto-mhc2-20261026/ms-length-background/native/native101/last.pt",
+  "checkpoint_sha256": "2586ac52a7b5c8731e11bfcc0b44be675f66401c99e8d16d311ebbe3aca32bde",
+  "coverage_gate": {
+    "exposed_features_without_updates": {},
+    "status": "passed",
+    "untrained_parameters": []
+  },
+  "fixed_steps": 2592,
+  "fresh_ic50_probe_max_abs_log10nm": 0.0,
+  "fresh_ic50_probes": [
+    {
+      "observation_id": "generated-length:ms-unit:a2074f850a4456091574a504addd769c15d021113c28aef3c1869287b3d1daf8",
+      "parent": 2.6699024574894317,
+      "retained": 2.6699024574894317
+    },
+    {
+      "observation_id": "generated-length:ms-unit:ab6d7a15a8c644507003fb23a1f7f5ef0527cb52de69325a656054fe2f8e03e7",
+      "parent": 3.74621573455567,
+      "retained": 3.74621573455567
+    },
+    {
+      "observation_id": "generated-length:ms-unit:00b3cf2091675f4256d492d4996b03698d47c46e2894482764ac15690e6d5778",
+      "parent": 3.2392159894317056,
+      "retained": 3.2392159894317056
+    },
+    {
+      "observation_id": "generated-length:ms-unit:c8c64d2c28a1d5c1c22bbffb8cc3afd4731317d55fcd0a2f4e082cfe2388cd13",
+      "parent": 4.156931918973038,
+      "retained": 4.156931918973038
+    },
+    {
+      "observation_id": "generated-length:ms-unit:fc6cf43273b60047011480eb5f0fcfaaafe72025a642cfa5b06193592292fe22",
+      "parent": 2.575695925582551,
+      "retained": 2.575695925582551
+    },
+    {
+      "observation_id": "generated-length:ms-unit:cab8e5f0d5c1a6d04a24dc123420447fc209e71d68b974319a3c8f4951ba8742",
+      "parent": 3.0173830635772476,
+      "retained": 3.0173830635772476
+    },
+    {
+      "observation_id": "generated-length:ms-unit:6d69d93576a657be9ac07ff2075ec5026c558c995af7c1a075b02e333310d595",
+      "parent": 3.47525519489847,
+      "retained": 3.47525519489847
+    },
+    {
+      "observation_id": "generated-length:ms-unit:2ead213d92897baadf8197cd57e634014e4743b60069f67371b82456532f77ff",
+      "parent": 2.599265400815421,
+      "retained": 2.599265400815421
+    },
+    {
+      "observation_id": "generated-length:ms-unit:5962ae819d25e4138e501e07d316f1e2654110516ca781e86d9d61dc24335d83",
+      "parent": 3.63382287372928,
+      "retained": 3.63382287372928
+    },
+    {
+      "observation_id": "generated-length:ms-unit:7d53db59e7ab6cd06050fa894df9a1a3a3945840ac1865ff0c43f8128e51ae2c",
+      "parent": 3.4893905459121375,
+      "retained": 3.4893905459121375
+    },
+    {
+      "observation_id": "ms:http://www.iedb.org/assay/18881759",
+      "parent": 0.826267624895751,
+      "retained": 0.826267624895751
+    },
+    {
+      "observation_id": "ms:http://www.iedb.org/assay/18871293",
+      "parent": 2.486492132077278,
+      "retained": 2.486492132077278
+    },
+    {
+      "observation_id": "ms:http://www.iedb.org/assay/18886619",
+      "parent": 2.1950885208905264,
+      "retained": 2.1950885208905264
+    },
+    {
+      "observation_id": "ms:http://www.iedb.org/assay/18872566",
+      "parent": 2.9993957871715025,
+      "retained": 2.9993957871715025
+    },
+    {
+      "observation_id": "ms:http://www.iedb.org/assay/18909168",
+      "parent": 3.9506666694065418,
+      "retained": 3.9506666694065418
+    },
+    {
+      "observation_id": "ms:http://www.iedb.org/assay/18894727",
+      "parent": 2.3982959731063818,
+      "retained": 2.3982959731063818
+    },
+    {
+      "observation_id": "ms:http://www.iedb.org/assay/18874717",
+      "parent": 3.8857755899580364,
+      "retained": 3.8857755899580364
+    },
+    {
+      "observation_id": "ms:http://www.iedb.org/assay/18891125",
+      "parent": 3.0465649268347423,
+      "retained": 3.0465649268347423
+    },
+    {
+      "observation_id": "ms:http://www.iedb.org/assay/18876113",
+      "parent": 1.6618212511134902,
+      "retained": 1.6618212511134902
+    },
+    {
+      "observation_id": "ms:http://www.iedb.org/assay/18876626",
+      "parent": 2.9620668844996882,
+      "retained": 2.9620668844996882
+    }
+  ],
+  "metrics": {
+    "external": {
+      "elution_observation": {
+        "accuracy": 0.5939762525340284,
+        "auprc": 0.6499629287096299,
+        "auroc": 0.6331844053056522,
+        "balanced_accuracy": 0.5939762525340284,
+        "f1": 0.5245846049508308,
+        "fn": 1906,
+        "fp": 898,
+        "loss": 0.6998680798612511,
+        "n": 6906,
+        "precision": 0.632719836400818,
+        "recall": 0.44801621778163914,
+        "tn": 2555,
+        "tp": 1547
+      }
+    },
+    "test": {
+      "elution_observation": {
+        "accuracy": 0.7015582655826558,
+        "auprc": 0.772585929597887,
+        "auroc": 0.775585806967487,
+        "balanced_accuracy": 0.7015582655826558,
+        "f1": 0.7149789712067293,
+        "fn": 1484,
+        "fp": 2040,
+        "loss": 0.5677560947570908,
+        "n": 11808,
+        "precision": 0.6842105263157895,
+        "recall": 0.7486449864498645,
+        "tn": 3864,
+        "tp": 4420
+      }
+    },
+    "train": {
+      "elution_observation": {
+        "accuracy": 0.7147533275462963,
+        "auprc": 0.7808865182920699,
+        "auroc": 0.79122112415455,
+        "balanced_accuracy": 0.7147533275462963,
+        "f1": 0.7283000017225638,
+        "fn": 6508,
+        "fp": 9265,
+        "loss": 0.5551755143452426,
+        "n": 55296,
+        "precision": 0.695280381516198,
+        "recall": 0.7646122685185185,
+        "tn": 18383,
+        "tp": 21140
+      }
+    },
+    "validation": {
+      "elution_observation": {
+        "accuracy": 0.6997282608695652,
+        "auprc": 0.7733738779601178,
+        "auroc": 0.7747199577294686,
+        "balanced_accuracy": 0.6997282608695652,
+        "f1": 0.7113123748149438,
+        "fn": 1436,
+        "fp": 1879,
+        "loss": 0.5678868429705145,
+        "n": 11040,
+        "precision": 0.6848901559617642,
+        "recall": 0.7398550724637681,
+        "tn": 3641,
+        "tp": 4084
+      }
+    }
+  },
+  "original_canonical_fit_failed": true,
+  "parent_ic50_tensors_equal": [
+    "encoder.embedding.weight",
+    "encoder.norm.bias",
+    "encoder.norm.weight",
+    "encoder.transformer.layers.0.linear1.bias",
+    "encoder.transformer.layers.0.linear1.weight",
+    "encoder.transformer.layers.0.linear2.bias",
+    "encoder.transformer.layers.0.linear2.weight",
+    "encoder.transformer.layers.0.norm1.bias",
+    "encoder.transformer.layers.0.norm1.weight",
+    "encoder.transformer.layers.0.norm2.bias",
+    "encoder.transformer.layers.0.norm2.weight",
+    "encoder.transformer.layers.0.self_attn.in_proj_bias",
+    "encoder.transformer.layers.0.self_attn.in_proj_weight",
+    "encoder.transformer.layers.0.self_attn.out_proj.bias",
+    "encoder.transformer.layers.0.self_attn.out_proj.weight",
+    "encoder.transformer.layers.1.linear1.bias",
+    "encoder.transformer.layers.1.linear1.weight",
+    "encoder.transformer.layers.1.linear2.bias",
+    "encoder.transformer.layers.1.linear2.weight",
+    "encoder.transformer.layers.1.norm1.bias",
+    "encoder.transformer.layers.1.norm1.weight",
+    "encoder.transformer.layers.1.norm2.bias",
+    "encoder.transformer.layers.1.norm2.weight",
+    "encoder.transformer.layers.1.self_attn.in_proj_bias",
+    "encoder.transformer.layers.1.self_attn.in_proj_weight",
+    "encoder.transformer.layers.1.self_attn.out_proj.bias",
+    "encoder.transformer.layers.1.self_attn.out_proj.weight",
+    "heads.ic50.bias",
+    "heads.ic50.weight",
+    "pmhc_fusion.0.bias",
+    "pmhc_fusion.0.weight",
+    "register_score.weight"
+  ],
+  "parent_scaler_equal": true,
+  "selected_final_tensor_equality": true,
+  "serialization_transition": "reproduce/serialization-transition.json"
+}

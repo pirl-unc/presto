@@ -1,0 +1,95 @@
+{
+  "argv": [
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1857_codex_nontryptic-transition-lineage/code/launch.py",
+    "verify",
+    "--attempt",
+    "2",
+    "--requests",
+    "experiments/2026-10-25_1857_codex_nontryptic-transition-lineage/reproduce/requests/verify-1.json"
+  ],
+  "configuration": {
+    "experiment_id": "2026-10-25_1857_codex_nontryptic-transition-lineage",
+    "agent_model": "Codex/GPT-6",
+    "created_utc": "2026-10-25T18:58:53.446877+00:00",
+    "presto_commit": "717ed59e0938b10f3bedc2c5fad760ce65d65613",
+    "dirty_tracked": true,
+    "dirty_scope": "preserved unrelated task notes; no model changes",
+    "source_scope": "exact already-named PXD024917 processed transition export lineage; no broad source discovery",
+    "discovery_operation_limit": 8,
+    "n_initial_queries_max": 0,
+    "n_primary_candidates_max": 1,
+    "n_model_fits": 0,
+    "new_numeric_data_admitted": false,
+    "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+    "plan_sha256": "dea107f5515519d1d3e9dce6d68ae4f694bfaf556371739ed9924be0a91e60a4",
+    "validation_test_split": null,
+    "reason_no_predictions": "source qualification only; no model dataset admitted",
+    "local_inspection_limits": {
+      "stage_seconds": 1200,
+      "rss_bytes": 3221225472,
+      "startup_memory_bytes": 3221225472,
+      "disk_floor_bytes": 1073741824,
+      "start_margin_bytes": 33554432
+    },
+    "limits": {
+      "stage_seconds": 1200,
+      "rss_bytes": 3221225472,
+      "startup_memory_bytes": 3221225472,
+      "disk_floor_bytes": 1073741824,
+      "start_margin_bytes": 33554432
+    },
+    "environment_overrides": {
+      "PYTHONSAFEPATH": "1",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUNBUFFERED": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    },
+    "network_limits": {
+      "metadata_requests": 8,
+      "metadata_bytes_each": 4194304,
+      "processed_bytes_each": 16777216,
+      "total_bytes": 41943040,
+      "connect_seconds": 10,
+      "read_seconds": 30,
+      "request_wall_seconds": 120
+    },
+    "public_hosts": [
+      "www.ebi.ac.uk",
+      "ftp.pride.ebi.ac.uk"
+    ],
+    "data_directory": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/nontryptic_transition_sources/2026-10-25_1857_codex_nontryptic-transition-lineage",
+    "frozen_code_sha256": {
+      "code/launch.py": "337b0957f12bced683299134c33465d6b26145fbaa4d9bc1e233832b437a9e27",
+      "code/fetch.py": "1bda902de950a889bab3a23487ca45cb430713afb42f7dc5b4a577dd37578dbb",
+      "reproduce/source/launch.py": "337b0957f12bced683299134c33465d6b26145fbaa4d9bc1e233832b437a9e27",
+      "reproduce/source/fetch.py": "1bda902de950a889bab3a23487ca45cb430713afb42f7dc5b4a577dd37578dbb",
+      "reproduce/launch.sh": "48381d83f937b30b045c8a3d61751e997e02fbc37b1aec11853b25346904a864"
+    }
+  },
+  "request_set": {
+    "scope": "reproduce/requests/lineage-scope-1.json",
+    "shared_reader": "/Users/iskander/code/presto/.worktrees/hitlist-nontryptic-calibration/hitlist/nontryptic_workbooks.py",
+    "workbooks": [
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/nontryptic_transition_sources/2026-10-25_1857_codex_nontryptic-transition-lineage/Iso18_DirectSpike_TransitionResults.xlsx",
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/nontryptic_transition_sources/2026-10-25_1857_codex_nontryptic-transition-lineage/Iso18_hipMHCspikein_TransitionResults.xlsx"
+    ],
+    "S3_cells": "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/dose-signal-cells.json",
+    "source_sha256": {
+      "code/verify.py": "5d5857b803d559c7f522bac20adb517ff78a1818e41427b8be7768e14f916171",
+      "reproduce/source/verify.py": "5d5857b803d559c7f522bac20adb517ff78a1818e41427b8be7768e14f916171",
+      "reproduce/requests/lineage-scope-1.json": "b8b7ed86b0b28f46cd679e437f8fb9398a532b03461f8a4529092164d7ff7f2c"
+    },
+    "input_sha256": {
+      "/Users/iskander/code/presto/.worktrees/hitlist-nontryptic-calibration/hitlist/nontryptic_workbooks.py": "d6665fad51361f2c08dbaf08c259d91ff464a0d56937bd35b9c18f50675c39f8",
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/dose-signal-cells.json": "b123848c362ddb27e7498caf7f1beeb3a5c84ee90d23ed59511fd6406584196f",
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/nontryptic_transition_sources/2026-10-25_1857_codex_nontryptic-transition-lineage/Iso18_DirectSpike_TransitionResults.xlsx": "d359bf7b8afd0ade9df9539d941c0f7931b8c39657a444d3bf8025e54ff1d995",
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/nontryptic_transition_sources/2026-10-25_1857_codex_nontryptic-transition-lineage/Iso18_hipMHCspikein_TransitionResults.xlsx": "8426f43364ea1d84244403811956f501664abf8001e7043ec8fc1ae546175308",
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1857_codex_nontryptic-transition-lineage/results/transition-inventory.json": "7a53fc76575e8720aac5ce42db51aab7562438f26c15a9ed3da36c7102411415"
+    }
+  },
+  "request_set_sha256": "8494047db665a871ffe301cd4df03e669c23b70cc53ad2dc00809b90fae22275"
+}

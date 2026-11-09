@@ -1,0 +1,186 @@
+{
+  "observed_at_utc": "2026-10-25T12:41:14.032409+00:00",
+  "processes": [
+    {
+      "pid": 57351,
+      "name": "python3.12",
+      "cwd": "/Users/iskander/code/varcode",
+      "created_at_utc": "2026-10-25T12:35:55.974652+00:00",
+      "module": null,
+      "has_pytest_argument": false,
+      "ancestry": [
+        {
+          "pid": 57296,
+          "name": "python3.12"
+        },
+        {
+          "pid": 8588,
+          "name": "codex"
+        },
+        {
+          "pid": 1482,
+          "name": "codex"
+        },
+        {
+          "pid": 1,
+          "name": "launchd"
+        },
+        {
+          "pid": 0,
+          "name": "kernel_task"
+        }
+      ]
+    },
+    {
+      "pid": 57350,
+      "name": "python3.12",
+      "cwd": "/Users/iskander/code/varcode",
+      "created_at_utc": "2026-10-25T12:35:55.908058+00:00",
+      "module": null,
+      "has_pytest_argument": false,
+      "ancestry": [
+        {
+          "pid": 57296,
+          "name": "python3.12"
+        },
+        {
+          "pid": 8588,
+          "name": "codex"
+        },
+        {
+          "pid": 1482,
+          "name": "codex"
+        },
+        {
+          "pid": 1,
+          "name": "launchd"
+        },
+        {
+          "pid": 0,
+          "name": "kernel_task"
+        }
+      ]
+    },
+    {
+      "pid": 63847,
+      "name": "python3.12",
+      "cwd": "/Users/iskander/code/oncoref",
+      "created_at_utc": "2026-10-25T12:40:27.802590+00:00",
+      "module": null,
+      "has_pytest_argument": false,
+      "ancestry": [
+        {
+          "pid": 8588,
+          "name": "codex"
+        },
+        {
+          "pid": 1482,
+          "name": "codex"
+        },
+        {
+          "pid": 1,
+          "name": "launchd"
+        },
+        {
+          "pid": 0,
+          "name": "kernel_task"
+        }
+      ]
+    },
+    {
+      "pid": 62678,
+      "name": "python3.12",
+      "cwd": "/Users/iskander/code/varcode",
+      "created_at_utc": "2026-10-25T12:39:50.109501+00:00",
+      "module": null,
+      "has_pytest_argument": false,
+      "ancestry": [
+        {
+          "pid": 62633,
+          "name": "python3.12"
+        },
+        {
+          "pid": 62632,
+          "name": "zsh"
+        },
+        {
+          "pid": 8588,
+          "name": "codex"
+        },
+        {
+          "pid": 1482,
+          "name": "codex"
+        },
+        {
+          "pid": 1,
+          "name": "launchd"
+        },
+        {
+          "pid": 0,
+          "name": "kernel_task"
+        }
+      ]
+    },
+    {
+      "pid": 62679,
+      "name": "python3.12",
+      "cwd": "/Users/iskander/code/varcode",
+      "created_at_utc": "2026-10-25T12:39:50.151451+00:00",
+      "module": null,
+      "has_pytest_argument": false,
+      "ancestry": [
+        {
+          "pid": 62633,
+          "name": "python3.12"
+        },
+        {
+          "pid": 62632,
+          "name": "zsh"
+        },
+        {
+          "pid": 8588,
+          "name": "codex"
+        },
+        {
+          "pid": 1482,
+          "name": "codex"
+        },
+        {
+          "pid": 1,
+          "name": "launchd"
+        },
+        {
+          "pid": 0,
+          "name": "kernel_task"
+        }
+      ]
+    },
+    {
+      "pid": 57296,
+      "name": "python3.12",
+      "cwd": "/Users/iskander/code/varcode",
+      "created_at_utc": "2026-10-25T12:35:50.311429+00:00",
+      "module": "pytest",
+      "has_pytest_argument": true,
+      "ancestry": [
+        {
+          "pid": 8588,
+          "name": "codex"
+        },
+        {
+          "pid": 1482,
+          "name": "codex"
+        },
+        {
+          "pid": 1,
+          "name": "launchd"
+        },
+        {
+          "pid": 0,
+          "name": "kernel_task"
+        }
+      ]
+    }
+  ],
+  "actions": "Read-only; no processes terminated."
+}

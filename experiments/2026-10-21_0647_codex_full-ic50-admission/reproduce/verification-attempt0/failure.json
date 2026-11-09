@@ -1,0 +1,7 @@
+{
+  "status": "failed",
+  "phase": "independent_analysis_setup",
+  "reason": "Unscoped text replacement bound raw in the unrelated catalog defaultdict before raw was defined; lint reported this, but the analysis command was still invoked.",
+  "impact": "No source preparation or model fitting reran; no independent replay result was produced.",
+  "correction": "Restore the single unrelated defaultdict lambda; require successful lint before executing corrected analysis."
+}

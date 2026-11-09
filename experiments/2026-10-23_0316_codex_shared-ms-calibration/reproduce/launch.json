@@ -1,0 +1,55 @@
+{
+  "registered_at": "2026-10-23T07:27:16.922415+00:00",
+  "agent_model": "Codex / GPT-6",
+  "stage": "shared source/protocol/query and prior-target conservation; no fit",
+  "presto_commit": "3f1ae1b6fb9de1f175fbfc99f14682793b4f4a88",
+  "presto_dirty": " M tasks/todo.md\n?? data/availability_recipes/\n?? experiments/2026-10-23_0316_codex_shared-ms-calibration/\n?? experiments/agents/codex/plans/full-ic50-fitting.md\n?? tasks/modular_model/trajectory-sampling-issue.md\n",
+  "hitlist_commit": "04f7369d64e6d099cc5b8ce5163e6825389e1c1c",
+  "hitlist_dirty": "",
+  "hitlist_root": "/private/tmp/hitlist-ms-calibration",
+  "reference_package": "/private/tmp/hitlist-v2-reference-200-final",
+  "reference_manifest_sha256": "d99f67e625c6c33a2054a56dea4f98fb8248ca5f717cc98af3662f228655fa6a",
+  "prior_mapp_package": "/private/tmp/hitlist-v2-mapp-202-canonical",
+  "prior_mapp_manifest_sha256": "83a21da963d7d938c68a9570d7b868e578107302ba466ac55df09c839309b693",
+  "output_package": "/private/tmp/hitlist-v2-calibration-203-canonical",
+  "source_roots": {
+    "pxd009092": "/private/tmp/hitlist-v2-mapp-202-canonical/external/pxd009092/assets",
+    "pxd004886": "/private/tmp/hitlist-pxd004886-assets"
+  },
+  "old_recipes": {
+    "mapp_captured_composition_v1": "/private/tmp/presto-modular-model/artifacts/2026-10-23_0149_codex_mapp-v2-integration/recipes/mapp_captured_composition_v1",
+    "mapp_captured_composition_min2_v1": "/private/tmp/presto-modular-model/artifacts/2026-10-23_0149_codex_mapp-v2-integration/recipes/mapp_captured_composition_min2_v1",
+    "mapp_complete_run_composition_v1": "/private/tmp/presto-modular-model/artifacts/2026-10-23_0149_codex_mapp-v2-integration/recipes/mapp_complete_run_composition_v1"
+  },
+  "recipe_outputs": "/private/tmp/presto-modular-model/artifacts/2026-10-23_0316_codex_shared-ms-calibration/recipes",
+  "environment": {
+    "PYTHONPATH": "/private/tmp/hitlist-ms-calibration",
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1"
+  },
+  "device": "local CPU only; no Modal",
+  "test_policy": "No new predictive split, training or prediction dump. Verify exact preservation of all original source facts and previously exposed partitions.",
+  "frozen_hitlist_sources": {
+    "hitlist/external_successor.py": "5288843f275510acbd921df6c148f1e762594daa95b3c18b6c748ba001716aa6",
+    "hitlist/external_evidence.py": "7454d10251d7b48da3522d4e4dbd5740f709be0168724ddbb9d9e5550d9e58a5",
+    "hitlist/evidence_snapshot.py": "2945129a0f48375e90082066ce8336ebfff2d55d2809d91f7cde751fb585e71c",
+    "hitlist/evidence_catalog.py": "5b527c7a6b5cbc84a3d3f4816758ecb7e6024c050abc0a57fd60882c9b84f577",
+    "hitlist/evidence_bindings.py": "52d356873ddb9aa4c12502dbbe0754f619456c2385382992fb07500d53438d0e",
+    "hitlist/evidence_store.py": "eded37376ea4315284009018a5ec834f5b861763d0e4e10c41365d1f9f6f0deb",
+    "hitlist/evidence_recipe.py": "4e8795b27ea739c7add7ecfd8cf2c66082d3a76914b77fc88684fe3fa82ffb27",
+    "hitlist/distribution_recipe.py": "428580c8b2c2eeac511c7f3016e95c1e21af5aa29cce74813c76f7871ee42d2d",
+    "hitlist/mapp_composition.py": "7f8cd1c9aa5a8019c3573cddbe8827ef0081c99cd1629e385d2054fde1061973",
+    "hitlist/mapp_evidence.py": "4c3f19bacf1a79cb49e2ee9d3e6c82c4fde96edbb932063462c43b185b7a342f",
+    "hitlist/sequence_reference_evidence.py": "e9e68fc59b5e3ef8685f169fa0e363c710b315b2c673d03d23c03162cd56cc04",
+    "hitlist/reference_evidence.py": "e0fcd7c96ed21183f41f810e5176dde1b2eb629201084e9a1423f67e14837dc7",
+    "hitlist/ms_calibration_evidence.py": "35d34fa30631084f69de94dc84a8f25b8650e5a7807c7b10045ff0b32befda27",
+    "hitlist/version.py": "fc610a11ae81623055df849991294047ceda08ce58f46d1a488d0b5cbe768898",
+    "hitlist/data/evidence_revisions/ms_calibration_assets.json": "99b24b0aebae0382e2bf1a2895739be0bbb715737ae77e256eeddac3a87540f2",
+    "hitlist/data/evidence_revisions/ms_calibration_contract.json": "5738070d90fd37589657e1ad831a268e1e20bb6788b0f5db7b8805707063bff3",
+    "hitlist/data/evidence_revisions/mapp_assets.json": "1bb665ba3f4fdf385f3bb6f93416ff1b44e67bf9d117f0d065a8e96499f283bb",
+    "hitlist/data/evidence_revisions/mapp_contract.json": "056688f5bef7dc3c2acfc1d9ff47485ef2d7597cd3634ef5bf4e6cb53e53cb8c"
+  },
+  "launcher_sha256": "ab69ae3a9d456ea49651d091d774a78be02fbbe7445a5c9ed6486e5081d0ea44",
+  "attempt": 2,
+  "prior_attempt": "attempts/attempt-1"
+}

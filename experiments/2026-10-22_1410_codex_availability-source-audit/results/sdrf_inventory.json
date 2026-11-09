@@ -1,0 +1,513 @@
+{
+  "annotated_raw_files": [
+    "BMDM_coculture_CD45neg_ac1-9_38_F1_20230712.raw",
+    "BMDM_coculture_CD45neg_ac1-9_38_F2_20230712.raw",
+    "BMDM_coculture_CD45neg_ac1-9_38_F3_20230712.raw",
+    "BMDM_coculture_CD45neg_ac1-9_38_F4_20230712.raw",
+    "BMDM_coculture_CD45neg_ac1-9_38_F5_20230712.raw",
+    "BMDM_coculture_CD45neg_ac1-9_38_F6_20230713.raw"
+  ],
+  "column_values": [
+    {
+      "column_index_1based": 1,
+      "name": "source name",
+      "values": {
+        "E38-GBM-CD45neg-cocult-TMT129C": 6,
+        "E38-GBM-CD45neg-cocult-TMT130C": 6,
+        "E38-GBM-CD45neg-cocult-TMT130N": 6,
+        "E38-GBM-CD45neg-cocult-TMT131C": 6,
+        "E38-GBM-CD45neg-cocult-TMT131N": 6,
+        "E38-GBM-CD45neg-cocult-TMT132C": 6,
+        "E38-GBM-CD45neg-cocult-TMT132N": 6,
+        "E38-GBM-CD45neg-cocult-TMT133C": 6,
+        "E38-GBM-CD45neg-cocult-TMT133N": 6,
+        "E38-GBM-CD45neg-cocult-TMT134C": 6,
+        "E38-GBM-CD45neg-cocult-TMT134N": 6,
+        "E38-GBM-CD45neg-cocult-TMT135N": 6
+      }
+    },
+    {
+      "column_index_1based": 2,
+      "name": "characteristics[organism]",
+      "values": {
+        "Mus musculus": 72
+      }
+    },
+    {
+      "column_index_1based": 3,
+      "name": "characteristics[organism part]",
+      "values": {
+        "brain": 72
+      }
+    },
+    {
+      "column_index_1based": 4,
+      "name": "characteristics[cell type]",
+      "values": {
+        "neoplastic cell": 72
+      }
+    },
+    {
+      "column_index_1based": 5,
+      "name": "characteristics[biological replicate]",
+      "values": {
+        "1": 6,
+        "10": 6,
+        "11": 6,
+        "12": 6,
+        "2": 6,
+        "3": 6,
+        "4": 6,
+        "5": 6,
+        "6": 6,
+        "7": 6,
+        "8": 6,
+        "9": 6
+      }
+    },
+    {
+      "column_index_1based": 6,
+      "name": "characteristics[pooled sample]",
+      "values": {
+        "not pooled": 72
+      }
+    },
+    {
+      "column_index_1based": 7,
+      "name": "characteristics[disease]",
+      "values": {
+        "glioblastoma": 72
+      }
+    },
+    {
+      "column_index_1based": 8,
+      "name": "characteristics[treatment]",
+      "values": {
+        "not available": 72
+      }
+    },
+    {
+      "column_index_1based": 9,
+      "name": "characteristics[enrichment process]",
+      "values": {
+        "magnetic affinity cell sorting": 72
+      }
+    },
+    {
+      "column_index_1based": 10,
+      "name": "characteristics[developmental stage]",
+      "values": {
+        "not applicable": 72
+      }
+    },
+    {
+      "column_index_1based": 11,
+      "name": "characteristics[strain or breed]",
+      "values": {
+        "C57BL/6": 72
+      }
+    },
+    {
+      "column_index_1based": 12,
+      "name": "characteristics[sex]",
+      "values": {
+        "not available": 72
+      }
+    },
+    {
+      "column_index_1based": 13,
+      "name": "characteristics[mhc protein complex]",
+      "values": {
+        "MHC class I protein complex": 72
+      }
+    },
+    {
+      "column_index_1based": 14,
+      "name": "characteristics[immunopeptidome enrichment method]",
+      "values": {
+        "immunoaffinity purification": 72
+      }
+    },
+    {
+      "column_index_1based": 15,
+      "name": "characteristics[mhc typing]",
+      "values": {
+        "H-2Kb;H-2Db": 72
+      }
+    },
+    {
+      "column_index_1based": 16,
+      "name": "characteristics[mhc typing method]",
+      "values": {
+        "not available": 72
+      }
+    },
+    {
+      "column_index_1based": 17,
+      "name": "characteristics[antibody enrichment]",
+      "values": {
+        "Y-3 and in-house anti-H2-Db": 72
+      }
+    },
+    {
+      "column_index_1based": 18,
+      "name": "assay name",
+      "values": {
+        "E38-GBM-CD45neg-cocult-F1-TMT129C": 1,
+        "E38-GBM-CD45neg-cocult-F1-TMT130C": 1,
+        "E38-GBM-CD45neg-cocult-F1-TMT130N": 1,
+        "E38-GBM-CD45neg-cocult-F1-TMT131C": 1,
+        "E38-GBM-CD45neg-cocult-F1-TMT131N": 1,
+        "E38-GBM-CD45neg-cocult-F1-TMT132C": 1,
+        "E38-GBM-CD45neg-cocult-F1-TMT132N": 1,
+        "E38-GBM-CD45neg-cocult-F1-TMT133C": 1,
+        "E38-GBM-CD45neg-cocult-F1-TMT133N": 1,
+        "E38-GBM-CD45neg-cocult-F1-TMT134C": 1,
+        "E38-GBM-CD45neg-cocult-F1-TMT134N": 1,
+        "E38-GBM-CD45neg-cocult-F1-TMT135N": 1,
+        "E38-GBM-CD45neg-cocult-F2-TMT129C": 1,
+        "E38-GBM-CD45neg-cocult-F2-TMT130C": 1,
+        "E38-GBM-CD45neg-cocult-F2-TMT130N": 1,
+        "E38-GBM-CD45neg-cocult-F2-TMT131C": 1,
+        "E38-GBM-CD45neg-cocult-F2-TMT131N": 1,
+        "E38-GBM-CD45neg-cocult-F2-TMT132C": 1,
+        "E38-GBM-CD45neg-cocult-F2-TMT132N": 1,
+        "E38-GBM-CD45neg-cocult-F2-TMT133C": 1,
+        "E38-GBM-CD45neg-cocult-F2-TMT133N": 1,
+        "E38-GBM-CD45neg-cocult-F2-TMT134C": 1,
+        "E38-GBM-CD45neg-cocult-F2-TMT134N": 1,
+        "E38-GBM-CD45neg-cocult-F2-TMT135N": 1,
+        "E38-GBM-CD45neg-cocult-F3-TMT129C": 1,
+        "E38-GBM-CD45neg-cocult-F3-TMT130C": 1,
+        "E38-GBM-CD45neg-cocult-F3-TMT130N": 1,
+        "E38-GBM-CD45neg-cocult-F3-TMT131C": 1,
+        "E38-GBM-CD45neg-cocult-F3-TMT131N": 1,
+        "E38-GBM-CD45neg-cocult-F3-TMT132C": 1,
+        "E38-GBM-CD45neg-cocult-F3-TMT132N": 1,
+        "E38-GBM-CD45neg-cocult-F3-TMT133C": 1,
+        "E38-GBM-CD45neg-cocult-F3-TMT133N": 1,
+        "E38-GBM-CD45neg-cocult-F3-TMT134C": 1,
+        "E38-GBM-CD45neg-cocult-F3-TMT134N": 1,
+        "E38-GBM-CD45neg-cocult-F3-TMT135N": 1,
+        "E38-GBM-CD45neg-cocult-F4-TMT129C": 1,
+        "E38-GBM-CD45neg-cocult-F4-TMT130C": 1,
+        "E38-GBM-CD45neg-cocult-F4-TMT130N": 1,
+        "E38-GBM-CD45neg-cocult-F4-TMT131C": 1,
+        "E38-GBM-CD45neg-cocult-F4-TMT131N": 1,
+        "E38-GBM-CD45neg-cocult-F4-TMT132C": 1,
+        "E38-GBM-CD45neg-cocult-F4-TMT132N": 1,
+        "E38-GBM-CD45neg-cocult-F4-TMT133C": 1,
+        "E38-GBM-CD45neg-cocult-F4-TMT133N": 1,
+        "E38-GBM-CD45neg-cocult-F4-TMT134C": 1,
+        "E38-GBM-CD45neg-cocult-F4-TMT134N": 1,
+        "E38-GBM-CD45neg-cocult-F4-TMT135N": 1,
+        "E38-GBM-CD45neg-cocult-F5-TMT129C": 1,
+        "E38-GBM-CD45neg-cocult-F5-TMT130C": 1,
+        "E38-GBM-CD45neg-cocult-F5-TMT130N": 1,
+        "E38-GBM-CD45neg-cocult-F5-TMT131C": 1,
+        "E38-GBM-CD45neg-cocult-F5-TMT131N": 1,
+        "E38-GBM-CD45neg-cocult-F5-TMT132C": 1,
+        "E38-GBM-CD45neg-cocult-F5-TMT132N": 1,
+        "E38-GBM-CD45neg-cocult-F5-TMT133C": 1,
+        "E38-GBM-CD45neg-cocult-F5-TMT133N": 1,
+        "E38-GBM-CD45neg-cocult-F5-TMT134C": 1,
+        "E38-GBM-CD45neg-cocult-F5-TMT134N": 1,
+        "E38-GBM-CD45neg-cocult-F5-TMT135N": 1,
+        "E38-GBM-CD45neg-cocult-F6-TMT129C": 1,
+        "E38-GBM-CD45neg-cocult-F6-TMT130C": 1,
+        "E38-GBM-CD45neg-cocult-F6-TMT130N": 1,
+        "E38-GBM-CD45neg-cocult-F6-TMT131C": 1,
+        "E38-GBM-CD45neg-cocult-F6-TMT131N": 1,
+        "E38-GBM-CD45neg-cocult-F6-TMT132C": 1,
+        "E38-GBM-CD45neg-cocult-F6-TMT132N": 1,
+        "E38-GBM-CD45neg-cocult-F6-TMT133C": 1,
+        "E38-GBM-CD45neg-cocult-F6-TMT133N": 1,
+        "E38-GBM-CD45neg-cocult-F6-TMT134C": 1,
+        "E38-GBM-CD45neg-cocult-F6-TMT134N": 1,
+        "E38-GBM-CD45neg-cocult-F6-TMT135N": 1
+      }
+    },
+    {
+      "column_index_1based": 19,
+      "name": "technology type",
+      "values": {
+        "proteomic profiling by mass spectrometry": 72
+      }
+    },
+    {
+      "column_index_1based": 20,
+      "name": "comment[technical replicate]",
+      "values": {
+        "1": 72
+      }
+    },
+    {
+      "column_index_1based": 21,
+      "name": "comment[data file]",
+      "values": {
+        "BMDM_coculture_CD45neg_ac1-9_38_F1_20230712.raw": 12,
+        "BMDM_coculture_CD45neg_ac1-9_38_F2_20230712.raw": 12,
+        "BMDM_coculture_CD45neg_ac1-9_38_F3_20230712.raw": 12,
+        "BMDM_coculture_CD45neg_ac1-9_38_F4_20230712.raw": 12,
+        "BMDM_coculture_CD45neg_ac1-9_38_F5_20230712.raw": 12,
+        "BMDM_coculture_CD45neg_ac1-9_38_F6_20230713.raw": 12
+      }
+    },
+    {
+      "column_index_1based": 22,
+      "name": "comment[sdrf version]",
+      "values": {
+        "v1.1.0": 72
+      }
+    },
+    {
+      "column_index_1based": 23,
+      "name": "comment[proteomics data acquisition method]",
+      "values": {
+        "NT=Data-dependent acquisition;AC=PRIDE:0000627": 72
+      }
+    },
+    {
+      "column_index_1based": 24,
+      "name": "comment[instrument]",
+      "values": {
+        "NT=Orbitrap Exploris 480;AC=MS:1003028": 72
+      }
+    },
+    {
+      "column_index_1based": 25,
+      "name": "comment[cleavage agent details]",
+      "values": {
+        "NT=unspecific cleavage;AC=MS:1001956": 72
+      }
+    },
+    {
+      "column_index_1based": 26,
+      "name": "comment[label]",
+      "values": {
+        "TMT129C": 6,
+        "TMT130C": 6,
+        "TMT130N": 6,
+        "TMT131C": 6,
+        "TMT131N": 6,
+        "TMT132C": 6,
+        "TMT132N": 6,
+        "TMT133C": 6,
+        "TMT133N": 6,
+        "TMT134C": 6,
+        "TMT134N": 6,
+        "TMT135N": 6
+      }
+    },
+    {
+      "column_index_1based": 27,
+      "name": "comment[fraction identifier]",
+      "values": {
+        "1": 12,
+        "2": 12,
+        "3": 12,
+        "4": 12,
+        "5": 12,
+        "6": 12
+      }
+    },
+    {
+      "column_index_1based": 28,
+      "name": "comment[dissociation method]",
+      "values": {
+        "NT=HCD;AC=MS:1000422": 72
+      }
+    },
+    {
+      "column_index_1based": 29,
+      "name": "comment[fractionation method]",
+      "values": {
+        "NT=High-performance liquid chromatography;AC=PRIDE:0000565": 72
+      }
+    },
+    {
+      "column_index_1based": 30,
+      "name": "comment[collision energy]",
+      "values": {
+        "33 NCE": 72
+      }
+    },
+    {
+      "column_index_1based": 31,
+      "name": "comment[precursor mass tolerance]",
+      "values": {
+        "not available": 72
+      }
+    },
+    {
+      "column_index_1based": 32,
+      "name": "comment[fragment mass tolerance]",
+      "values": {
+        "not available": 72
+      }
+    },
+    {
+      "column_index_1based": 33,
+      "name": "comment[reduction reagent]",
+      "values": {
+        "not applicable": 72
+      }
+    },
+    {
+      "column_index_1based": 34,
+      "name": "comment[alkylation reagent]",
+      "values": {
+        "not applicable": 72
+      }
+    },
+    {
+      "column_index_1based": 35,
+      "name": "comment[ms2 mass analyzer]",
+      "values": {
+        "NT=orbitrap;AC=MS:1000484": 72
+      }
+    },
+    {
+      "column_index_1based": 36,
+      "name": "comment[sample preparation batch]",
+      "values": {
+        "38": 72
+      }
+    },
+    {
+      "column_index_1based": 37,
+      "name": "comment[acquisition date]",
+      "values": {
+        "2023-07-12": 36,
+        "2023-07-13": 36
+      }
+    },
+    {
+      "column_index_1based": 38,
+      "name": "comment[sdrf template]",
+      "values": {
+        "NT=ms-proteomics;VV=v1.1.0": 72
+      }
+    },
+    {
+      "column_index_1based": 39,
+      "name": "comment[sdrf template]",
+      "values": {
+        "NT=vertebrates;VV=v1.1.0": 72
+      }
+    },
+    {
+      "column_index_1based": 40,
+      "name": "comment[sdrf template]",
+      "values": {
+        "NT=immunopeptidomics;VV=v1.0.0": 72
+      }
+    },
+    {
+      "column_index_1based": 41,
+      "name": "comment[modification parameters]",
+      "values": {
+        "NT=TMTpro;AC=UNIMOD:2016;MT=Fixed;PP=Any N-term": 72
+      }
+    },
+    {
+      "column_index_1based": 42,
+      "name": "comment[modification parameters]",
+      "values": {
+        "NT=TMTpro;AC=UNIMOD:2016;MT=Fixed;TA=K": 72
+      }
+    },
+    {
+      "column_index_1based": 43,
+      "name": "comment[modification parameters]",
+      "values": {
+        "NT=Carbamidomethyl;AC=UNIMOD:4;MT=Fixed;TA=C": 72
+      }
+    },
+    {
+      "column_index_1based": 44,
+      "name": "comment[modification parameters]",
+      "values": {
+        "NT=Oxidation;AC=UNIMOD:35;MT=Variable;TA=M": 72
+      }
+    },
+    {
+      "column_index_1based": 45,
+      "name": "factor value[source name]",
+      "values": {
+        "E38-GBM-CD45neg-cocult-TMT129C": 6,
+        "E38-GBM-CD45neg-cocult-TMT130C": 6,
+        "E38-GBM-CD45neg-cocult-TMT130N": 6,
+        "E38-GBM-CD45neg-cocult-TMT131C": 6,
+        "E38-GBM-CD45neg-cocult-TMT131N": 6,
+        "E38-GBM-CD45neg-cocult-TMT132C": 6,
+        "E38-GBM-CD45neg-cocult-TMT132N": 6,
+        "E38-GBM-CD45neg-cocult-TMT133C": 6,
+        "E38-GBM-CD45neg-cocult-TMT133N": 6,
+        "E38-GBM-CD45neg-cocult-TMT134C": 6,
+        "E38-GBM-CD45neg-cocult-TMT134N": 6,
+        "E38-GBM-CD45neg-cocult-TMT135N": 6
+      }
+    }
+  ],
+  "columns": 45,
+  "deposit_file_categories": {
+    "EXPERIMENTAL DESIGN": 1,
+    "PEAK": 7,
+    "RAW": 50,
+    "RESULT": 7
+  },
+  "distinct_source_names": 12,
+  "duplicate_column_names": {
+    "comment[modification parameters]": 4,
+    "comment[sdrf template]": 3
+  },
+  "full_sdrf_validator_run": false,
+  "rows": 72,
+  "unannotated_raw_files": [
+    "BMDM_KOline_coculture_CD45pos_ac1-9_40_F1_20230723.raw",
+    "BMDM_KOline_coculture_CD45pos_ac1-9_40_F2_20230723.raw",
+    "BMDM_KOline_coculture_CD45pos_ac1-9_40_F3_20230723.raw",
+    "BMDM_KOline_coculture_CD45pos_ac1-9_40_F4_20230723.raw",
+    "BMDM_KOline_coculture_CD45pos_ac1-9_40_F5_20230723.raw",
+    "BMDM_KOline_coculture_CD45pos_ac1-9_40_F6_20230723.raw",
+    "BMDM_M1_ac1-9_44_F1_20230909.raw",
+    "BMDM_M1_ac1-9_44_F2_20230909.raw",
+    "BMDM_M1_ac1-9_44_F3_20230909.raw",
+    "BMDM_M1_ac1-9_44_F4_20230909.raw",
+    "BMDM_M1_ac1-9_44_F5_20230909.raw",
+    "BMDM_M1_ac1-9_44_F6_20230909.raw",
+    "BMDM_M2_ac1-9_44_F1_20230908.raw",
+    "BMDM_M2_ac1-9_44_F2_20230908.raw",
+    "BMDM_M2_ac1-9_44_F3_20230908.raw",
+    "BMDM_M2_ac1-9_44_F4_20230908.raw",
+    "BMDM_M2_ac1-9_44_F5_20230908.raw",
+    "BMDM_M2_ac1-9_44_F6_20230908.raw",
+    "BMDM_coculture_CD45neg_global_ac1-9_41_F10_20230829.raw",
+    "BMDM_coculture_CD45neg_global_ac1-9_41_F1_20230828.raw",
+    "BMDM_coculture_CD45neg_global_ac1-9_41_F2_20230828.raw",
+    "BMDM_coculture_CD45neg_global_ac1-9_41_F3_20230829.raw",
+    "BMDM_coculture_CD45neg_global_ac1-9_41_F4_20230829.raw",
+    "BMDM_coculture_CD45neg_global_ac1-9_41_F5_20230829.raw",
+    "BMDM_coculture_CD45neg_global_ac1-9_41_F6_20230829.raw",
+    "BMDM_coculture_CD45neg_global_ac1-9_41_F7_20230829.raw",
+    "BMDM_coculture_CD45neg_global_ac1-9_41_F8_20230829.raw",
+    "BMDM_coculture_CD45neg_global_ac1-9_41_F9_20230829.raw",
+    "BMDM_coculture_CD45pos_GP_ac1-9_41_F10_20230727.raw",
+    "BMDM_coculture_CD45pos_GP_ac1-9_41_F1_20230726.raw",
+    "BMDM_coculture_CD45pos_GP_ac1-9_41_F2_20230726.raw",
+    "BMDM_coculture_CD45pos_GP_ac1-9_41_F3_20230726.raw",
+    "BMDM_coculture_CD45pos_GP_ac1-9_41_F4_20230726.raw",
+    "BMDM_coculture_CD45pos_GP_ac1-9_41_F5_20230726.raw",
+    "BMDM_coculture_CD45pos_GP_ac1-9_41_F6_20230727.raw",
+    "BMDM_coculture_CD45pos_GP_ac1-9_41_F7_20230727_20230726224150.raw",
+    "BMDM_coculture_CD45pos_GP_ac1-9_41_F8_20230727.raw",
+    "BMDM_coculture_CD45pos_GP_ac1-9_41_F9_20230727.raw",
+    "BMDM_coculture_CD45pos_ac1-9_37_F1_20230710.raw",
+    "BMDM_coculture_CD45pos_ac1-9_37_F2_20230710.raw",
+    "BMDM_coculture_CD45pos_ac1-9_37_F3_20230710.raw",
+    "BMDM_coculture_CD45pos_ac1-9_37_F4_20230710.raw",
+    "BMDM_coculture_CD45pos_ac1-9_37_F5_20230710.raw",
+    "BMDM_coculture_CD45pos_ac1-9_37_F6_20230710.raw"
+  ]
+}

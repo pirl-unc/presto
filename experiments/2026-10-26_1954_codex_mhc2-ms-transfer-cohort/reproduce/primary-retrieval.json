@@ -1,0 +1,46 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "utc": "2026-10-26T20:00:57.138315+00:00",
+  "argv": [
+    "experiments/2026-10-26_1954_codex_mhc2-ms-transfer-cohort/code/retrieve_primary.py"
+  ],
+  "git_commit": "aa5eb5ed41e2916b8f94c9e4a30e9d069bf3a5fc",
+  "dirty_status": " M tasks/todo.md\n?? experiments/2026-10-26_1954_codex_mhc2-ms-transfer-cohort/\n?? experiments/agents/codex/plans/2026-10-26_mhc2-ms-transfer-cohort.md\n",
+  "script_sha256": "7ace7dbe7bafdbbf8b0ca560276396809063d36c21185094d55eefe630cce4df",
+  "prior_network_operations": 19,
+  "max_network_operations": 24,
+  "requests": [
+    {
+      "pmid": "33858848",
+      "pmc": "PMC8054196",
+      "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8054196/fullTextXML",
+      "status": "failed",
+      "error": "URLError(gaierror(8, 'nodename nor servname provided, or not known'))",
+      "elapsed_seconds": 0.031459625002753455
+    },
+    {
+      "pmid": "25502872",
+      "pmc": "PMC4297300",
+      "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4297300/fullTextXML",
+      "status": "failed",
+      "error": "URLError(gaierror(8, 'nodename nor servname provided, or not known'))",
+      "elapsed_seconds": 0.0012436249999154825
+    },
+    {
+      "pmid": "30573663",
+      "pmc": "PMC6398211",
+      "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6398211/fullTextXML",
+      "status": "failed",
+      "error": "URLError(gaierror(8, 'nodename nor servname provided, or not known'))",
+      "elapsed_seconds": 0.0007786659989506006
+    },
+    {
+      "pmid": "33592498",
+      "pmc": "PMC8724627",
+      "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8724627/fullTextXML",
+      "status": "failed",
+      "error": "URLError(gaierror(8, 'nodename nor servname provided, or not known'))",
+      "elapsed_seconds": 0.0009463749993301462
+    }
+  ]
+}

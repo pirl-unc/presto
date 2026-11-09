@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "n_synthetic_rows": 60,
+  "selected_alpha": 0.01,
+  "identifiable_context_rmse": 0.009900990099008855,
+  "checks": [
+    "149 features and no extra biochemical grouping",
+    "overlapping occurrence averaging",
+    "unknown and terminal tokens",
+    "reference reversal",
+    "actual ridge fitting and inner selection learn known context signal",
+    "zero-RMS removal",
+    "duplicated weight invariance",
+    "held-out-row rejection",
+    "constant correlation",
+    "component bootstrap",
+    "both decision branches"
+  ],
+  "synthetic_rows_used_for_biological_training": false
+}

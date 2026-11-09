@@ -1,0 +1,222 @@
+{
+  "schema": "presto.modular.manifest.v1",
+  "model": {
+    "endpoints": [
+      "ic50",
+      "kd",
+      "ec50",
+      "kd_via_ic50",
+      "kd_via_ec50",
+      "half_life"
+    ],
+    "mhc_classes": [
+      "I",
+      "II"
+    ],
+    "species": [
+      "human"
+    ],
+    "identity_tasks": [],
+    "dropout": 0.1,
+    "d_model": 192,
+    "n_layers": 3,
+    "n_heads": 6,
+    "d_ff": 768
+  },
+  "training": {
+    "seed": 43,
+    "batch_size": 64,
+    "max_steps": 6000,
+    "max_epochs": 10000,
+    "min_epochs": 10000,
+    "patience": 10000,
+    "identity_weight": 0,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "checkpoint_every_steps": 100,
+    "validation_every_steps": 500,
+    "selection_endpoint": "ic50",
+    "balance_by": [
+      "mhc_class"
+    ],
+    "stratum_weights": []
+  },
+  "sources": [
+    {
+      "path": "/input/data/ic50-train-measured-hitlist-v4-iedb.jsonl",
+      "sha256": "5a713d1c23bead1fabbf7779646a04354afd7f91025d725fbb1047e36a69f1f1",
+      "source": "hitlist-v4-iedb",
+      "population": "new component split of earlier purified human six-output TRAIN rows",
+      "label_policy": "original physical quantitative measurements and bounds; no clipping; training-only endpoint scales",
+      "split_policy": "2026-10-28-assay-transfer-mechanisms-v1"
+    },
+    {
+      "path": "/input/data/kd-train-measured-hitlist-v4-iedb.jsonl",
+      "sha256": "74db786e0852062c6f877956c83a28b7371d30b4e641074f4181bb9c63eab275",
+      "source": "hitlist-v4-iedb",
+      "population": "new component split of earlier purified human six-output TRAIN rows",
+      "label_policy": "original physical quantitative measurements and bounds; no clipping; training-only endpoint scales",
+      "split_policy": "2026-10-28-assay-transfer-mechanisms-v1"
+    },
+    {
+      "path": "/input/data/ec50-train-measured-hitlist-v4-cedar.jsonl",
+      "sha256": "3feb89edc04fbeeaa5ee63726de227cda3ecdf90cc266834513e029df58dc3ce",
+      "source": "hitlist-v4-cedar",
+      "population": "new component split of earlier purified human six-output TRAIN rows",
+      "label_policy": "original physical quantitative measurements and bounds; no clipping; training-only endpoint scales",
+      "split_policy": "2026-10-28-assay-transfer-mechanisms-v1"
+    },
+    {
+      "path": "/input/data/ec50-train-measured-hitlist-v4-iedb.jsonl",
+      "sha256": "2ed13597d5904a2d1f1de1d3a81261122ee404cba2c491478334e57e757a03f6",
+      "source": "hitlist-v4-iedb",
+      "population": "new component split of earlier purified human six-output TRAIN rows",
+      "label_policy": "original physical quantitative measurements and bounds; no clipping; training-only endpoint scales",
+      "split_policy": "2026-10-28-assay-transfer-mechanisms-v1"
+    },
+    {
+      "path": "/input/data/kd_via_ic50-train-measured-hitlist-v4-iedb.jsonl",
+      "sha256": "09e189957b3c691b272d15f73a86dbb82cc7d5c101aeb2b9b3f092e04d2ec4f4",
+      "source": "hitlist-v4-iedb",
+      "population": "new component split of earlier purified human six-output TRAIN rows",
+      "label_policy": "original physical quantitative measurements and bounds; no clipping; training-only endpoint scales",
+      "split_policy": "2026-10-28-assay-transfer-mechanisms-v1"
+    },
+    {
+      "path": "/input/data/kd_via_ec50-train-measured-hitlist-v4-iedb.jsonl",
+      "sha256": "86394c146d95b6441f6ec69ad1ae110046602e52429c807750cb77508963321e",
+      "source": "hitlist-v4-iedb",
+      "population": "new component split of earlier purified human six-output TRAIN rows",
+      "label_policy": "original physical quantitative measurements and bounds; no clipping; training-only endpoint scales",
+      "split_policy": "2026-10-28-assay-transfer-mechanisms-v1"
+    },
+    {
+      "path": "/input/data/half_life-train-measured-hitlist-v4-cedar.jsonl",
+      "sha256": "341155790753c54338eed7c40774862450f5cbef2b2e7891a5b68bd865c54171",
+      "source": "hitlist-v4-cedar",
+      "population": "new component split of earlier purified human six-output TRAIN rows",
+      "label_policy": "original physical quantitative measurements and bounds; no clipping; training-only endpoint scales",
+      "split_policy": "2026-10-28-assay-transfer-mechanisms-v1"
+    },
+    {
+      "path": "/input/data/half_life-train-measured-hitlist-v4-iedb.jsonl",
+      "sha256": "7a75370abf426cb0f065c261a4cc2a683b4cb15491ad2b77a3f47ba17d0a4720",
+      "source": "hitlist-v4-iedb",
+      "population": "new component split of earlier purified human six-output TRAIN rows",
+      "label_policy": "original physical quantitative measurements and bounds; no clipping; training-only endpoint scales",
+      "split_policy": "2026-10-28-assay-transfer-mechanisms-v1"
+    },
+    {
+      "path": "/input/data/ic50-validation-measured-hitlist-v4-iedb.jsonl",
+      "sha256": "088ea77cc2f5c5e0bd752089a02ea9e78262669e070b3b8a782b1af108e651f1",
+      "source": "hitlist-v4-iedb",
+      "population": "new component split of earlier purified human six-output TRAIN rows",
+      "label_policy": "original physical quantitative measurements and bounds; no clipping; training-only endpoint scales",
+      "split_policy": "2026-10-28-assay-transfer-mechanisms-v1"
+    },
+    {
+      "path": "/input/data/kd-validation-measured-hitlist-v4-iedb.jsonl",
+      "sha256": "d83b7ef21c656fc134736a08a591fbc95a4450533e3ddcc16844332c2ec1d339",
+      "source": "hitlist-v4-iedb",
+      "population": "new component split of earlier purified human six-output TRAIN rows",
+      "label_policy": "original physical quantitative measurements and bounds; no clipping; training-only endpoint scales",
+      "split_policy": "2026-10-28-assay-transfer-mechanisms-v1"
+    },
+    {
+      "path": "/input/data/ec50-validation-measured-hitlist-v4-cedar.jsonl",
+      "sha256": "7fd74a96d4a207ccfa23dea8986c785b272ce18520c4889981e59646de921450",
+      "source": "hitlist-v4-cedar",
+      "population": "new component split of earlier purified human six-output TRAIN rows",
+      "label_policy": "original physical quantitative measurements and bounds; no clipping; training-only endpoint scales",
+      "split_policy": "2026-10-28-assay-transfer-mechanisms-v1"
+    },
+    {
+      "path": "/input/data/ec50-validation-measured-hitlist-v4-iedb.jsonl",
+      "sha256": "3050cfd9498aef8b06be95fa4eaf262c52c63d6f4d82448b024e078776d2c5a5",
+      "source": "hitlist-v4-iedb",
+      "population": "new component split of earlier purified human six-output TRAIN rows",
+      "label_policy": "original physical quantitative measurements and bounds; no clipping; training-only endpoint scales",
+      "split_policy": "2026-10-28-assay-transfer-mechanisms-v1"
+    },
+    {
+      "path": "/input/data/kd_via_ic50-validation-measured-hitlist-v4-iedb.jsonl",
+      "sha256": "49e98b39cb0bbbf8744226325c1352fc14b83dee2b0eb2126a04ba00436f1ca7",
+      "source": "hitlist-v4-iedb",
+      "population": "new component split of earlier purified human six-output TRAIN rows",
+      "label_policy": "original physical quantitative measurements and bounds; no clipping; training-only endpoint scales",
+      "split_policy": "2026-10-28-assay-transfer-mechanisms-v1"
+    },
+    {
+      "path": "/input/data/kd_via_ec50-validation-measured-hitlist-v4-iedb.jsonl",
+      "sha256": "945112c081922b5bfcbc64d30edd716b325cd0e2c94fef8cfa1b21762e72f34d",
+      "source": "hitlist-v4-iedb",
+      "population": "new component split of earlier purified human six-output TRAIN rows",
+      "label_policy": "original physical quantitative measurements and bounds; no clipping; training-only endpoint scales",
+      "split_policy": "2026-10-28-assay-transfer-mechanisms-v1"
+    },
+    {
+      "path": "/input/data/half_life-validation-measured-hitlist-v4-cedar.jsonl",
+      "sha256": "2e5232bc7751d9793193b50c03e39bd7ee25ea19ebf5a2634d73e9b7ff533ef9",
+      "source": "hitlist-v4-cedar",
+      "population": "new component split of earlier purified human six-output TRAIN rows",
+      "label_policy": "original physical quantitative measurements and bounds; no clipping; training-only endpoint scales",
+      "split_policy": "2026-10-28-assay-transfer-mechanisms-v1"
+    },
+    {
+      "path": "/input/data/half_life-validation-measured-hitlist-v4-iedb.jsonl",
+      "sha256": "67f261c6dc2597327458deff6b127bc6c5654ec8a6a032fe0be7aed98a0f4f1d",
+      "source": "hitlist-v4-iedb",
+      "population": "new component split of earlier purified human six-output TRAIN rows",
+      "label_policy": "original physical quantitative measurements and bounds; no clipping; training-only endpoint scales",
+      "split_policy": "2026-10-28-assay-transfer-mechanisms-v1"
+    },
+    {
+      "path": "/input/data/ic50-test-measured-hitlist-v4-iedb.jsonl",
+      "sha256": "9623e4a24733f83c186f3ec9495428124279fbca4af64dac1f4cbbb442842675",
+      "source": "hitlist-v4-iedb",
+      "population": "new component split of earlier purified human six-output TRAIN rows",
+      "label_policy": "original physical quantitative measurements and bounds; no clipping; training-only endpoint scales",
+      "split_policy": "2026-10-28-assay-transfer-mechanisms-v1"
+    },
+    {
+      "path": "/input/data/kd-test-measured-hitlist-v4-iedb.jsonl",
+      "sha256": "33517dbdaa4067e0cda85ccf876b6fa52a20dd93f9f7d6e7887ac8dca8aa2f58",
+      "source": "hitlist-v4-iedb",
+      "population": "new component split of earlier purified human six-output TRAIN rows",
+      "label_policy": "original physical quantitative measurements and bounds; no clipping; training-only endpoint scales",
+      "split_policy": "2026-10-28-assay-transfer-mechanisms-v1"
+    },
+    {
+      "path": "/input/data/ec50-test-measured-hitlist-v4-iedb.jsonl",
+      "sha256": "3d53f1a44665f546b38dc54c2d31506c3e71aaddd33656247a9d946bd8c8134b",
+      "source": "hitlist-v4-iedb",
+      "population": "new component split of earlier purified human six-output TRAIN rows",
+      "label_policy": "original physical quantitative measurements and bounds; no clipping; training-only endpoint scales",
+      "split_policy": "2026-10-28-assay-transfer-mechanisms-v1"
+    },
+    {
+      "path": "/input/data/kd_via_ic50-test-measured-hitlist-v4-iedb.jsonl",
+      "sha256": "84479395b46b2aae46d764dba193d50634dd68287e006c4df2b8ca59d13d9fe4",
+      "source": "hitlist-v4-iedb",
+      "population": "new component split of earlier purified human six-output TRAIN rows",
+      "label_policy": "original physical quantitative measurements and bounds; no clipping; training-only endpoint scales",
+      "split_policy": "2026-10-28-assay-transfer-mechanisms-v1"
+    },
+    {
+      "path": "/input/data/kd_via_ec50-test-measured-hitlist-v4-iedb.jsonl",
+      "sha256": "7f8343957c12946fd6dec00d426458a43c435f18b022a3c494c10a2a0313c1a9",
+      "source": "hitlist-v4-iedb",
+      "population": "new component split of earlier purified human six-output TRAIN rows",
+      "label_policy": "original physical quantitative measurements and bounds; no clipping; training-only endpoint scales",
+      "split_policy": "2026-10-28-assay-transfer-mechanisms-v1"
+    },
+    {
+      "path": "/input/data/half_life-test-measured-hitlist-v4-iedb.jsonl",
+      "sha256": "bd2342575f5e3832c0c0267ea2956e7c5e99ef3b68f785fc2d60fd94278b89ae",
+      "source": "hitlist-v4-iedb",
+      "population": "new component split of earlier purified human six-output TRAIN rows",
+      "label_policy": "original physical quantitative measurements and bounds; no clipping; training-only endpoint scales",
+      "split_policy": "2026-10-28-assay-transfer-mechanisms-v1"
+    }
+  ]
+}

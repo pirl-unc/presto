@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/private/tmp/presto-modular-model/experiments/2026-10-24_0259_codex_native-response-admission/analysis/verify.py", line 420, in <module>
+    main()
+  File "/private/tmp/presto-modular-model/experiments/2026-10-24_0259_codex_native-response-admission/analysis/verify.py", line 183, in main
+    save()
+  File "/private/tmp/presto-modular-model/experiments/2026-10-24_0259_codex_native-response-admission/analysis/verify.py", line 178, in save
+    assert accession not in proteins and " OX=9606 " in header
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

@@ -1,0 +1,54 @@
+{
+  "status": "pass",
+  "method": "original OOXML versus openpyxl, every nonempty value",
+  "sheets": [
+    {
+      "workbook": "project-download.xlsx",
+      "sheet": "Sheet1",
+      "sha256": "c777722f9a6bbfa9f39a8525821e7c621ad1e55d920dde81edc66574cef261cc",
+      "n_nonempty_values": 2529,
+      "raw_cell_types": {
+        "s": 2378,
+        "n": 151,
+        "empty_payload": 55
+      }
+    },
+    {
+      "workbook": "sample-download.xlsx",
+      "sheet": "Sheet1",
+      "sha256": "739fd96bf13f90988cc00548b0250d640a0f97bbf25ecb737b7d89fc165b1f39",
+      "n_nonempty_values": 58194,
+      "raw_cell_types": {
+        "s": 58194,
+        "empty_payload": 5694
+      }
+    },
+    {
+      "workbook": "datasets-download.xlsx",
+      "sheet": "Pairwise datasets",
+      "sha256": "a06849f77df39c424580ffbd2a3f20fd462fee8d57dc4b5ee6850b2a31d0b327",
+      "n_nonempty_values": 2923,
+      "raw_cell_types": {
+        "s": 2425,
+        "empty_payload": 89,
+        "n": 498
+      }
+    },
+    {
+      "workbook": "datasets-download.xlsx",
+      "sheet": "Context-specific datasets",
+      "sha256": "a06849f77df39c424580ffbd2a3f20fd462fee8d57dc4b5ee6850b2a31d0b327",
+      "n_nonempty_values": 115,
+      "raw_cell_types": {
+        "s": 101,
+        "n": 14,
+        "empty_payload": 5
+      }
+    }
+  ],
+  "n_nonempty_values": 63761,
+  "n_formula_cells": 0,
+  "training_observations": 0,
+  "elapsed_seconds": 0.5585115000139922,
+  "peak_rss_bytes": 94470144
+}

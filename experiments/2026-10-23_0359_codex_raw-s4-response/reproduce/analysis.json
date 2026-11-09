@@ -1,0 +1,11 @@
+{
+  "commands": [
+    "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 /Users/iskander/code/shared-virtual-env/bin/python /private/tmp/presto-modular-model/experiments/2026-10-23_0359_codex_raw-s4-response/analysis/plot.py",
+    "/Users/iskander/code/shared-virtual-env/bin/python /private/tmp/presto-modular-model/experiments/2026-10-23_0359_codex_raw-s4-response/analysis/coefficients.py"
+  ],
+  "source_hashes": {
+    "plot.py": "7b7a1b0c11a4a3e57aa29d07c0854390e4124958d5d1664314cce1a5afefa5b5",
+    "coefficients.py": "72902828478d6e3ae9cf848528795f35f62491f760db720185936962c75ec9f6"
+  },
+  "plot_check": "PNG visually inspected; axes/labels/data visible. PDF also generated. Matplotlib used its automatic writable temporary font cache; no user-home changes."
+}

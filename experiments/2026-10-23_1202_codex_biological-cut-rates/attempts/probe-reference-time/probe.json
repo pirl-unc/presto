@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_1202_codex_biological-cut-rates/code/probe.py"
+  ],
+  "sha256": "807dc763d1ae83ec535acdb6c92f9fd7bf5cde51121dcd9fffedcb83b337125c",
+  "sample_counts": [
+    32,
+    128,
+    512
+  ],
+  "estimates": 32,
+  "seed": 20261023,
+  "objective": "Exact loss/residual/probabilities; unbiased complete-partition score gradient with LOO baseline; conditional integration reference",
+  "no_iterative_sampled_fit": true
+}

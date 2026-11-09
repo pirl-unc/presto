@@ -1,0 +1,79 @@
+{
+  "publisher_peptide_rows": 6311,
+  "publisher_unique_sequences": 6311,
+  "publisher_sequences_in_deposit": 6311,
+  "publisher_sequences_absent_from_deposit": [],
+  "publisher_reverse_rows": 0,
+  "publisher_contaminant_rows": 0,
+  "columns": [
+    {
+      "column": "C",
+      "header": "Median  IntensityUT",
+      "encoding": "log10",
+      "counts": {
+        "rows": 6311,
+        "numeric": 4983,
+        "missing": 1328
+      }
+    },
+    {
+      "column": "D",
+      "header": "Median IntensityTNF+IFN",
+      "encoding": "log10",
+      "counts": {
+        "rows": 6311,
+        "numeric": 5311,
+        "missing": 1000
+      }
+    },
+    {
+      "column": "E",
+      "header": "Median  IntensityUT",
+      "encoding": "linear",
+      "counts": {
+        "rows": 6311,
+        "numeric": 6311
+      }
+    },
+    {
+      "column": "F",
+      "header": "Median IntensityTNF+IFN",
+      "encoding": "linear",
+      "counts": {
+        "rows": 6311,
+        "numeric": 6311
+      }
+    }
+  ],
+  "publisher_protein_summary_rows": 131,
+  "publisher_protein_headers": [
+    [
+      "Supplementary Data S3 - Proteins which increased in MAPP intensity by 2-fold or more and didn't decrease (by 2-fold) in Standard Proteomics.",
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      "Gene Name",
+      "Proteomics Protein Intensity- T+I",
+      "Proteomics Protein Intensity -UT",
+      "MAPP Protein Intensity- T+I",
+      "MAPP Protein Intensity- UT"
+    ]
+  ],
+  "best_background_rule_by_cell_match": {
+    "rule": "run_over_beads_median",
+    "cells": 160095,
+    "matching_cells": 160095,
+    "mismatching_cells": 0,
+    "reported_zero_predicted_positive": 0,
+    "reported_positive_predicted_zero": 0,
+    "positive_numerator_exact_boundary": 0
+  },
+  "background_rule_complete_matches": [
+    "run_over_beads_median"
+  ],
+  "all_training_admission": "pending; no source filters or specimen joins inferred from best approximate matches",
+  "seconds": 57.791189833020326
+}

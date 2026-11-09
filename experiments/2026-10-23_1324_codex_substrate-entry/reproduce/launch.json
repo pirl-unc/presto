@@ -1,0 +1,43 @@
+{
+  "registered_at": "2026-10-23T13:24:58.045233-04:00",
+  "agent_model": "Codex / GPT-6",
+  "presto_commit": "311744eee9aa72c9b9ff4d44529a494982a8dd92",
+  "presto_dirty": " M tasks/todo.md\n?? data/availability_recipes/\n?? experiments/2026-10-23_1324_codex_substrate-entry/\n?? experiments/agents/codex/plans/full-ic50-fitting.md\n?? tasks/modular_model/trajectory-sampling-issue.md\n",
+  "recipe_directory": "/private/tmp/hitlist-digestion-209-review-candidate",
+  "previous_family": "/private/tmp/presto-modular-model/experiments/2026-10-23_1202_codex_biological-cut-rates",
+  "input_hashes": {
+    "/private/tmp/hitlist-digestion-209-review-candidate/manifest.json": "5f616170b5514cb4d8f0c7b7843d232959e9514eebbca6483f976e17b0846615",
+    "/private/tmp/hitlist-digestion-209-review-candidate/examples.json": "8b89735c3a0f4fe11d863dd886118e64b2ff1fb8570b4e01f4d209e5078f3d8c",
+    "/private/tmp/hitlist-digestion-209-review-candidate/components.json": "f671af6267de6e1531027bb14fc4e76f8c3617b94e42c0b7913c8093daed74a9",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_1202_codex_biological-cut-rates/results/fits.json": "2400f214141b6ab421cc0b5168ec08b3209507b62b7cf0a590fd719937bd267f",
+    "/private/tmp/presto-modular-model/models/independent_cut.py": "6b6a2afa884ed3d0fa4ba553a1f6c94d884e9299f3ece68d62cd34bcc6f3771f"
+  },
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "PYTHONPATH": "/private/tmp/presto-modular-imports"
+  },
+  "test_policy": "closed prior test; training and development validation only",
+  "quadrature_candidates": [
+    16,
+    32,
+    64,
+    128
+  ],
+  "log_amount_tolerance": 1e-06,
+  "gradient_tolerance": 1e-05,
+  "recipe_manifest_sha256": "5f616170b5514cb4d8f0c7b7843d232959e9514eebbca6483f976e17b0846615",
+  "source_hashes": {
+    "models/substrate_entry.py": "28765cb0f8812417c767d23550935d064a2ee794e13d95109e9e6372e1bd56d5",
+    "tests/test_substrate_entry.py": "94f85289abeacc432e683f522ff90aebd18be9bd18c234c2d0134a9022a89f48",
+    "experiments/2026-10-23_1324_codex_substrate-entry/code/common.py": "3f011adcc27e9cbfb37d1496d210265c51670fcb44d1d7a5a65cbbd1245cc40f",
+    "experiments/2026-10-23_1324_codex_substrate-entry/code/qualify.py": "cac4f5f2083cd340e30d320f1ef59208942cc05571dbd9e39287036d0b9787e5"
+  },
+  "argv": [
+    "sh",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_1324_codex_substrate-entry/reproduce/launch.sh"
+  ],
+  "numerical_revision": "fast-entry-v2; original registration preserved under attempts/fixed-age-quadrature"
+}

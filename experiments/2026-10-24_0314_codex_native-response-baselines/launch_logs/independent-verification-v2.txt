@@ -1,0 +1,63 @@
+{
+  "status": "passed",
+  "verifier_sha256": "d16e1c5df0d0136dc5861a8085b26dc9451e4f3fb2b3853fd0bc998af849504e",
+  "n_predictions": 46002,
+  "n_global_metrics": 12,
+  "n_stratified_metrics": 960,
+  "n_corrected_metric_records": 149,
+  "n_corrected_correlations": 149,
+  "checks": [
+    {
+      "variant": "no_change",
+      "n_predictions": 7667,
+      "maximum_prediction_error": 0.0,
+      "maximum_difference_from_scalar_reference": 0.0,
+      "n_parameters": 0,
+      "converged": true
+    },
+    {
+      "variant": "exact_train_mean",
+      "n_predictions": 7667,
+      "maximum_prediction_error": 0.0,
+      "maximum_difference_from_scalar_reference": 0.0,
+      "n_parameters": 1,
+      "converged": true
+    },
+    {
+      "variant": "censored_constant",
+      "n_predictions": 7667,
+      "maximum_prediction_error": 0.0,
+      "maximum_difference_from_scalar_reference": 0.0,
+      "n_parameters": 1,
+      "converged": true
+    },
+    {
+      "variant": "condition",
+      "n_predictions": 7667,
+      "maximum_prediction_error": 2.220446049250313e-16,
+      "maximum_difference_from_scalar_reference": 1.1102230246251565e-16,
+      "n_parameters": 28,
+      "converged": true
+    },
+    {
+      "variant": "sequence_shared",
+      "n_predictions": 7667,
+      "maximum_prediction_error": 1.1102230246251565e-15,
+      "maximum_difference_from_scalar_reference": 4.440892098500626e-16,
+      "n_parameters": 83,
+      "converged": true
+    },
+    {
+      "variant": "sequence_compound",
+      "n_predictions": 7667,
+      "maximum_prediction_error": 3.2751579226442118e-15,
+      "maximum_difference_from_scalar_reference": 1.1657341758564144e-15,
+      "n_parameters": 582,
+      "converged": true
+    }
+  ],
+  "seconds": 6.955764250014909,
+  "peak_rss_bytes": 458981376,
+  "no_refit": true,
+  "test_evaluated": false
+}

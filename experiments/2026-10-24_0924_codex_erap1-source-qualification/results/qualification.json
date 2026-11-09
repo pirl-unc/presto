@@ -1,0 +1,67 @@
+{
+  "decision": "does_not_qualify_as_sequence_diverse_peptide_processing_training_cohort",
+  "n_sheets": 34,
+  "sheet_categories": {
+    "structure_or_structure_derived": 21,
+    "peptide_assay": 2,
+    "reporter_activity_including_some_fits": 9,
+    "image_panel": 1,
+    "reporter_fitted_parameters": 1
+  },
+  "n_nonempty_cells": 3726,
+  "n_numeric_cells": 3390,
+  "candidate_peptide_blocks": [
+    {
+      "workbook": "Source Data_Main Figures.xlsx",
+      "sheet": "Fig 2h",
+      "description": "one peptide, three enzyme conditions, duplicate slots across 12 concentrations",
+      "n_expected_response_slots": 72,
+      "n_numeric_response_cells": 70,
+      "missing_cells": [
+        "H14",
+        "I15"
+      ],
+      "reported_zero_cells": [],
+      "above_100_cells": [],
+      "n_training_observations_admitted": 0
+    },
+    {
+      "workbook": "Source Data_Supplementary Figures.xlsx",
+      "sheet": "Fig S8d",
+      "description": "two peptide probes, duplicate slots across nine time points",
+      "n_expected_response_slots": 36,
+      "n_numeric_response_cells": 35,
+      "missing_cells": [
+        "D5"
+      ],
+      "reported_zero_cells": [
+        "I5",
+        "J5"
+      ],
+      "above_100_cells": [
+        "E10",
+        "E11",
+        "J9",
+        "J10"
+      ],
+      "n_training_observations_admitted": 0
+    }
+  ],
+  "fig2i_duplicate_axis": {
+    "range_a": "K11:K16",
+    "range_b": "L11:L16",
+    "all_equal": true,
+    "meaning": "Do not read L as a fourth rate replicate just because L9 labels C404S"
+  },
+  "n_training_observations_admitted": 0,
+  "article_sha256": "3776aa5739d7ba0609539e1af601a313b0b831ebeba59c6e6955f2ca8ea5d65b",
+  "measurement_limits": [
+    "Many numbers are structural calculations, uncertainties or fitted summaries; numeric cells are not observation counts",
+    "One unmodified peptide and one BPA-modified probe; neither a sequence library nor a product-resolved cellular peptidome",
+    "The SIINFEKL condition is a structural measurement, not a measured peptide trimming trajectory",
+    "Fig2h rate scale and independent experiment identity are not established by workbook headers",
+    "FigS8d response normalization and product identity require qualification; values above 100 remain unchanged",
+    "Article describes experiments beyond the two replicate slots shown; do not invent independent repetitions",
+    "No APC machinery context, paired precursor abundance, or intracellular concentration labels"
+  ]
+}

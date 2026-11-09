@@ -1,0 +1,50 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "argv": [
+    "modal",
+    "run",
+    "--detach",
+    "/private/tmp/presto-transfer-improvements-20261027/presto/experiments/2026-10-27_2100_codex_transfer-improvements/code/launch.py"
+  ],
+  "cwd": "/private/tmp/presto-transfer-improvements-20261027/presto",
+  "git_commit": "653bbfb96965551b49e53a6a854bd438952b00cc",
+  "git_dirty": false,
+  "source_pins": {
+    "worker.py": "54a55afca30227cf481633b7e06c6bddce1bfadd50ee528ed6957959c1bb648e",
+    "launch.py": "ae4d55af7f3ff096b7ceae6f96e37b911fafee14b440a1f72ded5c7c6470998e",
+    "prepare.py": "95aae716d4f300dafe05f26d910bbff5e5be520adeef1fab7b59b5a815347415"
+  },
+  "transport_metadata_sha256": "dd6395f979a9ebf0f0167375e6071b624a89c1531a09f7c00c5ad33ac94b1f1d",
+  "conditions": [
+    "pooled-natural-joint-s42",
+    "pooled-balanced-joint-s42",
+    "interaction-natural-joint-s42",
+    "interaction-balanced-joint-s42",
+    "interaction-I-s42",
+    "interaction-II-s42",
+    "pooled-natural-joint-s43",
+    "pooled-balanced-joint-s43",
+    "interaction-natural-joint-s43",
+    "interaction-balanced-joint-s43",
+    "interaction-I-s43",
+    "interaction-II-s43"
+  ],
+  "requirements": [
+    "torch==2.14.1",
+    "numpy==2.5.4",
+    "pyyaml==6.0.3",
+    "mhcgnomes==3.64.6",
+    "mhcseqs==2.6.13",
+    "tqdm==4.70.1",
+    "psutil==7.2.2"
+  ],
+  "requested_gpu": "H100!",
+  "cpu": 4,
+  "memory_mib": 16384,
+  "max_containers": 2,
+  "timeout_seconds": 7200,
+  "environment": {
+    "PRESTO_MODAL_GPU": "H100!"
+  },
+  "started_unix": 1793135557.272848
+}

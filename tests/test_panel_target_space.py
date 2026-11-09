@@ -26,7 +26,7 @@ import pytest
 torch = pytest.importorskip("torch")
 
 from presto.models.affinity import DEFAULT_MAX_AFFINITY_NM  # noqa: E402
-from presto.scripts.train_synthetic import (  # noqa: E402
+from presto.legacy.scripts.train_synthetic import (  # noqa: E402
     normalize_binding_target_log10,
 )
 
@@ -60,7 +60,7 @@ class TestPanelLossIsNormalized:
     @pytest.mark.parametrize("qualifier,expected", [(-1, 1.0), (0, 1.0), (1, 0.0)])
     def test_panel_target_space_and_censoring(self, axis, qualifier, expected):
         from presto.data.collate import PrestoCollator, PrestoSample
-        from presto.scripts.train_synthetic import compute_loss
+        from presto.legacy.scripts.train_synthetic import compute_loss
 
         class Panel(torch.nn.Module):
             def forward(self, **kwargs):

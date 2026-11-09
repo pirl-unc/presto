@@ -1,0 +1,65 @@
+{
+  "stage": "inspect",
+  "attempt": 1,
+  "started_utc": "2026-10-25T17:39:40.068437+00:00",
+  "status": "passed",
+  "child_launched": true,
+  "exit_code": 0,
+  "resource_violation": null,
+  "memory_admission": {
+    "metric": "macos_free_plus_speculative",
+    "bytes": 10949836800
+  },
+  "disk_free_before_bytes": 15184207872,
+  "request_set_sha256": "5a449712150261dc842917d31df391a8686295be4a564713458febea71500106",
+  "request_set": {
+    "article_xml": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/intact_degradomics_source/2026-10-24_2338_codex_intact-degradomics-source/article.xml",
+    "source_sha256": {
+      "code/inspect.py": "ea4334a0198cd0d8ed7b930c11de6b147bf2b3a428dac25e74bd3d57187195a5",
+      "reproduce/source/inspect.py": "ea4334a0198cd0d8ed7b930c11de6b147bf2b3a428dac25e74bd3d57187195a5"
+    },
+    "input_sha256": {
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/intact_degradomics_source/2026-10-24_2338_codex_intact-degradomics-source/article.xml": "34c2d374b62afe17c48e04bdfd75a5f91e23786db1d537035d632c0f7f411bea",
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1735_codex_intact-search-contract/results/clipsms-source-commit.json": "8a9b5b7271ea88cbe84e2cce753fe612f2133219b2a70878be38752ee9bb7cc6",
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/intact_search_contract_sources/2026-10-25_1735_codex_intact-search-contract/No_Unlocalized_Modifications.csv": "9aa1771666d23de3344dd9ace0b5f521f84bf7ef7520e8daf9bedbda8e963cb1",
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/intact_search_contract_sources/2026-10-25_1735_codex_intact-search-contract/LICENSE": "3726c6239dc7a72f55f745a2a573d2c31c5f6b2b492f7656c01644a07b1e5dcf",
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/intact_search_contract_sources/2026-10-25_1735_codex_intact-search-contract/No_Unlocalized_Modifications.csv.receipt.json": "fbc6c90acb677ed9af64fbf57506e2e9ddd1363ca03167828e3dc3349fe8e921",
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/intact_search_contract_sources/2026-10-25_1735_codex_intact-search-contract/README.md": "7a8aa0c3f7cd98c4f26033eb84926ae9e0b2f4f079363ef15f98141ed2dd41ea",
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/intact_search_contract_sources/2026-10-25_1735_codex_intact-search-contract/README.md.receipt.json": "6068d595d56005566f93411cdc82a41e5dbdc7c0c5ac223cc3b309e606b74de6",
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/intact_search_contract_sources/2026-10-25_1735_codex_intact-search-contract/ClipsMS_v2.0.1.py": "c6930aac46be78fa62c0831ae8ef488021ac8dbe580bb4a80fe463c14cadc882",
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/intact_search_contract_sources/2026-10-25_1735_codex_intact-search-contract/LICENSE.receipt.json": "a776b10ba349e127af12d84eb20cfd30658b2ae6528f1e10453865d5a2ebf511",
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/intact_search_contract_sources/2026-10-25_1735_codex_intact-search-contract/ClipsMS_v2.0.1.py.receipt.json": "7fe70dc5e022a4abf454a179d5fcea583760d1384d1da4ae720af1697754de06"
+    }
+  },
+  "environment": {
+    "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "versions": {
+      "requests": "2.34.2",
+      "psutil": "7.2.2"
+    },
+    "overrides": {
+      "PYTHONSAFEPATH": "1",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUNBUFFERED": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    }
+  },
+  "child_pid": 54471,
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "-B",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1735_codex_intact-search-contract/code/inspect.py",
+    "--requests",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1735_codex_intact-search-contract/reproduce/requests/inspect-1.json"
+  ],
+  "elapsed_seconds": 0.18974883295595646,
+  "peak_observed_process_tree_rss_bytes": 100974592,
+  "peak_child_process_rss_bytes": 100974592,
+  "rss_poll_interval_seconds": 0.05,
+  "disk_free_after_bytes": 15182893056
+}

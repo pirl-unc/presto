@@ -1,0 +1,14 @@
+[
+  {
+    "symlinks": false,
+    "returncode": -6,
+    "stdout": "",
+    "stderr": "dyld[49746]: Library not loaded: @executable_path/../lib/libpython3.12.dylib\n  Referenced from: <4C4C4430-5555-3144-A1E2-274F3F858120> /private/var/folders/qm/qf74v01n2s12j3w0h1yrx4l00000gn/T/presto-venv-diagnostic-8bref_hw/environment/bin/python\n  Reason: tried: '/private/var/folders/qm/qf74v01n2s12j3w0h1yrx4l00000gn/T/presto-venv-diagnostic-8bref_hw/environment/lib/libpython3.12.dylib' (no such file)\n"
+  },
+  {
+    "symlinks": true,
+    "returncode": 0,
+    "stdout": "Python 3.12.6\n",
+    "stderr": ""
+  }
+]

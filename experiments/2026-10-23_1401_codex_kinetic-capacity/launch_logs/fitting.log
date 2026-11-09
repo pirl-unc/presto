@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/private/tmp/presto-modular-model/experiments/2026-10-23_1401_codex_kinetic-capacity/code/fit_capacity.py", line 401, in <module>
+    main()
+  File "/private/tmp/presto-modular-model/experiments/2026-10-23_1401_codex_kinetic-capacity/code/fit_capacity.py", line 188, in main
+    assert abs(baseline - saved["data_mse"]) < 1e-12
+                          ~~~~~^^^^^^^^^^^^
+KeyError: 'data_mse'

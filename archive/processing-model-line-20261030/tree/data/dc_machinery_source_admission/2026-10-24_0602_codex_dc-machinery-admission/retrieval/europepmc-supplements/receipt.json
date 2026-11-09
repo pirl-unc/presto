@@ -1,0 +1,36 @@
+{
+  "requested_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC2938112/supplementaryFiles?includeInlineImage=false",
+  "started_at": "2026-10-24T10:09:29.077810+00:00",
+  "command": [
+    "experiments/2026-10-24_0602_codex_dc-machinery-admission/code/launch.py",
+    "europepmc-supplements",
+    "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC2938112/supplementaryFiles?includeInlineImage=false"
+  ],
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "presto_head": "c7d538cfc64f2295e70c2bf693e333f08d1f34b6",
+  "launcher_sha256": "86c54f88a4c9edc743467e5a9acc2fd49d9fcdf57786562ac2f3b24a28eb1e4d",
+  "body_path": "/private/tmp/presto-modular-model/data/dc_machinery_source_admission/2026-10-24_0602_codex_dc-machinery-admission/retrieval/europepmc-supplements/body",
+  "purpose": "source-discovery-only; not a curated training observation",
+  "status_code": 200,
+  "final_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC2938112/supplementaryFiles?includeInlineImage=false",
+  "content_type": "application/xml",
+  "response_headers": {
+    "Vary": "Origin, Access-Control-Request-Method, Access-Control-Request-Headers",
+    "Content-Type": "application/xml",
+    "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+    "Date": "Sat, 24 Oct 2026 10:09:29 GMT",
+    "Transfer-Encoding": "chunked",
+    "Connection": "keep-alive",
+    "Set-Cookie": "JSESSIONID=E36F92FD08C2BEDF790F2336E68CCC83; Path=/europepmc/webservices/rest; Secure; HttpOnly"
+  },
+  "redirects": [],
+  "n_bytes": 296,
+  "sha256": "fe0817401aec9182813873dd80ebc46afaf9520734cc5c4359a00b579e8dd2af",
+  "elapsed_seconds": 0.6537111669895239
+}

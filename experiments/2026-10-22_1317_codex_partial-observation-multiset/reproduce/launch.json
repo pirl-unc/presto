@@ -1,0 +1,59 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "plan": "experiments/agents/codex/plans/partial-observation-multiset.md",
+  "plan_sha256": "8c5816da4fc2b887bb0dcb94eca09d5df68fe1ec668f7616e4c92ac2885b52f3",
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "mechanisms": [
+    "positive",
+    "blind"
+  ],
+  "counts": [
+    32,
+    256
+  ],
+  "methods": [
+    "ce",
+    "l2",
+    "multiset16",
+    "multiset64",
+    "naive"
+  ],
+  "fit_count": 60,
+  "model": "two independent 83->32->1 Tanh MLPs, final biases disabled",
+  "optimizer": {
+    "name": "Adam",
+    "lr": 0.003,
+    "weight_decay": 0,
+    "steps": 1440,
+    "batch_size": 16
+  },
+  "pretraining": null,
+  "checkpoint_selection": "minimum validation observed-count CE every 120 steps; no oracle selection",
+  "device": "cpu",
+  "modal_gpu": null,
+  "threads": 1,
+  "data_seed": 20261021,
+  "teacher_seed": 20261022,
+  "count_seeds": {
+    "positive": 20261023,
+    "blind": 20261024
+  },
+  "minibatch_rng": "10000+seed",
+  "draw_rng": "20000+seed",
+  "group_count": 4,
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "PYTHONHASHSEED": "0"
+  },
+  "command": "bash experiments/2026-10-22_1317_codex_partial-observation-multiset/reproduce/launch.sh",
+  "sources": {
+    "launch.py": "4d53ac3fdf1a8fa3bc72de14fa010b7db757a13315b110b048f9a358a2cb11b9",
+    "base.py": "e66c3a5cffc0d512989094ad653ba7ea4f3ff56778d3b298fecb8e809eee5945"
+  }
+}

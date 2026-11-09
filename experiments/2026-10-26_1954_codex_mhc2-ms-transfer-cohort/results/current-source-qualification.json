@@ -1,0 +1,97 @@
+{
+  "status": "replayed",
+  "hitlist_version": "2.0.42",
+  "current_curation_module": "/private/tmp/presto-mhc2-20261026/hitlist-current/hitlist/curation.py",
+  "current_curation_module_sha256": "8c0c3f232b9acdc7e1208b6270e452c21c53105bdb6c68407ecf42edb7b2b785",
+  "input_sha256": "532977c4a5e9b6530fca36d039b73a3b832c7b15197dc7a6def0bd66191aecef",
+  "atlas_classification": [
+    {
+      "native": "unknown",
+      "current": "unknown",
+      "rows": 24399
+    }
+  ],
+  "examples": [
+    {
+      "observation_id": "ms:http://www.iedb.org/assay/11198595",
+      "restriction": "HLA-DPA1*01:03/DPB1*04:01",
+      "native_evidence": "unknown",
+      "current_evidence": "unknown"
+    },
+    {
+      "observation_id": "ms:http://www.iedb.org/assay/11198624",
+      "restriction": "HLA-DPA1*01:03/DPB1*04:01",
+      "native_evidence": "unknown",
+      "current_evidence": "unknown"
+    },
+    {
+      "observation_id": "ms:http://www.iedb.org/assay/11198625",
+      "restriction": "HLA-DPA1*01:03/DPB1*04:01",
+      "native_evidence": "unknown",
+      "current_evidence": "unknown"
+    }
+  ],
+  "ciita_statements": [
+    {
+      "condition_id": "hrog02_ciita_transduced_class_ii",
+      "assay_comments": "The epitope was eluted from the following conditions: HRGO02 cells, HRGO02 cells treated with CIITA.",
+      "sample_note": "This arm's HLA-II repertoire is the one the transduction produced. It also receives the peptides whose deposited statement names both the parental and the CIITA-treated condition, rather than leaving those ambiguous between the two class-II arms, because the paper establishes HLA-II presentation only after transduction (\"While HROG02, HROG17, and RA cells express HLA-I, they do not express HLA-DR, HLA-DP, and HLA-DQ molecules (supplemental Fig. S1)\") and reads the parental class-II identifications as background (\"suggesting that a background level of potential contaminants contributed to these identifications\"). Co-detection in the parental sample is a property of those particular peptides and is recoverable from their own assay_comments; it is not evidence of parental presentation, and it says nothing about the rest of this arm's peptides. Class I is treated the other way round on the same statements: both conditions do present class I, so a class-I peptide named under both stays ambiguous between them. The asymmetry between the two classes is the biology the paper reports, not a curation shortcut -- the parental cells present class I and do not present class II.\n",
+      "rows": 13
+    },
+    {
+      "condition_id": "hrog02_parental_class_ii",
+      "assay_comments": "The epitope was eluted from the following conditions: HRGO02 cells.",
+      "sample_note": "The authors' own reading of this arm: \"While HROG02, HROG17, and RA cells express HLA-I, they do not express HLA-DR, HLA-DP, and HLA-DQ molecules (supplemental Fig. S1)\"; \"As GBM cells do not naturally express HLA-II molecules, only 165, 651, and 83 peptides were identified in HROG02, HROG17, and RA cells, respectively\"; \"The majority of them were not predicted to bind the respective HLA-II allotypes (rank <= 2%; MixMHCpred, Fig. 4, A\u2013C and supplemental Table S5), suggesting that a background level of potential contaminants contributed to these identifications.\" Treat these peptides as probable background rather than as evidence of HLA-II presentation. The candidate list is the line's own class-II typing because the pull-down used a pan-HLA-II antibody; it is not a claim of expression.\n",
+      "rows": 35
+    },
+    {
+      "condition_id": "hrog17_parental_class_ii",
+      "assay_comments": "The epitope was eluted from the following conditions: HROG17 cells.",
+      "sample_note": "The authors' own reading of this arm: \"While HROG02, HROG17, and RA cells express HLA-I, they do not express HLA-DR, HLA-DP, and HLA-DQ molecules (supplemental Fig. S1)\"; \"As GBM cells do not naturally express HLA-II molecules, only 165, 651, and 83 peptides were identified in HROG02, HROG17, and RA cells, respectively\"; \"The majority of them were not predicted to bind the respective HLA-II allotypes (rank <= 2%; MixMHCpred, Fig. 4, A\u2013C and supplemental Table S5), suggesting that a background level of potential contaminants contributed to these identifications.\" Treat these peptides as probable background rather than as evidence of HLA-II presentation. The candidate list is the line's own class-II typing because the pull-down used a pan-HLA-II antibody; it is not a claim of expression.\n",
+      "rows": 167
+    },
+    {
+      "condition_id": "hrog17_ciita_transduced_class_ii",
+      "assay_comments": "The epitope was eluted from the following conditions: HROG17 cells treated with CIITA.",
+      "sample_note": "This arm's HLA-II repertoire is the one the transduction produced. It also receives the peptides whose deposited statement names both the parental and the CIITA-treated condition, rather than leaving those ambiguous between the two class-II arms, because the paper establishes HLA-II presentation only after transduction (\"While HROG02, HROG17, and RA cells express HLA-I, they do not express HLA-DR, HLA-DP, and HLA-DQ molecules (supplemental Fig. S1)\") and reads the parental class-II identifications as background (\"suggesting that a background level of potential contaminants contributed to these identifications\"). Co-detection in the parental sample is a property of those particular peptides and is recoverable from their own assay_comments; it is not evidence of parental presentation, and it says nothing about the rest of this arm's peptides. Class I is treated the other way round on the same statements: both conditions do present class I, so a class-I peptide named under both stays ambiguous between them. The asymmetry between the two classes is the biology the paper reports, not a curation shortcut -- the parental cells present class I and do not present class II.\n",
+      "rows": 1045
+    },
+    {
+      "condition_id": "hrog17_ciita_transduced_class_ii",
+      "assay_comments": "The epitope was eluted from the following conditions: HROG17 cells, HROG17 cells treated with CIITA.",
+      "sample_note": "This arm's HLA-II repertoire is the one the transduction produced. It also receives the peptides whose deposited statement names both the parental and the CIITA-treated condition, rather than leaving those ambiguous between the two class-II arms, because the paper establishes HLA-II presentation only after transduction (\"While HROG02, HROG17, and RA cells express HLA-I, they do not express HLA-DR, HLA-DP, and HLA-DQ molecules (supplemental Fig. S1)\") and reads the parental class-II identifications as background (\"suggesting that a background level of potential contaminants contributed to these identifications\"). Co-detection in the parental sample is a property of those particular peptides and is recoverable from their own assay_comments; it is not evidence of parental presentation, and it says nothing about the rest of this arm's peptides. Class I is treated the other way round on the same statements: both conditions do present class I, so a class-I peptide named under both stays ambiguous between them. The asymmetry between the two classes is the biology the paper reports, not a curation shortcut -- the parental cells present class I and do not present class II.\n",
+      "rows": 26
+    },
+    {
+      "condition_id": "hrog02_ciita_transduced_class_ii",
+      "assay_comments": "The epitope was eluted from the following conditions: HRGO02 cells treated with CIITA.",
+      "sample_note": "This arm's HLA-II repertoire is the one the transduction produced. It also receives the peptides whose deposited statement names both the parental and the CIITA-treated condition, rather than leaving those ambiguous between the two class-II arms, because the paper establishes HLA-II presentation only after transduction (\"While HROG02, HROG17, and RA cells express HLA-I, they do not express HLA-DR, HLA-DP, and HLA-DQ molecules (supplemental Fig. S1)\") and reads the parental class-II identifications as background (\"suggesting that a background level of potential contaminants contributed to these identifications\"). Co-detection in the parental sample is a property of those particular peptides and is recoverable from their own assay_comments; it is not evidence of parental presentation, and it says nothing about the rest of this arm's peptides. Class I is treated the other way round on the same statements: both conditions do present class I, so a class-I peptide named under both stays ambiguous between them. The asymmetry between the two classes is the biology the paper reports, not a curation shortcut -- the parental cells present class I and do not present class II.\n",
+      "rows": 2910
+    },
+    {
+      "condition_id": "ra_ciita_transduced_class_ii",
+      "assay_comments": "The epitope was eluted from the following conditions: RA cells treated with CIITA.",
+      "sample_note": "This arm's HLA-II repertoire is the one the transduction produced. It also receives the peptides whose deposited statement names both the parental and the CIITA-treated condition, rather than leaving those ambiguous between the two class-II arms, because the paper establishes HLA-II presentation only after transduction (\"While HROG02, HROG17, and RA cells express HLA-I, they do not express HLA-DR, HLA-DP, and HLA-DQ molecules (supplemental Fig. S1)\") and reads the parental class-II identifications as background (\"suggesting that a background level of potential contaminants contributed to these identifications\"). Co-detection in the parental sample is a property of those particular peptides and is recoverable from their own assay_comments; it is not evidence of parental presentation, and it says nothing about the rest of this arm's peptides. Class I is treated the other way round on the same statements: both conditions do present class I, so a class-I peptide named under both stays ambiguous between them. The asymmetry between the two classes is the biology the paper reports, not a curation shortcut -- the parental cells present class I and do not present class II.\n",
+      "rows": 617
+    },
+    {
+      "condition_id": "ra_parental_class_ii",
+      "assay_comments": "The epitope was eluted from the following conditions: RA cells.",
+      "sample_note": "The authors' own reading of this arm: \"While HROG02, HROG17, and RA cells express HLA-I, they do not express HLA-DR, HLA-DP, and HLA-DQ molecules (supplemental Fig. S1)\"; \"As GBM cells do not naturally express HLA-II molecules, only 165, 651, and 83 peptides were identified in HROG02, HROG17, and RA cells, respectively\"; \"The majority of them were not predicted to bind the respective HLA-II allotypes (rank <= 2%; MixMHCpred, Fig. 4, A\u2013C and supplemental Table S5), suggesting that a background level of potential contaminants contributed to these identifications.\" Treat these peptides as probable background rather than as evidence of HLA-II presentation. The candidate list is the line's own class-II typing because the pull-down used a pan-HLA-II antibody; it is not a claim of expression.\n",
+      "rows": 6
+    },
+    {
+      "condition_id": "ra_ciita_transduced_class_ii",
+      "assay_comments": "The epitope was eluted from the following conditions: RA cells, RA cells treated with CIITA.",
+      "sample_note": "This arm's HLA-II repertoire is the one the transduction produced. It also receives the peptides whose deposited statement names both the parental and the CIITA-treated condition, rather than leaving those ambiguous between the two class-II arms, because the paper establishes HLA-II presentation only after transduction (\"While HROG02, HROG17, and RA cells express HLA-I, they do not express HLA-DR, HLA-DP, and HLA-DQ molecules (supplemental Fig. S1)\") and reads the parental class-II identifications as background (\"suggesting that a background level of potential contaminants contributed to these identifications\"). Co-detection in the parental sample is a property of those particular peptides and is recoverable from their own assay_comments; it is not evidence of parental presentation, and it says nothing about the rest of this arm's peptides. Class I is treated the other way round on the same statements: both conditions do present class I, so a class-I peptide named under both stays ambiguous between them. The asymmetry between the two classes is the biology the paper reports, not a curation shortcut -- the parental cells present class I and do not present class II.\n",
+      "rows": 1
+    }
+  ],
+  "elapsed_seconds": 3.349768916999892,
+  "peak_rss_bytes": 172195840,
+  "argv": [
+    "experiments/2026-10-26_1954_codex_mhc2-ms-transfer-cohort/code/audit_current_v2.py"
+  ],
+  "code_sha256": "e6576ec499fd7ace3029dc1301368083e0f1dd83b9a5c9af45e040c6c1102f77",
+  "interpretation": "current classifier replay; exact source assignment audit remains required, no blanket relabeling"
+}

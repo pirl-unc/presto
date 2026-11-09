@@ -1,0 +1,20 @@
+{
+  "status": "verified",
+  "arm": "uniform_composition",
+  "predictions": 1030,
+  "maximum_prediction_field_error": 7.105427357601002e-15,
+  "feature_transform": {
+    "raw_errors": {
+      "regression": 9.43689570931383e-16,
+      "scale": 1.6653345369377348e-16,
+      "basis": 5.0154325137441447e-14
+    },
+    "projector_error": 1.4432899320127035e-15
+  },
+  "optimizer_updates": 0,
+  "maximum_optimizer_error": 0.0,
+  "fixed_gradient_checks": [],
+  "source_target_reconstruction": "original source log10 intensities centered per example; no historical test",
+  "metrics_verified": true,
+  "seconds": 2.9604745829710737
+}

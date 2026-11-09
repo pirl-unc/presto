@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "name": "pxd024917_free1h_response_development_v1",
+  "mapping_policy": "no_expansion",
+  "sources": [
+    {
+      "evidence_type": "nontryptic_measurements",
+      "row_id": "measurement_id",
+      "select": [
+        "measurement_id",
+        "nominal_amount_id",
+        "slot_id",
+        "standard_id",
+        "context_id",
+        "quantitative_raw",
+        "quantitative_value",
+        "measurement_unit",
+        "value_status",
+        "observation_kind",
+        "aggregation_status",
+        "cell_id",
+        "source_locator",
+        "standard.peptide_sequence",
+        "standard.gene_symbol_raw",
+        "standard.peptide_length",
+        "standard.reported_length_raw",
+        "standard.length_consistency_status",
+        "amount.nominal_amount_raw",
+        "amount.nominal_amount_fmol",
+        "amount.measurement_unit",
+        "amount.nominal_status",
+        "amount.isotopologue_label",
+        "amount.reported_form_label",
+        "amount.source_locator",
+        "slot.source_column",
+        "slot.source_slot_ordinal",
+        "slot.acquisition_id",
+        "slot.specimen_id",
+        "slot.aliquot_id"
+      ],
+      "joins": [
+        "standard",
+        "amount",
+        "slot"
+      ],
+      "where": {},
+      "target": {
+        "field": "quantitative_value",
+        "mode": "numeric",
+        "unit_field": "measurement_unit",
+        "allowed_units": [
+          "source_arbitrary_summed_intensity"
+        ],
+        "status_field": "value_status",
+        "allowed_statuses": [
+          "reported_positive"
+        ]
+      },
+      "required_fields": [
+        "standard.peptide_sequence",
+        "standard.gene_symbol_raw",
+        "amount.nominal_amount_fmol",
+        "amount.nominal_amount_raw",
+        "source_locator",
+        "quantitative_raw"
+      ],
+      "context_precision": {
+        "field": "amount.isotopologue_label",
+        "allowed": [
+          "1H"
+        ],
+        "on_mismatch": "exclude"
+      },
+      "grouping": {
+        "fields": [
+          "standard.gene_symbol_raw"
+        ],
+        "on_missing": "exclude"
+      },
+      "limit": null
+    }
+  ]
+}

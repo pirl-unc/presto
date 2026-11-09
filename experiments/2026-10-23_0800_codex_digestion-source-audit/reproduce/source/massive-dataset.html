@@ -1,0 +1,2006 @@
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>MassIVE Dataset Summary</title>
+    <link href="/ProteoSAFe/styles/main.css" rel="stylesheet" type="text/css"/>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/icon"/>
+    
+    <!-- General ProteoSAFe scripts -->
+    <script src="/ProteoSAFe/scripts/util.js?1.3.16" language="javascript" type="text/javascript"></script>
+    <script src="/ProteoSAFe/scripts/render.js?1.3.16" language="javascript" type="text/javascript"></script>
+    <script src="/ProteoSAFe/scripts/result/result.js?1.3.16" language="javascript" type="text/javascript"></script>
+    <script src="/ProteoSAFe/scripts/result/table.js?1.3.16" language="javascript" type="text/javascript"></script>
+    <script src="/ProteoSAFe/scripts/result/generic_dynamic_table.js?1.3.16" language="javascript" type="text/javascript"></script>
+    <script src="/ProteoSAFe/scripts/result/spectrumpage.js?1.3.16" language="javascript" type="text/javascript"></script>
+    <script src="/ProteoSAFe/scripts/result/massivepage.js?1.3.16" language="javascript" type="text/javascript"></script>
+    
+    <!-- jQuery scripts -->
+    <script src="/ProteoSAFe/scripts/jquery/jquery-1.10.2.min.js?1.3.16" language="javascript" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/jquery-ui.min.js" type="text/javascript"></script>
+    
+    <!-- Third-party UI scripts -->
+	<script src="scripts/tooltips/balloon.js?1.3.16" language="javascript" type="text/javascript"></script>
+	<script src="scripts/tooltips/balloon.config.js?1.3.16" language="javascript" type="text/javascript"></script>
+	<script src="scripts/tooltips/box.js?1.3.16" language="javascript" type="text/javascript"></script>
+	<script src="scripts/tooltips/yahoo-dom-event.js?1.3.16" language="javascript" type="text/javascript"></script>
+	<script src="scripts/tooltips/spin.min.js?1.3.16" language="javascript" type="text/javascript"></script>
+	
+	<!-- Custom scripts for this page -->
+    <script language="javascript" type="text/javascript">
+		var debug = false;
+    	var task_id = "b225eeb4927a44e481e1b190aec06402";
+     	var isMassIVESite = true;
+    	var isTrusted = false;
+     	var user = "";
+    	var dataset_name = "MSV000092631";
+    	var dataset_has_raw = true;
+    	var dataset_has_peak = false;
+    	var dataset_has_ccms_peak = false;
+    	var dataset_is_complete = false;
+    	var notApplicable = "N/A";
+		var tooltip = createTooltip();
+		function init() {
+			initLogoBlock('logo',
+false,
+false,
+true,
+'/ProteoSAFe',
+'https%3A%2F%2Fmassive.ucsd.edu%2FProteoSAFe%2Fdataset.jsp%3Faccession%3DMSV000092631',
+'');
+
+			// initialize button functionality
+			initSubscribe();
+			initAddReanalysis("add_reanalysis");
+			initConvertSpectra();
+			initReanalyzeSpectra();
+			initMakePublic();
+			// initialize tooltip functionality
+		    var help = document.getElementById("remapped_proteins_help");
+		    if (help != null) {
+		    	help.onmouseover = function(event) {
+			    	showTooltip(this, event, 'load:hProteins');
+			    };
+		    }
+		    help = document.getElementById("proteins_help");
+		    if (help != null) {
+		    	help.onmouseover = function(event) {
+			    	showTooltip(this, event, 'load:hProteinsReported');
+			    };
+		    }
+		    help = document.getElementById("peptides_help");
+		    if (help != null) {
+		    	help.onmouseover = function(event) {
+			    	showTooltip(this, event, 'load:hPeptides');
+			    };
+		    }
+		    help = document.getElementById("variants_help");
+		    if (help != null) {
+		    	help.onmouseover = function(event) {
+			    	showTooltip(this, event, 'load:hVariants');
+			    };
+		    }
+		    help = document.getElementById("psms_help");
+		    if (help != null) {
+		    	help.onmouseover = function(event) {
+			    	showTooltip(this, event, 'load:hPSMs');
+			    };
+		    }
+		    help = document.getElementById("quant_proteins_help");
+		    if (help != null) {
+		    	help.onmouseover = function(event) {
+			    	showTooltip(this, event, 'load:hQuantProteinsReported');
+			    };
+		    }
+		    help = document.getElementById("quant_proteins_da_help");
+		    if (help != null) {
+		    	help.onmouseover = function(event) {
+			    	showTooltip(this, event, 'load:hQuantProteinsDA');
+			    };
+		    }
+		    help = document.getElementById("studies_help");
+		    if (help != null) {
+		    	help.onmouseover = function(event) {
+			    	showTooltip(this, event, 'load:hStudies');
+			    };
+		    }
+		    help = document.getElementById("conditions_help");
+		    if (help != null) {
+		    	help.onmouseover = function(event) {
+			    	showTooltip(this, event, 'load:hConditions');
+			    };
+		    }
+		    help = document.getElementById("bio_replicates_help");
+		    if (help != null) {
+		    	help.onmouseover = function(event) {
+			    	showTooltip(this, event, 'load:hBioReplicates');
+			    };
+		    }
+		    help = document.getElementById("tech_replicates_help");
+		    if (help != null) {
+		    	help.onmouseover = function(event) {
+			    	showTooltip(this, event, 'load:hTechReplicates');
+			    };
+		    }
+            help = document.getElementById("imported_dataset_tag");
+            if (help != null) {
+                help.onmouseover = function(event) {
+                    showTooltip(this, event, 'load:hImportedDataset');
+                };
+            }
+			// initialize copy/paste text box functionality
+			var ftpLink = document.getElementById("ftpLink");
+			ftpLink.addEventListener("click", function(event) {
+				this.select();
+				document.execCommand("copy");
+				setTimeout(function(){ftpLink.blur();}, 100);
+			});
+			var ftpPublicLink = document.getElementById("ftpPublicLink");
+			if (ftpPublicLink != null) {
+				ftpPublicLink.addEventListener("click", function(event) {
+					this.select();
+					document.execCommand("copy");
+					setTimeout(function(){ftpPublicLink.blur();}, 100);
+				});
+			}
+			// initialize metadata list expand/collapse functionality
+			$("ul.metadata-list").each(function() {
+				if($(this).find("li").length > 3) {    
+					$("li", this).eq(2).nextAll().hide().addClass("toggleable");
+					$(this).append("<li class='more'>More...</li>");    
+				}
+				$(this).on("click",".more", toggleMetadata);
+			});
+			// initialize history table expand/collapse functionality
+			var history = $("#history");
+			if (history != null)
+				history.hide();
+			// build summary table
+			buildSummaryTable();
+			// build history table
+			buildHistoryTable();
+			// build reanalyses table
+			buildReanalysesTable();
+		}
+		
+		// function to initialize the "Subscribe" button with the proper content
+		// and functionality based on the current user's subscription status
+		function initSubscribe() {
+	    	$.ajax({
+	            url: "./MassiveServlet",
+	            data: { "task":"b225eeb4927a44e481e1b190aec06402", "function":"subscription" },
+	            type: "GET",
+	            cache: false,
+	            async: false,
+	            complete: function(data) {
+					// handle errors, style button appropriately
+					var subscribe_button = document.getElementById("subscribe");
+					if (data.responseText == "LOGIN") {
+						//alert("login");
+						$(subscribe_button).addClass("disabled");
+						return;
+					} else if (data.responseText == "ERROR") {
+						alert("error");
+						$(subscribe_button).addClass("disabled");
+						return;
+					} else subscribe_button.className = "button";
+					// parse server response to set up button
+					// according to current subscription status
+					var json = JSON.parse(data.responseText);
+					if (json["status"] == 0) {
+						subscribe_button.innerHTML = "Subscribe";
+						subscribe_button.onclick = function() {
+							subscribe(subscribe_button);
+						};
+					} else if (json["status"] == 1) {
+						subscribe_button.innerHTML = "Unsubscribe";
+						subscribe_button.onclick = function() {
+							unsubscribe(subscribe_button);
+						};
+					}
+	            }
+	        });
+		}
+		
+		function subscribe(subscribe_button) {
+	    	$.ajax({
+	            url: "./MassiveServlet",
+	            data: { "task":"b225eeb4927a44e481e1b190aec06402", "function":"subscription" },
+	            type: "POST",
+	            cache: false,
+				async: false,
+				complete: function(data) {
+					// handle errors, style button appropriately
+					if (data.responseText == "LOGIN") {
+						//alert("login");
+						$(subscribe_button).addClass("disabled");
+						return;
+					} else if(data.responseText == "ERROR"){
+						alert("error");
+						$(subscribe_button).addClass("disabled");
+						return;
+					} else subscribe_button.className = "button";
+					// parse server response to set up button
+					// according to current subscription status
+					var json = JSON.parse(data.responseText);
+					if (json["status"] == 0) {
+						subscribe_button.innerHTML = "Unsubscribe";
+						subscribe_button.onclick = function(){
+							unsubscribe(subscribe_button);
+						};
+						// update subscriber count
+						buildSummaryTable();
+					}
+				}
+	    	});
+		}
+		
+		function unsubscribe(subscribe_button) {
+	    	$.ajax({
+	            url: "./MassiveServlet?task=b225eeb4927a44e481e1b190aec06402&function=subscription",
+	            type: "DELETE",
+	            cache: false,
+				async: false,
+				complete: function(data) {
+					// handle errors, style button appropriately
+					if (data.responseText == "LOGIN") {
+						//alert("login");
+						$(subscribe_button).addClass("disabled");
+						return;
+					} else if(data.responseText == "ERROR"){
+						alert("error");
+						$(subscribe_button).addClass("disabled");
+						return;
+					} else subscribe_button.className = "button";
+					// parse server response to set up button
+					// according to current subscription status
+					var json = JSON.parse(data.responseText);
+					if (json["status"] == 0) {
+						subscribe_button.innerHTML = "Subscribe";
+						subscribe_button.onclick = function(){
+							subscribe(subscribe_button);
+						};
+						// update subscriber count
+						buildSummaryTable();
+					}
+				}
+	    	});
+		}
+		
+		// function to initialize the "Add Reanalysis" button
+		// with the proper content and functionality
+		function initAddReanalysis(id) {
+		    var reanalysis_link = document.getElementById(id);
+			var workflow_fillin = {};
+			workflow_fillin["workflow"] = "ADD-MASSIVE-REANALYSIS";
+		    workflow_fillin["reanalyzed_dataset"] = dataset_name;
+		    workflow_fillin["reanalysis.species"] = "NCBITaxon:9606";
+		    workflow_fillin["reanalysis.instrument"] =
+		    	"MS:1002523;MS:1002416";
+            
+            workflow_fillin["reanalysis.keywords"] = "Mass Spectrometry ; antigen processing ; 20S proteasomes ; MHC-I presentation";
+            
+		    workflow_fillin["reanalysis.modification"] =
+		    	"MOD:00719;MOD:01060";
+		    if (dataset_has_raw)
+			    workflow_fillin["raw_files"] = "d." + dataset_name + "/raw;";
+			if (dataset_has_peak)
+				workflow_fillin["peak_list_files"] = "d." + dataset_name + "/peak;";
+			if (dataset_has_ccms_peak) {
+				var peak_list_files = workflow_fillin["peak_list_files"];
+				if (peak_list_files == null)
+					peak_list_files = "";
+				peak_list_files += "d." + dataset_name + "/ccms_peak;";
+				workflow_fillin["peak_list_files"] = peak_list_files;
+			}
+			var reanalysis_url =
+				get_host_url("MassIVE") + "ProteoSAFe/index.jsp?params=" +
+				JSON.stringify(workflow_fillin);
+		    reanalysis_link.onclick = function(){
+		    	$.ajax({
+		            url: "./ManageSharing",
+		            data: { importUser: dataset_name },
+		            complete: function(data, status) {
+		                window.location = reanalysis_url;
+		            },
+		            type: "POST"
+		        });
+			};
+		}
+		
+		// function to initialize the "Convert Spectra" button
+		// with the proper content and functionality
+		function initConvertSpectra() {
+		    var convert_link = document.getElementById("convert_spectra");
+		    if (convert_link == null)
+		    	return;
+		    convert_link.onmouseover = function(event) {
+		    	showTooltip(this, event, 'load:hConvertSpectra');
+		    };
+		    convert_link.onclick = function() {
+				$(convert_link).addClass("disabled");
+				tooltip.nukeTooltip();
+	        	$.ajax({
+	                url: "./ConvertDataset",
+	                data: { id: dataset_name },
+	                success: function() {
+	                	alert("This dataset's spectra are now queued for " +
+	                		"conversion. This process may take some time.");
+	                	$(convert_link).remove();
+	                },
+	                error: function(response, status, error) {
+	                	var message =
+	                		extractResponseMessage(response.responseText);
+	                	if (message == null)
+	                		message = error;
+	                	alert("There was a problem converting this dataset's " +
+	                		"submitted spectra. The server returned the " +
+	                		"following error message:\n\n\"" + message + "\"");
+	                	$(convert_link).remove();
+	                },
+	                type: "POST"
+	            });
+			};
+		}
+		
+		// function to initialize the "Reanalyze Spectra" button
+		// with the proper content and functionality
+		function initReanalyzeSpectra() {
+		    var reanalyze_link = document.getElementById("reanalyze_spectra");
+		    if (reanalyze_link == null)
+		    	return;
+			var workflow_fillin = {};
+			workflow_fillin["workflow"] = "MSGF_PLUS";
+			// fill in the correct collection based on
+			// this dataset's peak list file status
+			if (dataset_has_peak)
+				workflow_fillin["spec_on_server"] =
+					"d." + dataset_name + "/peak";
+			else if (dataset_has_ccms_peak)
+				workflow_fillin["spec_on_server"] =
+					"d." + dataset_name + "/ccms_peak";
+			var reanalyze_url =
+				"http://proteomics.ucsd.edu/ProteoSAFe/index.jsp?params=" +
+				JSON.stringify(workflow_fillin);
+		    reanalyze_link.onclick = function(){
+	        	$.ajax({
+	                url: "./ManageSharing",
+	                data: { importUser: dataset_name },
+	                complete: function(data, status) {
+	                    window.location = reanalyze_url;
+	                },
+	                type: "POST"
+	            });
+			};
+		}
+		
+		// function to initialize the "Make Public" button
+		// with the proper content and functionality
+		function initMakePublic() {
+			// only initialize the "Make Public" button if it's there
+		    var makepublic_link = document.getElementById("make_public");
+			if (makepublic_link == null)
+				return;
+			// build dataset publish URL
+			var url = null;
+			// if this is not the MassIVE web server, then we need to redirect
+			// there, since only there can a dataset be made public
+			if (isMassIVESite)
+			    url = "./PublishDataset";
+			else url = "http://massive.ucsd.edu/ProteoSAFe/dataset.jsp";
+		    var parameters = "?task=b225eeb4927a44e481e1b190aec06402";
+		    url += parameters;
+			var confirm_message = null;
+			if (isMassIVESite) {
+				confirm_message = "Are you sure? If you make this dataset " +
+					"public, then it will become viewable and downloadable " +
+					"by all users";
+				
+				confirm_message += ", and will be publicly announced " +
+					"via the ProteomeXchange consortium";
+				
+				confirm_message += ".";
+			} else confirm_message = "Datasets can only be made public on the " +
+				"official MassIVE web server. Would you like to go there now?";
+		    makepublic_link.href= url;
+		    makepublic_link.onclick = function() {
+		    	return confirm(confirm_message);
+		    };
+		}
+		
+		function buildSummaryTable() {
+			// render spinner over dataset summary table
+			var overlay = document.getElementById("summary_overlay");
+			enableOverlay(overlay, true, true, "30px");
+			// request dataset summary from server
+	    	$.ajax({
+	            url: "./MassiveServlet",
+	            data: { "function":"massivesummary", "massiveid":dataset_name },
+	            type: "GET",
+	            cache: false,
+	            complete: function(data) {
+	            	// disable spinner over dataset summary table
+	    			enableOverlay(overlay, false, false);
+	            	// parse output stats from server's text response
+	            	var stats = JSON.parse(data.responseText);
+	            	// write output stats to summary table
+        			// file numbers
+	            	var filecount = document.getElementById("filecount");
+	            	if (filecount != null && stats.filecount != null)
+	            		filecount.innerHTML = stats.filecount;
+	            	var filesize = document.getElementById("filesize");
+	            	if (filesize != null && stats.filesize != null)
+	            		filesize.innerHTML = stats.filesize;
+	            	// subscribers
+	            	var subscribers = document.getElementById("subscribers");
+	            	if (subscribers != null && stats.subscribercount != null)
+	            		subscribers.innerHTML = stats.subscribercount;
+	            	// dataset spectra
+	            	var spectra = document.getElementById("spectra");
+	            	if (spectra != null && stats.spectra != null)
+	            		spectra.innerHTML = stats.spectra;
+	            	// only display spectra row if spectra are nonzero,
+	            	// or if conversion has already happened
+	            	var spectra_row = document.getElementById("spectra_row");
+	            	if (spectra_row != null) {
+		            	if (debug ||
+		            		(stats.spectra != null && stats.spectra != "0") ||
+		            		dataset_has_ccms_peak)
+		            		delete spectra_row.style.display;
+		            	else spectra_row.style.display = "none";
+	            	}
+	            	// number of studies
+        			var study_design_visible = false;
+	            	if (stats.studies != null &&
+		            	stats.studies == "0" &&
+		            	true)
+		            	stats.studies = notApplicable;
+		            if (stats.reanalysis_studies != null && 
+		            	stats.reanalysis_studies == "0" &&
+			            false)
+			            stats.reanalysis_studies = notApplicable;
+					if ((stats.studies != null &&
+							stats.studies != "0" &&
+							stats.studies != notApplicable) ||
+						(stats.reanalysis_studies != null &&
+							stats.reanalysis_studies != "0" &&
+							stats.reanalysis_studies != notApplicable))
+			            study_design_visible = true;
+	            	var studies = document.getElementById("studies");
+	            	if (studies != null && stats.studies != null)
+	            		studies.innerHTML = stats.studies;
+		            var reanalysisStudies =
+		            	document.getElementById("reanalysis_studies");
+		            if (reanalysisStudies != null && stats.reanalysis_studies != null)
+		            	reanalysisStudies.innerHTML = stats.reanalysis_studies;
+	            	// number of study conditions
+	            	if (stats.conditions != null &&
+	            		stats.conditions == "0" &&
+	            		true)
+	            		stats.conditions = notApplicable;
+	            	if (stats.reanalysis_conditions != null && 
+	            		stats.reanalysis_conditions == "0" &&
+		            	false)
+		            	stats.reanalysis_conditions = notApplicable;
+					if ((stats.conditions != null &&
+							stats.conditions != "0" &&
+							stats.conditions != notApplicable) ||
+						(stats.reanalysis_conditions != null &&
+							stats.reanalysis_conditions != "0" &&
+							stats.reanalysis_conditions != notApplicable))
+			            study_design_visible = true;
+	            	var conditions = document.getElementById("conditions");
+	            	if (conditions != null && stats.conditions != null) {
+	        			if (stats.conditions != "0" && stats.conditions != notApplicable) {
+		            		removeChildren(conditions);
+		            		var link = document.createElement("a");
+		            		link.href =
+		            			"./result.jsp?task=" + task_id + "&view=view_metadata_list";
+		            		link.target = "_blank";
+		            		link.innerHTML = stats.conditions;
+		            		conditions.appendChild(link);
+		        		} else conditions.innerHTML = stats.conditions;
+	            	}
+		            var reanalysisConditions =
+		            	document.getElementById("reanalysis_conditions");
+		            if (reanalysisConditions != null && stats.reanalysis_conditions != null) {
+	        			if (stats.reanalysis_conditions != "0" &&
+							stats.reanalysis_conditions != notApplicable) {
+							removeChildren(reanalysisConditions);
+							var link = document.createElement("a");
+							link.href = "#reanalyses_header";
+							link.innerHTML = stats.reanalysis_conditions;
+							reanalysisConditions.appendChild(link);
+						} else reanalysisConditions.innerHTML = stats.reanalysis_conditions;
+		            }
+	            	// number of study biological replicates
+	            	if (stats.bio_replicates != null &&
+	            		stats.bio_replicates == "0" &&
+	            		true)
+	            		stats.bio_replicates = notApplicable;
+	            	if (stats.reanalysis_bio_replicates != null && 
+	            		stats.reanalysis_bio_replicates == "0" &&
+		            	false)
+		            	stats.reanalysis_bio_replicates = notApplicable;
+					if ((stats.bio_replicates != null &&
+							stats.bio_replicates != "0" &&
+							stats.bio_replicates != notApplicable) ||
+						(stats.reanalysis_bio_replicates != null &&
+							stats.reanalysis_bio_replicates != "0" &&
+							stats.reanalysis_bio_replicates != notApplicable))
+			            study_design_visible = true;
+	            	var bioReplicates = document.getElementById("bio_replicates");
+	            	if (bioReplicates != null && stats.bio_replicates != null) {
+	        			if (stats.bio_replicates != "0" && stats.bio_replicates != notApplicable) {
+		            		removeChildren(bioReplicates);
+		            		var link = document.createElement("a");
+		            		link.href =
+		            			"./result.jsp?task=" + task_id + "&view=view_metadata_list";
+		            		link.target = "_blank";
+		            		link.innerHTML = stats.bio_replicates;
+		            		bioReplicates.appendChild(link);
+		        		} else bioReplicates.innerHTML = stats.bio_replicates;
+	            	}
+		            var reanalysisBioReplicates =
+		            	document.getElementById("reanalysis_bio_replicates");
+		            if (reanalysisBioReplicates != null &&
+		            	stats.reanalysis_bio_replicates != null) {
+	        			if (stats.reanalysis_bio_replicates != "0" &&
+							stats.reanalysis_bio_replicates != notApplicable) {
+							removeChildren(reanalysisBioReplicates);
+							var link = document.createElement("a");
+							link.href = "#reanalyses_header";
+							link.innerHTML = stats.reanalysis_bio_replicates;
+							reanalysisBioReplicates.appendChild(link);
+						} else reanalysisBioReplicates.innerHTML = stats.reanalysis_bio_replicates;
+		            }
+	            	// number of study technical replicates
+	            	if (stats.tech_replicates != null &&
+	            		stats.tech_replicates == "0" &&
+	            		true)
+	            		stats.tech_replicates = notApplicable;
+	            	if (stats.reanalysis_tech_replicates != null && 
+	            		stats.reanalysis_tech_replicates == "0" &&
+		            	false)
+		            	stats.reanalysis_tech_replicates = notApplicable;
+					if ((stats.tech_replicates != null &&
+							stats.tech_replicates != "0" &&
+							stats.tech_replicates != notApplicable) ||
+						(stats.reanalysis_tech_replicates != null &&
+							stats.reanalysis_tech_replicates != "0" &&
+							stats.reanalysis_tech_replicates != notApplicable))
+			            study_design_visible = true;
+	            	var techReplicates = document.getElementById("tech_replicates");
+	            	if (techReplicates != null && stats.tech_replicates != null) {
+	        			if (stats.tech_replicates != "0" && stats.tech_replicates != notApplicable) {
+		            		removeChildren(techReplicates);
+		            		var link = document.createElement("a");
+		            		link.href =
+		            			"./result.jsp?task=" + task_id + "&view=view_metadata_list";
+		            		link.target = "_blank";
+		            		link.innerHTML = stats.tech_replicates;
+		            		techReplicates.appendChild(link);
+		        		} else techReplicates.innerHTML = stats.tech_replicates;
+	            	}
+		            var reanalysisTechReplicates =
+		            	document.getElementById("reanalysis_tech_replicates");
+		            if (reanalysisTechReplicates != null &&
+		            	stats.reanalysis_tech_replicates != null) {
+	        			if (stats.reanalysis_tech_replicates != "0" &&
+							stats.reanalysis_tech_replicates != notApplicable) {
+							removeChildren(reanalysisTechReplicates);
+							var link = document.createElement("a");
+							link.href = "#reanalyses_header";
+							link.innerHTML = stats.reanalysis_tech_replicates;
+							reanalysisTechReplicates.appendChild(link);
+						} else reanalysisTechReplicates.innerHTML = stats.reanalysis_tech_replicates;
+		            }
+	                // only display study design block if any study design rows are visible
+					var studies_row = document.getElementById("conditions_row");
+					var conditions_row = document.getElementById("conditions_row");
+					var bio_replicates_row = document.getElementById("bio_replicates_row");
+					var tech_replicates_row = document.getElementById("tech_replicates_row");
+					var study_design_header =
+						document.getElementById("study_design_header");
+					var spacer = document.getElementById("study_design_block_spacer");
+        			if (debug || study_design_visible) {
+    					if (studies_row != null)
+    						delete studies_row.style.display;
+    					if (conditions_row != null)
+    						delete conditions_row.style.display;
+    					if (bio_replicates_row != null)
+    						delete bio_replicates_row.style.display;
+    					if (tech_replicates_row != null)
+    						delete tech_replicates_row.style.display;
+						if (study_design_header != null)
+                			delete study_design_header.style.display;
+                		if (spacer != null)
+                			delete spacer.style.display;
+					} else {
+						if (studies_row != null)
+    						studies_row.style.display = "none";
+    					if (conditions_row != null)
+    						conditions_row.style.display = "none";
+    					if (bio_replicates_row != null)
+    						bio_replicates_row.style.display = "none";
+    					if (tech_replicates_row != null)
+    						tech_replicates_row.style.display = "none";
+                		if (study_design_header != null)
+                			study_design_header.style.display = "none";
+                		if (spacer != null)
+                			spacer.style.display = "none";
+        			}
+	                // number of proteins remapped to SwissProt human database
+	            	if (stats.remapped_proteins != null &&
+		            	stats.remapped_proteins == "0" &&
+		            	dataset_is_complete == false)
+		            	stats.remapped_proteins = notApplicable;
+		            if (stats.remapped_reanalysis_proteins != null && 
+		            	stats.remapped_reanalysis_proteins == "0" &&
+		            	dataset_is_complete == false)
+			            stats.remapped_reanalysis_proteins = notApplicable;
+	            	var remappedProteins =
+	            		document.getElementById("remapped_proteins");
+	            	if (remappedProteins != null && stats.remapped_proteins != null) {
+	        			if (stats.remapped_proteins != "0" &&
+	        				stats.remapped_proteins != notApplicable) {
+	            			removeChildren(remappedProteins);
+	            			var link = document.createElement("a");
+	            			link.href =
+	            				"./result.jsp?task=" + task_id + "&view=view_result_list";
+	            			link.target = "_blank";
+	            			link.innerHTML = stats.remapped_proteins;
+	            			remappedProteins.appendChild(link);
+	        			} else remappedProteins.innerHTML = stats.remapped_proteins;
+	            	}
+	            	var remappedReanalysisProteins =
+	            		document.getElementById("remapped_reanalysis_proteins");
+	            	if (remappedReanalysisProteins != null &&
+	            		stats.remapped_reanalysis_proteins != null) {
+	        			if (stats.remapped_reanalysis_proteins != "0" &&
+		        			stats.remapped_reanalysis_proteins != notApplicable) {
+		            		removeChildren(remappedReanalysisProteins);
+		            		var link = document.createElement("a");
+		            		link.href = "#reanalyses_header";
+		            		link.innerHTML = stats.remapped_reanalysis_proteins;
+		            		remappedReanalysisProteins.appendChild(link);
+		        		} else remappedReanalysisProteins.innerHTML =
+		        			stats.remapped_reanalysis_proteins;
+	            	}
+	                // only display remapped proteins row if number is nonzero
+	            	var remapped_proteins_row =
+	            		document.getElementById("remapped_proteins_row");
+	            	if (remapped_proteins_row != null) {
+		            	if (debug ||
+		            		(stats.remapped_proteins != null &&
+		            			stats.remapped_proteins != "0" &&
+		            			stats.remapped_proteins != notApplicable) ||
+		            		(stats.remapped_reanalysis_proteins != null &&
+		            			stats.remapped_reanalysis_proteins != "0" &&
+	            				stats.remapped_reanalysis_proteins != notApplicable))
+		            		delete remapped_proteins_row.style.display;
+		            	else remapped_proteins_row.style.display = "none";
+	            	}
+	                // number of proteins in identification results
+	            	if (stats.proteins != null &&
+		            	stats.proteins == "0" &&
+		            	dataset_is_complete == false)
+		            	stats.proteins = notApplicable;
+		            if (stats.reanalysis_proteins != null && 
+		            	stats.reanalysis_proteins == "0" &&
+		            	dataset_is_complete == false)
+			            stats.reanalysis_proteins = notApplicable;
+	            	var proteins = document.getElementById("proteins");
+	            	if (proteins != null && stats.proteins != null) {
+	        			if (stats.proteins != "0" && stats.proteins != notApplicable) {
+	            			removeChildren(proteins);
+	            			var link = document.createElement("a");
+	            			link.href =
+	            				"./result.jsp?task=" + task_id + "&view=view_result_list";
+	            			link.target = "_blank";
+	            			link.innerHTML = stats.proteins;
+	            			proteins.appendChild(link);
+	        			} else proteins.innerHTML = stats.proteins;
+	            	}
+	            	var reanalysisProteins =
+	            		document.getElementById("reanalysis_proteins");
+	            	if (reanalysisProteins != null &&
+	            		stats.reanalysis_proteins != null) {
+	        			if (stats.reanalysis_proteins != "0" &&
+	        				stats.reanalysis_proteins != notApplicable) {
+			            	removeChildren(reanalysisProteins);
+			            	var link = document.createElement("a");
+			            	link.href = "#reanalyses_header";
+			            	link.innerHTML = stats.reanalysis_proteins;
+			            	reanalysisProteins.appendChild(link);
+			        	} else reanalysisProteins.innerHTML = stats.reanalysis_proteins;
+	            	}
+	                // number of peptides in identification results
+	            	if (stats.peptides != null &&
+		            	stats.peptides == "0" &&
+		            	dataset_is_complete == false)
+		            	stats.peptides = notApplicable;
+		            if (stats.reanalysis_peptides != null && 
+		            	stats.reanalysis_peptides == "0" &&
+		            	dataset_is_complete == false)
+			            stats.reanalysis_peptides = notApplicable;
+	            	var peptides = document.getElementById("peptides");
+	            	if (peptides != null && stats.peptides != null) {
+	        			if (stats.peptides != "0" && stats.peptides != notApplicable) {
+	            			removeChildren(peptides);
+	            			var link = document.createElement("a");
+	            			link.href =
+	            				"./result.jsp?task=" + task_id + "&view=view_result_list";
+	            			link.target = "_blank";
+	            			link.innerHTML = stats.peptides;
+	            			peptides.appendChild(link);
+	        			} else peptides.innerHTML = stats.peptides;
+	            	}
+	            	var reanalysisPeptides =
+	            		document.getElementById("reanalysis_peptides");
+	            	if (reanalysisPeptides != null &&
+	            		stats.reanalysis_peptides != null) {
+	        			if (stats.reanalysis_peptides != "0" &&
+		        			stats.reanalysis_peptides != notApplicable) {
+				            removeChildren(reanalysisPeptides);
+				            var link = document.createElement("a");
+				            link.href = "#reanalyses_header";
+				            link.innerHTML = stats.reanalysis_peptides;
+				            reanalysisPeptides.appendChild(link);
+				        } else reanalysisPeptides.innerHTML = stats.reanalysis_peptides;
+	            	}
+	                // number of variant peptides in identification results
+	            	if (stats.variants != null &&
+		            	stats.variants == "0" &&
+		            	dataset_is_complete == false)
+		            	stats.variants = notApplicable;
+		            if (stats.reanalysis_variants != null && 
+		            	stats.reanalysis_variants == "0" &&
+		            	dataset_is_complete == false)
+			            stats.reanalysis_variants = notApplicable;
+	            	var variants = document.getElementById("variants");
+	            	if (variants != null && stats.variants != null) {
+	        			if (stats.variants != "0" && stats.variants != notApplicable) {
+	            			removeChildren(variants);
+	            			var link = document.createElement("a");
+	            			link.href =
+	            				"./result.jsp?task=" + task_id + "&view=view_result_list";
+	            			link.target = "_blank";
+	            			link.innerHTML = stats.variants;
+	            			variants.appendChild(link);
+	        			} else variants.innerHTML = stats.variants;
+	            	}
+	            	var reanalysisVariants =
+	            		document.getElementById("reanalysis_variants");
+	            	if (reanalysisVariants != null &&
+	            		stats.reanalysis_variants != null) {
+	        			if (stats.reanalysis_variants != "0" &&
+							stats.reanalysis_variants != notApplicable) {
+							removeChildren(reanalysisVariants);
+							var link = document.createElement("a");
+							link.href = "#reanalyses_header";
+							link.innerHTML = stats.reanalysis_variants;
+							reanalysisVariants.appendChild(link);
+						} else reanalysisVariants.innerHTML = stats.reanalysis_variants;
+	            	}
+	                // number of PSMs in identification results
+	            	if (stats.psms != null &&
+		            	stats.psms == "0" &&
+		            	dataset_is_complete == false)
+		            	stats.psms = notApplicable;
+		            if (stats.reanalysis_psms != null && 
+		            	stats.reanalysis_psms == "0" &&
+		            	dataset_is_complete == false)
+			            stats.reanalysis_psms = notApplicable;
+	            	var psms = document.getElementById("psms");
+	            	if (psms != null && stats.psms != null) {
+	        			if (stats.psms != "0" && stats.psms != notApplicable) {
+	            			removeChildren(psms);
+	            			var link = document.createElement("a");
+	            			link.href =
+	            				"./result.jsp?task=" + task_id + "&view=view_result_list";
+	            			link.target = "_blank";
+	            			link.innerHTML = stats.psms;
+	            			psms.appendChild(link);
+	        			} else psms.innerHTML = stats.psms;
+	            	}
+	            	var reanalysisPSMs =
+	            		document.getElementById("reanalysis_psms");
+	            	if (reanalysisPSMs != null &&
+	            		stats.reanalysis_psms != null) {
+	        			if (stats.reanalysis_psms != "0" &&
+							stats.reanalysis_psms != notApplicable) {
+							removeChildren(reanalysisPSMs);
+							var link = document.createElement("a");
+							link.href = "#reanalyses_header";
+							link.innerHTML = stats.reanalysis_psms;
+							reanalysisPSMs.appendChild(link);
+						} else reanalysisPSMs.innerHTML = stats.reanalysis_psms;
+	            	}
+	                // number of differentially abundant proteins
+        			var quant_visible = false;
+	            	if (stats.quant_proteins_da != null &&
+	            		stats.quant_proteins_da == "0" &&
+	            		true)
+	            		stats.quant_proteins_da = notApplicable;
+	            	if (stats.reanalysis_quant_proteins_da != null && 
+	            		stats.reanalysis_quant_proteins_da == "0" &&
+		            	true)
+		            	stats.reanalysis_quant_proteins_da = notApplicable;
+					if ((stats.quant_proteins_da != null &&
+							stats.quant_proteins_da != "0" &&
+							stats.quant_proteins_da != notApplicable) ||
+						(stats.reanalysis_quant_proteins_da != null &&
+							stats.reanalysis_quant_proteins_da != "0" &&
+							stats.reanalysis_quant_proteins_da != notApplicable))
+						quant_visible = true;
+	                var differentiallyAbundantProteins =
+	                	document.getElementById("quant_proteins_da");
+	                if (differentiallyAbundantProteins != null && stats.quant_proteins_da != null) {
+	        			if (stats.quant_proteins_da != "0" &&
+	        				stats.quant_proteins_da != notApplicable) {
+	            			removeChildren(differentiallyAbundantProteins);
+	            			var link = document.createElement("a");
+	            			link.href =
+	            				"./result.jsp?task=" + task_id + "&view=view_quant_list";
+	            			link.target = "_blank";
+	            			link.innerHTML = stats.quant_proteins_da;
+	            			differentiallyAbundantProteins.appendChild(link);
+	        			} else differentiallyAbundantProteins.innerHTML = stats.quant_proteins_da;
+	                }
+	                var reanalysisDifferentiallyAbundantProteins =
+	                	document.getElementById("reanalysis_quant_proteins_da");
+	                if (reanalysisDifferentiallyAbundantProteins != null &&
+	                	stats.reanalysis_quant_proteins_da != null) {
+	        			if (stats.reanalysis_quant_proteins_da != "0" &&
+							stats.reanalysis_quant_proteins_da != notApplicable) {
+							removeChildren(reanalysisDifferentiallyAbundantProteins);
+							var link = document.createElement("a");
+							link.href = "#reanalyses_header";
+							link.innerHTML = stats.reanalysis_quant_proteins_da;
+							reanalysisDifferentiallyAbundantProteins.appendChild(link);
+						} else reanalysisDifferentiallyAbundantProteins.innerHTML =
+							stats.reanalysis_quant_proteins_da;
+	                }
+	                // number of proteins reported in quant stats results
+	            	if (stats.quant_proteins != null &&
+	            		stats.quant_proteins == "0" &&
+	            		true)
+	            		stats.quant_proteins = notApplicable;
+	            	if (stats.reanalysis_quant_proteins != null && 
+	            		stats.reanalysis_quant_proteins == "0" &&
+		            	true)
+		            	stats.reanalysis_quant_proteins = notApplicable;
+					if ((stats.quant_proteins != null &&
+							stats.quant_proteins != "0" &&
+							stats.quant_proteins != notApplicable) ||
+						(stats.reanalysis_quant_proteins != null &&
+							stats.reanalysis_quant_proteins != "0" &&
+							stats.reanalysis_quant_proteins != notApplicable))
+						quant_visible = true;
+	                var quantProteins = document.getElementById("quant_proteins");
+	                if (quantProteins != null && stats.quant_proteins != null) {
+	        			if (stats.quant_proteins != "0" && stats.quant_proteins != notApplicable) {
+		            		removeChildren(quantProteins);
+		            		var link = document.createElement("a");
+		            		link.href =
+		            			"./result.jsp?task=" + task_id + "&view=view_quant_list";
+		            		link.target = "_blank";
+		            		link.innerHTML = stats.quant_proteins;
+		            		quantProteins.appendChild(link);
+		        		} else quantProteins.innerHTML = stats.quant_proteins;
+	                }
+	                var reanalysisQuantProteins = document.getElementById("reanalysis_quant_proteins");
+	                if (reanalysisQuantProteins != null &&
+	                	stats.reanalysis_quant_proteins != null) {
+	        			if (stats.reanalysis_quant_proteins != "0" &&
+							stats.reanalysis_quant_proteins != notApplicable) {
+							removeChildren(reanalysisQuantProteins);
+							var link = document.createElement("a");
+							link.href = "#reanalyses_header";
+							link.innerHTML = stats.reanalysis_quant_proteins;
+							reanalysisQuantProteins.appendChild(link);
+						} else reanalysisQuantProteins.innerHTML = stats.reanalysis_quant_proteins;
+	                }
+	                // only display quant results block if any quant results rows are visible
+	    			var quant_proteins_da_row = document.getElementById("quant_proteins_da_row");
+	    			var quant_proteins_row = document.getElementById("quant_proteins_row");
+	                var quant_results_header = document.getElementById("quant_results_header");
+	                spacer = document.getElementById("quant_block_spacer");
+	            	if (debug || quant_visible) {
+	        			if (quant_proteins_da_row != null)
+	        				delete quant_proteins_da_row.style.display;
+	        			if (quant_proteins_row != null)
+	        				delete quant_proteins_row.style.display;
+	                    if (quant_results_header != null)
+	                    	delete quant_results_header.style.display;
+	                    if (spacer != null)
+	                    	delete spacer.style.display;
+	            	} else {
+	        			if (quant_proteins_da_row != null)
+	        	            quant_proteins_da_row.style.display = "none";
+	        			if (quant_proteins_row != null)
+	        	            quant_proteins_row.style.display = "none";
+	                    if (quant_results_header != null)
+	                    	quant_results_header.style.display = "none";
+	                    if (spacer != null)
+	                    	spacer.style.display = "none";
+	            	}
+	            	// hide all identification numbers if they are all zero
+	            	// and any quant numbers are nonzero
+	            	if (debug == false &&
+	            		((quantProteins.innerHTML != "0" &&
+	            			quantProteins.innerHTML != notApplicable) ||
+	            		(differentiallyAbundantProteins.innerHTML != "0" &&
+	            			differentiallyAbundantProteins.innerHTML != notApplicable) ||
+	            		(reanalysisQuantProteins.innerHTML != "0" &&
+	            			reanalysisQuantProteins.innerHTML != notApplicable) ||
+	            		(reanalysisDifferentiallyAbundantProteins.innerHTML != "0" &&
+	            			reanalysisDifferentiallyAbundantProteins.innerHTML != notApplicable)) &&
+	            		((proteins.innerHTML == "0" ||
+	            			proteins.innerHTML == notApplicable) &&
+	            		(reanalysisProteins.innerHTML == "0" ||
+	            			reanalysisProteins.innerHTML == notApplicable) &&
+	            		(remappedProteins.innerHTML == "0" ||
+	            			remappedProteins.innerHTML == notApplicable) &&
+	            		(remappedReanalysisProteins.innerHTML == "0" ||
+	            			remappedReanalysisProteins.innerHTML == notApplicable) &&
+	            		(peptides.innerHTML == "0" ||
+	            			peptides.innerHTML == notApplicable) &&
+	            		(reanalysisPeptides.innerHTML == "0" ||
+	            			reanalysisPeptides.innerHTML == notApplicable) &&
+	            		(variants.innerHTML == "0" ||
+	            			variants.innerHTML == notApplicable) &&
+	            		(reanalysisVariants.innerHTML == "0" ||
+	            			reanalysisVariants.innerHTML == notApplicable) &&
+	            		(psms.innerHTML == "0" ||
+	            			psms.innerHTML == notApplicable) &&
+	            		(reanalysisPSMs.innerHTML == "0" ||
+	            			reanalysisPSMs.innerHTML == notApplicable))) {
+	                    var proteins_row = document.getElementById("proteins_row");
+	                    if (proteins_row != null)
+	        	            proteins_row.style.display = "none";
+	                    if (remapped_proteins_row != null)
+	        	            remapped_proteins_row.style.display = "none";
+	                    var peptides_row = document.getElementById("peptides_row");
+	                    if (peptides_row != null)
+	        	            peptides_row.style.display = "none";
+	                    var variants_row = document.getElementById("variants_row");
+	                    if (variants_row != null)
+	        	            variants_row.style.display = "none";
+	                    var psms_row = document.getElementById("psms_row");
+	                    if (psms_row != null)
+	        	            psms_row.style.display = "none";
+		                var id_header = document.getElementById("identification_results");
+		                if (id_header != null)
+		                	id_header.style.display = "none";
+		                spacer = document.getElementById("identification_block_spacer");
+		                if (spacer != null)
+		                	spacer.style.display = "none";
+	            	}
+	            }
+	        });
+		}
+		
+		function buildReanalysesTable() {
+			// only do something if the reanalyses div is present
+			var reanalyses = document.getElementById("reanalyses");
+			if (reanalyses == null)
+				return;
+			// render spinner over reanalyses table
+			var overlay = document.getElementById("reanalyses_overlay");
+			enableOverlay(overlay, true, true, "30px");
+			// request current reanalyses from server
+	    	$.ajax({
+	            url: "./MassiveServlet",
+	            data: { "function":"reanalysis", "task":"b225eeb4927a44e481e1b190aec06402" },
+	            type: "GET",
+	            cache: false,
+	            complete: function(data) {
+	            	// disable spinner over reanalyses table
+	    			enableOverlay(overlay, false, false);
+	    			// clear reanalyses table, if already present
+	    			removeChildren(reanalyses);
+	            	// get reanalysis data
+	            	var json = null;
+	            	try {
+	            		json =
+	            			JSON.parse(data.responseText)["massivereanalyses"];
+	            	} catch (error) {}
+	            	// if reanalyses are present, show them
+	            	if (json != null && json.length >= 1) {
+	            		// build and render reanalyses table
+		    			var task = {id:"N/A", description:"Dataset Reanalyses"}
+		    			var table = new ResultViewTableGen(
+		    				getReanalysesTableXML(), "reanalyses_table", task);
+		    			table.setData(json);
+		    			table.render(reanalyses, 0);
+		    			tableManager.getBlock("reanalyses_table").rebuildTable();
+		    			// update summary table with reanalysis count
+		    			var header = document.getElementById("reanalyses_summary_header");
+		    			if (header != null) {
+		    				removeChildren(header);
+		    				var link = document.createElement("a");
+		    				link.href = "#reanalyses_header";
+		    				if (json.length == 1)
+		    					link.innerHTML = "1 Reanalysis";
+		    				else link.innerHTML = json.length + " Reanalyses";
+		    				header.appendChild(link);
+		    			}
+	            	}
+	            	// otherwise, invite the user to add the first reanalysis
+	            	else {
+	            		var content = document.createElement("p");
+	            		content.style.fontSize = "1.1em";
+	            		content.appendChild(document.createTextNode(
+	            			"This dataset has no reanalyses " +
+	            			"attached. Click here to add one: "));
+	            		var button = document.createElement("a");
+	            		button.id = "dynamic_add_reanalysis";
+	            		button.className = "button";
+	            		button.innerHTML = "Add Reanalysis";
+	            		content.appendChild(button);
+	            		reanalyses.appendChild(content);
+	            		initAddReanalysis("dynamic_add_reanalysis");
+	            	}
+	            }
+	        });
+		}
+		
+		function buildHistoryTable() {
+			// only do something if the history div is present
+			var history = document.getElementById("history");
+			if (history == null)
+				return;
+			// render spinner over dataset history table
+			var overlay = document.getElementById("history_overlay");
+			enableOverlay(overlay, true, true, "30px");
+			// request dataset history from server
+	    	$.ajax({
+	            url: "./MassiveServlet",
+	            data: { "function":"massivehistory", "massiveid":dataset_name },
+	            type: "GET",
+	            cache: false,
+	            complete: function(data) {
+	            	// disable spinner over dataset history table
+	    			enableOverlay(overlay, false, false);
+	    			// clear history table, if already present
+	    			removeChildren(history);
+	    			// build and render history table
+	    			var task = {id:"N/A", description:"Dataset History"}
+	    			var table = new ResultViewTableGen(
+	    				getHistoryTableXML(), "main", task);
+	    			table.setData(JSON.parse(data.responseText));
+	    			table.render(history, 0);
+	    			tableManager.getBlock("main").rebuildTable();
+	            }
+	        });
+		}
+		
+		// custom XML layout for the dataset reanalyses table
+		function getReanalysesTableXML() {
+			var tableXML =
+				"<block id='reanalyses' type='table' pagesize='10'>\n" +
+				"\t<row>\n" +
+				"\t\t<column type='reanalysis' field='comment' " +
+					"label='Title' width='18' " +
+					"tooltip='Reanalysis title, with MassIVE accession'/>\n" +
+ 				"\t\t<column type='container' field='container_title' " +
+					"label='Reanalysis Container' width='12' " +
+					"tooltip='Reanalysis container title, with MassIVE accession'/>\n" +
+				"\t\t<column type='integer' field='conditions' " +
+					"label='Conditions' width='1' " +
+					"tooltip='Number of distinct conditions across all analyses (original submission and reanalyses) associated with this dataset. Distinct condition labels are counted across all files submitted in the \"Metadata\" category having a \"Condition\" column in this dataset.'/>\n" +
+				"\t\t<column type='integer' field='bio_replicates' " +
+					"label='Biological&lt;br/&gt;Replicates' width='1' " +
+					"tooltip='Number of distinct biological replicates across all analyses (original submission and reanalyses) associated with this dataset. Distinct replicate labels are counted across all files submitted in the \"Metadata\" category having a \"BioReplicate\" or \"Replicate\" column in this dataset.'/>\n" +
+				"\t\t<column type='integer' field='tech_replicates' " +
+					"label='Technical&lt;br/&gt;Replicates' width='1' " +
+					"tooltip='Number of distinct technical replicates across all analyses (original submission and reanalyses) associated with this dataset. The technical replicate count is defined as the maximum number of times any one distinct combination of condition and biological replicate was analyzed across all files submitted in the \"Metadata\" category. In the case of fractionated experiments, only the first fraction is considered.'/>\n" +
+				"\t\t<column type='time' field='create_time' label='Date' " +
+					"width='12' tooltip='Reanalysis attachment date'/>\n" +
+				"\t\t<column type='detach' field='task' " +
+					"label='Deactivate' width='3' sort='false' " +
+					"tooltip='Deactivate this reanalysis'/>\n" +
+				"\t</row>\n" +
+				"</block>";
+		    return (parseXML(tableXML));
+		}
+		
+		// custom XML layout for the dataset history table
+		function getHistoryTableXML() {
+			var tableXML = "<block id='history' type='table' pagesize='10'>\n" +
+				"\t<row>\n" +
+				"\t\t<column type='time' field='date' label='Date' " +
+					"width='12' tooltip='Dataset operation date'/>\n" +
+				"\t\t<column type='text' field='workflow' label='Type' " +
+					"width='12' tooltip='Dataset operation type'/>\n" +
+				"\t\t<column type='task' field='description' " +
+					"label='Description' width='18' " +
+					"tooltip='Dataset operation description'/>\n" +
+				"\t</row>\n" +
+				"</block>";
+		    return (parseXML(tableXML));
+		}
+		
+		// custom decorator for this table
+		function decorateTable(table) {
+			table.cellSpacing = "1";
+			table.cellPadding = "4";
+			table.className = "result";
+			table.border = "0";	
+			table.width = "100%";
+		}
+
+		// custom column handlers for this table
+		var reanalysisColumnHandler = {
+            render: function(tableId, rowId, columnId, attributes) {
+                var format = function(value, record) {
+                	// add title text first
+					if (value == null)
+						value = "N/A";
+                	var div = document.createElement("div");
+                	div.appendChild(document.createTextNode(value));
+                	var spacer = document.createElement("hr");
+                	spacer.className = "spacer";
+                	div.appendChild(spacer);
+                    // set up reanalysis page link
+                    value = record["id"];
+					if (value == null)
+						value = "N/A";
+                    var link = document.createElement("a");
+					link.href = "QueryMSV?id=" + value;
+                    link.target = "_blank";
+                    link.textContent = "[" + value + "]";
+                    // give link the usual task status page link style
+                    link.className = "task";
+                    div.appendChild(link);
+                    return div;
+                };
+                return renderCell(format, tableId, rowId, columnId, attributes);
+            },
+			sort: plainSorter,
+            filter: plainFilter
+        };
+        columnHandlers["reanalysis"] = reanalysisColumnHandler;
+        
+        var containerColumnHandler = {
+			render: function(tableId, rowId, columnId, attributes) {
+				var format = function(value, record) {
+                    // add title text first
+    				if (value == null)
+    					value = "N/A";
+                    var div = document.createElement("div");
+                    div.appendChild(document.createTextNode(value));
+                    var spacer = document.createElement("hr");
+                    spacer.className = "spacer";
+                    div.appendChild(spacer);
+					// set up container page link
+					value = record["container_name"];
+					if (value == null)
+						value = "N/A";
+					var link = document.createElement("a");
+					link.href = "QueryMSV?id=" + value;
+                    link.target = "_blank";
+					link.textContent = "[" + value + "]";
+					// give link the usual task status page link style
+					link.className = "task";
+					div.appendChild(link);
+					return div;
+				};
+				return renderCell(format, tableId, rowId, columnId, attributes);
+			},
+			sort: plainSorter,
+			filter: plainFilter
+		};
+		columnHandlers["container"] = containerColumnHandler;
+		
+		var timeColumnHandler = {
+			render: renderPlain,
+			sort: function(sg, caption, fieldname, tooltipText) {
+				return numberSorter(sg, caption, (fieldname + "Millis"),
+					tooltipText);
+			},
+			filter: plainFilter
+		};
+		columnHandlers["time"] = timeColumnHandler;
+        
+		var detachColumnHandler = {
+			render: function(tableId, rowId, columnId, attributes) {
+				// set up comment detachment function closure generator
+				var getRemover = function(icon, taskID) {
+					return function() {
+						var sure = confirm(
+							"Are you sure? If you detach this reanalysis " +
+							"from this dataset, only MassIVE administrators " +
+							"will be able to recover it.");
+						if (sure) {
+							icon.src = "images/inProgress.gif";
+					    	$.ajax({
+					            url: "./DetachReanalysis",
+					            data: { "task": taskID },
+					            type: "GET",
+					            cache: false,
+					            async: false,
+					            success: function(data) {
+					            	buildHistoryTable();
+					            	buildReanalysesTable();
+					            },
+					            error: function(data) {
+					            	alert(extractResponseMessage(
+					            		data.responseText));
+						            icon.src = "images/hide.png";
+					            }
+					        });
+						}
+					}
+				};
+        		var format = function(value, record) {
+        			if ((isTrusted || user == record.user) &&
+        				record.workflow == "ADD-MASSIVE-REANALYSIS") {
+        				var wrapper = document.createElement("div");
+        				wrapper.style.textAlign = "center";
+            			var icon = document.createElement("img");
+            			icon.src = "images/hide.png";
+            			icon.style.width = "20px";
+            			icon.style.height = "auto";
+            			icon.style.cursor = "pointer";
+            			icon.onclick = getRemover(icon, value);
+            			wrapper.appendChild(icon);
+            			return wrapper;
+        			} else return "";
+                };
+                return renderCell(format, tableId, rowId, columnId, attributes);
+			},
+			sort: plainSorter,
+			filter: null
+		};
+		columnHandlers["detach"] = detachColumnHandler;
+        
+        // controller functions for the dataset history table
+		function toggleMetadata() {
+			var opened = $(this).hasClass('less');  
+			$(this).text(opened ? 'More...' : 'Less...').toggleClass('less', !opened);    
+			$(this).siblings('li.toggleable').slideToggle();
+		}
+		
+		function toggleDiv(id) {
+			var div = $("#" + id);
+			if (div == null)
+				return;
+			else {
+				var toggle = $("#" + id + "Toggle");
+				if (div.is(":hidden")) {
+					div.slideDown(200);
+					if (toggle != null)
+						toggle.text("-");
+					// scroll down to the bottom of the page after expanding
+					$("html, body").animate(
+						{scrollTop: $("#" + id + "_header").offset().top}, 200);
+				} else {
+					div.slideUp(200);
+					if (toggle != null)
+						toggle.text("+");
+				}
+			}
+		}
+    </script>
+	
+	<!-- Custom styles for this page -->
+	<style>
+		#pageWrapper {
+			margin-left: 40px;
+			margin-right: 40px;
+		}
+		#pageWrapper a {
+			text-decoration: none;
+		}
+		#pageWrapper a.button {
+			background-color: #CFE8EF;
+			background-image: -webkit-linear-gradient(top,#CFE8EF,#9ACEDD);
+			background-image: -moz-linear-gradient(top,#CFE8EF,#9ACEDD);
+			background-image: linear-gradient(top,#CFE8EF,#9ACEDD);
+			border: 1px solid #5CAECD;
+			border-radius: 2px;
+			color: #00709B;
+			cursor: pointer;
+			font-size: 10pt;
+			font-style: normal;
+			margin: 0 .1em;
+			padding: 4px;
+			bottom: 0;
+		}
+		#pageWrapper a.disabled {
+			pointer-events: none;
+			background-image: -webkit-linear-gradient(top,#F0F0F0,#C0C0C0);
+			background-image: -moz-linear-gradient(top,#F0F0F0,#C0C0C0);
+			background-image: linear-gradient(top,#F0F0F0,#C0C0C0);
+			border: 1px solid #808080;
+			color: gray;
+			cursor: default;
+		}
+		#pageWrapper hr.spacer {
+			background: none;
+			clear: both;
+			float: none;
+			width: 100%;
+			height: 50px;
+			border: none;
+			margin: -1px 0;
+		}
+		#titleHeader {
+			margin-left: auto;
+			margin-right: auto;
+		}
+		#titleHeader div.left-panel {
+			display: inline;
+			float: left;
+			margin-left: 0;
+			margin-right: 1%;
+			position: relative;
+			width: 70%;
+		}
+		#titleHeader h1 {
+			color: #003399;
+			float: left;
+			font-family: "Helvetica neue",Helvetica,Arial,sans-serif;
+			font-size: 24pt;
+			font-style: normal;
+			font-weight: bold;
+			text-align: left;
+		}
+		#titleHeader h2 {
+			clear: both;
+			font-size: 16pt;
+			font-weight: normal;
+			padding-bottom: 10px;
+			text-align: left;
+		}
+		#titleHeader h3 {
+			clear: both;
+			color: black;
+			font-size: 11pt;
+			font-weight: normal;
+			text-align: left;
+		}
+		#titleHeader p {
+			font-size: 11pt;
+			padding-bottom: 10px;
+			text-align: left;
+		}
+		#titleHeader span.tag {
+			background: #B7EEBA url('images/icons/tag.png') no-repeat 2px 2px;
+			border-style: dotted;
+			border-width: 0 0 1px 0;
+			border-radius: 5px;
+			font-style: italic;
+			margin-left: 5px;
+			padding: 2px 8px 2px 17px;
+			position: relative;
+			left: 30px;
+			top: 32px;
+		}
+		#titleHeader span.yellow {
+			background-color: #FFFACD;
+		}
+		#titleHeader span.red {
+			background-color: #FFCCCB;
+		}
+		#titleHeader span.purple {
+			background-color: #F0C0FF;
+		}
+		#titleHeader div.buttons {
+			clear: both;
+		}
+		#titleHeader a.button::before {
+			content: attr(data-icon);
+			font-family: "EBI-Functional";
+			margin: 0 0.3em 0 0;
+		}
+		#textWrapper {
+			clear: both;
+		}
+		#textWrapper h2, h3, h4, h5, h6 {
+			color: #003399;
+			font-family: "Helvetica neue",Helvetica,Arial,sans-serif;
+			font-style: normal;
+			font-weight: normal;
+			margin-bottom: 5px;
+		}
+		#textWrapper h2 {
+			border-bottom: 2px solid #003399;
+		}
+		#textWrapper td {
+			vertical-align: top;
+		}
+		#textWrapper input.copyBox {
+			width: 100%;
+			cursor: pointer;
+		}
+		#textWrapper div.left-panel {
+			display: inline;
+			float: left;
+			margin-left: 0;
+			margin-right: 1%;
+			position: relative;
+			width: 56%;
+		}
+		#textWrapper div.left-panel div.dataset-block {
+			font-size: 11pt;
+			border-bottom: 1px solid lightgray;
+			padding-bottom: 10px;
+		}
+		#textWrapper div.left-panel div.dataset-block td.value {
+			padding-left: 10px;
+		}
+		#textWrapper div.right-panel {
+			float: right;
+			width: 40%;
+			padding-bottom: 12px;
+		}
+		#textWrapper div.right-panel div.dataset-summary {
+			background-color: #DBEEF4;
+			border: 3px solid #C6D9F1;
+			border-radius: 10px;
+			bottom: -20px;
+			margin: 10px;
+			padding: 10px;
+			text-align: left;
+		}
+		#textWrapper div.right-panel div.dataset-summary table {
+			margin: 0 auto;
+		}
+		#textWrapper div.right-panel div.dataset-summary td {
+			font-size: 1.1em;
+			padding-right: 10px;
+		}
+		#textWrapper div.right-panel div.dataset-summary th {
+			font-size: 1.1em;
+			font-weight: bold;
+		}
+		#textWrapper div.right-panel div.dataset-summary div.info {
+			position: relative;
+		}
+		#textWrapper div.right-panel div.dataset-summary span.info {
+			padding-right: 20px;
+		}
+		#textWrapper div.right-panel div.dataset-summary img.info {
+			position: absolute;
+			width: 28px;
+			left: 91%;
+			top: -35%;
+			cursor: help;
+		}
+		#textWrapper div.right-panel div.dataset-summary div.ftpHelp {
+			font-size: 0.9em;
+		}
+		#textWrapper div.right-panel div.dataset-summary input.copyBox {
+			margin: 5px 0 5px 0;
+		}
+		#textWrapper div.right-panel div.dataset-metadata {
+			border: 1px solid #003399;
+			display: inline;
+			float: left;
+			margin-left: 1%;
+			margin-right: 0;
+			margin-top: 30px;
+			padding: 10px;
+			text-align: left;
+		}
+		#textWrapper div.right-panel div.dataset-metadata td {
+			font-size: 9pt;
+			padding-right: 7px;
+			width: 30%;
+		}
+		#textWrapper div.right-panel div.dataset-metadata ul {
+			list-style: none;
+			padding-left: 0;
+		}
+		#textWrapper div.right-panel div.dataset-metadata li.more {
+			color: red;
+			cursor: pointer;
+		}
+		#textWrapper div.bottom-panel {
+			clear: both;
+		}
+		#textWrapper div.bottom-panel span.toggle {
+			float: left;
+			width: 20px;
+			cursor: pointer; 
+		}
+		#textWrapper div.bottom-panel hr.spacer {
+			background: none;
+			height: auto;
+			border: none;
+			margin: 4px;
+		}
+		#textWrapper div.bottom-panel table.result {
+			width: 85%;
+		}
+		#textWrapper div.bottom-panel table.result thead th {
+			background-color: #4F81BD;
+			color: white;
+			padding: 7px;
+			text-align: center;
+		}
+		#textWrapper div.bottom-panel table.result tbody tr.odd {
+			background-color: #D0D8E8;
+		}
+		#textWrapper div.bottom-panel table.result tbody tr.even {
+			background-color: #E9EDF4;
+		}
+		#textWrapper div.bottom-panel table.result tbody td {
+			padding: 7px;
+		}
+	</style>
+</head>
+<body onload="init()">
+<div id="bodyWrapper">
+	<a href="/ProteoSAFe/static/massive.jsp"><div id="logo"></div></a>
+</div>
+<div id="pageWrapper">
+    <div id="titleHeader">
+    	<div class="left-panel">
+			<h1>MassIVE MSV000092631</h1>
+			
+			<span class="tag yellow">
+				Partial
+			
+			</span>
+			<span class="tag">
+				Public
+			</span>
+			
+			<span class="tag">
+				<a href="http://proteomecentral.proteomexchange.org/cgi/GetDataset?ID=PXD044463" target="_blank">
+					PXD044463
+				</a>
+			</span>
+			
+			<h2>Digestion of protein substrates by 20S proteasomes</h2>
+		</div>
+    	<div class="buttons">
+			<a class="button" id="subscribe">Subscribe</a>
+			<a class="button" href="./index.jsp?params=%7B%22workflow%22:%22ADD-MASSIVE-COMMENT%22,%22MASSIVEID%22:%2292631%22%7D">
+				Comment
+			</a>
+			
+			<a class="button" id="convert_spectra">Convert Spectra</a>
+			
+			<a class="button" id="add_reanalysis">Add Reanalysis</a>
+		</div>
+		
+	</div>
+    
+    <div id="textWrapper">
+    	<h2></h2>
+    	<div class="left-panel">
+    		<div class="dataset-block">
+    			<h2>Description</h2>
+    			<p>
+    				The proteasome is the central protease in generating peptide repertoires for antigen presentation on human leukocyte antigen class I (HLA-I). Proteasomes not only can catalyze peptide hydrolysis but are also capable of mediating transpeptidation, resulting in spliced peptides generation, a process known as proteasome-catalyzed peptide splicing (PCPS). Despite its immunological importance, it is still unclear what are the determinants of PCPS that favor transpeptidation over hydrolysis. Hence, we sought to characterize the processing of many protein substrates and their peptide products by using a simplistic in vitro antigen processing system and analyzed by mass spectrometry followed by a refined downstream data analysis pipeline.
+
+					
+    				[<a href="https://doi.org/doi:10.25345/C5X921V5S">doi:10.25345/C5X921V5S</a>]
+    				
+    				[dataset license: <a href="http://creativecommons.org/publicdomain/zero/1.0/" target="_blank">CC0 1.0 Universal (CC0 1.0)</a>]
+    				
+    				<br/><br/>
+    				<strong>Keywords:</strong> Mass Spectrometry ; antigen processing ; 20S proteasomes ; MHC-I presentation
+    			</p>
+    		</div>
+    		
+    		<div class="dataset-block">
+    			<h2>Contact</h2>
+    			<table>
+    				<tr>
+                        <td>
+                            Principal Investigators:<br/>
+                            <span style="font-size:0.9em">(in alphabetical order)</span>
+                        </td>
+    					<td class="value">
+    						Dr. Juliane Liepe, Max Planck Institute for Multidisciplinary Sciences, Germany<br/>
+    					
+    						Michele Mishto, King's College London and the Francis Crick Institute, United Kingdom
+    					</td>
+    				</tr>
+    				<tr>
+    					<td>Submitting User:</td>
+    					<td class="value">
+    						<a href="./user/summary.jsp?user=waitucksoh">
+    							waitucksoh
+    						</a>
+    					</td>
+    				</tr>
+    			</table>
+    		</div>
+    		
+    		
+    		<div class="dataset-block">
+    			<h2>Publications</h2>
+    			<p>
+    				
+    				<span style="font-weight:bold;">Wai Tuck Soh, Hanna P. Roetschke, John A. Cormican, Bei Fang Teo, Nyet Cheng Chiam, Monika Raabe, Ralf Pflanz, Fabian Henneberg, Stefan Becker, Ashwin Chari, Haiyan Liu, Henning Urlaub, Juliane Liepe & Michele Mishto.</span><br/><span style="font-style:italic;">Protein degradation by human 20S proteasomes elucidates the interplay between peptide hydrolysis and splicing.</span><br/>Soh, W.T., Roetschke, H.P., Cormican, J.A. et al. Protein degradation by human 20S proteasomes elucidates the interplay between peptide hydrolysis and splicing. Nat Commun 15, 1147 (2024). https://doi.org/10.1038/s41467-024-45339-3.<br/><br/>
+    				
+    			</p>
+    		</div>
+    		
+    	</div>
+    	<div class="right-panel">
+    		<div class="dataset-summary" style="position:relative">
+				<div id="summary_overlay" class="overlay"><div id="summary_overlay_spinner"></div></div>
+    			<table>
+    				<tr>
+    					<td>Number of Files:</td>
+    					<td id="filecount"></td>
+    				</tr>
+    				<tr>
+    					<td>Total Size:</td>
+    					<td id="filesize"></td>
+    				</tr>
+    				<tr id="spectra_row" style="display:hidden">
+    					<td>Spectra:</td>
+    					<td id="spectra"></td>
+    				</tr>
+    				<tr>
+    					<td>Subscribers:</td>
+    					<td id="subscribers"></td>
+    				</tr>
+    				<tr><td colspan="2">&nbsp;</td></tr>
+				</table>
+				<table>
+    				<tr>
+    					<th/>
+    					<th>Owner</th>
+    					<th id="reanalyses_summary_header">Reanalyses</th>
+    				</tr>
+    				<tr id="study_design_header"><td>Experimental Design</td></tr>
+    				<!--
+    				<tr id="studies_row" style="display:hidden">
+    					<td>
+    						<div class="info">
+    							<span class="info">&nbsp;&nbsp;&nbsp;&nbsp;Studies:</span>
+    							<img id="studies_help" class="info" src="./images/help.png"></img>
+    						</div>
+    					</td>
+    					<td id="studies"></td>
+    					<td id="reanalysis_studies"></td>
+    				</tr>
+    				-->
+    				<tr id="conditions_row" style="display:hidden">
+    					<td>
+    						<div class="info">
+    							<span class="info">&nbsp;&nbsp;&nbsp;&nbsp;Conditions:</span>
+    							<img id="conditions_help" class="info" src="./images/help.png"></img>
+    						</div>
+    					</td>
+    					<td id="conditions"></td>
+    					<td id="reanalysis_conditions"></td>
+    				</tr>
+    				<tr id="bio_replicates_row" style="display:hidden">
+    					<td>
+    						<div class="info">
+    							<span class="info">&nbsp;&nbsp;&nbsp;&nbsp;Biological Replicates:</span>
+    							<img id="bio_replicates_help" class="info" src="./images/help.png"></img>
+    						</div>
+    					</td>
+    					<td id="bio_replicates"></td>
+    					<td id="reanalysis_bio_replicates"></td>
+    				</tr>
+    				<tr id="tech_replicates_row" style="display:hidden">
+    					<td>
+    						<div class="info">
+    							<span class="info">&nbsp;&nbsp;&nbsp;&nbsp;Technical Replicates:</span>
+    							<img id="tech_replicates_help" class="info" src="./images/help.png"></img>
+    						</div>
+    					</td>
+    					<td id="tech_replicates"></td>
+    					<td id="reanalysis_tech_replicates"></td>
+    				</tr>
+    				<tr id="study_design_block_spacer"><td>&nbsp;</td></tr>
+    				<tr id="identification_results"><td>Identification Results</td></tr>
+    				<tr id="remapped_proteins_row" style="display:hidden">
+    					<td>
+    						<div class="info">
+    							<span class="info">&nbsp;&nbsp;&nbsp;&nbsp;Proteins (Human, Remapped):</span>
+    							<img id="remapped_proteins_help" class="info" src="./images/help.png"></img>
+    						</div>
+    					</td>
+    					<td id="remapped_proteins"></td>
+    					<td id="remapped_reanalysis_proteins"></td>
+    				</tr>
+    				<tr id="proteins_row">
+    					<td>
+    						<div class="info">
+    							<span class="info">&nbsp;&nbsp;&nbsp;&nbsp;Proteins (Reported):</span>
+    							<img class="info" id="proteins_help" src="./images/help.png"></img>
+    						</div>
+    					</td>
+    					<td id="proteins"></td>
+    					<td id="reanalysis_proteins"></td>
+    				</tr>
+    				<tr id="peptides_row">
+    					<td>
+    						<div class="info">
+    							<span class="info">&nbsp;&nbsp;&nbsp;&nbsp;Peptides:</span>
+    							<img class="info" id="peptides_help" src="./images/help.png"></img>
+    						</div>
+    					</td>
+    					<td id="peptides"></td>
+    					<td id="reanalysis_peptides"></td>
+    				</tr>
+    				<tr id="variants_row">
+    					<td>
+    						<div class="info">
+    							<span class="info">&nbsp;&nbsp;&nbsp;&nbsp;Variant Peptides:</span>
+    							<img class="info" id="variants_help" src="./images/help.png"></img>
+    						</div>
+    					</td>
+    					<td id="variants"></td>
+    					<td id="reanalysis_variants"></td>
+    				</tr>
+    				<tr id="psms_row">
+    					<td>
+    						<div class="info">
+    							<span class="info">&nbsp;&nbsp;&nbsp;&nbsp;PSMs:</span>
+    							<img class="info" id="psms_help" src="./images/help.png"></img>
+    						</div>
+    					</td>
+    					<td id="psms"></td>
+    					<td id="reanalysis_psms"></td>
+    				</tr>
+    				<tr id="identification_block_spacer"><td>&nbsp;</td></tr>
+    				<tr id="quant_results_header"><td>Quantification Results</td></tr>
+    				<tr id="quant_proteins_da_row">
+    					<td>
+    						<div class="info">
+    							<span class="info">&nbsp;&nbsp;&nbsp;&nbsp;Differential Proteins:</span>
+    							<img class="info" id="quant_proteins_da_help" src="./images/help.png"></img>
+    						</div>
+    					</td>
+    					<td id="quant_proteins_da" style="padding-right:50px;"></td>
+    					<td id="reanalysis_quant_proteins_da"></td>
+    				</tr>
+    				<tr id="quant_proteins_row">
+    					<td>
+    						<div class="info">
+    							<span class="info">&nbsp;&nbsp;&nbsp;&nbsp;Quantified Proteins:</span>
+    							<img class="info" id="quant_proteins_help" src="./images/help.png"></img>
+    						</div>
+    					</td>
+    					<td id="quant_proteins"></td>
+    					<td id="reanalysis_quant_proteins"></td>
+    				</tr>
+    				<tr id="quant_block_spacer"><td colspan="2">&nbsp;</td></tr>
+				</table>
+				<table style="width:80%">
+    				<tr>
+						
+    					<td colspan="2" style="text-align:center">
+    					
+    						<a class="button" href="./dataset_files.jsp?task=b225eeb4927a44e481e1b190aec06402">
+    							Browse&nbsp;Dataset&nbsp;Files
+    						</a>
+    					</td>
+						
+    				</tr>
+					
+    				<tr><td colspan="2">&nbsp;</td></tr>
+    				<tr>
+    					<td colspan="2">
+    						<div class="ftpHelp">FTP Download Link (click to copy):</div>
+    						<input type="text" id="ftpLink" class="copyBox" readonly="readonly" value="ftp://massive-ftp.ucsd.edu/v06/MSV000092631/"></input>
+    						
+    					</td>
+    				</tr>
+    			</table>
+    		</div>
+    		<div class="dataset-metadata">
+    			<table>
+    				<tr>
+    					<td>
+    						<h3>Species</h3>
+    						<hr class="separator"/>
+    						<ul class="metadata-list">
+    							
+    							<li>
+    								<a href="./datasets.jsp#%7B%22species_resolved_input%22%3A%22Homo sapiens (NCBITaxon:9606)%22%2C%22table_sort_history%22%3A%22createdMillis_dsc%22%7D" target="_blank">
+    									Homo sapiens (NCBITaxon:9606)
+    								</a>
+    								<hr class="separator"/>
+    							</li>
+    							
+    						</ul>
+    					</td>
+    					<td>
+    						<h3>Instrument</h3>
+    						<hr class="separator"/>
+    						<ul class="metadata-list">
+    							
+    							<li>
+    								<a href="./datasets.jsp#%7B%22instrument_resolved_input%22%3A%22Q Exactive HF%22%2C%22table_sort_history%22%3A%22createdMillis_dsc%22%7D" target="_blank">
+    									Q Exactive HF
+    								</a>
+    								<hr class="separator"/>
+    							</li>
+    							
+    							<li>
+    								<a href="./datasets.jsp#%7B%22instrument_resolved_input%22%3A%22Orbitrap Fusion%22%2C%22table_sort_history%22%3A%22createdMillis_dsc%22%7D" target="_blank">
+    									Orbitrap Fusion
+    								</a>
+    								<hr class="separator"/>
+    							</li>
+    							
+    						</ul>
+    					</td>
+    					<td>
+    						<h3>Modifications</h3>
+    						<hr class="separator"/>
+    						<ul class="metadata-list">
+    							
+    							<li>
+    								<a href="./datasets.jsp#%7B%22modification_resolved_input%22%3A%22MOD:00719 - \&quot;A protein modification that oxygenates an L-methionine residue to one of the diastereomeric L-methionine sulfoxide residues.\&quot;%22%2C%22table_sort_history%22%3A%22createdMillis_dsc%22%7D" target="_blank">
+    									MOD:00719 - \&quot;A protein modification that oxygenates an L-methionine residue to one of the diastereomeric L-methionine sulfoxide residues.\&quot;
+    								</a>
+    								<hr class="separator"/>
+    							</li>
+    							
+    							<li>
+    								<a href="./datasets.jsp#%7B%22modification_resolved_input%22%3A%22MOD:01060 - \&quot;A protein modification that effectively converts an L-cysteine residue to S-carboxamidomethyl-L-cysteine.\&quot;%22%2C%22table_sort_history%22%3A%22createdMillis_dsc%22%7D" target="_blank">
+    									MOD:01060 - \&quot;A protein modification that effectively converts an L-cysteine residue to S-carboxamidomethyl-L-cysteine.\&quot;
+    								</a>
+    								<hr class="separator"/>
+    							</li>
+    							
+    						</ul>
+    					</td>
+    				</tr>
+    			</table>
+    		</div>
+    	</div>
+    	<div class="bottom-panel">
+    		<div style="position:relative">
+				<div id="reanalyses_overlay" class="overlay"><div id="reanalyses_overlay_spinner"></div></div>
+    			<h2 id="reanalyses_header" style="margin-top:5px">
+    				<span id="reanalysesToggle" class="toggle" onclick="toggleDiv('reanalyses');">-</span>
+    				Dataset Reanalyses
+    			</h2>
+    			<div id="reanalyses"></div>
+    			<hr class="spacer"/>
+    		</div>
+    		<div style="position:relative">
+				<div id="history_overlay" class="overlay"><div id="history_overlay_spinner"></div></div>
+    			<h2 id="history_header" style="margin-top:5px">
+    				<span id="historyToggle" class="toggle" onclick="toggleDiv('history');">+</span>
+    				Dataset History
+    			</h2>
+    			<div id="history"></div>
+    			<hr class="spacer"/>
+    		</div>
+    		
+    	</div>
+    </div>
+</div>
+
+<!-- Column selector form -->
+<div class="helpbox" id="hColumnSelector" style="left:-5000px;">
+	<form name="columnSelector" method="get" action="">
+		<table id="columnSelector">
+			<tr>
+				<td/>
+				<td>
+					<input value="Submit" type="button"
+						onclick="evaluateColumns(this.form);"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>
+
+<!-- Static help text -->
+<div class="helpbox" id="hConvertSpectra" style="left:-5000px;">
+	Click here to queue conversion of this dataset's submitted spectrum files
+	to open formats (e.g. mzML). This process may take some time.<br/><br/>
+	When complete, the converted files will be available in the "ccms_peak"
+	subdirectory of the dataset's FTP space (accessible via the "FTP Download"
+	link to the right).
+</div>
+<div class="helpbox" id="hStudies" style="left:-5000px;">
+	
+</div>
+<div class="helpbox" id="hConditions" style="left:-5000px;">
+	Number of distinct conditions across all analyses (original submission and reanalyses)
+	associated with this dataset.<br/><br/>
+	Distinct condition labels are counted across all files submitted in the "Metadata" category
+	having a "Condition" column in this dataset.<br/><br/>
+	"N/A" means no results of this type were submitted.
+</div>
+<div class="helpbox" id="hBioReplicates" style="left:-5000px;">
+	Number of distinct biological replicates across all analyses (original submission and reanalyses)
+	associated with this dataset.<br/><br/>
+	Distinct replicate labels are counted across all files submitted in the "Metadata" category
+	having a "BioReplicate" or "Replicate" column in this dataset.<br/><br/>
+	"N/A" means no results of this type were submitted.
+</div>
+<div class="helpbox" id="hTechReplicates" style="left:-5000px;">
+	Number of distinct technical replicates across all analyses (original submission and reanalyses)
+	associated with this dataset.<br/><br/>
+	The technical replicate count is defined as the maximum number of times any one distinct
+	combination of condition and biological replicate was analyzed across all files submitted in the
+	"Metadata" category. In the case of fractionated experiments, only the first fraction is
+	considered.<br/><br/>
+	"N/A" means no results of this type were submitted.
+</div>
+<div class="helpbox" id="hProteins" style="left:-5000px;">
+	Originally identified proteins that were automatically
+	remapped by MassIVE to proteins in the
+	<a href="https://www.uniprot.org/uniprot/?query=*&fil=organism%3A%22Homo+sapiens+%28Human%29+%5B9606%5D%22+AND+reviewed%3Ayes">
+		SwissProt
+	</a> human reference database.<br/><br/>
+	"N/A" means no results of this type were submitted.
+</div>
+<div class="helpbox" id="hProteinsReported" style="left:-5000px;">
+	Number of distinct protein accessions reported across all analyses (original submission and
+	reanalyses) associated with this dataset.<br/><br/>
+	"N/A" means no results of this type were submitted.
+</div>
+<div class="helpbox" id="hPeptides" style="left:-5000px;">
+	Number of distinct unmodified peptide sequences reported across all analyses (original
+	submission and reanalyses) associated with this dataset.<br/><br/>
+	"N/A" means no results of this type were submitted.
+</div>
+<div class="helpbox" id="hVariants" style="left:-5000px;">
+	Number of distinct peptide sequences (including modified variants or peptidoforms) reported
+	across all analyses (original submission and reanalyses) associated with this dataset.<br/><br/>
+	"N/A" means no results of this type were submitted.
+</div>
+<div class="helpbox" id="hPSMs" style="left:-5000px;">
+	Total number of peptide-spectrum matches (i.e. spectrum identifications) reported across all
+	analyses (original submission and reanalyses) associated with this dataset.<br/><br/>
+	"N/A" means no results of this type were submitted.
+</div>
+<div class="helpbox" id="hQuantProteinsReported" style="left:-5000px;">
+	Number of distinct proteins quantified across all analyses (original submission and reanalyses)
+	associated with this dataset.<br/><br/>
+	Distinct protein accessions are counted across all files submitted in the "Statistical Analysis
+	of Quantified Analytes" category having a "Protein" column in this dataset.<br/><br/>
+	"N/A" means no results of this type were submitted.
+</div>
+<div class="helpbox" id="hQuantProteinsDA" style="left:-5000px;">
+	Number of distinct proteins found to be differentially abundant in at least one comparison
+	across all analyses (original submission and reanalyses) associated with this dataset.<br/><br/>
+	A protein is differentially abundant if its change in abundance across conditions is found
+	to be statistically significant with an adjusted p-value <= 0.05 and lists no issues associated
+	with statistical tests for differential abundance.<br/><br/>
+	Distinct protein accessions are counted across all files submitted in the "Statistical Analysis
+	of Quantified Analytes" category having a "Protein" column in this dataset.<br/><br/>
+	"N/A" means no results of this type were submitted.
+</div>
+<div class="helpbox" id="hImportedDataset" style="left:-5000px;">
+	This dataset may not contain all raw spectra data as originally deposited in PRIDE.
+	It has been imported to MassIVE for reanalysis purposes, so its spectra data here may
+	consist solely of processed peak lists suitable for reanalysis with most software.
+</div>
+
+
+<script type="text/javascript">
+try {
+	var ProteoSAFe_analytics = 'UA-8412213-4';
+	if (ProteoSAFe_analytics != '') {
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		ga('create', ProteoSAFe_analytics, 'auto');
+		ga('send', 'pageview');
+	}
+} catch(error) {
+	console.log("There was an error loading Google analytics:\n" + error);
+}
+</script>
+
+
+</body>
+</html>

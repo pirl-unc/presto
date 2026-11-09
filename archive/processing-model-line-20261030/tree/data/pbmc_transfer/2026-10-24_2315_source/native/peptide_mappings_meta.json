@@ -1,0 +1,2747 @@
+{
+  "built_at": "2026-10-16T07:07:50.595709+00:00",
+  "ci_mapping_manifest_version": 1,
+  "contract": {
+    "artifact_version": 3,
+    "columns": [
+      "peptide",
+      "protein_id",
+      "gene_name",
+      "gene_id",
+      "gene_biotype",
+      "transcript_id",
+      "is_canonical_transcript",
+      "position",
+      "n_flank",
+      "c_flank",
+      "proteome",
+      "proteome_source"
+    ],
+    "ensembl_gene_biotypes": [
+      "protein_coding",
+      "IG_V_gene",
+      "IG_D_gene",
+      "IG_J_gene",
+      "IG_C_gene",
+      "TR_V_gene",
+      "TR_D_gene",
+      "TR_J_gene",
+      "TR_C_gene"
+    ],
+    "fetch_missing": false,
+    "flank": 15,
+    "release": 112,
+    "seed_kmer_length": 7,
+    "use_uniprot": false
+  },
+  "n_peptides": 1145721,
+  "n_proteomes": 1,
+  "n_rows": 6205013,
+  "observation_hashes": {
+    "binding": {
+      "sha256": "2b3f6ea2dd647e7fc54d214eef420feaebc4e81fab97ffc0565a2de1f8695ba0",
+      "size_bytes": 17096569
+    },
+    "observations": {
+      "sha256": "a665f37c0b5917fefb6d12eade530d7e2001de1f0ee73479b21d2c393d173ab4",
+      "size_bytes": 145685701
+    },
+    "other_assays": {
+      "sha256": "c40f5227ded408830885ecba8336dbdd701172df9573b0d32e5e8a5f8fc947c2",
+      "size_bytes": 1259717
+    }
+  },
+  "original_metadata_sha256": "9001b1edb365253ef53d2a8ab32c2c4a9df3d984787a60f41722935ea1d163bf",
+  "per_proteome": {
+    "Adeno-associated virus - 6": {
+      "peptides_matched": 0,
+      "peptides_searched": 253
+    },
+    "African swine fever virus": {
+      "peptides_matched": 0,
+      "peptides_searched": 5
+    },
+    "African swine fever virus BA71V": {
+      "peptides_matched": 0,
+      "peptides_searched": 106
+    },
+    "Alphapolyomavirus muris": {
+      "peptides_matched": 0,
+      "peptides_searched": 29
+    },
+    "Ascaris suum": {
+      "peptides_matched": 0,
+      "peptides_searched": 268
+    },
+    "Betapolyomavirus hominis": {
+      "peptides_matched": 0,
+      "peptides_searched": 35
+    },
+    "Bos sp.": {
+      "peptides_matched": 0,
+      "peptides_searched": 58
+    },
+    "Bos taurus": {
+      "peptides_matched": 0,
+      "peptides_searched": 1093
+    },
+    "Canine distemper virus strain Onderstepoort": {
+      "peptides_matched": 0,
+      "peptides_searched": 22
+    },
+    "Canis lupus": {
+      "peptides_matched": 0,
+      "peptides_searched": 1809
+    },
+    "Canis sp.": {
+      "peptides_matched": 0,
+      "peptides_searched": 22
+    },
+    "Epstein-Barr virus": {
+      "peptides_matched": 0,
+      "peptides_searched": 302228
+    },
+    "Epstein-barr virus strain ag876": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Equus caballus": {
+      "peptides_matched": 0,
+      "peptides_searched": 15
+    },
+    "Gallus gallus": {
+      "peptides_matched": 0,
+      "peptides_searched": 915
+    },
+    "Giant panda rotavirus A": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "H9N2 subtype Influenza A virus (A/swine/Korea/S81/2004(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "H9N2 subtype Influenza A virus (A/swine/Korea/S83/2004(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "HIV-1 M:A": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "HIV-1 M:B": {
+      "peptides_matched": 0,
+      "peptides_searched": 27
+    },
+    "HIV-1 M:B_ARV2/SF2": {
+      "peptides_matched": 0,
+      "peptides_searched": 54
+    },
+    "HIV-1 M:B_HXB2R": {
+      "peptides_matched": 0,
+      "peptides_searched": 19
+    },
+    "HIV-1 M:B_MN": {
+      "peptides_matched": 0,
+      "peptides_searched": 28
+    },
+    "Hepacivirus hominis": {
+      "peptides_matched": 0,
+      "peptides_searched": 763
+    },
+    "Hepatitis B virus": {
+      "peptides_matched": 0,
+      "peptides_searched": 910
+    },
+    "Hepatitis B virus LSH/chimpanzee": {
+      "peptides_matched": 0,
+      "peptides_searched": 4
+    },
+    "Hepatitis B virus adr4": {
+      "peptides_matched": 0,
+      "peptides_searched": 12
+    },
+    "Hepatitis B virus adw/991": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Hepatitis B virus adw/Indonesia/PIDW420": {
+      "peptides_matched": 0,
+      "peptides_searched": 4
+    },
+    "Hepatitis B virus adw/Japan/Nishioka/1983": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Hepatitis B virus adw/Okinawa/PODW282": {
+      "peptides_matched": 0,
+      "peptides_searched": 4
+    },
+    "Hepatitis B virus adw4/Brazil/isolate w4b": {
+      "peptides_matched": 0,
+      "peptides_searched": 23
+    },
+    "Hepatitis B virus alpha1": {
+      "peptides_matched": 0,
+      "peptides_searched": 28
+    },
+    "Hepatitis B virus ayw/France/Tiollais/1979": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Hepatitis B virus genotype B": {
+      "peptides_matched": 0,
+      "peptides_searched": 12
+    },
+    "Hepatitis B virus subtype AYR": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Hepatitis B virus subtype adr": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Hepatitis B virus subtype adw": {
+      "peptides_matched": 0,
+      "peptides_searched": 69
+    },
+    "Hepatitis B virus subtype adw2": {
+      "peptides_matched": 0,
+      "peptides_searched": 39
+    },
+    "Hepatitis B virus subtype adyw": {
+      "peptides_matched": 0,
+      "peptides_searched": 71
+    },
+    "Hepatitis B virus subtype ayw": {
+      "peptides_matched": 0,
+      "peptides_searched": 138
+    },
+    "Hepatitis C virus (isolate 1)": {
+      "peptides_matched": 0,
+      "peptides_searched": 196
+    },
+    "Hepatitis C virus (isolate 6a33)": {
+      "peptides_matched": 0,
+      "peptides_searched": 14
+    },
+    "Hepatitis C virus (isolate BEBE1)": {
+      "peptides_matched": 0,
+      "peptides_searched": 17
+    },
+    "Hepatitis C virus (isolate BK)": {
+      "peptides_matched": 0,
+      "peptides_searched": 16
+    },
+    "Hepatitis C virus (isolate Con1)": {
+      "peptides_matched": 0,
+      "peptides_searched": 3
+    },
+    "Hepatitis C virus (isolate EUH1480)": {
+      "peptides_matched": 0,
+      "peptides_searched": 6
+    },
+    "Hepatitis C virus (isolate Glasgow)": {
+      "peptides_matched": 0,
+      "peptides_searched": 5
+    },
+    "Hepatitis C virus (isolate H)": {
+      "peptides_matched": 0,
+      "peptides_searched": 27
+    },
+    "Hepatitis C virus (isolate H77)": {
+      "peptides_matched": 0,
+      "peptides_searched": 8
+    },
+    "Hepatitis C virus (isolate HC-G9)": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Hepatitis C virus (isolate HCV-K3a/650)": {
+      "peptides_matched": 0,
+      "peptides_searched": 24
+    },
+    "Hepatitis C virus (isolate India)": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Hepatitis C virus (isolate JK049)": {
+      "peptides_matched": 0,
+      "peptides_searched": 6
+    },
+    "Hepatitis C virus (isolate Japanese)": {
+      "peptides_matched": 0,
+      "peptides_searched": 9
+    },
+    "Hepatitis C virus (isolate NZL1)": {
+      "peptides_matched": 0,
+      "peptides_searched": 8
+    },
+    "Hepatitis C virus (isolate Taiwan)": {
+      "peptides_matched": 0,
+      "peptides_searched": 9
+    },
+    "Hepatitis C virus (isolate Th580)": {
+      "peptides_matched": 0,
+      "peptides_searched": 8
+    },
+    "Hepatitis C virus (isolate Tr Kj)": {
+      "peptides_matched": 0,
+      "peptides_searched": 4
+    },
+    "Hepatitis C virus (isolate VN004)": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Hepatitis C virus ED43": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Hepatitis C virus genotype 1": {
+      "peptides_matched": 0,
+      "peptides_searched": 46
+    },
+    "Hepatitis C virus genotype 2": {
+      "peptides_matched": 0,
+      "peptides_searched": 6
+    },
+    "Hepatitis C virus genotype 3": {
+      "peptides_matched": 0,
+      "peptides_searched": 8
+    },
+    "Hepatitis C virus genotype 4": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Hepatitis C virus genotype 5": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Hepatitis C virus genotype 6": {
+      "peptides_matched": 0,
+      "peptides_searched": 6
+    },
+    "Hepatitis C virus isolate HC-J4": {
+      "peptides_matched": 0,
+      "peptides_searched": 3
+    },
+    "Hepatitis C virus isolate HC-J6": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Hepatitis C virus subtype 1a 1/910": {
+      "peptides_matched": 0,
+      "peptides_searched": 11
+    },
+    "Hepatitis C virus subtype 1b": {
+      "peptides_matched": 0,
+      "peptides_searched": 106
+    },
+    "Hepatitis C virus subtype 2b": {
+      "peptides_matched": 0,
+      "peptides_searched": 5
+    },
+    "Hepatitis C virus subtype 3a": {
+      "peptides_matched": 0,
+      "peptides_searched": 161
+    },
+    "Hepatitis C virus subtype 6a": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Homo sapiens": {
+      "peptides_matched": 1145721,
+      "peptides_searched": 1241004
+    },
+    "Human alphaherpesvirus 1": {
+      "peptides_matched": 0,
+      "peptides_searched": 464
+    },
+    "Human alphaherpesvirus 1 strain 17": {
+      "peptides_matched": 0,
+      "peptides_searched": 61
+    },
+    "Human alphaherpesvirus 1 strain Angelotti": {
+      "peptides_matched": 0,
+      "peptides_searched": 6
+    },
+    "Human alphaherpesvirus 1 strain F": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Human alphaherpesvirus 1 strain KOS": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Human alphaherpesvirus 1 strain SC16": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Human alphaherpesvirus 2": {
+      "peptides_matched": 0,
+      "peptides_searched": 109
+    },
+    "Human betaherpesvirus 5": {
+      "peptides_matched": 0,
+      "peptides_searched": 542
+    },
+    "Human betaherpesvirus 6B": {
+      "peptides_matched": 0,
+      "peptides_searched": 29
+    },
+    "Human cytomegalovirus": {
+      "peptides_matched": 0,
+      "peptides_searched": 14065
+    },
+    "Human gammaherpesvirus 8": {
+      "peptides_matched": 0,
+      "peptides_searched": 214
+    },
+    "Human herpesvirus 2 strain 333": {
+      "peptides_matched": 0,
+      "peptides_searched": 3
+    },
+    "Human herpesvirus 2 strain HG52": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Human herpesvirus 4 GD1": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Human herpesvirus 4 WW1": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Human herpesvirus 4 strain B95-8": {
+      "peptides_matched": 0,
+      "peptides_searched": 270
+    },
+    "Human herpesvirus 4 strain CAO": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Human herpesvirus 4 strain RAJI": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Human herpesvirus 4 type 1": {
+      "peptides_matched": 0,
+      "peptides_searched": 3
+    },
+    "Human herpesvirus 4 type 2": {
+      "peptides_matched": 0,
+      "peptides_searched": 8
+    },
+    "Human herpesvirus 5 TB40": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Human herpesvirus 5 strain AD169": {
+      "peptides_matched": 0,
+      "peptides_searched": 246
+    },
+    "Human herpesvirus 5 strain Merlin": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Human herpesvirus 5 strain Towne": {
+      "peptides_matched": 0,
+      "peptides_searched": 6
+    },
+    "Human immunodeficiency virus 1": {
+      "peptides_matched": 0,
+      "peptides_searched": 18309
+    },
+    "Human immunodeficiency virus 1 IIIB": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Human metapneumovirus A2 NL/00/17": {
+      "peptides_matched": 0,
+      "peptides_searched": 4
+    },
+    "Human papillomavirus 16": {
+      "peptides_matched": 0,
+      "peptides_searched": 273
+    },
+    "Human respiratory syncytial virus A strain Long": {
+      "peptides_matched": 0,
+      "peptides_searched": 72
+    },
+    "Human respiratory syncytial virus A2": {
+      "peptides_matched": 0,
+      "peptides_searched": 20
+    },
+    "Human respiratory syncytial virus B1": {
+      "peptides_matched": 0,
+      "peptides_searched": 25
+    },
+    "Human rotavirus A": {
+      "peptides_matched": 0,
+      "peptides_searched": 73
+    },
+    "Influenza A virus": {
+      "peptides_matched": 0,
+      "peptides_searched": 92287
+    },
+    "Influenza A virus (A/81/HO)": {
+      "peptides_matched": 0,
+      "peptides_searched": 7
+    },
+    "Influenza A virus (A/Aichi/2/1968(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 19
+    },
+    "Influenza A virus (A/Aichi/2/1994(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Alaska/6/1977(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/Anas acuta/Primorje/695/1976(H2N3))": {
+      "peptides_matched": 0,
+      "peptides_searched": 33
+    },
+    "Influenza A virus (A/Anhui/1-YK_RG134/2013(H7N9))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Anhui/1-YK_RG64/2013(H7N9))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/Ann Arbor/6/1960(H2N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 393
+    },
+    "Influenza A virus (A/Auckland/1/2009(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Auckland/590/2000(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Bangkok/1/1979(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 8
+    },
+    "Influenza A virus (A/Bangkok/10/1983(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Bar-headed Goose/Qinghai/61/05(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 13
+    },
+    "Influenza A virus (A/Beijing/01/2009(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 53
+    },
+    "Influenza A virus (A/Beijing/11/1956(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 34
+    },
+    "Influenza A virus (A/Beijing/32/1992(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 35
+    },
+    "Influenza A virus (A/Belfast/53582/2004(H3N?))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/Brazil/140/2001(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Brevig Mission/1/1918(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/CHU/2-524/2005(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/California/04/2007(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/California/04/2009(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 46
+    },
+    "Influenza A virus (A/California/07/2009(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 580
+    },
+    "Influenza A virus (A/Cameron/1946(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Canterbury/236/2005(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Chicken/Beijing/1/95(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Chicken/Guangdong/11/97(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Chicken/Henan/98(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Chicken/Hong Kong/739/94(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Chicken/Hong Kong/G23/97(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Chicken/Nanchang/2-220/2001(H3N6))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Chile/1/1983(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 8
+    },
+    "Influenza A virus (A/Ck/HK/2133.1/2003(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Ck/HK/CSW161/2003(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Ck/YN/115/2004(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Cygnus olor/Czech Republic/10732/07(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Darwin/9/2021(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Denver/1957(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/Duck/Hong Kong/ww461/2000(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Duck/Shantou/1881/00(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Duck/Shantou/2088/01(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Duck/Shantou/2134/00(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Duck/Shantou/2144/00(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Egypt/96/2002(H1N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/England/333/1980(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/England/627/01(H1N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 3
+    },
+    "Influenza A virus (A/England/654/2007(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/England/939/69 x A/PR/8/34)": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Fort Monmouth/1/1947-mouse adapted(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 51
+    },
+    "Influenza A virus (A/Fujian/411/02-like(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/G.H/HK/793.1/02 (H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Gf/HK/SSP607/2003(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Goose/Hong Kong/385.3/2000(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Hangzhou/1/2013(H7N9))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Harbin/1/1988(H1N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 22
+    },
+    "Influenza A virus (A/Hokkaido/20/89(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 3
+    },
+    "Influenza A virus (A/Hong Kong/1/1968(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 4
+    },
+    "Influenza A virus (A/Hong Kong/1074/1999(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Hong Kong/1131/1998(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Hong Kong/156/97(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 30
+    },
+    "Influenza A virus (A/Hong Kong/1774/99(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Hong Kong/213/2003(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 5
+    },
+    "Influenza A virus (A/Hong Kong/482/97(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Hong Kong/483/1997(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 3
+    },
+    "Influenza A virus (A/Hong Kong/485/1997(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Hong Kong/488/97(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Hong Kong/507/97(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 8
+    },
+    "Influenza A virus (A/Hong Kong/514/97(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Hong Kong/516/97(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/Hong Kong/532/1997(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Hong Kong/CUHK13527/2003(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/India/GWMH05/2009(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Istanbul/CTF/10/2004(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Japan/305/1957(H2N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 15
+    },
+    "Influenza A virus (A/Jiangsu/38/2004(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Kayano/57(H2N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/Kiev/59/1979(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 8
+    },
+    "Influenza A virus (A/Kinmen/645/04(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Kitakyushu/159/93(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Kitakyushu/93(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Korea/426/1968(H2N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 3
+    },
+    "Influenza A virus (A/Leningrad/1954/1(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 14
+    },
+    "Influenza A virus (A/Liaoning/25/2000(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Memphis/1/1971(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/Memphis/1/1978(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 11
+    },
+    "Influenza A virus (A/Memphis/1/1986(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Memphis/1/1990(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Memphis/10/1996(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Memphis/13/1978(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Memphis/14/1998(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Memphis/4/1973(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Memphis/4/1980(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Memphis/6/1986(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Moscow/10/1999(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/Moscow/343/2003(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/Moscow/346/2003(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Nagasaki/76/98(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Nagasaki/N03/2005(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Nanchang/0058/1994(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Netherlands/458/98 (H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/New Caledonia/20/1999(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 23
+    },
+    "Influenza A virus (A/New York/124/2001(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/New York/140/1999(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/New York/348/2003(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Northern Territory/60/1968(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/Oklahoma/309/2006(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 3
+    },
+    "Influenza A virus (A/Osaka/930/88(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Philippines/2/1982(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Puerto Rico/8/1934(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 571
+    },
+    "Influenza A virus (A/Puerto Rico/8/34/Mount Sinai(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 219
+    },
+    "Influenza A virus (A/Quail/Shanghai/8/96(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Queensland/11/2001(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/RI/5-/1957(H2N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Rio/6/69(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/SW/KS/13481-T/00(H1N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/SW/MN/12883/00(H1N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/SW/MN/3128/00(H1N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/SW/MN/3227/00(H1N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/Saudi Arabia/2581/2001(H1N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Saudi Arabia/7971/2000(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Shanghai/11/1987(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Shanghai/4665T/2013(H7N9))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Shanghai/5190T/2013(H7N9))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Sichuan/2/1987(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 5
+    },
+    "Influenza A virus (A/Singapore/1/1957(H2N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 18
+    },
+    "Influenza A virus (A/South Carolina/1/1918(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/Swine/Colorado/23619/99(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Swine/Indiana/1726/1988(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/Swine/Indiana/9K035/99 (H1N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/Swine/Italy/25823/94(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/Swine/Minnesota/55551/2000(H1N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/Switzerland/8808/2002(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Taiwan/1/1986(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Taiwan/2/2006(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 30
+    },
+    "Influenza A virus (A/Taiwan/3427/97(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Texas/1/1977(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 10
+    },
+    "Influenza A virus (A/Texas/36/1991(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Thailand/4(SP-528)/2004(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 3
+    },
+    "Influenza A virus (A/Thailand/CU-H126/2009(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Tokyo/1566/98(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Turkey/MO/24093/99(H1N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 7
+    },
+    "Influenza A virus (A/Udorn/307/1972(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Victoria/1968(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/Victoria/3/1975(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 13
+    },
+    "Influenza A virus (A/Viet Nam/1203/2004(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 7
+    },
+    "Influenza A virus (A/Viet Nam/HN/2004(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 9
+    },
+    "Influenza A virus (A/Vietnam/1194/2004(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/WSN(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/WSN/1933(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 5
+    },
+    "Influenza A virus (A/Waikato/7/2000(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 3
+    },
+    "Influenza A virus (A/Weiss/1943(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Wellington/22/2001(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Wellington/8/2004(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Wilson-Smith/1933(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 190
+    },
+    "Influenza A virus (A/Wisconsin/4754/1994(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/Wisconsin/4755/1994(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 7
+    },
+    "Influenza A virus (A/Wisconsin/67/2005(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 48
+    },
+    "Influenza A virus (A/Wyoming/3/2003-X-147(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/X-31(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 295
+    },
+    "Influenza A virus (A/X-31(H3N2)) A/X-31 X HK": {
+      "peptides_matched": 0,
+      "peptides_searched": 126
+    },
+    "Influenza A virus (A/Yilan/515/03(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/Yokohama/22/2002(H1N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/Yokohama/47/2002(H1N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/aquatic bird/Korea/w44/2005(H7N3))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/bar-headed goose/Qinghai/1-HVRI/2006(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 6
+    },
+    "Influenza A virus (A/bar-headed goose/Qinghai/3/2005(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/budgerigar/Hokkaido/1/1977(H4N6))": {
+      "peptides_matched": 0,
+      "peptides_searched": 14
+    },
+    "Influenza A virus (A/camel/Mongolia/1982(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 10
+    },
+    "Influenza A virus (A/chicken/Anhui/1/1998(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/chicken/Beijing/nl/2002(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/chicken/Brescia/1902(H7N7))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/chicken/CA/375TR/2002(H6N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/chicken/California/1002a/00(H6N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/chicken/FPV/Weybridge(H7N7))": {
+      "peptides_matched": 0,
+      "peptides_searched": 4
+    },
+    "Influenza A virus (A/chicken/Fujian/25/00(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 6
+    },
+    "Influenza A virus (A/chicken/Guiyang/2147/2005(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/chicken/Hebei/706/2005(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 4
+    },
+    "Influenza A virus (A/chicken/Hebei/nj/2002(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/chicken/Hong Kong/3123.1/2002(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/chicken/Hubei/wk/1997(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 3
+    },
+    "Influenza A virus (A/chicken/Hubei/wm/1997(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/chicken/Hunan/HN/2015(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 10
+    },
+    "Influenza A virus (A/chicken/Hunan/fg/2004(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/chicken/Italy/1067/1999(H7N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 8
+    },
+    "Influenza A virus (A/chicken/Jilin/hg/2002(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/chicken/Korea/S1/2003(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/chicken/Korea/S4/2003(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/chicken/Korea/SNU0091/00(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/chicken/Korea/SNU1035C/00(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/chicken/Mexico/37821-771/1996(H5N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/chicken/Nakorn-Patom/Thailand/CU-K3/2004(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/chicken/Nanchang/7-010/2000(H3N6))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/chicken/Pennsylvania/1/1983(H5N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/chicken/Rostock/8/1934(H7N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/chicken/Scotland/1959(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/chicken/Shanghai/Q0808-1/2008(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/chicken/Thailand/LV1NF/2004(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/chicken/Tula/Russia/Oct-5/2005(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/chicken/Uchal/8286/2006(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/chicken/Uchal/8293/2006(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/chicken/Viet Nam/AG-010/2004(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/chicken/Viet Nam/DT-015/2004(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/chicken/Vietnam/393/2005(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/chicken/Vietnam/5/2003(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 4
+    },
+    "Influenza A virus (A/chicken/Vietnam/DT171/2004(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/chicken/Vietnam/HD1/2004(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 3
+    },
+    "Influenza A virus (A/common pochard/France/06167/2006(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/duck/Australia/341/1983(H15N8))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/duck/Bavaria/1/1977(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/duck/Beijing/MG0617/2005(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/duck/England/1/1956(H11N6))": {
+      "peptides_matched": 0,
+      "peptides_searched": 3
+    },
+    "Influenza A virus (A/duck/Fujian/17/2001(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/duck/Guangxi/1586/2004(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/duck/Guangxi/1793/2004(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/duck/Hokkaido/1130/01(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/duck/Hokkaido/8/1980(H3N8))": {
+      "peptides_matched": 0,
+      "peptides_searched": 7
+    },
+    "Influenza A virus (A/duck/Hong Kong/3096/99(H6N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/duck/Hungary/1/1970(H6N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/duck/IT/701/2005(H10N7))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/duck/Ireland/113/1983(H5N8))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/duck/Korea/S10/03(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/duck/Mongolia/47/2001(H7N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 6
+    },
+    "Influenza A virus (A/duck/Novosibirsk/56/2005(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/duck/Ontario/05/00 (H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/duck/Vietnam/15/2003(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 4
+    },
+    "Influenza A virus (A/duck/Vietnam/37/2007(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/egret/Hong Kong/757.3/2002(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 3
+    },
+    "Influenza A virus (A/eka/Thailand/EkA1NRC/2004(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/environment/Hong Kong/437-10/99 (H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/environment/Hong Kong/437-4/99 (H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/equine/Alaska/1/1991(H3N8))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/equine/California/8560/2002(H3N8))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/equine/Kentucky/2/1986(H3N8))": {
+      "peptides_matched": 0,
+      "peptides_searched": 4
+    },
+    "Influenza A virus (A/equine/London/1416/1973(H7N7))": {
+      "peptides_matched": 0,
+      "peptides_searched": 3
+    },
+    "Influenza A virus (A/equine/Massachussetts/213/2003(H3N8))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/equine/New York/1/1999(H3N8))": {
+      "peptides_matched": 0,
+      "peptides_searched": 3
+    },
+    "Influenza A virus (A/equine/NewMarket/D64/79(H3N8))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/equine/Tennessee/5/1986(H3N8))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/ferret/Maryland/P10-UMD/2008(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/finch/Canada/NS1301/2001(H3N8))": {
+      "peptides_matched": 0,
+      "peptides_searched": 3
+    },
+    "Influenza A virus (A/flat-faced bat/Peru/033/2010(H18N11))": {
+      "peptides_matched": 0,
+      "peptides_searched": 3
+    },
+    "Influenza A virus (A/goose/Guangdong/1/1996(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 8
+    },
+    "Influenza A virus (A/goose/Guangdong/3/1997(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/goose/Guangxi/1097/2004(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/goose/Hong Kong/437-6/1999(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/goose/Hong Kong/739.2/2002(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/goose/Hong Kong/8/1976(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 3
+    },
+    "Influenza A virus (A/gray teal/Australia/2/1979(H4N4))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/gull/Delaware/475/1986(H2N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/herring gull/DE/677/1988(H2N8))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/kunke/1/71(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/little yellow-shouldered bat/Guatemala/060/2010(H17N10))": {
+      "peptides_matched": 0,
+      "peptides_searched": 4
+    },
+    "Influenza A virus (A/little yellow-shouldered bat/Guatemala/153/2009(H17N10))": {
+      "peptides_matched": 0,
+      "peptides_searched": 3
+    },
+    "Influenza A virus (A/mallard/Alberta/127/00(H3N8))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/mallard/Alberta/35/1976(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 9
+    },
+    "Influenza A virus (A/mallard/Bavaria/10/2007(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/mallard/NZ/1/97(H5N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/mallard/New York/6750/1978(H2N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/mallard/Norway/685/05(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/mallard/Ohio/556/1987(H5N9))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/mallard/Quebec/10969/2006(H2N3))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/nt/60/1968(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 29
+    },
+    "Influenza A virus (A/parakeet/Chiba/1/97(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 4
+    },
+    "Influenza A virus (A/parakeet/Narita/92A/98(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 3
+    },
+    "Influenza A virus (A/parrot/Ulster/73(H7N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/quail/Hong Kong/FY298/00(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 7
+    },
+    "Influenza A virus (A/quail/Hong Kong/SF550/00(H6N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/red knot/Delaware/2561/1987(H10N5))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/ruddy turnstone/Delaware/67/1998(H12N4))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/ruddy turnstone/NJ/60/1985(N9))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/ruddy turnstone/New Jersey/47/1985(H4N6))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/seal/Mass/1/1980(H7N7))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/shearwater/Australia/1/1972(H6N5))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/shorebird/Delaware Bay/277/2000(H9N7))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/shorebird/Delaware/141/2002(H9N9))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/shorebird/Delaware/275/2001(H9N7))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/swine/29/1937(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/swine/Bakum/1832/2000(H1N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 3
+    },
+    "Influenza A virus (A/swine/Bakum/5/95(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/swine/Chiai/77-10/2001(H3N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/swine/Cotes d'Armor/1482/1999(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/swine/Cotes d'Armor/800/00(H1N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/swine/Denmark/101310-1/2011(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 9
+    },
+    "Influenza A virus (A/swine/Finistere/127/99(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 4
+    },
+    "Influenza A virus (A/swine/Guangdong/221/2009(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/swine/Hannover/1/1981(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 13
+    },
+    "Influenza A virus (A/swine/Hong Kong/127/1982(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/swine/Hong Kong/2106/98(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/swine/Hong Kong/273/1994(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/swine/Hong Kong/3297/98(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 3
+    },
+    "Influenza A virus (A/swine/Hong Kong/4/1976(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/swine/Hong Kong/5190/99(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 3
+    },
+    "Influenza A virus (A/swine/Hong Kong/71/2009(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/swine/Hong Kong/81/1978(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 16
+    },
+    "Influenza A virus (A/swine/Hong Kong/9/98(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/swine/IDT/Bakum1832/2000(H1N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/swine/Italy/1509-6/97(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 15
+    },
+    "Influenza A virus (A/swine/Italy/1513-1/1998(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/swine/Italy/1521/98(H1N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 5
+    },
+    "Influenza A virus (A/swine/Italy/1654-1/99(H1N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/swine/Italy/1850/1977(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/swine/Italy/2/1979(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 4
+    },
+    "Influenza A virus (A/swine/Italy/425/1976(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/swine/Italy/809/1989(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/swine/Korea/4382/2009(H1N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/swine/Korea/Hongsong2/2004(H1N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/swine/Korea/S190/2004(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 4
+    },
+    "Influenza A virus (A/swine/Korea/S452/2004(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/swine/Miyagi/5/2003(H1N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/swine/Ohio/24366/2007(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/swine/Quebec/1192/1986(H1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/swine/Quebec/192/81(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/swine/Scotland/410440/94(H1N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 5
+    },
+    "Influenza A virus (A/swine/Spain/SF11131/2007(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 5
+    },
+    "Influenza A virus (A/swine/Ukkel/1/1984(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/tern/Australia/1/04(H2N5))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/tern/Australia/1402/2004(H2N5))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/tiger/Thailand/CU-LV/2004(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/tiger/Thailand/CU-T4/04(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 5
+    },
+    "Influenza A virus (A/tiger/Thailand/CU-T6/04(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/turkey/Canada-Ontario/NS-01839-1/05(H3))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/turkey/England/2614/2007(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/turkey/MN/735/79(H6N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/turkey/Minnesota/1200/1980(H7N3))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/turkey/Minnesota/511/1978(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/turkey/NC/17026/1988(H1N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/turkey/Ohio/313053/2004(H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus (A/turkey/Ontario/7732/1966(H5N9))": {
+      "peptides_matched": 0,
+      "peptides_searched": 11
+    },
+    "Influenza A virus (A/turkey/Wisconsin/1968(H5N9))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus (A/whooper swan/Mongolia/6/05(H5N1))": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza A virus H3N2": {
+      "peptides_matched": 0,
+      "peptides_searched": 58
+    },
+    "Influenza A virus H3N2 (A/Resvir-9 (H3N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus(A/swine/Henan/2/2004(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza A virus(A/swine/Henan/3/2004(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 8
+    },
+    "Influenza A virus(A/swine/Henan/5/2004(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 5
+    },
+    "Influenza A virus(A/swine/Henan/8/2004(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 5
+    },
+    "Influenza A virus(A/swine/Shandong/fNY/2003(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 22
+    },
+    "Influenza A virus(A/swine/Shandong/fZC/2003(H9N2))": {
+      "peptides_matched": 0,
+      "peptides_searched": 23
+    },
+    "Influenza B virus": {
+      "peptides_matched": 0,
+      "peptides_searched": 361
+    },
+    "Influenza B virus (B/Beijing/184/93)": {
+      "peptides_matched": 0,
+      "peptides_searched": 4
+    },
+    "Influenza B virus (B/Chiba/447/98)": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Influenza B virus (B/Hong Kong/330/2001)": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Influenza B virus (B/Lee/1940)": {
+      "peptides_matched": 0,
+      "peptides_searched": 3
+    },
+    "Influenza B virus (B/Malaysia/2506/2004)": {
+      "peptides_matched": 0,
+      "peptides_searched": 195
+    },
+    "Influenza B virus (B/Victoria/2/1987)": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Listeria monocytogenes EGD-e": {
+      "peptides_matched": 0,
+      "peptides_searched": 15851
+    },
+    "Lymphocytic choriomeningitis virus (strain Armstrong)": {
+      "peptides_matched": 0,
+      "peptides_searched": 1892
+    },
+    "Lymphocytic choriomeningitis virus (strain Armstrong) (clone 53b)": {
+      "peptides_matched": 0,
+      "peptides_searched": 21
+    },
+    "Lymphocytic choriomeningitis virus (strain Pasteur)": {
+      "peptides_matched": 0,
+      "peptides_searched": 3
+    },
+    "Lymphocytic choriomeningitis virus (strain Traub)": {
+      "peptides_matched": 0,
+      "peptides_searched": 4
+    },
+    "Lymphocytic choriomeningitis virus (strain WE)": {
+      "peptides_matched": 0,
+      "peptides_searched": 71
+    },
+    "Lymphocytic choriomeningitis virus A22.2b": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Macaca mulatta": {
+      "peptides_matched": 0,
+      "peptides_searched": 272
+    },
+    "Measles virus (strain Edmonston B)": {
+      "peptides_matched": 0,
+      "peptides_searched": 7854
+    },
+    "Murid betaherpesvirus 1": {
+      "peptides_matched": 0,
+      "peptides_searched": 12
+    },
+    "Murid herpesvirus 1 deltaMS94.5": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Murine cytomegalovirus (strain Smith)": {
+      "peptides_matched": 0,
+      "peptides_searched": 5
+    },
+    "Mus musculus": {
+      "peptides_matched": 0,
+      "peptides_searched": 84552
+    },
+    "Mycobacterium tuberculosis": {
+      "peptides_matched": 0,
+      "peptides_searched": 2051
+    },
+    "Mycobacterium tuberculosis H37Rv": {
+      "peptides_matched": 0,
+      "peptides_searched": 592
+    },
+    "Orf virus strain D1701": {
+      "peptides_matched": 0,
+      "peptides_searched": 36
+    },
+    "Pan troglodytes": {
+      "peptides_matched": 0,
+      "peptides_searched": 284
+    },
+    "Peste-des-petits-ruminants virus Sungri-96": {
+      "peptides_matched": 0,
+      "peptides_searched": 11
+    },
+    "Plasmodium falciparum": {
+      "peptides_matched": 0,
+      "peptides_searched": 1058
+    },
+    "Porcine reproductive and respiratory syndrome virus": {
+      "peptides_matched": 0,
+      "peptides_searched": 93
+    },
+    "Porcine reproductive and respiratory syndrome virus 2": {
+      "peptides_matched": 0,
+      "peptides_searched": 46
+    },
+    "Porcine reproductive and respiratory syndrome virus HuN4-F112": {
+      "peptides_matched": 0,
+      "peptides_searched": 27
+    },
+    "Rattus norvegicus": {
+      "peptides_matched": 0,
+      "peptides_searched": 43052
+    },
+    "Rattus sp.": {
+      "peptides_matched": 0,
+      "peptides_searched": 25
+    },
+    "Rotavirus A": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Rotavirus A human/USA/D/1974 G1P1A[8]": {
+      "peptides_matched": 0,
+      "peptides_searched": 25
+    },
+    "SARS coronavirus BJ01": {
+      "peptides_matched": 0,
+      "peptides_searched": 33
+    },
+    "SARS coronavirus TJF": {
+      "peptides_matched": 0,
+      "peptides_searched": 14
+    },
+    "SARS coronavirus Tor2": {
+      "peptides_matched": 0,
+      "peptides_searched": 2264
+    },
+    "SARS coronavirus Urbani": {
+      "peptides_matched": 0,
+      "peptides_searched": 9
+    },
+    "SARS coronavirus ZJ0301": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "SARS-CoV-2": {
+      "peptides_matched": 0,
+      "peptides_searched": 72058
+    },
+    "SARS-CoV1": {
+      "peptides_matched": 0,
+      "peptides_searched": 906
+    },
+    "SARS-CoV2 Alpha": {
+      "peptides_matched": 0,
+      "peptides_searched": 232
+    },
+    "SARS-CoV2 Beta": {
+      "peptides_matched": 0,
+      "peptides_searched": 5
+    },
+    "SARS-CoV2 Delta": {
+      "peptides_matched": 0,
+      "peptides_searched": 7
+    },
+    "SARS-CoV2 Epsilon": {
+      "peptides_matched": 0,
+      "peptides_searched": 3
+    },
+    "SARS-CoV2 Gamma": {
+      "peptides_matched": 0,
+      "peptides_searched": 15
+    },
+    "SARS-CoV2 Iota": {
+      "peptides_matched": 0,
+      "peptides_searched": 24
+    },
+    "SARS-CoV2 Kappa": {
+      "peptides_matched": 0,
+      "peptides_searched": 7
+    },
+    "SARS-CoV2 Omicron": {
+      "peptides_matched": 0,
+      "peptides_searched": 38
+    },
+    "Sarcophilus harrisii": {
+      "peptides_matched": 0,
+      "peptides_searched": 23668
+    },
+    "Severe acute respiratory syndrome coronavirus": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Severe acute respiratory syndrome coronavirus 2": {
+      "peptides_matched": 0,
+      "peptides_searched": 11507
+    },
+    "Severe acute respiratory syndrome coronavirus 2 Canada/QC-L00478241001/2022": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Severe acute respiratory syndrome coronavirus 2 Denmark/MinkVariant16/2020": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Severe acute respiratory syndrome coronavirus 2 HKG/HKU-001a/2020": {
+      "peptides_matched": 0,
+      "peptides_searched": 9
+    },
+    "Severe acute respiratory syndrome coronavirus 2 Indonesia/JI-ITD-12202V/2020": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Severe acute respiratory syndrome coronavirus 2 USA-WA1/2020": {
+      "peptides_matched": 0,
+      "peptides_searched": 23
+    },
+    "Severe acute respiratory syndrome coronavirus 2 USA/MD-HP20874-PIDUYWZOWA/2021": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Severe acute respiratory syndrome coronavirus 2 USA/NJ-CDC-LC0471426/2022": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    },
+    "Severe acute respiratory syndrome coronavirus 2 Wuhan/Hu-1/2019": {
+      "peptides_matched": 0,
+      "peptides_searched": 138
+    },
+    "Sus scrofa": {
+      "peptides_matched": 0,
+      "peptides_searched": 11279
+    },
+    "Sus sp.": {
+      "peptides_matched": 0,
+      "peptides_searched": 369
+    },
+    "Theileria parva": {
+      "peptides_matched": 0,
+      "peptides_searched": 189
+    },
+    "Trichosurus vulpecula": {
+      "peptides_matched": 0,
+      "peptides_searched": 5583
+    },
+    "Vaccinia Virus Acambis 3000 MVA": {
+      "peptides_matched": 0,
+      "peptides_searched": 18
+    },
+    "Vaccinia virus": {
+      "peptides_matched": 0,
+      "peptides_searched": 540
+    },
+    "Vaccinia virus Ankara": {
+      "peptides_matched": 0,
+      "peptides_searched": 125
+    },
+    "Vaccinia virus Copenhagen": {
+      "peptides_matched": 0,
+      "peptides_searched": 842
+    },
+    "Vaccinia virus GLV-1h68": {
+      "peptides_matched": 0,
+      "peptides_searched": 2
+    },
+    "Vaccinia virus L-IPV": {
+      "peptides_matched": 0,
+      "peptides_searched": 8
+    },
+    "Vaccinia virus LC16M8": {
+      "peptides_matched": 0,
+      "peptides_searched": 5
+    },
+    "Vaccinia virus Tian Tan": {
+      "peptides_matched": 0,
+      "peptides_searched": 21
+    },
+    "Vaccinia virus WR": {
+      "peptides_matched": 0,
+      "peptides_searched": 7821
+    },
+    "Vaccinia virus WR 65-16": {
+      "peptides_matched": 0,
+      "peptides_searched": 4
+    },
+    "Vaccinia virus Western Reserve": {
+      "peptides_matched": 0,
+      "peptides_searched": 18
+    },
+    "Wobbly possum disease virus": {
+      "peptides_matched": 0,
+      "peptides_searched": 31
+    },
+    "Zika virus": {
+      "peptides_matched": 0,
+      "peptides_searched": 11
+    },
+    "Zika virus ZIKV/H. sapiens/FrenchPolynesia/10087PF/2013": {
+      "peptides_matched": 0,
+      "peptides_searched": 37
+    },
+    "adeno-associated virus 2": {
+      "peptides_matched": 0,
+      "peptides_searched": 331
+    },
+    "adeno-associated virus 8": {
+      "peptides_matched": 0,
+      "peptides_searched": 10
+    },
+    "hepatitis B virus genotype A": {
+      "peptides_matched": 0,
+      "peptides_searched": 7
+    },
+    "hepatitis B virus genotype C": {
+      "peptides_matched": 0,
+      "peptides_searched": 6
+    },
+    "hepatitis C virus genotype 1a": {
+      "peptides_matched": 0,
+      "peptides_searched": 140
+    },
+    "human gammaherpesvirus 4": {
+      "peptides_matched": 0,
+      "peptides_searched": 466
+    },
+    "human metapneumovirus": {
+      "peptides_matched": 0,
+      "peptides_searched": 196
+    },
+    "human papillomavirus 18": {
+      "peptides_matched": 0,
+      "peptides_searched": 70
+    },
+    "human respiratory syncytial virus": {
+      "peptides_matched": 0,
+      "peptides_searched": 238
+    },
+    "peste-des-petits-ruminants virus": {
+      "peptides_matched": 0,
+      "peptides_searched": 1
+    }
+  },
+  "unavailable_proteomes": [
+    "Adeno-associated virus - 6",
+    "African swine fever virus",
+    "African swine fever virus BA71V",
+    "Alphapolyomavirus muris",
+    "Ascaris suum",
+    "Betapolyomavirus hominis",
+    "Bos sp.",
+    "Bos taurus",
+    "Canine distemper virus strain Onderstepoort",
+    "Canis lupus",
+    "Canis sp.",
+    "Epstein-Barr virus [UP000153037]",
+    "Epstein-barr virus strain ag876",
+    "Equus caballus",
+    "Gallus gallus",
+    "Giant panda rotavirus A",
+    "H9N2 subtype Influenza A virus (A/swine/Korea/S81/2004(H9N2))",
+    "H9N2 subtype Influenza A virus (A/swine/Korea/S83/2004(H9N2))",
+    "HIV-1 M:A",
+    "HIV-1 M:B",
+    "HIV-1 M:B_ARV2/SF2",
+    "HIV-1 M:B_HXB2R",
+    "HIV-1 M:B_MN",
+    "Hepacivirus hominis",
+    "Hepatitis B virus",
+    "Hepatitis B virus LSH/chimpanzee",
+    "Hepatitis B virus adr4",
+    "Hepatitis B virus adw/991",
+    "Hepatitis B virus adw/Indonesia/PIDW420",
+    "Hepatitis B virus adw/Japan/Nishioka/1983",
+    "Hepatitis B virus adw/Okinawa/PODW282",
+    "Hepatitis B virus adw4/Brazil/isolate w4b",
+    "Hepatitis B virus alpha1",
+    "Hepatitis B virus ayw/France/Tiollais/1979",
+    "Hepatitis B virus genotype B",
+    "Hepatitis B virus subtype AYR",
+    "Hepatitis B virus subtype adr",
+    "Hepatitis B virus subtype adw",
+    "Hepatitis B virus subtype adw2",
+    "Hepatitis B virus subtype adyw",
+    "Hepatitis B virus subtype ayw",
+    "Hepatitis C virus (isolate 1)",
+    "Hepatitis C virus (isolate 6a33)",
+    "Hepatitis C virus (isolate BEBE1)",
+    "Hepatitis C virus (isolate BK)",
+    "Hepatitis C virus (isolate Con1)",
+    "Hepatitis C virus (isolate EUH1480)",
+    "Hepatitis C virus (isolate Glasgow)",
+    "Hepatitis C virus (isolate H)",
+    "Hepatitis C virus (isolate H77)",
+    "Hepatitis C virus (isolate HC-G9)",
+    "Hepatitis C virus (isolate HCV-K3a/650)",
+    "Hepatitis C virus (isolate India)",
+    "Hepatitis C virus (isolate JK049)",
+    "Hepatitis C virus (isolate Japanese)",
+    "Hepatitis C virus (isolate NZL1)",
+    "Hepatitis C virus (isolate Taiwan)",
+    "Hepatitis C virus (isolate Th580)",
+    "Hepatitis C virus (isolate Tr Kj)",
+    "Hepatitis C virus (isolate VN004)",
+    "Hepatitis C virus ED43",
+    "Hepatitis C virus genotype 1",
+    "Hepatitis C virus genotype 2",
+    "Hepatitis C virus genotype 3",
+    "Hepatitis C virus genotype 4",
+    "Hepatitis C virus genotype 5",
+    "Hepatitis C virus genotype 6",
+    "Hepatitis C virus isolate HC-J4",
+    "Hepatitis C virus isolate HC-J6",
+    "Hepatitis C virus subtype 1a 1/910",
+    "Hepatitis C virus subtype 1b",
+    "Hepatitis C virus subtype 2b",
+    "Hepatitis C virus subtype 3a",
+    "Hepatitis C virus subtype 6a",
+    "Human alphaherpesvirus 1",
+    "Human alphaherpesvirus 1 strain 17",
+    "Human alphaherpesvirus 1 strain Angelotti",
+    "Human alphaherpesvirus 1 strain F",
+    "Human alphaherpesvirus 1 strain KOS",
+    "Human alphaherpesvirus 1 strain SC16",
+    "Human alphaherpesvirus 2",
+    "Human betaherpesvirus 5",
+    "Human betaherpesvirus 6B",
+    "Human cytomegalovirus [UP000000938]",
+    "Human gammaherpesvirus 8",
+    "Human herpesvirus 2 strain 333",
+    "Human herpesvirus 2 strain HG52",
+    "Human herpesvirus 4 GD1",
+    "Human herpesvirus 4 WW1",
+    "Human herpesvirus 4 strain B95-8",
+    "Human herpesvirus 4 strain CAO",
+    "Human herpesvirus 4 strain RAJI",
+    "Human herpesvirus 4 type 1",
+    "Human herpesvirus 4 type 2",
+    "Human herpesvirus 5 TB40",
+    "Human herpesvirus 5 strain AD169",
+    "Human herpesvirus 5 strain Merlin",
+    "Human herpesvirus 5 strain Towne",
+    "Human immunodeficiency virus 1",
+    "Human immunodeficiency virus 1 IIIB",
+    "Human immunodeficiency virus 1 [UP000002241]",
+    "Human metapneumovirus A2 NL/00/17",
+    "Human papillomavirus 16",
+    "Human respiratory syncytial virus A strain Long",
+    "Human respiratory syncytial virus A2",
+    "Human respiratory syncytial virus B1",
+    "Human rotavirus A",
+    "Influenza A virus",
+    "Influenza A virus (A/81/HO)",
+    "Influenza A virus (A/Aichi/2/1968(H3N2))",
+    "Influenza A virus (A/Aichi/2/1994(H3N2))",
+    "Influenza A virus (A/Alaska/6/1977(H3N2))",
+    "Influenza A virus (A/Anas acuta/Primorje/695/1976(H2N3))",
+    "Influenza A virus (A/Anhui/1-YK_RG134/2013(H7N9))",
+    "Influenza A virus (A/Anhui/1-YK_RG64/2013(H7N9))",
+    "Influenza A virus (A/Ann Arbor/6/1960(H2N2))",
+    "Influenza A virus (A/Auckland/1/2009(H1N1))",
+    "Influenza A virus (A/Auckland/590/2000(H1N1))",
+    "Influenza A virus (A/Bangkok/1/1979(H3N2))",
+    "Influenza A virus (A/Bangkok/10/1983(H1N1))",
+    "Influenza A virus (A/Bar-headed Goose/Qinghai/61/05(H5N1))",
+    "Influenza A virus (A/Beijing/01/2009(H1N1))",
+    "Influenza A virus (A/Beijing/11/1956(H1N1))",
+    "Influenza A virus (A/Beijing/32/1992(H3N2))",
+    "Influenza A virus (A/Belfast/53582/2004(H3N?))",
+    "Influenza A virus (A/Brazil/140/2001(H1N1))",
+    "Influenza A virus (A/Brevig Mission/1/1918(H1N1))",
+    "Influenza A virus (A/CHU/2-524/2005(H3N2))",
+    "Influenza A virus (A/California/04/2007(H1N1))",
+    "Influenza A virus (A/California/04/2009(H1N1))",
+    "Influenza A virus (A/California/07/2009(H1N1))",
+    "Influenza A virus (A/Cameron/1946(H1N1))",
+    "Influenza A virus (A/Canterbury/236/2005(H3N2))",
+    "Influenza A virus (A/Chicken/Beijing/1/95(H9N2))",
+    "Influenza A virus (A/Chicken/Guangdong/11/97(H9N2))",
+    "Influenza A virus (A/Chicken/Henan/98(H9N2))",
+    "Influenza A virus (A/Chicken/Hong Kong/739/94(H9N2))",
+    "Influenza A virus (A/Chicken/Hong Kong/G23/97(H9N2))",
+    "Influenza A virus (A/Chicken/Nanchang/2-220/2001(H3N6))",
+    "Influenza A virus (A/Chile/1/1983(H1N1))",
+    "Influenza A virus (A/Ck/HK/2133.1/2003(H5N1))",
+    "Influenza A virus (A/Ck/HK/CSW161/2003(H9N2))",
+    "Influenza A virus (A/Ck/YN/115/2004(H5N1))",
+    "Influenza A virus (A/Cygnus olor/Czech Republic/10732/07(H5N1))",
+    "Influenza A virus (A/Darwin/9/2021(H3N2))",
+    "Influenza A virus (A/Denver/1957(H1N1))",
+    "Influenza A virus (A/Duck/Hong Kong/ww461/2000(H5N1))",
+    "Influenza A virus (A/Duck/Shantou/1881/00(H9N2))",
+    "Influenza A virus (A/Duck/Shantou/2088/01(H9N2))",
+    "Influenza A virus (A/Duck/Shantou/2134/00(H9N2))",
+    "Influenza A virus (A/Duck/Shantou/2144/00(H9N2))",
+    "Influenza A virus (A/Egypt/96/2002(H1N2))",
+    "Influenza A virus (A/England/333/1980(H1N1))",
+    "Influenza A virus (A/England/627/01(H1N2))",
+    "Influenza A virus (A/England/654/2007(H1N1))",
+    "Influenza A virus (A/England/939/69 x A/PR/8/34)",
+    "Influenza A virus (A/Fort Monmouth/1/1947-mouse adapted(H1N1))",
+    "Influenza A virus (A/Fujian/411/02-like(H3N2))",
+    "Influenza A virus (A/G.H/HK/793.1/02 (H5N1))",
+    "Influenza A virus (A/Gf/HK/SSP607/2003(H9N2))",
+    "Influenza A virus (A/Goose/Hong Kong/385.3/2000(H5N1))",
+    "Influenza A virus (A/Hangzhou/1/2013(H7N9))",
+    "Influenza A virus (A/Harbin/1/1988(H1N2))",
+    "Influenza A virus (A/Hokkaido/20/89(H3N2))",
+    "Influenza A virus (A/Hong Kong/1/1968(H3N2))",
+    "Influenza A virus (A/Hong Kong/1074/1999(H9N2))",
+    "Influenza A virus (A/Hong Kong/1131/1998(H1N1))",
+    "Influenza A virus (A/Hong Kong/156/97(H5N1))",
+    "Influenza A virus (A/Hong Kong/1774/99(H3N2))",
+    "Influenza A virus (A/Hong Kong/213/2003(H5N1))",
+    "Influenza A virus (A/Hong Kong/482/97(H5N1))",
+    "Influenza A virus (A/Hong Kong/483/1997(H5N1))",
+    "Influenza A virus (A/Hong Kong/485/1997(H5N1))",
+    "Influenza A virus (A/Hong Kong/488/97(H5N1))",
+    "Influenza A virus (A/Hong Kong/507/97(H5N1))",
+    "Influenza A virus (A/Hong Kong/514/97(H5N1))",
+    "Influenza A virus (A/Hong Kong/516/97(H5N1))",
+    "Influenza A virus (A/Hong Kong/532/1997(H5N1))",
+    "Influenza A virus (A/Hong Kong/CUHK13527/2003(H3N2))",
+    "Influenza A virus (A/India/GWMH05/2009(H1N1))",
+    "Influenza A virus (A/Istanbul/CTF/10/2004(H3N2))",
+    "Influenza A virus (A/Japan/305/1957(H2N2))",
+    "Influenza A virus (A/Jiangsu/38/2004(H3N2))",
+    "Influenza A virus (A/Kayano/57(H2N2))",
+    "Influenza A virus (A/Kiev/59/1979(H1N1))",
+    "Influenza A virus (A/Kinmen/645/04(H3N2))",
+    "Influenza A virus (A/Kitakyushu/159/93(H3N2))",
+    "Influenza A virus (A/Kitakyushu/93(H3N2))",
+    "Influenza A virus (A/Korea/426/1968(H2N2))",
+    "Influenza A virus (A/Leningrad/1954/1(H1N1))",
+    "Influenza A virus (A/Liaoning/25/2000(H1N1))",
+    "Influenza A virus (A/Memphis/1/1971(H3N2))",
+    "Influenza A virus (A/Memphis/1/1978(H1N1))",
+    "Influenza A virus (A/Memphis/1/1986(H3N2))",
+    "Influenza A virus (A/Memphis/1/1990(H3N2))",
+    "Influenza A virus (A/Memphis/10/1996(H1N1))",
+    "Influenza A virus (A/Memphis/13/1978(H1N1))",
+    "Influenza A virus (A/Memphis/14/1998(H3N2))",
+    "Influenza A virus (A/Memphis/4/1973(H3N2))",
+    "Influenza A virus (A/Memphis/4/1980(H3N2))",
+    "Influenza A virus (A/Memphis/6/1986(H3N2))",
+    "Influenza A virus (A/Moscow/10/1999(H3N2))",
+    "Influenza A virus (A/Moscow/343/2003(H3N2))",
+    "Influenza A virus (A/Moscow/346/2003(H3N2))",
+    "Influenza A virus (A/Nagasaki/76/98(H3N2))",
+    "Influenza A virus (A/Nagasaki/N03/2005(H3N2))",
+    "Influenza A virus (A/Nanchang/0058/1994(H3N2))",
+    "Influenza A virus (A/Netherlands/458/98 (H3N2))",
+    "Influenza A virus (A/New Caledonia/20/1999(H1N1))",
+    "Influenza A virus (A/New York/124/2001(H3N2))",
+    "Influenza A virus (A/New York/140/1999(H3N2))",
+    "Influenza A virus (A/New York/348/2003(H1N1))",
+    "Influenza A virus (A/Northern Territory/60/1968(H3N2))",
+    "Influenza A virus (A/Oklahoma/309/2006(H3N2))",
+    "Influenza A virus (A/Osaka/930/88(H1N1))",
+    "Influenza A virus (A/Philippines/2/1982(H3N2))",
+    "Influenza A virus (A/Puerto Rico/8/1934(H1N1))",
+    "Influenza A virus (A/Puerto Rico/8/34/Mount Sinai(H1N1))",
+    "Influenza A virus (A/Quail/Shanghai/8/96(H9N2))",
+    "Influenza A virus (A/Queensland/11/2001(H3N2))",
+    "Influenza A virus (A/RI/5-/1957(H2N2))",
+    "Influenza A virus (A/Rio/6/69(H3N2))",
+    "Influenza A virus (A/SW/KS/13481-T/00(H1N2))",
+    "Influenza A virus (A/SW/MN/12883/00(H1N2))",
+    "Influenza A virus (A/SW/MN/3128/00(H1N2))",
+    "Influenza A virus (A/SW/MN/3227/00(H1N2))",
+    "Influenza A virus (A/Saudi Arabia/2581/2001(H1N2))",
+    "Influenza A virus (A/Saudi Arabia/7971/2000(H1N1))",
+    "Influenza A virus (A/Shanghai/11/1987(H3N2))",
+    "Influenza A virus (A/Shanghai/4665T/2013(H7N9))",
+    "Influenza A virus (A/Shanghai/5190T/2013(H7N9))",
+    "Influenza A virus (A/Sichuan/2/1987(H3N2))",
+    "Influenza A virus (A/Singapore/1/1957(H2N2))",
+    "Influenza A virus (A/South Carolina/1/1918(H1N1))",
+    "Influenza A virus (A/Swine/Colorado/23619/99(H3N2))",
+    "Influenza A virus (A/Swine/Indiana/1726/1988(H1N1))",
+    "Influenza A virus (A/Swine/Indiana/9K035/99 (H1N2))",
+    "Influenza A virus (A/Swine/Italy/25823/94(H3N2))",
+    "Influenza A virus (A/Swine/Minnesota/55551/2000(H1N2))",
+    "Influenza A virus (A/Switzerland/8808/2002(H1N1))",
+    "Influenza A virus (A/Taiwan/1/1986(H1N1))",
+    "Influenza A virus (A/Taiwan/2/2006(H1N1))",
+    "Influenza A virus (A/Taiwan/3427/97(H3N2))",
+    "Influenza A virus (A/Texas/1/1977(H3N2))",
+    "Influenza A virus (A/Texas/36/1991(H1N1))",
+    "Influenza A virus (A/Thailand/4(SP-528)/2004(H5N1))",
+    "Influenza A virus (A/Thailand/CU-H126/2009(H1N1))",
+    "Influenza A virus (A/Tokyo/1566/98(H3N2))",
+    "Influenza A virus (A/Turkey/MO/24093/99(H1N2))",
+    "Influenza A virus (A/Udorn/307/1972(H3N2))",
+    "Influenza A virus (A/Victoria/1968(H3N2))",
+    "Influenza A virus (A/Victoria/3/1975(H3N2))",
+    "Influenza A virus (A/Viet Nam/1203/2004(H5N1))",
+    "Influenza A virus (A/Viet Nam/HN/2004(H5N1))",
+    "Influenza A virus (A/Vietnam/1194/2004(H5N1))",
+    "Influenza A virus (A/WSN(H1N1))",
+    "Influenza A virus (A/WSN/1933(H1N1))",
+    "Influenza A virus (A/Waikato/7/2000(H3N2))",
+    "Influenza A virus (A/Weiss/1943(H1N1))",
+    "Influenza A virus (A/Wellington/22/2001(H3N2))",
+    "Influenza A virus (A/Wellington/8/2004(H3N2))",
+    "Influenza A virus (A/Wilson-Smith/1933(H1N1))",
+    "Influenza A virus (A/Wisconsin/4754/1994(H1N1))",
+    "Influenza A virus (A/Wisconsin/4755/1994(H1N1))",
+    "Influenza A virus (A/Wisconsin/67/2005(H3N2))",
+    "Influenza A virus (A/Wyoming/3/2003-X-147(H3N2))",
+    "Influenza A virus (A/X-31(H3N2))",
+    "Influenza A virus (A/X-31(H3N2)) A/X-31 X HK",
+    "Influenza A virus (A/Yilan/515/03(H3N2))",
+    "Influenza A virus (A/Yokohama/22/2002(H1N2))",
+    "Influenza A virus (A/Yokohama/47/2002(H1N2))",
+    "Influenza A virus (A/aquatic bird/Korea/w44/2005(H7N3))",
+    "Influenza A virus (A/bar-headed goose/Qinghai/1-HVRI/2006(H5N1))",
+    "Influenza A virus (A/bar-headed goose/Qinghai/3/2005(H5N1))",
+    "Influenza A virus (A/budgerigar/Hokkaido/1/1977(H4N6))",
+    "Influenza A virus (A/camel/Mongolia/1982(H1N1))",
+    "Influenza A virus (A/chicken/Anhui/1/1998(H9N2))",
+    "Influenza A virus (A/chicken/Beijing/nl/2002(H9N2))",
+    "Influenza A virus (A/chicken/Brescia/1902(H7N7))",
+    "Influenza A virus (A/chicken/CA/375TR/2002(H6N2))",
+    "Influenza A virus (A/chicken/California/1002a/00(H6N2))",
+    "Influenza A virus (A/chicken/FPV/Weybridge(H7N7))",
+    "Influenza A virus (A/chicken/Fujian/25/00(H9N2))",
+    "Influenza A virus (A/chicken/Guiyang/2147/2005(H5N1))",
+    "Influenza A virus (A/chicken/Hebei/706/2005(H5N1))",
+    "Influenza A virus (A/chicken/Hebei/nj/2002(H9N2))",
+    "Influenza A virus (A/chicken/Hong Kong/3123.1/2002(H5N1))",
+    "Influenza A virus (A/chicken/Hubei/wk/1997(H5N1))",
+    "Influenza A virus (A/chicken/Hubei/wm/1997(H5N1))",
+    "Influenza A virus (A/chicken/Hunan/HN/2015(H9N2))",
+    "Influenza A virus (A/chicken/Hunan/fg/2004(H5N1))",
+    "Influenza A virus (A/chicken/Italy/1067/1999(H7N1))",
+    "Influenza A virus (A/chicken/Jilin/hg/2002(H5N1))",
+    "Influenza A virus (A/chicken/Korea/S1/2003(H9N2))",
+    "Influenza A virus (A/chicken/Korea/S4/2003(H9N2))",
+    "Influenza A virus (A/chicken/Korea/SNU0091/00(H9N2))",
+    "Influenza A virus (A/chicken/Korea/SNU1035C/00(H9N2))",
+    "Influenza A virus (A/chicken/Mexico/37821-771/1996(H5N2))",
+    "Influenza A virus (A/chicken/Nakorn-Patom/Thailand/CU-K3/2004(H5N1))",
+    "Influenza A virus (A/chicken/Nanchang/7-010/2000(H3N6))",
+    "Influenza A virus (A/chicken/Pennsylvania/1/1983(H5N2))",
+    "Influenza A virus (A/chicken/Rostock/8/1934(H7N1))",
+    "Influenza A virus (A/chicken/Scotland/1959(H5N1))",
+    "Influenza A virus (A/chicken/Shanghai/Q0808-1/2008(H9N2))",
+    "Influenza A virus (A/chicken/Thailand/LV1NF/2004(H5N1))",
+    "Influenza A virus (A/chicken/Tula/Russia/Oct-5/2005(H5N1))",
+    "Influenza A virus (A/chicken/Uchal/8286/2006(H9N2))",
+    "Influenza A virus (A/chicken/Uchal/8293/2006(H9N2))",
+    "Influenza A virus (A/chicken/Viet Nam/AG-010/2004(H5N1))",
+    "Influenza A virus (A/chicken/Viet Nam/DT-015/2004(H5N1))",
+    "Influenza A virus (A/chicken/Vietnam/393/2005(H5N1))",
+    "Influenza A virus (A/chicken/Vietnam/5/2003(H5N1))",
+    "Influenza A virus (A/chicken/Vietnam/DT171/2004(H5N1))",
+    "Influenza A virus (A/chicken/Vietnam/HD1/2004(H5N1))",
+    "Influenza A virus (A/common pochard/France/06167/2006(H5N1))",
+    "Influenza A virus (A/duck/Australia/341/1983(H15N8))",
+    "Influenza A virus (A/duck/Bavaria/1/1977(H1N1))",
+    "Influenza A virus (A/duck/Beijing/MG0617/2005(H9N2))",
+    "Influenza A virus (A/duck/England/1/1956(H11N6))",
+    "Influenza A virus (A/duck/Fujian/17/2001(H5N1))",
+    "Influenza A virus (A/duck/Guangxi/1586/2004(H5N1))",
+    "Influenza A virus (A/duck/Guangxi/1793/2004(H5N1))",
+    "Influenza A virus (A/duck/Hokkaido/1130/01(H1N1))",
+    "Influenza A virus (A/duck/Hokkaido/8/1980(H3N8))",
+    "Influenza A virus (A/duck/Hong Kong/3096/99(H6N2))",
+    "Influenza A virus (A/duck/Hungary/1/1970(H6N2))",
+    "Influenza A virus (A/duck/IT/701/2005(H10N7))",
+    "Influenza A virus (A/duck/Ireland/113/1983(H5N8))",
+    "Influenza A virus (A/duck/Korea/S10/03(H3N2))",
+    "Influenza A virus (A/duck/Mongolia/47/2001(H7N1))",
+    "Influenza A virus (A/duck/Novosibirsk/56/2005(H5N1))",
+    "Influenza A virus (A/duck/Ontario/05/00 (H3N2))",
+    "Influenza A virus (A/duck/Vietnam/15/2003(H5N1))",
+    "Influenza A virus (A/duck/Vietnam/37/2007(H5N1))",
+    "Influenza A virus (A/egret/Hong Kong/757.3/2002(H5N1))",
+    "Influenza A virus (A/eka/Thailand/EkA1NRC/2004(H5N1))",
+    "Influenza A virus (A/environment/Hong Kong/437-10/99 (H5N1))",
+    "Influenza A virus (A/environment/Hong Kong/437-4/99 (H5N1))",
+    "Influenza A virus (A/equine/Alaska/1/1991(H3N8))",
+    "Influenza A virus (A/equine/California/8560/2002(H3N8))",
+    "Influenza A virus (A/equine/Kentucky/2/1986(H3N8))",
+    "Influenza A virus (A/equine/London/1416/1973(H7N7))",
+    "Influenza A virus (A/equine/Massachussetts/213/2003(H3N8))",
+    "Influenza A virus (A/equine/New York/1/1999(H3N8))",
+    "Influenza A virus (A/equine/NewMarket/D64/79(H3N8))",
+    "Influenza A virus (A/equine/Tennessee/5/1986(H3N8))",
+    "Influenza A virus (A/ferret/Maryland/P10-UMD/2008(H9N2))",
+    "Influenza A virus (A/finch/Canada/NS1301/2001(H3N8))",
+    "Influenza A virus (A/flat-faced bat/Peru/033/2010(H18N11))",
+    "Influenza A virus (A/goose/Guangdong/1/1996(H5N1))",
+    "Influenza A virus (A/goose/Guangdong/3/1997(H5N1))",
+    "Influenza A virus (A/goose/Guangxi/1097/2004(H5N1))",
+    "Influenza A virus (A/goose/Hong Kong/437-6/1999(H5N1))",
+    "Influenza A virus (A/goose/Hong Kong/739.2/2002(H5N1))",
+    "Influenza A virus (A/goose/Hong Kong/8/1976(H1N1))",
+    "Influenza A virus (A/gray teal/Australia/2/1979(H4N4))",
+    "Influenza A virus (A/gull/Delaware/475/1986(H2N2))",
+    "Influenza A virus (A/herring gull/DE/677/1988(H2N8))",
+    "Influenza A virus (A/kunke/1/71(H3N2))",
+    "Influenza A virus (A/little yellow-shouldered bat/Guatemala/060/2010(H17N10))",
+    "Influenza A virus (A/little yellow-shouldered bat/Guatemala/153/2009(H17N10))",
+    "Influenza A virus (A/mallard/Alberta/127/00(H3N8))",
+    "Influenza A virus (A/mallard/Alberta/35/1976(H1N1))",
+    "Influenza A virus (A/mallard/Bavaria/10/2007(H5N1))",
+    "Influenza A virus (A/mallard/NZ/1/97(H5N2))",
+    "Influenza A virus (A/mallard/New York/6750/1978(H2N2))",
+    "Influenza A virus (A/mallard/Norway/685/05(H9N2))",
+    "Influenza A virus (A/mallard/Ohio/556/1987(H5N9))",
+    "Influenza A virus (A/mallard/Quebec/10969/2006(H2N3))",
+    "Influenza A virus (A/nt/60/1968(H3N2))",
+    "Influenza A virus (A/parakeet/Chiba/1/97(H9N2))",
+    "Influenza A virus (A/parakeet/Narita/92A/98(H9N2))",
+    "Influenza A virus (A/parrot/Ulster/73(H7N1))",
+    "Influenza A virus (A/quail/Hong Kong/FY298/00(H9N2))",
+    "Influenza A virus (A/quail/Hong Kong/SF550/00(H6N1))",
+    "Influenza A virus (A/red knot/Delaware/2561/1987(H10N5))",
+    "Influenza A virus (A/ruddy turnstone/Delaware/67/1998(H12N4))",
+    "Influenza A virus (A/ruddy turnstone/NJ/60/1985(N9))",
+    "Influenza A virus (A/ruddy turnstone/New Jersey/47/1985(H4N6))",
+    "Influenza A virus (A/seal/Mass/1/1980(H7N7))",
+    "Influenza A virus (A/shearwater/Australia/1/1972(H6N5))",
+    "Influenza A virus (A/shorebird/Delaware Bay/277/2000(H9N7))",
+    "Influenza A virus (A/shorebird/Delaware/141/2002(H9N9))",
+    "Influenza A virus (A/shorebird/Delaware/275/2001(H9N7))",
+    "Influenza A virus (A/swine/29/1937(H1N1))",
+    "Influenza A virus (A/swine/Bakum/1832/2000(H1N2))",
+    "Influenza A virus (A/swine/Bakum/5/95(H1N1))",
+    "Influenza A virus (A/swine/Chiai/77-10/2001(H3N1))",
+    "Influenza A virus (A/swine/Cotes d'Armor/1482/1999(H1N1))",
+    "Influenza A virus (A/swine/Cotes d'Armor/800/00(H1N2))",
+    "Influenza A virus (A/swine/Denmark/101310-1/2011(H1N1))",
+    "Influenza A virus (A/swine/Finistere/127/99(H3N2))",
+    "Influenza A virus (A/swine/Guangdong/221/2009(H1N1))",
+    "Influenza A virus (A/swine/Hannover/1/1981(H1N1))",
+    "Influenza A virus (A/swine/Hong Kong/127/1982(H3N2))",
+    "Influenza A virus (A/swine/Hong Kong/2106/98(H9N2))",
+    "Influenza A virus (A/swine/Hong Kong/273/1994(H1N1))",
+    "Influenza A virus (A/swine/Hong Kong/3297/98(H9N2))",
+    "Influenza A virus (A/swine/Hong Kong/4/1976(H3N2))",
+    "Influenza A virus (A/swine/Hong Kong/5190/99(H3N2))",
+    "Influenza A virus (A/swine/Hong Kong/71/2009(H1N1))",
+    "Influenza A virus (A/swine/Hong Kong/81/1978(H3N2))",
+    "Influenza A virus (A/swine/Hong Kong/9/98(H9N2))",
+    "Influenza A virus (A/swine/IDT/Bakum1832/2000(H1N2))",
+    "Influenza A virus (A/swine/Italy/1509-6/97(H1N1))",
+    "Influenza A virus (A/swine/Italy/1513-1/1998(H1N1))",
+    "Influenza A virus (A/swine/Italy/1521/98(H1N2))",
+    "Influenza A virus (A/swine/Italy/1654-1/99(H1N2))",
+    "Influenza A virus (A/swine/Italy/1850/1977(H3N2))",
+    "Influenza A virus (A/swine/Italy/2/1979(H1N1))",
+    "Influenza A virus (A/swine/Italy/425/1976(H1N1))",
+    "Influenza A virus (A/swine/Italy/809/1989(H3N2))",
+    "Influenza A virus (A/swine/Korea/4382/2009(H1N2))",
+    "Influenza A virus (A/swine/Korea/Hongsong2/2004(H1N2))",
+    "Influenza A virus (A/swine/Korea/S190/2004(H9N2))",
+    "Influenza A virus (A/swine/Korea/S452/2004(H9N2))",
+    "Influenza A virus (A/swine/Miyagi/5/2003(H1N2))",
+    "Influenza A virus (A/swine/Ohio/24366/2007(H1N1))",
+    "Influenza A virus (A/swine/Quebec/1192/1986(H1))",
+    "Influenza A virus (A/swine/Quebec/192/81(H1N1))",
+    "Influenza A virus (A/swine/Scotland/410440/94(H1N2))",
+    "Influenza A virus (A/swine/Spain/SF11131/2007(H1N1))",
+    "Influenza A virus (A/swine/Ukkel/1/1984(H3N2))",
+    "Influenza A virus (A/tern/Australia/1/04(H2N5))",
+    "Influenza A virus (A/tern/Australia/1402/2004(H2N5))",
+    "Influenza A virus (A/tiger/Thailand/CU-LV/2004(H5N1))",
+    "Influenza A virus (A/tiger/Thailand/CU-T4/04(H5N1))",
+    "Influenza A virus (A/tiger/Thailand/CU-T6/04(H5N1))",
+    "Influenza A virus (A/turkey/Canada-Ontario/NS-01839-1/05(H3))",
+    "Influenza A virus (A/turkey/England/2614/2007(H5N1))",
+    "Influenza A virus (A/turkey/MN/735/79(H6N2))",
+    "Influenza A virus (A/turkey/Minnesota/1200/1980(H7N3))",
+    "Influenza A virus (A/turkey/Minnesota/511/1978(H9N2))",
+    "Influenza A virus (A/turkey/NC/17026/1988(H1N1))",
+    "Influenza A virus (A/turkey/Ohio/313053/2004(H3N2))",
+    "Influenza A virus (A/turkey/Ontario/7732/1966(H5N9))",
+    "Influenza A virus (A/turkey/Wisconsin/1968(H5N9))",
+    "Influenza A virus (A/whooper swan/Mongolia/6/05(H5N1))",
+    "Influenza A virus H3N2",
+    "Influenza A virus H3N2 (A/Resvir-9 (H3N2))",
+    "Influenza A virus [UP000009255]",
+    "Influenza A virus(A/swine/Henan/2/2004(H9N2))",
+    "Influenza A virus(A/swine/Henan/3/2004(H9N2))",
+    "Influenza A virus(A/swine/Henan/5/2004(H9N2))",
+    "Influenza A virus(A/swine/Henan/8/2004(H9N2))",
+    "Influenza A virus(A/swine/Shandong/fNY/2003(H9N2))",
+    "Influenza A virus(A/swine/Shandong/fZC/2003(H9N2))",
+    "Influenza B virus",
+    "Influenza B virus (B/Beijing/184/93)",
+    "Influenza B virus (B/Chiba/447/98)",
+    "Influenza B virus (B/Hong Kong/330/2001)",
+    "Influenza B virus (B/Lee/1940)",
+    "Influenza B virus (B/Malaysia/2506/2004)",
+    "Influenza B virus (B/Victoria/2/1987)",
+    "Listeria monocytogenes EGD-e [UP000000817]",
+    "Lymphocytic choriomeningitis virus (strain Armstrong)",
+    "Lymphocytic choriomeningitis virus (strain Armstrong) (clone 53b)",
+    "Lymphocytic choriomeningitis virus (strain Pasteur)",
+    "Lymphocytic choriomeningitis virus (strain Traub)",
+    "Lymphocytic choriomeningitis virus (strain WE)",
+    "Lymphocytic choriomeningitis virus A22.2b",
+    "Macaca mulatta",
+    "Measles virus (strain Edmonston B) [UP000100252]",
+    "Murid betaherpesvirus 1",
+    "Murid herpesvirus 1 deltaMS94.5",
+    "Murine cytomegalovirus (strain Smith)",
+    "Mus musculus",
+    "Mycobacterium tuberculosis",
+    "Mycobacterium tuberculosis H37Rv",
+    "Orf virus strain D1701",
+    "Pan troglodytes",
+    "Peste-des-petits-ruminants virus Sungri-96",
+    "Plasmodium falciparum",
+    "Porcine reproductive and respiratory syndrome virus",
+    "Porcine reproductive and respiratory syndrome virus 2",
+    "Porcine reproductive and respiratory syndrome virus HuN4-F112",
+    "Rattus norvegicus",
+    "Rattus sp.",
+    "Rotavirus A",
+    "Rotavirus A human/USA/D/1974 G1P1A[8]",
+    "SARS coronavirus BJ01",
+    "SARS coronavirus TJF",
+    "SARS coronavirus Tor2",
+    "SARS coronavirus Urbani",
+    "SARS coronavirus ZJ0301",
+    "SARS-CoV-2 [UP000464024]",
+    "SARS-CoV1",
+    "SARS-CoV2 Alpha",
+    "SARS-CoV2 Beta",
+    "SARS-CoV2 Delta",
+    "SARS-CoV2 Epsilon",
+    "SARS-CoV2 Gamma",
+    "SARS-CoV2 Iota",
+    "SARS-CoV2 Kappa",
+    "SARS-CoV2 Omicron",
+    "Sarcophilus harrisii",
+    "Severe acute respiratory syndrome coronavirus",
+    "Severe acute respiratory syndrome coronavirus 2",
+    "Severe acute respiratory syndrome coronavirus 2 Canada/QC-L00478241001/2022",
+    "Severe acute respiratory syndrome coronavirus 2 Denmark/MinkVariant16/2020",
+    "Severe acute respiratory syndrome coronavirus 2 HKG/HKU-001a/2020",
+    "Severe acute respiratory syndrome coronavirus 2 Indonesia/JI-ITD-12202V/2020",
+    "Severe acute respiratory syndrome coronavirus 2 USA-WA1/2020",
+    "Severe acute respiratory syndrome coronavirus 2 USA/MD-HP20874-PIDUYWZOWA/2021",
+    "Severe acute respiratory syndrome coronavirus 2 USA/NJ-CDC-LC0471426/2022",
+    "Severe acute respiratory syndrome coronavirus 2 Wuhan/Hu-1/2019",
+    "Sus scrofa",
+    "Sus sp.",
+    "Theileria parva",
+    "Trichosurus vulpecula",
+    "Vaccinia Virus Acambis 3000 MVA",
+    "Vaccinia virus",
+    "Vaccinia virus Ankara",
+    "Vaccinia virus Copenhagen",
+    "Vaccinia virus GLV-1h68",
+    "Vaccinia virus L-IPV",
+    "Vaccinia virus LC16M8",
+    "Vaccinia virus Tian Tan",
+    "Vaccinia virus WR",
+    "Vaccinia virus WR 65-16",
+    "Vaccinia virus Western Reserve",
+    "Wobbly possum disease virus",
+    "Zika virus",
+    "Zika virus ZIKV/H. sapiens/FrenchPolynesia/10087PF/2013",
+    "adeno-associated virus 2",
+    "adeno-associated virus 8",
+    "hepatitis B virus genotype A",
+    "hepatitis B virus genotype C",
+    "hepatitis C virus genotype 1a",
+    "human gammaherpesvirus 4",
+    "human metapneumovirus",
+    "human papillomavirus 18",
+    "human respiratory syncytial virus",
+    "peste-des-petits-ruminants virus"
+  ],
+  "unmapped_organisms": {
+    "Bacillus anthracis": 1596,
+    "Burkholderia pseudomallei K96243": 1653,
+    "Dengue virus 1 Brazil/97-11/1997": 1771,
+    "Dengue virus 2 Jamaica/1409/1983": 2251,
+    "Dengue virus 4 Philippines/H241/1956": 1711,
+    "Escherichia coli O157:H7": 1659,
+    "Giardia lamblia ATCC 50803": 4471,
+    "Mammarenavirus brazilense": 2881,
+    "Mammarenavirus choriomeningitidis": 1905,
+    "Mammarenavirus guanaritoense": 2759,
+    "Mammarenavirus juninense": 2899,
+    "Mammarenavirus lassaense": 2643,
+    "Mammarenavirus machupoense": 2632,
+    "Penaeus aztecus": 1532,
+    "Phleum pratense": 17161,
+    "Simian immunodeficiency virus - mac  - mac 239": 1573,
+    "Yellow fever virus": 16717,
+    "Zaire ebolavirus": 7337,
+    "dengue virus type 3": 2496,
+    "unidentified": 66285
+  }
+}

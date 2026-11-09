@@ -1,0 +1,118 @@
+{
+  "mapp_captured_composition_min2_v1": {
+    "coverage": {
+      "mapp_peptide": {
+        "grain": "source_peptide_row",
+        "n_accepted": 616,
+        "n_ambiguous": 0,
+        "n_candidates": 10673,
+        "n_contributor_links": 1232,
+        "n_examples": 202,
+        "n_excluded": 10057,
+        "n_filtered_by_query": 0,
+        "n_limit_omitted": 0,
+        "n_parent_sequences": 101,
+        "n_query_matches": 10673,
+        "n_run_observations": 0,
+        "n_source_rows": 10673,
+        "reason_counts": {
+          "ambiguous_source_group": 1100,
+          "fewer_than_two_eligible_peptides_per_parent": 105,
+          "insufficient_positive_runs:TNF+IFN": 4249,
+          "insufficient_positive_runs:UT": 4422,
+          "missing_direct_msms:TNF+IFN": 4473,
+          "missing_direct_msms:UT": 5549,
+          "missing_nonimputed_quantity:TNF+IFN": 5362,
+          "missing_nonimputed_quantity:UT": 5690,
+          "multiple_parent_sequences": 5354,
+          "peptide_pep_above_threshold": 3826,
+          "reference_unmapped": 1883,
+          "source_contaminant": 1562,
+          "source_leading_coordinate_or_flank_unconfirmed": 4355,
+          "source_reverse": 396
+        }
+      }
+    },
+    "interface": "API",
+    "manifest_sha256": "02f5bbfc0ba3f3d66fbc73665e1fd7cd50c00ad4a347a3850fdd7e6cd7ce4e50",
+    "path": "/private/tmp/presto-modular-model/artifacts/2026-10-23_0149_codex_mapp-v2-integration/recipes/mapp_captured_composition_min2_v1"
+  },
+  "mapp_captured_composition_v1": {
+    "coverage": {
+      "mapp_peptide": {
+        "grain": "source_peptide_row",
+        "n_accepted": 544,
+        "n_ambiguous": 0,
+        "n_candidates": 10673,
+        "n_contributor_links": 1088,
+        "n_examples": 130,
+        "n_excluded": 10129,
+        "n_filtered_by_query": 0,
+        "n_limit_omitted": 0,
+        "n_parent_sequences": 65,
+        "n_query_matches": 10673,
+        "n_run_observations": 0,
+        "n_source_rows": 10673,
+        "reason_counts": {
+          "ambiguous_source_group": 1100,
+          "fewer_than_three_eligible_peptides_per_parent": 177,
+          "insufficient_positive_runs:TNF+IFN": 4249,
+          "insufficient_positive_runs:UT": 4422,
+          "missing_direct_msms:TNF+IFN": 4473,
+          "missing_direct_msms:UT": 5549,
+          "missing_nonimputed_quantity:TNF+IFN": 5362,
+          "missing_nonimputed_quantity:UT": 5690,
+          "multiple_parent_sequences": 5354,
+          "peptide_pep_above_threshold": 3826,
+          "reference_unmapped": 1883,
+          "source_contaminant": 1562,
+          "source_leading_coordinate_or_flank_unconfirmed": 4355,
+          "source_reverse": 396
+        }
+      }
+    },
+    "interface": "API",
+    "manifest_sha256": "bc17f46ccedb4ad9a858573710f09a64465aa57a72c5bf0df810efdf9850392c",
+    "path": "/private/tmp/presto-modular-model/artifacts/2026-10-23_0149_codex_mapp-v2-integration/recipes/mapp_captured_composition_v1"
+  },
+  "mapp_complete_run_composition_v1": {
+    "coverage": {
+      "mapp_peptide": {
+        "grain": "source_peptide_row",
+        "n_accepted": 369,
+        "n_ambiguous": 0,
+        "n_candidates": 10673,
+        "n_contributor_links": 738,
+        "n_examples": 142,
+        "n_excluded": 10304,
+        "n_filtered_by_query": 0,
+        "n_limit_omitted": 0,
+        "n_parent_sequences": 71,
+        "n_query_matches": 10673,
+        "n_run_observations": 3696,
+        "n_source_rows": 10673,
+        "reason_counts": {
+          "ambiguous_source_group": 1100,
+          "fewer_than_two_complete_peptides_per_parent": 22,
+          "fewer_than_two_eligible_peptides_per_parent": 105,
+          "incomplete_positive_filtered_runs": 225,
+          "insufficient_positive_runs:TNF+IFN": 4249,
+          "insufficient_positive_runs:UT": 4422,
+          "missing_direct_msms:TNF+IFN": 4473,
+          "missing_direct_msms:UT": 5549,
+          "missing_nonimputed_quantity:TNF+IFN": 5362,
+          "missing_nonimputed_quantity:UT": 5690,
+          "multiple_parent_sequences": 5354,
+          "peptide_pep_above_threshold": 3826,
+          "reference_unmapped": 1883,
+          "source_contaminant": 1562,
+          "source_leading_coordinate_or_flank_unconfirmed": 4355,
+          "source_reverse": 396
+        }
+      }
+    },
+    "interface": "CLI",
+    "manifest_sha256": "be58585cdc18485dbfcfc946f6a6cb4aaeec92687b8f5442c1fb59903597c7a8",
+    "path": "/private/tmp/presto-modular-model/artifacts/2026-10-23_0149_codex_mapp-v2-integration/recipes/mapp_complete_run_composition_v1"
+  }
+}

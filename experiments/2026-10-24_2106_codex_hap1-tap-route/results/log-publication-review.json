@@ -1,0 +1,54 @@
+{
+  "reviewed_at_utc": "2026-10-24T21:21:04.347921+00:00",
+  "review": "All complete raw logs were inspected before compression. Contents are public HAP1-derived aggregate scientific metrics, fit progress, diagnostics, resource measurements and a Matplotlib font-cache notice. No credentials, auth headers, private communication, environment dumps or patient identifiers.",
+  "logs": [
+    {
+      "raw_path": "experiments/2026-10-24_2106_codex_hap1-tap-route/launch_logs/boundary.log",
+      "raw_sha256": "8da34bb79cd7e1712d859d52e28b3e83eb41aa54ffe47fb5dbb2f9a2490c139f",
+      "raw_bytes": 349,
+      "published_path": "launch_logs/boundary.log.gz",
+      "published_sha256": "1261d7474cdc0bdca1de32d7437903bebd55a971b4ae8f55a7165a9cb1ec6c9a",
+      "roundtrip_equal": true
+    },
+    {
+      "raw_path": "experiments/2026-10-24_2106_codex_hap1-tap-route/launch_logs/fit.log",
+      "raw_sha256": "04018fe0aeb000ac9a24bad0cf15fbefa58595a3e7dbb47820528b075988ad59",
+      "raw_bytes": 17338,
+      "published_path": "launch_logs/fit.log.gz",
+      "published_sha256": "1ad28f80fab9584b5caebc800fd40535ea27b7d061225760d32e29250c65b4df",
+      "roundtrip_equal": true
+    },
+    {
+      "raw_path": "experiments/2026-10-24_2106_codex_hap1-tap-route/launch_logs/qualify.log",
+      "raw_sha256": "3d252647bf2823ff699676fa370180dd1a57ef20dd9d4f221e89dd18d7912b57",
+      "raw_bytes": 706,
+      "published_path": "launch_logs/qualify.log.gz",
+      "published_sha256": "ee47166ce8302add9857d9228ca5b3a853a1fc7288f0ece33d16384a6438f8f8",
+      "roundtrip_equal": true
+    },
+    {
+      "raw_path": "experiments/2026-10-24_2106_codex_hap1-tap-route/launch_logs/report.log",
+      "raw_sha256": "896b5a995b8b194b6bdbab82f4d946d56201d519b273ba2844bc9269220480e7",
+      "raw_bytes": 550,
+      "published_path": "launch_logs/report.log.gz",
+      "published_sha256": "94c574b4d0c22317017647212e993936f9a7e788d71d118bc1b17fa3be73d121",
+      "roundtrip_equal": true
+    },
+    {
+      "raw_path": "experiments/2026-10-24_2106_codex_hap1-tap-route/launch_logs/report-final.log",
+      "raw_sha256": "6d0c839f9cc0dca7288268d0123e441b39c66f1b4709849d0cbe7e95608772fb",
+      "raw_bytes": 487,
+      "published_path": "launch_logs/report-final.log.gz",
+      "published_sha256": "1a2a20a5e58193c1221f8054a07c632b1044f98a775085e57eff1d108bf5bca4",
+      "roundtrip_equal": true
+    },
+    {
+      "raw_path": "experiments/2026-10-24_2106_codex_hap1-tap-route/launch_logs/verify.log",
+      "raw_sha256": "abca8627ac892af1c925036807228ba6988b80f733f28fe5d9ee8c809ab06d38",
+      "raw_bytes": 1103,
+      "published_path": "launch_logs/verify.log.gz",
+      "published_sha256": "48e57aee4d5e4df3d711cc035882a3a8b9a34fd6fe27c4ee89b3d4a843d76a53",
+      "roundtrip_equal": true
+    }
+  ]
+}

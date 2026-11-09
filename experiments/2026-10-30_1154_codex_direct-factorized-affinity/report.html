@@ -1,0 +1,26 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Presto · one factorized affinity head</title>
+<style>body{font:15px system-ui;color:#183142;background:#f7fafb;max-width:1350px;margin:32px auto;padding:0 22px}h1{font-size:28px}p{line-height:1.5;max-width:1100px}table{border-collapse:collapse;width:100%;background:white;margin:18px 0}td,th{text-align:left;padding:12px;border-bottom:1px solid #dbe4e8;font-variant-numeric:tabular-nums}th{background:#eaf0f3}small{display:block;color:#536773;margin-top:4px}.status{padding:16px;background:#e6f1ef;border-left:4px solid #237d70;line-height:1.7}select{font:inherit;padding:6px;margin:8px 18px 8px 0}a{color:#155b90}</style>
+<h1>One shared affinity head</h1>
+<p>Shared peptide–MHC latent + separate vectors for quantity, preparation, mechanism and detector → one nonlinear scalar decoder. Both MHC classes and all five concentration quantities use this head. Two fresh seeds × 4,000 updates; the completed pooled controls use the same source rows, splits and sampling.</p>
+<div id="status" class="status">Loading live state…</div>
+<label>Quantity <select id="endpoint"><option value="ic50">IC50</option><option value="kd">KD</option><option value="ec50">EC50</option><option value="kd_via_ic50">KD derived from IC50</option><option value="kd_via_ec50">KD derived from EC50</option></select></label>
+<label>Split <select id="split"><option value="validation">Validation</option><option value="test">Selected-checkpoint test</option></select></label>
+<table><thead><tr><th>Class / source-reported method</th><th>pooled-s42</th><th>pooled-s43</th><th>direct-s42</th><th>direct-s43</th></tr></thead><tbody id="rows"></tbody></table>
+<p>Each cell: <b>Spearman · RMSE log₁₀(nM)</b>, followed by exact-value n and bounded n. Bounds remain in the loss and are omitted from these correlations. Training rows show the latest available validation; completed rows use the selected-checkpoint report after collection.</p>
+<p>These are inspected development holdouts. Each literal-IC50 validation class/method cell is one study; fluorescence has only 28 exact values for MHC-I and 41 for MHC-II. Detector names are coarse source tags, not full verified protocols. KD-derived proxies remain separate labels; KD source tags do not establish a direct equilibrium assay.</p>
+<p><a href="README.md">Experiment contract</a> · <a href="results/preparation-audit.json">Assay counts</a> · <a href="results/pooled-controls.json">Frozen control metrics</a></p>
+<script>
+const names=['pooled-s42','pooled-s43','direct-s42','direct-s43'];let cache;
+const fmt=x=>x===null||x===undefined?'—':x.toFixed(3);
+async function get(path){const r=await fetch(path,{cache:'no-store'});return r.ok?await r.json():null}
+function render(d){cache=d;const split=document.getElementById('split').value;const endpoint=document.getElementById('endpoint').value;const available={};
+for(const name of names){if(name.startsWith('pooled'))available[name]=d.controls[name].metrics[split];else{const run=d.live?.runs?.find(r=>r.condition===name);available[name]=d.reports[name]?.summary?.metrics?.[split]||(run?.status==='finished'?null:run?.[split]);}}
+const status=document.getElementById('status');status.replaceChildren();for(const run of d.live?.runs||[]){const line=document.createElement('div');line.textContent=`${run.condition}: ${run.status} · ${run.steps||0}/4000 · loss ${fmt(run.loss)}`;status.append(line)}
+const methods=new Set();for(const metrics of Object.values(available))for(const method of Object.keys(metrics?.[endpoint]?.by_assay_method||{}))methods.add(method);
+const body=document.getElementById('rows');body.replaceChildren();for(const cls of ['I','II'])for(const method of [...methods].sort()){const relevant=names.some(n=>available[n]?.[endpoint]?.by_assay_method?.[method]?.by_class?.[cls]);if(!relevant)continue;
+const tr=document.createElement('tr');const label=document.createElement('td');label.textContent=`MHC-${cls} · ${method.replaceAll('/',' / ')}`;tr.append(label);
+for(const name of names){const td=document.createElement('td');const cell=available[name]?.[endpoint]?.by_assay_method?.[method]?.by_class?.[cls];td.textContent=cell?`${fmt(cell.spearman)} · ${fmt(cell.rmse)}`:'—';if(cell){const [prep,mech,det,review]=method.split('/');const total=d.parent.methods[`${split}:${endpoint}:${cls}:${prep}/${mech}/${det}:${review}`];const counts=document.createElement('small');counts.textContent=`exact n=${cell.n}${total===undefined?'':` · bounded n=${total-cell.n}`}`;td.append(counts)}tr.append(td)}body.append(tr)} }
+async function refresh(){try{const [live,controls,parent,a,b]=await Promise.all([get('results/live.json'),get('results/pooled-controls.json'),get('reproduce/parent-prepared.json'),get('results/direct-s42/report.json'),get('results/direct-s43/report.json')]);render({live,controls,parent,reports:{'direct-s42':a,'direct-s43':b}})}catch(e){document.getElementById('status').textContent='Waiting for live artifacts: '+e.message}}
+for(const id of ['endpoint','split'])document.getElementById(id).onchange=()=>cache&&render(cache);refresh();setInterval(refresh,20000);
+</script></html>

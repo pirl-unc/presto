@@ -1,0 +1,258 @@
+{
+  "schema": "presto.modular.manifest.v1",
+  "model": {
+    "endpoints": [
+      "ec50",
+      "half_life",
+      "ic50",
+      "kd",
+      "kd_via_ec50",
+      "kd_via_ic50"
+    ],
+    "mhc_classes": [
+      "I",
+      "II"
+    ],
+    "species": [
+      "human"
+    ],
+    "identity_tasks": [],
+    "dropout": 0.1,
+    "d_model": 192,
+    "n_layers": 3,
+    "n_heads": 6,
+    "d_ff": 768
+  },
+  "training": {
+    "seed": 42,
+    "batch_size": 64,
+    "max_steps": 6000,
+    "max_epochs": 10000,
+    "min_epochs": 10000,
+    "patience": 10000,
+    "identity_weight": 0,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "checkpoint_every_steps": 100,
+    "validation_every_steps": 500,
+    "balance_by": []
+  },
+  "sources": [
+    {
+      "path": "/input/data/ic50-original-train.jsonl",
+      "sha256": "79e44788883a4668fb790191e2079b46bb28e3ea06314e75ace3aa25c65b096c",
+      "source": "hitlist-v4-iedb",
+      "population": "original admitted human IC50 cohort; frozen unchanged",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "/input/data/ic50-original-validation.jsonl",
+      "sha256": "12b88ebf0573e98b434f20e1a5fa8645128d5a14b05dfda3985ef57440d1719b",
+      "source": "hitlist-v4-iedb",
+      "population": "original admitted human IC50 cohort; frozen unchanged",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "/input/data/ic50-original-test.jsonl",
+      "sha256": "0ade7b1ed2436bcdc9fd145831a1718db36c00056321b9815cad418c293fbd75",
+      "source": "hitlist-v4-iedb",
+      "population": "original admitted human IC50 cohort; frozen unchanged",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "/input/data/ec50-hitlist-v4-cedar-train.jsonl",
+      "sha256": "b5b79e882e2a2da4db8c2971b1cd4532a30a834d9680c92cdf6bd75e323815b1",
+      "source": "hitlist-v4-cedar",
+      "population": "literal purified human quantitative pMHC assays; canonical peptide and verified complete HLA pair",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "/input/data/half_life-hitlist-v4-cedar-train.jsonl",
+      "sha256": "7dd0bf542ca4c968f22c807bc9f01da36fcede82eb0ff884d33519589f4c3108",
+      "source": "hitlist-v4-cedar",
+      "population": "literal purified human quantitative pMHC assays; canonical peptide and verified complete HLA pair",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "/input/data/ec50-hitlist-v4-cedar-validation.jsonl",
+      "sha256": "c8f0817017ff589d6c8e12ef9a20fd8c7ae4d7286ce762a08b37e73349710e57",
+      "source": "hitlist-v4-cedar",
+      "population": "literal purified human quantitative pMHC assays; canonical peptide and verified complete HLA pair",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "/input/data/half_life-hitlist-v4-cedar-validation.jsonl",
+      "sha256": "823d8e873fc56608f44a44fdaa800e4bb891b91a67fbac5d29e904ff249c43bf",
+      "source": "hitlist-v4-cedar",
+      "population": "literal purified human quantitative pMHC assays; canonical peptide and verified complete HLA pair",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "/input/data/ec50-hitlist-v4-cedar-test.jsonl",
+      "sha256": "22cc92ef295c80b493e386d94e097f7f14ca380b438a02225ea1f371fe4b253b",
+      "source": "hitlist-v4-cedar",
+      "population": "literal purified human quantitative pMHC assays; canonical peptide and verified complete HLA pair",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "/input/data/half_life-hitlist-v4-cedar-test.jsonl",
+      "sha256": "74439ebcf97e5c4034191e09eed1e87d032ceeef7a6396bc944d14f3ca419c1d",
+      "source": "hitlist-v4-cedar",
+      "population": "literal purified human quantitative pMHC assays; canonical peptide and verified complete HLA pair",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "/input/data/kd_via_ec50-hitlist-v4-iedb-train.jsonl",
+      "sha256": "9f9f713d20ea3f7a8a23799fbd7ab706ba1fac63bc4c36f4245a2a9d2fe60083",
+      "source": "hitlist-v4-iedb",
+      "population": "literal purified human quantitative pMHC assays; canonical peptide and verified complete HLA pair",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "/input/data/kd_via_ic50-hitlist-v4-iedb-train.jsonl",
+      "sha256": "6c826b7e8accbb8eaf3d11ff884a4d1918831212e57a4f9967b165190c7e4ef0",
+      "source": "hitlist-v4-iedb",
+      "population": "literal purified human quantitative pMHC assays; canonical peptide and verified complete HLA pair",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "/input/data/kd-hitlist-v4-iedb-train.jsonl",
+      "sha256": "4311d82911b70197d9d3d6bb57be57069a0c62fd03f93abf0380e84c8ccc1b48",
+      "source": "hitlist-v4-iedb",
+      "population": "literal purified human quantitative pMHC assays; canonical peptide and verified complete HLA pair",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "/input/data/half_life-hitlist-v4-iedb-train.jsonl",
+      "sha256": "b7f19e8d5a045efaff52fab2738a602550db4371d3a9bba3a158e4059912a575",
+      "source": "hitlist-v4-iedb",
+      "population": "literal purified human quantitative pMHC assays; canonical peptide and verified complete HLA pair",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "/input/data/kd_via_ec50-hitlist-v4-iedb-validation.jsonl",
+      "sha256": "9a0d247b488513e8b7620162425a807afcc0c4b0fdb4dceff967aa8b498daff8",
+      "source": "hitlist-v4-iedb",
+      "population": "literal purified human quantitative pMHC assays; canonical peptide and verified complete HLA pair",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "/input/data/kd_via_ic50-hitlist-v4-iedb-validation.jsonl",
+      "sha256": "72c8a71c615ff370489c961df725dd6cb7a471e2a4da25d315a35dc76dc462dc",
+      "source": "hitlist-v4-iedb",
+      "population": "literal purified human quantitative pMHC assays; canonical peptide and verified complete HLA pair",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "/input/data/half_life-hitlist-v4-iedb-validation.jsonl",
+      "sha256": "023d4ee988831e03bb145ba8a85b922e9b35c950b4431a62c0e43b62240256d8",
+      "source": "hitlist-v4-iedb",
+      "population": "literal purified human quantitative pMHC assays; canonical peptide and verified complete HLA pair",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "/input/data/kd_via_ec50-hitlist-v4-iedb-test.jsonl",
+      "sha256": "181a542d0bb7c6c7ab3e3e359b3af06eec4f23a7c99f023e8bb9ba471dd10385",
+      "source": "hitlist-v4-iedb",
+      "population": "literal purified human quantitative pMHC assays; canonical peptide and verified complete HLA pair",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "/input/data/kd_via_ic50-hitlist-v4-iedb-test.jsonl",
+      "sha256": "10d9fdc15245072f47ebfa06fc92e9c7a98e3d04aabfac8b481e4469276ebf48",
+      "source": "hitlist-v4-iedb",
+      "population": "literal purified human quantitative pMHC assays; canonical peptide and verified complete HLA pair",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "/input/data/half_life-hitlist-v4-iedb-test.jsonl",
+      "sha256": "ea7285840ebd5abbaf904796dcd1600bf98e44aa7c22285f7ce8010b0595662f",
+      "source": "hitlist-v4-iedb",
+      "population": "literal purified human quantitative pMHC assays; canonical peptide and verified complete HLA pair",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "/input/data/ic50-hitlist-v4-iedb-train.jsonl",
+      "sha256": "ea4c7809ac88b89ecdc79539fd8157e74d55c69c45e81719003a1aadd388e1eb",
+      "source": "hitlist-v4-iedb",
+      "population": "literal purified human quantitative pMHC assays; canonical peptide and verified complete HLA pair",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "/input/data/kd-hitlist-v4-iedb-test.jsonl",
+      "sha256": "9a857c4a0ffc9617cb1c2fc2f996ba8b8c1176e447dac00c1d96d15790f3bbd1",
+      "source": "hitlist-v4-iedb",
+      "population": "literal purified human quantitative pMHC assays; canonical peptide and verified complete HLA pair",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "/input/data/ic50-hitlist-v4-iedb-validation.jsonl",
+      "sha256": "7ee74db98023695defec41f266ff101191a05e1d7caaab0d2b46e725c54b8a33",
+      "source": "hitlist-v4-iedb",
+      "population": "literal purified human quantitative pMHC assays; canonical peptide and verified complete HLA pair",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "/input/data/ec50-hitlist-v4-iedb-train.jsonl",
+      "sha256": "c6e1f1b81403c7bc52deb2470b181e7d74ed27751bffeb33065823e4718ae07d",
+      "source": "hitlist-v4-iedb",
+      "population": "literal purified human quantitative pMHC assays; canonical peptide and verified complete HLA pair",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "/input/data/kd-hitlist-v4-iedb-validation.jsonl",
+      "sha256": "f1589cfdd55aedd682e66f704196c7a5f5663a0f8eddb250d382db68c6b660c8",
+      "source": "hitlist-v4-iedb",
+      "population": "literal purified human quantitative pMHC assays; canonical peptide and verified complete HLA pair",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "/input/data/ec50-hitlist-v4-iedb-validation.jsonl",
+      "sha256": "d361e6c0ed015ca3f8ebf3126c06b112a03776c010b9dc633a38ef7228d519ad",
+      "source": "hitlist-v4-iedb",
+      "population": "literal purified human quantitative pMHC assays; canonical peptide and verified complete HLA pair",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "/input/data/ec50-hitlist-v4-iedb-test.jsonl",
+      "sha256": "529873df393e5ce2536d5d379d76f452b2bfcf991566ca1144a86afd382801d8",
+      "source": "hitlist-v4-iedb",
+      "population": "literal purified human quantitative pMHC assays; canonical peptide and verified complete HLA pair",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "/input/data/ic50-hitlist-v4-iedb-test.jsonl",
+      "sha256": "fa67ed4d5678edbab0be0d755f3fefaabcce9b117b4bb09455a6f94900bff35e",
+      "source": "hitlist-v4-iedb",
+      "population": "literal purified human quantitative pMHC assays; canonical peptide and verified complete HLA pair",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    }
+  ]
+}

@@ -1,0 +1,179 @@
+{
+  "results": {
+    "unregularized_sequence": {
+      "metrics": {
+        "mse": 0.7799488260968803,
+        "rmse": 0.8831471146399564,
+        "pearson": 0.44189044662274946,
+        "spearman": 0.330831181584942,
+        "prediction_sd": 0.6411760700227571,
+        "by_parent": {
+          "soh2024_digestion:construct:7fa7636cad66d6fbc4e373829ee78bb9ab66adb141e99f051d21cad9084a6bea": {
+            "rmse": 1.0901835225870824,
+            "n": 30514
+          },
+          "soh2024_digestion:construct:af62ea1fde21fcc684bef6605aeee01ac2b3e3c59796d64c34c624f0f272aeec": {
+            "rmse": 0.7726678752379744,
+            "n": 4150
+          },
+          "soh2024_digestion:construct:50d8b307581e0a39b20cd381c16a12dfbf6642e27d4df233f9b0f26f46bd82b5": {
+            "rmse": 0.7928001201222578,
+            "n": 4404
+          },
+          "soh2024_digestion:construct:f3df12ae52a6c6fc2cd28a85b9081abbf0ecc3e0da0265e151972558abf931d7": {
+            "rmse": 0.7060005814541893,
+            "n": 3360
+          },
+          "soh2024_digestion:construct:5c44f6a3ee6e96b468205cf19c495bb0fd42bfae7f025a9744f6c09386070ba7": {
+            "rmse": 0.9090509142411125,
+            "n": 11508
+          },
+          "soh2024_digestion:construct:e7599d914ddf8ec9d8cdc94c7497b3a247e94d7396c93a8b7aaba6041628384b": {
+            "rmse": 0.9699663819298142,
+            "n": 13640
+          }
+        }
+      },
+      "finite_difference_coordinates": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39
+      ],
+      "maximum_gradient_error": 1.7017540154817823e-10,
+      "all_parameters_changed": true,
+      "converged": false
+    },
+    "free_condition_rates": {
+      "metrics": {
+        "mse": 0.6357500018417919,
+        "rmse": 0.7973393266619877,
+        "pearson": 0.6037001120703198,
+        "spearman": 0.4963129817167733,
+        "prediction_sd": 0.7856394340333831,
+        "by_parent": {
+          "soh2024_digestion:construct:7fa7636cad66d6fbc4e373829ee78bb9ab66adb141e99f051d21cad9084a6bea": {
+            "rmse": 0.9606492210341453,
+            "n": 30514
+          },
+          "soh2024_digestion:construct:af62ea1fde21fcc684bef6605aeee01ac2b3e3c59796d64c34c624f0f272aeec": {
+            "rmse": 0.7235070496930751,
+            "n": 4150
+          },
+          "soh2024_digestion:construct:50d8b307581e0a39b20cd381c16a12dfbf6642e27d4df233f9b0f26f46bd82b5": {
+            "rmse": 0.74340883095668,
+            "n": 4404
+          },
+          "soh2024_digestion:construct:f3df12ae52a6c6fc2cd28a85b9081abbf0ecc3e0da0265e151972558abf931d7": {
+            "rmse": 0.654251680125051,
+            "n": 3360
+          },
+          "soh2024_digestion:construct:5c44f6a3ee6e96b468205cf19c495bb0fd42bfae7f025a9744f6c09386070ba7": {
+            "rmse": 0.8246547850574801,
+            "n": 11508
+          },
+          "soh2024_digestion:construct:e7599d914ddf8ec9d8cdc94c7497b3a247e94d7396c93a8b7aaba6041628384b": {
+            "rmse": 0.8410904641075384,
+            "n": 13640
+          }
+        }
+      },
+      "finite_difference_coordinates": [
+        0,
+        68,
+        136,
+        171,
+        195,
+        200,
+        205,
+        273,
+        341,
+        410,
+        478,
+        547,
+        615,
+        683,
+        752,
+        820,
+        889,
+        902,
+        920,
+        927,
+        928,
+        957,
+        1025,
+        1078,
+        1083,
+        1090,
+        1091,
+        1094,
+        1100,
+        1162,
+        1230,
+        1299,
+        1367,
+        1436,
+        1504,
+        1572,
+        1641,
+        1701,
+        1703,
+        1709,
+        1778,
+        1846,
+        1914,
+        1983,
+        1997,
+        2004,
+        2051,
+        2120
+      ],
+      "maximum_gradient_error": 6.23637485884065e-12,
+      "all_parameters_changed": true,
+      "converged": false
+    }
+  },
+  "predictions_verified": 135152,
+  "maximum_prediction_error": 1.6764367671839864e-13,
+  "allocation_parameters": 2121,
+  "qualification": "Independent direct-sum predictions, all allocation incidences, finite differences of all40sequence and up to48free-rate coordinates; no optimizer replay or global-optimum claim",
+  "no_heldout_evaluation": true,
+  "wall_seconds": 9.39295895898249,
+  "peak_rss_bytes": 1054048256
+}

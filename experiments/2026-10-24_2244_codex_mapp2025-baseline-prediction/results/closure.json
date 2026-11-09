@@ -1,0 +1,40 @@
+{
+  "decision_and_bootstrap_passed": true,
+  "bootstrap_maxabs": 2.1510571102112408e-16,
+  "accession_rule": "exact sp|accession|entry or tr|accession|entry field extraction; bare accession retained; no isoform collapse or aliases",
+  "accession_inventory_overlap": {
+    "HAP1": {
+      "source_sha256": "b307fd64aebc83ce943143b1d1fbf5380807af3b2bdff27670e592ec60412a75",
+      "n_source_identifiers": 20481,
+      "by_split": {
+        "train": 293,
+        "val": 80,
+        "test": 134
+      }
+    },
+    "lymph_DC": {
+      "source_sha256": "2180ba74a27366588ba632fb47490766f543613011bab26e3f324e68a50e3cb1",
+      "n_source_identifiers": 1223,
+      "by_split": {
+        "train": 0,
+        "val": 0,
+        "test": 0
+      }
+    }
+  },
+  "timing": "postfit provenance only; no source split, model or eligibility changes",
+  "environment": {
+    "python": "3.12.6",
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "machine": "arm64",
+    "packages": {
+      "numpy": "2.5.4",
+      "scipy": "1.18.1",
+      "torch": "2.14.1",
+      "pandas": "3.1.0",
+      "pyarrow": "26.0.0",
+      "networkx": "3.7",
+      "psutil": "7.2.2"
+    }
+  }
+}

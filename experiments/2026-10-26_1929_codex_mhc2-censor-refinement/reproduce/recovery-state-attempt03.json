@@ -1,0 +1,17 @@
+{
+  "status": "stopped_on_failure",
+  "events": [
+    {
+      "utc": "2026-10-26T20:24:29.997674+00:00",
+      "action": "resume-censor",
+      "argv": [
+        "/Users/iskander/code/shared-virtual-env/bin/python",
+        "/private/tmp/presto-mhc2-20261026/presto/experiments/2026-10-26_1929_codex_mhc2-censor-refinement/code/resume_censor_attempt03.py"
+      ]
+    }
+  ],
+  "current_action": "resume-censor",
+  "pid": 21797,
+  "error": "RuntimeError('resume-censor exited 1; no next condition launched')",
+  "updated_utc": "2026-10-26T20:25:26.105000+00:00"
+}

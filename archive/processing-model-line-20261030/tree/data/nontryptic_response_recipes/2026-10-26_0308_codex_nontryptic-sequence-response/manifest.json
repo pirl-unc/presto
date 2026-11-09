@@ -1,0 +1,139 @@
+{
+  "catalog_schema_version": 38,
+  "coverage": {
+    "nontryptic_measurements": {
+      "grain": "one_original_summed_signal_slot_including_blank",
+      "n_accepted": 213,
+      "n_ambiguous": 0,
+      "n_candidates": 348,
+      "n_contributor_links": 348,
+      "n_excluded": 135,
+      "n_filtered_by_query": 0,
+      "n_limit_omitted": 0,
+      "n_query_matches": 348,
+      "n_source_rows": 348,
+      "n_unresolved_contributor_links": 348,
+      "reason_counts": {
+        "context_precision_unmet": 135,
+        "missing_required:quantitative_raw": 9,
+        "missing_target": 9
+      },
+      "row_id": "measurement_id",
+      "source_population": "pxd024917_nominal_MS2_with_qualified_source_lineage"
+    }
+  },
+  "files": {
+    "coverage.json": {
+      "sha256": "8606a83b859b82a66f8682227233fb7030fcec9e0457a7d7560fa2234f8bf2ed",
+      "size_bytes": 632
+    },
+    "sources/nontryptic_measurements/accepted.parquet": {
+      "sha256": "b027bf3c86d73cd1534376c03a61aefb156240f3e460666d3707f8229213d315",
+      "size_bytes": 50064
+    },
+    "sources/nontryptic_measurements/ambiguous.parquet": {
+      "sha256": "104f0917b5c5b12db783413e42778c39c5f8a0c083d2aa115bcd602cc811f6bb",
+      "size_bytes": 4533
+    },
+    "sources/nontryptic_measurements/contributors.parquet": {
+      "sha256": "c5b163e7ab9d5a79fdeb18965f0687006ccbbb10bd7955540b90bbd69f353c77",
+      "size_bytes": 14997
+    },
+    "sources/nontryptic_measurements/excluded.parquet": {
+      "sha256": "1da537e25d4b00629b76212fdbd86d65f39c115b72eab9050e3998109f6a1894",
+      "size_bytes": 36711
+    },
+    "sources/nontryptic_measurements/lineage.parquet": {
+      "sha256": "e91db7b514549e8c4749f3d05e5963c5897dc8832042f5a058890cc07acca3e5",
+      "size_bytes": 15126
+    }
+  },
+  "hitlist_version": "2.0.42",
+  "recipe": {
+    "mapping_policy": "no_expansion",
+    "name": "pxd024917_free1h_response_development_v1",
+    "schema_version": 1,
+    "sources": [
+      {
+        "context_precision": {
+          "allowed": [
+            "1H"
+          ],
+          "field": "amount.isotopologue_label",
+          "on_mismatch": "exclude"
+        },
+        "evidence_type": "nontryptic_measurements",
+        "grouping": {
+          "fields": [
+            "standard.gene_symbol_raw"
+          ],
+          "on_missing": "exclude"
+        },
+        "joins": [
+          "standard",
+          "amount",
+          "slot"
+        ],
+        "limit": null,
+        "required_fields": [
+          "standard.peptide_sequence",
+          "standard.gene_symbol_raw",
+          "amount.nominal_amount_fmol",
+          "amount.nominal_amount_raw",
+          "source_locator",
+          "quantitative_raw"
+        ],
+        "row_id": "measurement_id",
+        "select": [
+          "measurement_id",
+          "nominal_amount_id",
+          "slot_id",
+          "standard_id",
+          "context_id",
+          "quantitative_raw",
+          "quantitative_value",
+          "measurement_unit",
+          "value_status",
+          "observation_kind",
+          "aggregation_status",
+          "cell_id",
+          "source_locator",
+          "standard.peptide_sequence",
+          "standard.gene_symbol_raw",
+          "standard.peptide_length",
+          "standard.reported_length_raw",
+          "standard.length_consistency_status",
+          "amount.nominal_amount_raw",
+          "amount.nominal_amount_fmol",
+          "amount.measurement_unit",
+          "amount.nominal_status",
+          "amount.isotopologue_label",
+          "amount.reported_form_label",
+          "amount.source_locator",
+          "slot.source_column",
+          "slot.source_slot_ordinal",
+          "slot.acquisition_id",
+          "slot.specimen_id",
+          "slot.aliquot_id"
+        ],
+        "target": {
+          "allowed_statuses": [
+            "reported_positive"
+          ],
+          "allowed_units": [
+            "source_arbitrary_summed_intensity"
+          ],
+          "field": "quantitative_value",
+          "mode": "numeric",
+          "status_field": "value_status",
+          "unit_field": "measurement_unit"
+        },
+        "where": {}
+      }
+    ]
+  },
+  "recipe_sha256": "2ecf13ff111d0df11fd48ab7faab6a96b022dff2473ff5f6e282bbef56402631",
+  "schema_version": 1,
+  "source_package_manifest_sha256": "ee304b6e9976135316e931cdcda4fd007d8f1e76c8a968c5253e2298e57ed876",
+  "source_package_schema_version": 29
+}

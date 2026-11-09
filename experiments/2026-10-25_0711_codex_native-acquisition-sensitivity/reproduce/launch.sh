@@ -1,0 +1,5 @@
+#!/bin/sh
+set -eu
+# Frozen stages: qualify, diagnose, replay; no retry overwrites.
+export OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1 MPLBACKEND=Agg
+exec /Users/iskander/code/shared-virtual-env/bin/python -B "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0711_codex_native-acquisition-sensitivity/code/launch.py" "$@"

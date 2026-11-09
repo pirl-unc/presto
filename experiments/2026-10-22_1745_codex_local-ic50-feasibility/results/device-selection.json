@@ -1,0 +1,23 @@
+{
+  "selected_device": "cpu",
+  "criterion": "lowest median synchronized training step time after four warmup updates; no held-out data used",
+  "timings": {
+    "cpu": 0.42739629151765257,
+    "mps": 0.4865778329985915
+  },
+  "same_observation_ids_and_order": true,
+  "memory": {
+    "cpu": {
+      "current_process_rss_bytes": 1874853888,
+      "peak_process_rss_bytes": 2434580480,
+      "system_available_bytes": 12852477952
+    },
+    "mps": {
+      "current_process_rss_bytes": 628506624,
+      "mps_current_allocated_bytes": 7543808,
+      "mps_driver_allocated_bytes": 2204696576,
+      "peak_process_rss_bytes": 628506624,
+      "system_available_bytes": 11303600128
+    }
+  }
+}

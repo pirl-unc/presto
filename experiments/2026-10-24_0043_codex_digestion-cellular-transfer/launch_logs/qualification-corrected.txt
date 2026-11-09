@@ -1,0 +1,7 @@
+source/exposure {'train': {'parents': 72, 'examples': 144, 'candidates': 918, 'training_construct_overlap': 0, 'training_shared_peptide_parents': 0, 'outside_feature_span_bonds': 0}, 'validation': {'parents': 15, 'examples': 30, 'candidates': 112, 'training_construct_overlap': 0, 'training_shared_peptide_parents': 0, 'outside_feature_span_bonds': 0}}
+mathematical checks pass
+retained ORIGINAL cost admission {'uniform_rates': {'seconds': 690, 'admitted': True}, 'adjacent_rates': {'seconds': 517, 'admitted': True}, 'wider_rates': {'seconds': 525, 'admitted': True}, 'wider_hybrid': {'seconds': 8598, 'admitted': False}}
+gradient probe 0 True 9.287323390522878e-06 3.984243453965667e-05
+gradient probe -1 True 4.13495758969009e-06 1.6399818463811336e-05
+gradient probe 1 True 6.871951994599779e-06 9.752733181162779e-05
+{'status': 'completed', 'seconds': 61.57687941601034, 'peak_rss_bytes': 1158840320, 'math_pass': True, 'source_pass': True, 'hybrid_gradient_gate_pass': True, 'fit_caps': {'uniform_rates': {'seconds': 690, 'admitted': True}, 'adjacent_rates': {'seconds': 517, 'admitted': True}, 'wider_rates': {'seconds': 525, 'admitted': True}, 'wider_hybrid': {'seconds': 8598, 'admitted': False}}}

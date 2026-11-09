@@ -1,0 +1,67 @@
+{
+  "status": "provisional_worker_validation",
+  "test_used": false,
+  "independent_per_example_verification": false,
+  "source_sha256": {
+    "provisional-validation-s42-step1000.json": "f79387a407569d68c8e3222825270b03e182888bdc991dca2fb9b4a56f01bfea",
+    "provisional-validation-s43-step1000.json": "a52ee91f3ef8aa175eaa17945d396b355479352b04c86f0b884047bb700b67f2"
+  },
+  "rows": [
+    {
+      "seed": 42,
+      "steps": 1000,
+      "split": "validation",
+      "mhc_class": "I",
+      "ic50_n_exact": 141,
+      "ic50_spearman": 0.3730603667571977,
+      "ic50_pearson": 0.47240396919674393,
+      "ic50_rmse_log10_nM": 1.6523207929987367,
+      "ligand_population": "same_protein_unobserved_comparators",
+      "ligand_n": 10116,
+      "ligand_auroc": 0.9326360129965707,
+      "ligand_auprc": 0.6747986608065446
+    },
+    {
+      "seed": 42,
+      "steps": 1000,
+      "split": "validation",
+      "mhc_class": "II",
+      "ic50_n_exact": 1129,
+      "ic50_spearman": 0.36509878917236027,
+      "ic50_pearson": 0.3600582189244844,
+      "ic50_rmse_log10_nM": 0.8536157813419768,
+      "ligand_population": "same_protein_unobserved_comparators",
+      "ligand_n": 4152,
+      "ligand_auroc": 0.7592193190550971,
+      "ligand_auprc": 0.4328855278815117
+    },
+    {
+      "seed": 43,
+      "steps": 1000,
+      "split": "validation",
+      "mhc_class": "I",
+      "ic50_n_exact": 141,
+      "ic50_spearman": 0.392599585415447,
+      "ic50_pearson": 0.43563399228809035,
+      "ic50_rmse_log10_nM": 1.8519111587753088,
+      "ligand_population": "same_protein_unobserved_comparators",
+      "ligand_n": 10116,
+      "ligand_auroc": 0.9421987507194128,
+      "ligand_auprc": 0.7537767750542362
+    },
+    {
+      "seed": 43,
+      "steps": 1000,
+      "split": "validation",
+      "mhc_class": "II",
+      "ic50_n_exact": 1129,
+      "ic50_spearman": 0.36404729124018276,
+      "ic50_pearson": 0.3603068099060284,
+      "ic50_rmse_log10_nM": 0.960022353645286,
+      "ligand_population": "same_protein_unobserved_comparators",
+      "ligand_n": 4152,
+      "ligand_auroc": 0.7597447291924221,
+      "ligand_auprc": 0.40456840023409674
+    }
+  ]
+}

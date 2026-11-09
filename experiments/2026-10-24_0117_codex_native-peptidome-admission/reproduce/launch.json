@@ -1,0 +1,56 @@
+{
+  "registered_at": "2026-10-24T01:17:11.777878-04:00",
+  "agent_model": "Codex / GPT-6",
+  "source_commit": "132404d1d0a2b714dcff9804e7e052b909f28f6d",
+  "dirty_status": " M tasks/todo.md\n",
+  "phase": "Public source/lineage audit only; no model or training admission",
+  "asset_directory": "/private/tmp/presto-modular-model/data/native_peptidome_source_audit/2026-10-24_0117_codex_native-peptidome-admission",
+  "sources": [
+    {
+      "id": "dasgupta2014",
+      "doi": "10.1371/journal.pone.0103604",
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0103604",
+      "supplements": [
+        "s001",
+        "s002"
+      ]
+    },
+    {
+      "id": "gelman2013",
+      "doi": "10.1371/journal.pone.0053263",
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0053263",
+      "supplements": [
+        "s001",
+        "s002"
+      ]
+    },
+    {
+      "id": "epoxomicin_original",
+      "pmcid": "PMC3315381",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3315381/",
+      "status": "discovery lead; bibliographic/source reuse must be confirmed"
+    }
+  ],
+  "source_plan_sha256": "3fbc755a640fa9c2263c5a8e69faab0259ea4281c8e64a2a713f4e32944c746c",
+  "retrieval": {
+    "timeout_seconds_per_request": 60,
+    "retries": 0,
+    "allowed": "public publisher/archive endpoints only; record fallback and errors; no author outreach or credentials",
+    "max_asset_bytes": 104857600
+  },
+  "audit": {
+    "raw_cell_preservation": true,
+    "no_model_training": true,
+    "no_source_value_repairs": true,
+    "independent_parser": "OOXML via XML versus openpyxl; BIFF via raw records/independent reader as applicable; stop if unavailable",
+    "parse_seconds_per_asset": 120,
+    "peak_rss_bytes": 2147483648
+  },
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "test_policy": "No predictive dataset or model in source audit; no validation/test split or predictions; source-lineage grouping precedes any future split"
+}

@@ -1,0 +1,16 @@
+
+==================================== ERRORS ====================================
+___________ ERROR collecting tests/test_mhc2_ms_length_background.py ___________
+test_mhc2_ms_length_background.py:15: in <module>
+    SPEC.loader.exec_module(rules)
+<frozen importlib._bootstrap_external>:991: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:1128: in get_code
+    ???
+<frozen importlib._bootstrap_external>:1186: in get_data
+    ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/cohort_rules.py'
+=========================== short test summary info ============================
+ERROR test_mhc2_ms_length_background.py - FileNotFoundError: [Errno 2] No suc...
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 10.50s

@@ -1,0 +1,65 @@
+{
+  "status": "completed",
+  "results": [
+    {
+      "condition": "original",
+      "repeat": 0,
+      "rows": 15000,
+      "seconds": 1.1892500829999335,
+      "rows_per_second": 12612.99050083887,
+      "identity_digest": "ffce1a66d16808601125ef914bc2dacc0df38719faf3a782cfc3c16114fc03af"
+    },
+    {
+      "condition": "sequential",
+      "repeat": 0,
+      "rows": 15000,
+      "seconds": 0.9155828749935608,
+      "rows_per_second": 16383.00628996091,
+      "identity_digest": "ffce1a66d16808601125ef914bc2dacc0df38719faf3a782cfc3c16114fc03af"
+    },
+    {
+      "condition": "sequential",
+      "repeat": 1,
+      "rows": 15000,
+      "seconds": 0.9156218749994878,
+      "rows_per_second": 16382.30847205173,
+      "identity_digest": "ffce1a66d16808601125ef914bc2dacc0df38719faf3a782cfc3c16114fc03af"
+    },
+    {
+      "condition": "original",
+      "repeat": 1,
+      "rows": 15000,
+      "seconds": 1.17177591600921,
+      "rows_per_second": 12801.08235291815,
+      "identity_digest": "ffce1a66d16808601125ef914bc2dacc0df38719faf3a782cfc3c16114fc03af"
+    },
+    {
+      "condition": "original",
+      "repeat": 2,
+      "rows": 15000,
+      "seconds": 1.1730294170265552,
+      "rows_per_second": 12787.403096865753,
+      "identity_digest": "ffce1a66d16808601125ef914bc2dacc0df38719faf3a782cfc3c16114fc03af"
+    },
+    {
+      "condition": "sequential",
+      "repeat": 2,
+      "rows": 15000,
+      "seconds": 0.9030567500158213,
+      "rows_per_second": 16610.251791747534,
+      "identity_digest": "ffce1a66d16808601125ef914bc2dacc0df38719faf3a782cfc3c16114fc03af"
+    }
+  ],
+  "median_seconds": {
+    "original": 1.1730294170265552,
+    "sequential": 0.9155828749935608
+  },
+  "median_speedup": 1.2811832211636822,
+  "throughput_gate_passed": true,
+  "construction_seconds": 0.953279500012286,
+  "exact_content_verified": 15000,
+  "maximum_resident_set_native_units": 288440320,
+  "rss_unit": "bytes",
+  "finished_unix": 1793249350.321264,
+  "interpretation": "Local warm-cache TRAIN-prefix reader benchmark only; not an estimate of full H100 fit speedup"
+}

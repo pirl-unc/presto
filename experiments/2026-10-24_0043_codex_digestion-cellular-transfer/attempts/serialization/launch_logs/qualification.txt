@@ -1,0 +1,34 @@
+source/exposure {'train': {'parents': 72, 'examples': 144, 'candidates': 918, 'training_construct_overlap': 0, 'training_shared_peptide_parents': 0, 'outside_feature_span_bonds': 0}, 'validation': {'parents': 15, 'examples': 30, 'candidates': 112, 'training_construct_overlap': 0, 'training_shared_peptide_parents': 0, 'outside_feature_span_bonds': 0}}
+mathematical checks pass
+cost admission {'uniform_rates': {'seconds': 690, 'admitted': True}, 'adjacent_rates': {'seconds': 517, 'admitted': True}, 'wider_rates': {'seconds': 525, 'admitted': True}, 'wider_hybrid': {'seconds': 8598, 'admitted': False}}
+/private/tmp/presto-modular-model/experiments/2026-10-24_0043_codex_digestion-cellular-transfer/code/launch.py:123: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:821.)
+  assert abs(float(tl)-loss)<=1e-10 and abs(tg-gradient)<=1e-10
+Traceback (most recent call last):
+  File "/private/tmp/presto-modular-model/experiments/2026-10-24_0043_codex_digestion-cellular-transfer/code/launch.py", line 142, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/private/tmp/presto-modular-model/experiments/2026-10-24_0043_codex_digestion-cellular-transfer/code/launch.py", line 134, in main
+    dump(FAMILY/'results/gradient-probes.json',probes);print('gradient probe',offset,passed,mean,rms,flush=True)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/presto-modular-model/experiments/2026-10-24_0043_codex_digestion-cellular-transfer/code/core.py", line 16, in dump
+    Path(path).write_text(json.dumps(obj, indent=2, allow_nan=False) + "\n")
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/json/__init__.py", line 238, in dumps
+    **kw).encode(obj)
+          ^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/json/encoder.py", line 202, in encode
+    chunks = list(chunks)
+             ^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/json/encoder.py", line 430, in _iterencode
+    yield from _iterencode_list(o, _current_indent_level)
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/json/encoder.py", line 326, in _iterencode_list
+    yield from chunks
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/json/encoder.py", line 406, in _iterencode_dict
+    yield from chunks
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/json/encoder.py", line 439, in _iterencode
+    o = _default(o)
+        ^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/json/encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type bool is not JSON serializable

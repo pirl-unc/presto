@@ -1,0 +1,7831 @@
+{
+  "1": {
+    "sheets": [
+      {
+        "name": "SD1 - SIS Pep Conc",
+        "state": "visible",
+        "max_row": 10,
+        "max_column": 9,
+        "xml_populated_cells": 39,
+        "openpyxl_populated_cells": 39,
+        "formula_cells": 0,
+        "formula_cache_missing": 0,
+        "xml_only_coordinates": [],
+        "merged_ranges": [
+          "B4:F4"
+        ],
+        "preview": [
+          [
+            {
+              "cell": "A1",
+              "value": "Supplementary Data 1 \u2013 SIS peptide concentrations"
+            }
+          ],
+          [
+            {
+              "cell": "A2",
+              "value": "This table describes how the different peptide groups were diluted serially 3-fold into the HEK293 background to create the 5 different samples. "
+            }
+          ],
+          [],
+          [
+            {
+              "cell": "B4",
+              "value": "Concentration (fmol on column)"
+            }
+          ],
+          [
+            {
+              "cell": "A5",
+              "value": "Peptide Group"
+            },
+            {
+              "cell": "B5",
+              "value": "S5"
+            },
+            {
+              "cell": "C5",
+              "value": "S4"
+            },
+            {
+              "cell": "D5",
+              "value": "S3"
+            },
+            {
+              "cell": "E5",
+              "value": "S2"
+            },
+            {
+              "cell": "F5",
+              "value": "S1"
+            }
+          ],
+          [
+            {
+              "cell": "A6",
+              "value": "E"
+            },
+            {
+              "cell": "B6",
+              "value": 10000
+            },
+            {
+              "cell": "C6",
+              "value": 3333.3333333333335
+            },
+            {
+              "cell": "D6",
+              "value": 1111.111111111111
+            },
+            {
+              "cell": "E6",
+              "value": 370.3703703703704
+            },
+            {
+              "cell": "F6",
+              "value": 123.4567901234568
+            }
+          ],
+          [
+            {
+              "cell": "A7",
+              "value": "D"
+            },
+            {
+              "cell": "B7",
+              "value": 1000
+            },
+            {
+              "cell": "C7",
+              "value": 333.3333333333333
+            },
+            {
+              "cell": "D7",
+              "value": 111.1111111111111
+            },
+            {
+              "cell": "E7",
+              "value": 37.03703703703703
+            },
+            {
+              "cell": "F7",
+              "value": 12.345679012345677
+            }
+          ],
+          [
+            {
+              "cell": "A8",
+              "value": "C"
+            },
+            {
+              "cell": "B8",
+              "value": 100
+            },
+            {
+              "cell": "C8",
+              "value": 33.333333333333336
+            },
+            {
+              "cell": "D8",
+              "value": 11.111111111111112
+            },
+            {
+              "cell": "E8",
+              "value": 3.703703703703704
+            },
+            {
+              "cell": "F8",
+              "value": 1.234567901234568
+            }
+          ],
+          [
+            {
+              "cell": "A9",
+              "value": "B"
+            },
+            {
+              "cell": "B9",
+              "value": 10
+            },
+            {
+              "cell": "C9",
+              "value": 3.3333333333333335
+            },
+            {
+              "cell": "D9",
+              "value": 1.1111111111111112
+            },
+            {
+              "cell": "E9",
+              "value": 0.3703703703703704
+            },
+            {
+              "cell": "F9",
+              "value": 0.1234567901234568
+            }
+          ],
+          [
+            {
+              "cell": "A10",
+              "value": "A"
+            },
+            {
+              "cell": "B10",
+              "value": 1
+            },
+            {
+              "cell": "C10",
+              "value": 0.3333333333333333
+            },
+            {
+              "cell": "D10",
+              "value": 0.1111111111111111
+            },
+            {
+              "cell": "E10",
+              "value": 0.037037037037037035
+            },
+            {
+              "cell": "F10",
+              "value": 0.012345679012345678
+            }
+          ]
+        ]
+      }
+    ],
+    "openpyxl_version": "3.1.5",
+    "cell_dump": "results/supplementary-data-1-cells.jsonl.gz",
+    "cell_dump_sha256": "5c6676824e6a5bb589a7743a8fcc39bc079a228e4a54c6c763f6a0d29d7a200e",
+    "n_source_cells": 39,
+    "independent_structure_check": "passed"
+  },
+  "2": {
+    "sheets": [
+      {
+        "name": "SD2 - SIS Peps Groups",
+        "state": "visible",
+        "max_row": 34,
+        "max_column": 3,
+        "xml_populated_cells": 95,
+        "openpyxl_populated_cells": 95,
+        "formula_cells": 0,
+        "formula_cache_missing": 0,
+        "xml_only_coordinates": [],
+        "merged_ranges": [],
+        "preview": [
+          [
+            {
+              "cell": "A1",
+              "value": "Supplementary Data 2 \u2013 SIS peptide groups"
+            }
+          ],
+          [
+            {
+              "cell": "A2",
+              "value": "List of heavy labeled synthetic peptides and the group they were mixed into."
+            }
+          ],
+          [],
+          [
+            {
+              "cell": "A4",
+              "value": "Peptide"
+            },
+            {
+              "cell": "B4",
+              "value": "Protein Name"
+            },
+            {
+              "cell": "C4",
+              "value": "Group"
+            }
+          ],
+          [
+            {
+              "cell": "A5",
+              "value": "VAQLEQVYIR[+10]"
+            },
+            {
+              "cell": "B5",
+              "value": "1/sp|P62318|SMD3_HUMAN"
+            },
+            {
+              "cell": "C5",
+              "value": "A"
+            }
+          ],
+          [
+            {
+              "cell": "A6",
+              "value": "APPPGGWPLQPR[+10]"
+            },
+            {
+              "cell": "B6",
+              "value": "1/sp|Q9UDW3|ZMAT5_HUMAN"
+            },
+            {
+              "cell": "C6",
+              "value": "A"
+            }
+          ],
+          [
+            {
+              "cell": "A7",
+              "value": "SVQQVIESHLLK[+08]"
+            },
+            {
+              "cell": "B7",
+              "value": "1/sp|Q9H9E1|ANRA2_HUMAN"
+            },
+            {
+              "cell": "C7",
+              "value": "A"
+            }
+          ],
+          [
+            {
+              "cell": "A8",
+              "value": "GFAFVQYVNER[+10]"
+            },
+            {
+              "cell": "B8",
+              "value": "1/sp|P07910|HNRPC_HUMAN"
+            },
+            {
+              "cell": "C8",
+              "value": "A"
+            }
+          ],
+          [
+            {
+              "cell": "A9",
+              "value": "LVEVQWEQQEAR[+10]"
+            },
+            {
+              "cell": "B9",
+              "value": "1/sp|Q8WTP8|AEN_HUMAN"
+            },
+            {
+              "cell": "C9",
+              "value": "A"
+            }
+          ],
+          [
+            {
+              "cell": "A10",
+              "value": "FAQHGTFEYEYSQR[+10]"
+            },
+            {
+              "cell": "B10",
+              "value": "1/sp|P23246|SFPQ_HUMAN"
+            },
+            {
+              "cell": "C10",
+              "value": "A"
+            }
+          ],
+          [
+            {
+              "cell": "A11",
+              "value": "EPVQLETLSIR[+10]"
+            },
+            {
+              "cell": "B11",
+              "value": "1/sp|P62314|SMD1_HUMAN"
+            },
+            {
+              "cell": "C11",
+              "value": "B"
+            }
+          ],
+          [
+            {
+              "cell": "A12",
+              "value": "CNNVLYIR[+10]"
+            },
+            {
+              "cell": "B12",
+              "value": "1/sp|P62306|RUXF_HUMAN"
+            },
+            {
+              "cell": "C12",
+              "value": "B"
+            }
+          ],
+          [
+            {
+              "cell": "A13",
+              "value": "EASGLSADSLAR[+10]"
+            },
+            {
+              "cell": "B13",
+              "value": "1/sp|Q9H6T0|ESRP2_HUMAN"
+            },
+            {
+              "cell": "C13",
+              "value": "B"
+            }
+          ],
+          [
+            {
+              "cell": "A14",
+              "value": "EVSSATNALR[+10]"
+            },
+            {
+              "cell": "B14",
+              "value": "1/sp|P09012|SNRPA_HUMAN"
+            },
+            {
+              "cell": "C14",
+              "value": "B"
+            }
+          ],
+          [
+            {
+              "cell": "A15",
+              "value": "EAQISSAIVSSVQSK[+08]"
+            },
+            {
+              "cell": "B15",
+              "value": "1/sp|Q12872|SFSWA_HUMAN"
+            },
+            {
+              "cell": "C15",
+              "value": "B"
+            }
+          ],
+          [
+            {
+              "cell": "A16",
+              "value": "FVINYDYPNSSEDYIHR[+10]"
+            },
+            {
+              "cell": "B16",
+              "value": "1/sp|P17844|DDX5_HUMAN"
+            },
+            {
+              "cell": "C16",
+              "value": "B"
+            }
+          ],
+          [
+            {
+              "cell": "A17",
+              "value": "AFSYYGPLR[+10]"
+            },
+            {
+              "cell": "B17",
+              "value": "1/sp|Q16629|SRSF7_HUMAN"
+            },
+            {
+              "cell": "C17",
+              "value": "C"
+            }
+          ],
+          [
+            {
+              "cell": "A18",
+              "value": "SDSYVELSQYR[+10]"
+            },
+            {
+              "cell": "B18",
+              "value": "1/sp|P52298|NCBP2_HUMAN"
+            },
+            {
+              "cell": "C18",
+              "value": "C"
+            }
+          ],
+          [
+            {
+              "cell": "A19",
+              "value": "LDFAVEDGENAQK[+08]"
+            },
+            {
+              "cell": "B19",
+              "value": "1/sp|Q96AV8|E2F7_HUMAN"
+            },
+            {
+              "cell": "C19",
+              "value": "C"
+            }
+          ],
+          [
+            {
+              "cell": "A20",
+              "value": "GGNFGFGDSR[+10]"
+            },
+            {
+              "cell": "B20",
+              "value": "1/sp|P22626|ROA2_HUMAN"
+            },
+            {
+              "cell": "C20",
+              "value": "C"
+            }
+          ],
+          [
+            {
+              "cell": "A21",
+              "value": "APAELEVECATQLR[+10]"
+            },
+            {
+              "cell": "B21",
+              "value": "1/sp|Q13794|APR_HUMAN"
+            },
+            {
+              "cell": "C21",
+              "value": "C"
+            }
+          ],
+          [
+            {
+              "cell": "A22",
+              "value": "NNTQVLINCR[+10]"
+            },
+            {
+              "cell": "B22",
+              "value": "1/sp|P62316|SMD2_HUMAN"
+            },
+            {
+              "cell": "C22",
+              "value": "C"
+            }
+          ]
+        ]
+      }
+    ],
+    "openpyxl_version": "3.1.5",
+    "cell_dump": "results/supplementary-data-2-cells.jsonl.gz",
+    "cell_dump_sha256": "a508cbddbabda78f5a090c6ce83c0ae4a46503939efc31a0224b300740812821",
+    "n_source_cells": 95,
+    "independent_structure_check": "passed"
+  },
+  "4": {
+    "sheets": [
+      {
+        "name": "SD4 - S4 Peak Areas cross site",
+        "state": "visible",
+        "max_row": 74,
+        "max_column": 104,
+        "xml_populated_cells": 6249,
+        "openpyxl_populated_cells": 6249,
+        "formula_cells": 0,
+        "formula_cache_missing": 0,
+        "xml_only_coordinates": [],
+        "merged_ranges": [
+          "BH3:BP3",
+          "AY3:BG3",
+          "CI3:CQ3",
+          "AP3:AX3",
+          "O3:W3",
+          "BQ3:BY3",
+          "BZ3:CH3",
+          "CR3:CZ3",
+          "X3:AF3",
+          "F3:N3",
+          "AG3:AO3"
+        ],
+        "preview": [
+          [
+            {
+              "cell": "A1",
+              "value": "Supplementary Data 4 \u2013 Peptide Peak areas (Sum of 4 Fragment Ions) for SIS peptides  from sample S4"
+            }
+          ],
+          [],
+          [
+            {
+              "cell": "F3",
+              "value": 1
+            },
+            {
+              "cell": "O3",
+              "value": 2
+            },
+            {
+              "cell": "X3",
+              "value": 3
+            },
+            {
+              "cell": "AG3",
+              "value": 4
+            },
+            {
+              "cell": "AP3",
+              "value": 5
+            },
+            {
+              "cell": "AY3",
+              "value": 6
+            },
+            {
+              "cell": "BH3",
+              "value": 7
+            },
+            {
+              "cell": "BQ3",
+              "value": 8
+            },
+            {
+              "cell": "BZ3",
+              "value": 9
+            },
+            {
+              "cell": "CI3",
+              "value": 10
+            },
+            {
+              "cell": "CR3",
+              "value": 11
+            }
+          ],
+          [
+            {
+              "cell": "C4",
+              "value": "Avg"
+            },
+            {
+              "cell": "D4",
+              "value": "Std Dev"
+            },
+            {
+              "cell": "E4",
+              "value": "CV"
+            }
+          ],
+          [
+            {
+              "cell": "A5",
+              "value": "Un-Normalized"
+            }
+          ],
+          [
+            {
+              "cell": "A6",
+              "value": "SMD3.VAQLEQVYIR[+10]"
+            },
+            {
+              "cell": "B6",
+              "value": 0.33
+            },
+            {
+              "cell": "C6",
+              "value": 63264.074184007506
+            },
+            {
+              "cell": "D6",
+              "value": 33408.36317148154
+            },
+            {
+              "cell": "E6",
+              "value": 52.8077958974176
+            },
+            {
+              "cell": "F6",
+              "value": ""
+            },
+            {
+              "cell": "G6",
+              "value": ""
+            },
+            {
+              "cell": "H6",
+              "value": ""
+            },
+            {
+              "cell": "I6",
+              "value": ""
+            },
+            {
+              "cell": "J6",
+              "value": ""
+            },
+            {
+              "cell": "K6",
+              "value": ""
+            },
+            {
+              "cell": "L6",
+              "value": ""
+            },
+            {
+              "cell": "M6",
+              "value": ""
+            },
+            {
+              "cell": "N6",
+              "value": ""
+            },
+            {
+              "cell": "O6",
+              "value": ""
+            },
+            {
+              "cell": "P6",
+              "value": ""
+            },
+            {
+              "cell": "Q6",
+              "value": ""
+            },
+            {
+              "cell": "R6",
+              "value": ""
+            },
+            {
+              "cell": "S6",
+              "value": ""
+            },
+            {
+              "cell": "T6",
+              "value": ""
+            },
+            {
+              "cell": "U6",
+              "value": ""
+            },
+            {
+              "cell": "V6",
+              "value": ""
+            },
+            {
+              "cell": "W6",
+              "value": ""
+            },
+            {
+              "cell": "Y6",
+              "value": 75245.51956
+            },
+            {
+              "cell": "Z6",
+              "value": 74730.98974
+            },
+            {
+              "cell": "AA6",
+              "value": 60986.63265
+            },
+            {
+              "cell": "AB6",
+              "value": 62278.28652
+            },
+            {
+              "cell": "AC6",
+              "value": 67734.64824
+            },
+            {
+              "cell": "AD6",
+              "value": 77616.8389
+            },
+            {
+              "cell": "AE6",
+              "value": 58974.28357
+            },
+            {
+              "cell": "AF6",
+              "value": 68617.37963
+            },
+            {
+              "cell": "AG6",
+              "value": 78850.74
+            },
+            {
+              "cell": "AH6",
+              "value": 70249.37
+            },
+            {
+              "cell": "AI6",
+              "value": 96247.24
+            },
+            {
+              "cell": "AJ6",
+              "value": 89864.32
+            },
+            {
+              "cell": "AK6",
+              "value": 76686.35
+            },
+            {
+              "cell": "AL6",
+              "value": 91690
+            },
+            {
+              "cell": "AM6",
+              "value": 83862.57
+            },
+            {
+              "cell": "AN6",
+              "value": 78959.79
+            },
+            {
+              "cell": "AO6",
+              "value": 54936.84
+            },
+            {
+              "cell": "AP6",
+              "value": 130251.553113548
+            },
+            {
+              "cell": "AQ6",
+              "value": 128861.150885634
+            },
+            {
+              "cell": "AR6",
+              "value": 94317.0275891684
+            },
+            {
+              "cell": "AS6",
+              "value": 93720.9162997855
+            },
+            {
+              "cell": "AT6",
+              "value": 115436.988056607
+            },
+            {
+              "cell": "AU6",
+              "value": 125039.876501302
+            },
+            {
+              "cell": "AV6",
+              "value": 121398.239629256
+            },
+            {
+              "cell": "AW6",
+              "value": 128168.699530811
+            },
+            {
+              "cell": "AX6",
+              "value": 115354.809186692
+            },
+            {
+              "cell": "AY6",
+              "value": 38035.96
+            },
+            {
+              "cell": "AZ6",
+              "value": 38822.12
+            },
+            {
+              "cell": "BA6",
+              "value": 41760.3
+            },
+            {
+              "cell": "BB6",
+              "value": 35506.95
+            },
+            {
+              "cell": "BC6",
+              "value": 38212.37
+            },
+            {
+              "cell": "BD6",
+              "value": 46958.93
+            },
+            {
+              "cell": "BE6",
+              "value": 39775.99
+            },
+            {
+              "cell": "BF6",
+              "value": 49545.73
+            },
+            {
+              "cell": "BG6",
+              "value": 33204.38
+            },
+            {
+              "cell": "BH6",
+              "value": 75966.366913487
+            },
+            {
+              "cell": "BI6",
+              "value": 76381.118427081
+            },
+            {
+              "cell": "BJ6",
+              "value": 86469.7672721008
+            },
+            {
+              "cell": "BK6",
+              "value": 78995.7273671575
+            },
+            {
+              "cell": "BL6",
+              "value": 65040.7556629293
+            },
+            {
+              "cell": "BM6",
+              "value": 74395.1226438517
+            },
+            {
+              "cell": "BN6",
+              "value": 94242.9329897018
+            },
+            {
+              "cell": "BO6",
+              "value": 80829.7045291683
+            },
+            {
+              "cell": "BP6",
+              "value": 86100.5810001831
+            },
+            {
+              "cell": "BQ6",
+              "value": 15691.59
+            },
+            {
+              "cell": "BR6",
+              "value": 13417.6
+            },
+            {
+              "cell": "BS6",
+              "value": 11034.8
+            },
+            {
+              "cell": "BT6",
+              "value": 8901.877
+            },
+            {
+              "cell": "BU6",
+              "value": 7218.074
+            },
+            {
+              "cell": "BV6",
+              "value": 5715.921
+            },
+            {
+              "cell": "BW6",
+              "value": 8969.99
+            },
+            {
+              "cell": "BX6",
+              "value": 5048.2
+            },
+            {
+              "cell": "BY6",
+              "value": 9294.421
+            },
+            {
+              "cell": "BZ6",
+              "value": ""
+            },
+            {
+              "cell": "CA6",
+              "value": ""
+            },
+            {
+              "cell": "CB6",
+              "value": ""
+            },
+            {
+              "cell": "CC6",
+              "value": ""
+            },
+            {
+              "cell": "CD6",
+              "value": ""
+            },
+            {
+              "cell": "CE6",
+              "value": ""
+            },
+            {
+              "cell": "CF6",
+              "value": ""
+            },
+            {
+              "cell": "CG6",
+              "value": ""
+            },
+            {
+              "cell": "CH6",
+              "value": ""
+            },
+            {
+              "cell": "CI6",
+              "value": ""
+            },
+            {
+              "cell": "CJ6",
+              "value": ""
+            },
+            {
+              "cell": "CK6",
+              "value": ""
+            },
+            {
+              "cell": "CL6",
+              "value": ""
+            },
+            {
+              "cell": "CM6",
+              "value": ""
+            },
+            {
+              "cell": "CN6",
+              "value": ""
+            },
+            {
+              "cell": "CO6",
+              "value": ""
+            },
+            {
+              "cell": "CP6",
+              "value": ""
+            },
+            {
+              "cell": "CQ6",
+              "value": ""
+            },
+            {
+              "cell": "CR6",
+              "value": 46771.89
+            },
+            {
+              "cell": "CS6",
+              "value": 45224.25
+            },
+            {
+              "cell": "CT6",
+              "value": 50878.9
+            },
+            {
+              "cell": "CU6",
+              "value": 45407.9
+            },
+            {
+              "cell": "CV6",
+              "value": 49097.51
+            },
+            {
+              "cell": "CW6",
+              "value": 53465.72
+            },
+            {
+              "cell": "CX6",
+              "value": 47466.45
+            },
+            {
+              "cell": "CY6",
+              "value": 50587.71
+            },
+            {
+              "cell": "CZ6",
+              "value": 47853.93
+            }
+          ],
+          [
+            {
+              "cell": "A7",
+              "value": "ZMAT5.APPPGGWPLQPR[+10]"
+            },
+            {
+              "cell": "B7",
+              "value": 0.33
+            },
+            {
+              "cell": "C7",
+              "value": ""
+            },
+            {
+              "cell": "D7",
+              "value": ""
+            },
+            {
+              "cell": "E7",
+              "value": ""
+            },
+            {
+              "cell": "F7",
+              "value": ""
+            },
+            {
+              "cell": "G7",
+              "value": ""
+            },
+            {
+              "cell": "H7",
+              "value": ""
+            },
+            {
+              "cell": "I7",
+              "value": ""
+            },
+            {
+              "cell": "J7",
+              "value": ""
+            },
+            {
+              "cell": "K7",
+              "value": ""
+            },
+            {
+              "cell": "L7",
+              "value": ""
+            },
+            {
+              "cell": "M7",
+              "value": ""
+            },
+            {
+              "cell": "N7",
+              "value": ""
+            },
+            {
+              "cell": "O7",
+              "value": ""
+            },
+            {
+              "cell": "P7",
+              "value": ""
+            },
+            {
+              "cell": "Q7",
+              "value": ""
+            },
+            {
+              "cell": "R7",
+              "value": ""
+            },
+            {
+              "cell": "S7",
+              "value": ""
+            },
+            {
+              "cell": "T7",
+              "value": ""
+            },
+            {
+              "cell": "U7",
+              "value": ""
+            },
+            {
+              "cell": "V7",
+              "value": ""
+            },
+            {
+              "cell": "W7",
+              "value": ""
+            },
+            {
+              "cell": "Y7",
+              "value": ""
+            },
+            {
+              "cell": "Z7",
+              "value": ""
+            },
+            {
+              "cell": "AA7",
+              "value": ""
+            },
+            {
+              "cell": "AB7",
+              "value": ""
+            },
+            {
+              "cell": "AC7",
+              "value": ""
+            },
+            {
+              "cell": "AD7",
+              "value": ""
+            },
+            {
+              "cell": "AE7",
+              "value": ""
+            },
+            {
+              "cell": "AF7",
+              "value": ""
+            },
+            {
+              "cell": "AG7",
+              "value": ""
+            },
+            {
+              "cell": "AH7",
+              "value": ""
+            },
+            {
+              "cell": "AI7",
+              "value": ""
+            },
+            {
+              "cell": "AJ7",
+              "value": ""
+            },
+            {
+              "cell": "AK7",
+              "value": ""
+            },
+            {
+              "cell": "AL7",
+              "value": ""
+            },
+            {
+              "cell": "AM7",
+              "value": ""
+            },
+            {
+              "cell": "AN7",
+              "value": ""
+            },
+            {
+              "cell": "AO7",
+              "value": ""
+            },
+            {
+              "cell": "AP7",
+              "value": ""
+            },
+            {
+              "cell": "AQ7",
+              "value": ""
+            },
+            {
+              "cell": "AR7",
+              "value": ""
+            },
+            {
+              "cell": "AS7",
+              "value": ""
+            },
+            {
+              "cell": "AT7",
+              "value": ""
+            },
+            {
+              "cell": "AU7",
+              "value": ""
+            },
+            {
+              "cell": "AV7",
+              "value": ""
+            },
+            {
+              "cell": "AW7",
+              "value": ""
+            },
+            {
+              "cell": "AX7",
+              "value": ""
+            },
+            {
+              "cell": "AY7",
+              "value": ""
+            },
+            {
+              "cell": "AZ7",
+              "value": ""
+            },
+            {
+              "cell": "BA7",
+              "value": ""
+            },
+            {
+              "cell": "BB7",
+              "value": ""
+            },
+            {
+              "cell": "BC7",
+              "value": ""
+            },
+            {
+              "cell": "BD7",
+              "value": ""
+            },
+            {
+              "cell": "BE7",
+              "value": ""
+            },
+            {
+              "cell": "BF7",
+              "value": ""
+            },
+            {
+              "cell": "BG7",
+              "value": ""
+            },
+            {
+              "cell": "BH7",
+              "value": ""
+            },
+            {
+              "cell": "BI7",
+              "value": ""
+            },
+            {
+              "cell": "BJ7",
+              "value": ""
+            },
+            {
+              "cell": "BK7",
+              "value": ""
+            },
+            {
+              "cell": "BL7",
+              "value": ""
+            },
+            {
+              "cell": "BM7",
+              "value": ""
+            },
+            {
+              "cell": "BN7",
+              "value": ""
+            },
+            {
+              "cell": "BO7",
+              "value": ""
+            },
+            {
+              "cell": "BP7",
+              "value": ""
+            },
+            {
+              "cell": "BQ7",
+              "value": ""
+            },
+            {
+              "cell": "BR7",
+              "value": ""
+            },
+            {
+              "cell": "BS7",
+              "value": ""
+            },
+            {
+              "cell": "BT7",
+              "value": ""
+            },
+            {
+              "cell": "BU7",
+              "value": ""
+            },
+            {
+              "cell": "BV7",
+              "value": ""
+            },
+            {
+              "cell": "BW7",
+              "value": ""
+            },
+            {
+              "cell": "BX7",
+              "value": ""
+            },
+            {
+              "cell": "BY7",
+              "value": ""
+            },
+            {
+              "cell": "BZ7",
+              "value": ""
+            },
+            {
+              "cell": "CA7",
+              "value": ""
+            },
+            {
+              "cell": "CB7",
+              "value": ""
+            },
+            {
+              "cell": "CC7",
+              "value": ""
+            },
+            {
+              "cell": "CD7",
+              "value": ""
+            },
+            {
+              "cell": "CE7",
+              "value": ""
+            },
+            {
+              "cell": "CF7",
+              "value": ""
+            },
+            {
+              "cell": "CG7",
+              "value": ""
+            },
+            {
+              "cell": "CH7",
+              "value": ""
+            },
+            {
+              "cell": "CI7",
+              "value": ""
+            },
+            {
+              "cell": "CJ7",
+              "value": ""
+            },
+            {
+              "cell": "CK7",
+              "value": ""
+            },
+            {
+              "cell": "CL7",
+              "value": ""
+            },
+            {
+              "cell": "CM7",
+              "value": ""
+            },
+            {
+              "cell": "CN7",
+              "value": ""
+            },
+            {
+              "cell": "CO7",
+              "value": ""
+            },
+            {
+              "cell": "CP7",
+              "value": ""
+            },
+            {
+              "cell": "CQ7",
+              "value": ""
+            },
+            {
+              "cell": "CR7",
+              "value": ""
+            },
+            {
+              "cell": "CS7",
+              "value": ""
+            },
+            {
+              "cell": "CT7",
+              "value": ""
+            },
+            {
+              "cell": "CU7",
+              "value": ""
+            },
+            {
+              "cell": "CV7",
+              "value": ""
+            },
+            {
+              "cell": "CW7",
+              "value": ""
+            },
+            {
+              "cell": "CX7",
+              "value": ""
+            },
+            {
+              "cell": "CY7",
+              "value": ""
+            },
+            {
+              "cell": "CZ7",
+              "value": ""
+            }
+          ],
+          [
+            {
+              "cell": "A8",
+              "value": "HNRPC.GFAFVQYVNER[+10]"
+            },
+            {
+              "cell": "B8",
+              "value": 0.33
+            },
+            {
+              "cell": "C8",
+              "value": 42949.971469165204
+            },
+            {
+              "cell": "D8",
+              "value": 21279.207384356167
+            },
+            {
+              "cell": "E8",
+              "value": 49.54417117513806
+            },
+            {
+              "cell": "F8",
+              "value": 22790.1957153871
+            },
+            {
+              "cell": "G8",
+              "value": 23811.555740929
+            },
+            {
+              "cell": "H8",
+              "value": 28134.3369119654
+            },
+            {
+              "cell": "I8",
+              "value": ""
+            },
+            {
+              "cell": "J8",
+              "value": 24720.9602132291
+            },
+            {
+              "cell": "K8",
+              "value": 22848.5070488101
+            },
+            {
+              "cell": "L8",
+              "value": 24659.331802507
+            },
+            {
+              "cell": "M8",
+              "value": 25597.5655688853
+            },
+            {
+              "cell": "N8",
+              "value": 23950.0662708499
+            },
+            {
+              "cell": "O8",
+              "value": 56622.06855
+            },
+            {
+              "cell": "P8",
+              "value": 54374.79679
+            },
+            {
+              "cell": "Q8",
+              "value": 54253.45706
+            },
+            {
+              "cell": "R8",
+              "value": 49439.05349
+            },
+            {
+              "cell": "S8",
+              "value": 53305.87172
+            },
+            {
+              "cell": "T8",
+              "value": 44384.9079
+            },
+            {
+              "cell": "U8",
+              "value": 62408.24911
+            },
+            {
+              "cell": "V8",
+              "value": 67362.03694
+            },
+            {
+              "cell": "W8",
+              "value": 69503.11552
+            },
+            {
+              "cell": "Y8",
+              "value": 42835.72211
+            },
+            {
+              "cell": "Z8",
+              "value": 32374.83202
+            },
+            {
+              "cell": "AA8",
+              "value": 27575.66736
+            },
+            {
+              "cell": "AB8",
+              "value": 29143.26862
+            },
+            {
+              "cell": "AC8",
+              "value": 26381.78509
+            },
+            {
+              "cell": "AD8",
+              "value": 36043.44259
+            },
+            {
+              "cell": "AE8",
+              "value": 36340.92732
+            },
+            {
+              "cell": "AF8",
+              "value": 32946.80942
+            },
+            {
+              "cell": "AG8",
+              "value": 27832.44
+            },
+            {
+              "cell": "AH8",
+              "value": 50327.39
+            },
+            {
+              "cell": "AI8",
+              "value": 51995.02
+            },
+            {
+              "cell": "AJ8",
+              "value": 55240.46
+            },
+            {
+              "cell": "AK8",
+              "value": 53920.79
+            },
+            {
+              "cell": "AL8",
+              "value": 58755.44
+            },
+            {
+              "cell": "AM8",
+              "value": 53870.83
+            },
+            {
+              "cell": "AN8",
+              "value": 48464.97
+            },
+            {
+              "cell": "AO8",
+              "value": 46290
+            },
+            {
+              "cell": "AP8",
+              "value": ""
+            },
+            {
+              "cell": "AQ8",
+              "value": 79587.0796188807
+            },
+            {
+              "cell": "AR8",
+              "value": 87541.3247280896
+            },
+            {
+              "cell": "AS8",
+              "value": 79613.9954719485
+            },
+            {
+              "cell": "AT8",
+              "value": 88499.5970829449
+            },
+            {
+              "cell": "AU8",
+              "value": 85855.2456185689
+            },
+            {
+              "cell": "AV8",
+              "value": 97415.4098250803
+            },
+            {
+              "cell": "AW8",
+              "value": 92228.0719311727
+            },
+            {
+              "cell": "AX8",
+              "value": 93336.8048340289
+            },
+            {
+              "cell": "AY8",
+              "value": 32461.83
+            },
+            {
+              "cell": "AZ8",
+              "value": 33597.82
+            },
+            {
+              "cell": "BA8",
+              "value": 38235.14
+            },
+            {
+              "cell": "BB8",
+              "value": 36519.46
+            },
+            {
+              "cell": "BC8",
+              "value": 34542.05
+            },
+            {
+              "cell": "BD8",
+              "value": 39227.53
+            },
+            {
+              "cell": "BE8",
+              "value": 35121.34
+            },
+            {
+              "cell": "BF8",
+              "value": 44265.98
+            },
+            {
+              "cell": "BG8",
+              "value": 30763.12
+            },
+            {
+              "cell": "BH8",
+              "value": 50091.6984943985
+            },
+            {
+              "cell": "BI8",
+              "value": 56151.4119958946
+            },
+            {
+              "cell": "BJ8",
+              "value": 41891.2898947872
+            },
+            {
+              "cell": "BK8",
+              "value": 37228.6106025235
+            },
+            {
+              "cell": "BL8",
+              "value": 38356.3085987994
+            },
+            {
+              "cell": "BM8",
+              "value": 39596.313921963
+            },
+            {
+              "cell": "BN8",
+              "value": 38825.9947303793
+            },
+            {
+              "cell": "BO8",
+              "value": 40278.1691220801
+            },
+            {
+              "cell": "BP8",
+              "value": 51830.3064632694
+            },
+            {
+              "cell": "BQ8",
+              "value": 7926.092
+            },
+            {
+              "cell": "BR8",
+              "value": 6955.938
+            },
+            {
+              "cell": "BS8",
+              "value": 7544.85
+            },
+            {
+              "cell": "BT8",
+              "value": 8791.23
+            },
+            {
+              "cell": "BU8",
+              "value": 6405.199
+            },
+            {
+              "cell": "BV8",
+              "value": 6842.367
+            },
+            {
+              "cell": "BW8",
+              "value": 9395.97
+            },
+            {
+              "cell": "BX8",
+              "value": 9006.804
+            },
+            {
+              "cell": "BY8",
+              "value": 8072.064
+            },
+            {
+              "cell": "BZ8",
+              "value": 33856.98
+            },
+            {
+              "cell": "CA8",
+              "value": 37059.9
+            },
+            {
+              "cell": "CB8",
+              "value": 32943.52
+            },
+            {
+              "cell": "CC8",
+              "value": 27020.29
+            },
+            {
+              "cell": "CD8",
+              "value": 31685.63
+            },
+            {
+              "cell": "CE8",
+              "value": 27780.26
+            },
+            {
+              "cell": "CF8",
+              "value": 35686.42
+            },
+            {
+              "cell": "CG8",
+              "value": 35899.13
+            },
+            {
+              "cell": "CH8",
+              "value": 34862.7
+            },
+            {
+              "cell": "CI8",
+              "value": 60533.95
+            },
+            {
+              "cell": "CJ8",
+              "value": 59218.91
+            },
+            {
+              "cell": "CK8",
+              "value": 57889.83
+            },
+            {
+              "cell": "CL8",
+              "value": 53289.03
+            },
+            {
+              "cell": "CM8",
+              "value": 55123.14
+            },
+            {
+              "cell": "CN8",
+              "value": 54351.55
+            },
+            {
+              "cell": "CO8",
+              "value": 62463.02
+            },
+            {
+              "cell": "CP8",
+              "value": 66289.98
+            },
+            {
+              "cell": "CQ8",
+              "value": 58184.99
+            },
+            {
+              "cell": "CR8",
+              "value": ""
+            },
+            {
+              "cell": "CS8",
+              "value": ""
+            },
+            {
+              "cell": "CT8",
+              "value": ""
+            },
+            {
+              "cell": "CU8",
+              "value": ""
+            },
+            {
+              "cell": "CV8",
+              "value": ""
+            },
+            {
+              "cell": "CW8",
+              "value": ""
+            },
+            {
+              "cell": "CX8",
+              "value": ""
+            },
+            {
+              "cell": "CY8",
+              "value": ""
+            },
+            {
+              "cell": "CZ8",
+              "value": ""
+            }
+          ],
+          [
+            {
+              "cell": "A9",
+              "value": "SFPQ_HUMAN.FAQHGTFEYEYSQR"
+            },
+            {
+              "cell": "B9",
+              "value": 0.33
+            },
+            {
+              "cell": "C9",
+              "value": ""
+            },
+            {
+              "cell": "D9",
+              "value": ""
+            },
+            {
+              "cell": "E9",
+              "value": ""
+            },
+            {
+              "cell": "F9",
+              "value": ""
+            },
+            {
+              "cell": "G9",
+              "value": ""
+            },
+            {
+              "cell": "H9",
+              "value": ""
+            },
+            {
+              "cell": "I9",
+              "value": ""
+            },
+            {
+              "cell": "J9",
+              "value": ""
+            },
+            {
+              "cell": "K9",
+              "value": ""
+            },
+            {
+              "cell": "L9",
+              "value": ""
+            },
+            {
+              "cell": "M9",
+              "value": ""
+            },
+            {
+              "cell": "N9",
+              "value": ""
+            },
+            {
+              "cell": "O9",
+              "value": ""
+            },
+            {
+              "cell": "P9",
+              "value": ""
+            },
+            {
+              "cell": "Q9",
+              "value": ""
+            },
+            {
+              "cell": "R9",
+              "value": ""
+            },
+            {
+              "cell": "S9",
+              "value": ""
+            },
+            {
+              "cell": "T9",
+              "value": ""
+            },
+            {
+              "cell": "U9",
+              "value": ""
+            },
+            {
+              "cell": "V9",
+              "value": ""
+            },
+            {
+              "cell": "W9",
+              "value": ""
+            },
+            {
+              "cell": "Y9",
+              "value": ""
+            },
+            {
+              "cell": "Z9",
+              "value": ""
+            },
+            {
+              "cell": "AA9",
+              "value": ""
+            },
+            {
+              "cell": "AB9",
+              "value": ""
+            },
+            {
+              "cell": "AC9",
+              "value": ""
+            },
+            {
+              "cell": "AD9",
+              "value": ""
+            },
+            {
+              "cell": "AE9",
+              "value": ""
+            },
+            {
+              "cell": "AF9",
+              "value": ""
+            },
+            {
+              "cell": "AG9",
+              "value": ""
+            },
+            {
+              "cell": "AH9",
+              "value": ""
+            },
+            {
+              "cell": "AI9",
+              "value": ""
+            },
+            {
+              "cell": "AJ9",
+              "value": ""
+            },
+            {
+              "cell": "AK9",
+              "value": ""
+            },
+            {
+              "cell": "AL9",
+              "value": ""
+            },
+            {
+              "cell": "AM9",
+              "value": ""
+            },
+            {
+              "cell": "AN9",
+              "value": ""
+            },
+            {
+              "cell": "AO9",
+              "value": ""
+            },
+            {
+              "cell": "AP9",
+              "value": ""
+            },
+            {
+              "cell": "AQ9",
+              "value": ""
+            },
+            {
+              "cell": "AR9",
+              "value": ""
+            },
+            {
+              "cell": "AS9",
+              "value": ""
+            },
+            {
+              "cell": "AT9",
+              "value": ""
+            },
+            {
+              "cell": "AU9",
+              "value": ""
+            },
+            {
+              "cell": "AV9",
+              "value": ""
+            },
+            {
+              "cell": "AW9",
+              "value": ""
+            },
+            {
+              "cell": "AX9",
+              "value": ""
+            },
+            {
+              "cell": "AY9",
+              "value": ""
+            },
+            {
+              "cell": "AZ9",
+              "value": ""
+            },
+            {
+              "cell": "BA9",
+              "value": ""
+            },
+            {
+              "cell": "BB9",
+              "value": ""
+            },
+            {
+              "cell": "BC9",
+              "value": ""
+            },
+            {
+              "cell": "BD9",
+              "value": ""
+            },
+            {
+              "cell": "BE9",
+              "value": ""
+            },
+            {
+              "cell": "BF9",
+              "value": ""
+            },
+            {
+              "cell": "BG9",
+              "value": ""
+            },
+            {
+              "cell": "BH9",
+              "value": ""
+            },
+            {
+              "cell": "BI9",
+              "value": ""
+            },
+            {
+              "cell": "BJ9",
+              "value": ""
+            },
+            {
+              "cell": "BK9",
+              "value": ""
+            },
+            {
+              "cell": "BL9",
+              "value": ""
+            },
+            {
+              "cell": "BM9",
+              "value": ""
+            },
+            {
+              "cell": "BN9",
+              "value": ""
+            },
+            {
+              "cell": "BO9",
+              "value": ""
+            },
+            {
+              "cell": "BP9",
+              "value": ""
+            },
+            {
+              "cell": "BQ9",
+              "value": ""
+            },
+            {
+              "cell": "BR9",
+              "value": ""
+            },
+            {
+              "cell": "BS9",
+              "value": ""
+            },
+            {
+              "cell": "BT9",
+              "value": ""
+            },
+            {
+              "cell": "BU9",
+              "value": ""
+            },
+            {
+              "cell": "BV9",
+              "value": ""
+            },
+            {
+              "cell": "BW9",
+              "value": ""
+            },
+            {
+              "cell": "BX9",
+              "value": ""
+            },
+            {
+              "cell": "BY9",
+              "value": ""
+            },
+            {
+              "cell": "BZ9",
+              "value": ""
+            },
+            {
+              "cell": "CA9",
+              "value": ""
+            },
+            {
+              "cell": "CB9",
+              "value": ""
+            },
+            {
+              "cell": "CC9",
+              "value": ""
+            },
+            {
+              "cell": "CD9",
+              "value": ""
+            },
+            {
+              "cell": "CE9",
+              "value": ""
+            },
+            {
+              "cell": "CF9",
+              "value": ""
+            },
+            {
+              "cell": "CG9",
+              "value": ""
+            },
+            {
+              "cell": "CH9",
+              "value": ""
+            },
+            {
+              "cell": "CI9",
+              "value": ""
+            },
+            {
+              "cell": "CJ9",
+              "value": ""
+            },
+            {
+              "cell": "CK9",
+              "value": ""
+            },
+            {
+              "cell": "CL9",
+              "value": ""
+            },
+            {
+              "cell": "CM9",
+              "value": ""
+            },
+            {
+              "cell": "CN9",
+              "value": ""
+            },
+            {
+              "cell": "CO9",
+              "value": ""
+            },
+            {
+              "cell": "CP9",
+              "value": ""
+            },
+            {
+              "cell": "CQ9",
+              "value": ""
+            },
+            {
+              "cell": "CR9",
+              "value": ""
+            },
+            {
+              "cell": "CS9",
+              "value": ""
+            },
+            {
+              "cell": "CT9",
+              "value": ""
+            },
+            {
+              "cell": "CU9",
+              "value": ""
+            },
+            {
+              "cell": "CV9",
+              "value": ""
+            },
+            {
+              "cell": "CW9",
+              "value": ""
+            },
+            {
+              "cell": "CX9",
+              "value": ""
+            },
+            {
+              "cell": "CY9",
+              "value": ""
+            },
+            {
+              "cell": "CZ9",
+              "value": ""
+            }
+          ],
+          [
+            {
+              "cell": "A10",
+              "value": "ANRA2_HUMAN.SVQQVIESHLLK"
+            },
+            {
+              "cell": "B10",
+              "value": 0.33
+            },
+            {
+              "cell": "C10",
+              "value": ""
+            },
+            {
+              "cell": "D10",
+              "value": ""
+            },
+            {
+              "cell": "E10",
+              "value": ""
+            },
+            {
+              "cell": "F10",
+              "value": ""
+            },
+            {
+              "cell": "G10",
+              "value": ""
+            },
+            {
+              "cell": "H10",
+              "value": ""
+            },
+            {
+              "cell": "I10",
+              "value": ""
+            },
+            {
+              "cell": "J10",
+              "value": ""
+            },
+            {
+              "cell": "K10",
+              "value": ""
+            },
+            {
+              "cell": "L10",
+              "value": ""
+            },
+            {
+              "cell": "M10",
+              "value": ""
+            },
+            {
+              "cell": "N10",
+              "value": ""
+            },
+            {
+              "cell": "O10",
+              "value": ""
+            },
+            {
+              "cell": "P10",
+              "value": ""
+            },
+            {
+              "cell": "Q10",
+              "value": ""
+            },
+            {
+              "cell": "R10",
+              "value": ""
+            },
+            {
+              "cell": "S10",
+              "value": ""
+            },
+            {
+              "cell": "T10",
+              "value": ""
+            },
+            {
+              "cell": "U10",
+              "value": ""
+            },
+            {
+              "cell": "V10",
+              "value": ""
+            },
+            {
+              "cell": "W10",
+              "value": ""
+            },
+            {
+              "cell": "Y10",
+              "value": ""
+            },
+            {
+              "cell": "Z10",
+              "value": ""
+            },
+            {
+              "cell": "AA10",
+              "value": ""
+            },
+            {
+              "cell": "AB10",
+              "value": ""
+            },
+            {
+              "cell": "AC10",
+              "value": ""
+            },
+            {
+              "cell": "AD10",
+              "value": ""
+            },
+            {
+              "cell": "AE10",
+              "value": ""
+            },
+            {
+              "cell": "AF10",
+              "value": ""
+            },
+            {
+              "cell": "AG10",
+              "value": ""
+            },
+            {
+              "cell": "AH10",
+              "value": ""
+            },
+            {
+              "cell": "AI10",
+              "value": ""
+            },
+            {
+              "cell": "AJ10",
+              "value": ""
+            },
+            {
+              "cell": "AK10",
+              "value": ""
+            },
+            {
+              "cell": "AL10",
+              "value": ""
+            },
+            {
+              "cell": "AM10",
+              "value": ""
+            },
+            {
+              "cell": "AN10",
+              "value": ""
+            },
+            {
+              "cell": "AO10",
+              "value": ""
+            },
+            {
+              "cell": "AP10",
+              "value": ""
+            },
+            {
+              "cell": "AQ10",
+              "value": ""
+            },
+            {
+              "cell": "AR10",
+              "value": ""
+            },
+            {
+              "cell": "AS10",
+              "value": ""
+            },
+            {
+              "cell": "AT10",
+              "value": ""
+            },
+            {
+              "cell": "AU10",
+              "value": ""
+            },
+            {
+              "cell": "AV10",
+              "value": ""
+            },
+            {
+              "cell": "AW10",
+              "value": ""
+            },
+            {
+              "cell": "AX10",
+              "value": ""
+            },
+            {
+              "cell": "AY10",
+              "value": ""
+            },
+            {
+              "cell": "AZ10",
+              "value": ""
+            },
+            {
+              "cell": "BA10",
+              "value": ""
+            },
+            {
+              "cell": "BB10",
+              "value": ""
+            },
+            {
+              "cell": "BC10",
+              "value": ""
+            },
+            {
+              "cell": "BD10",
+              "value": ""
+            },
+            {
+              "cell": "BE10",
+              "value": ""
+            },
+            {
+              "cell": "BF10",
+              "value": ""
+            },
+            {
+              "cell": "BG10",
+              "value": ""
+            },
+            {
+              "cell": "BH10",
+              "value": ""
+            },
+            {
+              "cell": "BI10",
+              "value": ""
+            },
+            {
+              "cell": "BJ10",
+              "value": ""
+            },
+            {
+              "cell": "BK10",
+              "value": ""
+            },
+            {
+              "cell": "BL10",
+              "value": ""
+            },
+            {
+              "cell": "BM10",
+              "value": ""
+            },
+            {
+              "cell": "BN10",
+              "value": ""
+            },
+            {
+              "cell": "BO10",
+              "value": ""
+            },
+            {
+              "cell": "BP10",
+              "value": ""
+            },
+            {
+              "cell": "BQ10",
+              "value": ""
+            },
+            {
+              "cell": "BR10",
+              "value": ""
+            },
+            {
+              "cell": "BS10",
+              "value": ""
+            },
+            {
+              "cell": "BT10",
+              "value": ""
+            },
+            {
+              "cell": "BU10",
+              "value": ""
+            },
+            {
+              "cell": "BV10",
+              "value": ""
+            },
+            {
+              "cell": "BW10",
+              "value": ""
+            },
+            {
+              "cell": "BX10",
+              "value": ""
+            },
+            {
+              "cell": "BY10",
+              "value": ""
+            },
+            {
+              "cell": "BZ10",
+              "value": ""
+            },
+            {
+              "cell": "CA10",
+              "value": ""
+            },
+            {
+              "cell": "CB10",
+              "value": ""
+            },
+            {
+              "cell": "CC10",
+              "value": ""
+            },
+            {
+              "cell": "CD10",
+              "value": ""
+            },
+            {
+              "cell": "CE10",
+              "value": ""
+            },
+            {
+              "cell": "CF10",
+              "value": ""
+            },
+            {
+              "cell": "CG10",
+              "value": ""
+            },
+            {
+              "cell": "CH10",
+              "value": ""
+            },
+            {
+              "cell": "CI10",
+              "value": ""
+            },
+            {
+              "cell": "CJ10",
+              "value": ""
+            },
+            {
+              "cell": "CK10",
+              "value": ""
+            },
+            {
+              "cell": "CL10",
+              "value": ""
+            },
+            {
+              "cell": "CM10",
+              "value": ""
+            },
+            {
+              "cell": "CN10",
+              "value": ""
+            },
+            {
+              "cell": "CO10",
+              "value": ""
+            },
+            {
+              "cell": "CP10",
+              "value": ""
+            },
+            {
+              "cell": "CQ10",
+              "value": ""
+            },
+            {
+              "cell": "CR10",
+              "value": ""
+            },
+            {
+              "cell": "CS10",
+              "value": ""
+            },
+            {
+              "cell": "CT10",
+              "value": ""
+            },
+            {
+              "cell": "CU10",
+              "value": ""
+            },
+            {
+              "cell": "CV10",
+              "value": ""
+            },
+            {
+              "cell": "CW10",
+              "value": ""
+            },
+            {
+              "cell": "CX10",
+              "value": ""
+            },
+            {
+              "cell": "CY10",
+              "value": ""
+            },
+            {
+              "cell": "CZ10",
+              "value": ""
+            }
+          ],
+          [
+            {
+              "cell": "A11",
+              "value": "AEN.LVEVQWEQQEAR[+10]"
+            },
+            {
+              "cell": "B11",
+              "value": 0.33
+            },
+            {
+              "cell": "C11",
+              "value": 31166358.067401454
+            },
+            {
+              "cell": "D11",
+              "value": 2510763.5703871306
+            },
+            {
+              "cell": "E11",
+              "value": 8.056005661480452
+            },
+            {
+              "cell": "F11",
+              "value": ""
+            },
+            {
+              "cell": "G11",
+              "value": ""
+            },
+            {
+              "cell": "H11",
+              "value": ""
+            },
+            {
+              "cell": "I11",
+              "value": ""
+            },
+            {
+              "cell": "J11",
+              "value": ""
+            },
+            {
+              "cell": "K11",
+              "value": ""
+            },
+            {
+              "cell": "L11",
+              "value": ""
+            },
+            {
+              "cell": "M11",
+              "value": ""
+            },
+            {
+              "cell": "N11",
+              "value": ""
+            },
+            {
+              "cell": "O11",
+              "value": ""
+            },
+            {
+              "cell": "P11",
+              "value": ""
+            },
+            {
+              "cell": "Q11",
+              "value": ""
+            },
+            {
+              "cell": "R11",
+              "value": ""
+            },
+            {
+              "cell": "S11",
+              "value": ""
+            },
+            {
+              "cell": "T11",
+              "value": ""
+            },
+            {
+              "cell": "U11",
+              "value": ""
+            },
+            {
+              "cell": "V11",
+              "value": ""
+            },
+            {
+              "cell": "W11",
+              "value": ""
+            },
+            {
+              "cell": "Y11",
+              "value": ""
+            },
+            {
+              "cell": "Z11",
+              "value": ""
+            },
+            {
+              "cell": "AA11",
+              "value": ""
+            },
+            {
+              "cell": "AB11",
+              "value": ""
+            },
+            {
+              "cell": "AC11",
+              "value": ""
+            },
+            {
+              "cell": "AD11",
+              "value": ""
+            },
+            {
+              "cell": "AE11",
+              "value": ""
+            },
+            {
+              "cell": "AF11",
+              "value": ""
+            },
+            {
+              "cell": "AG11",
+              "value": ""
+            },
+            {
+              "cell": "AH11",
+              "value": ""
+            },
+            {
+              "cell": "AI11",
+              "value": ""
+            },
+            {
+              "cell": "AJ11",
+              "value": ""
+            },
+            {
+              "cell": "AK11",
+              "value": ""
+            },
+            {
+              "cell": "AL11",
+              "value": ""
+            },
+            {
+              "cell": "AM11",
+              "value": ""
+            },
+            {
+              "cell": "AN11",
+              "value": ""
+            },
+            {
+              "cell": "AO11",
+              "value": ""
+            },
+            {
+              "cell": "AP11",
+              "value": ""
+            },
+            {
+              "cell": "AQ11",
+              "value": ""
+            },
+            {
+              "cell": "AR11",
+              "value": ""
+            },
+            {
+              "cell": "AS11",
+              "value": ""
+            },
+            {
+              "cell": "AT11",
+              "value": ""
+            },
+            {
+              "cell": "AU11",
+              "value": ""
+            },
+            {
+              "cell": "AV11",
+              "value": ""
+            },
+            {
+              "cell": "AW11",
+              "value": ""
+            },
+            {
+              "cell": "AX11",
+              "value": ""
+            },
+            {
+              "cell": "AY11",
+              "value": ""
+            },
+            {
+              "cell": "AZ11",
+              "value": ""
+            },
+            {
+              "cell": "BA11",
+              "value": ""
+            },
+            {
+              "cell": "BB11",
+              "value": ""
+            },
+            {
+              "cell": "BC11",
+              "value": ""
+            },
+            {
+              "cell": "BD11",
+              "value": ""
+            },
+            {
+              "cell": "BE11",
+              "value": ""
+            },
+            {
+              "cell": "BF11",
+              "value": ""
+            },
+            {
+              "cell": "BG11",
+              "value": ""
+            },
+            {
+              "cell": "BH11",
+              "value": 33723578.8895633
+            },
+            {
+              "cell": "BI11",
+              "value": 33102367.4364414
+            },
+            {
+              "cell": "BJ11",
+              "value": 34383747.8175645
+            },
+            {
+              "cell": "BK11",
+              "value": 32090710.9130195
+            },
+            {
+              "cell": "BL11",
+              "value": 28774804.0868758
+            },
+            {
+              "cell": "BM11",
+              "value": 29147127.1104639
+            },
+            {
+              "cell": "BN11",
+              "value": 28804648.1270508
+            },
+            {
+              "cell": "BO11",
+              "value": 32667096.0998025
+            },
+            {
+              "cell": "BP11",
+              "value": 27803142.1258314
+            },
+            {
+              "cell": "BQ11",
+              "value": ""
+            },
+            {
+              "cell": "BR11",
+              "value": ""
+            },
+            {
+              "cell": "BS11",
+              "value": ""
+            },
+            {
+              "cell": "BT11",
+              "value": ""
+            },
+            {
+              "cell": "BU11",
+              "value": ""
+            },
+            {
+              "cell": "BV11",
+              "value": ""
+            },
+            {
+              "cell": "BW11",
+              "value": ""
+            },
+            {
+              "cell": "BX11",
+              "value": ""
+            },
+            {
+              "cell": "BY11",
+              "value": ""
+            },
+            {
+              "cell": "BZ11",
+              "value": ""
+            },
+            {
+              "cell": "CA11",
+              "value": ""
+            },
+            {
+              "cell": "CB11",
+              "value": ""
+            },
+            {
+              "cell": "CC11",
+              "value": ""
+            },
+            {
+              "cell": "CD11",
+              "value": ""
+            },
+            {
+              "cell": "CE11",
+              "value": ""
+            },
+            {
+              "cell": "CF11",
+              "value": ""
+            },
+            {
+              "cell": "CG11",
+              "value": ""
+            },
+            {
+              "cell": "CH11",
+              "value": ""
+            },
+            {
+              "cell": "CI11",
+              "value": ""
+            },
+            {
+              "cell": "CJ11",
+              "value": ""
+            },
+            {
+              "cell": "CK11",
+              "value": ""
+            },
+            {
+              "cell": "CL11",
+              "value": ""
+            },
+            {
+              "cell": "CM11",
+              "value": ""
+            },
+            {
+              "cell": "CN11",
+              "value": ""
+            },
+            {
+              "cell": "CO11",
+              "value": ""
+            },
+            {
+              "cell": "CP11",
+              "value": ""
+            },
+            {
+              "cell": "CQ11",
+              "value": ""
+            },
+            {
+              "cell": "CR11",
+              "value": ""
+            },
+            {
+              "cell": "CS11",
+              "value": ""
+            },
+            {
+              "cell": "CT11",
+              "value": ""
+            },
+            {
+              "cell": "CU11",
+              "value": ""
+            },
+            {
+              "cell": "CV11",
+              "value": ""
+            },
+            {
+              "cell": "CW11",
+              "value": ""
+            },
+            {
+              "cell": "CX11",
+              "value": ""
+            },
+            {
+              "cell": "CY11",
+              "value": ""
+            },
+            {
+              "cell": "CZ11",
+              "value": ""
+            }
+          ],
+          [
+            {
+              "cell": "A12",
+              "value": "RUXF.C[CAM]NNVLYIR[+10]"
+            },
+            {
+              "cell": "B12",
+              "value": 3.33
+            },
+            {
+              "cell": "C12",
+              "value": 156952.19613685462
+            },
+            {
+              "cell": "D12",
+              "value": 74228.28516479328
+            },
+            {
+              "cell": "E12",
+              "value": 47.29356262085677
+            },
+            {
+              "cell": "F12",
+              "value": 106860.313870117
+            },
+            {
+              "cell": "G12",
+              "value": 110108.038876594
+            },
+            {
+              "cell": "H12",
+              "value": 108418.610641602
+            },
+            {
+              "cell": "I12",
+              "value": ""
+            },
+            {
+              "cell": "J12",
+              "value": 111543.36043788
+            },
+            {
+              "cell": "K12",
+              "value": 100895.468185569
+            },
+            {
+              "cell": "L12",
+              "value": 84627.1699982119
+            },
+            {
+              "cell": "M12",
+              "value": 88667.7654527424
+            },
+            {
+              "cell": "N12",
+              "value": 83487.0331431266
+            },
+            {
+              "cell": "O12",
+              "value": 185312.593
+            },
+            {
+              "cell": "P12",
+              "value": 229711.0967
+            },
+            {
+              "cell": "Q12",
+              "value": 244456.6942
+            },
+            {
+              "cell": "R12",
+              "value": 236916.4584
+            },
+            {
+              "cell": "S12",
+              "value": 248036.8488
+            },
+            {
+              "cell": "T12",
+              "value": 245456.6619
+            },
+            {
+              "cell": "U12",
+              "value": 322683.8812
+            },
+            {
+              "cell": "V12",
+              "value": 274176.6718
+            },
+            {
+              "cell": "W12",
+              "value": 284593.2357
+            },
+            {
+              "cell": "Y12",
+              "value": 134865.5835
+            },
+            {
+              "cell": "Z12",
+              "value": 124589.3567
+            },
+            {
+              "cell": "AA12",
+              "value": 98131.40153
+            },
+            {
+              "cell": "AB12",
+              "value": 99517.18843
+            },
+            {
+              "cell": "AC12",
+              "value": 97619.03464
+            },
+            {
+              "cell": "AD12",
+              "value": 107273.538
+            },
+            {
+              "cell": "AE12",
+              "value": 105600.5439
+            },
+            {
+              "cell": "AF12",
+              "value": 107260.353
+            },
+            {
+              "cell": "AG12",
+              "value": 200671
+            },
+            {
+              "cell": "AH12",
+              "value": 218755.6
+            },
+            {
+              "cell": "AI12",
+              "value": 231177.6
+            },
+            {
+              "cell": "AJ12",
+              "value": 234678.9
+            },
+            {
+              "cell": "AK12",
+              "value": 226676
+            },
+            {
+              "cell": "AL12",
+              "value": 220251.7
+            },
+            {
+              "cell": "AM12",
+              "value": 221062.4
+            },
+            {
+              "cell": "AN12",
+              "value": 232655.5
+            },
+            {
+              "cell": "AO12",
+              "value": 209540.8
+            },
+            {
+              "cell": "AP12",
+              "value": 243935.563664936
+            },
+            {
+              "cell": "AQ12",
+              "value": 279744.36858457
+            },
+            {
+              "cell": "AR12",
+              "value": 200431.890657286
+            },
+            {
+              "cell": "AS12",
+              "value": 241713.335929478
+            },
+            {
+              "cell": "AT12",
+              "value": 240816.371281951
+            },
+            {
+              "cell": "AU12",
+              "value": 240167.865246571
+            },
+            {
+              "cell": "AV12",
+              "value": 249625.267753977
+            },
+            {
+              "cell": "AW12",
+              "value": 231727.392628781
+            },
+            {
+              "cell": "AX12",
+              "value": 243526.195119509
+            },
+            {
+              "cell": "AY12",
+              "value": 113932.2
+            },
+            {
+              "cell": "AZ12",
+              "value": 114363.9
+            },
+            {
+              "cell": "BA12",
+              "value": 122453.9
+            },
+            {
+              "cell": "BB12",
+              "value": 105426.7
+            },
+            {
+              "cell": "BC12",
+              "value": 123780.9
+            },
+            {
+              "cell": "BD12",
+              "value": 128985
+            },
+            {
+              "cell": "BE12",
+              "value": 114272.9
+            },
+            {
+              "cell": "BF12",
+              "value": 124242.2
+            },
+            {
+              "cell": "BG12",
+              "value": 99924.43
+            },
+            {
+              "cell": "BH12",
+              "value": 192612.327757517
+            },
+            {
+              "cell": "BI12",
+              "value": 211729.648077227
+            },
+            {
+              "cell": "BJ12",
+              "value": 198451.289728497
+            },
+            {
+              "cell": "BK12",
+              "value": 204031.103613863
+            },
+            {
+              "cell": "BL12",
+              "value": 181449.793207027
+            },
+            {
+              "cell": "BM12",
+              "value": 194576.908851557
+            },
+            {
+              "cell": "BN12",
+              "value": 204032.826257046
+            },
+            {
+              "cell": "BO12",
+              "value": 193757.753486609
+            },
+            {
+              "cell": "BP12",
+              "value": 181007.101422655
+            },
+            {
+              "cell": "BQ12",
+              "value": 55026.35
+            },
+            {
+              "cell": "BR12",
+              "value": 43026.05
+            },
+            {
+              "cell": "BS12",
+              "value": 40367.35
+            },
+            {
+              "cell": "BT12",
+              "value": 22182.07
+            },
+            {
+              "cell": "BU12",
+              "value": 23062.34
+            },
+            {
+              "cell": "BV12",
+              "value": 22600.62
+            },
+            {
+              "cell": "BW12",
+              "value": 23189.25
+            },
+            {
+              "cell": "BX12",
+              "value": 18854.81
+            },
+            {
+              "cell": "BY12",
+              "value": 27193.53
+            },
+            {
+              "cell": "BZ12",
+              "value": 172253
+            },
+            {
+              "cell": "CA12",
+              "value": 179284.9
+            },
+            {
+              "cell": "CB12",
+              "value": 169658.2
+            },
+            {
+              "cell": "CC12",
+              "value": 177081.2
+            },
+            {
+              "cell": "CD12",
+              "value": 191977.7
+            },
+            {
+              "cell": "CE12",
+              "value": 210272
+            },
+            {
+              "cell": "CF12",
+              "value": 182899.3
+            },
+            {
+              "cell": "CG12",
+              "value": 205572.4
+            },
+            {
+              "cell": "CH12",
+              "value": 190333.1
+            },
+            {
+              "cell": "CI12",
+              "value": 205089.9
+            },
+            {
+              "cell": "CJ12",
+              "value": 221706.8
+            },
+            {
+              "cell": "CK12",
+              "value": 206719.9
+            },
+            {
+              "cell": "CL12",
+              "value": 180477.3
+            },
+            {
+              "cell": "CM12",
+              "value": 183915
+            },
+            {
+              "cell": "CN12",
+              "value": 194605.5
+            },
+            {
+              "cell": "CO12",
+              "value": 201110.8
+            },
+            {
+              "cell": "CP12",
+              "value": 197697.2
+            },
+            {
+              "cell": "CQ12",
+              "value": 199598.8
+            },
+            {
+              "cell": "CR12",
+              "value": 69392.16
+            },
+            {
+              "cell": "CS12",
+              "value": 70006.49
+            },
+            {
+              "cell": "CT12",
+              "value": 65914.77
+            },
+            {
+              "cell": "CU12",
+              "value": 59086.6
+            },
+            {
+              "cell": "CV12",
+              "value": 61682.44
+            },
+            {
+              "cell": "CW12",
+              "value": 58965.88
+            },
+            {
+              "cell": "CX12",
+              "value": 55361.54
+            },
+            {
+              "cell": "CY12",
+              "value": 58559.92
+            },
+            {
+              "cell": "CZ12",
+              "value": 62640.32
+            }
+          ],
+          [
+            {
+              "cell": "A13",
+              "value": "RUXF.C[PCm]NNVLYIR[+10]"
+            },
+            {
+              "cell": "B13",
+              "value": 3.33
+            },
+            {
+              "cell": "C13",
+              "value": 46966.95471411671
+            },
+            {
+              "cell": "D13",
+              "value": 42137.488374314045
+            },
+            {
+              "cell": "E13",
+              "value": 89.71731003383302
+            },
+            {
+              "cell": "F13",
+              "value": ""
+            },
+            {
+              "cell": "G13",
+              "value": ""
+            },
+            {
+              "cell": "H13",
+              "value": ""
+            },
+            {
+              "cell": "I13",
+              "value": ""
+            },
+            {
+              "cell": "J13",
+              "value": ""
+            },
+            {
+              "cell": "K13",
+              "value": ""
+            },
+            {
+              "cell": "L13",
+              "value": ""
+            },
+            {
+              "cell": "M13",
+              "value": ""
+            },
+            {
+              "cell": "N13",
+              "value": ""
+            },
+            {
+              "cell": "O13",
+              "value": ""
+            },
+            {
+              "cell": "P13",
+              "value": ""
+            },
+            {
+              "cell": "Q13",
+              "value": ""
+            },
+            {
+              "cell": "R13",
+              "value": ""
+            },
+            {
+              "cell": "S13",
+              "value": ""
+            },
+            {
+              "cell": "T13",
+              "value": ""
+            },
+            {
+              "cell": "U13",
+              "value": ""
+            },
+            {
+              "cell": "V13",
+              "value": ""
+            },
+            {
+              "cell": "W13",
+              "value": ""
+            },
+            {
+              "cell": "Y13",
+              "value": 69836.78051
+            },
+            {
+              "cell": "Z13",
+              "value": 55342.47193
+            },
+            {
+              "cell": "AA13",
+              "value": 48348.24215
+            },
+            {
+              "cell": "AB13",
+              "value": 50642.52559
+            },
+            {
+              "cell": "AC13",
+              "value": 48404.86961
+            },
+            {
+              "cell": "AD13",
+              "value": 56603.645
+            },
+            {
+              "cell": "AE13",
+              "value": 53948.93058
+            },
+            {
+              "cell": "AF13",
+              "value": 70430.22222
+            },
+            {
+              "cell": "AG13",
+              "value": 93212.67
+            },
+            {
+              "cell": "AH13",
+              "value": 139555.5
+            },
+            {
+              "cell": "AI13",
+              "value": 144928.2
+            },
+            {
+              "cell": "AJ13",
+              "value": 145566.5
+            },
+            {
+              "cell": "AK13",
+              "value": 143483.9
+            },
+            {
+              "cell": "AL13",
+              "value": 132332
+            },
+            {
+              "cell": "AM13",
+              "value": 125168.1
+            },
+            {
+              "cell": "AN13",
+              "value": 128446.4
+            },
+            {
+              "cell": "AO13",
+              "value": 98377.86
+            },
+            {
+              "cell": "AP13",
+              "value": 61831.9628326681
+            },
+            {
+              "cell": "AQ13",
+              "value": 83021.7324215955
+            },
+            {
+              "cell": "AR13",
+              "value": 21593.1570248606
+            },
+            {
+              "cell": "AS13",
+              "value": 46949.4293262936
+            },
+            {
+              "cell": "AT13",
+              "value": 63111.4207835997
+            },
+            {
+              "cell": "AU13",
+              "value": 50626.3422957228
+            },
+            {
+              "cell": "AV13",
+              "value": 54498.2661186471
+            },
+            {
+              "cell": "AW13",
+              "value": 54408.8581896963
+            },
+            {
+              "cell": "AX13",
+              "value": 55958.734693336
+            },
+            {
+              "cell": "AY13",
+              "value": ""
+            },
+            {
+              "cell": "AZ13",
+              "value": ""
+            },
+            {
+              "cell": "BA13",
+              "value": ""
+            },
+            {
+              "cell": "BB13",
+              "value": 43182.75
+            },
+            {
+              "cell": "BC13",
+              "value": 30480.46
+            },
+            {
+              "cell": "BD13",
+              "value": ""
+            },
+            {
+              "cell": "BE13",
+              "value": ""
+            },
+            {
+              "cell": "BF13",
+              "value": ""
+            },
+            {
+              "cell": "BG13",
+              "value": ""
+            },
+            {
+              "cell": "BH13",
+              "value": ""
+            },
+            {
+              "cell": "BI13",
+              "value": ""
+            },
+            {
+              "cell": "BJ13",
+              "value": ""
+            },
+            {
+              "cell": "BK13",
+              "value": ""
+            },
+            {
+              "cell": "BL13",
+              "value": ""
+            },
+            {
+              "cell": "BM13",
+              "value": ""
+            },
+            {
+              "cell": "BN13",
+              "value": ""
+            },
+            {
+              "cell": "BO13",
+              "value": ""
+            },
+            {
+              "cell": "BP13",
+              "value": ""
+            },
+            {
+              "cell": "BQ13",
+              "value": 13376.65
+            },
+            {
+              "cell": "BR13",
+              "value": 7817.416
+            },
+            {
+              "cell": "BS13",
+              "value": 9165.525
+            },
+            {
+              "cell": "BT13",
+              "value": 10783.25
+            },
+            {
+              "cell": "BU13",
+              "value": 10394.59
+            },
+            {
+              "cell": "BV13",
+              "value": 10917.5
+            },
+            {
+              "cell": "BW13",
+              "value": 3549.285
+            },
+            {
+              "cell": "BX13",
+              "value": 5727.126
+            },
+            {
+              "cell": "BY13",
+              "value": 7739.17
+            },
+            {
+              "cell": "BZ13",
+              "value": 31132.95
+            },
+            {
+              "cell": "CA13",
+              "value": 25138.51
+            },
+            {
+              "cell": "CB13",
+              "value": 16707.68
+            },
+            {
+              "cell": "CC13",
+              "value": 24711.05
+            },
+            {
+              "cell": "CD13",
+              "value": 30289.27
+            },
+            {
+              "cell": "CE13",
+              "value": 28814.75
+            },
+            {
+              "cell": "CF13",
+              "value": 19727.13
+            },
+            {
+              "cell": "CG13",
+              "value": 26879.86
+            },
+            {
+              "cell": "CH13",
+              "value": 20375.39
+            },
+            {
+              "cell": "CI13",
+              "value": ""
+            },
+            {
+              "cell": "CJ13",
+              "value": ""
+            },
+            {
+              "cell": "CK13",
+              "value": ""
+            },
+            {
+              "cell": "CL13",
+              "value": ""
+            },
+            {
+              "cell": "CM13",
+              "value": ""
+            },
+            {
+              "cell": "CN13",
+              "value": ""
+            },
+            {
+              "cell": "CO13",
+              "value": ""
+            },
+            {
+              "cell": "CP13",
+              "value": ""
+            },
+            {
+              "cell": "CQ13",
+              "value": ""
+            },
+            {
+              "cell": "CR13",
+              "value": 29531.01
+            },
+            {
+              "cell": "CS13",
+              "value": 23363.36
+            },
+            {
+              "cell": "CT13",
+              "value": 26927.23
+            },
+            {
+              "cell": "CU13",
+              "value": 3444.633
+            },
+            {
+              "cell": "CV13",
+              "value": 9118.596
+            },
+            {
+              "cell": "CW13",
+              "value": 2770.061
+            },
+            {
+              "cell": "CX13",
+              "value": 3931.276
+            },
+            {
+              "cell": "CY13",
+              "value": 5653.507
+            },
+            {
+              "cell": "CZ13",
+              "value": 4903.803
+            }
+          ],
+          [
+            {
+              "cell": "A14",
+              "value": "SFSWA_HUMAN.EAQISSAIVSSVQSK"
+            },
+            {
+              "cell": "B14",
+              "value": 3.33
+            },
+            {
+              "cell": "C14",
+              "value": 15490.2988580546
+            },
+            {
+              "cell": "D14",
+              "value": 4904.464616187571
+            },
+            {
+              "cell": "E14",
+              "value": 31.66152351952436
+            },
+            {
+              "cell": "F14",
+              "value": 10492.9057056793
+            },
+            {
+              "cell": "G14",
+              "value": 12411.583965313
+            },
+            {
+              "cell": "H14",
+              "value": 13769.3503695485
+            },
+            {
+              "cell": "I14",
+              "value": ""
+            },
+            {
+              "cell": "J14",
+              "value": 13849.4989061052
+            },
+            {
+              "cell": "K14",
+              "value": 11966.1451393424
+            },
+            {
+              "cell": "L14",
+              "value": 11924.1209431173
+            },
+            {
+              "cell": "M14",
+              "value": 11033.8703156596
+            },
+            {
+              "cell": "N14",
+              "value": 11753.2026020738
+            },
+            {
+              "cell": "O14",
+              "value": 15724.82191
+            },
+            {
+              "cell": "P14",
+              "value": 13582.85188
+            },
+            {
+              "cell": "Q14",
+              "value": 15516.2881
+            },
+            {
+              "cell": "R14",
+              "value": 17084.1858
+            },
+            {
+              "cell": "S14",
+              "value": 16463.27366
+            },
+            {
+              "cell": "T14",
+              "value": 15890.53664
+            },
+            {
+              "cell": "U14",
+              "value": 21014.19377
+            },
+            {
+              "cell": "V14",
+              "value": 19064.72723
+            },
+            {
+              "cell": "W14",
+              "value": 19980.06651
+            },
+            {
+              "cell": "Y14",
+              "value": 18367.20564
+            },
+            {
+              "cell": "Z14",
+              "value": 14960.3305
+            },
+            {
+              "cell": "AA14",
+              "value": 8856.803632
+            },
+            {
+              "cell": "AB14",
+              "value": 11717.0194
+            },
+            {
+              "cell": "AC14",
+              "value": 9870.018313
+            },
+            {
+              "cell": "AD14",
+              "value": 9614.622988
+            },
+            {
+              "cell": "AE14",
+              "value": 8795.000512
+            },
+            {
+              "cell": "AF14",
+              "value": 9220.873187
+            },
+            {
+              "cell": "AG14",
+              "value": 16926.16
+            },
+            {
+              "cell": "AH14",
+              "value": 18142
+            },
+            {
+              "cell": "AI14",
+              "value": 18724.03
+            },
+            {
+              "cell": "AJ14",
+              "value": 19851.37
+            },
+            {
+              "cell": "AK14",
+              "value": 18068.89
+            },
+            {
+              "cell": "AL14",
+              "value": 16167.99
+            },
+            {
+              "cell": "AM14",
+              "value": 18808.09
+            },
+            {
+              "cell": "AN14",
+              "value": 18252.61
+            },
+            {
+              "cell": "AO14",
+              "value": 11728.7
+            },
+            {
+              "cell": "AP14",
+              "value": ""
+            },
+            {
+              "cell": "AQ14",
+              "value": ""
+            },
+            {
+              "cell": "AR14",
+              "value": ""
+            },
+            {
+              "cell": "AS14",
+              "value": ""
+            },
+            {
+              "cell": "AT14",
+              "value": ""
+            },
+            {
+              "cell": "AU14",
+              "value": ""
+            },
+            {
+              "cell": "AV14",
+              "value": ""
+            },
+            {
+              "cell": "AW14",
+              "value": ""
+            },
+            {
+              "cell": "AX14",
+              "value": ""
+            },
+            {
+              "cell": "AY14",
+              "value": 7788.472
+            },
+            {
+              "cell": "AZ14",
+              "value": 11285.71
+            },
+            {
+              "cell": "BA14",
+              "value": 12668.43
+            },
+            {
+              "cell": "BB14",
+              "value": 8202.611
+            },
+            {
+              "cell": "BC14",
+              "value": 11863.41
+            },
+            {
+              "cell": "BD14",
+              "value": 13118.43
+            },
+            {
+              "cell": "BE14",
+              "value": 12521.47
+            },
+            {
+              "cell": "BF14",
+              "value": 10652.9
+            },
+            {
+              "cell": "BG14",
+              "value": 10074.17
+            },
+            {
+              "cell": "BH14",
+              "value": ""
+            },
+            {
+              "cell": "BI14",
+              "value": ""
+            },
+            {
+              "cell": "BJ14",
+              "value": ""
+            },
+            {
+              "cell": "BK14",
+              "value": ""
+            },
+            {
+              "cell": "BL14",
+              "value": ""
+            },
+            {
+              "cell": "BM14",
+              "value": ""
+            },
+            {
+              "cell": "BN14",
+              "value": ""
+            },
+            {
+              "cell": "BO14",
+              "value": ""
+            },
+            {
+              "cell": "BP14",
+              "value": ""
+            },
+            {
+              "cell": "BQ14",
+              "value": ""
+            },
+            {
+              "cell": "BR14",
+              "value": ""
+            },
+            {
+              "cell": "BS14",
+              "value": ""
+            },
+            {
+              "cell": "BT14",
+              "value": ""
+            },
+            {
+              "cell": "BU14",
+              "value": ""
+            },
+            {
+              "cell": "BV14",
+              "value": ""
+            },
+            {
+              "cell": "BW14",
+              "value": ""
+            },
+            {
+              "cell": "BX14",
+              "value": ""
+            },
+            {
+              "cell": "BY14",
+              "value": ""
+            },
+            {
+              "cell": "BZ14",
+              "value": ""
+            },
+            {
+              "cell": "CA14",
+              "value": ""
+            },
+            {
+              "cell": "CB14",
+              "value": ""
+            },
+            {
+              "cell": "CC14",
+              "value": ""
+            },
+            {
+              "cell": "CD14",
+              "value": ""
+            },
+            {
+              "cell": "CE14",
+              "value": ""
+            },
+            {
+              "cell": "CF14",
+              "value": ""
+            },
+            {
+              "cell": "CG14",
+              "value": ""
+            },
+            {
+              "cell": "CH14",
+              "value": ""
+            },
+            {
+              "cell": "CI14",
+              "value": 20623.65
+            },
+            {
+              "cell": "CJ14",
+              "value": 22242.45
+            },
+            {
+              "cell": "CK14",
+              "value": 23296.7
+            },
+            {
+              "cell": "CL14",
+              "value": 22056.67
+            },
+            {
+              "cell": "CM14",
+              "value": 25988.2
+            },
+            {
+              "cell": "CN14",
+              "value": 24864.3
+            },
+            {
+              "cell": "CO14",
+              "value": 24490.42
+            },
+            {
+              "cell": "CP14",
+              "value": 22786.95
+            },
+            {
+              "cell": "CQ14",
+              "value": 21377.26
+            },
+            {
+              "cell": "CR14",
+              "value": ""
+            },
+            {
+              "cell": "CS14",
+              "value": ""
+            },
+            {
+              "cell": "CT14",
+              "value": ""
+            },
+            {
+              "cell": "CU14",
+              "value": ""
+            },
+            {
+              "cell": "CV14",
+              "value": ""
+            },
+            {
+              "cell": "CW14",
+              "value": ""
+            },
+            {
+              "cell": "CX14",
+              "value": ""
+            },
+            {
+              "cell": "CY14",
+              "value": ""
+            },
+            {
+              "cell": "CZ14",
+              "value": ""
+            }
+          ],
+          [
+            {
+              "cell": "A15",
+              "value": "ESRP2.EASGLSADSLAR[+10]"
+            },
+            {
+              "cell": "B15",
+              "value": 3.33
+            },
+            {
+              "cell": "C15",
+              "value": 209777.7415439857
+            },
+            {
+              "cell": "D15",
+              "value": 105396.1841319932
+            },
+            {
+              "cell": "E15",
+              "value": 50.24183374092336
+            },
+            {
+              "cell": "F15",
+              "value": 129442.587366234
+            },
+            {
+              "cell": "G15",
+              "value": 122706.330136855
+            },
+            {
+              "cell": "H15",
+              "value": 123936.472364474
+            },
+            {
+              "cell": "I15",
+              "value": ""
+            },
+            {
+              "cell": "J15",
+              "value": 111002.151399479
+            },
+            {
+              "cell": "K15",
+              "value": 124606.677490772
+            },
+            {
+              "cell": "L15",
+              "value": 120027.747720503
+            },
+            {
+              "cell": "M15",
+              "value": 124536.209930773
+            },
+            {
+              "cell": "N15",
+              "value": 112619.918978419
+            },
+            {
+              "cell": "O15",
+              "value": 215064.6718
+            },
+            {
+              "cell": "P15",
+              "value": 181556.3625
+            },
+            {
+              "cell": "Q15",
+              "value": 267648.3659
+            },
+            {
+              "cell": "R15",
+              "value": 260207.7426
+            },
+            {
+              "cell": "S15",
+              "value": 274221.2014
+            },
+            {
+              "cell": "T15",
+              "value": 275388.7278
+            },
+            {
+              "cell": "U15",
+              "value": 289189.8826
+            },
+            {
+              "cell": "V15",
+              "value": 275968.4538
+            },
+            {
+              "cell": "W15",
+              "value": 294368.6242
+            },
+            {
+              "cell": "Y15",
+              "value": 328768.9403
+            },
+            {
+              "cell": "Z15",
+              "value": 291910.4263
+            },
+            {
+              "cell": "AA15",
+              "value": 223132.8482
+            },
+            {
+              "cell": "AB15",
+              "value": 225754.6464
+            },
+            {
+              "cell": "AC15",
+              "value": 217041.7687
+            },
+            {
+              "cell": "AD15",
+              "value": 253614.3745
+            },
+            {
+              "cell": "AE15",
+              "value": 230882.6999
+            },
+            {
+              "cell": "AF15",
+              "value": 241424.8492
+            },
+            {
+              "cell": "AG15",
+              "value": 184032.8
+            },
+            {
+              "cell": "AH15",
+              "value": 276902.6
+            },
+            {
+              "cell": "AI15",
+              "value": 271469.6
+            },
+            {
+              "cell": "AJ15",
+              "value": 304551.3
+            },
+            {
+              "cell": "AK15",
+              "value": 293044.5
+            },
+            {
+              "cell": "AL15",
+              "value": 287933.7
+            },
+            {
+              "cell": "AM15",
+              "value": 266360.1
+            },
+            {
+              "cell": "AN15",
+              "value": 280815.7
+            },
+            {
+              "cell": "AO15",
+              "value": 308875.3
+            },
+            {
+              "cell": "AP15",
+              "value": 306022.284265329
+            },
+            {
+              "cell": "AQ15",
+              "value": 297576.637932214
+            },
+            {
+              "cell": "AR15",
+              "value": 368710.686262529
+            },
+            {
+              "cell": "AS15",
+              "value": 432041.383280447
+            },
+            {
+              "cell": "AT15",
+              "value": 435483.235412705
+            },
+            {
+              "cell": "AU15",
+              "value": 403449.809087497
+            },
+            {
+              "cell": "AV15",
+              "value": 419418.388141576
+            },
+            {
+              "cell": "AW15",
+              "value": 416312.694362442
+            },
+            {
+              "cell": "AX15",
+              "value": 421425.361683125
+            },
+            {
+              "cell": "AY15",
+              "value": 125125.3
+            },
+            {
+              "cell": "AZ15",
+              "value": 125265.3
+            },
+            {
+              "cell": "BA15",
+              "value": 140994.5
+            },
+            {
+              "cell": "BB15",
+              "value": 120963.8
+            },
+            {
+              "cell": "BC15",
+              "value": 135840.5
+            },
+            {
+              "cell": "BD15",
+              "value": 143465.7
+            },
+            {
+              "cell": "BE15",
+              "value": 132574
+            },
+            {
+              "cell": "BF15",
+              "value": 133025.3
+            },
+            {
+              "cell": "BG15",
+              "value": 166784.3
+            },
+            {
+              "cell": "BH15",
+              "value": 340256.236881749
+            },
+            {
+              "cell": "BI15",
+              "value": 319733.896566333
+            },
+            {
+              "cell": "BJ15",
+              "value": 340699.700361216
+            },
+            {
+              "cell": "BK15",
+              "value": 308721.004413802
+            },
+            {
+              "cell": "BL15",
+              "value": 321178.267189886
+            },
+            {
+              "cell": "BM15",
+              "value": 324712.627928041
+            },
+            {
+              "cell": "BN15",
+              "value": 307635.15579607
+            },
+            {
+              "cell": "BO15",
+              "value": 331353.600921563
+            },
+            {
+              "cell": "BP15",
+              "value": 322421.867792579
+            },
+            {
+              "cell": "BQ15",
+              "value": 74831.9
+            },
+            {
+              "cell": "BR15",
+              "value": 54729.58
+            },
+            {
+              "cell": "BS15",
+              "value": 53490.35
+            },
+            {
+              "cell": "BT15",
+              "value": 30269.3
+            },
+            {
+              "cell": "BU15",
+              "value": 31505.26
+            },
+            {
+              "cell": "BV15",
+              "value": 26227.81
+            },
+            {
+              "cell": "BW15",
+              "value": 31849.28
+            },
+            {
+              "cell": "BX15",
+              "value": 27509.19
+            },
+            {
+              "cell": "BY15",
+              "value": 31238.82
+            },
+            {
+              "cell": "BZ15",
+              "value": 180456.3
+            },
+            {
+              "cell": "CA15",
+              "value": 179301.7
+            },
+            {
+              "cell": "CB15",
+              "value": 190509.6
+            },
+            {
+              "cell": "CC15",
+              "value": 231454.3
+            },
+            {
+              "cell": "CD15",
+              "value": 198275.1
+            },
+            {
+              "cell": "CE15",
+              "value": 205433
+            },
+            {
+              "cell": "CF15",
+              "value": 231434.7
+            },
+            {
+              "cell": "CG15",
+              "value": 213180.6
+            },
+            {
+              "cell": "CH15",
+              "value": 240342.6
+            },
+            {
+              "cell": "CI15",
+              "value": 244194.9
+            },
+            {
+              "cell": "CJ15",
+              "value": 212927.3
+            },
+            {
+              "cell": "CK15",
+              "value": 212919.7
+            },
+            {
+              "cell": "CL15",
+              "value": 219488.5
+            },
+            {
+              "cell": "CM15",
+              "value": 201172.3
+            },
+            {
+              "cell": "CN15",
+              "value": 214317.2
+            },
+            {
+              "cell": "CO15",
+              "value": 219455.2
+            },
+            {
+              "cell": "CP15",
+              "value": 204317.5
+            },
+            {
+              "cell": "CQ15",
+              "value": 223894.1
+            },
+            {
+              "cell": "CR15",
+              "value": 83654.52
+            },
+            {
+              "cell": "CS15",
+              "value": 82047.39
+            },
+            {
+              "cell": "CT15",
+              "value": 84395.83
+            },
+            {
+              "cell": "CU15",
+              "value": 86886.22
+            },
+            {
+              "cell": "CV15",
+              "value": 87729.95
+            },
+            {
+              "cell": "CW15",
+              "value": 93656.22
+            },
+            {
+              "cell": "CX15",
+              "value": 77025.49
+            },
+            {
+              "cell": "CY15",
+              "value": 70738.71
+            },
+            {
+              "cell": "CZ15",
+              "value": 67380.69
+            }
+          ],
+          [
+            {
+              "cell": "A16",
+              "value": "SMD1.EPVQLETLSIR[+10]"
+            },
+            {
+              "cell": "B16",
+              "value": 3.33
+            },
+            {
+              "cell": "C16",
+              "value": 196770.23338786256
+            },
+            {
+              "cell": "D16",
+              "value": 98224.55043505682
+            },
+            {
+              "cell": "E16",
+              "value": 49.91839911143574
+            },
+            {
+              "cell": "F16",
+              "value": 117938.683237386
+            },
+            {
+              "cell": "G16",
+              "value": 113488.572021691
+            },
+            {
+              "cell": "H16",
+              "value": 114366.224618088
+            },
+            {
+              "cell": "I16",
+              "value": ""
+            },
+            {
+              "cell": "J16",
+              "value": 102306.478813371
+            },
+            {
+              "cell": "K16",
+              "value": 106797.265909964
+            },
+            {
+              "cell": "L16",
+              "value": 90474.5997619189
+            },
+            {
+              "cell": "M16",
+              "value": 97744.4594218835
+            },
+            {
+              "cell": "N16",
+              "value": 94955.4310106376
+            },
+            {
+              "cell": "O16",
+              "value": 168891.0442
+            },
+            {
+              "cell": "P16",
+              "value": 179150.9275
+            },
+            {
+              "cell": "Q16",
+              "value": 204364.3444
+            },
+            {
+              "cell": "R16",
+              "value": 224205.3719
+            },
+            {
+              "cell": "S16",
+              "value": 280760.8296
+            },
+            {
+              "cell": "T16",
+              "value": 232622.2984
+            },
+            {
+              "cell": "U16",
+              "value": 317070.8787
+            },
+            {
+              "cell": "V16",
+              "value": 338510.9154
+            },
+            {
+              "cell": "W16",
+              "value": 291603.8076
+            },
+            {
+              "cell": "Y16",
+              "value": 227393.6528
+            },
+            {
+              "cell": "Z16",
+              "value": 207228.6907
+            },
+            {
+              "cell": "AA16",
+              "value": 153274.7964
+            },
+            {
+              "cell": "AB16",
+              "value": 146517.7418
+            },
+            {
+              "cell": "AC16",
+              "value": 155202.2825
+            },
+            {
+              "cell": "AD16",
+              "value": 190559.824
+            },
+            {
+              "cell": "AE16",
+              "value": 172800.2356
+            },
+            {
+              "cell": "AF16",
+              "value": 182089.507
+            },
+            {
+              "cell": "AG16",
+              "value": 245884.2
+            },
+            {
+              "cell": "AH16",
+              "value": 264706.5
+            },
+            {
+              "cell": "AI16",
+              "value": 280890.5
+            },
+            {
+              "cell": "AJ16",
+              "value": 280876
+            },
+            {
+              "cell": "AK16",
+              "value": 285420.7
+            },
+            {
+              "cell": "AL16",
+              "value": 280241.2
+            },
+            {
+              "cell": "AM16",
+              "value": 246063.2
+            },
+            {
+              "cell": "AN16",
+              "value": 277193.6
+            },
+            {
+              "cell": "AO16",
+              "value": 171077.2
+            },
+            {
+              "cell": "AP16",
+              "value": 347133.114880583
+            },
+            {
+              "cell": "AQ16",
+              "value": 335865.225660525
+            },
+            {
+              "cell": "AR16",
+              "value": 303285.511357081
+            },
+            {
+              "cell": "AS16",
+              "value": 366096.071660525
+            },
+            {
+              "cell": "AT16",
+              "value": 363417.673194937
+            },
+            {
+              "cell": "AU16",
+              "value": 380511.749105138
+            },
+            {
+              "cell": "AV16",
+              "value": 341539.549100903
+            },
+            {
+              "cell": "AW16",
+              "value": 335287.581704243
+            },
+            {
+              "cell": "AX16",
+              "value": 354926.824152642
+            },
+            {
+              "cell": "AY16",
+              "value": 127260.9
+            },
+            {
+              "cell": "AZ16",
+              "value": 152686.8
+            },
+            {
+              "cell": "BA16",
+              "value": 145585.7
+            },
+            {
+              "cell": "BB16",
+              "value": 121975.6
+            },
+            {
+              "cell": "BC16",
+              "value": 140053.2
+            },
+            {
+              "cell": "BD16",
+              "value": 155037.1
+            },
+            {
+              "cell": "BE16",
+              "value": 137329.7
+            },
+            {
+              "cell": "BF16",
+              "value": 151411.6
+            },
+            {
+              "cell": "BG16",
+              "value": 127206.5
+            },
+            {
+              "cell": "BH16",
+              "value": 265645.391971232
+            },
+            {
+              "cell": "BI16",
+              "value": 277073.831487716
+            },
+            {
+              "cell": "BJ16",
+              "value": 255573.340621137
+            },
+            {
+              "cell": "BK16",
+              "value": 267979.906538636
+            },
+            {
+              "cell": "BL16",
+              "value": 265728.62189174
+            },
+            {
+              "cell": "BM16",
+              "value": 252734.195714316
+            },
+            {
+              "cell": "BN16",
+              "value": 254604.229885346
+            },
+            {
+              "cell": "BO16",
+              "value": 291611.519265544
+            },
+            {
+              "cell": "BP16",
+              "value": 275932.607135487
+            },
+            {
+              "cell": "BQ16",
+              "value": 73689.29
+            },
+            {
+              "cell": "BR16",
+              "value": 60427.25
+            },
+            {
+              "cell": "BS16",
+              "value": 47965.06
+            },
+            {
+              "cell": "BT16",
+              "value": 36462.12
+            },
+            {
+              "cell": "BU16",
+              "value": 34924.78
+            },
+            {
+              "cell": "BV16",
+              "value": 29815.11
+            },
+            {
+              "cell": "BW16",
+              "value": 29619.65
+            },
+            {
+              "cell": "BX16",
+              "value": 25567.75
+            },
+            {
+              "cell": "BY16",
+              "value": 24764.95
+            },
+            {
+              "cell": "BZ16",
+              "value": 138656.7
+            },
+            {
+              "cell": "CA16",
+              "value": 146547.9
+            },
+            {
+              "cell": "CB16",
+              "value": 160163.7
+            },
+            {
+              "cell": "CC16",
+              "value": 144176.3
+            },
+            {
+              "cell": "CD16",
+              "value": 165086.9
+            },
+            {
+              "cell": "CE16",
+              "value": 162088.9
+            },
+            {
+              "cell": "CF16",
+              "value": 148642.8
+            },
+            {
+              "cell": "CG16",
+              "value": 150514.9
+            },
+            {
+              "cell": "CH16",
+              "value": 166763.4
+            },
+            {
+              "cell": "CI16",
+              "value": 289480.6
+            },
+            {
+              "cell": "CJ16",
+              "value": 332632.9
+            },
+            {
+              "cell": "CK16",
+              "value": 305702.3
+            },
+            {
+              "cell": "CL16",
+              "value": 287138.9
+            },
+            {
+              "cell": "CM16",
+              "value": 322787.2
+            },
+            {
+              "cell": "CN16",
+              "value": 336517.3
+            },
+            {
+              "cell": "CO16",
+              "value": 327943.6
+            },
+            {
+              "cell": "CP16",
+              "value": 318815.3
+            },
+            {
+              "cell": "CQ16",
+              "value": 328285.7
+            },
+            {
+              "cell": "CR16",
+              "value": 90454.71
+            },
+            {
+              "cell": "CS16",
+              "value": 99400.43
+            },
+            {
+              "cell": "CT16",
+              "value": 94742.04
+            },
+            {
+              "cell": "CU16",
+              "value": 98449.97
+            },
+            {
+              "cell": "CV16",
+              "value": 94050.47
+            },
+            {
+              "cell": "CW16",
+              "value": 94729.18
+            },
+            {
+              "cell": "CX16",
+              "value": 96528.06
+            },
+            {
+              "cell": "CY16",
+              "value": 95159.65
+            },
+            {
+              "cell": "CZ16",
+              "value": 91850.86
+            }
+          ],
+          [
+            {
+              "cell": "A17",
+              "value": "SNRPA_HUMAN.EVSSATNALR"
+            },
+            {
+              "cell": "B17",
+              "value": 3.33
+            },
+            {
+              "cell": "C17",
+              "value": ""
+            },
+            {
+              "cell": "D17",
+              "value": ""
+            },
+            {
+              "cell": "E17",
+              "value": ""
+            }
+          ],
+          [
+            {
+              "cell": "A18",
+              "value": "DDX5.FVINYDYPNSSEDYIHR[+10]"
+            },
+            {
+              "cell": "B18",
+              "value": 3.33
+            },
+            {
+              "cell": "C18",
+              "value": 43062.44810523594
+            },
+            {
+              "cell": "D18",
+              "value": 29297.381387855636
+            },
+            {
+              "cell": "E18",
+              "value": 68.03463963836599
+            },
+            {
+              "cell": "F18",
+              "value": 27970
+            },
+            {
+              "cell": "G18",
+              "value": 25710
+            },
+            {
+              "cell": "H18",
+              "value": 26440
+            },
+            {
+              "cell": "I18",
+              "value": ""
+            },
+            {
+              "cell": "J18",
+              "value": 20250
+            },
+            {
+              "cell": "K18",
+              "value": 19110
+            },
+            {
+              "cell": "L18",
+              "value": 25030
+            },
+            {
+              "cell": "M18",
+              "value": 19700
+            },
+            {
+              "cell": "N18",
+              "value": 21050
+            },
+            {
+              "cell": "O18",
+              "value": 82553.4834
+            },
+            {
+              "cell": "P18",
+              "value": 97601.9798
+            },
+            {
+              "cell": "Q18",
+              "value": 92159.19219
+            },
+            {
+              "cell": "R18",
+              "value": 90893.88814
+            },
+            {
+              "cell": "S18",
+              "value": 93848.88585
+            },
+            {
+              "cell": "T18",
+              "value": 88777.17937
+            },
+            {
+              "cell": "U18",
+              "value": 119277.6402
+            },
+            {
+              "cell": "V18",
+              "value": 158586.8503
+            },
+            {
+              "cell": "W18",
+              "value": 123733.2765
+            },
+            {
+              "cell": "Y18",
+              "value": 25710
+            },
+            {
+              "cell": "Z18",
+              "value": 26440
+            },
+            {
+              "cell": "AA18",
+              "value": 33792.55387
+            },
+            {
+              "cell": "AB18",
+              "value": 20250
+            },
+            {
+              "cell": "AC18",
+              "value": 19110
+            },
+            {
+              "cell": "AD18",
+              "value": 25030
+            },
+            {
+              "cell": "AE18",
+              "value": 19700
+            },
+            {
+              "cell": "AF18",
+              "value": 21050
+            },
+            {
+              "cell": "AG18",
+              "value": 55999.6
+            },
+            {
+              "cell": "AH18",
+              "value": 54887.43
+            },
+            {
+              "cell": "AI18",
+              "value": 49780.52
+            },
+            {
+              "cell": "AJ18",
+              "value": 63704.2
+            },
+            {
+              "cell": "AK18",
+              "value": 61713.73
+            },
+            {
+              "cell": "AL18",
+              "value": 62320.15
+            },
+            {
+              "cell": "AM18",
+              "value": 50723.36
+            },
+            {
+              "cell": "AN18",
+              "value": 56578.98
+            },
+            {
+              "cell": "AO18",
+              "value": 34676.12
+            },
+            {
+              "cell": "AP18",
+              "value": ""
+            },
+            {
+              "cell": "AQ18",
+              "value": ""
+            },
+            {
+              "cell": "AR18",
+              "value": ""
+            },
+            {
+              "cell": "AS18",
+              "value": ""
+            },
+            {
+              "cell": "AT18",
+              "value": ""
+            },
+            {
+              "cell": "AU18",
+              "value": ""
+            },
+            {
+              "cell": "AV18",
+              "value": ""
+            },
+            {
+              "cell": "AW18",
+              "value": ""
+            },
+            {
+              "cell": "AX18",
+              "value": ""
+            },
+            {
+              "cell": "AY18",
+              "value": 27970
+            },
+            {
+              "cell": "AZ18",
+              "value": 25710
+            },
+            {
+              "cell": "BA18",
+              "value": 26440
+            },
+            {
+              "cell": "BB18",
+              "value": 24121.21
+            },
+            {
+              "cell": "BC18",
+              "value": 20250
+            },
+            {
+              "cell": "BD18",
+              "value": 19110
+            },
+            {
+              "cell": "BE18",
+              "value": 25030
+            },
+            {
+              "cell": "BF18",
+              "value": 19700
+            },
+            {
+              "cell": "BG18",
+              "value": 21050
+            },
+            {
+              "cell": "BH18",
+              "value": 74876.9823676245
+            },
+            {
+              "cell": "BI18",
+              "value": 72102.4901819993
+            },
+            {
+              "cell": "BJ18",
+              "value": 75767.623952727
+            },
+            {
+              "cell": "BK18",
+              "value": 68619.8303816674
+            },
+            {
+              "cell": "BL18",
+              "value": 78024.1659350479
+            },
+            {
+              "cell": "BM18",
+              "value": 57175.0146491874
+            },
+            {
+              "cell": "BN18",
+              "value": 66854.772427926
+            },
+            {
+              "cell": "BO18",
+              "value": 69767.0159027177
+            },
+            {
+              "cell": "BP18",
+              "value": 78953.9248947431
+            },
+            {
+              "cell": "BQ18",
+              "value": ""
+            },
+            {
+              "cell": "BR18",
+              "value": ""
+            },
+            {
+              "cell": "BS18",
+              "value": ""
+            },
+            {
+              "cell": "BT18",
+              "value": ""
+            },
+            {
+              "cell": "BU18",
+              "value": ""
+            },
+            {
+              "cell": "BV18",
+              "value": ""
+            },
+            {
+              "cell": "BW18",
+              "value": ""
+            },
+            {
+              "cell": "BX18",
+              "value": ""
+            },
+            {
+              "cell": "BY18",
+              "value": ""
+            },
+            {
+              "cell": "BZ18",
+              "value": 30998.79
+            },
+            {
+              "cell": "CA18",
+              "value": 28455.23
+            },
+            {
+              "cell": "CB18",
+              "value": 27759.49
+            },
+            {
+              "cell": "CC18",
+              "value": 29336.63
+            },
+            {
+              "cell": "CD18",
+              "value": 27527.74
+            },
+            {
+              "cell": "CE18",
+              "value": 35217.84
+            },
+            {
+              "cell": "CF18",
+              "value": 26972.53
+            },
+            {
+              "cell": "CG18",
+              "value": 36492.3
+            },
+            {
+              "cell": "CH18",
+              "value": 34646.66
+            },
+            {
+              "cell": "CI18",
+              "value": 27970
+            },
+            {
+              "cell": "CJ18",
+              "value": 25710
+            },
+            {
+              "cell": "CK18",
+              "value": 26440
+            },
+            {
+              "cell": "CL18",
+              "value": 49614.41
+            },
+            {
+              "cell": "CM18",
+              "value": 20250
+            },
+            {
+              "cell": "CN18",
+              "value": 19110
+            },
+            {
+              "cell": "CO18",
+              "value": 25030
+            },
+            {
+              "cell": "CP18",
+              "value": 19700
+            },
+            {
+              "cell": "CQ18",
+              "value": 21050
+            },
+            {
+              "cell": "CR18",
+              "value": 27970
+            },
+            {
+              "cell": "CS18",
+              "value": 25710
+            },
+            {
+              "cell": "CT18",
+              "value": 26440
+            },
+            {
+              "cell": "CU18",
+              "value": 38709.73
+            },
+            {
+              "cell": "CV18",
+              "value": 20250
+            },
+            {
+              "cell": "CW18",
+              "value": 19110
+            },
+            {
+              "cell": "CX18",
+              "value": 25030
+            },
+            {
+              "cell": "CY18",
+              "value": 19700
+            },
+            {
+              "cell": "CZ18",
+              "value": 21050
+            }
+          ],
+          [
+            {
+              "cell": "A19",
+              "value": "ROA2.GGNFGFGDSR[+10].sum3"
+            },
+            {
+              "cell": "B19",
+              "value": 33.33
+            },
+            {
+              "cell": "C19",
+              "value": 1167356.43387765
+            },
+            {
+              "cell": "D19",
+              "value": 589186.8146741802
+            },
+            {
+              "cell": "E19",
+              "value": 50.47188652715582
+            },
+            {
+              "cell": "F19",
+              "value": 624921.534079616
+            },
+            {
+              "cell": "G19",
+              "value": 634653.286255396
+            },
+            {
+              "cell": "H19",
+              "value": 617425.872883216
+            },
+            {
+              "cell": "I19",
+              "value": ""
+            },
+            {
+              "cell": "J19",
+              "value": 601732.007524519
+            },
+            {
+              "cell": "K19",
+              "value": 588050.129005369
+            },
+            {
+              "cell": "L19",
+              "value": 548845.120529301
+            },
+            {
+              "cell": "M19",
+              "value": 596533.773718455
+            },
+            {
+              "cell": "N19",
+              "value": 587708.384212858
+            },
+            {
+              "cell": "O19",
+              "value": 1369932.26
+            },
+            {
+              "cell": "P19",
+              "value": 1209902.683
+            },
+            {
+              "cell": "Q19",
+              "value": 1501862.703
+            },
+            {
+              "cell": "R19",
+              "value": 1607351.974
+            },
+            {
+              "cell": "S19",
+              "value": 1514539.494
+            },
+            {
+              "cell": "T19",
+              "value": 1559386.878
+            },
+            {
+              "cell": "U19",
+              "value": 1580850.376
+            },
+            {
+              "cell": "V19",
+              "value": 1656243.755
+            },
+            {
+              "cell": "W19",
+              "value": 1614066.723
+            },
+            {
+              "cell": "Y19",
+              "value": 1668866.797
+            },
+            {
+              "cell": "Z19",
+              "value": 1542325.296
+            },
+            {
+              "cell": "AA19",
+              "value": 1182177.137
+            },
+            {
+              "cell": "AB19",
+              "value": 1169793.24
+            },
+            {
+              "cell": "AC19",
+              "value": 1223400.393
+            },
+            {
+              "cell": "AD19",
+              "value": 1349667.494
+            },
+            {
+              "cell": "AE19",
+              "value": 1337242.927
+            },
+            {
+              "cell": "AF19",
+              "value": 1348342.165
+            },
+            {
+              "cell": "AG19",
+              "value": 1434033
+            },
+            {
+              "cell": "AH19",
+              "value": 1727175
+            },
+            {
+              "cell": "AI19",
+              "value": 1888865
+            },
+            {
+              "cell": "AJ19",
+              "value": 1810269
+            },
+            {
+              "cell": "AK19",
+              "value": 1877192
+            },
+            {
+              "cell": "AL19",
+              "value": 1753052
+            },
+            {
+              "cell": "AM19",
+              "value": 1676594
+            },
+            {
+              "cell": "AN19",
+              "value": 1857727
+            },
+            {
+              "cell": "AO19",
+              "value": 1793726
+            },
+            {
+              "cell": "AP19",
+              "value": 1906337.7938064
+            },
+            {
+              "cell": "AQ19",
+              "value": 2040800.95018228
+            },
+            {
+              "cell": "AR19",
+              "value": 2415542.46683568
+            },
+            {
+              "cell": "AS19",
+              "value": 2320381.42455566
+            },
+            {
+              "cell": "AT19",
+              "value": 2332048.71426655
+            },
+            {
+              "cell": "AU19",
+              "value": 2282166.79608374
+            },
+            {
+              "cell": "AV19",
+              "value": 2453532.71120375
+            },
+            {
+              "cell": "AW19",
+              "value": 2259813.93911652
+            },
+            {
+              "cell": "AX19",
+              "value": 2276894.97905644
+            },
+            {
+              "cell": "AY19",
+              "value": 1062287
+            },
+            {
+              "cell": "AZ19",
+              "value": 1149335
+            },
+            {
+              "cell": "BA19",
+              "value": 1179278
+            },
+            {
+              "cell": "BB19",
+              "value": 975148.4
+            },
+            {
+              "cell": "BC19",
+              "value": 1151864
+            },
+            {
+              "cell": "BD19",
+              "value": 1219535
+            },
+            {
+              "cell": "BE19",
+              "value": 1102254
+            },
+            {
+              "cell": "BF19",
+              "value": 1182147
+            },
+            {
+              "cell": "BG19",
+              "value": 1008505
+            },
+            {
+              "cell": "BH19",
+              "value": 1062050.58952065
+            },
+            {
+              "cell": "BI19",
+              "value": 1161858.95529254
+            },
+            {
+              "cell": "BJ19",
+              "value": 991030.22880354
+            },
+            {
+              "cell": "BK19",
+              "value": 1227663.08786978
+            },
+            {
+              "cell": "BL19",
+              "value": 1112798.12559231
+            },
+            {
+              "cell": "BM19",
+              "value": 1186506.23860912
+            },
+            {
+              "cell": "BN19",
+              "value": 1182114.11329294
+            },
+            {
+              "cell": "BO19",
+              "value": 1027291.59070999
+            },
+            {
+              "cell": "BP19",
+              "value": 1084589.77812546
+            },
+            {
+              "cell": "BQ19",
+              "value": 429688.7
+            },
+            {
+              "cell": "BR19",
+              "value": 352489.2
+            },
+            {
+              "cell": "BS19",
+              "value": 337194.2
+            },
+            {
+              "cell": "BT19",
+              "value": 166222.8
+            },
+            {
+              "cell": "BU19",
+              "value": 172138.5
+            },
+            {
+              "cell": "BV19",
+              "value": 173237.1
+            },
+            {
+              "cell": "BW19",
+              "value": 167206.7
+            },
+            {
+              "cell": "BX19",
+              "value": 147731.8
+            },
+            {
+              "cell": "BY19",
+              "value": 177277.7
+            },
+            {
+              "cell": "BZ19",
+              "value": 896260.8
+            },
+            {
+              "cell": "CA19",
+              "value": 846908.7
+            },
+            {
+              "cell": "CB19",
+              "value": 869180.1
+            },
+            {
+              "cell": "CC19",
+              "value": 1028446
+            },
+            {
+              "cell": "CD19",
+              "value": 1066721
+            },
+            {
+              "cell": "CE19",
+              "value": 996819.8
+            },
+            {
+              "cell": "CF19",
+              "value": 1038779
+            },
+            {
+              "cell": "CG19",
+              "value": 1014502
+            },
+            {
+              "cell": "CH19",
+              "value": 1072073
+            },
+            {
+              "cell": "CI19",
+              "value": 1517213
+            },
+            {
+              "cell": "CJ19",
+              "value": 1506670
+            },
+            {
+              "cell": "CK19",
+              "value": 1412858
+            },
+            {
+              "cell": "CL19",
+              "value": 1475403
+            },
+            {
+              "cell": "CM19",
+              "value": 1420566
+            },
+            {
+              "cell": "CN19",
+              "value": 1519686
+            },
+            {
+              "cell": "CO19",
+              "value": 1477449
+            },
+            {
+              "cell": "CP19",
+              "value": 1474340
+            },
+            {
+              "cell": "CQ19",
+              "value": 1571111
+            },
+            {
+              "cell": "CR19",
+              "value": 327977.3
+            },
+            {
+              "cell": "CS19",
+              "value": 267497.8
+            },
+            {
+              "cell": "CT19",
+              "value": 346026.3
+            },
+            {
+              "cell": "CU19",
+              "value": 436044.3
+            },
+            {
+              "cell": "CV19",
+              "value": 447453.7
+            },
+            {
+              "cell": "CW19",
+              "value": 462158.4
+            },
+            {
+              "cell": "CX19",
+              "value": 433850.6
+            },
+            {
+              "cell": "CY19",
+              "value": 401376.7
+            },
+            {
+              "cell": "CZ19",
+              "value": 374784.6
+            }
+          ],
+          [
+            {
+              "cell": "A20",
+              "value": "SRSF7.AFSYYGPLR[+10]"
+            },
+            {
+              "cell": "B20",
+              "value": 33.33
+            },
+            {
+              "cell": "C20",
+              "value": 2348787.340967356
+            },
+            {
+              "cell": "D20",
+              "value": 1112607.5982217034
+            },
+            {
+              "cell": "E20",
+              "value": 47.36944800475092
+            },
+            {
+              "cell": "F20",
+              "value": 1456989.87400036
+            },
+            {
+              "cell": "G20",
+              "value": 1444948.88018195
+            },
+            {
+              "cell": "H20",
+              "value": 1399264.2567759
+            },
+            {
+              "cell": "I20",
+              "value": ""
+            },
+            {
+              "cell": "J20",
+              "value": 1241984.93530449
+            },
+            {
+              "cell": "K20",
+              "value": 1225624.89498619
+            },
+            {
+              "cell": "L20",
+              "value": 1148249.38206337
+            },
+            {
+              "cell": "M20",
+              "value": 1136876.04032954
+            },
+            {
+              "cell": "N20",
+              "value": 1142088.95556857
+            },
+            {
+              "cell": "O20",
+              "value": 2932710.383
+            },
+            {
+              "cell": "P20",
+              "value": 3061049.936
+            },
+            {
+              "cell": "Q20",
+              "value": 3091637.302
+            },
+            {
+              "cell": "R20",
+              "value": 3217552.447
+            },
+            {
+              "cell": "S20",
+              "value": 3038258.567
+            },
+            {
+              "cell": "T20",
+              "value": 3143909.222
+            },
+            {
+              "cell": "U20",
+              "value": 3398331.33
+            },
+            {
+              "cell": "V20",
+              "value": 3316862.908
+            },
+            {
+              "cell": "W20",
+              "value": 3310110.418
+            },
+            {
+              "cell": "Y20",
+              "value": 2950296.078
+            },
+            {
+              "cell": "Z20",
+              "value": 2623217.164
+            },
+            {
+              "cell": "AA20",
+              "value": 2054060.207
+            },
+            {
+              "cell": "AB20",
+              "value": 2052773.56
+            },
+            {
+              "cell": "AC20",
+              "value": 1968020.25
+            },
+            {
+              "cell": "AD20",
+              "value": 2471009.436
+            },
+            {
+              "cell": "AE20",
+              "value": 2408607.712
+            },
+            {
+              "cell": "AF20",
+              "value": 2434221.573
+            },
+            {
+              "cell": "AG20",
+              "value": 3021171
+            },
+            {
+              "cell": "AH20",
+              "value": 3273217
+            },
+            {
+              "cell": "AI20",
+              "value": 3378756
+            },
+            {
+              "cell": "AJ20",
+              "value": 3340234
+            },
+            {
+              "cell": "AK20",
+              "value": 3386719
+            },
+            {
+              "cell": "AL20",
+              "value": 3233554
+            },
+            {
+              "cell": "AM20",
+              "value": 3228705
+            },
+            {
+              "cell": "AN20",
+              "value": 3414700
+            },
+            {
+              "cell": "AO20",
+              "value": 2259756
+            },
+            {
+              "cell": "AP20",
+              "value": 3826002.56073391
+            },
+            {
+              "cell": "AQ20",
+              "value": 3573715.47097215
+            },
+            {
+              "cell": "AR20",
+              "value": 4009396.52179092
+            },
+            {
+              "cell": "AS20",
+              "value": 4238135.01080816
+            },
+            {
+              "cell": "AT20",
+              "value": 4396879.784629
+            },
+            {
+              "cell": "AU20",
+              "value": 4284675.43125384
+            },
+            {
+              "cell": "AV20",
+              "value": 4066694.33607772
+            },
+            {
+              "cell": "AW20",
+              "value": 4002890.53434019
+            },
+            {
+              "cell": "AX20",
+              "value": 4173605.05473935
+            },
+            {
+              "cell": "AY20",
+              "value": 1705632
+            },
+            {
+              "cell": "AZ20",
+              "value": 1925949
+            },
+            {
+              "cell": "BA20",
+              "value": 1986614
+            },
+            {
+              "cell": "BB20",
+              "value": 1614484
+            },
+            {
+              "cell": "BC20",
+              "value": 1904081
+            },
+            {
+              "cell": "BD20",
+              "value": 2067020
+            },
+            {
+              "cell": "BE20",
+              "value": 1816207
+            },
+            {
+              "cell": "BF20",
+              "value": 2031421
+            },
+            {
+              "cell": "BG20",
+              "value": 1684179
+            },
+            {
+              "cell": "BH20",
+              "value": 3848075.80336202
+            },
+            {
+              "cell": "BI20",
+              "value": 3709642.34179846
+            },
+            {
+              "cell": "BJ20",
+              "value": 3801738.79310208
+            },
+            {
+              "cell": "BK20",
+              "value": 3681137.32906894
+            },
+            {
+              "cell": "BL20",
+              "value": 3724744.64585788
+            },
+            {
+              "cell": "BM20",
+              "value": 3711134.95100463
+            },
+            {
+              "cell": "BN20",
+              "value": 3707798.75052495
+            },
+            {
+              "cell": "BO20",
+              "value": 3775979.36565374
+            },
+            {
+              "cell": "BP20",
+              "value": 3656050.27590534
+            },
+            {
+              "cell": "BQ20",
+              "value": 846932.1
+            },
+            {
+              "cell": "BR20",
+              "value": 704733
+            },
+            {
+              "cell": "BS20",
+              "value": 666124.7
+            },
+            {
+              "cell": "BT20",
+              "value": 480727.7
+            },
+            {
+              "cell": "BU20",
+              "value": 437051.4
+            },
+            {
+              "cell": "BV20",
+              "value": 437191.2
+            },
+            {
+              "cell": "BW20",
+              "value": 374173.4
+            },
+            {
+              "cell": "BX20",
+              "value": 350516.2
+            },
+            {
+              "cell": "BY20",
+              "value": 340642.3
+            },
+            {
+              "cell": "BZ20",
+              "value": 2065393
+            },
+            {
+              "cell": "CA20",
+              "value": 2131639
+            },
+            {
+              "cell": "CB20",
+              "value": 1733272
+            },
+            {
+              "cell": "CC20",
+              "value": 1967621
+            },
+            {
+              "cell": "CD20",
+              "value": 1983075
+            },
+            {
+              "cell": "CE20",
+              "value": 2065865
+            },
+            {
+              "cell": "CF20",
+              "value": 2138779
+            },
+            {
+              "cell": "CG20",
+              "value": 1985574
+            },
+            {
+              "cell": "CH20",
+              "value": 2315201
+            },
+            {
+              "cell": "CI20",
+              "value": 2632690
+            },
+            {
+              "cell": "CJ20",
+              "value": 2567122
+            },
+            {
+              "cell": "CK20",
+              "value": 2537312
+            },
+            {
+              "cell": "CL20",
+              "value": 2408453
+            },
+            {
+              "cell": "CM20",
+              "value": 2466922
+            },
+            {
+              "cell": "CN20",
+              "value": 2570263
+            },
+            {
+              "cell": "CO20",
+              "value": 2358865
+            },
+            {
+              "cell": "CP20",
+              "value": 2558581
+            },
+            {
+              "cell": "CQ20",
+              "value": 2698281
+            },
+            {
+              "cell": "CR20",
+              "value": 1035769
+            },
+            {
+              "cell": "CS20",
+              "value": 1056520
+            },
+            {
+              "cell": "CT20",
+              "value": 992924.3
+            },
+            {
+              "cell": "CU20",
+              "value": 972516.1
+            },
+            {
+              "cell": "CV20",
+              "value": 1018172
+            },
+            {
+              "cell": "CW20",
+              "value": 953377.2
+            },
+            {
+              "cell": "CX20",
+              "value": 973610.7
+            },
+            {
+              "cell": "CY20",
+              "value": 882822
+            },
+            {
+              "cell": "CZ20",
+              "value": 994309.1
+            }
+          ],
+          [
+            {
+              "cell": "A21",
+              "value": "SMD2.NNTQVLINC[CAM]R[+10]"
+            },
+            {
+              "cell": "B21",
+              "value": 33.33
+            },
+            {
+              "cell": "C21",
+              "value": 183970.55818484598
+            },
+            {
+              "cell": "D21",
+              "value": 85535.69380389761
+            },
+            {
+              "cell": "E21",
+              "value": 46.49422964622138
+            },
+            {
+              "cell": "F21",
+              "value": 129211.635315808
+            },
+            {
+              "cell": "G21",
+              "value": 129623.67400349
+            },
+            {
+              "cell": "H21",
+              "value": 132494.063399566
+            },
+            {
+              "cell": "I21",
+              "value": ""
+            },
+            {
+              "cell": "J21",
+              "value": 118668.765606055
+            },
+            {
+              "cell": "K21",
+              "value": 136678.867053167
+            },
+            {
+              "cell": "L21",
+              "value": 120785.983645792
+            },
+            {
+              "cell": "M21",
+              "value": 124664.083715936
+            },
+            {
+              "cell": "N21",
+              "value": 116986.91771094
+            },
+            {
+              "cell": "O21",
+              "value": 186152.7289
+            },
+            {
+              "cell": "P21",
+              "value": 193526.8502
+            },
+            {
+              "cell": "Q21",
+              "value": 231155.5328
+            },
+            {
+              "cell": "R21",
+              "value": 234642.7803
+            },
+            {
+              "cell": "S21",
+              "value": 225001.6338
+            },
+            {
+              "cell": "T21",
+              "value": 226785.8031
+            },
+            {
+              "cell": "U21",
+              "value": 244580.4644
+            },
+            {
+              "cell": "V21",
+              "value": 258638.1924
+            },
+            {
+              "cell": "W21",
+              "value": 239008.4185
+            },
+            {
+              "cell": "Y21",
+              "value": 231406.1867
+            },
+            {
+              "cell": "Z21",
+              "value": 206039.7731
+            },
+            {
+              "cell": "AA21",
+              "value": 159258.6103
+            },
+            {
+              "cell": "AB21",
+              "value": 154706.3612
+            },
+            {
+              "cell": "AC21",
+              "value": 162116.669
+            },
+            {
+              "cell": "AD21",
+              "value": 175233.5131
+            },
+            {
+              "cell": "AE21",
+              "value": 167193.5887
+            },
+            {
+              "cell": "AF21",
+              "value": 185707.3781
+            },
+            {
+              "cell": "AG21",
+              "value": 176153.8
+            },
+            {
+              "cell": "AH21",
+              "value": 254628.9
+            },
+            {
+              "cell": "AI21",
+              "value": 277496.5
+            },
+            {
+              "cell": "AJ21",
+              "value": 269156.2
+            },
+            {
+              "cell": "AK21",
+              "value": 276262.5
+            },
+            {
+              "cell": "AL21",
+              "value": 295864.8
+            },
+            {
+              "cell": "AM21",
+              "value": 273656
+            },
+            {
+              "cell": "AN21",
+              "value": 278564.2
+            },
+            {
+              "cell": "AO21",
+              "value": 280708.8
+            },
+            {
+              "cell": "AP21",
+              "value": 309656.279742064
+            },
+            {
+              "cell": "AQ21",
+              "value": 318820.261088649
+            },
+            {
+              "cell": "AR21",
+              "value": 332540.766406859
+            },
+            {
+              "cell": "AS21",
+              "value": 336692.917574514
+            },
+            {
+              "cell": "AT21",
+              "value": 336915.561017779
+            },
+            {
+              "cell": "AU21",
+              "value": 360624.942204058
+            },
+            {
+              "cell": "AV21",
+              "value": 345385.129304018
+            },
+            {
+              "cell": "AW21",
+              "value": 328489.705942513
+            },
+            {
+              "cell": "AX21",
+              "value": 347498.361935244
+            },
+            {
+              "cell": "AY21",
+              "value": 147675.3
+            },
+            {
+              "cell": "AZ21",
+              "value": 167720.4
+            },
+            {
+              "cell": "BA21",
+              "value": 154097.8
+            },
+            {
+              "cell": "BB21",
+              "value": 147507.5
+            },
+            {
+              "cell": "BC21",
+              "value": 171203.3
+            },
+            {
+              "cell": "BD21",
+              "value": 155115
+            },
+            {
+              "cell": "BE21",
+              "value": 163214.7
+            },
+            {
+              "cell": "BF21",
+              "value": 158310.7
+            },
+            {
+              "cell": "BG21",
+              "value": 141920
+            },
+            {
+              "cell": "BH21",
+              "value": ""
+            },
+            {
+              "cell": "BI21",
+              "value": ""
+            },
+            {
+              "cell": "BJ21",
+              "value": ""
+            },
+            {
+              "cell": "BK21",
+              "value": ""
+            },
+            {
+              "cell": "BL21",
+              "value": ""
+            },
+            {
+              "cell": "BM21",
+              "value": ""
+            },
+            {
+              "cell": "BN21",
+              "value": ""
+            },
+            {
+              "cell": "BO21",
+              "value": ""
+            },
+            {
+              "cell": "BP21",
+              "value": ""
+            },
+            {
+              "cell": "BQ21",
+              "value": 69417.38
+            },
+            {
+              "cell": "BR21",
+              "value": 49680.37
+            },
+            {
+              "cell": "BS21",
+              "value": 55470.58
+            },
+            {
+              "cell": "BT21",
+              "value": 27199.1
+            },
+            {
+              "cell": "BU21",
+              "value": 25988.44
+            },
+            {
+              "cell": "BV21",
+              "value": 25424.96
+            },
+            {
+              "cell": "BW21",
+              "value": 28367.43
+            },
+            {
+              "cell": "BX21",
+              "value": 24202.18
+            },
+            {
+              "cell": "BY21",
+              "value": 32235.58
+            },
+            {
+              "cell": "BZ21",
+              "value": 146620.3
+            },
+            {
+              "cell": "CA21",
+              "value": 148557.7
+            },
+            {
+              "cell": "CB21",
+              "value": 144326.2
+            },
+            {
+              "cell": "CC21",
+              "value": 155185
+            },
+            {
+              "cell": "CD21",
+              "value": 160355.5
+            },
+            {
+              "cell": "CE21",
+              "value": 157027.1
+            },
+            {
+              "cell": "CF21",
+              "value": 152152.3
+            },
+            {
+              "cell": "CG21",
+              "value": 158900.7
+            },
+            {
+              "cell": "CH21",
+              "value": 169438.2
+            },
+            {
+              "cell": "CI21",
+              "value": 252038.6
+            },
+            {
+              "cell": "CJ21",
+              "value": 248331.1
+            },
+            {
+              "cell": "CK21",
+              "value": 229514.4
+            },
+            {
+              "cell": "CL21",
+              "value": 232089.4
+            },
+            {
+              "cell": "CM21",
+              "value": 233871.2
+            },
+            {
+              "cell": "CN21",
+              "value": 251972.6
+            },
+            {
+              "cell": "CO21",
+              "value": 241558.7
+            },
+            {
+              "cell": "CP21",
+              "value": 277687.1
+            },
+            {
+              "cell": "CQ21",
+              "value": 260821.4
+            },
+            {
+              "cell": "CR21",
+              "value": 114033.7
+            },
+            {
+              "cell": "CS21",
+              "value": 112657.2
+            },
+            {
+              "cell": "CT21",
+              "value": 114570
+            },
+            {
+              "cell": "CU21",
+              "value": 106583.3
+            },
+            {
+              "cell": "CV21",
+              "value": 101705.7
+            },
+            {
+              "cell": "CW21",
+              "value": 102322
+            },
+            {
+              "cell": "CX21",
+              "value": 90251.34
+            },
+            {
+              "cell": "CY21",
+              "value": 98504.12
+            },
+            {
+              "cell": "CZ21",
+              "value": 94199.44
+            }
+          ],
+          [
+            {
+              "cell": "A22",
+              "value": "NCBP2.SDSYVELSQYR[+10]"
+            },
+            {
+              "cell": "B22",
+              "value": 33.33
+            },
+            {
+              "cell": "C22",
+              "value": 1738692.1348561202
+            },
+            {
+              "cell": "D22",
+              "value": 822345.1108008141
+            },
+            {
+              "cell": "E22",
+              "value": 47.29676371768166
+            },
+            {
+              "cell": "F22",
+              "value": 1093381.32753832
+            },
+            {
+              "cell": "G22",
+              "value": 1101240.81330109
+            },
+            {
+              "cell": "H22",
+              "value": 1087610.31899402
+            },
+            {
+              "cell": "I22",
+              "value": ""
+            },
+            {
+              "cell": "J22",
+              "value": 977952.37031409
+            },
+            {
+              "cell": "K22",
+              "value": 1006597.06866661
+            },
+            {
+              "cell": "L22",
+              "value": 922004.844742742
+            },
+            {
+              "cell": "M22",
+              "value": 926222.012732199
+            },
+            {
+              "cell": "N22",
+              "value": 900429.868342545
+            },
+            {
+              "cell": "O22",
+              "value": 1786496.313
+            },
+            {
+              "cell": "P22",
+              "value": 1750677.241
+            },
+            {
+              "cell": "Q22",
+              "value": 2008382.261
+            },
+            {
+              "cell": "R22",
+              "value": 1984881.534
+            },
+            {
+              "cell": "S22",
+              "value": 1890231.535
+            },
+            {
+              "cell": "T22",
+              "value": 1904230.616
+            },
+            {
+              "cell": "U22",
+              "value": 2304575.463
+            },
+            {
+              "cell": "V22",
+              "value": 2196085.283
+            },
+            {
+              "cell": "W22",
+              "value": 2061391.174
+            },
+            {
+              "cell": "Y22",
+              "value": 2158393.668
+            },
+            {
+              "cell": "Z22",
+              "value": 2017844.61
+            },
+            {
+              "cell": "AA22",
+              "value": 1522982.961
+            },
+            {
+              "cell": "AB22",
+              "value": 1552904.636
+            },
+            {
+              "cell": "AC22",
+              "value": 1551905.202
+            },
+            {
+              "cell": "AD22",
+              "value": 1760712.762
+            },
+            {
+              "cell": "AE22",
+              "value": 1663118.315
+            },
+            {
+              "cell": "AF22",
+              "value": 1700457.493
+            },
+            {
+              "cell": "AG22",
+              "value": 2222961
+            },
+            {
+              "cell": "AH22",
+              "value": 2357337
+            },
+            {
+              "cell": "AI22",
+              "value": 2620648
+            },
+            {
+              "cell": "AJ22",
+              "value": 2472078
+            },
+            {
+              "cell": "AK22",
+              "value": 2486299
+            },
+            {
+              "cell": "AL22",
+              "value": 2523431
+            },
+            {
+              "cell": "AM22",
+              "value": 2291316
+            },
+            {
+              "cell": "AN22",
+              "value": 2489108
+            },
+            {
+              "cell": "AO22",
+              "value": 1656126
+            },
+            {
+              "cell": "AP22",
+              "value": 2707155.02374823
+            },
+            {
+              "cell": "AQ22",
+              "value": 2700101.95982328
+            },
+            {
+              "cell": "AR22",
+              "value": 3077194.60625245
+            },
+            {
+              "cell": "AS22",
+              "value": 2872150.1612376
+            },
+            {
+              "cell": "AT22",
+              "value": 3218108.0870845
+            },
+            {
+              "cell": "AU22",
+              "value": 3062770.78695194
+            },
+            {
+              "cell": "AV22",
+              "value": 2826168.9751841
+            },
+            {
+              "cell": "AW22",
+              "value": 2946091.20736558
+            },
+            {
+              "cell": "AX22",
+              "value": 2808019.28515197
+            },
+            {
+              "cell": "AY22",
+              "value": 1341474
+            },
+            {
+              "cell": "AZ22",
+              "value": 1472870
+            },
+            {
+              "cell": "BA22",
+              "value": 1505237
+            },
+            {
+              "cell": "BB22",
+              "value": 1260727
+            },
+            {
+              "cell": "BC22",
+              "value": 1447060
+            },
+            {
+              "cell": "BD22",
+              "value": 1580125
+            },
+            {
+              "cell": "BE22",
+              "value": 1387608
+            },
+            {
+              "cell": "BF22",
+              "value": 1504463
+            },
+            {
+              "cell": "BG22",
+              "value": 1242269
+            },
+            {
+              "cell": "BH22",
+              "value": 2903918.45077443
+            },
+            {
+              "cell": "BI22",
+              "value": 2873586.12774079
+            },
+            {
+              "cell": "BJ22",
+              "value": 3000626.63778249
+            },
+            {
+              "cell": "BK22",
+              "value": 2836308.07108625
+            },
+            {
+              "cell": "BL22",
+              "value": 2791432.08172326
+            },
+            {
+              "cell": "BM22",
+              "value": 2773604.27606474
+            },
+            {
+              "cell": "BN22",
+              "value": 2817711.04840237
+            },
+            {
+              "cell": "BO22",
+              "value": 2856377.63391818
+            },
+            {
+              "cell": "BP22",
+              "value": 2824067.46911995
+            },
+            {
+              "cell": "BQ22",
+              "value": 528202.2
+            },
+            {
+              "cell": "BR22",
+              "value": 439912.6
+            },
+            {
+              "cell": "BS22",
+              "value": 410114.4
+            },
+            {
+              "cell": "BT22",
+              "value": 256835.8
+            },
+            {
+              "cell": "BU22",
+              "value": 249389.8
+            },
+            {
+              "cell": "BV22",
+              "value": 230458.5
+            },
+            {
+              "cell": "BW22",
+              "value": 232439.1
+            },
+            {
+              "cell": "BX22",
+              "value": 224000.1
+            },
+            {
+              "cell": "BY22",
+              "value": 232051.3
+            },
+            {
+              "cell": "BZ22",
+              "value": 1182177
+            },
+            {
+              "cell": "CA22",
+              "value": 1229782
+            },
+            {
+              "cell": "CB22",
+              "value": 1236708
+            },
+            {
+              "cell": "CC22",
+              "value": 1209030
+            },
+            {
+              "cell": "CD22",
+              "value": 1269673
+            },
+            {
+              "cell": "CE22",
+              "value": 1223183
+            },
+            {
+              "cell": "CF22",
+              "value": 1247425
+            },
+            {
+              "cell": "CG22",
+              "value": 1302285
+            },
+            {
+              "cell": "CH22",
+              "value": 1371242
+            },
+            {
+              "cell": "CI22",
+              "value": 2267939
+            },
+            {
+              "cell": "CJ22",
+              "value": 2355172
+            },
+            {
+              "cell": "CK22",
+              "value": 2267949
+            },
+            {
+              "cell": "CL22",
+              "value": 2340262
+            },
+            {
+              "cell": "CM22",
+              "value": 2272071
+            },
+            {
+              "cell": "CN22",
+              "value": 2348374
+            },
+            {
+              "cell": "CO22",
+              "value": 2273276
+            },
+            {
+              "cell": "CP22",
+              "value": 2419362
+            },
+            {
+              "cell": "CQ22",
+              "value": 2477724
+            },
+            {
+              "cell": "CR22",
+              "value": 933645.5
+            },
+            {
+              "cell": "CS22",
+              "value": 973258.9
+            },
+            {
+              "cell": "CT22",
+              "value": 929762.7
+            },
+            {
+              "cell": "CU22",
+              "value": 876321.3
+            },
+            {
+              "cell": "CV22",
+              "value": 903875.6
+            },
+            {
+              "cell": "CW22",
+              "value": 871981.5
+            },
+            {
+              "cell": "CX22",
+              "value": 866900.1
+            },
+            {
+              "cell": "CY22",
+              "value": 813556.7
+            },
+            {
+              "cell": "CZ22",
+              "value": 799558.4
+            }
+          ]
+        ]
+      }
+    ],
+    "openpyxl_version": "3.1.5",
+    "cell_dump": "results/supplementary-data-4-cells.jsonl.gz",
+    "cell_dump_sha256": "71648cd9e06821d7dc2f14d2640eff444095ccb17d22aecdbb6f7735b19ec6f3",
+    "n_source_cells": 6249,
+    "independent_structure_check": "passed"
+  },
+  "8": {
+    "sheets": [
+      {
+        "name": "SD8 - SIS Response Crvs",
+        "state": "visible",
+        "max_row": 871,
+        "max_column": 33,
+        "xml_populated_cells": 6558,
+        "openpyxl_populated_cells": 6558,
+        "formula_cells": 726,
+        "formula_cache_missing": 138,
+        "xml_only_coordinates": [],
+        "merged_ranges": [],
+        "preview": [
+          [
+            {
+              "cell": "A1",
+              "value": "Supplementary Data 9 \u2013 Responses from SIS peptides in dilution series"
+            }
+          ],
+          [],
+          [],
+          [
+            {
+              "cell": "A4",
+              "value": "Site 1"
+            }
+          ],
+          [
+            {
+              "cell": "A5",
+              "value": "Un-Normalized"
+            }
+          ],
+          [
+            {
+              "cell": "C6",
+              "value": 0.01
+            },
+            {
+              "cell": "D6",
+              "value": 0.03
+            },
+            {
+              "cell": "E6",
+              "value": 0.11
+            },
+            {
+              "cell": "F6",
+              "value": 0.35
+            },
+            {
+              "cell": "G6",
+              "value": 1.1
+            },
+            {
+              "cell": "H6",
+              "value": 3.3
+            },
+            {
+              "cell": "I6",
+              "value": 11
+            },
+            {
+              "cell": "J6",
+              "value": 33
+            },
+            {
+              "cell": "K6",
+              "value": 111
+            },
+            {
+              "cell": "L6",
+              "value": 333
+            },
+            {
+              "cell": "M6",
+              "value": 1111
+            },
+            {
+              "cell": "N6",
+              "value": 3333
+            },
+            {
+              "cell": "O6",
+              "value": 10000
+            },
+            {
+              "cell": "P6",
+              "value": "R squared"
+            }
+          ],
+          [
+            {
+              "cell": "B7",
+              "value": "Group"
+            }
+          ],
+          [
+            {
+              "cell": "A8",
+              "value": "AEN.LVEVQWEQQEAR[+10]"
+            },
+            {
+              "cell": "B8",
+              "value": "A"
+            },
+            {
+              "cell": "C8",
+              "value": ""
+            },
+            {
+              "cell": "D8",
+              "value": ""
+            },
+            {
+              "cell": "E8",
+              "value": ""
+            },
+            {
+              "cell": "F8",
+              "value": ""
+            },
+            {
+              "cell": "G8",
+              "value": 10405.687680880328
+            }
+          ],
+          [
+            {
+              "cell": "A9",
+              "value": "HNRPC.GFAFVQYVNER[+10]"
+            },
+            {
+              "cell": "B9",
+              "value": "A"
+            },
+            {
+              "cell": "C9",
+              "value": ""
+            },
+            {
+              "cell": "D9",
+              "value": ""
+            },
+            {
+              "cell": "E9",
+              "value": ""
+            },
+            {
+              "cell": "F9",
+              "value": 24564.064909070363
+            },
+            {
+              "cell": "G9",
+              "value": 61987.21465346127
+            },
+            {
+              "cell": "P9",
+              "value": 1
+            }
+          ],
+          [
+            {
+              "cell": "A10",
+              "value": "SFPQ_HUMAN.FAQHGTFEYEYSQR"
+            },
+            {
+              "cell": "B10",
+              "value": "A"
+            },
+            {
+              "cell": "C10",
+              "value": ""
+            },
+            {
+              "cell": "D10",
+              "value": ""
+            },
+            {
+              "cell": "E10",
+              "value": ""
+            },
+            {
+              "cell": "F10",
+              "value": ""
+            },
+            {
+              "cell": "G10",
+              "value": ""
+            }
+          ],
+          [
+            {
+              "cell": "A11",
+              "value": "SMD3.VAQLEQVYIR[+10]"
+            },
+            {
+              "cell": "B11",
+              "value": "A"
+            },
+            {
+              "cell": "C11",
+              "value": ""
+            },
+            {
+              "cell": "D11",
+              "value": ""
+            },
+            {
+              "cell": "E11",
+              "value": ""
+            },
+            {
+              "cell": "F11",
+              "value": ""
+            },
+            {
+              "cell": "G11",
+              "value": 78370.12698333537
+            }
+          ],
+          [
+            {
+              "cell": "A12",
+              "value": "ZMAT5.APPPGGWPLQPR[+10]"
+            },
+            {
+              "cell": "B12",
+              "value": "A"
+            },
+            {
+              "cell": "C12",
+              "value": ""
+            },
+            {
+              "cell": "D12",
+              "value": ""
+            },
+            {
+              "cell": "E12",
+              "value": ""
+            },
+            {
+              "cell": "F12",
+              "value": ""
+            },
+            {
+              "cell": "G12",
+              "value": ""
+            }
+          ],
+          [
+            {
+              "cell": "A13",
+              "value": "ANRA2_HUMAN.SVQQVIESHLLK"
+            },
+            {
+              "cell": "B13",
+              "value": "A"
+            },
+            {
+              "cell": "C13",
+              "value": ""
+            },
+            {
+              "cell": "D13",
+              "value": ""
+            },
+            {
+              "cell": "E13",
+              "value": ""
+            },
+            {
+              "cell": "F13",
+              "value": ""
+            },
+            {
+              "cell": "G13",
+              "value": ""
+            }
+          ],
+          [
+            {
+              "cell": "A14",
+              "value": "DDX5.FVINYDYPNSSEDYIHR[+10]"
+            },
+            {
+              "cell": "B14",
+              "value": "B"
+            },
+            {
+              "cell": "E14",
+              "value": ""
+            },
+            {
+              "cell": "F14",
+              "value": ""
+            },
+            {
+              "cell": "G14",
+              "value": ""
+            },
+            {
+              "cell": "H14",
+              "value": 23157.5
+            },
+            {
+              "cell": "I14",
+              "value": 53755.48484267857
+            },
+            {
+              "cell": "P14",
+              "value": 1
+            }
+          ],
+          [
+            {
+              "cell": "A15",
+              "value": "ESRP2.EASGLSADSLAR[+10]"
+            },
+            {
+              "cell": "B15",
+              "value": "B"
+            },
+            {
+              "cell": "E15",
+              "value": ""
+            },
+            {
+              "cell": "F15",
+              "value": 17182.1295859456
+            },
+            {
+              "cell": "G15",
+              "value": 45670.6876123514
+            },
+            {
+              "cell": "H15",
+              "value": 121109.76192343864
+            },
+            {
+              "cell": "I15",
+              "value": 362488.1498095943
+            },
+            {
+              "cell": "P15",
+              "value": 0.9994162040702236
+            }
+          ],
+          [
+            {
+              "cell": "A16",
+              "value": "RUXF.C[CAM]NNVLYIR[+10]"
+            },
+            {
+              "cell": "B16",
+              "value": "B"
+            },
+            {
+              "cell": "E16",
+              "value": ""
+            },
+            {
+              "cell": "F16",
+              "value": 28305.88642242443
+            },
+            {
+              "cell": "G16",
+              "value": 49926.20736595554
+            },
+            {
+              "cell": "H16",
+              "value": 99325.97007573038
+            },
+            {
+              "cell": "I16",
+              "value": 254509.7813738593
+            },
+            {
+              "cell": "P16",
+              "value": 0.9985137999465783
+            }
+          ],
+          [
+            {
+              "cell": "A17",
+              "value": "RUXF.C[PCm]NNVLYIR[+10]"
+            },
+            {
+              "cell": "B17",
+              "value": "B"
+            }
+          ],
+          [
+            {
+              "cell": "A18",
+              "value": "SFSWA_HUMAN.EAQISSAIVSSVQSK"
+            },
+            {
+              "cell": "B18",
+              "value": "B"
+            },
+            {
+              "cell": "E18",
+              "value": ""
+            },
+            {
+              "cell": "F18",
+              "value": ""
+            },
+            {
+              "cell": "G18",
+              "value": ""
+            },
+            {
+              "cell": "H18",
+              "value": 12150.084743354888
+            },
+            {
+              "cell": "I18",
+              "value": 24781.35135011173
+            },
+            {
+              "cell": "P18",
+              "value": 1
+            }
+          ],
+          [
+            {
+              "cell": "A19",
+              "value": "SMD1.EPVQLETLSIR[+10]"
+            },
+            {
+              "cell": "B19",
+              "value": "B"
+            },
+            {
+              "cell": "E19",
+              "value": ""
+            },
+            {
+              "cell": "F19",
+              "value": 14310.423725922366
+            },
+            {
+              "cell": "G19",
+              "value": 40133.04808058943
+            },
+            {
+              "cell": "H19",
+              "value": 104758.96434936748
+            },
+            {
+              "cell": "I19",
+              "value": 272605.38959946734
+            },
+            {
+              "cell": "P19",
+              "value": 0.994478373504942
+            }
+          ],
+          [
+            {
+              "cell": "A20",
+              "value": "SNRPA_HUMAN.EVSSATNALR"
+            },
+            {
+              "cell": "B20",
+              "value": "B"
+            },
+            {
+              "cell": "E20",
+              "value": ""
+            },
+            {
+              "cell": "F20",
+              "value": 12844.099337892565
+            },
+            {
+              "cell": "G20",
+              "value": 35816.361163727364
+            },
+            {
+              "cell": "H20",
+              "value": 109942.66506742123
+            },
+            {
+              "cell": "I20",
+              "value": 341994.938532917
+            },
+            {
+              "cell": "P20",
+              "value": 0.9996044583937189
+            }
+          ],
+          [
+            {
+              "cell": "A21",
+              "value": "APR.APAELEVEC[CAM]ATQLR[+10]"
+            },
+            {
+              "cell": "B21",
+              "value": "C"
+            },
+            {
+              "cell": "G21",
+              "value": 35106.117835027166
+            },
+            {
+              "cell": "H21",
+              "value": 92004.69068501286
+            },
+            {
+              "cell": "I21",
+              "value": 294224.69886221836
+            },
+            {
+              "cell": "J21",
+              "value": 846965.5562814327
+            },
+            {
+              "cell": "K21",
+              "value": 2397272.1780314264
+            },
+            {
+              "cell": "P21",
+              "value": 0.9970597305876108
+            }
+          ],
+          [
+            {
+              "cell": "A22",
+              "value": "E2F7.LDFAVEDGENAQK[+08]"
+            },
+            {
+              "cell": "B22",
+              "value": "C"
+            },
+            {
+              "cell": "G22",
+              "value": 14546.873914815
+            },
+            {
+              "cell": "H22",
+              "value": 51220.168064502905
+            },
+            {
+              "cell": "I22",
+              "value": 171667.91003040533
+            },
+            {
+              "cell": "J22",
+              "value": 468678.818515622
+            },
+            {
+              "cell": "K22",
+              "value": 1320458.77269091
+            },
+            {
+              "cell": "P22",
+              "value": 0.9965522896121494
+            }
+          ]
+        ]
+      }
+    ],
+    "openpyxl_version": "3.1.5",
+    "cell_dump": "results/supplementary-data-8-cells.jsonl.gz",
+    "cell_dump_sha256": "3045e74361ea649a788b060eb872029f5b5ffc64db296e13db0f7a71ca508101",
+    "n_source_cells": 6558,
+    "independent_structure_check": "passed"
+  }
+}

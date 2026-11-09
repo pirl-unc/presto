@@ -1,0 +1,97 @@
+{
+  "article_xml": {
+    "path": "/private/tmp/hitlist-pxd004886-assets/article.xml",
+    "sha256": "36407dc5bacd14286d3b032806a31fbf4358e7264f523ad948172e658ba16f6a",
+    "size_bytes": 158096,
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC5566333/fullTextXML",
+    "exact_retrieval_command": "curl --fail --location --max-time 45 --silent --show-error 'https://www.ebi.ac.uk/europepmc/webservices/rest/PMC5566333/fullTextXML' -o /private/tmp/hitlist-pxd004886-assets/article.xml"
+  },
+  "archive_head_attempt": {
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC5566333/supplementaryFiles",
+    "command": "curl --head --location --max-time 45 --silent --show-error URL",
+    "exit_code": 28,
+    "result": "No response bytes in45s; terminal timeout, followed by a separately recorded GET."
+  },
+  "article_license": "CC-BY4.0, with stated third-party credit exceptions; no additional restriction found in these four workbook cells. Source credit retained.",
+  "source_labels": [
+    {
+      "label": "Supplementary Information",
+      "filename": "41467_2017_249_MOESM1_ESM.pdf"
+    },
+    {
+      "label": "Peer Review File",
+      "filename": "41467_2017_249_MOESM2_ESM.pdf"
+    },
+    {
+      "label": "Supplementary Data 1",
+      "filename": "41467_2017_249_MOESM3_ESM.xlsx"
+    },
+    {
+      "label": "Supplementary Data 2",
+      "filename": "41467_2017_249_MOESM4_ESM.xlsx"
+    },
+    {
+      "label": "Supplementary Data 3",
+      "filename": "41467_2017_249_MOESM5_ESM.xlsx"
+    },
+    {
+      "label": "Supplementary Data 4",
+      "filename": "41467_2017_249_MOESM6_ESM.xlsx"
+    },
+    {
+      "label": "Supplementary Data 5",
+      "filename": "41467_2017_249_MOESM7_ESM.xlsx"
+    },
+    {
+      "label": "Supplementary Data 6",
+      "filename": "41467_2017_249_MOESM8_ESM.xlsx"
+    },
+    {
+      "label": "Supplementary Data 7",
+      "filename": "41467_2017_249_MOESM9_ESM.xlsx"
+    },
+    {
+      "label": "Supplementary Data 8",
+      "filename": "41467_2017_249_MOESM10_ESM.xlsx"
+    },
+    {
+      "label": "Supplementary Data 9",
+      "filename": "41467_2017_249_MOESM11_ESM.xlsx"
+    },
+    {
+      "label": "Supplementary Data 10",
+      "filename": "41467_2017_249_MOESM12_ESM.xlsx"
+    },
+    {
+      "label": "Supplementary Data 11",
+      "filename": "41467_2017_249_MOESM13_ESM.xlsx"
+    },
+    {
+      "label": "Supplementary Data 12",
+      "filename": "41467_2017_249_MOESM14_ESM.xlsx"
+    },
+    {
+      "label": "Supplementary Data 13",
+      "filename": "41467_2017_249_MOESM15_ESM.xlsx"
+    },
+    {
+      "label": "Supplementary Data 14",
+      "filename": "41467_2017_249_MOESM16_ESM.xlsx"
+    },
+    {
+      "label": "Supplementary Data 15",
+      "filename": "41467_2017_249_MOESM17_ESM.xlsx"
+    },
+    {
+      "label": "Supplementary Data 16",
+      "filename": "41467_2017_249_MOESM18_ESM.xlsx"
+    },
+    {
+      "label": "Supplementary Data 17",
+      "filename": "41467_2017_249_MOESM19_ESM.xlsx"
+    }
+  ],
+  "source_asset_directory": "/private/tmp/hitlist-pxd004886-assets",
+  "raw_artifact_policy": "Original workbooks/archive stay in the shared source directory; audit cell records are generated diagnostic artifacts, not an alternate training table.",
+  "public_receipt_redaction": "Transient response cookies omitted; source XLSX bytes and all useful retrieval hashes/statuses unchanged."
+}

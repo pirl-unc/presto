@@ -1,0 +1,25 @@
+{
+  "observed_utc": "2026-10-25T01:59:20.546749+00:00",
+  "scope": "static_only_no_numerical_or_biological_stage",
+  "ruff_command": "ruff check --isolated --no-cache --select E9,F EXPERIMENT_DIR",
+  "ruff_passed": true,
+  "ast_parse_passed": true,
+  "python_files": 9,
+  "pinned_original_input_hashes_verified": 4,
+  "frozen_model_byte_equal": true,
+  "stage_receipts": [],
+  "free_bytes": 778227712,
+  "launch_requirement_bytes": 1107296256,
+  "files": {
+    "analysis/replay.py": "be895c0c584f8ea4e92c91eb1da9af8da9a6a6ac0edaff36af441d3348a969db",
+    "code/closure.py": "35b1fde94b134476bdd99ce9e8424e6c5d2dc85a701e10c9a7131da96db92067",
+    "code/core.py": "d2a957a772a9e8ad3ce2ae0f92cf91a9f95b9aa98cc79bd8ebaf6e974c1677a4",
+    "code/evaluate.py": "7bd69ef919fb0feb0bf819194555df05a2ae87ea8edd645e84b811341971533b",
+    "code/fit.py": "83a8c2b975d7a9879badccd89099a26d79044de9005d4eca6361cf3a1b3f4186",
+    "code/frozen_model.py": "3823a48e22adba2cd6906272a47f2ac1844656d713c58957a4b43c706eb35a83",
+    "code/launch.py": "d8e6a101be1b3e74bd9569ba37f7cf6bdee4f9d04090b55c83152f327f8bc079",
+    "code/prepare.py": "5ce265ce34ba1d08b18db93df9fa5bfa37a9cfd6f3050f72006dfd0ff29ea723",
+    "code/qualify.py": "5e5f57328a14989add4591743bab8c06597e314c7ac3fc32521866fac53b0160"
+  },
+  "first_default_ruff_attempt": "No files checked because repository excludes experiments; isolated invocation checked all nine."
+}

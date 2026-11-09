@@ -1,0 +1,25 @@
+{
+  "checks": {
+    "binding.parquet": {
+      "coverage_fields_verified": 6,
+      "distinct_counts_verified": true,
+      "n_category_rows_verified": 2361916
+    },
+    "observations.parquet": {
+      "coverage_fields_verified": 12,
+      "distinct_counts_verified": true,
+      "n_category_rows_verified": 5776540
+    },
+    "other_assays.parquet": {
+      "coverage_fields_verified": 11,
+      "distinct_counts_verified": true,
+      "n_category_rows_verified": 3328
+    }
+  },
+  "correction": "Replaced class_ii_categories: original serializer truncated scalar keys.",
+  "original_inventory_sha256": "92aacc261c458094859c0932eabbbd1749a7732c5a205c5bb83a79c4a6d26950",
+  "passed": true,
+  "peak_rss_bytes": 445202432,
+  "script_sha256": "c4f6f2b4ef6f63f8b80e2e78c18dba08c5071084a3f691dfc21784cbbd770161",
+  "seconds": 3.8485196250003355
+}

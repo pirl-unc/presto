@@ -1,0 +1,22 @@
+{
+  "status": "launched",
+  "agent_model": "Codex / GPT-6",
+  "argv": [
+    "python",
+    "-m",
+    "modal",
+    "run",
+    "--detach",
+    "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-29_1318_codex_affinity-objectives-geometry/code/audit.py"
+  ],
+  "git_commit": "0d96d801d0ad8c9ebd8682a5db0de812200ba674",
+  "git_dirty": " M experiments/agents/codex/ideas.md\n M experiments/experiment_log.md\n M tasks/lessons.md\n M tasks/todo.md\n?? experiments/2026-10-29_1318_codex_affinity-objectives-geometry/\n?? experiments/agents/codex/plans/2026-10-29_affinity-objectives-geometry.md\n",
+  "environment": {
+    "requested_gpu": null
+  },
+  "started_unix": 1793281564.117249,
+  "source_hashes": {
+    "audit.py": "9a2de045da0b34459b5d76f5812717f758012d85b24d3da6e37eb116ebb316e9",
+    "assay_agreement.py": "d5afe20c4df4f51ef9d39dd0676960866f74ce784253900fe1e8b50c7859ba65"
+  }
+}

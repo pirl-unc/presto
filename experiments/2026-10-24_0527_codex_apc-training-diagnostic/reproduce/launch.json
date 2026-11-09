@@ -1,0 +1,55 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "registered_at": "2026-10-24T05:27:19.700461-04:00",
+  "presto_commit": "34568ca4bdd7086044333da09a4c4b4e9e660edd",
+  "dirty_tracked": " M tasks/todo.md\n",
+  "source_family": "/private/tmp/presto-modular-model/experiments/2026-10-24_0449_codex_apc-precursor-response",
+  "fold_salt": "pxd057588_train_diagnostic_v1:",
+  "folds": 5,
+  "arms": {
+    "shared_penalty": {
+      "flexible": false,
+      "penalty": 0.01
+    },
+    "shared_unpenalized": {
+      "flexible": false,
+      "penalty": 0.0
+    },
+    "flexible_penalty": {
+      "flexible": true,
+      "penalty": 0.01
+    },
+    "flexible_unpenalized": {
+      "flexible": true,
+      "penalty": 0.0
+    }
+  },
+  "steps": 400,
+  "lr": 0.02,
+  "betas": [
+    0.9,
+    0.999
+  ],
+  "eps": 1e-08,
+  "seed": 42,
+  "sample_count": 512,
+  "gradient_repeats": 16,
+  "gradient_state_seed": 703,
+  "gradient_state_scale": 0.03,
+  "gradient_mean_gate": 0.1,
+  "gradient_rms_gate": 0.25,
+  "sampled_biological_rmse_gain": 0.02,
+  "sampled_variation_gate": 0.001,
+  "exact_seconds_cap": 300,
+  "hybrid_seconds_cap": 1800,
+  "rss_bytes_cap": 4294967296,
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "PYTHONPATH": "/private/tmp/presto-native-import"
+  },
+  "original_test_used": false,
+  "scope": "posthoc original-training-only component-grouped inner CV; no fresh external test"
+}

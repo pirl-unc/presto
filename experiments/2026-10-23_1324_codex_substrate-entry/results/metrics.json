@@ -1,0 +1,130 @@
+{
+  "entry_constant": {
+    "train": {
+      "by_parent": {
+        "soh2024_digestion:construct:50d8b307581e0a39b20cd381c16a12dfbf6642e27d4df233f9b0f26f46bd82b5": {
+          "n": 4404,
+          "rmse": 0.8227023058272817
+        },
+        "soh2024_digestion:construct:5c44f6a3ee6e96b468205cf19c495bb0fd42bfae7f025a9744f6c09386070ba7": {
+          "n": 11508,
+          "rmse": 0.9338632204708027
+        },
+        "soh2024_digestion:construct:7fa7636cad66d6fbc4e373829ee78bb9ab66adb141e99f051d21cad9084a6bea": {
+          "n": 30514,
+          "rmse": 1.242517050823578
+        },
+        "soh2024_digestion:construct:af62ea1fde21fcc684bef6605aeee01ac2b3e3c59796d64c34c624f0f272aeec": {
+          "n": 4150,
+          "rmse": 0.8783346545932412
+        },
+        "soh2024_digestion:construct:e7599d914ddf8ec9d8cdc94c7497b3a247e94d7396c93a8b7aaba6041628384b": {
+          "n": 13640,
+          "rmse": 1.2034959413381943
+        },
+        "soh2024_digestion:construct:f3df12ae52a6c6fc2cd28a85b9081abbf0ecc3e0da0265e151972558abf931d7": {
+          "n": 3360,
+          "rmse": 0.7560792733081066
+        }
+      },
+      "mse": 0.9807197223253328,
+      "n_parents": 6,
+      "n_predictions": 67576,
+      "pearson": 0.15427348368986757,
+      "pooled_rmse": 1.1050527551860065,
+      "prediction_sd": 0.4978377639150253,
+      "rmse": 0.9903129416125656,
+      "spearman": 0.13304917944029404,
+      "target_sd": 1.017549226945896
+    },
+    "val": {
+      "by_parent": {
+        "soh2024_digestion:construct:1cca82978a55647fbda9420ad7989fceed0efa699ef0f05c464cab9ef38a740d": {
+          "n": 1848,
+          "rmse": 1.3215584036923789
+        },
+        "soh2024_digestion:construct:cef4bb8fb7b8677076cb40c5dcd728f3d037cfeef3f6b90276cc4509ac6da407": {
+          "n": 4568,
+          "rmse": 1.3622513944711536
+        },
+        "soh2024_digestion:construct:fe305e5ce18517fc9f3aad74401a2f0317725a1cfca4248eca63d8d89eccb8fe": {
+          "n": 4574,
+          "rmse": 0.7647224686232407
+        }
+      },
+      "mse": 1.3956819767085915,
+      "n_parents": 3,
+      "n_predictions": 10990,
+      "pearson": 0.31478075370001,
+      "pooled_rmse": 1.1227738122353759,
+      "prediction_sd": 0.4634477024316302,
+      "rmse": 1.1813898495875912,
+      "spearman": 0.28925485964968206,
+      "target_sd": 1.0386269059630522
+    }
+  },
+  "entry_sequence": {
+    "train": {
+      "by_parent": {
+        "soh2024_digestion:construct:50d8b307581e0a39b20cd381c16a12dfbf6642e27d4df233f9b0f26f46bd82b5": {
+          "n": 4404,
+          "rmse": 0.7874773107795331
+        },
+        "soh2024_digestion:construct:5c44f6a3ee6e96b468205cf19c495bb0fd42bfae7f025a9744f6c09386070ba7": {
+          "n": 11508,
+          "rmse": 0.9050145094650155
+        },
+        "soh2024_digestion:construct:7fa7636cad66d6fbc4e373829ee78bb9ab66adb141e99f051d21cad9084a6bea": {
+          "n": 30514,
+          "rmse": 1.1143517743624343
+        },
+        "soh2024_digestion:construct:af62ea1fde21fcc684bef6605aeee01ac2b3e3c59796d64c34c624f0f272aeec": {
+          "n": 4150,
+          "rmse": 0.7756639118733386
+        },
+        "soh2024_digestion:construct:e7599d914ddf8ec9d8cdc94c7497b3a247e94d7396c93a8b7aaba6041628384b": {
+          "n": 13640,
+          "rmse": 1.0422366146457864
+        },
+        "soh2024_digestion:construct:f3df12ae52a6c6fc2cd28a85b9081abbf0ecc3e0da0265e151972558abf931d7": {
+          "n": 3360,
+          "rmse": 0.722385221087012
+        }
+      },
+      "mse": 0.8151172878492274,
+      "n_parents": 6,
+      "n_predictions": 67576,
+      "pearson": 0.3780000520022274,
+      "pooled_rmse": 0.9941110709364909,
+      "prediction_sd": 0.5680462170760748,
+      "rmse": 0.9028384616581349,
+      "spearman": 0.2661027831687967,
+      "target_sd": 1.017549226945896
+    },
+    "val": {
+      "by_parent": {
+        "soh2024_digestion:construct:1cca82978a55647fbda9420ad7989fceed0efa699ef0f05c464cab9ef38a740d": {
+          "n": 1848,
+          "rmse": 1.2546471143141056
+        },
+        "soh2024_digestion:construct:cef4bb8fb7b8677076cb40c5dcd728f3d037cfeef3f6b90276cc4509ac6da407": {
+          "n": 4568,
+          "rmse": 1.2390950528374869
+        },
+        "soh2024_digestion:construct:fe305e5ce18517fc9f3aad74401a2f0317725a1cfca4248eca63d8d89eccb8fe": {
+          "n": 4574,
+          "rmse": 0.7017675787816576
+        }
+      },
+      "mse": 1.200657888684039,
+      "n_parents": 3,
+      "n_predictions": 10990,
+      "pearson": 0.42881386894085005,
+      "pooled_rmse": 1.0293125562092102,
+      "prediction_sd": 0.4540792732295945,
+      "rmse": 1.0957453575918261,
+      "spearman": 0.36161956261220346,
+      "target_sd": 1.0386269059630522
+    }
+  }
+}

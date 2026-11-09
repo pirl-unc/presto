@@ -1,0 +1,71 @@
+{
+  "registered_at": "2026-10-23T05:52:20.090684-04:00",
+  "agent_model": "Codex / GPT-6",
+  "stage": "package/query/recipe conservation; no training",
+  "presto_commit": "7d4c7a5fb8d665cf74cf654069f44506468f4b5a",
+  "presto_dirty": "M tasks/todo.md\n?? data/availability_recipes/\n?? experiments/agents/codex/plans/full-ic50-fitting.md\n?? tasks/modular_model/trajectory-sampling-issue.md",
+  "hitlist_commit": "0219827e08d2d8a400c1091ad770e87d62562b7a",
+  "hitlist_dirty": "",
+  "hitlist_root": "/private/tmp/hitlist-successor-compat",
+  "parent_package": "/private/tmp/hitlist-v2-adjudication-204-reviewed",
+  "parent_manifest_sha256": "8f35dc5529b376f1b2e3b25f91dd2f2dc57d0a53c4d8a76c094294193708c9b6",
+  "legacy_package": "/private/tmp/hitlist-v2-calibration-203-canonical",
+  "legacy_manifest_sha256": "bce500f34f111aaf3b41573e96fa630252204a3403d5a2e93e9c50caa97b8552",
+  "source_roots": {
+    "pxd009092": "/private/tmp/hitlist-v2-calibration-203-canonical/external/pxd009092/assets",
+    "pxd004886": "/private/tmp/hitlist-v2-calibration-203-canonical/external/pxd004886/assets"
+  },
+  "output_package": "/private/tmp/hitlist-v2-combined-205-canonical",
+  "old_recipes": {
+    "mapp_captured_composition_v1": "/private/tmp/presto-modular-model/artifacts/2026-10-23_0316_codex_shared-ms-calibration/recipes/mapp_captured_composition_v1",
+    "mapp_captured_composition_min2_v1": "/private/tmp/presto-modular-model/artifacts/2026-10-23_0316_codex_shared-ms-calibration/recipes/mapp_captured_composition_min2_v1",
+    "mapp_complete_run_composition_v1": "/private/tmp/presto-modular-model/artifacts/2026-10-23_0316_codex_shared-ms-calibration/recipes/mapp_complete_run_composition_v1",
+    "ms_calibration_raw_s4_nominal_response_v1": "/private/tmp/presto-modular-model/artifacts/2026-10-23_0359_codex_raw-s4-response/recipe"
+  },
+  "old_recipe_manifests": {
+    "mapp_captured_composition_v1": "55495b3f5a4f0fb42bffe966329fdcc727b0de0675de2c0cc3d31da4d24243df",
+    "mapp_captured_composition_min2_v1": "c4ad1b456bd4ce51975593c5d45a3811d003bdc84f95a829354ff21df80507f3",
+    "mapp_complete_run_composition_v1": "ff290cff74b539faa9e7b9f29d6ab96f34e6299b958917a7203972a649a7776d",
+    "ms_calibration_raw_s4_nominal_response_v1": "fca137691f11275c070c8f3f5feb210fd6d0dd93306ff57dbc5fed755825bbe8"
+  },
+  "recipe_outputs": "/private/tmp/presto-modular-model/artifacts/2026-10-23_0551_codex_adjudication-source-conservation/recipes",
+  "environment": {
+    "PYTHONPATH": "/private/tmp/hitlist-successor-compat",
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1"
+  },
+  "device": "local CPU; no Modal or GPU",
+  "predictive_split_policy": "No fitting or new split; conserve previously inspected outputs byte-for-byte except manifest provenance. No new held-out performance claim.",
+  "source_hashes": {
+    "hitlist/evidence_package.py": "a601ed9b0d3acb4b56d73809a954ddea3fbfc2826839f2f640ecd0960cb89e40",
+    "hitlist/external_successor.py": "a71afb516810e5a3b4dba9a83ed5cc71b5a488665e97e49fc7042157dbff0a85",
+    "hitlist/assay_adjudication.py": "78a936e0a445c855f65754099a3576b818f73245118c4bdcf821667014a7fd7c",
+    "hitlist/evidence_store.py": "340a57a89a7db80293b1c8484337a22eef6c4cbb64057f94594f970b2cc4458a",
+    "hitlist/evidence_bindings.py": "585025c637ab83bdfbca6bb39fb71aea7c872a2dad53049a0254b350a34a74d3",
+    "hitlist/evidence_catalog.py": "4c4328fbe56a742af32f33d4dad3fe16c293c2858e718af4deba69f2c4a1d874",
+    "hitlist/evidence_recipe.py": "c510402dc27f4ddd6267bbef68364bd529d1977f7e52e3cad8c8a2d65652b555",
+    "hitlist/distribution_recipe.py": "bc291d1868720e6980d27a2177abde77d8b3ab2cc09cc805939ac4d121be4b34",
+    "hitlist/ms_calibration_response.py": "a2e3108de803e4b6211223bc3f2aea15176764ab9236c92dcd01ef1602d31cbf",
+    "hitlist/version.py": "c446fb6786fcc5a9575c4c41838d973c085b24a9e21f372c10f8e9fba4b7a698"
+  },
+  "launcher_hashes": {
+    "launch.py": "1ec785255ba301f2d69887362ddb260dd92de00b21b8a64f84070a21faa97b65",
+    "verify.py": "315b47789d825b2ceea574868ce9f098eac4bae448f8095e88a484c15539c0a9"
+  },
+  "frozen_at": "2026-10-23T05:54:03.799310-04:00",
+  "presto_dirty_at_freeze": " M tasks/todo.md\n?? data/availability_recipes/\n?? experiments/2026-10-23_0551_codex_adjudication-source-conservation/\n?? experiments/agents/codex/plans/adjudication-source-conservation.md\n?? experiments/agents/codex/plans/full-ic50-fitting.md\n?? tasks/modular_model/trajectory-sampling-issue.md\n",
+  "standalone_mapp_recipes": {
+    "mapp_captured_composition_v1": "/private/tmp/presto-modular-model/data/availability_recipes/2026-10-22-mapp-captured-composition-v1",
+    "mapp_captured_composition_min2_v1": "/private/tmp/presto-modular-model/data/availability_recipes/2026-10-22-mapp-captured-composition-min2-v1",
+    "mapp_complete_run_composition_v1": "/private/tmp/presto-modular-model/data/availability_recipes/2026-10-23-mapp-complete-run-composition-v1"
+  },
+  "standalone_mapp_manifests": {
+    "mapp_captured_composition_v1": "9c1388c5e0c867623bcb902f743f8da9c540122496aa33afd0c5cd1ce2d41062",
+    "mapp_captured_composition_min2_v1": "df78d02f8200809c659e43adfae29866c48b712122b740379106994622f4ac80",
+    "mapp_complete_run_composition_v1": "23bcfeb4067fa4f47f0b1db702d6ae79f97a9c32a1366ff3de322c99f210b9bf"
+  },
+  "verification_amendment": {
+    "time": "2026-10-23T05:58:42.967638-04:00",
+    "reason": "Initial MAPP baselines were standalone schema-1 recipes, predating canonical coverage.json. Use last canonical 0316 exports for equal-inventory/coverage comparison; additionally preserve and compare every original standalone payload. Producer/code/targets are unchanged; no regeneration or fitting."
+  }
+}

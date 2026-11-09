@@ -1,0 +1,26 @@
+[
+  {
+    "name": "project.json",
+    "url": "https://www.ebi.ac.uk/pride/ws/archive/v2/projects/PXD052314",
+    "utc": "2026-10-24T21:28:48.786228+00:00",
+    "ok": false,
+    "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Max retries exceeded with url: /pride/ws/archive/v2/projects/PXD052314 (Caused by NameResolutionError(\"HTTPSConnection(host='www.ebi.ac.uk', port=443): Failed to resolve 'www.ebi.ac.uk' ([Errno 8] nodename nor servname provided, or not known)\"))",
+    "seconds": 0.0065123329986818135
+  },
+  {
+    "name": "files.json",
+    "url": "https://www.ebi.ac.uk/pride/ws/archive/v2/projects/PXD052314/files?page=0&pageSize=1000",
+    "utc": "2026-10-24T21:28:48.793125+00:00",
+    "ok": false,
+    "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Max retries exceeded with url: /pride/ws/archive/v2/projects/PXD052314/files?page=0&pageSize=1000 (Caused by NameResolutionError(\"HTTPSConnection(host='www.ebi.ac.uk', port=443): Failed to resolve 'www.ebi.ac.uk' ([Errno 8] nodename nor servname provided, or not known)\"))",
+    "seconds": 0.0005947909667156637
+  },
+  {
+    "name": "supplement.zip",
+    "url": "https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41586-025-08615-w/MediaObjects/41586_2025_8615_MOESM5_ESM.zip",
+    "utc": "2026-10-24T21:28:48.793893+00:00",
+    "ok": false,
+    "error": "HTTPSConnectionPool(host='media.springernature.com', port=443): Max retries exceeded with url: /original/springer-static/esm/art%3A10.1038%2Fs41586-025-08615-w/MediaObjects/41586_2025_8615_MOESM5_ESM.zip (Caused by NameResolutionError(\"HTTPSConnection(host='media.springernature.com', port=443): Failed to resolve 'media.springernature.com' ([Errno 8] nodename nor servname provided, or not known)\"))",
+    "seconds": 0.0005088750040158629
+  }
+]

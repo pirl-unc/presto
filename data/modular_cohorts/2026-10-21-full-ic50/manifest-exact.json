@@ -1,0 +1,46 @@
+{
+  "model": {
+    "dropout": 0.1,
+    "endpoints": [
+      "ic50"
+    ],
+    "identity_tasks": [],
+    "mhc_classes": [
+      "I",
+      "II"
+    ],
+    "species": [
+      "human"
+    ]
+  },
+  "schema": "presto.modular.manifest.v1",
+  "sources": [
+    {
+      "label_policy": "physical unclipped IC50; exact/censored raw bounds; absent export qualifier means exact with missingness retained",
+      "path": "hitlist-v4-iedb-test.jsonl",
+      "population": "all source-admitted direct IEDB/CEDAR purified human HLA IC50 within canonical sequence scope",
+      "sha256": "0ade7b1ed2436bcdc9fd145831a1718db36c00056321b9815cad418c293fbd75",
+      "source": "hitlist-v4-iedb",
+      "split_policy": "exact-peptide/original-assay components; preserve historical and memorization assignments; novel fixed hash80/10/10; not study/donor qualified"
+    },
+    {
+      "label_policy": "physical unclipped IC50; exact/censored raw bounds; absent export qualifier means exact with missingness retained",
+      "path": "hitlist-v4-iedb-train-exact.jsonl",
+      "population": "all source-admitted direct IEDB/CEDAR purified human HLA IC50 within canonical sequence scope",
+      "sha256": "79e44788883a4668fb790191e2079b46bb28e3ea06314e75ace3aa25c65b096c",
+      "source": "hitlist-v4-iedb",
+      "split_policy": "exact-peptide/original-assay components; preserve historical and memorization assignments; novel fixed hash80/10/10; not study/donor qualified"
+    },
+    {
+      "label_policy": "physical unclipped IC50; exact/censored raw bounds; absent export qualifier means exact with missingness retained",
+      "path": "hitlist-v4-iedb-validation.jsonl",
+      "population": "all source-admitted direct IEDB/CEDAR purified human HLA IC50 within canonical sequence scope",
+      "sha256": "12b88ebf0573e98b434f20e1a5fa8645128d5a14b05dfda3985ef57440d1719b",
+      "source": "hitlist-v4-iedb",
+      "split_policy": "exact-peptide/original-assay components; preserve historical and memorization assignments; novel fixed hash80/10/10; not study/donor qualified"
+    }
+  ],
+  "training": {
+    "identity_weight": 0
+  }
+}

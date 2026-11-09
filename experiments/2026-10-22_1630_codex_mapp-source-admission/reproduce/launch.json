@@ -1,0 +1,22 @@
+{
+  "command": "AUDIT_PYTHON=/Users/iskander/code/shared-virtual-env/bin/python bash experiments/2026-10-22_1630_codex_mapp-source-admission/reproduce/launch.sh",
+  "git_commit": "30cc5368bfa58b936339c3e5600309625831d851",
+  "dirty_status": " M experiments/experiment_log.md\n M tasks/todo.md\n?? data/availability_sources/snapshots/2026-10-22-mapp-series/\n?? experiments/2026-10-22_1630_codex_mapp-source-admission/\n?? experiments/agents/codex/plans/full-ic50-fitting.md\n?? experiments/agents/codex/plans/mapp-source-admission.md\n?? tasks/modular_model/trajectory-sampling-issue.md\n",
+  "source_sha256": "dde5f85903a6f58f7904ce2a0185d6e9170bf384c462de06a500628707b9c771",
+  "input_manifest_sha256": "d099acf82406d4abd068ae0d2361e03c40683b382808990ab41f128a41999496",
+  "member_manifest_sha256": "860693830ab82097bd717aef81047baf41477fb2f15109575608aad2c94a79af",
+  "launched_at_utc": "2026-10-22T16:39:38.160430+00:00",
+  "agent": "Codex",
+  "model": "GPT-6",
+  "environment_overrides": {
+    "AUDIT_PYTHON": "/Users/iskander/code/shared-virtual-env/bin/python"
+  },
+  "training": null,
+  "pretraining": null,
+  "loss": null,
+  "synthetic": null,
+  "splits": null,
+  "gpu": null,
+  "attempt": 2,
+  "revision": "Preserve and quarantine source group records without numeric IDs; do not overwrite empty-key rows."
+}

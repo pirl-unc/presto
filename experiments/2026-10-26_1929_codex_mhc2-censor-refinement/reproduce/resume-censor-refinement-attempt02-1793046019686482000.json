@@ -1,0 +1,63 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "argv": [
+    "/private/tmp/presto-mhc2-20261026/presto/experiments/2026-10-26_1929_codex_mhc2-censor-refinement/code/resume_censor.py"
+  ],
+  "device": "cpu",
+  "dirty_status": " M experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/continuation-state.json\n M experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/fit-exact_continuation-1793044126975529000.json\n M tasks/todo.md\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/code/recover.py\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/code/resume_censor.py\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/fit-censor_refinement-1793045035192116000.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/interruption01.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/recover.sh\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/recovery-launch-attempt02.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/recovery-plan.md\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/recovery-state-attempt02.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/score-exact_continuation-1793045003405002000.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/source/recover.py\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/source/resume_censor.py\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/results/exact_continuation-fit.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/results/exact_continuation/\n?? experiments/2026-10-26_1954_codex_mhc2-ms-transfer-cohort/\n?? experiments/agents/codex/plans/2026-10-26_mhc2-ms-transfer-cohort.md\n",
+  "elapsed_seconds": 7.2694640410009015,
+  "environment": {
+    "MKL_NUM_THREADS": "2",
+    "OMP_NUM_THREADS": "2",
+    "OPENBLAS_NUM_THREADS": "2",
+    "PYTHONPATH": "/private/tmp/presto-mhc2-20261026:/private/tmp/presto-pr-completion-20261026/dependencies",
+    "PYTORCH_ENABLE_MPS_FALLBACK": null
+  },
+  "executable": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "failure": {
+    "message": "resume execution contract changed or snapshot is not resumable",
+    "type": "ValueError"
+  },
+  "git_commit": "aa5eb5ed41e2916b8f94c9e4a30e9d069bf3a5fc",
+  "interop_threads": 1,
+  "launcher_sha256": "dfd12c0134b7f8b94c0416f6d740cd55598637d32c2cdeed7d9f7e7b917420f7",
+  "limits": {
+    "disk_floor": 10737418240,
+    "ram_floor": 10737418240,
+    "rss": 4294967296,
+    "seconds": 7200,
+    "startup_disk": 16106127360,
+    "startup_ram": 13958643712
+  },
+  "peak_polled_rss_bytes": 257327104,
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "process_peak_rss_bytes": 258080768,
+  "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "requested_modal_gpu": null,
+  "runtime_hashes": {
+    "cli/training_sources.py": "2e70ddf79a30cbb01a039aa26b2093b3083b78c96e53fbbff8a5264312745471",
+    "data/modular.py": "688dbc2dc49098abc7e66f186d5889fcd76e3ae2729d3b29b4e5b732237f13e8",
+    "data/modular_auxiliary.py": "7e2f6e9f560fe62650809ec6be6a781c5d3040270c73b8ec02cfa4bdb4cdb34f",
+    "data/modular_context.py": "4bb7e5a2432462e33e9c2632e85a78445282a604c095b0bff2ee6596b6617dc0",
+    "data/modular_lineage.py": "c10e7151af1a4f76fbc106a6621db69b024750ac042488df93a7a7d11e0cc4b9",
+    "data/modular_preparation.py": "e0268e9a9f5a531af378158f164ef5bce99361f6923be74f39bcd1f97bfc6962",
+    "data/modular_quantitative.py": "751a66c8aa68fd697d395ec3fc63951e262278a0fb6c3f26c185e8963f7d148d",
+    "data/modular_sources.py": "1f179c5f3b7791f6c79df7e77aa1ceafe4940ae1fcda50fd6e43e9fb4d886edf",
+    "data/vocab.py": "ecc2e1c5154d25d80cddae4f0708317e2cf40e39c171d9eaeb777ad88541e4f7",
+    "models/encoders.py": "c49f2461052b308f89289a3c44072c62edd09a1c1d41fb55426a5679db2b14c2",
+    "models/modular.py": "df5464f933796bf8f101fdb7d50a522e423339477b06df358d38cdeda50f2a37",
+    "models/modular_dependencies.py": "17918102c6d7965e48b7c2c367e371da46d858624725fd81193d3a726a2b07a0",
+    "models/modular_support.py": "d3cb1cb165d5cee236409c51c8d0e93eaa7bb9ef430dd682e726d72889e9619d",
+    "scripts/train_iedb.py": "efb1fee90dfb7f9b475ea1fc6f5c7b8711c719681ee64dc3a43fc017d6f83704",
+    "training/modular.py": "aab95991b75b0460baeb2be60d43096fb1c278953c260ea8d86662f7d9b3ade6",
+    "training/modular_evaluation.py": "ca75a674691a27e8c34ddf195ff31c29b76d134ec852320fa09aeeb9e69789ab",
+    "training/modular_resume.py": "5887626321ad2ead4b48c4032d34cfb013b14a2a0a716dc35bb0f7e443d32bfb",
+    "training/modular_run.py": "132b09b19ce911ad96a04bc2f8894fb1f26de5293146f35feb1d3f3c133339a6"
+  },
+  "startup_disk": 75763785728,
+  "startup_ram": 18831654912,
+  "status": "failed",
+  "threads": 2,
+  "torch": "2.14.1",
+  "utc": "2026-10-26T20:20:19.686488+00:00"
+}

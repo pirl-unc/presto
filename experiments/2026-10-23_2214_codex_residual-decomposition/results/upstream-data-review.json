@@ -1,0 +1,33 @@
+{
+  "hitlist_commit": "61baed9970f8661833e706c68a2adf2d0457e353",
+  "inspected_bundled_csv": "/private/tmp/hitlist-digestion-recipe/hitlist/data/bulk_proteomics/bekker_jensen_2017_peptides.csv.gz",
+  "sha256": "3ec65dd05e8ec58c3293e0fb5720570197a8b152cd14778130bae4224106e3d3",
+  "header": [
+    "peptide",
+    "cell_line",
+    "uniprot_acc",
+    "gene_symbol",
+    "length",
+    "start_position",
+    "end_position",
+    "digestion_enzyme",
+    "n_fractions_in_run",
+    "enrichment",
+    "fractionation_ph",
+    "modifications",
+    "n_replicates_detected",
+    "source",
+    "reference"
+  ],
+  "scope": "Header/code review only, not new quantitative source admission or claim about every current export",
+  "existing_intensity_issue": "https://github.com/pirl-unc/hitlist/issues/95",
+  "intensity_issue_state": "open",
+  "existing_comment": "https://github.com/pirl-unc/hitlist/issues/95#issuecomment-6307156975",
+  "known_load_issue": "https://github.com/pirl-unc/hitlist/issues/762",
+  "native_numeric_issue": {
+    "number": 751,
+    "state": "closed",
+    "scope": "Existing native populated values materialized; not a recovery of omitted peptide intensities"
+  },
+  "decision": "Use existing upstream requests; do not duplicate issue or relabel detection count as quantitative peptide signal. Existing comment already requires raw/normalized separation, experiment-level lineage, missingness and observation-model limits."
+}

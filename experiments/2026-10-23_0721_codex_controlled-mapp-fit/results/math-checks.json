@@ -1,0 +1,23 @@
+{
+  "passed": true,
+  "biological_inputs_used": false,
+  "finite_difference_max_absolute_error": 8.207255708381211e-11,
+  "analytic_max_absolute_error": 5.551115123125783e-17,
+  "exhaustive_two_draw_LOO_max_absolute_error": 4.163336342344337e-17,
+  "monte_carlo_groups": 4096,
+  "monte_carlo_draws_per_group": 32,
+  "monte_carlo_standard_errors": [
+    0.0003788024268349017,
+    0.0005034226887614826,
+    0.0006510850147355401,
+    0.0013593757891659805
+  ],
+  "monte_carlo_mean_error_zscores": [
+    0.11333857453967343,
+    0.37127593341794357,
+    0.3170164465652144,
+    0.5678382669331289
+  ],
+  "prospective_tolerance": "each coordinate < 6 Monte Carlo standard errors; exhaustive expectation atol1e-12",
+  "wall_seconds": 0.36094087501987815
+}

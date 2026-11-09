@@ -1,0 +1,521 @@
+{
+  "status": "prepared",
+  "source_family": "2026-10-27_2255_codex_shared-multi-assay-scale",
+  "prior_training_observations": 134561,
+  "prior_source_root": "/Users/iskander/code/presto/.worktrees/shared-training/presto/artifacts/2026-10-27_2255_codex_shared-multi-assay-scale/upload/inputs",
+  "split_salt": "2026-10-28-assay-transfer-mechanisms-v1",
+  "component_count": 24792,
+  "largest_components": [
+    [
+      "e67ec1d75d6892005e46fa91b843bf3d2a3b7a2c911b7e8bdf53a1188317f5a7",
+      46
+    ],
+    [
+      "26184a8d224bdaacddc38f789577c3865252e6e833a1d81131b1a45fd949fc6b",
+      44
+    ],
+    [
+      "2d833c130ea5a62059b67708ca8bb60354bb0bdcc6d7e3c7d3d2ed203de24b8d",
+      40
+    ],
+    [
+      "24b6aa1fc530bb6fa53f571d756cab03ed0059ca0a7d0faa489ffff7e80691bf",
+      40
+    ],
+    [
+      "c91bbcd2075dc08aec539dac0299232b461bb371390feb2c58752558ebda9077",
+      39
+    ],
+    [
+      "f9dede6938e9bede09ced03dc0290b7a1844839bcee27ae622a1ace83c3d22ff",
+      39
+    ],
+    [
+      "1af3138e8d7e9e365ca3bdfe7e782da453eba189f3676be4a572eb9432a40a2b",
+      39
+    ],
+    [
+      "643774811889ea966c1da3e27dce6c778ff2d46c90d07f891e82f6f624ad81eb",
+      39
+    ],
+    [
+      "e864678dd923178a307f49618debfc8c67bafa84936a2830ea2263f8e5caac01",
+      39
+    ],
+    [
+      "62b375bb0a51dc0a2c5433d5e2a4a2fd9dc1b0789e7273ba59ef133c286af4c7",
+      38
+    ]
+  ],
+  "counts": [
+    {
+      "split": "test",
+      "endpoint": "ec50",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 27
+    },
+    {
+      "split": "test",
+      "endpoint": "ec50",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 2
+    },
+    {
+      "split": "test",
+      "endpoint": "half_life",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 815
+    },
+    {
+      "split": "test",
+      "endpoint": "half_life",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 3
+    },
+    {
+      "split": "test",
+      "endpoint": "ic50",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 1476
+    },
+    {
+      "split": "test",
+      "endpoint": "ic50",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 28
+    },
+    {
+      "split": "test",
+      "endpoint": "ic50",
+      "mhc_class": "I",
+      "qualifier": ">=",
+      "n": 12
+    },
+    {
+      "split": "test",
+      "endpoint": "ic50",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 683
+    },
+    {
+      "split": "test",
+      "endpoint": "ic50",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 89
+    },
+    {
+      "split": "test",
+      "endpoint": "kd",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 405
+    },
+    {
+      "split": "test",
+      "endpoint": "kd",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 1238
+    },
+    {
+      "split": "test",
+      "endpoint": "kd",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 35
+    },
+    {
+      "split": "test",
+      "endpoint": "kd",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 13
+    },
+    {
+      "split": "test",
+      "endpoint": "kd_via_ec50",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 972
+    },
+    {
+      "split": "test",
+      "endpoint": "kd_via_ec50",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 2218
+    },
+    {
+      "split": "test",
+      "endpoint": "kd_via_ec50",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 1211
+    },
+    {
+      "split": "test",
+      "endpoint": "kd_via_ec50",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 365
+    },
+    {
+      "split": "test",
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 4105
+    },
+    {
+      "split": "test",
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 243
+    },
+    {
+      "split": "test",
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 58
+    },
+    {
+      "split": "test",
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 6
+    },
+    {
+      "split": "train",
+      "endpoint": "ec50",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 243
+    },
+    {
+      "split": "train",
+      "endpoint": "ec50",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 17
+    },
+    {
+      "split": "train",
+      "endpoint": "half_life",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 6135
+    },
+    {
+      "split": "train",
+      "endpoint": "half_life",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 6
+    },
+    {
+      "split": "train",
+      "endpoint": "half_life",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 11
+    },
+    {
+      "split": "train",
+      "endpoint": "ic50",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 11466
+    },
+    {
+      "split": "train",
+      "endpoint": "ic50",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 606
+    },
+    {
+      "split": "train",
+      "endpoint": "ic50",
+      "mhc_class": "I",
+      "qualifier": ">=",
+      "n": 113
+    },
+    {
+      "split": "train",
+      "endpoint": "ic50",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 5955
+    },
+    {
+      "split": "train",
+      "endpoint": "ic50",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 837
+    },
+    {
+      "split": "train",
+      "endpoint": "kd",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 3311
+    },
+    {
+      "split": "train",
+      "endpoint": "kd",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 8290
+    },
+    {
+      "split": "train",
+      "endpoint": "kd",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 280
+    },
+    {
+      "split": "train",
+      "endpoint": "kd",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 46
+    },
+    {
+      "split": "train",
+      "endpoint": "kd_via_ec50",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 7270
+    },
+    {
+      "split": "train",
+      "endpoint": "kd_via_ec50",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 17020
+    },
+    {
+      "split": "train",
+      "endpoint": "kd_via_ec50",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 8941
+    },
+    {
+      "split": "train",
+      "endpoint": "kd_via_ec50",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 2248
+    },
+    {
+      "split": "train",
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 31726
+    },
+    {
+      "split": "train",
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 1644
+    },
+    {
+      "split": "train",
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "I",
+      "qualifier": ">=",
+      "n": 2
+    },
+    {
+      "split": "train",
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 774
+    },
+    {
+      "split": "train",
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 189
+    },
+    {
+      "split": "train",
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "II",
+      "qualifier": ">=",
+      "n": 2
+    },
+    {
+      "split": "validation",
+      "endpoint": "ec50",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 18
+    },
+    {
+      "split": "validation",
+      "endpoint": "half_life",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 700
+    },
+    {
+      "split": "validation",
+      "endpoint": "half_life",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 1
+    },
+    {
+      "split": "validation",
+      "endpoint": "ic50",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 1433
+    },
+    {
+      "split": "validation",
+      "endpoint": "ic50",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 103
+    },
+    {
+      "split": "validation",
+      "endpoint": "ic50",
+      "mhc_class": "I",
+      "qualifier": ">=",
+      "n": 9
+    },
+    {
+      "split": "validation",
+      "endpoint": "ic50",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 623
+    },
+    {
+      "split": "validation",
+      "endpoint": "ic50",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 78
+    },
+    {
+      "split": "validation",
+      "endpoint": "ic50",
+      "mhc_class": "II",
+      "qualifier": ">=",
+      "n": 1
+    },
+    {
+      "split": "validation",
+      "endpoint": "kd",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 381
+    },
+    {
+      "split": "validation",
+      "endpoint": "kd",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 1134
+    },
+    {
+      "split": "validation",
+      "endpoint": "kd",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 35
+    },
+    {
+      "split": "validation",
+      "endpoint": "kd",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 13
+    },
+    {
+      "split": "validation",
+      "endpoint": "kd_via_ec50",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 871
+    },
+    {
+      "split": "validation",
+      "endpoint": "kd_via_ec50",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 2277
+    },
+    {
+      "split": "validation",
+      "endpoint": "kd_via_ec50",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 1155
+    },
+    {
+      "split": "validation",
+      "endpoint": "kd_via_ec50",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 298
+    },
+    {
+      "split": "validation",
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 4004
+    },
+    {
+      "split": "validation",
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 216
+    },
+    {
+      "split": "validation",
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 54
+    },
+    {
+      "split": "validation",
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 21
+    }
+  ],
+  "shuffled_rows": 88155,
+  "changed_shuffled_rows": 59943,
+  "membership_sha256": "569ea6653e012148ed3cd6d6d7489e4f577b77f603074ea57162db2bd9a06b98",
+  "permutation_sha256": "988824f3216015268b97bbd707ded26b742cfb2766531878d61a84cddff42622",
+  "data_directory": "/Users/iskander/code/presto/.worktrees/shared-training/presto/data/modular_cohorts/2026-10-28-assay-transfer-mechanisms",
+  "seconds": 21.819770374990185,
+  "scope": "New from-scratch development split of previously used training rows; original heldouts excluded; no external qualification."
+}

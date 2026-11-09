@@ -1,0 +1,69 @@
+{
+  "schema": "presto.unified_parity_receipt_closure_launch.v1",
+  "experiment": "2026-11-08_1800_codex_unified-parity-retrain",
+  "created_utc": "2026-11-09T01:22:09Z",
+  "purpose": "Canonical JSON comparison of the frozen primary and full independent corrected-preflight receipts",
+  "git": {
+    "branch": "codex/post-pr153-unified-retraining-20261108",
+    "source_commit": "368001e0ad13c010092ee8b5feb50ecd19072806",
+    "dirty": false
+  },
+  "source_sha256": {
+    "code/compare_preflight_receipts.py": "0c34fa1b8a48a9195e3f05bc2ec393f82496e1ebfb40697482e81d8ba0963f9c",
+    "reproduce/v5/launch.sh": "96e4936d12866d353fce0ba8dcdb75024440c47490b26ac2ebc816314d293649",
+    "reproduce/v5/collect.sh": "9e7c5025d413b4597e9dfccc2d74ab9a3f7db1389d3e83739788152d1d133878",
+    "reproduce/v5/source/collect.py": "d72e5f417767d29f0e3325a6fad342cfe942c37500e355f425629108678f5cb1"
+  },
+  "receipts": {
+    "primary": {
+      "path": "2026-11-08_1800_codex_unified-parity-retrain/preflight-v2-primary/receipt.json",
+      "bytes": 25681,
+      "sha256": "6efe6b3f64cbff080f9b03b9dce0ca1906a008d487fee3bd7d9eb8532ac6aaa2",
+      "status": "passed"
+    },
+    "independent": {
+      "path": "2026-11-08_1800_codex_unified-parity-retrain/preflight-v2-verification-r2/receipt.json",
+      "bytes": 26182,
+      "sha256": "fdce01321abedf12f0e3aa961f0bd8ab93bade1896a101bc65530d6015178326",
+      "condition_status": "both passed",
+      "raw_status": "failed on live-Python versus JSON-loaded reference/model comparison"
+    }
+  },
+  "comparison": {
+    "normalization": "canonical JSON with sorted keys, compact separators and allow_nan=false",
+    "exact_condition_keys": [
+      "rows",
+      "partitions",
+      "census",
+      "manifest_sha256",
+      "effective_manifest_sha256",
+      "model",
+      "training",
+      "scales",
+      "admission"
+    ],
+    "source_copy_keys": [
+      "bytes",
+      "sha256"
+    ],
+    "runtime_compared": false
+  },
+  "resources": {
+    "cpu": 2,
+    "memory_mib": 4096,
+    "timeout_seconds": 600,
+    "network": "blocked",
+    "requested_gpu": null
+  },
+  "data_access": {
+    "training_rows": false,
+    "validation_rows": false,
+    "test": false,
+    "locked_confirmation": false,
+    "model": false,
+    "predictions": false,
+    "optimizer_steps": 0
+  },
+  "output": "2026-11-08_1800_codex_unified-parity-retrain/preflight-v2-verification-comparison/receipt.json",
+  "launch_command": "PRESTO_EXPERIMENT_DIR=experiments/2026-11-08_1800_codex_unified-parity-retrain modal run --detach experiments/2026-11-08_1800_codex_unified-parity-retrain/code/compare_preflight_receipts.py"
+}

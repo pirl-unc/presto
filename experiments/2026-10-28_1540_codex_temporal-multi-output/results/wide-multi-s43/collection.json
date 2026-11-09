@@ -1,0 +1,27 @@
+{
+  "status": "collected",
+  "condition": "wide-multi-s43",
+  "receipt": {
+    "condition": "wide-multi-s43",
+    "archive": "2026-10-28_1540_codex_temporal-multi-output/revisions/kinetic-review-v2/wide-multi-s43-review.tar.gz",
+    "sha256": "d7bfbfb5dc27a5bb1dd0abe154eb2d3e79c26be0f91f51d4adca77175dff24e1",
+    "bytes": 84277938,
+    "raw_directory": "/volume/2026-10-28_1540_codex_temporal-multi-output/revisions/kinetic-review-v2/wide-multi-s43"
+  },
+  "directory": "/Users/iskander/code/presto/artifacts/2026-10-28_1540_codex_temporal-multi-output/collected/wide-multi-s43",
+  "predictions": {
+    "train": {
+      "path": "/Users/iskander/code/presto/artifacts/2026-10-28_1540_codex_temporal-multi-output/collected/wide-multi-s43/train-predictions.jsonl.gz",
+      "sha256": "785bcf66e5bf63596146c06c599a56d42fb4ff6a73f38125ae64308a44fb4dd9"
+    },
+    "validation": {
+      "path": "/Users/iskander/code/presto/artifacts/2026-10-28_1540_codex_temporal-multi-output/collected/wide-multi-s43/validation-predictions.jsonl.gz",
+      "sha256": "cddbd41234a8a417aafb5cb29dc2c80af7d41594ebd08ca4e078aac274ce94ae"
+    },
+    "test": {
+      "path": "/Users/iskander/code/presto/artifacts/2026-10-28_1540_codex_temporal-multi-output/collected/wide-multi-s43/test-predictions.jsonl.gz",
+      "sha256": "71cba720145e336bc1365c992114fd7c256c116cc631c131904215013ca86e3a"
+    }
+  },
+  "collected_unix": 1793295235.3128371
+}

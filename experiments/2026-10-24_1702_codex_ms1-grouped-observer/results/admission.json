@@ -1,0 +1,73 @@
+{
+  "status": "admitted",
+  "argv": [
+    "experiments/2026-10-24_1702_codex_ms1-grouped-observer/code/admit.py"
+  ],
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "data_directory": "/private/tmp/presto-modular-model/data/measured_ms1_grouped_observer/2026-10-24_1702_canonical",
+  "coverage": {
+    "n_examples": 12877,
+    "n_pools": 24,
+    "examples_per_pool": {
+      "TUM_HLA2_130": 445,
+      "TUM_HLA_90": 631,
+      "TUM_HLA_137": 736,
+      "TUM_HLA_76": 738,
+      "TUM_HLA_63": 777,
+      "TUM_HLA_147": 782,
+      "TUM_HLA_112": 845,
+      "TUM_HLA2_135": 478,
+      "TUM_HLA_173": 749,
+      "TUM_HLA_104": 668,
+      "TUM_HLA_109": 442,
+      "TUM_HLA2_112": 374,
+      "TUM_HLA_91": 646,
+      "TUM_HLA_37": 707,
+      "TUM_HLA2_4": 446,
+      "TUM_HLA2_125": 479,
+      "TUM_HLA2_127": 484,
+      "TUM_HLA2_64": 184,
+      "TUM_HLA2_105": 451,
+      "TUM_HLA2_11": 372,
+      "TUM_HLA2_97": 439,
+      "TUM_HLA_79": 665,
+      "TUM_HLA2_67": 168,
+      "TUM_HLA2_88": 171
+    },
+    "examples_per_split": {
+      "train": 8712,
+      "validation": 2104,
+      "test": 2061
+    }
+  },
+  "source_manifest": {
+    "sha256": "e373789b499fff90bdb34e305642812d8ffc5ceea3d91527d5b467d08031f7f9",
+    "size_bytes": 7799
+  },
+  "recipe_manifest": {
+    "sha256": "0183d91b5e97bcfdecf229900033066e6b524f31ba3ef6c1a1f7de4b5da82c6c",
+    "size_bytes": 5396
+  },
+  "split_files": {
+    "test-covariates.jsonl": {
+      "sha256": "3735b55b7251e93a3b608558cfd09efe62b3d5c4b59aec7433e7d9a883abadb5",
+      "size_bytes": 1012167
+    },
+    "test-targets.jsonl": {
+      "sha256": "d8225d618acc05136588ec4da2b66de65d18f063d07aa332ffd3dd9546de6717",
+      "size_bytes": 273754
+    },
+    "train.jsonl": {
+      "sha256": "e946fa17d48067a75c9cb583d7bebd8abc5fa390d43e87fae1ea3830616123cb",
+      "size_bytes": 4556953
+    },
+    "validation.jsonl": {
+      "sha256": "9b629ad8052ee63c30f03acf375f4c8df2fbe8dc4696a5940b1b51749c870956",
+      "size_bytes": 1103955
+    }
+  },
+  "elapsed_seconds": 39.1795651250286,
+  "peak_rss_gib": 1.7156982421875,
+  "raw_and_package_logical_bytes": 1582596202,
+  "free_disk_bytes": 5265989632
+}

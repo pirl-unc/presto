@@ -1,0 +1,21 @@
+{
+  "family": "2026-10-23_1202_codex_biological-cut-rates",
+  "error": "Shape fraction prose said weighted; code/statistics use pooled counts",
+  "unchanged": [
+    "source values",
+    "predictions",
+    "shape counts",
+    "all fits",
+    "MSE/RMSE",
+    "promotion gates"
+  ],
+  "corrected_labels": [
+    "7.47% pooled ratio observations",
+    "9.59% pooled triplets"
+  ],
+  "source_evidence": "code/shape_constraints.py statistics: count(value>threshold)/len(rows)",
+  "original_report_commit": "1497d9b84fd26c94d5185cfdbf94c8b45a370009",
+  "original_report_sha256": "53562c0eaa20badd99d82978d5c32269c1b3d9aa6b7f247edcb43cd5b91cd653",
+  "corrected_report_sha256": "2cdb9139dac488b2ac8fc981555ae1417500b7692672e9cd577f50f2c49c7573",
+  "prior_closure_manifest_policy": "Retained immutable; hashes refer to original published files at1497d9b. This additive correction receipt records later report prose only."
+}

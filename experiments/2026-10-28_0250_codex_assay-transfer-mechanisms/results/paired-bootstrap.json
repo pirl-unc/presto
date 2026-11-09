@@ -1,0 +1,345 @@
+{
+  "results": [
+    {
+      "variant": "wide-ic50",
+      "baseline": "small-ic50",
+      "split": "validation",
+      "mhc_class": "I",
+      "exact_rows": 1433,
+      "peptide_clusters": 671,
+      "bootstrap_draws": 1000,
+      "spearman_delta_95_percentile": [
+        0.00883302288267327,
+        0.04641155540197704
+      ],
+      "rmse_delta_95_percentile": [
+        -0.053135341268142164,
+        0.0008701964248980309
+      ]
+    },
+    {
+      "variant": "wide-six-natural",
+      "baseline": "wide-ic50",
+      "split": "validation",
+      "mhc_class": "I",
+      "exact_rows": 1433,
+      "peptide_clusters": 671,
+      "bootstrap_draws": 1000,
+      "spearman_delta_95_percentile": [
+        -0.009402724009644769,
+        0.04044770771683414
+      ],
+      "rmse_delta_95_percentile": [
+        -0.07740677017664381,
+        0.0011465055530553775
+      ]
+    },
+    {
+      "variant": "wide-six-class-balanced",
+      "baseline": "wide-six-natural",
+      "split": "validation",
+      "mhc_class": "I",
+      "exact_rows": 1433,
+      "peptide_clusters": 671,
+      "bootstrap_draws": 1000,
+      "spearman_delta_95_percentile": [
+        -0.07052941578969987,
+        -0.026009425326239916
+      ],
+      "rmse_delta_95_percentile": [
+        0.031175709432890518,
+        0.09134471157452755
+      ]
+    },
+    {
+      "variant": "wide-six-primary-matched",
+      "baseline": "wide-six-natural",
+      "split": "validation",
+      "mhc_class": "I",
+      "exact_rows": 1433,
+      "peptide_clusters": 671,
+      "bootstrap_draws": 1000,
+      "spearman_delta_95_percentile": [
+        0.004620251840535351,
+        0.05022053615025358
+      ],
+      "rmse_delta_95_percentile": [
+        -0.06774809346439767,
+        -0.0006110423724563567
+      ]
+    },
+    {
+      "variant": "wide-six-primary-matched",
+      "baseline": "wide-six-primary-shuffled",
+      "split": "validation",
+      "mhc_class": "I",
+      "exact_rows": 1433,
+      "peptide_clusters": 671,
+      "bootstrap_draws": 1000,
+      "spearman_delta_95_percentile": [
+        0.006132893183234341,
+        0.04502266569663841
+      ],
+      "rmse_delta_95_percentile": [
+        -0.05407153161663657,
+        0.0014706057388719415
+      ]
+    },
+    {
+      "variant": "wide-ic50",
+      "baseline": "small-ic50",
+      "split": "validation",
+      "mhc_class": "II",
+      "exact_rows": 623,
+      "peptide_clusters": 96,
+      "bootstrap_draws": 1000,
+      "spearman_delta_95_percentile": [
+        -0.0009973836882496534,
+        0.0640679011428838
+      ],
+      "rmse_delta_95_percentile": [
+        -0.07315281582137262,
+        0.011044036565496794
+      ]
+    },
+    {
+      "variant": "wide-six-natural",
+      "baseline": "wide-ic50",
+      "split": "validation",
+      "mhc_class": "II",
+      "exact_rows": 623,
+      "peptide_clusters": 96,
+      "bootstrap_draws": 1000,
+      "spearman_delta_95_percentile": [
+        -0.18270386340964967,
+        -0.0833725706602949
+      ],
+      "rmse_delta_95_percentile": [
+        0.02327622523355482,
+        0.11899623919074145
+      ]
+    },
+    {
+      "variant": "wide-six-class-balanced",
+      "baseline": "wide-six-natural",
+      "split": "validation",
+      "mhc_class": "II",
+      "exact_rows": 623,
+      "peptide_clusters": 96,
+      "bootstrap_draws": 1000,
+      "spearman_delta_95_percentile": [
+        0.02805790556374928,
+        0.1134202156220058
+      ],
+      "rmse_delta_95_percentile": [
+        -0.0563852152301535,
+        0.021229930425796156
+      ]
+    },
+    {
+      "variant": "wide-six-primary-matched",
+      "baseline": "wide-six-natural",
+      "split": "validation",
+      "mhc_class": "II",
+      "exact_rows": 623,
+      "peptide_clusters": 96,
+      "bootstrap_draws": 1000,
+      "spearman_delta_95_percentile": [
+        0.0668589419389372,
+        0.16476143527775092
+      ],
+      "rmse_delta_95_percentile": [
+        -0.10484038678143486,
+        -0.02074389668510435
+      ]
+    },
+    {
+      "variant": "wide-six-primary-matched",
+      "baseline": "wide-six-primary-shuffled",
+      "split": "validation",
+      "mhc_class": "II",
+      "exact_rows": 623,
+      "peptide_clusters": 96,
+      "bootstrap_draws": 1000,
+      "spearman_delta_95_percentile": [
+        -0.028327101074003935,
+        0.029301141067151204
+      ],
+      "rmse_delta_95_percentile": [
+        -0.02259931273351967,
+        0.05081013383060835
+      ]
+    },
+    {
+      "variant": "wide-ic50",
+      "baseline": "small-ic50",
+      "split": "test",
+      "mhc_class": "I",
+      "exact_rows": 1476,
+      "peptide_clusters": 630,
+      "bootstrap_draws": 1000,
+      "spearman_delta_95_percentile": [
+        0.006316531761210044,
+        0.055696007849116116
+      ],
+      "rmse_delta_95_percentile": [
+        -0.05372604006691973,
+        0.01686166100924821
+      ]
+    },
+    {
+      "variant": "wide-six-natural",
+      "baseline": "wide-ic50",
+      "split": "test",
+      "mhc_class": "I",
+      "exact_rows": 1476,
+      "peptide_clusters": 630,
+      "bootstrap_draws": 1000,
+      "spearman_delta_95_percentile": [
+        0.01693055534247726,
+        0.07565364340449364
+      ],
+      "rmse_delta_95_percentile": [
+        -0.13467611608160382,
+        -0.049495749747975375
+      ]
+    },
+    {
+      "variant": "wide-six-class-balanced",
+      "baseline": "wide-six-natural",
+      "split": "test",
+      "mhc_class": "I",
+      "exact_rows": 1476,
+      "peptide_clusters": 630,
+      "bootstrap_draws": 1000,
+      "spearman_delta_95_percentile": [
+        -0.07384012542997644,
+        -0.02956427081005414
+      ],
+      "rmse_delta_95_percentile": [
+        0.04802617027004428,
+        0.1061086764654591
+      ]
+    },
+    {
+      "variant": "wide-six-primary-matched",
+      "baseline": "wide-six-natural",
+      "split": "test",
+      "mhc_class": "I",
+      "exact_rows": 1476,
+      "peptide_clusters": 630,
+      "bootstrap_draws": 1000,
+      "spearman_delta_95_percentile": [
+        -0.028834928440404056,
+        0.016657379695734678
+      ],
+      "rmse_delta_95_percentile": [
+        -0.03475415541704382,
+        0.03467813860577064
+      ]
+    },
+    {
+      "variant": "wide-six-primary-matched",
+      "baseline": "wide-six-primary-shuffled",
+      "split": "test",
+      "mhc_class": "I",
+      "exact_rows": 1476,
+      "peptide_clusters": 630,
+      "bootstrap_draws": 1000,
+      "spearman_delta_95_percentile": [
+        0.01201448086783515,
+        0.04929241122443456
+      ],
+      "rmse_delta_95_percentile": [
+        -0.0693666866060545,
+        -0.01777387944689243
+      ]
+    },
+    {
+      "variant": "wide-ic50",
+      "baseline": "small-ic50",
+      "split": "test",
+      "mhc_class": "II",
+      "exact_rows": 683,
+      "peptide_clusters": 108,
+      "bootstrap_draws": 1000,
+      "spearman_delta_95_percentile": [
+        -0.042192146589172794,
+        0.018783708790397594
+      ],
+      "rmse_delta_95_percentile": [
+        -0.01830388518995562,
+        0.046108970114631304
+      ]
+    },
+    {
+      "variant": "wide-six-natural",
+      "baseline": "wide-ic50",
+      "split": "test",
+      "mhc_class": "II",
+      "exact_rows": 683,
+      "peptide_clusters": 108,
+      "bootstrap_draws": 1000,
+      "spearman_delta_95_percentile": [
+        -0.07859004040192608,
+        0.009369454250770298
+      ],
+      "rmse_delta_95_percentile": [
+        -0.04045889615064177,
+        0.040048754083717504
+      ]
+    },
+    {
+      "variant": "wide-six-class-balanced",
+      "baseline": "wide-six-natural",
+      "split": "test",
+      "mhc_class": "II",
+      "exact_rows": 683,
+      "peptide_clusters": 108,
+      "bootstrap_draws": 1000,
+      "spearman_delta_95_percentile": [
+        0.022204213779039157,
+        0.07365514958132872
+      ],
+      "rmse_delta_95_percentile": [
+        -0.03589290226606288,
+        0.02153075237897127
+      ]
+    },
+    {
+      "variant": "wide-six-primary-matched",
+      "baseline": "wide-six-natural",
+      "split": "test",
+      "mhc_class": "II",
+      "exact_rows": 683,
+      "peptide_clusters": 108,
+      "bootstrap_draws": 1000,
+      "spearman_delta_95_percentile": [
+        0.014291345495345147,
+        0.07974630130177005
+      ],
+      "rmse_delta_95_percentile": [
+        -0.039703210634299935,
+        0.03567187558048141
+      ]
+    },
+    {
+      "variant": "wide-six-primary-matched",
+      "baseline": "wide-six-primary-shuffled",
+      "split": "test",
+      "mhc_class": "II",
+      "exact_rows": 683,
+      "peptide_clusters": 108,
+      "bootstrap_draws": 1000,
+      "spearman_delta_95_percentile": [
+        -0.013905068905696517,
+        0.04428167387260638
+      ],
+      "rmse_delta_95_percentile": [
+        -0.025293334404817215,
+        0.031733535197037435
+      ]
+    }
+  ],
+  "scope": "Paired peptide-cluster bootstrap of mean seed effects, conditional on existing development splits; not independent studies or uncertainty over new training seeds."
+}

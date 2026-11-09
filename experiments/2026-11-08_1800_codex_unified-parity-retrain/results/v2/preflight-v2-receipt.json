@@ -1,0 +1,819 @@
+{
+  "conditions": {
+    "parity": {
+      "admission": {
+        "cell_types": [],
+        "census": {
+          "train:ec50:=": 150,
+          "train:ec50:>": 13,
+          "train:elution_observation:=": 1349378,
+          "train:ic50:<=": 2327,
+          "train:ic50:=": 168331,
+          "train:ic50:>": 4304,
+          "train:ic50:>=": 19605,
+          "train:kd:=": 1237,
+          "train:kd:>": 212,
+          "train:kd_via_ec50:=": 10830,
+          "train:kd_via_ec50:>": 25626,
+          "train:kd_via_ec50:>=": 51,
+          "train:kd_via_ic50:<=": 10,
+          "train:kd_via_ic50:=": 65790,
+          "train:kd_via_ic50:>": 4693,
+          "train:kd_via_ic50:>=": 360,
+          "validation:ec50:=": 69,
+          "validation:elution_observation:=": 48530,
+          "validation:ic50:=": 1339,
+          "validation:ic50:>": 65,
+          "validation:ic50:>=": 193,
+          "validation:kd_via_ec50:=": 458,
+          "validation:kd_via_ec50:>": 70,
+          "validation:kd_via_ic50:=": 329,
+          "validation:kd_via_ic50:>": 13
+        },
+        "component_states": {},
+        "context_assertion_states": {
+          "intervention": {},
+          "pathway": {}
+        },
+        "cytokine_numeric": {},
+        "cytokine_states": {},
+        "frozen_parameters": [],
+        "frozen_targets": [],
+        "inherited_scalers": [
+          "ec50",
+          "ic50",
+          "kd",
+          "kd_via_ec50",
+          "kd_via_ic50"
+        ],
+        "manifest_sha256": "8259d1ec1b59430d7078174a7718d8b7157e351a0261e70384996692605bbd7c",
+        "module_pruning": [],
+        "observed_numeric_features": {
+          "acquisition": [],
+          "observation": [],
+          "preparation": []
+        },
+        "ordinal_levels": {},
+        "source_label_values": {},
+        "training_labels": {
+          "ec50": 163,
+          "elution_observation": 1349378,
+          "ic50": 194567,
+          "kd": 1449,
+          "kd_via_ec50": 36507,
+          "kd_via_ic50": 70853
+        }
+      },
+      "census": {
+        "train:ec50:=": 150,
+        "train:ec50:>": 13,
+        "train:elution_observation:=": 1349378,
+        "train:ic50:<=": 2327,
+        "train:ic50:=": 168331,
+        "train:ic50:>": 4304,
+        "train:ic50:>=": 19605,
+        "train:kd:=": 1237,
+        "train:kd:>": 212,
+        "train:kd_via_ec50:=": 10830,
+        "train:kd_via_ec50:>": 25626,
+        "train:kd_via_ec50:>=": 51,
+        "train:kd_via_ic50:<=": 10,
+        "train:kd_via_ic50:=": 65790,
+        "train:kd_via_ic50:>": 4693,
+        "train:kd_via_ic50:>=": 360,
+        "validation:ec50:=": 69,
+        "validation:elution_observation:=": 48530,
+        "validation:ic50:=": 1339,
+        "validation:ic50:>": 65,
+        "validation:ic50:>=": 193,
+        "validation:kd_via_ec50:=": 458,
+        "validation:kd_via_ec50:>": 70,
+        "validation:kd_via_ic50:=": 329,
+        "validation:kd_via_ic50:>": 13
+      },
+      "effective_manifest_path": "2026-11-08_1800_codex_unified-parity-retrain/preflight-v2-primary/parity/manifest.json",
+      "effective_manifest_sha256": "8259d1ec1b59430d7078174a7718d8b7157e351a0261e70384996692605bbd7c",
+      "elapsed_seconds": 507.48882844799994,
+      "manifest_sha256": "8259d1ec1b59430d7078174a7718d8b7157e351a0261e70384996692605bbd7c",
+      "model": {
+        "acquisition_features": [],
+        "acquisition_units": {},
+        "assay_mode": "factorized",
+        "assay_tracks": [
+          {
+            "detector": "fluorescence",
+            "endpoint": "ec50",
+            "mechanism": "direct",
+            "preparation": "purified"
+          },
+          {
+            "detector": "fluorescence",
+            "endpoint": "ic50",
+            "mechanism": "competitive",
+            "preparation": "purified"
+          },
+          {
+            "detector": "radioactivity",
+            "endpoint": "ic50",
+            "mechanism": "competitive",
+            "preparation": "purified"
+          },
+          {
+            "detector": "fluorescence",
+            "endpoint": "kd",
+            "mechanism": "competitive",
+            "preparation": "purified"
+          },
+          {
+            "detector": "radioactivity",
+            "endpoint": "kd",
+            "mechanism": "competitive",
+            "preparation": "purified"
+          },
+          {
+            "detector": "radioactivity",
+            "endpoint": "kd",
+            "mechanism": "direct",
+            "preparation": "purified"
+          },
+          {
+            "detector": "fluorescence",
+            "endpoint": "kd_via_ec50",
+            "mechanism": "direct",
+            "preparation": "purified"
+          },
+          {
+            "detector": "fluorescence",
+            "endpoint": "kd_via_ic50",
+            "mechanism": "competitive",
+            "preparation": "purified"
+          },
+          {
+            "detector": "radioactivity",
+            "endpoint": "kd_via_ic50",
+            "mechanism": "competitive",
+            "preparation": "purified"
+          }
+        ],
+        "auxiliary_context": [],
+        "cell_types": [],
+        "component_activity_units": {},
+        "components": [],
+        "context_species": [],
+        "cytokine_dose_units": {},
+        "cytokine_duration_features": [],
+        "cytokines": [],
+        "d_ff": 512,
+        "d_model": 128,
+        "dropout": 0.1,
+        "elution_affinity_endpoint": "ic50",
+        "elution_detach_affinity": false,
+        "elution_staging": "affinity_downstream",
+        "endpoints": [
+          "ec50",
+          "ic50",
+          "kd",
+          "kd_via_ec50",
+          "kd_via_ic50",
+          "elution_observation"
+        ],
+        "enzymes": [],
+        "identity_tasks": [],
+        "identity_threshold": 0.8,
+        "interventions": [],
+        "machinery_profiles": {},
+        "machinery_references": [],
+        "max_length": 512,
+        "mhc_classes": [
+          "I",
+          "II"
+        ],
+        "n_heads": 4,
+        "n_layers": 2,
+        "observation_features": [],
+        "observation_units": {},
+        "ordinal_scales": {},
+        "peptide_context": "shared_core_context_v2",
+        "preparation_features": [],
+        "preparation_units": {},
+        "processing_pathways": [],
+        "quantity_domains": {},
+        "register_pooling": true,
+        "source_categories": [],
+        "source_context": true,
+        "species": [],
+        "species_defaults": true
+      },
+      "partitions": {
+        "train:assay": 1652917,
+        "validation:assay": 51066
+      },
+      "rows": 1703983,
+      "scales": {
+        "ec50": {
+          "exact_count": 155,
+          "floor": 0.001,
+          "mean": 2.346593308199416,
+          "scale": 1.1865124231540765
+        },
+        "ic50": {
+          "exact_count": 48589,
+          "floor": 0.001,
+          "mean": 2.8340331315105654,
+          "scale": 1.2391689894018834
+        },
+        "kd": {
+          "exact_count": 1267,
+          "floor": 0.001,
+          "mean": 2.9278778219473054,
+          "scale": 1.0347258953724063
+        },
+        "kd_via_ec50": {
+          "exact_count": 11051,
+          "floor": 0.001,
+          "mean": 2.2806303460923067,
+          "scale": 1.1518801709590498
+        },
+        "kd_via_ic50": {
+          "exact_count": 66911,
+          "floor": 0.001,
+          "mean": 2.686728216103016,
+          "scale": 1.367380174838496
+        }
+      },
+      "status": "passed",
+      "training": {
+        "balance_by": [
+          "endpoint",
+          "mhc_class"
+        ],
+        "batch_size": 128,
+        "checkpoint_every_steps": 500,
+        "coverage_exception_reason": null,
+        "coverage_policy": "required",
+        "identity_batch_size": 64,
+        "identity_weight": 0.0,
+        "learning_rate": 0.0003,
+        "lr_schedule": {
+          "decay": "cosine",
+          "decay_steps": 5000,
+          "min_lr_fraction": 0.05,
+          "warmup_steps": 300
+        },
+        "max_epochs": 100000,
+        "max_steps": 5000,
+        "min_epochs": 10,
+        "no_test_reason": "Development Stage B joint-replay selection only. Confirmation stays locked unless all paired comparator and affinity-retention gates pass.",
+        "patience": 15,
+        "seed": 42,
+        "selection_endpoint": "elution_observation",
+        "selection_reduction": "study_mean",
+        "stratum_weights": [
+          {
+            "values": [
+              "ec50",
+              "I"
+            ],
+            "weight": 0.00817535357840644
+          },
+          {
+            "values": [
+              "ec50",
+              "II"
+            ],
+            "weight": 0.005550032921950173
+          },
+          {
+            "values": [
+              "ic50",
+              "I"
+            ],
+            "weight": 0.25
+          },
+          {
+            "values": [
+              "ic50",
+              "II"
+            ],
+            "weight": 0.25
+          },
+          {
+            "values": [
+              "kd",
+              "I"
+            ],
+            "weight": 0.004175593874928233
+          },
+          {
+            "values": [
+              "kd",
+              "II"
+            ],
+            "weight": 0.029089637678126543
+          },
+          {
+            "values": [
+              "kd_via_ec50",
+              "I"
+            ],
+            "weight": 0.14386925731322356
+          },
+          {
+            "values": [
+              "kd_via_ec50",
+              "II"
+            ],
+            "weight": 0.025897660239503142
+          },
+          {
+            "values": [
+              "kd_via_ic50",
+              "I"
+            ],
+            "weight": 0.1721371377011087
+          },
+          {
+            "values": [
+              "kd_via_ic50",
+              "II"
+            ],
+            "weight": 0.11110532669275326
+          },
+          {
+            "values": [
+              "elution_observation",
+              "I"
+            ],
+            "weight": 1.0
+          }
+        ],
+        "test_policy": "no_test_training_diagnostic",
+        "train_evaluation_max_rows": 2048,
+        "validation_every_steps": 500,
+        "weight_decay": 0.0001
+      }
+    },
+    "reference": {
+      "admission": {
+        "cell_types": [],
+        "census": {
+          "train:ec50:=": 150,
+          "train:ec50:>": 13,
+          "train:elution_observation:=": 1349378,
+          "train:ic50:<=": 14,
+          "train:ic50:=": 46978,
+          "train:ic50:>": 4304,
+          "train:ic50:>=": 58,
+          "train:kd:=": 1237,
+          "train:kd:>": 212,
+          "train:kd_via_ec50:=": 10830,
+          "train:kd_via_ec50:>": 25626,
+          "train:kd_via_ec50:>=": 51,
+          "train:kd_via_ic50:<=": 10,
+          "train:kd_via_ic50:=": 65790,
+          "train:kd_via_ic50:>": 4693,
+          "train:kd_via_ic50:>=": 360,
+          "validation:ec50:=": 69,
+          "validation:elution_observation:=": 48530,
+          "validation:ic50:=": 1339,
+          "validation:ic50:>": 65,
+          "validation:ic50:>=": 193,
+          "validation:kd_via_ec50:=": 458,
+          "validation:kd_via_ec50:>": 70,
+          "validation:kd_via_ic50:=": 329,
+          "validation:kd_via_ic50:>": 13
+        },
+        "component_states": {},
+        "context_assertion_states": {
+          "intervention": {},
+          "pathway": {}
+        },
+        "cytokine_numeric": {},
+        "cytokine_states": {},
+        "frozen_parameters": [],
+        "frozen_targets": [],
+        "inherited_scalers": [
+          "ec50",
+          "ic50",
+          "kd",
+          "kd_via_ec50",
+          "kd_via_ic50"
+        ],
+        "manifest_sha256": "e2724c0ba873a98fa15f90c6ccc06013f320e65eb8968af0400bf7722e6db16d",
+        "module_pruning": [],
+        "observed_numeric_features": {
+          "acquisition": [],
+          "observation": [],
+          "preparation": []
+        },
+        "ordinal_levels": {},
+        "source_label_values": {},
+        "training_labels": {
+          "ec50": 163,
+          "elution_observation": 1349378,
+          "ic50": 51354,
+          "kd": 1449,
+          "kd_via_ec50": 36507,
+          "kd_via_ic50": 70853
+        }
+      },
+      "census": {
+        "train:ec50:=": 150,
+        "train:ec50:>": 13,
+        "train:elution_observation:=": 1349378,
+        "train:ic50:<=": 14,
+        "train:ic50:=": 46978,
+        "train:ic50:>": 4304,
+        "train:ic50:>=": 58,
+        "train:kd:=": 1237,
+        "train:kd:>": 212,
+        "train:kd_via_ec50:=": 10830,
+        "train:kd_via_ec50:>": 25626,
+        "train:kd_via_ec50:>=": 51,
+        "train:kd_via_ic50:<=": 10,
+        "train:kd_via_ic50:=": 65790,
+        "train:kd_via_ic50:>": 4693,
+        "train:kd_via_ic50:>=": 360,
+        "validation:ec50:=": 69,
+        "validation:elution_observation:=": 48530,
+        "validation:ic50:=": 1339,
+        "validation:ic50:>": 65,
+        "validation:ic50:>=": 193,
+        "validation:kd_via_ec50:=": 458,
+        "validation:kd_via_ec50:>": 70,
+        "validation:kd_via_ic50:=": 329,
+        "validation:kd_via_ic50:>": 13
+      },
+      "effective_manifest_path": "2026-11-08_1800_codex_unified-parity-retrain/preflight-v2-primary/reference/manifest.json",
+      "effective_manifest_sha256": "e2724c0ba873a98fa15f90c6ccc06013f320e65eb8968af0400bf7722e6db16d",
+      "elapsed_seconds": 493.586488702,
+      "manifest_sha256": "e2724c0ba873a98fa15f90c6ccc06013f320e65eb8968af0400bf7722e6db16d",
+      "model": {
+        "acquisition_features": [],
+        "acquisition_units": {},
+        "assay_mode": "factorized",
+        "assay_tracks": [
+          {
+            "detector": "fluorescence",
+            "endpoint": "ec50",
+            "mechanism": "direct",
+            "preparation": "purified"
+          },
+          {
+            "detector": "fluorescence",
+            "endpoint": "ic50",
+            "mechanism": "competitive",
+            "preparation": "purified"
+          },
+          {
+            "detector": "radioactivity",
+            "endpoint": "ic50",
+            "mechanism": "competitive",
+            "preparation": "purified"
+          },
+          {
+            "detector": "fluorescence",
+            "endpoint": "kd",
+            "mechanism": "competitive",
+            "preparation": "purified"
+          },
+          {
+            "detector": "radioactivity",
+            "endpoint": "kd",
+            "mechanism": "competitive",
+            "preparation": "purified"
+          },
+          {
+            "detector": "radioactivity",
+            "endpoint": "kd",
+            "mechanism": "direct",
+            "preparation": "purified"
+          },
+          {
+            "detector": "fluorescence",
+            "endpoint": "kd_via_ec50",
+            "mechanism": "direct",
+            "preparation": "purified"
+          },
+          {
+            "detector": "fluorescence",
+            "endpoint": "kd_via_ic50",
+            "mechanism": "competitive",
+            "preparation": "purified"
+          },
+          {
+            "detector": "radioactivity",
+            "endpoint": "kd_via_ic50",
+            "mechanism": "competitive",
+            "preparation": "purified"
+          }
+        ],
+        "auxiliary_context": [],
+        "cell_types": [],
+        "component_activity_units": {},
+        "components": [],
+        "context_species": [],
+        "cytokine_dose_units": {},
+        "cytokine_duration_features": [],
+        "cytokines": [],
+        "d_ff": 512,
+        "d_model": 128,
+        "dropout": 0.1,
+        "elution_affinity_endpoint": "ic50",
+        "elution_detach_affinity": false,
+        "elution_staging": "affinity_downstream",
+        "endpoints": [
+          "ec50",
+          "ic50",
+          "kd",
+          "kd_via_ec50",
+          "kd_via_ic50",
+          "elution_observation"
+        ],
+        "enzymes": [],
+        "identity_tasks": [],
+        "identity_threshold": 0.8,
+        "interventions": [],
+        "machinery_profiles": {},
+        "machinery_references": [],
+        "max_length": 512,
+        "mhc_classes": [
+          "I",
+          "II"
+        ],
+        "n_heads": 4,
+        "n_layers": 2,
+        "observation_features": [],
+        "observation_units": {},
+        "ordinal_scales": {},
+        "peptide_context": "shared_core_context_v2",
+        "preparation_features": [],
+        "preparation_units": {},
+        "processing_pathways": [],
+        "quantity_domains": {},
+        "register_pooling": true,
+        "source_categories": [],
+        "source_context": true,
+        "species": [],
+        "species_defaults": true
+      },
+      "partitions": {
+        "train:assay": 1509704,
+        "validation:assay": 51066
+      },
+      "rows": 1560770,
+      "scales": {
+        "ec50": {
+          "exact_count": 155,
+          "floor": 0.001,
+          "mean": 2.346593308199416,
+          "scale": 1.1865124231540765
+        },
+        "ic50": {
+          "exact_count": 48589,
+          "floor": 0.001,
+          "mean": 2.8340331315105654,
+          "scale": 1.2391689894018834
+        },
+        "kd": {
+          "exact_count": 1267,
+          "floor": 0.001,
+          "mean": 2.9278778219473054,
+          "scale": 1.0347258953724063
+        },
+        "kd_via_ec50": {
+          "exact_count": 11051,
+          "floor": 0.001,
+          "mean": 2.2806303460923067,
+          "scale": 1.1518801709590498
+        },
+        "kd_via_ic50": {
+          "exact_count": 66911,
+          "floor": 0.001,
+          "mean": 2.686728216103016,
+          "scale": 1.367380174838496
+        }
+      },
+      "status": "passed",
+      "training": {
+        "balance_by": [
+          "endpoint",
+          "mhc_class"
+        ],
+        "batch_size": 128,
+        "checkpoint_every_steps": 500,
+        "coverage_exception_reason": null,
+        "coverage_policy": "required",
+        "identity_batch_size": 64,
+        "identity_weight": 0.0,
+        "learning_rate": 0.0003,
+        "lr_schedule": {
+          "decay": "cosine",
+          "decay_steps": 5000,
+          "min_lr_fraction": 0.05,
+          "warmup_steps": 300
+        },
+        "max_epochs": 100000,
+        "max_steps": 5000,
+        "min_epochs": 10,
+        "no_test_reason": "Development Stage B joint-replay selection only. Confirmation stays locked unless all paired comparator and affinity-retention gates pass.",
+        "patience": 15,
+        "seed": 42,
+        "selection_endpoint": "elution_observation",
+        "selection_reduction": "study_mean",
+        "stratum_weights": [
+          {
+            "values": [
+              "ec50",
+              "I"
+            ],
+            "weight": 0.00817535357840644
+          },
+          {
+            "values": [
+              "ec50",
+              "II"
+            ],
+            "weight": 0.005550032921950173
+          },
+          {
+            "values": [
+              "ic50",
+              "I"
+            ],
+            "weight": 0.25
+          },
+          {
+            "values": [
+              "ic50",
+              "II"
+            ],
+            "weight": 0.25
+          },
+          {
+            "values": [
+              "kd",
+              "I"
+            ],
+            "weight": 0.004175593874928233
+          },
+          {
+            "values": [
+              "kd",
+              "II"
+            ],
+            "weight": 0.029089637678126543
+          },
+          {
+            "values": [
+              "kd_via_ec50",
+              "I"
+            ],
+            "weight": 0.14386925731322356
+          },
+          {
+            "values": [
+              "kd_via_ec50",
+              "II"
+            ],
+            "weight": 0.025897660239503142
+          },
+          {
+            "values": [
+              "kd_via_ic50",
+              "I"
+            ],
+            "weight": 0.1721371377011087
+          },
+          {
+            "values": [
+              "kd_via_ic50",
+              "II"
+            ],
+            "weight": 0.11110532669275326
+          },
+          {
+            "values": [
+              "elution_observation",
+              "I"
+            ],
+            "weight": 1.0
+          }
+        ],
+        "test_policy": "no_test_training_diagnostic",
+        "train_evaluation_max_rows": 2048,
+        "validation_every_steps": 500,
+        "weight_decay": 0.0001
+      }
+    }
+  },
+  "experiment": "2026-11-08_1800_codex_unified-parity-retrain",
+  "independent_verification": false,
+  "locked_confirmation_accessed": false,
+  "matched_contract": true,
+  "model_predictions_created": false,
+  "observed_gpu": null,
+  "optimizer_steps": 0,
+  "parent": {
+    "bytes": 3910569,
+    "path": "2026-11-07_1915_codex_unified-presentation/stage-a/raw/selected.pt",
+    "sha256": "e6cc6fbb9950ace32efe418bfa96b119e1b94f0399e6843db0a16b0208937c06"
+  },
+  "requested_gpu": null,
+  "resources": {
+    "cpu": 8,
+    "elapsed_seconds": 1010.1957254380001,
+    "ephemeral_disk_mib": 524288,
+    "memory_mib": 32768,
+    "peak_rss_bytes": 4817805312
+  },
+  "schema": "presto.unified_parity_preflight.v2",
+  "setup_error": null,
+  "source_commit": "87ed541daf6a5a0f9319b2667b03cd005e2afdc0",
+  "source_copies": {
+    "concentrations-s42-concentrations-s42-train.jsonl": {
+      "bytes": 836622693,
+      "elapsed_seconds": 1.3077097710000007,
+      "scratch_path": "/tmp/presto-unified-parity-v2-input/concentrations-s42-concentrations-s42-train.jsonl",
+      "sha256": "8593fbd416a489b46397c4fae288d5916ad55d2febec7f7798bc4bb3f788ec1c",
+      "source_path": "2026-11-07_1915_codex_unified-presentation/prepared-v2/concentrations-s42-concentrations-s42-train.jsonl"
+    },
+    "concentrations-s42-concentrations-s42-validation.jsonl": {
+      "bytes": 12196679,
+      "elapsed_seconds": 0.07334899799999839,
+      "scratch_path": "/tmp/presto-unified-parity-v2-input/concentrations-s42-concentrations-s42-validation.jsonl",
+      "sha256": "08e41a6c006274b5929142fc6bd4687a289a08df9cc5212edd92399f907f2f8a",
+      "source_path": "2026-11-07_1915_codex_unified-presentation/prepared-v2/concentrations-s42-concentrations-s42-validation.jsonl"
+    },
+    "netmhciipan43-ba-train.jsonl": {
+      "bytes": 112640875,
+      "elapsed_seconds": 0.36854100199999884,
+      "scratch_path": "/tmp/presto-unified-parity-v2-input/netmhciipan43-ba-train.jsonl",
+      "sha256": "9fe752274c895cb4cd46e36dfeff43a3db73e0c96fa24ba495e1fcfd7f24c66a",
+      "source_path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared-v2/netmhciipan43-ba-train.jsonl"
+    },
+    "netmhcpan42-ba-train.jsonl": {
+      "bytes": 141870035,
+      "elapsed_seconds": 0.25814855900000033,
+      "scratch_path": "/tmp/presto-unified-parity-v2-input/netmhcpan42-ba-train.jsonl",
+      "sha256": "2c007e6b46a99835f95ec612aeb498f4e52940aa81c22809ad48b5e922d6d0ca",
+      "source_path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared-v2/netmhcpan42-ba-train.jsonl"
+    },
+    "presentation-train.jsonl": {
+      "bytes": 5977683393,
+      "elapsed_seconds": 6.336318027,
+      "scratch_path": "/tmp/presto-unified-parity-v2-input/presentation-train.jsonl",
+      "sha256": "6609ee375f6bb117f19035560daa6cf50a63b9c229fa46ae24e773afebdda2fc",
+      "source_path": "2026-11-07_1915_codex_unified-presentation/prepared-v2/presentation-train.jsonl"
+    },
+    "presentation-val.jsonl": {
+      "bytes": 218542980,
+      "elapsed_seconds": 0.29842109400000005,
+      "scratch_path": "/tmp/presto-unified-parity-v2-input/presentation-val.jsonl",
+      "sha256": "0313b2d6b394320da7dcf6aa9144cbc44b73abe48b16380e03c1b27a9559fc52",
+      "source_path": "2026-11-07_1915_codex_unified-presentation/prepared-v2/presentation-val.jsonl"
+    },
+    "selected-stage-a.pt": {
+      "bytes": 3910569,
+      "elapsed_seconds": 0.04316008300000007,
+      "scratch_path": "/tmp/presto-unified-parity-v2-input/selected-stage-a.pt",
+      "sha256": "e6cc6fbb9950ace32efe418bfa96b119e1b94f0399e6843db0a16b0208937c06",
+      "source_path": "2026-11-07_1915_codex_unified-presentation/stage-a/raw/selected.pt"
+    }
+  },
+  "source_dirty": false,
+  "sources": {
+    "concentrations-s42-concentrations-s42-train.jsonl": {
+      "bytes": 836622693,
+      "path": "2026-11-07_1915_codex_unified-presentation/prepared-v2/concentrations-s42-concentrations-s42-train.jsonl",
+      "sha256": "8593fbd416a489b46397c4fae288d5916ad55d2febec7f7798bc4bb3f788ec1c"
+    },
+    "concentrations-s42-concentrations-s42-validation.jsonl": {
+      "bytes": 12196679,
+      "path": "2026-11-07_1915_codex_unified-presentation/prepared-v2/concentrations-s42-concentrations-s42-validation.jsonl",
+      "sha256": "08e41a6c006274b5929142fc6bd4687a289a08df9cc5212edd92399f907f2f8a"
+    },
+    "netmhciipan43-ba-train.jsonl": {
+      "bytes": 112640875,
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared-v2/netmhciipan43-ba-train.jsonl",
+      "sha256": "9fe752274c895cb4cd46e36dfeff43a3db73e0c96fa24ba495e1fcfd7f24c66a"
+    },
+    "netmhcpan42-ba-train.jsonl": {
+      "bytes": 141870035,
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared-v2/netmhcpan42-ba-train.jsonl",
+      "sha256": "2c007e6b46a99835f95ec612aeb498f4e52940aa81c22809ad48b5e922d6d0ca"
+    },
+    "presentation-train.jsonl": {
+      "bytes": 5977683393,
+      "path": "2026-11-07_1915_codex_unified-presentation/prepared-v2/presentation-train.jsonl",
+      "sha256": "6609ee375f6bb117f19035560daa6cf50a63b9c229fa46ae24e773afebdda2fc"
+    },
+    "presentation-val.jsonl": {
+      "bytes": 218542980,
+      "path": "2026-11-07_1915_codex_unified-presentation/prepared-v2/presentation-val.jsonl",
+      "sha256": "0313b2d6b394320da7dcf6aa9144cbc44b73abe48b16380e03c1b27a9559fc52"
+    }
+  },
+  "status": "passed",
+  "test_accessed": false
+}

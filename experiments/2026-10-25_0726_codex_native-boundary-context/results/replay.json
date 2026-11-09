@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "independent_algorithm": "literal startswith occurrences, augmented SVD least squares, manual ranks, per-draw PCG64 replay",
+  "numerical_values_checked": 149250,
+  "max_absolute_difference": 8.315570454442422e-14,
+  "n_fits": 240,
+  "n_inner_predictions": 9480,
+  "n_oof_predictions": 632,
+  "n_endpoints": 214,
+  "n_bootstrap_draws": 2000,
+  "no_production_core_import": true,
+  "no_outer_rows_materialized": true
+}

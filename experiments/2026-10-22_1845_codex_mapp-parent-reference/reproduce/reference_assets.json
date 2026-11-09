@@ -1,0 +1,20 @@
+{
+  "assets": {
+    "human-reviewed-2023.dat.gz": {
+      "url": "file:///Users/iskander/code/weirdo/data/swissprot-dat-files/uniprot_sprot_human.dat.gz",
+      "size": 108046188,
+      "sha256": "defd9fd7fdc3be6f36b5b57b1a2c29978b956612e1437ec15f7065b055bbe9d3",
+      "decompress": false
+    },
+    "human-reviewed-2026_03-isoforms.fasta": {
+      "url": "https://rest.uniprot.org/uniprotkb/stream?query=%28organism_id%3A9606%29%20AND%20%28reviewed%3Atrue%29&format=fasta&includeIsoform=true",
+      "size": 29338408,
+      "sha256": "8c4459cc1e190caad54150511e5a0b5779863557f88387e5a86647a48d19a9d4",
+      "decompress": false
+    }
+  },
+  "seed_paths": {
+    "human-reviewed-2023.dat.gz": "/Users/iskander/code/weirdo/data/swissprot-dat-files/uniprot_sprot_human.dat.gz",
+    "human-reviewed-2026_03-isoforms.fasta": "/private/tmp/presto-human-reviewed-isoforms.fasta"
+  }
+}

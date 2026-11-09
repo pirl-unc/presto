@@ -1,0 +1,53 @@
+{
+  "files": {
+    "results/analytical/checkpoint.pt": {
+      "bytes": 9018,
+      "sha256": "064e50b52e74bef2c764bef88f203b88da9ceea75b1021a2129bf992b1597d35"
+    },
+    "results/analytical/independent-amounts.npz": {
+      "bytes": 596310,
+      "sha256": "55b264b5b922c6e9cea0d1d18092d32a2b8ba76885b9d1568ff1adbd64774845"
+    },
+    "results/analytical/updates.npz": {
+      "bytes": 598282,
+      "sha256": "74ee7d01fc51db29fcfad594b989cf0bcfbac156ee9e192d206e726729d85d60"
+    },
+    "results/fragment/checkpoint.pt": {
+      "bytes": 9018,
+      "sha256": "6e06a957e0c4ab586bfcb0fe751a527d690ca63116c1ca6cbe23de527568c21f"
+    },
+    "results/fragment/independent-amounts.npz": {
+      "bytes": 596764,
+      "sha256": "a1e0d4574152def0fd0393f0eff8021d8353af490170d177252c07bb0f9608e4"
+    },
+    "results/fragment/independent-reference-arrays.npz": {
+      "bytes": 17276916,
+      "sha256": "160cd76bd93533a93da5d7ea98f3c0c22d5535b92b4e113ebe02e64d0a5d3060"
+    },
+    "results/fragment/updates.npz": {
+      "bytes": 605730,
+      "sha256": "67a5d308531aef0c19e7fc22ad23f99376916e69d12aabaf821e79c8a56501fc"
+    },
+    "results/qualification.npz": {
+      "bytes": 3827,
+      "sha256": "3ae360ea3cc9665a28648ac9db5de9495f190f3e71b78d6d07be32c5de597eb0"
+    }
+  },
+  "archives": [
+    {
+      "path": "results/raw-training-00.tar.gz",
+      "sha256": "6224e2031ce1833891aa79c1378512d3c553d5195359394371a820d6aecfd4b6",
+      "members": [
+        "results/analytical/checkpoint.pt",
+        "results/analytical/independent-amounts.npz",
+        "results/analytical/updates.npz",
+        "results/fragment/checkpoint.pt",
+        "results/fragment/independent-amounts.npz",
+        "results/fragment/independent-reference-arrays.npz",
+        "results/fragment/updates.npz",
+        "results/qualification.npz"
+      ]
+    }
+  ],
+  "scope": "Exact executed checkpoints/arrays; prediction gzip files are kept directly. Restore original paths with reproduce/unpack.py."
+}

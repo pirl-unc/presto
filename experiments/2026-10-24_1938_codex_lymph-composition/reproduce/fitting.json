@@ -1,0 +1,36 @@
+{
+  "files": {
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_1938_codex_lymph-composition/code/admit.py": "a877924f2e7aa7e3b8987d22167f78ab6207a428695350bd65682b475da25c45",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_1938_codex_lymph-composition/code/core.py": "b32cf63bc4a979a7ff3389d5d9b8dd852bde068e79439d4711fe17e5edd4e86d",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_1938_codex_lymph-composition/code/fit.py": "cc3f695619f12c1d6c608ae17321daa4a763ad5e6313b056b0ec25fe48829474",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_1938_codex_lymph-composition/code/qualify.py": "de8a004d7251450f4d7b51f169ec2ccf0ca8a7afd560bdbe4b732e022e6f0cf0",
+    "/private/tmp/presto-modular-model/models/steady_processing.py": "1c6dc0038eea7cd685a0a058f871193993ce3258c580a0b3083d69b836e56bc2",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_1702_codex_ms1-grouped-observer/code/model.py": "c4e515d607d3846f973a4ed6f7a4cbe84116a0b3a7ddec4a3b5e0cf637f80498",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_1702_codex_ms1-grouped-observer/results/fit/transforms.npz": "0a0567abd099bf603593f56a2cf7abad9247b68bfacbc78c1137c42914412671",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_1702_codex_ms1-grouped-observer/results/fit/sequence_0.1.npz": "cf565690ecaf507d59040a79875b1f994a0a376cf534c8bf25c0f6bb9eb14b88"
+  },
+  "config_sha256": "8dfd9aa2caba345ef05c47f8a23bf702988c37f799d23f866799f2b499a66501",
+  "plan_sha256": "8d5256a720aab7edffd0b516405ff40a3a04bdec82f7fcaa9d7700fd2a9bab67",
+  "training": {
+    "steps": 500,
+    "lr": 0.02,
+    "betas": [
+      0.9,
+      0.999
+    ],
+    "epsilon": 1e-08,
+    "residue_penalty": 0.01,
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "reinforce_samples": 64,
+    "ridge_alphas": [
+      0.001,
+      0.01,
+      0.1,
+      1.0
+    ]
+  }
+}

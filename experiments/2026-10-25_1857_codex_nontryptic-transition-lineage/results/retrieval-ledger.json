@@ -1,0 +1,48 @@
+[
+  {
+    "operation": 1,
+    "name": "project.json",
+    "url": "https://www.ebi.ac.uk/pride/ws/archive/v2/projects/PXD024917",
+    "expected_kind": "json",
+    "discovery_provenance": "Fixed article accession and exact retrieval plan; official PRIDE v2 route used by existing Hitlist ingestion",
+    "status": "retrieved_validated_payload",
+    "sha256": "59871c5c423eb4b77aae23ad355f593e2cf7f463b3e008e6afd57534cccb82fa",
+    "bytes": 4380
+  },
+  {
+    "operation": 2,
+    "name": "files-page0.json",
+    "url": "https://www.ebi.ac.uk/pride/ws/archive/v2/projects/PXD024917/files?pageSize=100&page=0",
+    "expected_kind": "json",
+    "discovery_provenance": "Locate two exact deposited filenames already named in original Dataset S7; no raw files requested",
+    "status": "retrieved_validated_payload",
+    "sha256": "4c9d293a5eb88b74ddfc807e5c779ad4360cbeb877784c733aa0c2a1bf601da6",
+    "bytes": 76323
+  },
+  {
+    "operation": 3,
+    "name": "Iso18_DirectSpike_TransitionResults.xlsx",
+    "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2021/09/PXD024917/Iso18_DirectSpike_TransitionResults.xlsx",
+    "expected_kind": "xlsx",
+    "discovery_provenance": "Exact PXD024917 official file inventory; same PRIDE host/path over HTTPS; source S7 double-i hipMHCspiikein spelling retained as an unresolved filename discrepancy",
+    "expected_bytes": 151291,
+    "source_checksum_raw": "181646b46636be4abaab2eb498df7226dd7f753f",
+    "source_checksum_algorithm": "not declared in API; 40-character checksum retained without guessing algorithm",
+    "status": "retrieved_validated_payload",
+    "sha256": "d359bf7b8afd0ade9df9539d941c0f7931b8c39657a444d3bf8025e54ff1d995",
+    "bytes": 151291
+  },
+  {
+    "operation": 4,
+    "name": "Iso18_hipMHCspikein_TransitionResults.xlsx",
+    "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2021/09/PXD024917/Iso18_hipMHCspikein_TransitionResults.xlsx",
+    "expected_kind": "xlsx",
+    "discovery_provenance": "Exact PXD024917 official file inventory; same PRIDE host/path over HTTPS; source S7 double-i hipMHCspiikein spelling retained as an unresolved filename discrepancy",
+    "expected_bytes": 69651,
+    "source_checksum_raw": "25ca44773268c0d4229de2f25da4b64d6d5269cb",
+    "source_checksum_algorithm": "not declared in API; 40-character checksum retained without guessing algorithm",
+    "status": "retrieved_validated_payload",
+    "sha256": "8426f43364ea1d84244403811956f501664abf8001e7043ec8fc1ae546175308",
+    "bytes": 69651
+  }
+]

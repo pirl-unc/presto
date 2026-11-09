@@ -1,0 +1,22 @@
+{
+  "registered_at": "2026-10-23T13:31:30.501563-04:00",
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_1324_codex_substrate-entry/code/fit.py"
+  ],
+  "source_sha256": "b2f5018c86f132eb5b533b6c9a432b39310aaf92ce1d3c20e7af896f608d920b",
+  "variants": [
+    "immediate_constant",
+    "immediate_sequence",
+    "entry_constant",
+    "entry_sequence"
+  ],
+  "updates": 2000,
+  "order": 32,
+  "optimizer": "Adam lr.03 betas.9/.999 eps1e-8",
+  "regularization": "0.01/2 nonintercept shared-rate coefficients squared; entry rate unpenalized",
+  "selection": "fixed final checkpoint; no test evaluation or validation-based rescue",
+  "initialization": "all weights0 except bond intercept log.01; entry log-rate0",
+  "forecast": "Qualification includes forward/backward plus point values at0.177s/order32; two entry fits plus controls estimated below15minutes local CPU; one thread",
+  "precision_gate": "fixed32 vs64 at100/500/1000/2000, stop on max log amount1e-6 or gradient1e-5"
+}

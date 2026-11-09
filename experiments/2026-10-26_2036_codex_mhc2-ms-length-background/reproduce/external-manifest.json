@@ -1,0 +1,64 @@
+{
+  "model": {
+    "acquisition_features": [],
+    "acquisition_units": {},
+    "auxiliary_context": [],
+    "cell_types": [],
+    "component_activity_units": {},
+    "components": [],
+    "context_species": [],
+    "cytokine_dose_units": {},
+    "cytokine_duration_features": [],
+    "cytokines": [],
+    "dropout": 0.1,
+    "endpoints": [
+      "ic50",
+      "elution_observation"
+    ],
+    "enzymes": [],
+    "identity_tasks": [],
+    "identity_threshold": 0.8,
+    "interventions": [],
+    "machinery_profiles": {},
+    "machinery_references": [],
+    "max_length": 512,
+    "mhc_classes": [
+      "I",
+      "II"
+    ],
+    "observation_features": [],
+    "observation_units": {},
+    "preparation_features": [],
+    "preparation_units": {},
+    "processing_pathways": [],
+    "quantity_domains": {},
+    "register_pooling": true,
+    "source_categories": [],
+    "source_context": false,
+    "species": [
+      "human"
+    ],
+    "species_defaults": true
+  },
+  "schema": "presto.modular.manifest.v1",
+  "sources": [
+    {
+      "label_policy": "explicit_generated_sequence_background_not_measured_nondetection",
+      "partition": "external",
+      "path": "/private/tmp/presto-mhc2-20261026/ms-length-background/cohort/external-control.jsonl",
+      "population": "DQ8 external detection enrichment",
+      "sha256": "3950374ba22579fd52b921e4b01258bf58c6412e2cba3a3a987a4f57453e941e",
+      "source": "generated_mhc2_ms_background",
+      "split_policy": "frozen_nine_residue_components_and_initializer_exclusion_v1"
+    },
+    {
+      "label_policy": "reported_positive_ms_detection",
+      "partition": "external",
+      "path": "/private/tmp/presto-mhc2-20261026/ms-length-background/cohort/external-positive.jsonl",
+      "population": "DQ8 external detection enrichment",
+      "sha256": "69eb2bc8c6b119bfe7951d38bd4cb735cda564adbb0d5d9557bf8db553ee206e",
+      "source": "hitlist_native_ms",
+      "split_policy": "frozen_nine_residue_components_and_initializer_exclusion_v1"
+    }
+  ]
+}

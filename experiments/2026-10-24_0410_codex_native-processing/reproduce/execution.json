@@ -1,0 +1,87 @@
+{
+  "frozen_at": "2026-10-24T08:25:11.953678+00:00",
+  "agent_model": "Codex / GPT-6",
+  "git_commit": "2cb7db0fff076180e3235ea11ef9d30b6cb2872e",
+  "tracked_dirty": " M experiments/agents/codex/plans/native-processing-comparison.md\n M tasks/todo.md\n",
+  "untracked_runtime_files": [
+    "experiments/2026-10-24_0410_codex_native-processing/code/core.py",
+    "experiments/2026-10-24_0410_codex_native-processing/code/launch.py",
+    "experiments/2026-10-24_0410_codex_native-processing/reproduce/launch.json",
+    "experiments/2026-10-24_0410_codex_native-processing/reproduce/plan.md",
+    "experiments/2026-10-24_0410_codex_native-processing/reproduce/launch.sh",
+    "models/steady_processing.py",
+    "tests/test_steady_processing.py"
+  ],
+  "source_sha256": {
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0410_codex_native-processing/code/core.py": "f91e03f57a98ce731c39937e1904f80ab6851fbfb82cae4ac878b3b3503a5b17",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0410_codex_native-processing/code/launch.py": "51723a2c01a93aeea6754acd689fabfea3972d9a0e521367ca5716fbdbc8a286",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0410_codex_native-processing/reproduce/launch.json": "556dffc9b47ca7830f17a42462cd3f6e68b0ab44a521ec07d78478c7087c9141",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0410_codex_native-processing/reproduce/plan.md": "c5556c7478cfdb81bfe26e6079b27cb60cf3c424efebfcea0e35201941edd3fd",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0410_codex_native-processing/reproduce/launch.sh": "01682c4654efe38a104c565d1137eb3fb97e38a2f963d51682bc61ebb20e3b4d",
+    "/private/tmp/presto-modular-model/models/steady_processing.py": "1c6dc0038eea7cd685a0a058f871193993ce3258c580a0b3083d69b836e56bc2",
+    "/private/tmp/presto-modular-model/tests/test_steady_processing.py": "0359f3d2652c858ddcd613bafbb9a996840f32a8e7b2fc03d3bee6ef20382652",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0314_codex_native-response-baselines/code/launch.py": "12445fe48c4fc716286889d286a16e0732e99a88241fe1cd7442ff5cf98d2c65",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0314_codex_native-response-baselines/analysis/verify.py": "d16e1c5df0d0136dc5861a8085b26dc9451e4f3fb2b3853fd0bc998af849504e",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0314_codex_native-response-baselines/reproduce/launch.json": "ed167f1e18b5dc946d56367564cb5b109e3657b774b3462ce645c0846297c8de",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0259_codex_native-response-admission/results/independent-verification.json": "780fa1544833e61e1508ce8ee9234d58f416aee81f10040c897e86bcfb4aafdd"
+  },
+  "python": "3.12.6",
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "machine": "arm64",
+  "libraries": {
+    "numpy": "2.5.4",
+    "torch": "2.14.1",
+    "scipy": "1.18.1"
+  },
+  "environment": {
+    "PYTHONPATH": "/private/tmp/presto-native-import",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "import_symlink": {
+    "/private/tmp/presto-native-import/presto": "/private/tmp/presto-modular-model"
+  },
+  "physical_tests": "9 passed in 3.39s; original float32 reference failure retained in launch_logs",
+  "planned_invocations": [
+    [
+      "sh",
+      "/private/tmp/presto-modular-model/experiments/2026-10-24_0410_codex_native-processing/reproduce/launch.sh",
+      "qualify"
+    ],
+    [
+      "sh",
+      "/private/tmp/presto-modular-model/experiments/2026-10-24_0410_codex_native-processing/reproduce/launch.sh",
+      "baselines"
+    ],
+    [
+      "sh",
+      "/private/tmp/presto-modular-model/experiments/2026-10-24_0410_codex_native-processing/reproduce/launch.sh",
+      "train",
+      "uniform_exact"
+    ],
+    [
+      "sh",
+      "/private/tmp/presto-modular-model/experiments/2026-10-24_0410_codex_native-processing/reproduce/launch.sh",
+      "train",
+      "uniform_hybrid"
+    ],
+    [
+      "sh",
+      "/private/tmp/presto-modular-model/experiments/2026-10-24_0410_codex_native-processing/reproduce/launch.sh",
+      "train",
+      "sequence_exact"
+    ],
+    [
+      "sh",
+      "/private/tmp/presto-modular-model/experiments/2026-10-24_0410_codex_native-processing/reproduce/launch.sh",
+      "train",
+      "sequence_hybrid"
+    ],
+    [
+      "sh",
+      "/private/tmp/presto-modular-model/experiments/2026-10-24_0410_codex_native-processing/reproduce/launch.sh",
+      "evaluate"
+    ]
+  ]
+}

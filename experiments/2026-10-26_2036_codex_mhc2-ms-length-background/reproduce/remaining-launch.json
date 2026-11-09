@@ -1,0 +1,35 @@
+{
+  "utc": "2026-10-27T01:06:32.175290+00:00",
+  "agent_model": "Codex / GPT-6",
+  "cwd": "/private/tmp/presto-mhc2-evaluation-20261027/presto",
+  "git_commit": "2ed1bd8cdd36c94236d55c3fdd9927f6f79d4780",
+  "dirty_status": " M experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/fit-native101-1793047384363865000.json\n M experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/logistic-controller-state.json\n M experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/native-controller-state.json\n M tasks/todo.md\n M training/modular_resume.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/compare.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/continue_remaining.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/continue_streaming.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/logistic_controls_streaming.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/streaming_recovery.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/test_compare.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/comparison-plan.md\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/evaluation-recovery-original.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/native102-preflight-preservation.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/remaining-arms-plan.md\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/serialization-fix/\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/serialization-transition.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/source/compare.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/source/continue_remaining.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/source/continue_streaming.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/source/logistic_controls_streaming.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/source/streaming_recovery.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/source/test_compare.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/streaming-controller-state.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/streaming-fit-native102-1793062870276035000.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/streaming-recovery-launch.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/streaming-recovery.sh\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/streaming-score-native101-1793062656089722000.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/results/failure-attempt01/\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/results/native101-fit-recovered.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/results/native101/\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/results/software-json/\n?? tasks/mhc2_json_recovery_spec.md\n?? tests/test_modular_json_streaming.py\n",
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "device": "cpu",
+  "requested_modal_gpu": null,
+  "environment": {
+    "PYTHONPATH": "/private/tmp/presto-mhc2-evaluation-20261027:/private/tmp/presto-pr-completion-20261026/dependencies",
+    "OMP_NUM_THREADS": "2",
+    "OPENBLAS_NUM_THREADS": "2",
+    "MKL_NUM_THREADS": "2",
+    "PYTORCH_ENABLE_MPS_FALLBACK": "0"
+  },
+  "controller_sha256": "c67bc3e112e42648c561483a92c706dee954a5f01a88a4b247cf93abe47f113a",
+  "code_hashes": {
+    "streaming_recovery.py": "f8aaaee5257ecf1d4a66a1648b172e78b01d64b29fa54d71f2ed34c96bab95e8",
+    "continue_streaming.py": "e50c8d361edbe5d5b468b6772bd1fc8a4220f83f1c2b0a6634bc1bb67bd9ea1a",
+    "logistic_controls_streaming.py": "b396996d13d9dc2cfb48ce5d0a5ae66c4d746371530096d6b1da46aea6b5bb1e"
+  },
+  "plan_sha256": "8f5329db50ffed5824b1e1e2935947d75e2e8aba812cd3adae1fbc182e97e944",
+  "previous_state_sha256": "d756b15ce72311a9fc28a13bfa397095862dc9da9dcabb7d8291af71140eb505",
+  "native101_summary_sha256": "c5f2d17e08436bc2f09d130f31e025c2e1e395dd44638fd7f7a1c3fa6c16bca5",
+  "native101_recovery_sha256": "e683df2b9ce56199227e3d65530698ceb86010dcc02a3cfa17fc481330a41a93",
+  "preflight_preservation_sha256": "701ac96e2416cd34200fe2b844665e58fabc212dde49f5c13be57de67d901184",
+  "admission": {
+    "available_ram_bytes": 21474836480,
+    "sustained_seconds": 60,
+    "sample_seconds": 5,
+    "deadline_seconds": 1800
+  },
+  "no_automatic_retry": true
+}

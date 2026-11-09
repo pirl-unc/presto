@@ -1,0 +1,901 @@
+{
+  "appended_sources": {
+    "pxd004886": {
+      "adapter_schema_version": 1,
+      "asset_receipt_sha256": "99b24b0aebae0382e2bf1a2895739be0bbb715737ae77e256eeddac3a87540f2",
+      "reconciliation": {
+        "S4_normalized_statuses": {
+          "absent_source_cell": 99,
+          "explicit_empty_string": 572,
+          "reported_positive": 2398
+        },
+        "S4_raw_statuses": {
+          "absent_source_cell": 129,
+          "explicit_empty_string": 568,
+          "reported_positive": 2372
+        },
+        "n_curve_measurements_rows": 3410,
+        "n_curve_rows_rows": 682,
+        "n_nominal_loads_rows": 25,
+        "n_nominal_standards_rows": 30,
+        "n_nonuniform_normalization_columns": 39,
+        "n_normalization_diagnostics_rows": 99,
+        "n_normalized_only_values": 26,
+        "n_positive_curve_values": 2416,
+        "n_protocol_parameters_rows": 520,
+        "n_reporter_forms_rows": 32,
+        "n_reproduced_summary_values": 162,
+        "n_s4_measurements_rows": 6138,
+        "n_source_assertions_rows": 34,
+        "n_source_cells_rows": 13561,
+        "n_source_sheets_rows": 7,
+        "n_source_slots_rows": 99,
+        "n_summary_measurements_rows": 186
+      },
+      "registry": {
+        "curve_artifact": "typed/curve_measurements.parquet",
+        "dataset_accession": "PXD004886",
+        "limitations": [
+          "nominal_load_not_certified_form_molarity",
+          "response_selected_panel_and_groups",
+          "no_APC_processing_or_intracellular_concentration_label",
+          "unknown_run_day_and_specimen_links",
+          "curve_grid_to_sample_unresolved",
+          "normalization_source_discrepancies",
+          "cross_asset_reporter_aggregation_equivalence_unresolved",
+          "censoring_and_saturation_mapping_unresolved"
+        ],
+        "measured_pools": [
+          "synthetic_standard_in_background_digest"
+        ],
+        "measurement_grain": "reporter_form_by_source_slot_or_curve_position_and_representation",
+        "n_nominal_standards": 30,
+        "n_reporter_forms": 32,
+        "organism_scope": "synthetic_standards_human_HEK293_digest_background",
+        "quantity_artifact": "typed/s4_measurements.parquet",
+        "rights": {
+          "article_and_supplements": "CC-BY4.0_with_third_party_credit_exceptions",
+          "source_assets": "caller_supplied_not_bundled_in_distribution"
+        },
+        "source_id": "pxd004886",
+        "training_admission": "deferred_to_explicit_nominal_response_recipe"
+      }
+    },
+    "pxd009092": {
+      "adapter_schema_version": 2,
+      "asset_receipt_sha256": "1bb665ba3f4fdf385f3bb6f93416ff1b44e67bf9d117f0d065a8e96499f283bb",
+      "reconciliation": {
+        "maximum_absolute_filter_replay_error": 393010.0,
+        "n_channels_rows": 18,
+        "n_derivation_inputs_rows": 540034,
+        "n_evidence_rows": 149959,
+        "n_filtered_zeros_with_positive_evidence": 9276,
+        "n_groups_rows": 2039,
+        "n_peptide_rows_rows": 10673,
+        "n_publisher_TNF_IFN_numeric": 5311,
+        "n_publisher_UT_numeric": 4983,
+        "n_publisher_cells_rows": 36207,
+        "n_publisher_quantities_rows": 25244,
+        "n_quantity_measurements_rows": 362882,
+        "n_quantity_results_rows": 192114,
+        "n_quarantined_groups": 36,
+        "n_source_assertions_rows": 74,
+        "n_source_records_rows": 162767,
+        "reference_counts": [
+          {
+            "n_peptide_reference_coverage_rows": 10673,
+            "n_peptide_reference_occurrences_rows": 14258,
+            "n_reference_accessions_rows": 90852,
+            "n_reference_proteins_rows": 20422,
+            "n_sequence_references_rows": 1,
+            "n_source_parent_claims_rows": 32269,
+            "n_source_parent_resolutions_rows": 13811,
+            "reference_id": "reviewed_2023_canonical"
+          },
+          {
+            "n_peptide_reference_coverage_rows": 10673,
+            "n_peptide_reference_occurrences_rows": 23463,
+            "n_reference_accessions_rows": 42562,
+            "n_reference_proteins_rows": 42562,
+            "n_sequence_references_rows": 1,
+            "n_source_parent_claims_rows": 32269,
+            "n_source_parent_resolutions_rows": 13181,
+            "reference_id": "reviewed_2026_03_isoforms"
+          }
+        ],
+        "reference_relation_rows": {
+          "peptide_reference_coverage": 21346,
+          "peptide_reference_occurrences": 37721,
+          "reference_accessions": 133414,
+          "reference_proteins": 62984,
+          "sequence_references": 2,
+          "source_parent_claims": 64538,
+          "source_parent_resolutions": 26992
+        }
+      },
+      "registry": {
+        "dataset_accession": "PXD009092",
+        "limitations": [
+          "captured_pool_not_free_concentration",
+          "unresolved_specimens",
+          "source_FDR_conflict",
+          "search_scope_6_to_40",
+          "imputed_header_conflict",
+          "parallel_tryptic_specimen_and_condition_map_unresolved"
+        ],
+        "measured_pools": [
+          "proteasome_associated_fragment"
+        ],
+        "measurement_grain": "peptide_by_source_acquisition_run",
+        "n_primary_peptide_rows": 10673,
+        "organism_scope": "human_HEK293_measured_cells",
+        "quantity_artifact": "typed/quantity_measurements.parquet",
+        "reference_ids": [
+          "reviewed_2023_canonical",
+          "reviewed_2026_03_isoforms"
+        ],
+        "reference_occurrence_artifact": "typed/peptide_reference_occurrences.parquet",
+        "rights": {
+          "PRIDE_deposit": "EBI terms of use",
+          "publisher_workbooks": "unverified_not_bundled_in_distribution"
+        },
+        "source_id": "pxd009092",
+        "training_admission": "deferred_pending_endpoint_recipe_and_parent_alternative_policy"
+      }
+    }
+  },
+  "catalog_schema_version": 12,
+  "files": {
+    "assets/bulk_proteomics/bekker_jensen_2017_peptides.csv.gz": {
+      "sha256": "3ec65dd05e8ec58c3293e0fb5720570197a8b152cd14778130bae4224106e3d3",
+      "size_bytes": 35074080
+    },
+    "assets/bulk_proteomics/bekker_jensen_2017_protein_abundance.csv.gz": {
+      "sha256": "17628f1a9c3ed5e3ee1ad7aab4480008000a6beb2c042928f3fbdf699366bc45",
+      "size_bytes": 4410669
+    },
+    "assets/bulk_proteomics/ccle_nusinow_2020.csv.gz": {
+      "sha256": "1cd9bdd7b40e1a22593c0045f5ba1d785004b64943c4845d4311bc44e7f97d82",
+      "size_bytes": 1671535
+    },
+    "assets/bulk_proteomics/detectability.yaml": {
+      "sha256": "1936194860c47917681448a75401569258f0cf4ea5a46a295a6bfabf4db8073b",
+      "size_bytes": 12315
+    },
+    "assets/bulk_proteomics/sources.yaml": {
+      "sha256": "26a410b2839d6ad6ea0701066434919ea3ab90fb05c636e20391499212b2fc52",
+      "size_bytes": 8115
+    },
+    "assets/line_expression/apm_rna_build_report.yaml": {
+      "sha256": "443361d7803837c8a8de7139a68415d303a1e5aae10ea457eda9935ccb7c71a8",
+      "size_bytes": 306
+    },
+    "assets/line_expression/ensembl_gene_id_symbol.csv": {
+      "sha256": "cd5a8f42cd45137ffd3de580f395d42107e6ff4b77a80b0a746b9508c0f4c0e2",
+      "size_bytes": 257327
+    },
+    "assets/line_expression/gm12878_encode_rnaseq_tpm.csv.gz": {
+      "sha256": "b3d605f3426d283ecf166bd6a38006dc40d4d3aa9c4050c40f7f2101ff60d8ab",
+      "size_bytes": 271557
+    },
+    "assets/line_expression/hap1_depmap24q4_gene_tpm.csv.gz": {
+      "sha256": "9c91022631272fdd626369b03b848162da30062004295cc7249fc3140d149918",
+      "size_bytes": 253816
+    },
+    "assets/line_expression/sources.yaml": {
+      "sha256": "7e3ea4f05481ae1d810cf8bbbf2f0cb1e7b41b4f7c779629a413525a7b013ea2",
+      "size_bytes": 7621
+    },
+    "assets/line_expression_anchors.yaml": {
+      "sha256": "b736261a977b416b40623848a410b2b9ff16c56527bea392592996480f8f678e",
+      "size_bytes": 13122
+    },
+    "assets/receipt.json": {
+      "sha256": "baa0da5ac120c71a58252587cc48503fb76fffd82463309e067b612862c88436",
+      "size_bytes": 2107
+    },
+    "cohort_native/contributors.parquet": {
+      "sha256": "dfbe4bfcd96cc5e07772497201c1c12ad9b4aac620dd92f090aa5de3723b0b8e",
+      "size_bytes": 2066297045
+    },
+    "cohort_native/identities.parquet": {
+      "sha256": "6020667400ae4834f9a800479142b54f7c225f9e37ebb972a5a0a168b9c82001",
+      "size_bytes": 141119541
+    },
+    "cohort_native/lineage.json": {
+      "sha256": "75858cf562f65013aaae2325ea95deb70f826ea07f2373d394e8182ce459a1a5",
+      "size_bytes": 31901
+    },
+    "cohort_native/manifest.json": {
+      "sha256": "b180eba804532f633a6d61bb350584dbe24f8df4b4b96f02c6ec492c60144372",
+      "size_bytes": 33972
+    },
+    "cohort_native/training.parquet": {
+      "sha256": "f902341e90c1c57defc93f4bc540ffcbea1b41061afb4492ddd8aaa7642c65bd",
+      "size_bytes": 188175209
+    },
+    "curation/pmid_overrides_1_78.yaml": {
+      "sha256": "5223fc63d0a0a563f469641b2abb58578a359b9bfac32218ce2611aa9cc8ef27",
+      "size_bytes": 745987
+    },
+    "curation/pmid_overrides_current.yaml": {
+      "sha256": "f563a8f1a6224d668bf06aed2f034b439ec9a1b607f78f883ace21e053850b09",
+      "size_bytes": 747015
+    },
+    "curation/specimen_lineage.yaml": {
+      "sha256": "03300e7732c49a6c5359c211a9c8703beba0927003900c98881a25f3f34da276",
+      "size_bytes": 25870
+    },
+    "external/pxd004886/assets/article.xml": {
+      "sha256": "36407dc5bacd14286d3b032806a31fbf4358e7264f523ad948172e658ba16f6a",
+      "size_bytes": 158096
+    },
+    "external/pxd004886/assets/supplementary-data-1.xlsx": {
+      "sha256": "a7cfcefcfb2c056fdf4ffc935a0a4d783c1967d23e9282e41333271ba714d871",
+      "size_bytes": 8883
+    },
+    "external/pxd004886/assets/supplementary-data-13.xlsx": {
+      "sha256": "2e06edbbc7b12734737cf7903df4beb167c9390bd3da400f9598aa944d20e578",
+      "size_bytes": 13733
+    },
+    "external/pxd004886/assets/supplementary-data-14.xlsx": {
+      "sha256": "1dbc8838a073faa3160342b54bac91b6da28ca83d3ea54af5bfd02969a7511fd",
+      "size_bytes": 10850
+    },
+    "external/pxd004886/assets/supplementary-data-15.xlsx": {
+      "sha256": "da6499d873647e849a0f5eaa163beea1f9139620a2528d37e9d09e6f668ba7a1",
+      "size_bytes": 13132
+    },
+    "external/pxd004886/assets/supplementary-data-2.xlsx": {
+      "sha256": "877c1a8737a88fad64c007cc84008f81465bde7c23a463720e7210a473e555fe",
+      "size_bytes": 14180
+    },
+    "external/pxd004886/assets/supplementary-data-4.xlsx": {
+      "sha256": "89eece0d34b627c170c4252d9d6107ce1e88b41bf1c883126749cffa55badddc",
+      "size_bytes": 83827
+    },
+    "external/pxd004886/assets/supplementary-data-8.xlsx": {
+      "sha256": "b9272ec7b46238a3c0dd80d15fa6a1dc34fbc38a67c35d270b780e1c533eeaa7",
+      "size_bytes": 117542
+    },
+    "external/pxd004886/contracts/contract.json": {
+      "sha256": "5738070d90fd37589657e1ad831a268e1e20bb6788b0f5db7b8805707063bff3",
+      "size_bytes": 13518
+    },
+    "external/pxd004886/contracts/source_assets.json": {
+      "sha256": "99b24b0aebae0382e2bf1a2895739be0bbb715737ae77e256eeddac3a87540f2",
+      "size_bytes": 5013
+    },
+    "external/pxd004886/typed/curve_measurements.parquet": {
+      "sha256": "a3f98d08ddf64c736b1c0cf56f70d470cf6996e3d4d9a790314081642a59ac9d",
+      "size_bytes": 110636
+    },
+    "external/pxd004886/typed/curve_rows.parquet": {
+      "sha256": "18babf132fee5173fc788a29c0bbc7500564bd9ab7e6d744e7c2b604563bc19b",
+      "size_bytes": 35680
+    },
+    "external/pxd004886/typed/nominal_loads.parquet": {
+      "sha256": "254b3b89a68b7c432a4ecb9819bcaaf42718b4293bab5acbf2869e6ee2fd64ec",
+      "size_bytes": 5658
+    },
+    "external/pxd004886/typed/nominal_standards.parquet": {
+      "sha256": "4e7ab19fed4d04381bbedc70dd03286f104fbe010feb7c303b7d49af28bcbcf5",
+      "size_bytes": 6559
+    },
+    "external/pxd004886/typed/normalization_diagnostics.parquet": {
+      "sha256": "ae1675715d0ca10499d630ee5f48b6b0e99ffa89ccdee7492551bbb66ea90961",
+      "size_bytes": 15477
+    },
+    "external/pxd004886/typed/protocol_parameters.parquet": {
+      "sha256": "3d7bed426aa32516786bbe920d36de2699a952cd9ec4c05dfb5b3b263b22f483",
+      "size_bytes": 22302
+    },
+    "external/pxd004886/typed/reporter_forms.parquet": {
+      "sha256": "61ca24a5a24ae1f2ec2c98785d5c0b19e611d1cca0dd75ca824864975a7e9d99",
+      "size_bytes": 13617
+    },
+    "external/pxd004886/typed/s4_measurements.parquet": {
+      "sha256": "a470a08cd1e20a5f84dfb6fe8226fdf6ce73af6eb12d39bf4f33213f66dda65b",
+      "size_bytes": 171809
+    },
+    "external/pxd004886/typed/source_assertions.parquet": {
+      "sha256": "d698dce6c47199cf3312c2396f9721d0b28b6ffc9518d5fa78decbe5ff57a024",
+      "size_bytes": 4707
+    },
+    "external/pxd004886/typed/source_cells.parquet": {
+      "sha256": "4493ac7dbec5f2da6f3482a488c81921ad85ab97e3342b1757f93ab8670c9192",
+      "size_bytes": 422047
+    },
+    "external/pxd004886/typed/source_sheets.parquet": {
+      "sha256": "38469541d9be7d60647d1d1d32cd26ca20f46e18732873883b7fde44d9c5c734",
+      "size_bytes": 4770
+    },
+    "external/pxd004886/typed/source_slots.parquet": {
+      "sha256": "19cadd5cc919a83255870e9197f80278635ba497c937ed8b434bd3eb4aa37df5",
+      "size_bytes": 6149
+    },
+    "external/pxd004886/typed/summary_measurements.parquet": {
+      "sha256": "9870aef52e97e006eeef5c7f54a13f15fdcd62592af807e535120006ca290bdc",
+      "size_bytes": 12552
+    },
+    "external/pxd009092/assets/PXD009092/files.json": {
+      "sha256": "e7350ef7f6445856a944bc48a93d58c2b3abd3b06bd89ff8222e7abed94fe666",
+      "size_bytes": 21979
+    },
+    "external/pxd009092/assets/PXD009092/project.json": {
+      "sha256": "998f54e5c155f38495a976e5e303dbe7cf4435ed633160d37a75f9190f0253f6",
+      "size_bytes": 4482
+    },
+    "external/pxd009092/assets/PXD009360/files.json": {
+      "sha256": "af67353fe522aee5db7a10e864bb4019940358e564ac06bc3d2a5cbefc89875c",
+      "size_bytes": 11557
+    },
+    "external/pxd009092/assets/PXD009360/project.json": {
+      "sha256": "8c7c30704a298901c49422d0dd35fef38baa5e0317ecb5d81ec9a7edf1bdf0b7",
+      "size_bytes": 4207
+    },
+    "external/pxd009092/assets/publisher/suppdata2.xlsx": {
+      "sha256": "22ca91a68f772042a8a96848bc2a9446b120046fcfe2baa31968e5d05d839ce3",
+      "size_bytes": 467804
+    },
+    "external/pxd009092/assets/publisher/suppdata3.xlsx": {
+      "sha256": "cfd7f0e008f5d7cbae261092fba68cf5b1495b5e34cadcae65a2105d9e0e39fb",
+      "size_bytes": 16664
+    },
+    "external/pxd009092/assets/references/human-reviewed-2023.dat.gz": {
+      "sha256": "defd9fd7fdc3be6f36b5b57b1a2c29978b956612e1437ec15f7065b055bbe9d3",
+      "size_bytes": 108046188
+    },
+    "external/pxd009092/assets/references/human-reviewed-2026_03-isoforms.fasta": {
+      "sha256": "8c4459cc1e190caad54150511e5a0b5779863557f88387e5a86647a48d19a9d4",
+      "size_bytes": 29338408
+    },
+    "external/pxd009092/assets/txt/evidence.txt": {
+      "sha256": "9f8706d585cdd025c02b3b1240f25a1c27542cd1e8fde096b71f7277c3b350d5",
+      "size_bytes": 69533363
+    },
+    "external/pxd009092/assets/txt/parameters.txt": {
+      "sha256": "7b332c70bbfeb42b7b0f51c55b6590ac43f02725de6994aa12681dc3ac8fda75",
+      "size_bytes": 1676
+    },
+    "external/pxd009092/assets/txt/peptides.txt": {
+      "sha256": "7dacb6636ab0662d54db37fac591f4895488afcccb993a37c8634b0ed47edc14",
+      "size_bytes": 6859516
+    },
+    "external/pxd009092/assets/txt/proteinGroups.txt": {
+      "sha256": "060b19d74baaa917b29316f4174b410ada7947a9dbd9d2fb3a6bbffa598c0b09",
+      "size_bytes": 3767997
+    },
+    "external/pxd009092/assets/txt/summary.txt": {
+      "sha256": "38fbe7b68927f5459a44bf0eb4b3e73e3e31a26b7bc077636b7e18b496d57428",
+      "size_bytes": 8294
+    },
+    "external/pxd009092/contracts/contract.json": {
+      "sha256": "056688f5bef7dc3c2acfc1d9ff47485ef2d7597cd3634ef5bf4e6cb53e53cb8c",
+      "size_bytes": 7104
+    },
+    "external/pxd009092/contracts/source_assets.json": {
+      "sha256": "1bb665ba3f4fdf385f3bb6f93416ff1b44e67bf9d117f0d065a8e96499f283bb",
+      "size_bytes": 5146
+    },
+    "external/pxd009092/typed/channels.parquet": {
+      "sha256": "5c3330473961938daab11b105efe3c64b0352d5cab4b9ee50417ecbafdb3272e",
+      "size_bytes": 5068
+    },
+    "external/pxd009092/typed/derivation_inputs.parquet": {
+      "sha256": "9e765bd088b724a5a4ffa57ff0d5dd9335cdc18d1f55df9d2e8c921b802e618c",
+      "size_bytes": 2887399
+    },
+    "external/pxd009092/typed/evidence.parquet": {
+      "sha256": "ef6bd04c8f445cbb25031bef5f4cca2f929107c6b0dff20b6bfb7395ee4c41c3",
+      "size_bytes": 3881391
+    },
+    "external/pxd009092/typed/groups.parquet": {
+      "sha256": "e2df357983bb769d1869e927961fd888a55b31211ff7a477553d245e7fa39044",
+      "size_bytes": 161162
+    },
+    "external/pxd009092/typed/peptide_reference_coverage.parquet": {
+      "sha256": "19a200559cbea5d10c8cd16d15c87a650a6a43980325332f3ffcc1881d616d2b",
+      "size_bytes": 171117
+    },
+    "external/pxd009092/typed/peptide_reference_occurrences.parquet": {
+      "sha256": "cfb1d6273b443de4ed60d26e034f7be6f92d42499388cad0940c6da48edf7835",
+      "size_bytes": 538893
+    },
+    "external/pxd009092/typed/peptide_rows.parquet": {
+      "sha256": "7f1776274c516274a3c58da9365bcfcfa72b82bcdd50be2aa61023ffb787f4f8",
+      "size_bytes": 448820
+    },
+    "external/pxd009092/typed/publisher_cells.parquet": {
+      "sha256": "41a1d4b00d4b21203c5be822aa5e81a546484d3ba565258d7b73731ef793d6eb",
+      "size_bytes": 794505
+    },
+    "external/pxd009092/typed/publisher_quantities.parquet": {
+      "sha256": "012de15fa315f99fa8d0c966bb59053a9086ffde66f42c046a77ced4d0f9e279",
+      "size_bytes": 498081
+    },
+    "external/pxd009092/typed/quantity_measurements.parquet": {
+      "sha256": "49744a94d955458c77541f1decc1ec2dc93490b6923a540228ecd158b97f4f3c",
+      "size_bytes": 4118582
+    },
+    "external/pxd009092/typed/quantity_results.parquet": {
+      "sha256": "aa75f3c4a1150eb8cf1d16085581825d2fae1c9f61d1197893fb803f8aac65d6",
+      "size_bytes": 622512
+    },
+    "external/pxd009092/typed/reference_accessions.parquet": {
+      "sha256": "fd6411df90e72614249a24ad0c9235742d0140a45c670160d979c95dc6c6f116",
+      "size_bytes": 1208028
+    },
+    "external/pxd009092/typed/reference_proteins.parquet": {
+      "sha256": "d2fb8e038cdc437993ea05afb30860d9692b651c54a8e43be514b7a0fe70efbf",
+      "size_bytes": 20621456
+    },
+    "external/pxd009092/typed/sequence_references.parquet": {
+      "sha256": "bf1ba21478e21ece27ac53547cdb8c655aa1cafad0a1abc934738ef0b1058b8e",
+      "size_bytes": 8594
+    },
+    "external/pxd009092/typed/source_assertions.parquet": {
+      "sha256": "08cb553a6c06626e702f2f10bb933dde6ddd65115002a8490a1f774206bfb5ff",
+      "size_bytes": 5795
+    },
+    "external/pxd009092/typed/source_parent_claims.parquet": {
+      "sha256": "2e6ea7768335730c9c253102657a77c84d9613af44b2caff52f0395479f8bea3",
+      "size_bytes": 557691
+    },
+    "external/pxd009092/typed/source_parent_resolutions.parquet": {
+      "sha256": "ad50ecbdb3e655f4c1675b10362e94ea1fe55cd01583bd5c845a92a5a8765f46",
+      "size_bytes": 229532
+    },
+    "external/pxd009092/typed/source_records.parquet": {
+      "sha256": "df9fb24819e1c21345c1bd4f485e6adebcf4bae16d8c411d156a2f0a848f839f",
+      "size_bytes": 30888563
+    },
+    "external/pxd057588/assets/PXD009092/files.json": {
+      "sha256": "e7350ef7f6445856a944bc48a93d58c2b3abd3b06bd89ff8222e7abed94fe666",
+      "size_bytes": 21979
+    },
+    "external/pxd057588/assets/PXD009092/project.json": {
+      "sha256": "998f54e5c155f38495a976e5e303dbe7cf4435ed633160d37a75f9190f0253f6",
+      "size_bytes": 4482
+    },
+    "external/pxd057588/assets/PXD057588/community.sdrf.tsv": {
+      "sha256": "aee9a69ca50680d5b28f14cb9d690a959cc52f092706360f7da3bf4dd22f2b36",
+      "size_bytes": 74964
+    },
+    "external/pxd057588/assets/PXD057588/files.json": {
+      "sha256": "c917212a934ca63cdf175d914d052fbf09e15dc4d888394866c925b8feacfaa1",
+      "size_bytes": 76652
+    },
+    "external/pxd057588/assets/PXD057588/project.json": {
+      "sha256": "850033757534f5bc1917f62581d7be6562fc81607432edf0568eeed9cf438389",
+      "size_bytes": 6788
+    },
+    "external/pxd057588/assets/PXD057588/table10.metadata.json": {
+      "sha256": "e84d8c2a3903a0e3ef8a57ac43816f69935919f90de84bfe71d9b6f540ec02af",
+      "size_bytes": 7886
+    },
+    "external/pxd057588/assets/PXD057588/table10.xlsx": {
+      "sha256": "e3fb52b188af1910caddb040f502172f6c72f4847d33b9d67c16947d8201e427",
+      "size_bytes": 1089805
+    },
+    "external/pxd057588/assets/PXD057588/table11.metadata.json": {
+      "sha256": "a8edab2989b7c583c3e8aaae7ba77fd415637f311ed99c379f0e8e5388725ddf",
+      "size_bytes": 7894
+    },
+    "external/pxd057588/assets/PXD057588/table11.xlsx": {
+      "sha256": "7f5a4055a777b21bb163f963b936535dd5d39ebac59be1ed9d2783d62012b27f",
+      "size_bytes": 8257435
+    },
+    "external/pxd057588/assets/PXD057588/table12.metadata.json": {
+      "sha256": "6d53b36cff3940d5135c80f0419967a6227d7e214096e923f02f9f92be149f24",
+      "size_bytes": 7859
+    },
+    "external/pxd057588/assets/PXD057588/table12.xlsx": {
+      "sha256": "1e26a5a592111a1e5ac8aac6539c0bdbecc1faffca0c7221cb9e1dbd03d7976e",
+      "size_bytes": 155027
+    },
+    "external/pxd057588/assets/PXD057588/table7.metadata.json": {
+      "sha256": "bbb8a9d3786f890cee8ea301313ad655817191dffc863e8fb41a78cf560b6e10",
+      "size_bytes": 7866
+    },
+    "external/pxd057588/assets/PXD057588/table7.xlsx": {
+      "sha256": "e9f25e1b6e98fea35f5f16f64f6ad0ed836f9e376b82fc866bf0db7a66f45ec9",
+      "size_bytes": 640446
+    },
+    "external/pxd057588/assets/PXD057588/table8.metadata.json": {
+      "sha256": "327cd6123f9033c25b7846f87516658d83803aab813b2295d81bc725ff059476",
+      "size_bytes": 7865
+    },
+    "external/pxd057588/assets/PXD057588/table8.xlsx": {
+      "sha256": "e52118c3d46157f0a125c071e4ae7f0c9a16fd7675125d91cc028f056c37a99a",
+      "size_bytes": 726277
+    },
+    "external/pxd057588/assets/PXD057588/table9.metadata.json": {
+      "sha256": "6ba57d9fcd88d5c55b62d0b821dd9f5827b0edb1caee89c97e36e855d7a8afd6",
+      "size_bytes": 7875
+    },
+    "external/pxd057588/assets/PXD057588/table9.xlsx": {
+      "sha256": "1ef503226f3b0ccd4f1fc8b33aed10e83502396d4c01f52c558bfc159c6fc07f",
+      "size_bytes": 431467
+    },
+    "external/pxd057588/contracts/contrasts.json": {
+      "sha256": "3093f0ef61be0229cab72ab53017034bf26724f34e189d0b677e03adde9e9fe2",
+      "size_bytes": 8297
+    },
+    "external/pxd057588/contracts/retrieval_receipts.json": {
+      "sha256": "52e8b27af9056ec72f7d85bd6e11ae11f5647b892fa39d370eeaff9606b305cb",
+      "size_bytes": 4592
+    },
+    "external/pxd057588/contracts/source_assets.json": {
+      "sha256": "14419b00aeff8caebdc67917522e329b63b07d1ea85bbb59e15ef0c07bc3a27c",
+      "size_bytes": 4269
+    },
+    "external/pxd057588/contracts/workbook_inventory.json": {
+      "sha256": "82777479f3540e80179097877ffa779cab8b69d6646d6fe7e89e71bdbefecd34",
+      "size_bytes": 52277
+    },
+    "external/pxd057588/reference/context_and_quantity_contract.json": {
+      "sha256": "ccf51739b1ab39e0fb6e6776cfc6f3fa4da5247ad58e03d040a51118a6a02015",
+      "size_bytes": 52746
+    },
+    "external/pxd057588/reference/independent-verification.json": {
+      "sha256": "4c6ad0aa3e88f391195532519422fe71fe6927edc819d406862488a6cb80ea27",
+      "size_bytes": 681
+    },
+    "external/pxd057588/reference/input_paths.json": {
+      "sha256": "3d400e45a7f715840e5ca15ee0651306c122ff5b7a6e6eff16e3d3f95139eb94",
+      "size_bytes": 9337
+    },
+    "external/pxd057588/reference/matched_parents.jsonl.gz": {
+      "sha256": "83a668e811c64d58196fca47fefef815def4de7ac23eddc6e1c1fd1cfdd97260",
+      "size_bytes": 5025206
+    },
+    "external/pxd057588/reference/matches.csv.gz": {
+      "sha256": "97f3fcfb98e4a9cc5f638a5102a6534636b873b6c266d360f519538a45b8c11c",
+      "size_bytes": 2321364
+    },
+    "external/pxd057588/reference/mhc_digest_parent_support.jsonl.gz": {
+      "sha256": "3e96365445c1c696ebc9b28e8c4abdbaa31bc79312562d6c2d366aef4e6d4926",
+      "size_bytes": 830900
+    },
+    "external/pxd057588/reference/output_hashes.json": {
+      "sha256": "a6599a24c01f484660b91f227a57f68f6904605fbce8389e3b096c0e13abfcf6",
+      "size_bytes": 967
+    },
+    "external/pxd057588/reference/package-verification.json": {
+      "sha256": "8f986a7cf004150c62f9df133ddd89129fdd421aba9caba21eb20cc7f9a964df",
+      "size_bytes": 1623
+    },
+    "external/pxd057588/reference/reference.fasta": {
+      "sha256": "41bc0fa6cb9118ba95f330a27b18c39559e9397b6d99d1e73cc094869c99787a",
+      "size_bytes": 18126470
+    },
+    "external/pxd057588/reference/reference_entries.jsonl.gz": {
+      "sha256": "b6e2b33288278e6d75a0e7bb7b0fc0b857cc027c87c0b079fdbe9b6e134abfae",
+      "size_bytes": 2059626
+    },
+    "external/pxd057588/reference/sequences.csv.gz": {
+      "sha256": "b6a83bdab712b7ce40372c50e7c8734400af9afdc14ced0c5c802dd89efd38c3",
+      "size_bytes": 387250
+    },
+    "external/pxd057588/reference/source_mapping.jsonl.gz": {
+      "sha256": "ea2eabc63aadd61bde0ca1e033e0df469bfacc6e5e24767e4911e4b7b2102d80",
+      "size_bytes": 1440990
+    },
+    "external/pxd057588/reference/summary.json": {
+      "sha256": "4543ca0ec0ef8ab861c69b155920755f3b42cf63e9762d05be7a5cc13c2690fe",
+      "size_bytes": 5688
+    },
+    "external/pxd057588/typed/channels.parquet": {
+      "sha256": "7334b27f8decd2b094e851776e4c056364499c8ce97887332ecd588f5bae217d",
+      "size_bytes": 5961
+    },
+    "external/pxd057588/typed/contrasts.parquet": {
+      "sha256": "6c40f3199334ac7f3142f06be48d268bf7dc87d0a59bc107bc37a8b1b20a4880",
+      "size_bytes": 4492
+    },
+    "external/pxd057588/typed/deposited_files.parquet": {
+      "sha256": "cb3a842956a499cf711f6c8e76c912eaac1f469fd33328dc4eb0669dd8413f1b",
+      "size_bytes": 6011
+    },
+    "external/pxd057588/typed/derivation_inputs.parquet": {
+      "sha256": "12acd48c00b40d83ce30e662f0201bed9422163ba245e0f51aa2684ecebd9478",
+      "size_bytes": 2077514
+    },
+    "external/pxd057588/typed/panel_records.parquet": {
+      "sha256": "be51f15a69fb2d3ba2f3804ea4d3ee171e79f45a34843efccbe5224ffbdb618a",
+      "size_bytes": 1075492
+    },
+    "external/pxd057588/typed/panels.parquet": {
+      "sha256": "41f64f35fa4ebc1a6a316b37e5119a7bd1c9e86b68bf735564e5a11916f65c48",
+      "size_bytes": 2089
+    },
+    "external/pxd057588/typed/peptide_rows.parquet": {
+      "sha256": "3803b4b1929961cbebfbe0ef5f4841a2d2ac734df1f7f21d8c54c728fee4bdcb",
+      "size_bytes": 712108
+    },
+    "external/pxd057588/typed/quantity_measurements.parquet": {
+      "sha256": "e6d7d347463cd376428efe94a5c0c45c6d322fed8098bec61c9ac0ab8dedcecd",
+      "size_bytes": 11101773
+    },
+    "external/pxd057588/typed/quantity_results.parquet": {
+      "sha256": "2a021ae59117fc30c7b7777ff6c3061ed6126975727760647b377ced5d8c6ece",
+      "size_bytes": 1757170
+    },
+    "external/pxd057588/typed/reference_occurrences.parquet": {
+      "sha256": "1788308d418ebac613bb31aa7b66a6dad45a12bdb88503983844110f6d41f2f0",
+      "size_bytes": 1267546
+    },
+    "external/pxd057588/typed/reference_parent_support.parquet": {
+      "sha256": "e60410df2cf36d54bd46c752a06ba794c0d749b4f400e87d1fe170b0ad212540",
+      "size_bytes": 707867
+    },
+    "external/pxd057588/typed/reference_parents.parquet": {
+      "sha256": "18c9f49e1a0611a803ee1c12a3c0b6d0ad9a4c56ca2e0a90034238e6b098af37",
+      "size_bytes": 4802556
+    },
+    "external/pxd057588/typed/reference_result_context.parquet": {
+      "sha256": "5241ee71dd64aaba143a75985dfce4ff85dfbb290f0900887218d6b62fa60395",
+      "size_bytes": 1308930
+    },
+    "external/pxd057588/typed/reference_sequences.parquet": {
+      "sha256": "ba30c9c682f50dfaa94490deb9da5ecd55a909e307ab6eb7d797c7b35cd2dab6",
+      "size_bytes": 447917
+    },
+    "external/pxd057588/typed/reference_source_mappings.parquet": {
+      "sha256": "00793224eb5830e65057ee9077b4b09ade4a1fadba9c7a5e9ecd46213b430770",
+      "size_bytes": 1043606
+    },
+    "external/pxd057588/typed/reference_species_roles.parquet": {
+      "sha256": "45c92126245960f73c4484780d997959b818e8519c8c173fc2497820e1c6d566",
+      "size_bytes": 3755
+    },
+    "external/pxd057588/typed/sdrf_cells.parquet": {
+      "sha256": "9f7d926ffd6082d797ef94b47bd714b0ceaafba8c3b5885bca2772d477621f30",
+      "size_bytes": 12791
+    },
+    "external/pxd057588/typed/source_assertions.parquet": {
+      "sha256": "ce274a11cfc5eed32302c836dcc5c3acdda8f756329b575f2380df3480393742",
+      "size_bytes": 4712
+    },
+    "external/pxd057588/typed/source_assets.parquet": {
+      "sha256": "4d95f85587d626db7ebcc0c60aab92292d9a37fb09bb7281ac3844fccf5eee61",
+      "size_bytes": 4228
+    },
+    "external/pxd057588/typed/source_cells.parquet": {
+      "sha256": "24e2f21d06724aaa255214794cba902cf564e4a310309f63df7025e10e9c5fee",
+      "size_bytes": 18750867
+    },
+    "manifests/adjudication.json": {
+      "sha256": "8f35dc5529b376f1b2e3b25f91dd2f2dc57d0a53c4d8a76c094294193708c9b6",
+      "size_bytes": 21724
+    },
+    "manifests/context.json": {
+      "sha256": "0d16dd1b9fd0708087d9f04df5c4c57c0f3166f48db513d41816c9bda2685e6b",
+      "size_bytes": 57461
+    },
+    "manifests/external.json": {
+      "sha256": "daff7930e193c6dbde1fe84c065b024187232147fa006d9348e297766e95e69c",
+      "size_bytes": 18979
+    },
+    "manifests/mhc.json": {
+      "sha256": "efa5ea38cbed460a0a860d5ea2780314ead808a6b3eba064cff18228e2596674",
+      "size_bytes": 24598
+    },
+    "manifests/numeric.json": {
+      "sha256": "560770376121758b3c18679c3bf4db78bc89f9e95cc72785a7314fe35167cb1e",
+      "size_bytes": 19560
+    },
+    "manifests/reference.json": {
+      "sha256": "d99f67e625c6c33a2054a56dea4f98fb8248ca5f717cc98af3662f228655fa6a",
+      "size_bytes": 22176
+    },
+    "manifests/supporting.json": {
+      "sha256": "70f1cdb2124aea18f1ec4051dfecb58c73c34324dd06cb8d0b225b2b6a9fdb9c",
+      "size_bytes": 24657
+    },
+    "manifests/tcell.json": {
+      "sha256": "4c3275ca6da9a9e1de084fcc1a8d1243d4e67b1e9c3ed4d6307cbcce5c3738e3",
+      "size_bytes": 18408
+    },
+    "native/README.md": {
+      "sha256": "01bdac0dc3854df34379548923e6a125e3b5e9298c9c2fe0bf90022b8f8df759",
+      "size_bytes": 1367
+    },
+    "native/binding.parquet": {
+      "sha256": "2b3f6ea2dd647e7fc54d214eef420feaebc4e81fab97ffc0565a2de1f8695ba0",
+      "size_bytes": 17096569
+    },
+    "native/bulk_proteomics.parquet": {
+      "sha256": "9e3d52301fe014205bc65e7a8e4554f4e75ce7caa7de8ed184d517d6688df86b",
+      "size_bytes": 45394459
+    },
+    "native/line_expression.parquet": {
+      "sha256": "d2a2cbf00fdd5cbd285bcd88ed06c511f09ed3404c4b705e5108af407b3feddf",
+      "size_bytes": 730671
+    },
+    "native/observation_contributors.parquet": {
+      "sha256": "41ff93e08bc6ea4af692fee16044726af26c4e20ec650ec6c7cd851974b71db1",
+      "size_bytes": 628447260
+    },
+    "native/observations.parquet": {
+      "sha256": "a665f37c0b5917fefb6d12eade530d7e2001de1f0ee73479b21d2c393d173ab4",
+      "size_bytes": 145685701
+    },
+    "native/observations_meta.json": {
+      "sha256": "2318bc53cdae228285218991d58fbcc2bd7266327cec1dd3ed9a03b1c944a5b7",
+      "size_bytes": 12146
+    },
+    "native/other_assays.parquet": {
+      "sha256": "c40f5227ded408830885ecba8336dbdd701172df9573b0d32e5e8a5f8fc947c2",
+      "size_bytes": 1259717
+    },
+    "native/peptide_mappings.parquet": {
+      "sha256": "057c9f01da3aea46816aa9d164c24951e45b42c4cf5d8dc84f44ab201ec1fcc9",
+      "size_bytes": 176051509
+    },
+    "native/peptide_mappings_meta.json": {
+      "sha256": "c188f0f874c8d997ace15c79eca7365e0805f985cd0de9f28c6ec2f0128c8542",
+      "size_bytes": 90848
+    },
+    "tcell/adjudication/reviews.parquet": {
+      "sha256": "6f712666aede4ba12dd95cd9cb17f28dc721b344b28ca3a8b53f12907a36755a",
+      "size_bytes": 14361
+    },
+    "tcell/adjudication/reviews.yaml": {
+      "sha256": "0cc78c8f956abccda03053e474019d6c8b1a762b45373c469891f9a933a81f11",
+      "size_bytes": 12040
+    },
+    "tcell/assets/cedar_tcell_full_v3.zip": {
+      "sha256": "98e858b2a7fb8f220b694750ff2ae1de59f2ff871ade5f16d19816c2499c2ce9",
+      "size_bytes": 14506291
+    },
+    "tcell/assets/iedb_tcell_full_v3.zip": {
+      "sha256": "2e4c6e9df6ec3bb1a151cd7c65cb93f709d50f699321ca9e97a4dd2319b2d952",
+      "size_bytes": 45120781
+    },
+    "tcell/source_field_disposition.json": {
+      "sha256": "275e109d1375695b907c2232392b1d75d76e2fe28c8e104919ba24b26a58f960",
+      "size_bytes": 68552
+    },
+    "tcell/source_receipt.yaml": {
+      "sha256": "48c8cef1c9c55d8d8c675ab6ca1ed3a31a15b309376d08462095a6effd537ae5",
+      "size_bytes": 675
+    },
+    "tcell/typed/antigen_claims.parquet": {
+      "sha256": "fd0ab0aded026be986c7c35f6e5f358ec5b339db3be8e0c845b658d2215d612b",
+      "size_bytes": 10986992
+    },
+    "tcell/typed/assays.parquet": {
+      "sha256": "9a96d3181240fbaa1f35f2b395ec462a9ef897e3e49b9771688cb0daf1379b6a",
+      "size_bytes": 3197104
+    },
+    "tcell/typed/cedar_mutation_claims.parquet": {
+      "sha256": "b0d32d4de6a3121a74bd1ad9157b4320eacf0bc1c422588a43ea629fe5791196",
+      "size_bytes": 388979
+    },
+    "tcell/typed/eligibility.parquet": {
+      "sha256": "2885e592f7c195fd13461534ece80d8d168631ec210b3e73572c643d40184a73",
+      "size_bytes": 2149180
+    },
+    "tcell/typed/outcomes.parquet": {
+      "sha256": "b3e8f8d9d86b9be487d032d3e3e0665623452fb0a50ce504464b0d19edb4b7d3",
+      "size_bytes": 4041157
+    },
+    "tcell/typed/source_contributors.parquet": {
+      "sha256": "328e7afaf5b6663f53d03b043381df7e2c69a8933b0f7b6f9ceac54df8cae333",
+      "size_bytes": 11050077
+    },
+    "tcell/typed/training_examples.parquet": {
+      "sha256": "a7955e3a307af310f0d50b8fda4c3964078654224352cdc199e3685cb2d9498a",
+      "size_bytes": 901876
+    },
+    "typed/arm_control_links.parquet": {
+      "sha256": "d2808a92c52f330a7efa0c7117e1b863cf829c55fc20e0c40dece35df4aac332",
+      "size_bytes": 4916
+    },
+    "typed/arm_factors.parquet": {
+      "sha256": "a6c1f7f3decb6c0d51c4b6a7a4277d80e5fd84545e4e5798a52f46deb1ab4526",
+      "size_bytes": 43718
+    },
+    "typed/arm_mhc_claims.parquet": {
+      "sha256": "47374ec6feabde4035a1a3d6d202b9c1ead8926b26984953cb2e2212e2b11eac",
+      "size_bytes": 43943
+    },
+    "typed/assay_context.parquet": {
+      "sha256": "a8b30d17a19a252f5dd5c03a3f17318a006713d35e172dbde7913f3f44a39eab",
+      "size_bytes": 63755382
+    },
+    "typed/bulk_measurements.parquet": {
+      "sha256": "5805f2cb6c09eeeb7c9fde2fbe30b721b007fb80c57dec5cf23bf17abe731f7c",
+      "size_bytes": 16084453
+    },
+    "typed/bulk_numeric_measurements.parquet": {
+      "sha256": "d7fcd8737b12d610b59d419a8663c684af0ab1c43a1c73723c63dc46f8e38472",
+      "size_bytes": 7982492
+    },
+    "typed/bulk_protocol_scopes.parquet": {
+      "sha256": "bc38f212ace79f7db2869885b268b245e4836480c561871fffeae6dbb04b017e",
+      "size_bytes": 5600
+    },
+    "typed/bulk_results.parquet": {
+      "sha256": "26aaf2073084b435dc94a2d9c4236b5e98a2769c03be985e8be95496dd80ed3c",
+      "size_bytes": 44721009
+    },
+    "typed/curated_arms.parquet": {
+      "sha256": "1974a9066261080df688006adda471fd11736287f8aff1b37880e64d88016ed8",
+      "size_bytes": 47356
+    },
+    "typed/curated_studies.parquet": {
+      "sha256": "34af4b944737cae98e62bb599727ee8b9a0c242bb661f5ed89d91c9e2613fb90",
+      "size_bytes": 70080
+    },
+    "typed/curation_amendments.parquet": {
+      "sha256": "292208a5da61cbe4bacdb3cc3c9f56c5d698777962140235bf6a14fd5f8e15b9",
+      "size_bytes": 3699
+    },
+    "typed/expression_measurements.parquet": {
+      "sha256": "90586c8786cf836a0e3dadc879c6f6c9bb4c258f2b1613ab40c52963918b941c",
+      "size_bytes": 694960
+    },
+    "typed/expression_results.parquet": {
+      "sha256": "0249b504e608328acacd518b3d287f62345b55174e2fdafdf9295f594f189309",
+      "size_bytes": 700352
+    },
+    "typed/expression_sources.parquet": {
+      "sha256": "a55082215be962cd226182bb9e6e05339b4f0c6651888fb6023121ed33cf784f",
+      "size_bytes": 4365
+    },
+    "typed/line_anchor_claims.parquet": {
+      "sha256": "cb1f796fc09f77580d9ea23f4ffffa6443a174d38da980645ac73c034edf004a",
+      "size_bytes": 4629
+    },
+    "typed/line_expression_measurements.parquet": {
+      "sha256": "7857375b2062d1ee12ce391210604f096a98cb4f20f15c011ce6442bfdb8ea5a",
+      "size_bytes": 1059994
+    },
+    "typed/lineage_claims.parquet": {
+      "sha256": "c773accbf621037a7d1c2d8dfb2efd5eef3d3457f29296007412535d56f9c100",
+      "size_bytes": 4464
+    },
+    "typed/mhc_measurements.parquet": {
+      "sha256": "fc2e65c1ed5aad1460a0907c2774b6c8679dcbed663bf4bcb152c7c66d2df819",
+      "size_bytes": 30274921
+    },
+    "typed/mhc_observations.parquet": {
+      "sha256": "31f1c671147bf4c283cf439ba4706d2664e070bb9e3eac38778b19871c7c2913",
+      "size_bytes": 110352724
+    },
+    "typed/peptide_mapping_coverage.parquet": {
+      "sha256": "62eab74bda6acddc6ff4f48b829dfb7d2afa14a45ffa8db1de639c54513ad4e7",
+      "size_bytes": 13232432
+    },
+    "typed/peptide_protein_occurrences.parquet": {
+      "sha256": "e9f2e5c877bff4c3d5c8df9a804f1155d1aab4b92c39e3f0e9cd1d929de09173",
+      "size_bytes": 151559805
+    },
+    "typed/protocol_claims.parquet": {
+      "sha256": "09ef9ae174b6a443127834a67d18fa889d6a9b9b06d69740d1f44f49f1d5598a",
+      "size_bytes": 9438
+    }
+  },
+  "hitlist_version": "2.0.5",
+  "parent_kind": "adjudication",
+  "parent_manifest_path": "manifests/adjudication.json",
+  "parent_manifest_sha256": "8f35dc5529b376f1b2e3b25f91dd2f2dc57d0a53c4d8a76c094294193708c9b6",
+  "reference": {
+    "interpretation": "exact candidate mappings; not original search database or specimen pairing",
+    "output_receipt_sha256": "a6599a24c01f484660b91f227a57f68f6904605fbce8389e3b096c0e13abfcf6",
+    "presto_commit": "24f1d2b",
+    "reference_fasta_sha256": "41bc0fa6cb9118ba95f330a27b18c39559e9397b6d99d1e73cc094869c99787a",
+    "release": "UniProt 2026_03 reviewed mouse including isoforms",
+    "report": "pirl-unc/presto/experiments/2026-10-22_1914_codex_pxd057588-shared-sequence-admission",
+    "source_rights": {
+      "pride_project_metadata": "CC0",
+      "publisher_supplements": "CC BY 4.0",
+      "uniprot_reference": "CC BY 4.0"
+    },
+    "taxonomy_id": "10090"
+  },
+  "schema_version": 9
+}

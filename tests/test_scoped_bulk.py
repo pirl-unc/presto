@@ -343,9 +343,9 @@ def test_manual_scoped_record_cannot_bypass_missing_lineage():
 def test_scoped_metadata_survives_actual_prediction_exports(scoped_bundle, tmp_path):
     import csv
     from presto.data.source_lineage import source_lineage_fields
-    from presto.models.presto import Presto
+    from presto.legacy.presto import Presto
     from presto.training.holdout_eval import collect_holdout_predictions, write_holdout_artifacts
-    from presto.scripts.train_synthetic import (
+    from presto.legacy.scripts.train_synthetic import (
         LOSS_TASK_SPECS,
         _resolve_task_prediction,
         _get_batch_target,

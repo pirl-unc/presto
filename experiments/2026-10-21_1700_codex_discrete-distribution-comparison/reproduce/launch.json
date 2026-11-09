@@ -1,0 +1,28 @@
+{
+  "agent": "Codex / GPT-6",
+  "specification": "experiments/agents/codex/plans/discrete-distribution-comparison.md",
+  "command": "bash experiments/2026-10-21_1700_codex_discrete-distribution-comparison/reproduce/launch.sh",
+  "interpreter": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "PYTHONHASHSEED": "0"
+  },
+  "device": "cpu",
+  "modal_gpu": null,
+  "training": {
+    "optimizer": "Adam",
+    "learning_rate": 0.003,
+    "weight_decay": 0,
+    "batch_size": 16,
+    "epochs": 60,
+    "model_seeds": [42, 43, 44],
+    "validation_every_epochs": 5,
+    "selection": "minimum exact validation reverse KL",
+    "test_policy": "once after selection"
+  },
+  "data_seed": 20261021,
+  "teacher_seed": 20261022,
+  "source_pin": "actual commit, dirty state, diff and source hash written to results/run/execution.json at launch"
+}

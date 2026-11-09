@@ -13,7 +13,7 @@ but paired with a different allele. The only separating signal is the motif.
 
 import pytest
 
-from presto.scripts.train_iedb import (  # noqa: E402
+from presto.legacy.scripts.train_iedb import (  # noqa: E402
     ALL_SYNTHETIC_MODES,
     EASY_SYNTHETIC_MODES,
     HARD_SYNTHETIC_MODES,

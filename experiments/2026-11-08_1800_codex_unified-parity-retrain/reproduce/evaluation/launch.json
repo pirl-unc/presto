@@ -1,0 +1,50 @@
+{
+  "created_utc": "2026-11-09T05:02:05Z",
+  "determinism": {
+    "independent_runs": 2,
+    "scientific_artifacts_byte_identical": true,
+    "variable_receipt_fields": [
+      "elapsed_seconds",
+      "peak_rss_bytes"
+    ]
+  },
+  "environment": {
+    "MPLCONFIGDIR": "/private/tmp/presto-mpl-config",
+    "PRESTO_EVALUATION_INPUT_ROOT": "/private/tmp/presto-parity-eval-inputs",
+    "PRESTO_EVALUATION_OUTPUT_ROOT": "/private/tmp/presto-parity-evaluation-final-1",
+    "PRESTO_PYTHON": "/Users/iskander/code/shared-virtual-env/bin/python",
+    "PRESTO_PYTHONPATH": "/private/tmp/presto-import-post153"
+  },
+  "execution": {
+    "command": "experiments/2026-11-08_1800_codex_unified-parity-retrain/reproduce/evaluation/launch.sh",
+    "second_output_root": "/private/tmp/presto-parity-evaluation-final-2"
+  },
+  "files": {
+    "contract": {
+      "bytes": 1584,
+      "path": "reproduce/evaluation/contract.json",
+      "sha256": "9134a861178b4fff8f7715d1bf3e029bbca12f221668a1b7006b63d2bf5ad0b4"
+    },
+    "evaluator": {
+      "bytes": 29944,
+      "path": "code/evaluate_pair.py",
+      "sha256": "b5a8df93e39d160f0b9eb87c4be3ff7d8001b26122c94f283ffac089a437c1ab"
+    },
+    "launcher": {
+      "bytes": 836,
+      "path": "reproduce/evaluation/launch.sh",
+      "sha256": "314ad2c68484e03e64d15ab70e2712b139e8e7ccde13e301517ac4747b386177"
+    },
+    "verifier": {
+      "bytes": 9545,
+      "path": "code/verify_evaluation.py",
+      "sha256": "0366e8307305cba1e579f8743f12d73d7e07fa2fd2c70a7ef9ac62568e64ba87"
+    }
+  },
+  "result_root": "modal-volume://presto-checkpoints/2026-11-08_1800_codex_unified-parity-retrain/evaluation-final",
+  "schema": "presto.unified_parity_evaluation_launch.v1",
+  "source": {
+    "commit": "2d980da730eb2430c6162cf9f806cebafaad36dd",
+    "dirty": false
+  }
+}

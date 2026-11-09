@@ -1,0 +1,277 @@
+{
+  "admissions": {
+    "native101": {
+      "cell_types": [],
+      "census": {
+        "test:elution_observation:=": 11808,
+        "train:elution_observation:=": 55296,
+        "validation:elution_observation:=": 11040
+      },
+      "component_states": {},
+      "context_assertion_states": {
+        "intervention": {},
+        "pathway": {}
+      },
+      "cytokine_numeric": {},
+      "cytokine_states": {},
+      "frozen_parameters": [
+        "encoder.embedding.weight",
+        "encoder.norm.bias",
+        "encoder.norm.weight",
+        "encoder.transformer.layers.0.linear1.bias",
+        "encoder.transformer.layers.0.linear1.weight",
+        "encoder.transformer.layers.0.linear2.bias",
+        "encoder.transformer.layers.0.linear2.weight",
+        "encoder.transformer.layers.0.norm1.bias",
+        "encoder.transformer.layers.0.norm1.weight",
+        "encoder.transformer.layers.0.norm2.bias",
+        "encoder.transformer.layers.0.norm2.weight",
+        "encoder.transformer.layers.0.self_attn.in_proj_bias",
+        "encoder.transformer.layers.0.self_attn.in_proj_weight",
+        "encoder.transformer.layers.0.self_attn.out_proj.bias",
+        "encoder.transformer.layers.0.self_attn.out_proj.weight",
+        "encoder.transformer.layers.1.linear1.bias",
+        "encoder.transformer.layers.1.linear1.weight",
+        "encoder.transformer.layers.1.linear2.bias",
+        "encoder.transformer.layers.1.linear2.weight",
+        "encoder.transformer.layers.1.norm1.bias",
+        "encoder.transformer.layers.1.norm1.weight",
+        "encoder.transformer.layers.1.norm2.bias",
+        "encoder.transformer.layers.1.norm2.weight",
+        "encoder.transformer.layers.1.self_attn.in_proj_bias",
+        "encoder.transformer.layers.1.self_attn.in_proj_weight",
+        "encoder.transformer.layers.1.self_attn.out_proj.bias",
+        "encoder.transformer.layers.1.self_attn.out_proj.weight",
+        "heads.ic50.bias",
+        "heads.ic50.weight",
+        "pmhc_fusion.0.bias",
+        "pmhc_fusion.0.weight",
+        "register_score.weight"
+      ],
+      "frozen_targets": [
+        "ic50"
+      ],
+      "inherited_scalers": [
+        "ic50"
+      ],
+      "manifest_sha256": "eac75ec1274b0f13a33b1bd7fdf64f609d04481bd7d5d8febb815973451031a3",
+      "module_pruning": [],
+      "observed_numeric_features": {
+        "acquisition": [],
+        "observation": [],
+        "preparation": []
+      },
+      "source_label_values": {},
+      "training_labels": {
+        "elution_observation": 55296
+      }
+    },
+    "native102": {
+      "cell_types": [],
+      "census": {
+        "test:elution_observation:=": 11808,
+        "train:elution_observation:=": 55296,
+        "validation:elution_observation:=": 11040
+      },
+      "component_states": {},
+      "context_assertion_states": {
+        "intervention": {},
+        "pathway": {}
+      },
+      "cytokine_numeric": {},
+      "cytokine_states": {},
+      "frozen_parameters": [
+        "encoder.embedding.weight",
+        "encoder.norm.bias",
+        "encoder.norm.weight",
+        "encoder.transformer.layers.0.linear1.bias",
+        "encoder.transformer.layers.0.linear1.weight",
+        "encoder.transformer.layers.0.linear2.bias",
+        "encoder.transformer.layers.0.linear2.weight",
+        "encoder.transformer.layers.0.norm1.bias",
+        "encoder.transformer.layers.0.norm1.weight",
+        "encoder.transformer.layers.0.norm2.bias",
+        "encoder.transformer.layers.0.norm2.weight",
+        "encoder.transformer.layers.0.self_attn.in_proj_bias",
+        "encoder.transformer.layers.0.self_attn.in_proj_weight",
+        "encoder.transformer.layers.0.self_attn.out_proj.bias",
+        "encoder.transformer.layers.0.self_attn.out_proj.weight",
+        "encoder.transformer.layers.1.linear1.bias",
+        "encoder.transformer.layers.1.linear1.weight",
+        "encoder.transformer.layers.1.linear2.bias",
+        "encoder.transformer.layers.1.linear2.weight",
+        "encoder.transformer.layers.1.norm1.bias",
+        "encoder.transformer.layers.1.norm1.weight",
+        "encoder.transformer.layers.1.norm2.bias",
+        "encoder.transformer.layers.1.norm2.weight",
+        "encoder.transformer.layers.1.self_attn.in_proj_bias",
+        "encoder.transformer.layers.1.self_attn.in_proj_weight",
+        "encoder.transformer.layers.1.self_attn.out_proj.bias",
+        "encoder.transformer.layers.1.self_attn.out_proj.weight",
+        "heads.ic50.bias",
+        "heads.ic50.weight",
+        "pmhc_fusion.0.bias",
+        "pmhc_fusion.0.weight",
+        "register_score.weight"
+      ],
+      "frozen_targets": [
+        "ic50"
+      ],
+      "inherited_scalers": [
+        "ic50"
+      ],
+      "manifest_sha256": "290fea7d0ef2dce9b1cbeaa7f3391465e050989a1d3c39c4adfeeab3d74a9bd3",
+      "module_pruning": [],
+      "observed_numeric_features": {
+        "acquisition": [],
+        "observation": [],
+        "preparation": []
+      },
+      "source_label_values": {},
+      "training_labels": {
+        "elution_observation": 55296
+      }
+    },
+    "permuted101": {
+      "cell_types": [],
+      "census": {
+        "test:elution_observation:=": 11808,
+        "train:elution_observation:=": 55296,
+        "validation:elution_observation:=": 11040
+      },
+      "component_states": {},
+      "context_assertion_states": {
+        "intervention": {},
+        "pathway": {}
+      },
+      "cytokine_numeric": {},
+      "cytokine_states": {},
+      "frozen_parameters": [
+        "encoder.embedding.weight",
+        "encoder.norm.bias",
+        "encoder.norm.weight",
+        "encoder.transformer.layers.0.linear1.bias",
+        "encoder.transformer.layers.0.linear1.weight",
+        "encoder.transformer.layers.0.linear2.bias",
+        "encoder.transformer.layers.0.linear2.weight",
+        "encoder.transformer.layers.0.norm1.bias",
+        "encoder.transformer.layers.0.norm1.weight",
+        "encoder.transformer.layers.0.norm2.bias",
+        "encoder.transformer.layers.0.norm2.weight",
+        "encoder.transformer.layers.0.self_attn.in_proj_bias",
+        "encoder.transformer.layers.0.self_attn.in_proj_weight",
+        "encoder.transformer.layers.0.self_attn.out_proj.bias",
+        "encoder.transformer.layers.0.self_attn.out_proj.weight",
+        "encoder.transformer.layers.1.linear1.bias",
+        "encoder.transformer.layers.1.linear1.weight",
+        "encoder.transformer.layers.1.linear2.bias",
+        "encoder.transformer.layers.1.linear2.weight",
+        "encoder.transformer.layers.1.norm1.bias",
+        "encoder.transformer.layers.1.norm1.weight",
+        "encoder.transformer.layers.1.norm2.bias",
+        "encoder.transformer.layers.1.norm2.weight",
+        "encoder.transformer.layers.1.self_attn.in_proj_bias",
+        "encoder.transformer.layers.1.self_attn.in_proj_weight",
+        "encoder.transformer.layers.1.self_attn.out_proj.bias",
+        "encoder.transformer.layers.1.self_attn.out_proj.weight",
+        "heads.ic50.bias",
+        "heads.ic50.weight",
+        "pmhc_fusion.0.bias",
+        "pmhc_fusion.0.weight",
+        "register_score.weight"
+      ],
+      "frozen_targets": [
+        "ic50"
+      ],
+      "inherited_scalers": [
+        "ic50"
+      ],
+      "manifest_sha256": "92cd741c72b0e204bb13940316c8eb0c97d22031c225c291b6501e0b9238dbbf",
+      "module_pruning": [],
+      "observed_numeric_features": {
+        "acquisition": [],
+        "observation": [],
+        "preparation": []
+      },
+      "source_label_values": {},
+      "training_labels": {
+        "elution_observation": 55296
+      }
+    }
+  },
+  "agent_model": "Codex / GPT-6",
+  "code_hashes": {
+    "continue_native.py": "167d60076d97c094ef062b5a605ab995fac4f0418ce67dc195aa230e4d392f0d",
+    "native.py": "2da54d915d75028c3cd1273b00fbd6fd957c01026309af13aa004bbff6f57541"
+  },
+  "cohort_sha256": "3f4ed5debca77451c7e098252b6c9079c1d89b5f2213575c80ee186691f3ea67",
+  "cohort_verification_sha256": "614d122b1131b85a1e9411e8598bbf8bb36dad53e300525fa4ecc37a13e3100b",
+  "external_manifest": {
+    "path": "/private/tmp/presto-mhc2-20261026/presto/experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/external-manifest.json",
+    "sha256": "8342dd8a8e2ed9c16da893404cc175a7b28c871325de6833eda975904c904e55"
+  },
+  "initialization": {
+    "path": "/Users/iskander/code/presto/artifacts/2026-10-26_1610_codex_ic50-convergence/seed42/selected.pt",
+    "sha256": "db2585e63489cb5aac8c7a32fd7e522bcbc51035846c05f8cd2794c4449e3dc5"
+  },
+  "manifests": {
+    "native101": {
+      "path": "/private/tmp/presto-mhc2-20261026/presto/experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/native101-manifest.json",
+      "sha256": "eac75ec1274b0f13a33b1bd7fdf64f609d04481bd7d5d8febb815973451031a3"
+    },
+    "native102": {
+      "path": "/private/tmp/presto-mhc2-20261026/presto/experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/native102-manifest.json",
+      "sha256": "290fea7d0ef2dce9b1cbeaa7f3391465e050989a1d3c39c4adfeeab3d74a9bd3"
+    },
+    "permuted101": {
+      "path": "/private/tmp/presto-mhc2-20261026/presto/experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/permuted101-manifest.json",
+      "sha256": "92cd741c72b0e204bb13940316c8eb0c97d22031c225c291b6501e0b9238dbbf"
+    }
+  },
+  "parent_scales": {
+    "ic50": {
+      "exact_count": 21636,
+      "floor": 0.001,
+      "mean": 2.768232837778882,
+      "scale": 1.3434766242663534
+    }
+  },
+  "runtime_hashes": {
+    "cli/training_sources.py": "2e70ddf79a30cbb01a039aa26b2093b3083b78c96e53fbbff8a5264312745471",
+    "data/modular.py": "688dbc2dc49098abc7e66f186d5889fcd76e3ae2729d3b29b4e5b732237f13e8",
+    "data/modular_auxiliary.py": "7e2f6e9f560fe62650809ec6be6a781c5d3040270c73b8ec02cfa4bdb4cdb34f",
+    "data/modular_context.py": "4bb7e5a2432462e33e9c2632e85a78445282a604c095b0bff2ee6596b6617dc0",
+    "data/modular_lineage.py": "c10e7151af1a4f76fbc106a6621db69b024750ac042488df93a7a7d11e0cc4b9",
+    "data/modular_preparation.py": "e0268e9a9f5a531af378158f164ef5bce99361f6923be74f39bcd1f97bfc6962",
+    "data/modular_quantitative.py": "751a66c8aa68fd697d395ec3fc63951e262278a0fb6c3f26c185e8963f7d148d",
+    "data/modular_sources.py": "1f179c5f3b7791f6c79df7e77aa1ceafe4940ae1fcda50fd6e43e9fb4d886edf",
+    "data/vocab.py": "ecc2e1c5154d25d80cddae4f0708317e2cf40e39c171d9eaeb777ad88541e4f7",
+    "models/encoders.py": "c49f2461052b308f89289a3c44072c62edd09a1c1d41fb55426a5679db2b14c2",
+    "models/modular.py": "df5464f933796bf8f101fdb7d50a522e423339477b06df358d38cdeda50f2a37",
+    "models/modular_dependencies.py": "17918102c6d7965e48b7c2c367e371da46d858624725fd81193d3a726a2b07a0",
+    "models/modular_support.py": "d3cb1cb165d5cee236409c51c8d0e93eaa7bb9ef430dd682e726d72889e9619d",
+    "scripts/train_iedb.py": "efb1fee90dfb7f9b475ea1fc6f5c7b8711c719681ee64dc3a43fc017d6f83704",
+    "training/modular.py": "aab95991b75b0460baeb2be60d43096fb1c278953c260ea8d86662f7d9b3ade6",
+    "training/modular_evaluation.py": "ca75a674691a27e8c34ddf195ff31c29b76d134ec852320fa09aeeb9e69789ab",
+    "training/modular_resume.py": "5887626321ad2ead4b48c4032d34cfb013b14a2a0a716dc35bb0f7e443d32bfb",
+    "training/modular_run.py": "132b09b19ce911ad96a04bc2f8894fb1f26de5293146f35feb1d3f3c133339a6"
+  },
+  "seeds": {
+    "native101": 101,
+    "native102": 102,
+    "permuted101": 101
+  },
+  "status": "native_manifests_verified_not_fitted",
+  "training": {
+    "batch_size": 64,
+    "checkpoint_every_steps": 50,
+    "identity_weight": 0,
+    "learning_rate": 0.0003,
+    "max_epochs": 3,
+    "max_steps": 2592,
+    "min_epochs": 3,
+    "patience": 100,
+    "weight_decay": 0.0001
+  },
+  "utc": "2026-10-26T20:41:56.381837+00:00"
+}

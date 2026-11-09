@@ -1,0 +1,20 @@
+{
+  "all_pass": true,
+  "updates": 400,
+  "predictions_per_arm": 105452,
+  "archived_raw_files": 8,
+  "executed_sources_unchanged": true,
+  "source_commit": "a6c655905247bef41459221a1a2c402361c09a75",
+  "previous_ci": {
+    "run": 40052237814,
+    "status": "completed",
+    "conclusion": "success"
+  },
+  "environment": {
+    "python": "3.12.6",
+    "torch": "2.14.1",
+    "numpy": "2.5.4",
+    "machine": "arm64"
+  },
+  "scope": "Both biological arms and independent checks complete. No blind test or concentration validation; neither numerical checks nor parameter updates imply biological success."
+}

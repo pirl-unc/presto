@@ -1,0 +1,32 @@
+{
+  "gains": {
+    "zero": 0.0004121252447517598,
+    "length": -0.003476084361402787,
+    "sequence": 0.00320092089222479
+  },
+  "prediction_target_sd_ratio": 0.013855715222008682,
+  "improved_folds_vs_sequence": 3,
+  "paired_gain_intervals": {
+    "zero": [
+      -0.0021027489932386677,
+      0.0028489760063293425
+    ],
+    "length": [
+      -0.018646296028111714,
+      0.010554613407459019
+    ],
+    "sequence": [
+      -0.0003727746975623558,
+      0.00733609842094893
+    ]
+  },
+  "gates": {
+    "gain_over_all_controls": false,
+    "spread": false,
+    "four_of_five_folds": false,
+    "bootstrap_lower_bound": false
+  },
+  "prioritize_independent_confirmation": false,
+  "complete_APC_concentration_model": false,
+  "evidence_scope": "Training-only development OOF; overlapping fit sets, no blind biological test."
+}

@@ -1,0 +1,1 @@
+Preflight failed before optimizer updates because the older fit record has no data_mse key. The recorded metrics.json owns training MSE. Preserve original source/config/log. Correct only the reference lookup and pin that metrics file; no model/data/optimizer change. Registered 2026-10-23T14:09:59.739227-04:00

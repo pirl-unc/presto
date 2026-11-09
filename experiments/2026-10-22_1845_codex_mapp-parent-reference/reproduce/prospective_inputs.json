@@ -1,0 +1,12 @@
+{
+  "historical_dat": {
+    "path": "/Users/iskander/code/weirdo/data/swissprot-dat-files/uniprot_sprot_human.dat.gz",
+    "bytes": 108046188,
+    "sha256": "defd9fd7fdc3be6f36b5b57b1a2c29978b956612e1437ec15f7065b055bbe9d3",
+    "scope": "human reviewed canonical records; local2023snapshot, original2016search reference unverified"
+  },
+  "official_fasta": {
+    "url": "https://rest.uniprot.org/uniprotkb/stream?query=%28organism_id%3A9606%29%20AND%20%28reviewed%3Atrue%29&format=fasta&includeIsoform=true",
+    "scope": "retrieved reviewed human reference including isoforms; exact release from response headers"
+  }
+}

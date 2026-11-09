@@ -1,0 +1,48 @@
+{
+  "assets": [
+    {
+      "name": "article.xml",
+      "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6398211/fullTextXML",
+      "started_utc": "2026-10-24T18:17:21.733790+00:00",
+      "status_code": 500,
+      "final_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6398211/fullTextXML",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "status": "failed",
+      "error": "HTTPError: 500 Server Error:  for url: https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6398211/fullTextXML",
+      "seconds": 0.8893708749674261
+    },
+    {
+      "name": "proteomexchange.xml",
+      "url": "https://proteomecentral.proteomexchange.org/cgi/GetDataset?ID=PXD010301&outputMode=XML",
+      "started_utc": "2026-10-24T18:17:22.624576+00:00",
+      "status_code": 200,
+      "final_url": "https://proteomecentral.proteomexchange.org/cgi/GetDataset?ID=PXD010301&outputMode=XML",
+      "headers": {
+        "Content-Type": "text/plain; charset=UTF-8"
+      },
+      "status": "retrieved",
+      "bytes": 4494,
+      "sha256": "849b24000b6ba9e278e9381212785c468f426ffdccad40607e824126d1768385",
+      "path": "/private/tmp/presto-modular-model/data/do_source_qualification/2026-10-24_1818_v1/proteomexchange.xml",
+      "seconds": 1.9366341659915633
+    },
+    {
+      "name": "massive.html",
+      "url": "https://massive.ucsd.edu/ProteoSAFe/dataset.jsp?accession=MSV000082570",
+      "started_utc": "2026-10-24T18:17:24.561802+00:00",
+      "status_code": 200,
+      "final_url": "https://massive.ucsd.edu/ProteoSAFe/dataset.jsp?accession=MSV000082570",
+      "headers": {
+        "Content-Type": "text/html;charset=UTF-8"
+      },
+      "status": "retrieved",
+      "bytes": 81727,
+      "sha256": "72980bb8f11d5ceba97f80d855230a4fb5823a9d0fbab477ae070e6a5430bb76",
+      "path": "/private/tmp/presto-modular-model/data/do_source_qualification/2026-10-24_1818_v1/massive.html",
+      "seconds": 0.85593295795843
+    }
+  ],
+  "total_download_bytes": 86221
+}

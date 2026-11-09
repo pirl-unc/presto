@@ -1,0 +1,123 @@
+{
+  "registered_at": "2026-10-23T19:09:21.104757-04:00",
+  "agent_model": "Codex / GPT-6",
+  "git_commit": "702d66be09a32e753272917650db4f10f8b569c0",
+  "dirty": " M tasks/todo.md\n?? data/availability_recipes/\n?? experiments/2026-10-23_1909_codex_boundary-importance/\n?? experiments/agents/codex/plans/full-ic50-fitting.md\n?? tasks/modular_model/trajectory-sampling-issue.md\n",
+  "plan_sha256": "e7d4c5b68cbf5cff0b11d2845cfeee34eaf909417ca38d2fa2fcff9c36b7bfc1",
+  "scope": "Positive boundary-time importance estimates and full-path scores; no biological measurements or fitting",
+  "rates_per_hour": [
+    0.02,
+    0.07,
+    0.11,
+    0.03,
+    0.15
+  ],
+  "eta": [
+    -1.0,
+    0.0,
+    1.0
+  ],
+  "times_hours": [
+    0.5,
+    2.0,
+    8.0
+  ],
+  "targets": [
+    [
+      0,
+      6
+    ],
+    [
+      0,
+      3
+    ],
+    [
+      3,
+      6
+    ],
+    [
+      1,
+      5
+    ],
+    [
+      2,
+      3
+    ]
+  ],
+  "counts": [
+    256,
+    2048,
+    16384
+  ],
+  "groups": 16,
+  "seed_base": 73000,
+  "seed_rule": "base+1000000*state_index+10000*count_index+group_index; state order eta,time,target",
+  "gates": {
+    "primary_count": 16384,
+    "maximum_mean_relative_count_error": 0.05,
+    "maximum_abs_mean_log_error": 0.02,
+    "maximum_mean_log_gradient_relative_error": 0.05,
+    "maximum_rms_log_gradient_relative_error": 0.25
+  },
+  "rare_cases": [
+    {
+      "name": "internal_100",
+      "rates": [
+        0.02,
+        7.0,
+        11.0,
+        3.0,
+        0.15
+      ],
+      "eta": 0.0,
+      "time": 8.0,
+      "target": [
+        1,
+        5
+      ]
+    },
+    {
+      "name": "internal_1000",
+      "rates": [
+        0.02,
+        70.0,
+        110.0,
+        30.0,
+        0.15
+      ],
+      "eta": 0.0,
+      "time": 8.0,
+      "target": [
+        1,
+        5
+      ]
+    },
+    {
+      "name": "fast_boundaries",
+      "rates": [
+        2.0,
+        0.07,
+        0.11,
+        0.03,
+        15.0
+      ],
+      "eta": 0.0,
+      "time": 8.0,
+      "target": [
+        1,
+        5
+      ]
+    }
+  ],
+  "rare_scope": "Fixed stress diagnostics; gates before biological use unchanged, no adaptive seed/count rescue",
+  "rare_seed_rule": "base+50000000+1000000*case_index+10000*count_index+group_index",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "PYTHONPATH": "/private/tmp/presto-modular-imports"
+  },
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "device": "CPU",
+  "dtype": "float64"
+}

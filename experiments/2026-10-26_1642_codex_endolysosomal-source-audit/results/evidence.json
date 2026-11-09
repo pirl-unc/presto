@@ -1,0 +1,73 @@
+{
+  "decision": "not_admitted_for_peptide_quantity_training",
+  "peptide_quantity_rows_admitted": 0,
+  "source_doi": "10.3389/falgy.2026.1936335",
+  "scope": "original article and all five publisher-listed version1 supplementary PDFs",
+  "source_context": {
+    "enzyme_source": "murine dendritic-cell line JAWSII",
+    "compartment": "isolated endolysosomal preparation",
+    "proteins": [
+      "Bet v 1",
+      "Aes h 1"
+    ],
+    "quantity": "MS signal; no peptide-specific molar calibration",
+    "source_search_scope": "reported unspecific search; peptide length minimum9, usual maximum30; separate Aes h1 inspection to51",
+    "modifications": "source methods retain modified forms; Aes h1 preparation includes reduction/alkylation; do not equate altered detection to biological production"
+  },
+  "assets": [
+    {
+      "file": "Data_Sheet_1.pdf",
+      "kind": "reporter-activity graph",
+      "admitted": false,
+      "reason": "graph only and reporter response, not peptide-product amounts"
+    },
+    {
+      "file": "Data_Sheet_2.pdf",
+      "kind": "protein degradation half-life aggregate table and plot",
+      "aggregate_cells": 8,
+      "admitted": false,
+      "reason": "two protein-level summaries, not individual peptide measurements or pMHC dissociation half-life"
+    },
+    {
+      "file": "Data_Sheet_3.pdf",
+      "kind": "Bet v1 color-coded peptide map at nine times",
+      "admitted": false,
+      "reason": "sequences and log2 color legend; no individual numeric intensities or sample/replicate records"
+    },
+    {
+      "file": "Data_Sheet_4.pdf",
+      "kind": "Aes h1 color-coded peptide map at nine times",
+      "admitted": false,
+      "reason": "sequences and log2 color legend; no individual numeric intensities or sample/replicate records"
+    },
+    {
+      "file": "Data_Sheet_5.pdf",
+      "kind": "single peptide time-course plot",
+      "admitted": false,
+      "reason": "graph only; missing/zero/censor semantics not recoverable as original measurements"
+    }
+  ],
+  "missing_for_admission": [
+    "original peptide/form intensity table",
+    "acquisition/sample/preparation and replicate links",
+    "normalization and run scaling",
+    "missing/zero/censor semantics",
+    "supported short-product observation universe"
+  ],
+  "limits": [
+    "No graphs digitized or colors converted into quantitative labels.",
+    "No mean expanded into repeated observations.",
+    "No shared production parser or query created without an admitted source table.",
+    "No inference that data do not exist elsewhere; no repository/deposit search after this exact asset audit.",
+    "Synthetic software examples remain excluded by the prior pinned repository evidence; no new repository contents were fetched.",
+    "Raw files and search outputs may resolve these gaps later; no author contact was performed."
+  ],
+  "verification": {
+    "page_metadata": "pypdf and Poppler agree: five single-page PDFs, no embedded attachments",
+    "numeric_table": "eight source summary cells independently replay in both text engines",
+    "visual_inspection": "all five original PDF pages rendered and viewed",
+    "text_extraction_caveat": "initial pypdf extraction reached its form limit on maps; independent Poppler extraction and rendered pages used for coverage"
+  },
+  "full_model_qualified": false,
+  "next_action": "Await original measured tables with sample/run lineage for this source; continue independent IC50 and other qualified contracts."
+}

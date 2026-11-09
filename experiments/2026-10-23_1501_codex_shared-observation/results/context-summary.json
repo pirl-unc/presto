@@ -1,0 +1,163 @@
+{
+  "acquisition_relationships": [],
+  "assignment_raw_examples": [
+    "WSoh_301121_021221_HFGoe_M1_AnnexinA1_24h_R1_21636",
+    "WSoh_221121_011221_HFGoe_L1_hTau_24h_R1_22989",
+    "HRoetschke_291222_140123_HFGoe_H4_b1R2_4h_6018",
+    "Ncheng_230623_260623_HFGoe_FFH_20S_6p25_1_C2_3h_R2_26465",
+    "Ncheng_230623_260623_HFGoe_FFH_20S_6p25_1_C2_2h_R2_27024"
+  ],
+  "counts": {
+    "('train', 'unambiguous_candidate_instrument')": 90630,
+    "('val', 'unambiguous_candidate_instrument')": 14822
+  },
+  "form_scope": "Conservative per-run/IL-peptide candidate forms; no raw-assignment-to-retained-form equivalence asserted",
+  "instrument_scope": "All candidate source runs agree is sufficient for the retained subset; exact retained technical pairing remains unresolved",
+  "ms1_query": {
+    "evidence_type": "digestion_ms1",
+    "limit": null,
+    "select": [
+      "condition_id",
+      "peptide_sequence",
+      "digestion_run_id",
+      "digestion_modified_sequence_raw",
+      "native.precursor_charge_raw",
+      "native.assignment_id_raw",
+      "digestion_run_link_status"
+    ],
+    "where": {
+      "condition_id": {
+        "op": "in",
+        "value": [
+          "soh2024_digestion:condition:aSPIRE_AnnexinA1",
+          "soh2024_digestion:condition:aSPIRE_FFH_12p5",
+          "soh2024_digestion:condition:aSPIRE_FFH_6p25",
+          "soh2024_digestion:condition:aSPIRE_H2A",
+          "soh2024_digestion:condition:aSPIRE_H2B",
+          "soh2024_digestion:condition:aSPIRE_H3",
+          "soh2024_digestion:condition:aSPIRE_H4",
+          "soh2024_digestion:condition:aSPIRE_IL37b",
+          "soh2024_digestion:condition:aSPIRE_LEDGF",
+          "soh2024_digestion:condition:aSPIRE_hTau"
+        ]
+      }
+    }
+  },
+  "n_ms1_rows_matched": 2947318,
+  "n_ms1_rows_scanned": 4044956,
+  "n_raw_quantity_rows": 365001,
+  "n_source_curves": 26886,
+  "peak_rss_bytes": 2888613888,
+  "per_condition": {
+    "soh2024_digestion:condition:aSPIRE_AnnexinA1": {
+      "instrument:Q Exactive HF-X": 6174,
+      "missing_ms1_form_candidates": 0,
+      "multiple_candidate_forms": 654,
+      "n_observations": 6174,
+      "unambiguous_candidate_instrument": 6174
+    },
+    "soh2024_digestion:condition:aSPIRE_FFH_12p5": {
+      "instrument:Q Exactive HF-X": 19798,
+      "missing_ms1_form_candidates": 0,
+      "multiple_candidate_forms": 4572,
+      "n_observations": 19798,
+      "unambiguous_candidate_instrument": 19798
+    },
+    "soh2024_digestion:condition:aSPIRE_FFH_6p25": {
+      "instrument:Q Exactive HF-X": 21174,
+      "missing_ms1_form_candidates": 0,
+      "multiple_candidate_forms": 5690,
+      "n_observations": 21174,
+      "unambiguous_candidate_instrument": 21174
+    },
+    "soh2024_digestion:condition:aSPIRE_H2A": {
+      "instrument:Orbitrap Fusion": 5544,
+      "missing_ms1_form_candidates": 0,
+      "multiple_candidate_forms": 128,
+      "n_observations": 5544,
+      "unambiguous_candidate_instrument": 5544
+    },
+    "soh2024_digestion:condition:aSPIRE_H2B": {
+      "instrument:Orbitrap Fusion": 5904,
+      "missing_ms1_form_candidates": 0,
+      "multiple_candidate_forms": 846,
+      "n_observations": 5904,
+      "unambiguous_candidate_instrument": 5904
+    },
+    "soh2024_digestion:condition:aSPIRE_H3": {
+      "instrument:Q Exactive HF-X": 2492,
+      "missing_ms1_form_candidates": 0,
+      "multiple_candidate_forms": 588,
+      "n_observations": 2492,
+      "unambiguous_candidate_instrument": 2492
+    },
+    "soh2024_digestion:condition:aSPIRE_H4": {
+      "instrument:Q Exactive HF-X": 6156,
+      "missing_ms1_form_candidates": 0,
+      "multiple_candidate_forms": 2154,
+      "n_observations": 6156,
+      "unambiguous_candidate_instrument": 6156
+    },
+    "soh2024_digestion:condition:aSPIRE_IL37b": {
+      "instrument:Q Exactive HF-X": 4500,
+      "missing_ms1_form_candidates": 0,
+      "multiple_candidate_forms": 494,
+      "n_observations": 4500,
+      "unambiguous_candidate_instrument": 4500
+    },
+    "soh2024_digestion:condition:aSPIRE_LEDGF": {
+      "instrument:Q Exactive HF-X": 15396,
+      "missing_ms1_form_candidates": 0,
+      "multiple_candidate_forms": 3358,
+      "n_observations": 15396,
+      "unambiguous_candidate_instrument": 15396
+    },
+    "soh2024_digestion:condition:aSPIRE_hTau": {
+      "instrument:Q Exactive HF-X": 18314,
+      "missing_ms1_form_candidates": 0,
+      "multiple_candidate_forms": 3234,
+      "n_observations": 18314,
+      "unambiguous_candidate_instrument": 18314
+    }
+  },
+  "query": {
+    "evidence_type": "digestion_raw_quantities",
+    "joins": [
+      "acquisition"
+    ],
+    "limit": null,
+    "select": [
+      "source_record_id",
+      "condition_id",
+      "peptide_sequence",
+      "digestion_biological_replicate",
+      "digestion_quantity_time",
+      "digestion_metadata_time",
+      "digestion_time_status",
+      "digestion_run_id",
+      "quantitative_value",
+      "native.assignments_raw",
+      "acquisition.instrument",
+      "acquisition.source_locator"
+    ],
+    "where": {
+      "condition_id": {
+        "op": "in",
+        "value": [
+          "soh2024_digestion:condition:aSPIRE_AnnexinA1",
+          "soh2024_digestion:condition:aSPIRE_FFH_12p5",
+          "soh2024_digestion:condition:aSPIRE_FFH_6p25",
+          "soh2024_digestion:condition:aSPIRE_H2A",
+          "soh2024_digestion:condition:aSPIRE_H2B",
+          "soh2024_digestion:condition:aSPIRE_H3",
+          "soh2024_digestion:condition:aSPIRE_H4",
+          "soh2024_digestion:condition:aSPIRE_IL37b",
+          "soh2024_digestion:condition:aSPIRE_LEDGF",
+          "soh2024_digestion:condition:aSPIRE_hTau"
+        ]
+      }
+    }
+  },
+  "seconds": 35.924167292017955,
+  "source_manifest": "ad62414d511b74a6aa1e4da457fdff68d9f4527874d1a2e385c65e5b98df41e8"
+}

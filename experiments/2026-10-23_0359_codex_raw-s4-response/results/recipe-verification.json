@@ -1,0 +1,66 @@
+{
+  "catalog_schema_version": 11,
+  "coverage": {
+    "examples_per_fold": {
+      "0": 51,
+      "1": 45,
+      "2": 33,
+      "3": 42,
+      "4": 53
+    },
+    "n_admitted_measurements": 1974,
+    "n_admitted_sequences": 22,
+    "n_examples": 224,
+    "n_excluded_measurements": 1095,
+    "n_out_of_scope_normalized_rows": 3069,
+    "n_raw_source_slots": 3069,
+    "n_source_measurements": 6138,
+    "reason_counts": {
+      "multiple_raw_reporters_for_nominal_standard": 198,
+      "response_not_reported_positive_finite": 697,
+      "unresolved_nominal_isotope_annotation": 396,
+      "unresolved_reporter_aggregation": 198
+    }
+  },
+  "files": {
+    "contributors.json": {
+      "sha256": "c539b8375f7b1ef3bad4c2e8d5ee944c7532601d643364cf1c027fa130f9eec8",
+      "size_bytes": 1023661
+    },
+    "dispositions.json": {
+      "sha256": "6a68145d8a9351d7ad86d49608d140304fa83dc84b49d37e85e7a13e85cb6e30",
+      "size_bytes": 2431465
+    },
+    "examples.json": {
+      "sha256": "fc10e776f2501df5c01dc43935fa4bf2c5fbba79bb092f795af6bd7bea6b5044",
+      "size_bytes": 334157
+    },
+    "recipe.json": {
+      "sha256": "5cadab1acbcc61168283138c7b23c3f48de7f12283e6eab3e8cb10b35165d6f9",
+      "size_bytes": 1263
+    },
+    "source_manifest.json": {
+      "sha256": "bce500f34f111aaf3b41573e96fa630252204a3403d5a2e93e9c50caa97b8552",
+      "size_bytes": 37460
+    },
+    "source_tables.json": {
+      "sha256": "473d94267fe6eef58e5d7d1fdb764a309997882a07d35543d7a57a499f8e8c39",
+      "size_bytes": 5891654
+    },
+    "summary.json": {
+      "sha256": "ef5426fae62a4ecb903af54fa390b31ce6e6a981bcd0bb3d95940562835491e8",
+      "size_bytes": 548
+    }
+  },
+  "hitlist_version": "2.0.3",
+  "output_kind": "registered_response",
+  "recipe": {
+    "name": "ms_calibration_raw_s4_nominal_response_v1",
+    "registered_recipe": "ms_calibration_raw_s4_nominal_response_v1",
+    "schema_version": 1
+  },
+  "recipe_sha256": "d6086ca33e7404053f11f703d947cc23503d0c82d6ce38e9c41e1b9a6d62a1f7",
+  "schema_version": 1,
+  "source_package_manifest_sha256": "bce500f34f111aaf3b41573e96fa630252204a3403d5a2e93e9c50caa97b8552",
+  "source_package_schema_version": 8
+}

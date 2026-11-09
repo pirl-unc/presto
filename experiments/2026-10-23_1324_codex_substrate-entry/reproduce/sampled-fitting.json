@@ -1,0 +1,28 @@
+{
+  "registered_at": "2026-10-23T13:43:15.960276-04:00",
+  "source_hashes": {
+    "code/fit_sampled.py": "94b61fc81d5d2b4cbb5d6c9a252192e698474709b2e09a469a40a7f5d4a2dec9",
+    "code/sampled.py": "1af154c0b21d969f9091db2d237e06469417d5f095ab984dfb594c02ec9063ab",
+    "code/fit.py": "a4128a052523cbd628898b2f13350a4b6e3498e073e1b4f25786e3710d3963d3"
+  },
+  "samples": 512,
+  "seed": 42,
+  "updates": 2000,
+  "order": 32,
+  "optimizer": "Adam lr.03 betas.9/.999 eps1e-8",
+  "initializer": "all0 except bond intercept log.01; entry log-rate0",
+  "loss": "same weighted training log10 temporal ratio MSE plus .01/2 shared nonintercept coefficients squared",
+  "estimator": "Fresh continuous exponential-entry and complete-cut partitions; irrelevant-bond scores integrated out; quadrature residual/denominators retained. No clipping/std/reuse/reference penalty.",
+  "feasibility": "Initial integrated RMS relative gradient error .35946 atK512 vs full .47691; 16groups9.878seconds; up to25minutes local CPU forecast.",
+  "selection": "fixed final checkpoint, no validation-driven tuning; prior test closed",
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_1324_codex_substrate-entry/code/fit_sampled.py"
+  ],
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "PYTHONPATH": "/private/tmp/presto-modular-imports"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "after": {
+    "bytes": 1711245,
+    "files": 89,
+    "sha256": "3c3c39fc2c570bcb1ae68f5572889249770024648b00b3bc429162e98fb06d64"
+  },
+  "baseline_receipt_sha256": "b2c5406c375ad11342fa209c76b871b7e246da72024b0b2bf3eb5b33a6d0491f",
+  "before": {
+    "bytes": 1711245,
+    "files": 89,
+    "sha256": "3c3c39fc2c570bcb1ae68f5572889249770024648b00b3bc429162e98fb06d64"
+  },
+  "data_model_or_optimizer_access": false,
+  "diff": {
+    "added": [],
+    "changed": [],
+    "removed": []
+  },
+  "experiment": "2026-11-08_1800_codex_unified-parity-retrain",
+  "inline_json_bytes": 946,
+  "observed_gpu": null,
+  "requested_gpu": null,
+  "requirements": [
+    "torch==2.14.1",
+    "numpy==2.5.4",
+    "pyyaml==6.0.3",
+    "mhcgnomes==3.64.6",
+    "mhcseqs==2.6.13",
+    "tqdm==4.70.1",
+    "psutil==7.2.2"
+  ],
+  "schema": "presto.runtime_tree_import_probe.v2",
+  "source_commit": "71e31872ac384d6562c21026a0a58ab8d8f31d0e",
+  "status": "completed",
+  "versions": {
+    "observation_index_module": "presto.data.modular_sources",
+    "psutil": "7.2.2",
+    "runner_module": "presto.training.modular_run",
+    "torch": "2.14.1+cu130"
+  },
+  "volume_mounted": false
+}

@@ -1,0 +1,3 @@
+# Preserved pre-fit numerical qualification failure
+
+All original amount predictions agreed within3.29e-14, but the full long-vector LAPACK least-squares offset differed from the profiled scalar weighted mean by1.18e-12, just beyond the original1e-12 assertion. No training update ran. The amendment independently solves the one-variable weighted least-squares problem with compensated sums, keeps the original dense-solver discrepancy as a diagnostic, and retains the original profile/prediction thresholds. Model, source data, objective and sample budgets are unchanged. Original code/config/log and per-condition diagnosis are here.

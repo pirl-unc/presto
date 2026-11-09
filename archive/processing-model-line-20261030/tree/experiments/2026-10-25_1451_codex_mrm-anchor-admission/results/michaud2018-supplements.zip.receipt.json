@@ -1,0 +1,21 @@
+{
+  "bytes": 73268,
+  "content_length": null,
+  "content_type": "application/zip",
+  "elapsed_seconds": 33.03924029198242,
+  "error": "ConnectionError(ReadTimeoutError(\"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out.\"))",
+  "final_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6123701/supplementaryFiles",
+  "http_status": 200,
+  "phase": "processed",
+  "redirects": [],
+  "request": {
+    "discovery_provenance": "Official Europe PMC REST documentation https://europepmc.org/RestfulWebService lists GET /{id}/supplementaryFiles as the per-article ZIP retrieval route; PMC6123701 and MOESM1-10 filenames are verified in archived michaud2018.xml.",
+    "expected_kind": "zip",
+    "name": "michaud2018-supplements.zip",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6123701/supplementaryFiles"
+  },
+  "request_set": "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1451_codex_mrm-anchor-admission/reproduce/requests/processed-1.json",
+  "sha256": "14ab7302aad74a9e58a7acf1f2ec5bdc7858ba3b2deb5f4b700e3dee0c7e0c69",
+  "started_utc": "2026-10-25T15:03:04.556582+00:00",
+  "status": "failed"
+}

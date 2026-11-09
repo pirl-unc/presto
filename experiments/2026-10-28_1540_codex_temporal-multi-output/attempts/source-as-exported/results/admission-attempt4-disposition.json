@@ -1,0 +1,9 @@
+{
+  "status": "stopped",
+  "app_id": "ap-D3cuMa3oPIaV480l4cuRFB",
+  "call_id": "fc-01M61TK4AQKB7BBN6WA4Z8CW0P",
+  "error": "IndexError from local upload path evaluated in /root/admit.py at remote import",
+  "data_processing_started": false,
+  "fix": "Local upload paths now evaluated only within modal.is_local in all family launchers",
+  "verification": "All three launcher modules imported under /root paths with is_local=False"
+}

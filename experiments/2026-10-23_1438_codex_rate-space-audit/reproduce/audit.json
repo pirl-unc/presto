@@ -1,0 +1,16 @@
+{
+  "registered_at": "2026-10-23T14:41:04.074766-04:00",
+  "source_hashes": {
+    "code/audit.py": "416c1c749c5ffe8ebaac2dc4740c1157e61d632c50a3558c1cfd8e179f7ab021",
+    "code/direct_rates.py": "31cd36f1d66f7ae5937b874d695e87180b296487b06198af134da1aaaf091fd4",
+    "code/source.py": "e81c4beca5c73e2aa91f356acb892401da402ce11c68cb13d608a266f7701df5"
+  },
+  "qualification_gates": {
+    "decimal_value": 1e-12,
+    "decimal_derivative": 1e-09,
+    "positive_prediction": 1e-09,
+    "jvp": 1e-06,
+    "zero_jvp": 1e-06
+  },
+  "solver_documentation": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.least_squares.html"
+}

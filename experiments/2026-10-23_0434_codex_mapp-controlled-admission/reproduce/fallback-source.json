@@ -1,0 +1,20 @@
+{
+  "registered_utc": "2026-10-23T08:52:18.205244+00:00",
+  "scope": "Read-only primary-source fallback evaluation while MAPP archives recover; no dataset labels/training and no claim admission passed.",
+  "candidate": "InvitroSPI / ProteasomeDB, Scientific Data 2023, doi10.1038/s41597-022-01890-6, PMC9832164",
+  "reason": "Known substrate/purified proteasome/time variables may support cleavage validation; actual quantitative endpoints and donor/proteasome context must be inspected.",
+  "requests": [
+    {
+      "path": "proteasomedb-article.xml",
+      "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC9832164/fullTextXML"
+    }
+  ],
+  "source_expectations_not_yet_verified": [
+    "26-column CSV",
+    "80 synthetic substrates",
+    "non-spliced and spliced candidate ambiguity",
+    "original I/L sequences versus normalized product Ls",
+    "quantities may be PSM support rather than abundance"
+  ],
+  "github_scope_search": "No InvitroSPI or ProteasomeDB matches found in pirl-unc/hitlist; broad proteasome digestion search hits shared bulk-evidence roadmap, not a specific adapter."
+}

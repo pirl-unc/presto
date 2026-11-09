@@ -1,0 +1,18 @@
+{
+  "condition": "wide-six-natural-s42",
+  "expected": {
+    "condition": "wide-six-natural-s42",
+    "archive": "2026-10-28_0250_codex_assay-transfer-mechanisms/wide-six-natural-s42.tar.gz",
+    "sha256": "f21b7b9264f8e655dbd62667aab7b963f12535ede82295f1e8295a70a20ff494",
+    "bytes": 225755015
+  },
+  "path": "/Users/iskander/code/presto/.worktrees/shared-training/presto/artifacts/2026-10-28_0250_codex_assay-transfer-mechanisms/alternate-downloads/wide-six-natural-s42.tar.partial",
+  "status": "failed",
+  "method": "modal.Volume.read_file ordered iterator",
+  "timeout_seconds": 120,
+  "source_sha256": "75c5a2da1af6515db75031812063694ff796d8369995d1df33f1661727db303d",
+  "error": "TimeoutError('120-second transfer diagnostic budget')",
+  "seconds": 120.01128687500022,
+  "bytes_received": 67108864,
+  "sha256": "6a944609cab747bf29f765dbdda7249ed61642fb97d6fc7b3b954584b8f77bf3"
+}

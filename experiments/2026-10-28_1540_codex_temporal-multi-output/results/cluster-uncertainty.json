@@ -1,0 +1,1076 @@
+[
+  {
+    "condition": "wide-multi-s42",
+    "split": "validation",
+    "era": "older_or_mixed",
+    "endpoint": "ic50",
+    "mhc_class": "II",
+    "population": "reported_measurements",
+    "study": "all",
+    "assay_method": "all",
+    "scope": "study_component",
+    "n": 1129,
+    "clusters": 1,
+    "point": {
+      "spearman": 0.42479937751691293,
+      "pearson": 0.4408124951869368,
+      "rmse": 0.8463096109388469
+    },
+    "requested_draws": 500,
+    "status": "insufficient_clusters",
+    "intervals": null
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "validation",
+    "era": "older_or_mixed",
+    "endpoint": "ic50",
+    "mhc_class": "II",
+    "population": "reported_measurements",
+    "study": "all",
+    "assay_method": "all",
+    "scope": "within_cohort_peptide",
+    "n": 1129,
+    "clusters": 124,
+    "point": {
+      "spearman": 0.42479937751691293,
+      "pearson": 0.4408124951869368,
+      "rmse": 0.8463096109388469
+    },
+    "requested_draws": 500,
+    "status": "computed",
+    "intervals": {
+      "spearman": {
+        "defined_draws": 500,
+        "percentile_95": [
+          0.3576095227936181,
+          0.4937401989626371
+        ]
+      },
+      "pearson": {
+        "defined_draws": 500,
+        "percentile_95": [
+          0.37314969922772667,
+          0.506537058476871
+        ]
+      },
+      "rmse": {
+        "defined_draws": 500,
+        "percentile_95": [
+          0.804056547511265,
+          0.8902620905007854
+        ]
+      }
+    }
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "validation",
+    "era": "older_or_mixed",
+    "endpoint": "ic50",
+    "mhc_class": "I",
+    "population": "reported_measurements",
+    "study": "all",
+    "assay_method": "all",
+    "scope": "study_component",
+    "n": 141,
+    "clusters": 1,
+    "point": {
+      "spearman": 0.4995344240757785,
+      "pearson": 0.5270600123701658,
+      "rmse": 1.3178128688573656
+    },
+    "requested_draws": 500,
+    "status": "insufficient_clusters",
+    "intervals": null
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "validation",
+    "era": "older_or_mixed",
+    "endpoint": "ic50",
+    "mhc_class": "I",
+    "population": "reported_measurements",
+    "study": "all",
+    "assay_method": "all",
+    "scope": "within_cohort_peptide",
+    "n": 141,
+    "clusters": 47,
+    "point": {
+      "spearman": 0.4995344240757785,
+      "pearson": 0.5270600123701658,
+      "rmse": 1.3178128688573656
+    },
+    "requested_draws": 500,
+    "status": "computed",
+    "intervals": {
+      "spearman": {
+        "defined_draws": 500,
+        "percentile_95": [
+          0.32981022783958,
+          0.623883801544946
+        ]
+      },
+      "pearson": {
+        "defined_draws": 500,
+        "percentile_95": [
+          0.3770537553657034,
+          0.6323100964817003
+        ]
+      },
+      "rmse": {
+        "defined_draws": 500,
+        "percentile_95": [
+          1.1557390628811797,
+          1.5032572643617943
+        ]
+      }
+    }
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "validation",
+    "era": "older_or_mixed",
+    "endpoint": "elution_observation",
+    "mhc_class": "I",
+    "population": "synthetic_same_protein",
+    "study": "all",
+    "assay_method": "all",
+    "scope": "study_component",
+    "n": 10116,
+    "clusters": 3,
+    "point": {
+      "auroc": 0.9810498572431678,
+      "auprc": 0.8981705142960232
+    },
+    "requested_draws": 500,
+    "status": "insufficient_clusters",
+    "intervals": null
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "validation",
+    "era": "older_or_mixed",
+    "endpoint": "elution_observation",
+    "mhc_class": "I",
+    "population": "synthetic_same_protein",
+    "study": "all",
+    "assay_method": "all",
+    "scope": "within_cohort_peptide",
+    "n": 10116,
+    "clusters": 1617,
+    "point": {
+      "auroc": 0.9810498572431678,
+      "auprc": 0.8981705142960232
+    },
+    "requested_draws": 500,
+    "status": "computed",
+    "intervals": {
+      "auroc": {
+        "defined_draws": 500,
+        "percentile_95": [
+          0.9789195976468071,
+          0.9832613130294893
+        ]
+      },
+      "auprc": {
+        "defined_draws": 500,
+        "percentile_95": [
+          0.8826208997189331,
+          0.9117453632449295
+        ]
+      }
+    }
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "validation",
+    "era": "older_or_mixed",
+    "endpoint": "elution_observation",
+    "mhc_class": "I",
+    "population": "synthetic_reference_proteome",
+    "study": "all",
+    "assay_method": "all",
+    "scope": "study_component",
+    "n": 180,
+    "clusters": 2,
+    "point": {
+      "auroc": 0.9593333333333334,
+      "auprc": 0.9151619581766641
+    },
+    "requested_draws": 500,
+    "status": "insufficient_clusters",
+    "intervals": null
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "validation",
+    "era": "older_or_mixed",
+    "endpoint": "elution_observation",
+    "mhc_class": "I",
+    "population": "synthetic_reference_proteome",
+    "study": "all",
+    "assay_method": "all",
+    "scope": "within_cohort_peptide",
+    "n": 180,
+    "clusters": 13,
+    "point": {
+      "auroc": 0.9593333333333334,
+      "auprc": 0.9151619581766641
+    },
+    "requested_draws": 500,
+    "status": "insufficient_clusters",
+    "intervals": null
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "validation",
+    "era": "older_or_mixed",
+    "endpoint": "elution_observation",
+    "mhc_class": "II",
+    "population": "synthetic_same_protein",
+    "study": "all",
+    "assay_method": "all",
+    "scope": "study_component",
+    "n": 4152,
+    "clusters": 1,
+    "point": {
+      "auroc": 0.773889037388486,
+      "auprc": 0.5048989309766417
+    },
+    "requested_draws": 500,
+    "status": "insufficient_clusters",
+    "intervals": null
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "validation",
+    "era": "older_or_mixed",
+    "endpoint": "elution_observation",
+    "mhc_class": "II",
+    "population": "synthetic_same_protein",
+    "study": "all",
+    "assay_method": "all",
+    "scope": "within_cohort_peptide",
+    "n": 4152,
+    "clusters": 676,
+    "point": {
+      "auroc": 0.773889037388486,
+      "auprc": 0.5048989309766417
+    },
+    "requested_draws": 500,
+    "status": "computed",
+    "intervals": {
+      "auroc": {
+        "defined_draws": 500,
+        "percentile_95": [
+          0.751977292342515,
+          0.79586983959449
+        ]
+      },
+      "auprc": {
+        "defined_draws": 500,
+        "percentile_95": [
+          0.47256321965910253,
+          0.5405549481203005
+        ]
+      }
+    }
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "validation",
+    "era": "older_or_mixed",
+    "endpoint": "elution_observation",
+    "mhc_class": "II",
+    "population": "synthetic_reference_proteome",
+    "study": "all",
+    "assay_method": "all",
+    "scope": "study_component",
+    "n": 12,
+    "clusters": 1,
+    "point": {
+      "auroc": 0.95,
+      "auprc": 0.8333333333333333
+    },
+    "requested_draws": 500,
+    "status": "insufficient_clusters",
+    "intervals": null
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "validation",
+    "era": "older_or_mixed",
+    "endpoint": "elution_observation",
+    "mhc_class": "II",
+    "population": "synthetic_reference_proteome",
+    "study": "all",
+    "assay_method": "all",
+    "scope": "within_cohort_peptide",
+    "n": 12,
+    "clusters": 2,
+    "point": {
+      "auroc": 0.95,
+      "auprc": 0.8333333333333333
+    },
+    "requested_draws": 500,
+    "status": "insufficient_clusters",
+    "intervals": null
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "validation",
+    "era": "older_or_mixed",
+    "endpoint": "elution_observation",
+    "mhc_class": "I",
+    "population": "source_reported_outcomes",
+    "study": "pmid:35561310",
+    "assay_method": "cellular MHC/mass spectrometry",
+    "scope": "study_component",
+    "n": 1643,
+    "clusters": 1,
+    "point": {
+      "auroc": null,
+      "auprc": 1.0
+    },
+    "requested_draws": 500,
+    "status": "insufficient_clusters",
+    "intervals": null
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "validation",
+    "era": "older_or_mixed",
+    "endpoint": "elution_observation",
+    "mhc_class": "I",
+    "population": "source_reported_outcomes",
+    "study": "pmid:35561310",
+    "assay_method": "cellular MHC/mass spectrometry",
+    "scope": "within_cohort_peptide",
+    "n": 1643,
+    "clusters": 1614,
+    "point": {
+      "auroc": null,
+      "auprc": 1.0
+    },
+    "requested_draws": 500,
+    "status": "computed",
+    "intervals": {
+      "auroc": {
+        "defined_draws": 0,
+        "percentile_95": null
+      },
+      "auprc": {
+        "defined_draws": 500,
+        "percentile_95": [
+          1.0,
+          1.0
+        ]
+      }
+    }
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "validation",
+    "era": "older_or_mixed",
+    "endpoint": "elution_observation",
+    "mhc_class": "II",
+    "population": "source_reported_outcomes",
+    "study": "pmid:35561310",
+    "assay_method": "cellular MHC/mass spectrometry",
+    "scope": "study_component",
+    "n": 694,
+    "clusters": 1,
+    "point": {
+      "auroc": null,
+      "auprc": 1.0
+    },
+    "requested_draws": 500,
+    "status": "insufficient_clusters",
+    "intervals": null
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "validation",
+    "era": "older_or_mixed",
+    "endpoint": "elution_observation",
+    "mhc_class": "II",
+    "population": "source_reported_outcomes",
+    "study": "pmid:35561310",
+    "assay_method": "cellular MHC/mass spectrometry",
+    "scope": "within_cohort_peptide",
+    "n": 694,
+    "clusters": 678,
+    "point": {
+      "auroc": null,
+      "auprc": 1.0
+    },
+    "requested_draws": 500,
+    "status": "computed",
+    "intervals": {
+      "auroc": {
+        "defined_draws": 0,
+        "percentile_95": null
+      },
+      "auprc": {
+        "defined_draws": 500,
+        "percentile_95": [
+          1.0,
+          1.0
+        ]
+      }
+    }
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "validation",
+    "era": "older_or_mixed",
+    "endpoint": "elution_observation",
+    "mhc_class": "I",
+    "population": "source_reported_outcomes",
+    "study": "pmid:35474673",
+    "assay_method": "mass spectrometry",
+    "scope": "study_component",
+    "n": 53,
+    "clusters": 1,
+    "point": {
+      "auroc": 0.6803519061583577,
+      "auprc": 0.7940968996051573
+    },
+    "requested_draws": 500,
+    "status": "insufficient_clusters",
+    "intervals": null
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "validation",
+    "era": "older_or_mixed",
+    "endpoint": "elution_observation",
+    "mhc_class": "I",
+    "population": "source_reported_outcomes",
+    "study": "pmid:35474673",
+    "assay_method": "mass spectrometry",
+    "scope": "within_cohort_peptide",
+    "n": 53,
+    "clusters": 20,
+    "point": {
+      "auroc": 0.6803519061583577,
+      "auprc": 0.7940968996051573
+    },
+    "requested_draws": 500,
+    "status": "computed",
+    "intervals": {
+      "auroc": {
+        "defined_draws": 500,
+        "percentile_95": [
+          0.45796034322820034,
+          0.841450273803215
+        ]
+      },
+      "auprc": {
+        "defined_draws": 500,
+        "percentile_95": [
+          0.5781628754515514,
+          0.9339731955767895
+        ]
+      }
+    }
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "validation",
+    "era": "older_or_mixed",
+    "endpoint": "elution_observation",
+    "mhc_class": "I",
+    "population": "source_reported_outcomes",
+    "study": "pmid:40138458",
+    "assay_method": "cellular MHC/mass spectrometry",
+    "scope": "study_component",
+    "n": 52,
+    "clusters": 1,
+    "point": {
+      "auroc": 0.43809523809523815,
+      "auprc": 0.7893772893772893
+    },
+    "requested_draws": 500,
+    "status": "insufficient_clusters",
+    "intervals": null
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "validation",
+    "era": "older_or_mixed",
+    "endpoint": "elution_observation",
+    "mhc_class": "I",
+    "population": "source_reported_outcomes",
+    "study": "pmid:40138458",
+    "assay_method": "cellular MHC/mass spectrometry",
+    "scope": "within_cohort_peptide",
+    "n": 52,
+    "clusters": 2,
+    "point": {
+      "auroc": 0.43809523809523815,
+      "auprc": 0.7893772893772893
+    },
+    "requested_draws": 500,
+    "status": "insufficient_clusters",
+    "intervals": null
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "test",
+    "era": "older_or_mixed",
+    "endpoint": "ic50",
+    "mhc_class": "I",
+    "population": "reported_measurements",
+    "study": "all",
+    "assay_method": "all",
+    "scope": "study_component",
+    "n": 100,
+    "clusters": 1,
+    "point": {
+      "spearman": 0.23923694772343265,
+      "pearson": 0.23741009055321613,
+      "rmse": 1.0230807372974147
+    },
+    "requested_draws": 500,
+    "status": "insufficient_clusters",
+    "intervals": null
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "test",
+    "era": "older_or_mixed",
+    "endpoint": "ic50",
+    "mhc_class": "I",
+    "population": "reported_measurements",
+    "study": "all",
+    "assay_method": "all",
+    "scope": "within_cohort_peptide",
+    "n": 100,
+    "clusters": 30,
+    "point": {
+      "spearman": 0.23923694772343265,
+      "pearson": 0.23741009055321613,
+      "rmse": 1.0230807372974147
+    },
+    "requested_draws": 500,
+    "status": "computed",
+    "intervals": {
+      "spearman": {
+        "defined_draws": 500,
+        "percentile_95": [
+          -0.04154342996849942,
+          0.45268158969752403
+        ]
+      },
+      "pearson": {
+        "defined_draws": 500,
+        "percentile_95": [
+          -0.016067916344395847,
+          0.4462526223280694
+        ]
+      },
+      "rmse": {
+        "defined_draws": 500,
+        "percentile_95": [
+          0.8501117198035996,
+          1.2217448923106824
+        ]
+      }
+    }
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "test",
+    "era": "older_or_mixed",
+    "endpoint": "ic50",
+    "mhc_class": "II",
+    "population": "reported_measurements",
+    "study": "all",
+    "assay_method": "all",
+    "scope": "study_component",
+    "n": 267,
+    "clusters": 2,
+    "point": {
+      "spearman": 0.5199126458695306,
+      "pearson": 0.5265265181536126,
+      "rmse": 1.0122109083306892
+    },
+    "requested_draws": 500,
+    "status": "insufficient_clusters",
+    "intervals": null
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "test",
+    "era": "older_or_mixed",
+    "endpoint": "ic50",
+    "mhc_class": "II",
+    "population": "reported_measurements",
+    "study": "all",
+    "assay_method": "all",
+    "scope": "within_cohort_peptide",
+    "n": 267,
+    "clusters": 86,
+    "point": {
+      "spearman": 0.5199126458695306,
+      "pearson": 0.5265265181536126,
+      "rmse": 1.0122109083306892
+    },
+    "requested_draws": 500,
+    "status": "computed",
+    "intervals": {
+      "spearman": {
+        "defined_draws": 500,
+        "percentile_95": [
+          0.3985819096417926,
+          0.6145494687631426
+        ]
+      },
+      "pearson": {
+        "defined_draws": 500,
+        "percentile_95": [
+          0.40945436647233485,
+          0.6193241888111413
+        ]
+      },
+      "rmse": {
+        "defined_draws": 500,
+        "percentile_95": [
+          0.9105313311295472,
+          1.1138834616255961
+        ]
+      }
+    }
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "test",
+    "era": "older_or_mixed",
+    "endpoint": "elution_observation",
+    "mhc_class": "I",
+    "population": "synthetic_same_protein",
+    "study": "all",
+    "assay_method": "all",
+    "scope": "study_component",
+    "n": 432,
+    "clusters": 1,
+    "point": {
+      "auroc": 0.9748456790123458,
+      "auprc": 0.8648597734974139
+    },
+    "requested_draws": 500,
+    "status": "insufficient_clusters",
+    "intervals": null
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "test",
+    "era": "older_or_mixed",
+    "endpoint": "elution_observation",
+    "mhc_class": "I",
+    "population": "synthetic_same_protein",
+    "study": "all",
+    "assay_method": "all",
+    "scope": "within_cohort_peptide",
+    "n": 432,
+    "clusters": 4,
+    "point": {
+      "auroc": 0.9748456790123458,
+      "auprc": 0.8648597734974139
+    },
+    "requested_draws": 500,
+    "status": "insufficient_clusters",
+    "intervals": null
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "test",
+    "era": "2026",
+    "endpoint": "elution_observation",
+    "mhc_class": "II",
+    "population": "synthetic_same_protein",
+    "study": "all",
+    "assay_method": "all",
+    "scope": "study_component",
+    "n": 39108,
+    "clusters": 1,
+    "point": {
+      "auroc": 0.8060672143447545,
+      "auprc": 0.5412119065302058
+    },
+    "requested_draws": 500,
+    "status": "insufficient_clusters",
+    "intervals": null
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "test",
+    "era": "2026",
+    "endpoint": "elution_observation",
+    "mhc_class": "II",
+    "population": "synthetic_same_protein",
+    "study": "all",
+    "assay_method": "all",
+    "scope": "within_cohort_peptide",
+    "n": 39108,
+    "clusters": 4633,
+    "point": {
+      "auroc": 0.8060672143447545,
+      "auprc": 0.5412119065302058
+    },
+    "requested_draws": 500,
+    "status": "computed",
+    "intervals": {
+      "auroc": {
+        "defined_draws": 500,
+        "percentile_95": [
+          0.7979615717851012,
+          0.8135534078678743
+        ]
+      },
+      "auprc": {
+        "defined_draws": 500,
+        "percentile_95": [
+          0.5264800456786207,
+          0.5561825220657773
+        ]
+      }
+    }
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "test",
+    "era": "2026",
+    "endpoint": "elution_observation",
+    "mhc_class": "II",
+    "population": "synthetic_reference_proteome",
+    "study": "all",
+    "assay_method": "all",
+    "scope": "study_component",
+    "n": 546,
+    "clusters": 1,
+    "point": {
+      "auroc": 0.8203357082477962,
+      "auprc": 0.4889547536525836
+    },
+    "requested_draws": 500,
+    "status": "insufficient_clusters",
+    "intervals": null
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "test",
+    "era": "2026",
+    "endpoint": "elution_observation",
+    "mhc_class": "II",
+    "population": "synthetic_reference_proteome",
+    "study": "all",
+    "assay_method": "all",
+    "scope": "within_cohort_peptide",
+    "n": 546,
+    "clusters": 73,
+    "point": {
+      "auroc": 0.8203357082477962,
+      "auprc": 0.4889547536525836
+    },
+    "requested_draws": 500,
+    "status": "computed",
+    "intervals": {
+      "auroc": {
+        "defined_draws": 500,
+        "percentile_95": [
+          0.7612637059285585,
+          0.8747751393565559
+        ]
+      },
+      "auprc": {
+        "defined_draws": 500,
+        "percentile_95": [
+          0.3928541988104835,
+          0.6046777486905632
+        ]
+      }
+    }
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "test",
+    "era": "2026",
+    "endpoint": "elution_observation",
+    "mhc_class": "I",
+    "population": "synthetic_same_protein",
+    "study": "all",
+    "assay_method": "all",
+    "scope": "study_component",
+    "n": 31002,
+    "clusters": 1,
+    "point": {
+      "auroc": 0.9624587921539415,
+      "auprc": 0.9043221036230817
+    },
+    "requested_draws": 500,
+    "status": "insufficient_clusters",
+    "intervals": null
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "test",
+    "era": "2026",
+    "endpoint": "elution_observation",
+    "mhc_class": "I",
+    "population": "synthetic_same_protein",
+    "study": "all",
+    "assay_method": "all",
+    "scope": "within_cohort_peptide",
+    "n": 31002,
+    "clusters": 3606,
+    "point": {
+      "auroc": 0.9624587921539415,
+      "auprc": 0.9043221036230817
+    },
+    "requested_draws": 500,
+    "status": "computed",
+    "intervals": {
+      "auroc": {
+        "defined_draws": 500,
+        "percentile_95": [
+          0.9589983550136426,
+          0.9663665529734276
+        ]
+      },
+      "auprc": {
+        "defined_draws": 500,
+        "percentile_95": [
+          0.8970171455377239,
+          0.9120418427427487
+        ]
+      }
+    }
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "test",
+    "era": "2026",
+    "endpoint": "elution_observation",
+    "mhc_class": "I",
+    "population": "synthetic_reference_proteome",
+    "study": "all",
+    "assay_method": "all",
+    "scope": "study_component",
+    "n": 12,
+    "clusters": 1,
+    "point": {
+      "auroc": 1.0,
+      "auprc": 1.0
+    },
+    "requested_draws": 500,
+    "status": "insufficient_clusters",
+    "intervals": null
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "test",
+    "era": "2026",
+    "endpoint": "elution_observation",
+    "mhc_class": "I",
+    "population": "synthetic_reference_proteome",
+    "study": "all",
+    "assay_method": "all",
+    "scope": "within_cohort_peptide",
+    "n": 12,
+    "clusters": 2,
+    "point": {
+      "auroc": 1.0,
+      "auprc": 1.0
+    },
+    "requested_draws": 500,
+    "status": "insufficient_clusters",
+    "intervals": null
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "test",
+    "era": "older_or_mixed",
+    "endpoint": "elution_observation",
+    "mhc_class": "I",
+    "population": "source_reported_outcomes",
+    "study": "pmid:29308320",
+    "assay_method": "cellular MHC/mass spectrometry",
+    "scope": "study_component",
+    "n": 136,
+    "clusters": 1,
+    "point": {
+      "auroc": 0.10123697916666667,
+      "auprc": 0.4159177559912854
+    },
+    "requested_draws": 500,
+    "status": "insufficient_clusters",
+    "intervals": null
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "test",
+    "era": "older_or_mixed",
+    "endpoint": "elution_observation",
+    "mhc_class": "I",
+    "population": "source_reported_outcomes",
+    "study": "pmid:29308320",
+    "assay_method": "cellular MHC/mass spectrometry",
+    "scope": "within_cohort_peptide",
+    "n": 136,
+    "clusters": 4,
+    "point": {
+      "auroc": 0.10123697916666667,
+      "auprc": 0.4159177559912854
+    },
+    "requested_draws": 500,
+    "status": "insufficient_clusters",
+    "intervals": null
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "test",
+    "era": "2026",
+    "endpoint": "elution_observation",
+    "mhc_class": "II",
+    "population": "source_reported_outcomes",
+    "study": "pmid:41534530",
+    "assay_method": "cellular MHC/mass spectrometry",
+    "scope": "study_component",
+    "n": 6611,
+    "clusters": 1,
+    "point": {
+      "auroc": null,
+      "auprc": 1.0
+    },
+    "requested_draws": 500,
+    "status": "insufficient_clusters",
+    "intervals": null
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "test",
+    "era": "2026",
+    "endpoint": "elution_observation",
+    "mhc_class": "II",
+    "population": "source_reported_outcomes",
+    "study": "pmid:41534530",
+    "assay_method": "cellular MHC/mass spectrometry",
+    "scope": "within_cohort_peptide",
+    "n": 6611,
+    "clusters": 4707,
+    "point": {
+      "auroc": null,
+      "auprc": 1.0
+    },
+    "requested_draws": 500,
+    "status": "computed",
+    "intervals": {
+      "auroc": {
+        "defined_draws": 0,
+        "percentile_95": null
+      },
+      "auprc": {
+        "defined_draws": 500,
+        "percentile_95": [
+          1.0,
+          1.0
+        ]
+      }
+    }
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "test",
+    "era": "2026",
+    "endpoint": "elution_observation",
+    "mhc_class": "II",
+    "population": "no_background",
+    "study": "all",
+    "assay_method": "all",
+    "scope": "study_component",
+    "n": 2,
+    "clusters": 1,
+    "point": {
+      "auroc": null,
+      "auprc": 1.0
+    },
+    "requested_draws": 500,
+    "status": "insufficient_clusters",
+    "intervals": null
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "test",
+    "era": "2026",
+    "endpoint": "elution_observation",
+    "mhc_class": "II",
+    "population": "no_background",
+    "study": "all",
+    "assay_method": "all",
+    "scope": "within_cohort_peptide",
+    "n": 2,
+    "clusters": 1,
+    "point": {
+      "auroc": null,
+      "auprc": 1.0
+    },
+    "requested_draws": 500,
+    "status": "insufficient_clusters",
+    "intervals": null
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "test",
+    "era": "2026",
+    "endpoint": "elution_observation",
+    "mhc_class": "I",
+    "population": "source_reported_outcomes",
+    "study": "pmid:42069060",
+    "assay_method": "cellular MHC/mass spectrometry",
+    "scope": "study_component",
+    "n": 5169,
+    "clusters": 1,
+    "point": {
+      "auroc": null,
+      "auprc": 1.0
+    },
+    "requested_draws": 500,
+    "status": "insufficient_clusters",
+    "intervals": null
+  },
+  {
+    "condition": "wide-multi-s42",
+    "split": "test",
+    "era": "2026",
+    "endpoint": "elution_observation",
+    "mhc_class": "I",
+    "population": "source_reported_outcomes",
+    "study": "pmid:42069060",
+    "assay_method": "cellular MHC/mass spectrometry",
+    "scope": "within_cohort_peptide",
+    "n": 5169,
+    "clusters": 3608,
+    "point": {
+      "auroc": null,
+      "auprc": 1.0
+    },
+    "requested_draws": 500,
+    "status": "computed",
+    "intervals": {
+      "auroc": {
+        "defined_draws": 0,
+        "percentile_95": null
+      },
+      "auprc": {
+        "defined_draws": 500,
+        "percentile_95": [
+          1.0,
+          1.0
+        ]
+      }
+    }
+  }
+]

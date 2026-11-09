@@ -1,0 +1,9 @@
+{
+  "call_id": "fc-01M627VM7J2SPPR71V2MRSHT08",
+  "type": "TimeoutError",
+  "error": "",
+  "traceback": "Traceback (most recent call last):\n  File \"<stdin>\", line 6, in <module>\n  File \"/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_object.py\", line 49, in wrapped\n    return await method(self, *args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_functions.py\", line 2405, in get\n    return await self._invocation().poll_function(timeout=timeout, index=index)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_functions.py\", line 346, in poll_function\n    raise TimeoutError()\nTimeoutError\n",
+  "recorded_unix": 1793228282.053087,
+  "status": "pending_poll",
+  "interpretation": "Local result-poll timeout, not a remote execution failure. Modal logs show automatic retry after preemption."
+}

@@ -1,0 +1,14 @@
+{
+  "phase": "processed",
+  "scope": "Retrieve the primary paper's official supplement archive only. Inspect archive inventory before any member reading; audit all eight named XLSX supplementary datasets without fitting or selecting on response values. Preserve formulas, cached values and literal coordinates. No extraction of vendor MS data.",
+  "prospective_decision": "The specific Panorama peptide page requires Login to view this data. Do not query that restricted folder through alternate APIs. Supplement Data1-8 and their descriptions are explicitly named in the archived JATS XML; use the documented public supplementaryFiles endpoint instead of incorrectly resolving relative JATS hrefs against the fullTextXML URL.",
+  "size_contract": "Previously published supplement sizes total under 2 MiB excluding inline figures. Inspect response Content-Length before streaming when present; unchanged 256 MiB per-asset and 512 MiB family limits. Before reading members require safe relative paths, at most 256 MiB individual expanded size and 512 MiB total expansion. Do not extract the archive to disk.",
+  "requests": [
+    {
+      "name": "michaud2018-supplements.zip",
+      "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6123701/supplementaryFiles",
+      "expected_kind": "zip",
+      "discovery_provenance": "Official Europe PMC REST documentation https://europepmc.org/RestfulWebService lists GET /{id}/supplementaryFiles as the per-article ZIP retrieval route; PMC6123701 and MOESM1-10 filenames are verified in archived michaud2018.xml."
+    }
+  ]
+}

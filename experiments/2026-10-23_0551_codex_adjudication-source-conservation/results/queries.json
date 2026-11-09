@@ -1,0 +1,585 @@
+{
+  "assay_adjudication": {
+    "artifact": "tcell/adjudication/reviews.parquet",
+    "canonical_rows_sha256": "d8902b96f0430c5762925775779fb9035374874b950a3ddfb39746494e3dfae2",
+    "fields": [
+      "native.claim_id",
+      "native.source_assay_id",
+      "native.source_dataset",
+      "native.assay_family",
+      "native.review_revision",
+      "native.source_pmid",
+      "native.publication_url",
+      "native.source_asset_url",
+      "native.source_asset_sha256",
+      "native.source_asset_status",
+      "native.source_locator",
+      "native.expected_effector_cell_name",
+      "native.expected_n_subjects_positive_raw",
+      "native.expected_n_subjects_tested_raw",
+      "native.expected_peptide_sequence",
+      "native.expected_qualitative_result_raw",
+      "native.expected_reported_mhc_raw",
+      "native.expected_source_reference_id",
+      "native.interpretation_code",
+      "native.review_status",
+      "native.reviewed_endpoint_scope",
+      "native.reviewed_population_scope",
+      "native.reviewed_preparation_scope",
+      "native.reviewed_reagent",
+      "native.source_peptide_code",
+      "native.source_row_locator",
+      "native.training_effect",
+      "native.unresolved_question"
+    ],
+    "n_rows": 9
+  },
+  "calibration_curve": {
+    "artifact": "external/pxd004886/typed/curve_rows.parquet",
+    "canonical_rows_sha256": "52385cfb72c69c28bb022b0529294d8fd320c50c4b5cffeb7219d02761237aaf",
+    "fields": [
+      "native.curve_id",
+      "native.reporter_id",
+      "native.site_label",
+      "native.representation",
+      "native.group_label",
+      "native.label_source_cell",
+      "native.group_source_cell",
+      "native.rsq_source_cell",
+      "native.rsq_formula",
+      "native.header_range_raw",
+      "native.response_range_raw",
+      "native.sample_join_status",
+      "native.reported_r_squared"
+    ],
+    "n_rows": 682
+  },
+  "calibration_curve_measurement": {
+    "artifact": "external/pxd004886/typed/curve_measurements.parquet",
+    "canonical_rows_sha256": "a7e9bf96493c1078bf8edd69cdcfc5c69a9141369b292e6b7cd2ebc0cd08d039",
+    "fields": [
+      "native.measurement_id",
+      "native.curve_id",
+      "native.reporter_id",
+      "native.representation",
+      "native.unit",
+      "native.value_status",
+      "native.source_cell",
+      "native.source_locator",
+      "native.grid_amount_source_cell",
+      "native.grid_unit_status",
+      "native.sample_join_status",
+      "native.censoring_status",
+      "native.source_grid_ordinal",
+      "native.value",
+      "native.reported_grid_amount"
+    ],
+    "n_rows": 3410
+  },
+  "calibration_nominal_load": {
+    "artifact": "external/pxd004886/typed/nominal_loads.parquet",
+    "canonical_rows_sha256": "5454d2d022c9ea5a5e5baa8f3b70a9aa05d54115c4f9b8ed73cc8741c565a15d",
+    "fields": [
+      "native.nominal_load_id",
+      "native.group_label",
+      "native.sample_label",
+      "native.unit",
+      "native.unit_label_raw",
+      "native.source_cell",
+      "native.sample_source_cell",
+      "native.group_source_cell",
+      "native.unit_source_cell",
+      "native.assignment_status",
+      "native.value"
+    ],
+    "n_rows": 25
+  },
+  "calibration_normalization_diagnostic": {
+    "artifact": "external/pxd004886/typed/normalization_diagnostics.parquet",
+    "canonical_rows_sha256": "e0deac850c88aa90554742deffe7dc47205135213d1ee62b6742e27d8da32461",
+    "fields": [
+      "native.diagnostic_id",
+      "native.slot_id",
+      "native.diagnostic_status",
+      "native.method",
+      "native.source_cells_json",
+      "native.n_paired_reporters",
+      "native.n_normalized_only",
+      "native.n_raw_only",
+      "native.median_ratio",
+      "native.max_relative_deviation"
+    ],
+    "n_rows": 99
+  },
+  "calibration_protocol_parameter": {
+    "artifact": "external/pxd004886/typed/protocol_parameters.parquet",
+    "canonical_rows_sha256": "4a33afdaf9d7bf0ebd0180872ad9da8ec8856f1d96b86a4eb3b90a214d71049f",
+    "fields": [
+      "native.parameter_id",
+      "native.site_label",
+      "native.protocol_stage",
+      "native.scope",
+      "native.parameter_name_raw",
+      "native.value_json",
+      "native.value_status",
+      "native.unit_raw",
+      "native.source_cell",
+      "native.source_locator",
+      "native.parameter_source_cell",
+      "native.stage_source_cell",
+      "native.position_source_cell",
+      "native.site_source_cell",
+      "native.position_unit_raw",
+      "native.value",
+      "native.position_value"
+    ],
+    "n_rows": 520
+  },
+  "calibration_reporter_form": {
+    "artifact": "external/pxd004886/typed/reporter_forms.parquet",
+    "canonical_rows_sha256": "247e88e0c19f714c29f9bc98f94bf387bc7579e1751c98d08ea381e44b803ebb",
+    "fields": [
+      "native.reporter_id",
+      "native.standard_id",
+      "native.peptide_sequence",
+      "native.label_raw",
+      "native.annotations_json",
+      "native.aggregation_label_raw",
+      "native.membership_status",
+      "native.form_amount_status",
+      "native.source_cells_json"
+    ],
+    "n_rows": 32
+  },
+  "calibration_s4_measurement": {
+    "artifact": "external/pxd004886/typed/s4_measurements.parquet",
+    "canonical_rows_sha256": "69dfe8aeafbf75bb72bdcf2fd6f8620681e31bdd036af47fe9f5775ddd35fa7e",
+    "fields": [
+      "native.measurement_id",
+      "native.reporter_id",
+      "native.slot_id",
+      "native.nominal_load_id",
+      "native.representation",
+      "native.unit",
+      "native.quantity_scale",
+      "native.value_status",
+      "native.source_cell",
+      "native.source_locator",
+      "native.reported_load_source_cell",
+      "native.calibration_applicability",
+      "native.value",
+      "native.reported_load"
+    ],
+    "n_rows": 6138
+  },
+  "calibration_source_assertion": {
+    "artifact": "external/pxd004886/typed/source_assertions.parquet",
+    "canonical_rows_sha256": "93125882caafc218a21c08c8c8cb57da982f26efc0d33cb5a79ce1c331985d72",
+    "fields": [
+      "native.assertion_id",
+      "native.subject_id",
+      "native.predicate",
+      "native.value_raw",
+      "native.normalized_value",
+      "native.assertion_status",
+      "native.source_locator",
+      "native.scope"
+    ],
+    "n_rows": 34
+  },
+  "calibration_source_cell": {
+    "artifact": "external/pxd004886/typed/source_cells.parquet",
+    "canonical_rows_sha256": "ff9ec5b5f67e64f0da4a7ddb068eae9260b307b4ce8e482470dfdd642a6ddd0f",
+    "fields": [
+      "native.cell_id",
+      "native.sheet_id",
+      "native.asset_path",
+      "native.sheet_name",
+      "native.cell_ref",
+      "native.excel_type",
+      "native.value_json",
+      "native.formula",
+      "native.xml_element",
+      "native.value_status",
+      "native.row_1based",
+      "native.column_1based",
+      "native.value"
+    ],
+    "n_rows": 13561
+  },
+  "calibration_source_sheet": {
+    "artifact": "external/pxd004886/typed/source_sheets.parquet",
+    "canonical_rows_sha256": "c259629596ad1d72ce2f82e11d6df0e70a9528a26f65390b87a2aba251e801b6",
+    "fields": [
+      "native.sheet_id",
+      "native.asset_path",
+      "native.sheet_name",
+      "native.sheet_state",
+      "native.merged_ranges_json",
+      "native.publication_label",
+      "native.workbook_title",
+      "native.title_status",
+      "native.n_rows",
+      "native.n_columns"
+    ],
+    "n_rows": 7
+  },
+  "calibration_source_slot": {
+    "artifact": "external/pxd004886/typed/source_slots.parquet",
+    "canonical_rows_sha256": "e93482ec888f43c2b73d04eae928d2df6482ad446dc4d59cbc88dadf0e180c3d",
+    "fields": [
+      "native.slot_id",
+      "native.source_column",
+      "native.site_label",
+      "native.sample_label",
+      "native.site_source_cell",
+      "native.sample_source_cell",
+      "native.run_identity_status",
+      "native.day_status",
+      "native.specimen_status",
+      "native.material_link_precision",
+      "native.source_slot_ordinal"
+    ],
+    "n_rows": 99
+  },
+  "calibration_standard": {
+    "artifact": "external/pxd004886/typed/nominal_standards.parquet",
+    "canonical_rows_sha256": "61415a9d5b9a6bcbbb4433e59f28c798c92c842e18b71d2f80989b0697bd1d93",
+    "fields": [
+      "native.standard_id",
+      "native.peptide_sequence",
+      "native.form_label_raw",
+      "native.protein_label_raw",
+      "native.group_label",
+      "native.form_source_cell",
+      "native.protein_source_cell",
+      "native.group_source_cell",
+      "native.selection_status",
+      "native.lot_status",
+      "native.purity_status"
+    ],
+    "n_rows": 30
+  },
+  "calibration_summary_measurement": {
+    "artifact": "external/pxd004886/typed/summary_measurements.parquet",
+    "canonical_rows_sha256": "16e1f14c4eaba09289c5f84954562960d43fd019ed735b8c31257928ed6c8c35",
+    "fields": [
+      "native.measurement_id",
+      "native.reporter_id",
+      "native.representation",
+      "native.statistic_name",
+      "native.unit",
+      "native.value_status",
+      "native.source_cell",
+      "native.derivation_status",
+      "native.value",
+      "native.recomputed_value",
+      "native.relative_replay_error"
+    ],
+    "n_rows": 186
+  },
+  "external_peptide_parent_occurrence": {
+    "artifact": "external/pxd009092/typed/peptide_reference_occurrences.parquet",
+    "canonical_rows_sha256": "f9dafdb09516ad1b051caf6d1dbb5bf6332934e2ddb2416dc4126b956afcd016",
+    "fields": [
+      "native.occurrence_id",
+      "native.peptide_row_id",
+      "native.reference_id",
+      "native.reference_record_id",
+      "native.n_flank",
+      "native.c_flank",
+      "native.start_1based",
+      "native.end_1based",
+      "native.source_listed_resolved",
+      "native.source_leading_resolved"
+    ],
+    "n_rows": 37721
+  },
+  "external_peptide_reference_coverage": {
+    "artifact": "external/pxd009092/typed/peptide_reference_coverage.parquet",
+    "canonical_rows_sha256": "fdd6a930efb97e6a6c7f908859423ae7959e1b77f300a65b469f7785eb0220e7",
+    "fields": [
+      "native.peptide_row_id",
+      "native.reference_id",
+      "native.mapping_status",
+      "native.shared_sequence_component_id",
+      "native.n_source_claims",
+      "native.n_missing_claims",
+      "native.n_source_resolved_records",
+      "native.n_source_matched_records",
+      "native.n_reference_records",
+      "native.n_reference_sequences",
+      "native.n_occurrences",
+      "native.n_additional_records",
+      "native.leading_has_occurrence",
+      "native.leading_coordinate_match",
+      "native.leading_coordinate_flanks_match",
+      "native.leading_coordinate_conflict"
+    ],
+    "n_rows": 21346
+  },
+  "external_proteasome_fragment_quantity": {
+    "artifact": "external/pxd009092/typed/quantity_results.parquet",
+    "canonical_rows_sha256": "137b96d8e29ac7d3967eef8d41f695b78a0e8d929b8770b959f725e96188a4ae",
+    "fields": [
+      "native.result_id",
+      "native.peptide_row_id",
+      "native.channel_id",
+      "native.measured_pool",
+      "native.endpoint",
+      "native.material_link_precision"
+    ],
+    "n_rows": 192114
+  },
+  "external_reference_accession": {
+    "artifact": "external/pxd009092/typed/reference_accessions.parquet",
+    "canonical_rows_sha256": "c2e9ea172db72e82010db701d6482e1217e2a5dd6b35343a20205816c97567fa",
+    "fields": [
+      "native.reference_id",
+      "native.reference_record_id",
+      "native.accession_raw",
+      "native.accession_role"
+    ],
+    "n_rows": 133414
+  },
+  "external_reference_protein": {
+    "artifact": "external/pxd009092/typed/reference_proteins.parquet",
+    "canonical_rows_sha256": "ece744483b40c178718bd7fe6800a86d11dc5b8e2697613400482cda9746a02e",
+    "fields": [
+      "native.reference_record_id",
+      "native.reference_id",
+      "native.accession",
+      "native.sequence",
+      "native.sequence_sha256",
+      "native.header_raw",
+      "native.metadata_json",
+      "native.sequence_length",
+      "native.sequence_version"
+    ],
+    "n_rows": 62984
+  },
+  "external_sequence_reference": {
+    "artifact": "external/pxd009092/typed/sequence_references.parquet",
+    "canonical_rows_sha256": "c842cb62036de8aa45db1bf1a8de18e5832eb5ae2218d812aff370e30b1cfe2f",
+    "fields": [
+      "native.reference_id",
+      "native.asset_path",
+      "native.asset_sha256",
+      "native.source_url",
+      "native.reference_format",
+      "native.generation_label",
+      "native.reference_role",
+      "native.organism_scope",
+      "native.license",
+      "native.original_reference_status",
+      "native.asset_size_bytes"
+    ],
+    "n_rows": 2
+  },
+  "external_source_parent_claim": {
+    "artifact": "external/pxd009092/typed/source_parent_claims.parquet",
+    "canonical_rows_sha256": "bfd58c0ad5acbce8938cd0b9d2380083ab11f89110d6aa4ef55e7868111cb777",
+    "fields": [
+      "native.claim_id",
+      "native.peptide_row_id",
+      "native.reference_id",
+      "native.source_accession_raw",
+      "native.resolution_status",
+      "native.n_candidate_records",
+      "native.listed_in_source",
+      "native.source_leading"
+    ],
+    "n_rows": 64538
+  },
+  "external_source_parent_resolution": {
+    "artifact": "external/pxd009092/typed/source_parent_resolutions.parquet",
+    "canonical_rows_sha256": "66912c90d08a8d5a57c5e21519810b64bcc0ac3ac467568b2581fefc1f9e8155",
+    "fields": [
+      "native.claim_id",
+      "native.reference_record_id",
+      "native.accession_role",
+      "native.occurrence_status",
+      "native.coordinate_status",
+      "native.n_exact_occurrences",
+      "native.coordinate_in_range",
+      "native.coordinate_peptide_equal",
+      "native.coordinate_left_equal",
+      "native.coordinate_right_equal"
+    ],
+    "n_rows": 26992
+  },
+  "mapp_channel": {
+    "artifact": "external/pxd009092/typed/channels.parquet",
+    "canonical_rows_sha256": "87848453a452b332e000fd9fac3d0db01a0a34a3a6e9c4e223179ba0d6263878",
+    "fields": [
+      "native.channel_id",
+      "native.source_record_id",
+      "native.experiment_raw",
+      "native.raw_file",
+      "native.condition",
+      "native.condition_role",
+      "native.measured_species",
+      "native.measured_cell",
+      "native.measured_pool",
+      "native.material_link_precision",
+      "native.search_enzyme_mode_raw",
+      "native.replicate_label"
+    ],
+    "n_rows": 18
+  },
+  "mapp_derivation_input": {
+    "artifact": "external/pxd009092/typed/derivation_inputs.parquet",
+    "canonical_rows_sha256": "f7ae8dbca928ce4a3d85655e450101608caed64c2ed1097cfd71110bc919a689",
+    "fields": [
+      "native.derived_measurement_id",
+      "native.input_measurement_id",
+      "native.input_role"
+    ],
+    "n_rows": 540034
+  },
+  "mapp_group": {
+    "artifact": "external/pxd009092/typed/groups.parquet",
+    "canonical_rows_sha256": "377d00b0597486c1e39075f86ac5c3bfe2ab6550c74041e48d6819b2ad9d3da4",
+    "fields": [
+      "native.group_record_id",
+      "native.source_record_id",
+      "native.group_id_raw",
+      "native.protein_ids_raw",
+      "native.peptide_ids_raw",
+      "native.status",
+      "native.reverse",
+      "native.potential_contaminant"
+    ],
+    "n_rows": 2039
+  },
+  "mapp_identification": {
+    "artifact": "external/pxd009092/typed/evidence.parquet",
+    "canonical_rows_sha256": "71910c22fb94eb42de521c812dec41a6bac0f050130e8a16e32d549b83f2d360",
+    "fields": [
+      "native.evidence_id",
+      "native.source_record_id",
+      "native.peptide_row_id",
+      "native.channel_id",
+      "native.sequence_raw",
+      "native.modified_sequence_raw",
+      "native.modifications_raw",
+      "native.type_raw",
+      "native.group_ids_raw",
+      "native.pep_raw",
+      "native.pep_status",
+      "native.intensity_raw",
+      "native.intensity_status",
+      "native.msms_count",
+      "native.intensity",
+      "native.pep",
+      "native.reverse",
+      "native.potential_contaminant"
+    ],
+    "n_rows": 149959
+  },
+  "mapp_peptide": {
+    "artifact": "external/pxd009092/typed/peptide_rows.parquet",
+    "canonical_rows_sha256": "4cc82e09797bc8d4734bf747e740507be43c7d46d7fa1329ec41c9c1ca77fce9",
+    "fields": [
+      "native.peptide_row_id",
+      "native.source_record_id",
+      "native.peptide_id_raw",
+      "native.sequence_raw",
+      "native.pep_raw",
+      "native.pep_status",
+      "native.parent_labels_raw",
+      "native.leading_parent_raw",
+      "native.group_ids_raw",
+      "native.n_flank_raw",
+      "native.c_flank_raw",
+      "native.measured_pool",
+      "native.material_link_precision",
+      "native.start_1based_reported",
+      "native.end_1based_reported",
+      "native.pep",
+      "native.reverse",
+      "native.potential_contaminant"
+    ],
+    "n_rows": 10673
+  },
+  "mapp_publisher_cell": {
+    "artifact": "external/pxd009092/typed/publisher_cells.parquet",
+    "canonical_rows_sha256": "664986274b59a72933ab33af0cdadc795f13355a5a35d807e8b5643b7a910554",
+    "fields": [
+      "native.cell_id",
+      "native.asset_path",
+      "native.sheet_name",
+      "native.cell_ref",
+      "native.excel_type",
+      "native.value_text",
+      "native.row_1based",
+      "native.column_1based",
+      "native.value_number"
+    ],
+    "n_rows": 36207
+  },
+  "mapp_publisher_quantity": {
+    "artifact": "external/pxd009092/typed/publisher_quantities.parquet",
+    "canonical_rows_sha256": "9b991beae4a551006e1af180c470950277e7b2b4de96243af0c06fc6c4850a62",
+    "fields": [
+      "native.measurement_id",
+      "native.peptide_row_id",
+      "native.source_cell",
+      "native.representation",
+      "native.condition_header_raw",
+      "native.condition",
+      "native.value_status",
+      "native.unit",
+      "native.derivation_rule",
+      "native.value",
+      "native.recomputed_value",
+      "native.absolute_replay_error"
+    ],
+    "n_rows": 25244
+  },
+  "mapp_quantity_measurement": {
+    "artifact": "external/pxd009092/typed/quantity_measurements.parquet",
+    "canonical_rows_sha256": "4644305a2a7d8ab12e7a03b03bb294c55ab50688af583b32c49389d8df49c248",
+    "fields": [
+      "native.measurement_id",
+      "native.result_id",
+      "native.peptide_row_id",
+      "native.representation",
+      "native.value_status",
+      "native.unit",
+      "native.quantity_scale",
+      "native.source_locator",
+      "native.derivation_rule",
+      "native.value",
+      "native.recomputed_value",
+      "native.absolute_replay_error"
+    ],
+    "n_rows": 362882
+  },
+  "mapp_source_assertion": {
+    "artifact": "external/pxd009092/typed/source_assertions.parquet",
+    "canonical_rows_sha256": "d29ce637950e8838f199feb32fea8c54a9455468be73219f207974ad8099766c",
+    "fields": [
+      "native.assertion_id",
+      "native.subject_id",
+      "native.predicate",
+      "native.value_raw",
+      "native.normalized_value",
+      "native.assertion_status",
+      "native.source_locator",
+      "native.scope"
+    ],
+    "n_rows": 74
+  },
+  "mapp_source_record": {
+    "artifact": "external/pxd009092/typed/source_records.parquet",
+    "canonical_rows_sha256": "8179dd1740be279aef35a82fdbeaa2fa1529eb97bc9c19edced35624208f7796",
+    "fields": [
+      "native.source_record_id",
+      "native.asset_path",
+      "native.fields_json",
+      "native.row_1based"
+    ],
+    "n_rows": 162767
+  }
+}

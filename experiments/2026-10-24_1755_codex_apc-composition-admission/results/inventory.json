@@ -1,0 +1,46 @@
+{
+  "argv": [
+    "experiments/2026-10-24_1755_codex_apc-composition-admission/code/inventory.py"
+  ],
+  "free_disk_bytes": 4710539264,
+  "n_groups_before_minimum": 13770,
+  "n_prior_components_excluded": 512,
+  "n_prior_parent_sequences": 920,
+  "n_raw_quantity_cells": 38268,
+  "n_source_rows": 6378,
+  "n_source_rows_before_group_support": 2760,
+  "new_artifact_bytes": 3055841,
+  "peak_rss_gib": 0.947784423828125,
+  "predictions_or_model_scores_computed": false,
+  "seconds": 17.053430458996445,
+  "source_manifest_sha256": "d99f67e625c6c33a2054a56dea4f98fb8248ca5f717cc98af3662f228655fa6a",
+  "source_row_exclusion_counts": {
+    "noncanonical_parent": 6,
+    "not_one_full_parent_sequence": 2264,
+    "previous_predictive_component_or_parent": 2111
+  },
+  "source_schemas": "results/schemas.json",
+  "splits": {
+    "test": {
+      "n_components": 7,
+      "n_distinct_parents": 7,
+      "n_supported_channel_groups": 54
+    },
+    "train": {
+      "n_components": 45,
+      "n_distinct_parents": 45,
+      "n_supported_channel_groups": 324
+    },
+    "validation": {
+      "n_components": 5,
+      "n_distinct_parents": 5,
+      "n_supported_channel_groups": 30
+    }
+  },
+  "status": "support_gate_failed",
+  "support_gates": {
+    "test": false,
+    "train": false,
+    "validation": false
+  }
+}

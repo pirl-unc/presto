@@ -1,0 +1,37 @@
+{
+  "status": "completed",
+  "cohorts": {
+    "human_native": {
+      "n_models": 21,
+      "selected_controls": {
+        "length": "length_1",
+        "sequence": "sequence_1"
+      },
+      "observer_calibration": 0.23352706918975244,
+      "n_rows": 668
+    }
+  },
+  "runtime_seconds": 12.765198208973743,
+  "peak_rss_gib": 0.3946380615234375,
+  "files": {
+    "human_native": {
+      "row-identities.json": "6eb503286dbf37b14a7a531f6d9c75581f256d3c2eabdd72e4f79f1fee19ce9c",
+      "sealed-predictions.npz": "ba7ee78a8fa70b550dccdaf603db6c262ac4a1e49ac7230a6950afd728fd0fb9",
+      "sequence_alone_mse-optimizer.pt": "c583ad226453368cdba4d7dc59629a9c69916d6829799f29fcc4e75068338c2f",
+      "sequence_observer_exact_42-optimizer.pt": "f1e4e211b18a02380876ecc13b1ad6d18a121b2e3590ebecba9a1ea51230fd2e",
+      "sequence_observer_exact_43-optimizer.pt": "e0f45e627c2d671f28cecebc0e2b8755346d7ab7a4a8410857880e316104f56c",
+      "sequence_observer_exact_44-optimizer.pt": "db8a1e3c8547f34d37f4aae51b87c8602fca2517d9338998a6e933e884d8d51c",
+      "sequence_observer_mse-optimizer.pt": "826b2ea536fef252e69cff1ced892cae4ae38546dbe7be5e76f6cae034975927",
+      "sequence_observer_reinforce_42-optimizer.pt": "47fae5a29351857e9e399c971652d30948d3f2410c139ce003f57f878cd68ff6",
+      "sequence_observer_reinforce_43-optimizer.pt": "56f0eef33934e4c85cd516d19089c4eea9429bd084abc6e1d97fc3d914f81e9c",
+      "sequence_observer_reinforce_44-optimizer.pt": "7c3a3a898ff241599a3571da318c7951f157f449d336742542e6a728060cb935",
+      "states.json": "1e8e7623dd77d7a4fe1b27e71f6bc035408e327ed4f1b690625d89bb69b7fe9b",
+      "train-validation-metrics.json": "ba02b7bc68a8ed3367206b5189505010be88a1c31836cf8af46b4bb2aa7450d7",
+      "transforms.npz": "1924cd0afe25e8eac2871ecb473e1c9052af0528e12649fd2e7288300fd248ec",
+      "uniform_alone_mse-optimizer.pt": "a25920502d029d0bea005fc966080974d4764b5339990208d284d03262088717",
+      "uniform_observer_mse-optimizer.pt": "01ce5f09c86306f4e32008e1ad5e94b320f25a170e2266c1c3fa329563525300",
+      "validation-selection.json": "b0ea9ea2b41ecf7044217406750570a50685e1aeb476d835e2202227845411e7"
+    }
+  },
+  "test_labels_read": false
+}

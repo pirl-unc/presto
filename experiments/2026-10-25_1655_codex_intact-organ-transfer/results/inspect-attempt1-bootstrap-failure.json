@@ -1,0 +1,13 @@
+{
+  "stage": "inspect",
+  "attempt": 1,
+  "status": "launcher_bootstrap_failed_before_guard_initialization",
+  "exit_code": 1,
+  "command": "reproduce/launch.sh inspect --attempt 1 --requests reproduce/requests/inspect-1.json",
+  "error": "AttributeError: partially initialized module inspect has no attribute cleandoc (most likely due to a circular import)",
+  "cause": "Python prepended code/ to sys.path; importlib.metadata imported experiment code/inspect.py instead of stdlib inspect before launcher main. That incidental import used the shared editable Hitlist because stage PYTHONPATH had not been applied.",
+  "source_queries_executed": false,
+  "guarded_child_launched": false,
+  "resource_metrics_available": false,
+  "recorded_utc": "2026-10-25T16:57:45.643759+00:00"
+}

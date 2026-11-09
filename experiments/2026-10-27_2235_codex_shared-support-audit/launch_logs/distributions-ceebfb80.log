@@ -1,0 +1,1092 @@
+* Getting build dependencies for sdist...
+ModuleNotFoundError while trying to load entry-point nosetests: No module named 'imp'
+running egg_info
+writing presto.egg-info/PKG-INFO
+writing dependency_links to presto.egg-info/dependency_links.txt
+writing entry points to presto.egg-info/entry_points.txt
+writing requirements to presto.egg-info/requires.txt
+writing top-level names to presto.egg-info/top_level.txt
+reading manifest file 'presto.egg-info/SOURCES.txt'
+adding license file 'LICENSE'
+writing manifest file 'presto.egg-info/SOURCES.txt'
+* Building sdist...
+ModuleNotFoundError while trying to load entry-point nosetests: No module named 'imp'
+running sdist
+running egg_info
+writing presto.egg-info/PKG-INFO
+writing dependency_links to presto.egg-info/dependency_links.txt
+writing entry points to presto.egg-info/entry_points.txt
+writing requirements to presto.egg-info/requires.txt
+writing top-level names to presto.egg-info/top_level.txt
+reading manifest file 'presto.egg-info/SOURCES.txt'
+adding license file 'LICENSE'
+writing manifest file 'presto.egg-info/SOURCES.txt'
+running check
+creating presto-0.1.22
+creating presto-0.1.22/cli
+creating presto-0.1.22/data
+creating presto-0.1.22/inference
+creating presto-0.1.22/legacy
+creating presto-0.1.22/legacy/scripts
+creating presto-0.1.22/legacy/scripts/distributional_ba
+creating presto-0.1.22/legacy/scripts/distributional_ba/heads
+creating presto-0.1.22/models
+creating presto-0.1.22/scripts
+creating presto-0.1.22/scripts/distributional_ba
+creating presto-0.1.22/training
+creating presto-0.1.22/presto.egg-info
+creating presto-0.1.22/tests
+copying files to presto-0.1.22...
+copying LICENSE -> presto-0.1.22
+copying README.md -> presto-0.1.22
+copying __init__.py -> presto-0.1.22
+copying __main__.py -> presto-0.1.22
+copying pyproject.toml -> presto-0.1.22
+copying ./cli/__init__.py -> presto-0.1.22/./cli
+copying ./cli/data.py -> presto-0.1.22/./cli
+copying ./cli/evaluate.py -> presto-0.1.22/./cli
+copying ./cli/main.py -> presto-0.1.22/./cli
+copying ./cli/predict.py -> presto-0.1.22/./cli
+copying ./cli/train.py -> presto-0.1.22/./cli
+copying ./cli/training_sources.py -> presto-0.1.22/./cli
+copying ./cli/weights.py -> presto-0.1.22/./cli
+copying ./data/__init__.py -> presto-0.1.22/./data
+copying ./data/allele_resolver.py -> presto-0.1.22/./data
+copying ./data/assay_context.py -> presto-0.1.22/./data
+copying ./data/assay_types.py -> presto-0.1.22/./data
+copying ./data/b2m_sequences.csv -> presto-0.1.22/./data
+copying ./data/bulk_ms.py -> presto-0.1.22/./data
+copying ./data/collate.py -> presto-0.1.22/./data
+copying ./data/cross_source_dedup.py -> presto-0.1.22/./data
+copying ./data/downloaders.py -> presto-0.1.22/./data
+copying ./data/flank_selection.py -> presto-0.1.22/./data
+copying ./data/frozen_hitlist.py -> presto-0.1.22/./data
+copying ./data/frozen_partitions.py -> presto-0.1.22/./data
+copying ./data/groove.py -> presto-0.1.22/./data
+copying ./data/hitlist_source.py -> presto-0.1.22/./data
+copying ./data/label_provenance.py -> presto-0.1.22/./data
+copying ./data/loaders.py -> presto-0.1.22/./data
+copying ./data/mhc_index.py -> presto-0.1.22/./data
+copying ./data/mhc_sequence_resolver.py -> presto-0.1.22/./data
+copying ./data/modular.py -> presto-0.1.22/./data
+copying ./data/modular_auxiliary.py -> presto-0.1.22/./data
+copying ./data/modular_context.py -> presto-0.1.22/./data
+copying ./data/modular_hitlist.py -> presto-0.1.22/./data
+copying ./data/modular_hitlist_ms.py -> presto-0.1.22/./data
+copying ./data/modular_lineage.py -> presto-0.1.22/./data
+copying ./data/modular_ordinal.py -> presto-0.1.22/./data
+copying ./data/modular_preparation.py -> presto-0.1.22/./data
+copying ./data/modular_quantitative.py -> presto-0.1.22/./data
+copying ./data/modular_reference.py -> presto-0.1.22/./data
+copying ./data/modular_sources.py -> presto-0.1.22/./data
+copying ./data/mouse_mhc_overlay.py -> presto-0.1.22/./data
+copying ./data/scoped_bulk.py -> presto-0.1.22/./data
+copying ./data/scoped_partitions.py -> presto-0.1.22/./data
+copying ./data/sequence_augmentation.py -> presto-0.1.22/./data
+copying ./data/source_lineage.py -> presto-0.1.22/./data
+copying ./data/species_context.py -> presto-0.1.22/./data
+copying ./data/tcr_specificity.py -> presto-0.1.22/./data
+copying ./data/tokenizer.py -> presto-0.1.22/./data
+copying ./data/vocab.py -> presto-0.1.22/./data
+copying ./inference/__init__.py -> presto-0.1.22/./inference
+copying ./inference/modular.py -> presto-0.1.22/./inference
+copying ./inference/predictor.py -> presto-0.1.22/./inference
+copying ./legacy/__init__.py -> presto-0.1.22/./legacy
+copying ./legacy/modular_support_v2.py -> presto-0.1.22/./legacy
+copying ./legacy/modular_v2.py -> presto-0.1.22/./legacy
+copying ./legacy/pcgrad.py -> presto-0.1.22/./legacy
+copying ./legacy/presto.py -> presto-0.1.22/./legacy
+copying ./legacy/shared_v3.py -> presto-0.1.22/./legacy
+copying ./legacy/shared_v3_support.py -> presto-0.1.22/./legacy
+copying ./legacy/shared_v4.py -> presto-0.1.22/./legacy
+copying ./legacy/shared_v4_support.py -> presto-0.1.22/./legacy
+copying ./legacy/tcr_specificity.py -> presto-0.1.22/./legacy
+copying ./legacy/trainer.py -> presto-0.1.22/./legacy
+copying ./legacy/training_sources.py -> presto-0.1.22/./legacy
+copying ./legacy/scripts/__init__.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/assay_ablation_probe.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/benchmark_assay_ablation.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/benchmark_assay_head_bakeoff.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/benchmark_binding_latents.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/benchmark_broad_frontier_5ep.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/benchmark_design_round2.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/benchmark_design_round3.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/benchmark_directness_designs.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/benchmark_distributional_ba_heads.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/benchmark_distributional_ba_heads_v2.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/benchmark_distributional_ba_heads_v3.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/benchmark_distributional_ba_heads_v4.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/benchmark_factorized_ablation.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/benchmark_factorized_multioutput.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/benchmark_h100_batchsize.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/benchmark_hardware_generalization.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/benchmark_lr_schedule_bakeoff.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/benchmark_lr_stability_7allele.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/benchmark_modal_hardware.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/benchmark_positional_composition.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/benchmark_presto_bakeoff.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/benchmark_register_designs.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/benchmark_runtime_multiallele.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/benchmark_runtime_variants.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/benchmark_target_space_bakeoff.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/focused_binding_probe.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/groove_baseline_probe.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/pretrain_mhc_encoder.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/probe_training.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/sanity_check_modal.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/sweep_20m_models.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/train_class1.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/train_iedb.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/train_modal.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/train_remote.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/train_synthetic.py -> presto-0.1.22/./legacy/scripts
+copying ./legacy/scripts/distributional_ba/__init__.py -> presto-0.1.22/./legacy/scripts/distributional_ba
+copying ./legacy/scripts/distributional_ba/assay_combos.py -> presto-0.1.22/./legacy/scripts/distributional_ba
+copying ./legacy/scripts/distributional_ba/assay_context.py -> presto-0.1.22/./legacy/scripts/distributional_ba
+copying ./legacy/scripts/distributional_ba/config.py -> presto-0.1.22/./legacy/scripts/distributional_ba
+copying ./legacy/scripts/distributional_ba/config_v2.py -> presto-0.1.22/./legacy/scripts/distributional_ba
+copying ./legacy/scripts/distributional_ba/config_v3.py -> presto-0.1.22/./legacy/scripts/distributional_ba
+copying ./legacy/scripts/distributional_ba/config_v4.py -> presto-0.1.22/./legacy/scripts/distributional_ba
+copying ./legacy/scripts/distributional_ba/config_v5.py -> presto-0.1.22/./legacy/scripts/distributional_ba
+copying ./legacy/scripts/distributional_ba/config_v6.py -> presto-0.1.22/./legacy/scripts/distributional_ba
+copying ./legacy/scripts/distributional_ba/encoders.py -> presto-0.1.22/./legacy/scripts/distributional_ba
+copying ./legacy/scripts/distributional_ba/evaluate.py -> presto-0.1.22/./legacy/scripts/distributional_ba
+copying ./legacy/scripts/distributional_ba/losses.py -> presto-0.1.22/./legacy/scripts/distributional_ba
+copying ./legacy/scripts/distributional_ba/metrics.py -> presto-0.1.22/./legacy/scripts/distributional_ba
+copying ./legacy/scripts/distributional_ba/pretrain_mhc.py -> presto-0.1.22/./legacy/scripts/distributional_ba
+copying ./legacy/scripts/distributional_ba/train.py -> presto-0.1.22/./legacy/scripts/distributional_ba
+copying ./legacy/scripts/distributional_ba/heads/__init__.py -> presto-0.1.22/./legacy/scripts/distributional_ba/heads
+copying ./legacy/scripts/distributional_ba/heads/base.py -> presto-0.1.22/./legacy/scripts/distributional_ba/heads
+copying ./legacy/scripts/distributional_ba/heads/distributional.py -> presto-0.1.22/./legacy/scripts/distributional_ba/heads
+copying ./legacy/scripts/distributional_ba/heads/gaussian.py -> presto-0.1.22/./legacy/scripts/distributional_ba/heads
+copying ./legacy/scripts/distributional_ba/heads/hlgauss.py -> presto-0.1.22/./legacy/scripts/distributional_ba/heads
+copying ./legacy/scripts/distributional_ba/heads/quantile.py -> presto-0.1.22/./legacy/scripts/distributional_ba/heads
+copying ./legacy/scripts/distributional_ba/heads/regression.py -> presto-0.1.22/./legacy/scripts/distributional_ba/heads
+copying ./legacy/scripts/distributional_ba/heads/twohot.py -> presto-0.1.22/./legacy/scripts/distributional_ba/heads
+copying ./models/__init__.py -> presto-0.1.22/./models
+copying ./models/affinity.py -> presto-0.1.22/./models
+copying ./models/encoders.py -> presto-0.1.22/./models
+copying ./models/fragment_state.py -> presto-0.1.22/./models
+copying ./models/heads.py -> presto-0.1.22/./models
+copying ./models/independent_cut.py -> presto-0.1.22/./models
+copying ./models/modular.py -> presto-0.1.22/./models
+copying ./models/modular_dependencies.py -> presto-0.1.22/./models
+copying ./models/modular_support.py -> presto-0.1.22/./models
+copying ./models/n_terminal_trimming.py -> presto-0.1.22/./models
+copying ./models/peptide_availability.py -> presto-0.1.22/./models
+copying ./models/pmhc.py -> presto-0.1.22/./models
+copying ./models/presto.py -> presto-0.1.22/./models
+copying ./models/presto_modules.py -> presto-0.1.22/./models
+copying ./models/steady_processing.py -> presto-0.1.22/./models
+copying ./models/substrate_entry.py -> presto-0.1.22/./models
+copying ./models/tcr_specificity.py -> presto-0.1.22/./models
+copying ./scripts/__init__.py -> presto-0.1.22/./scripts
+copying ./scripts/aggregate_summary_runs.py -> presto-0.1.22/./scripts
+copying ./scripts/assay_ablation_probe.py -> presto-0.1.22/./scripts
+copying ./scripts/audit_mhc_groove.py -> presto-0.1.22/./scripts
+copying ./scripts/benchmark_assay_ablation.py -> presto-0.1.22/./scripts
+copying ./scripts/benchmark_assay_head_bakeoff.py -> presto-0.1.22/./scripts
+copying ./scripts/benchmark_binding_latents.py -> presto-0.1.22/./scripts
+copying ./scripts/benchmark_broad_frontier_5ep.py -> presto-0.1.22/./scripts
+copying ./scripts/benchmark_design_round2.py -> presto-0.1.22/./scripts
+copying ./scripts/benchmark_design_round3.py -> presto-0.1.22/./scripts
+copying ./scripts/benchmark_directness_designs.py -> presto-0.1.22/./scripts
+copying ./scripts/benchmark_distributional_ba_heads.py -> presto-0.1.22/./scripts
+copying ./scripts/benchmark_distributional_ba_heads_v2.py -> presto-0.1.22/./scripts
+copying ./scripts/benchmark_distributional_ba_heads_v3.py -> presto-0.1.22/./scripts
+copying ./scripts/benchmark_distributional_ba_heads_v4.py -> presto-0.1.22/./scripts
+copying ./scripts/benchmark_factorized_ablation.py -> presto-0.1.22/./scripts
+copying ./scripts/benchmark_factorized_multioutput.py -> presto-0.1.22/./scripts
+copying ./scripts/benchmark_h100_batchsize.py -> presto-0.1.22/./scripts
+copying ./scripts/benchmark_hardware_generalization.py -> presto-0.1.22/./scripts
+copying ./scripts/benchmark_lr_schedule_bakeoff.py -> presto-0.1.22/./scripts
+copying ./scripts/benchmark_lr_stability_7allele.py -> presto-0.1.22/./scripts
+copying ./scripts/benchmark_modal_hardware.py -> presto-0.1.22/./scripts
+copying ./scripts/benchmark_positional_composition.py -> presto-0.1.22/./scripts
+copying ./scripts/benchmark_presto_bakeoff.py -> presto-0.1.22/./scripts
+copying ./scripts/benchmark_register_designs.py -> presto-0.1.22/./scripts
+copying ./scripts/benchmark_runtime_multiallele.py -> presto-0.1.22/./scripts
+copying ./scripts/benchmark_runtime_variants.py -> presto-0.1.22/./scripts
+copying ./scripts/benchmark_target_space_bakeoff.py -> presto-0.1.22/./scripts
+copying ./scripts/check_wheel.py -> presto-0.1.22/./scripts
+copying ./scripts/collect_modal_runs.py -> presto-0.1.22/./scripts
+copying ./scripts/experiment_registry.py -> presto-0.1.22/./scripts
+copying ./scripts/fetch_experiment_modal_runs.py -> presto-0.1.22/./scripts
+copying ./scripts/focused_binding_probe.py -> presto-0.1.22/./scripts
+copying ./scripts/groove_baseline_probe.py -> presto-0.1.22/./scripts
+copying ./scripts/pretrain_mhc_encoder.py -> presto-0.1.22/./scripts
+copying ./scripts/probe_training.py -> presto-0.1.22/./scripts
+copying ./scripts/sanity_check_modal.py -> presto-0.1.22/./scripts
+copying ./scripts/sweep_20m_models.py -> presto-0.1.22/./scripts
+copying ./scripts/train_class1.py -> presto-0.1.22/./scripts
+copying ./scripts/train_iedb.py -> presto-0.1.22/./scripts
+copying ./scripts/train_modal.py -> presto-0.1.22/./scripts
+copying ./scripts/train_remote.py -> presto-0.1.22/./scripts
+copying ./scripts/train_synthetic.py -> presto-0.1.22/./scripts
+copying ./scripts/distributional_ba/__init__.py -> presto-0.1.22/./scripts/distributional_ba
+copying ./scripts/distributional_ba/pretrain_mhc.py -> presto-0.1.22/./scripts/distributional_ba
+copying ./scripts/distributional_ba/train.py -> presto-0.1.22/./scripts/distributional_ba
+copying ./training/__init__.py -> presto-0.1.22/./training
+copying ./training/checkpointing.py -> presto-0.1.22/./training
+copying ./training/config.py -> presto-0.1.22/./training
+copying ./training/config_io.py -> presto-0.1.22/./training
+copying ./training/coverage_preflight.py -> presto-0.1.22/./training
+copying ./training/data_support.py -> presto-0.1.22/./training
+copying ./training/evaluation_ledger.py -> presto-0.1.22/./training
+copying ./training/holdout_eval.py -> presto-0.1.22/./training
+copying ./training/losses.py -> presto-0.1.22/./training
+copying ./training/mil.py -> presto-0.1.22/./training
+copying ./training/modular.py -> presto-0.1.22/./training
+copying ./training/modular_evaluation.py -> presto-0.1.22/./training
+copying ./training/modular_resume.py -> presto-0.1.22/./training
+copying ./training/modular_run.py -> presto-0.1.22/./training
+copying ./training/modular_sampling.py -> presto-0.1.22/./training
+copying ./training/output_contract.py -> presto-0.1.22/./training
+copying ./training/output_coverage.py -> presto-0.1.22/./training
+copying ./training/output_updates.py -> presto-0.1.22/./training
+copying ./training/run_logger.py -> presto-0.1.22/./training
+copying ./training/supervision.py -> presto-0.1.22/./training
+copying ./training/supported_outputs.py -> presto-0.1.22/./training
+copying ./training/target_policy.py -> presto-0.1.22/./training
+copying ./training/tasks.py -> presto-0.1.22/./training
+copying ./training/trainer.py -> presto-0.1.22/./training
+copying presto.egg-info/PKG-INFO -> presto-0.1.22/presto.egg-info
+copying presto.egg-info/SOURCES.txt -> presto-0.1.22/presto.egg-info
+copying presto.egg-info/dependency_links.txt -> presto-0.1.22/presto.egg-info
+copying presto.egg-info/entry_points.txt -> presto-0.1.22/presto.egg-info
+copying presto.egg-info/requires.txt -> presto-0.1.22/presto.egg-info
+copying presto.egg-info/top_level.txt -> presto-0.1.22/presto.egg-info
+copying tests/test_affinity.py -> presto-0.1.22/tests
+copying tests/test_affinity_metric_numerics.py -> presto-0.1.22/tests
+copying tests/test_affinity_target_policy.py -> presto-0.1.22/tests
+copying tests/test_allele_resolver.py -> presto-0.1.22/tests
+copying tests/test_arm_attribution.py -> presto-0.1.22/tests
+copying tests/test_assay_ablation.py -> presto-0.1.22/tests
+copying tests/test_assay_context.py -> presto-0.1.22/tests
+copying tests/test_assay_panel_outputs.py -> presto-0.1.22/tests
+copying tests/test_assay_type_vocabulary.py -> presto-0.1.22/tests
+copying tests/test_benchmark_argv_pairing.py -> presto-0.1.22/tests
+copying tests/test_binding_selector_descriptors.py -> presto-0.1.22/tests
+copying tests/test_bulk_depth_validity.py -> presto-0.1.22/tests
+copying tests/test_bulk_ms_ingest.py -> presto-0.1.22/tests
+copying tests/test_checkpointing.py -> presto-0.1.22/tests
+copying tests/test_collate.py -> presto-0.1.22/tests
+copying tests/test_config_io.py -> presto-0.1.22/tests
+copying tests/test_coverage_preflight.py -> presto-0.1.22/tests
+copying tests/test_cross_source_dedup.py -> presto-0.1.22/tests
+copying tests/test_curriculum_and_init.py -> presto-0.1.22/tests
+copying tests/test_data_cli.py -> presto-0.1.22/tests
+copying tests/test_data_support.py -> presto-0.1.22/tests
+copying tests/test_data_trust_experiment.py -> presto-0.1.22/tests
+copying tests/test_dataloader_sharing.py -> presto-0.1.22/tests
+copying tests/test_distributional_ba.py -> presto-0.1.22/tests
+copying tests/test_docs_match_code.py -> presto-0.1.22/tests
+copying tests/test_downloaders.py -> presto-0.1.22/tests
+copying tests/test_dual_corpus_transfer.py -> presto-0.1.22/tests
+copying tests/test_encoders.py -> presto-0.1.22/tests
+copying tests/test_evaluate_cli.py -> presto-0.1.22/tests
+copying tests/test_exception_narrowing.py -> presto-0.1.22/tests
+copying tests/test_excision.py -> presto-0.1.22/tests
+copying tests/test_excision_scoring_version.py -> presto-0.1.22/tests
+copying tests/test_excision_window.py -> presto-0.1.22/tests
+copying tests/test_flank_boundary_context.py -> presto-0.1.22/tests
+copying tests/test_flank_selection.py -> presto-0.1.22/tests
+copying tests/test_flank_truncation.py -> presto-0.1.22/tests
+copying tests/test_focused_probe.py -> presto-0.1.22/tests
+copying tests/test_fragment_state.py -> presto-0.1.22/tests
+copying tests/test_frozen_hitlist.py -> presto-0.1.22/tests
+copying tests/test_frozen_partitions.py -> presto-0.1.22/tests
+copying tests/test_generated_parent_lineage.py -> presto-0.1.22/tests
+copying tests/test_gradient_coverage.py -> presto-0.1.22/tests
+copying tests/test_groove.py -> presto-0.1.22/tests
+copying tests/test_groove_baseline.py -> presto-0.1.22/tests
+copying tests/test_grpo_ingredient_factorial.py -> presto-0.1.22/tests
+copying tests/test_hard_negatives.py -> presto-0.1.22/tests
+copying tests/test_heads.py -> presto-0.1.22/tests
+copying tests/test_hitlist_source.py -> presto-0.1.22/tests
+copying tests/test_hitlist_version_floor.py -> presto-0.1.22/tests
+copying tests/test_holdout_eval.py -> presto-0.1.22/tests
+copying tests/test_holdout_train_eval_parity.py -> presto-0.1.22/tests
+copying tests/test_independent_cut.py -> presto-0.1.22/tests
+copying tests/test_independent_cut_estimators.py -> presto-0.1.22/tests
+copying tests/test_invivo_excision_gradient.py -> presto-0.1.22/tests
+copying tests/test_latent_topology.py -> presto-0.1.22/tests
+copying tests/test_loaders.py -> presto-0.1.22/tests
+copying tests/test_losses.py -> presto-0.1.22/tests
+copying tests/test_many_output_contract.py -> presto-0.1.22/tests
+copying tests/test_merged_assay_metadata.py -> presto-0.1.22/tests
+copying tests/test_merged_assay_routing.py -> presto-0.1.22/tests
+copying tests/test_merged_source_lineage.py -> presto-0.1.22/tests
+copying tests/test_mhc2_censor_refinement.py -> presto-0.1.22/tests
+copying tests/test_mhc2_ms_length_background.py -> presto-0.1.22/tests
+copying tests/test_mhc2_ms_prediction_cohort.py -> presto-0.1.22/tests
+copying tests/test_mhc_index.py -> presto-0.1.22/tests
+copying tests/test_mhc_sequence_resolver.py -> presto-0.1.22/tests
+copying tests/test_mil_provenance_integrity.py -> presto-0.1.22/tests
+copying tests/test_mil_supervision.py -> presto-0.1.22/tests
+copying tests/test_model_io_routing.py -> presto-0.1.22/tests
+copying tests/test_modular_cell_context.py -> presto-0.1.22/tests
+copying tests/test_modular_context_assertions.py -> presto-0.1.22/tests
+copying tests/test_modular_continuation.py -> presto-0.1.22/tests
+copying tests/test_modular_hitlist.py -> presto-0.1.22/tests
+copying tests/test_modular_hitlist_experiment.py -> presto-0.1.22/tests
+copying tests/test_modular_hitlist_ms.py -> presto-0.1.22/tests
+copying tests/test_modular_json_streaming.py -> presto-0.1.22/tests
+copying tests/test_modular_model.py -> presto-0.1.22/tests
+copying tests/test_modular_ordinal_context.py -> presto-0.1.22/tests
+copying tests/test_modular_prediction_provenance.py -> presto-0.1.22/tests
+copying tests/test_modular_quantitative.py -> presto-0.1.22/tests
+copying tests/test_modular_quantitative_admission.py -> presto-0.1.22/tests
+copying tests/test_modular_reference.py -> presto-0.1.22/tests
+copying tests/test_modular_reference_experiment.py -> presto-0.1.22/tests
+copying tests/test_modular_resume.py -> presto-0.1.22/tests
+copying tests/test_modular_single_chain.py -> presto-0.1.22/tests
+copying tests/test_modular_training.py -> presto-0.1.22/tests
+copying tests/test_mouse_mhc_overlay.py -> presto-0.1.22/tests
+copying tests/test_n_terminal_trimming.py -> presto-0.1.22/tests
+copying tests/test_output_coverage.py -> presto-0.1.22/tests
+copying tests/test_output_updates.py -> presto-0.1.22/tests
+copying tests/test_packaging.py -> presto-0.1.22/tests
+copying tests/test_panel_target_space.py -> presto-0.1.22/tests
+copying tests/test_parameter_classification.py -> presto-0.1.22/tests
+copying tests/test_peptide_availability.py -> presto-0.1.22/tests
+copying tests/test_peptide_split.py -> presto-0.1.22/tests
+copying tests/test_pmhc.py -> presto-0.1.22/tests
+copying tests/test_predict_cli.py -> presto-0.1.22/tests
+copying tests/test_predictor.py -> presto-0.1.22/tests
+copying tests/test_presto.py -> presto-0.1.22/tests
+copying tests/test_pretrain_mhc_encoder.py -> presto-0.1.22/tests
+copying tests/test_processing_species_context.py -> presto-0.1.22/tests
+copying tests/test_provenance_fork.py -> presto-0.1.22/tests
+copying tests/test_regularization_contract.py -> presto-0.1.22/tests
+copying tests/test_review_regressions.py -> presto-0.1.22/tests
+copying tests/test_row_supervision.py -> presto-0.1.22/tests
+copying tests/test_sampler_contrasts.py -> presto-0.1.22/tests
+copying tests/test_scoped_bulk.py -> presto-0.1.22/tests
+copying tests/test_scoped_partitions.py -> presto-0.1.22/tests
+copying tests/test_sequence_augmentation.py -> presto-0.1.22/tests
+copying tests/test_shared_capacity_coverage.py -> presto-0.1.22/tests
+copying tests/test_species_context.py -> presto-0.1.22/tests
+copying tests/test_stability_censoring.py -> presto-0.1.22/tests
+copying tests/test_steady_processing.py -> presto-0.1.22/tests
+copying tests/test_stimulus_vocabulary.py -> presto-0.1.22/tests
+copying tests/test_substrate_entry.py -> presto-0.1.22/tests
+copying tests/test_sweep_20m_models.py -> presto-0.1.22/tests
+copying tests/test_synthetic_distribution_comparison.py -> presto-0.1.22/tests
+copying tests/test_tasks.py -> presto-0.1.22/tests
+copying tests/test_tcr_specificity.py -> presto-0.1.22/tests
+copying tests/test_test_quality.py -> presto-0.1.22/tests
+copying tests/test_tokenizer.py -> presto-0.1.22/tests
+copying tests/test_train_cli.py -> presto-0.1.22/tests
+copying tests/test_train_iedb.py -> presto-0.1.22/tests
+copying tests/test_train_synthetic.py -> presto-0.1.22/tests
+copying tests/test_trainer.py -> presto-0.1.22/tests
+copying tests/test_training_e2e.py -> presto-0.1.22/tests
+copying tests/test_training_invariants.py -> presto-0.1.22/tests
+copying tests/test_training_logging.py -> presto-0.1.22/tests
+copying tests/test_transfer_improvements.py -> presto-0.1.22/tests
+copying tests/test_trypsin_p.py -> presto-0.1.22/tests
+copying tests/test_unified_training_core.py -> presto-0.1.22/tests
+copying tests/test_vocab.py -> presto-0.1.22/tests
+copying tests/test_weights_cli.py -> presto-0.1.22/tests
+copying tests/test_zero_mhc_guard.py -> presto-0.1.22/tests
+Writing presto-0.1.22/setup.cfg
+Creating tar archive
+removing 'presto-0.1.22' (and everything under it)
+* Building wheel from sdist
+* Getting build dependencies for wheel...
+ModuleNotFoundError while trying to load entry-point nosetests: No module named 'imp'
+running egg_info
+writing presto.egg-info/PKG-INFO
+writing dependency_links to presto.egg-info/dependency_links.txt
+writing entry points to presto.egg-info/entry_points.txt
+writing requirements to presto.egg-info/requires.txt
+writing top-level names to presto.egg-info/top_level.txt
+reading manifest file 'presto.egg-info/SOURCES.txt'
+adding license file 'LICENSE'
+writing manifest file 'presto.egg-info/SOURCES.txt'
+* Building wheel...
+ModuleNotFoundError while trying to load entry-point nosetests: No module named 'imp'
+running bdist_wheel
+running build
+running build_py
+creating build/lib/presto
+copying ./__init__.py -> build/lib/presto
+copying ./__main__.py -> build/lib/presto
+creating build/lib/presto/cli
+copying ./cli/predict.py -> build/lib/presto/cli
+copying ./cli/__init__.py -> build/lib/presto/cli
+copying ./cli/train.py -> build/lib/presto/cli
+copying ./cli/evaluate.py -> build/lib/presto/cli
+copying ./cli/training_sources.py -> build/lib/presto/cli
+copying ./cli/main.py -> build/lib/presto/cli
+copying ./cli/weights.py -> build/lib/presto/cli
+copying ./cli/data.py -> build/lib/presto/cli
+creating build/lib/presto/data
+copying ./data/hitlist_source.py -> build/lib/presto/data
+copying ./data/flank_selection.py -> build/lib/presto/data
+copying ./data/modular_auxiliary.py -> build/lib/presto/data
+copying ./data/scoped_partitions.py -> build/lib/presto/data
+copying ./data/collate.py -> build/lib/presto/data
+copying ./data/vocab.py -> build/lib/presto/data
+copying ./data/scoped_bulk.py -> build/lib/presto/data
+copying ./data/modular_ordinal.py -> build/lib/presto/data
+copying ./data/modular_quantitative.py -> build/lib/presto/data
+copying ./data/modular_reference.py -> build/lib/presto/data
+copying ./data/loaders.py -> build/lib/presto/data
+copying ./data/modular_preparation.py -> build/lib/presto/data
+copying ./data/__init__.py -> build/lib/presto/data
+copying ./data/modular_sources.py -> build/lib/presto/data
+copying ./data/modular_context.py -> build/lib/presto/data
+copying ./data/modular_hitlist.py -> build/lib/presto/data
+copying ./data/tokenizer.py -> build/lib/presto/data
+copying ./data/label_provenance.py -> build/lib/presto/data
+copying ./data/mouse_mhc_overlay.py -> build/lib/presto/data
+copying ./data/downloaders.py -> build/lib/presto/data
+copying ./data/bulk_ms.py -> build/lib/presto/data
+copying ./data/modular_lineage.py -> build/lib/presto/data
+copying ./data/assay_context.py -> build/lib/presto/data
+copying ./data/allele_resolver.py -> build/lib/presto/data
+copying ./data/modular.py -> build/lib/presto/data
+copying ./data/assay_types.py -> build/lib/presto/data
+copying ./data/frozen_partitions.py -> build/lib/presto/data
+copying ./data/cross_source_dedup.py -> build/lib/presto/data
+copying ./data/sequence_augmentation.py -> build/lib/presto/data
+copying ./data/groove.py -> build/lib/presto/data
+copying ./data/source_lineage.py -> build/lib/presto/data
+copying ./data/species_context.py -> build/lib/presto/data
+copying ./data/tcr_specificity.py -> build/lib/presto/data
+copying ./data/mhc_index.py -> build/lib/presto/data
+copying ./data/modular_hitlist_ms.py -> build/lib/presto/data
+copying ./data/mhc_sequence_resolver.py -> build/lib/presto/data
+copying ./data/frozen_hitlist.py -> build/lib/presto/data
+creating build/lib/presto/inference
+copying ./inference/predictor.py -> build/lib/presto/inference
+copying ./inference/__init__.py -> build/lib/presto/inference
+copying ./inference/modular.py -> build/lib/presto/inference
+creating build/lib/presto/models
+copying ./models/modular_support.py -> build/lib/presto/models
+copying ./models/pmhc.py -> build/lib/presto/models
+copying ./models/independent_cut.py -> build/lib/presto/models
+copying ./models/affinity.py -> build/lib/presto/models
+copying ./models/__init__.py -> build/lib/presto/models
+copying ./models/encoders.py -> build/lib/presto/models
+copying ./models/steady_processing.py -> build/lib/presto/models
+copying ./models/presto_modules.py -> build/lib/presto/models
+copying ./models/presto.py -> build/lib/presto/models
+copying ./models/fragment_state.py -> build/lib/presto/models
+copying ./models/modular.py -> build/lib/presto/models
+copying ./models/modular_dependencies.py -> build/lib/presto/models
+copying ./models/tcr_specificity.py -> build/lib/presto/models
+copying ./models/n_terminal_trimming.py -> build/lib/presto/models
+copying ./models/heads.py -> build/lib/presto/models
+copying ./models/substrate_entry.py -> build/lib/presto/models
+copying ./models/peptide_availability.py -> build/lib/presto/models
+creating build/lib/presto/legacy
+copying ./legacy/pcgrad.py -> build/lib/presto/legacy
+copying ./legacy/shared_v3_support.py -> build/lib/presto/legacy
+copying ./legacy/shared_v4.py -> build/lib/presto/legacy
+copying ./legacy/shared_v4_support.py -> build/lib/presto/legacy
+copying ./legacy/__init__.py -> build/lib/presto/legacy
+copying ./legacy/modular_v2.py -> build/lib/presto/legacy
+copying ./legacy/modular_support_v2.py -> build/lib/presto/legacy
+copying ./legacy/shared_v3.py -> build/lib/presto/legacy
+copying ./legacy/presto.py -> build/lib/presto/legacy
+copying ./legacy/training_sources.py -> build/lib/presto/legacy
+copying ./legacy/trainer.py -> build/lib/presto/legacy
+copying ./legacy/tcr_specificity.py -> build/lib/presto/legacy
+creating build/lib/presto/training
+copying ./training/data_support.py -> build/lib/presto/training
+copying ./training/output_contract.py -> build/lib/presto/training
+copying ./training/supported_outputs.py -> build/lib/presto/training
+copying ./training/coverage_preflight.py -> build/lib/presto/training
+copying ./training/tasks.py -> build/lib/presto/training
+copying ./training/modular_run.py -> build/lib/presto/training
+copying ./training/config.py -> build/lib/presto/training
+copying ./training/config_io.py -> build/lib/presto/training
+copying ./training/evaluation_ledger.py -> build/lib/presto/training
+copying ./training/mil.py -> build/lib/presto/training
+copying ./training/__init__.py -> build/lib/presto/training
+copying ./training/modular_resume.py -> build/lib/presto/training
+copying ./training/run_logger.py -> build/lib/presto/training
+copying ./training/modular_sampling.py -> build/lib/presto/training
+copying ./training/supervision.py -> build/lib/presto/training
+copying ./training/output_updates.py -> build/lib/presto/training
+copying ./training/modular_evaluation.py -> build/lib/presto/training
+copying ./training/holdout_eval.py -> build/lib/presto/training
+copying ./training/output_coverage.py -> build/lib/presto/training
+copying ./training/losses.py -> build/lib/presto/training
+copying ./training/trainer.py -> build/lib/presto/training
+copying ./training/modular.py -> build/lib/presto/training
+copying ./training/target_policy.py -> build/lib/presto/training
+copying ./training/checkpointing.py -> build/lib/presto/training
+creating build/lib/presto/scripts
+copying ./scripts/focused_binding_probe.py -> build/lib/presto/scripts
+copying ./scripts/experiment_registry.py -> build/lib/presto/scripts
+copying ./scripts/train_modal.py -> build/lib/presto/scripts
+copying ./scripts/train_remote.py -> build/lib/presto/scripts
+copying ./scripts/benchmark_broad_frontier_5ep.py -> build/lib/presto/scripts
+copying ./scripts/benchmark_lr_schedule_bakeoff.py -> build/lib/presto/scripts
+copying ./scripts/benchmark_positional_composition.py -> build/lib/presto/scripts
+copying ./scripts/train_synthetic.py -> build/lib/presto/scripts
+copying ./scripts/probe_training.py -> build/lib/presto/scripts
+copying ./scripts/audit_mhc_groove.py -> build/lib/presto/scripts
+copying ./scripts/benchmark_directness_designs.py -> build/lib/presto/scripts
+copying ./scripts/train_iedb.py -> build/lib/presto/scripts
+copying ./scripts/assay_ablation_probe.py -> build/lib/presto/scripts
+copying ./scripts/sweep_20m_models.py -> build/lib/presto/scripts
+copying ./scripts/benchmark_distributional_ba_heads_v3.py -> build/lib/presto/scripts
+copying ./scripts/benchmark_runtime_variants.py -> build/lib/presto/scripts
+copying ./scripts/benchmark_design_round3.py -> build/lib/presto/scripts
+copying ./scripts/benchmark_lr_stability_7allele.py -> build/lib/presto/scripts
+copying ./scripts/benchmark_binding_latents.py -> build/lib/presto/scripts
+copying ./scripts/pretrain_mhc_encoder.py -> build/lib/presto/scripts
+copying ./scripts/benchmark_h100_batchsize.py -> build/lib/presto/scripts
+copying ./scripts/benchmark_design_round2.py -> build/lib/presto/scripts
+copying ./scripts/__init__.py -> build/lib/presto/scripts
+copying ./scripts/benchmark_register_designs.py -> build/lib/presto/scripts
+copying ./scripts/benchmark_assay_head_bakeoff.py -> build/lib/presto/scripts
+copying ./scripts/aggregate_summary_runs.py -> build/lib/presto/scripts
+copying ./scripts/collect_modal_runs.py -> build/lib/presto/scripts
+copying ./scripts/benchmark_distributional_ba_heads_v2.py -> build/lib/presto/scripts
+copying ./scripts/benchmark_presto_bakeoff.py -> build/lib/presto/scripts
+copying ./scripts/benchmark_runtime_multiallele.py -> build/lib/presto/scripts
+copying ./scripts/train_class1.py -> build/lib/presto/scripts
+copying ./scripts/benchmark_hardware_generalization.py -> build/lib/presto/scripts
+copying ./scripts/benchmark_distributional_ba_heads_v4.py -> build/lib/presto/scripts
+copying ./scripts/fetch_experiment_modal_runs.py -> build/lib/presto/scripts
+copying ./scripts/benchmark_distributional_ba_heads.py -> build/lib/presto/scripts
+copying ./scripts/check_wheel.py -> build/lib/presto/scripts
+copying ./scripts/benchmark_factorized_multioutput.py -> build/lib/presto/scripts
+copying ./scripts/sanity_check_modal.py -> build/lib/presto/scripts
+copying ./scripts/benchmark_factorized_ablation.py -> build/lib/presto/scripts
+copying ./scripts/groove_baseline_probe.py -> build/lib/presto/scripts
+copying ./scripts/benchmark_target_space_bakeoff.py -> build/lib/presto/scripts
+copying ./scripts/benchmark_assay_ablation.py -> build/lib/presto/scripts
+copying ./scripts/benchmark_modal_hardware.py -> build/lib/presto/scripts
+creating build/lib/presto/scripts/distributional_ba
+copying ./scripts/distributional_ba/__init__.py -> build/lib/presto/scripts/distributional_ba
+copying ./scripts/distributional_ba/pretrain_mhc.py -> build/lib/presto/scripts/distributional_ba
+copying ./scripts/distributional_ba/train.py -> build/lib/presto/scripts/distributional_ba
+creating build/lib/presto/legacy/scripts
+copying ./legacy/scripts/focused_binding_probe.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/train_modal.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/train_remote.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/benchmark_broad_frontier_5ep.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/benchmark_lr_schedule_bakeoff.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/benchmark_positional_composition.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/train_synthetic.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/probe_training.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/benchmark_directness_designs.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/train_iedb.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/assay_ablation_probe.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/sweep_20m_models.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/benchmark_distributional_ba_heads_v3.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/benchmark_runtime_variants.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/benchmark_design_round3.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/benchmark_lr_stability_7allele.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/benchmark_binding_latents.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/pretrain_mhc_encoder.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/benchmark_h100_batchsize.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/benchmark_design_round2.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/__init__.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/benchmark_register_designs.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/benchmark_assay_head_bakeoff.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/benchmark_distributional_ba_heads_v2.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/benchmark_presto_bakeoff.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/benchmark_runtime_multiallele.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/train_class1.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/benchmark_hardware_generalization.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/benchmark_distributional_ba_heads_v4.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/benchmark_distributional_ba_heads.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/benchmark_factorized_multioutput.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/sanity_check_modal.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/benchmark_factorized_ablation.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/groove_baseline_probe.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/benchmark_target_space_bakeoff.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/benchmark_assay_ablation.py -> build/lib/presto/legacy/scripts
+copying ./legacy/scripts/benchmark_modal_hardware.py -> build/lib/presto/legacy/scripts
+creating build/lib/presto/legacy/scripts/distributional_ba
+copying ./legacy/scripts/distributional_ba/assay_combos.py -> build/lib/presto/legacy/scripts/distributional_ba
+copying ./legacy/scripts/distributional_ba/metrics.py -> build/lib/presto/legacy/scripts/distributional_ba
+copying ./legacy/scripts/distributional_ba/config.py -> build/lib/presto/legacy/scripts/distributional_ba
+copying ./legacy/scripts/distributional_ba/config_v5.py -> build/lib/presto/legacy/scripts/distributional_ba
+copying ./legacy/scripts/distributional_ba/__init__.py -> build/lib/presto/legacy/scripts/distributional_ba
+copying ./legacy/scripts/distributional_ba/encoders.py -> build/lib/presto/legacy/scripts/distributional_ba
+copying ./legacy/scripts/distributional_ba/config_v4.py -> build/lib/presto/legacy/scripts/distributional_ba
+copying ./legacy/scripts/distributional_ba/config_v3.py -> build/lib/presto/legacy/scripts/distributional_ba
+copying ./legacy/scripts/distributional_ba/config_v6.py -> build/lib/presto/legacy/scripts/distributional_ba
+copying ./legacy/scripts/distributional_ba/pretrain_mhc.py -> build/lib/presto/legacy/scripts/distributional_ba
+copying ./legacy/scripts/distributional_ba/train.py -> build/lib/presto/legacy/scripts/distributional_ba
+copying ./legacy/scripts/distributional_ba/config_v2.py -> build/lib/presto/legacy/scripts/distributional_ba
+copying ./legacy/scripts/distributional_ba/evaluate.py -> build/lib/presto/legacy/scripts/distributional_ba
+copying ./legacy/scripts/distributional_ba/losses.py -> build/lib/presto/legacy/scripts/distributional_ba
+copying ./legacy/scripts/distributional_ba/assay_context.py -> build/lib/presto/legacy/scripts/distributional_ba
+creating build/lib/presto/legacy/scripts/distributional_ba/heads
+copying ./legacy/scripts/distributional_ba/heads/regression.py -> build/lib/presto/legacy/scripts/distributional_ba/heads
+copying ./legacy/scripts/distributional_ba/heads/quantile.py -> build/lib/presto/legacy/scripts/distributional_ba/heads
+copying ./legacy/scripts/distributional_ba/heads/hlgauss.py -> build/lib/presto/legacy/scripts/distributional_ba/heads
+copying ./legacy/scripts/distributional_ba/heads/__init__.py -> build/lib/presto/legacy/scripts/distributional_ba/heads
+copying ./legacy/scripts/distributional_ba/heads/distributional.py -> build/lib/presto/legacy/scripts/distributional_ba/heads
+copying ./legacy/scripts/distributional_ba/heads/twohot.py -> build/lib/presto/legacy/scripts/distributional_ba/heads
+copying ./legacy/scripts/distributional_ba/heads/base.py -> build/lib/presto/legacy/scripts/distributional_ba/heads
+copying ./legacy/scripts/distributional_ba/heads/gaussian.py -> build/lib/presto/legacy/scripts/distributional_ba/heads
+running egg_info
+writing presto.egg-info/PKG-INFO
+writing dependency_links to presto.egg-info/dependency_links.txt
+writing entry points to presto.egg-info/entry_points.txt
+writing requirements to presto.egg-info/requires.txt
+writing top-level names to presto.egg-info/top_level.txt
+reading manifest file 'presto.egg-info/SOURCES.txt'
+adding license file 'LICENSE'
+writing manifest file 'presto.egg-info/SOURCES.txt'
+copying ./data/b2m_sequences.csv -> build/lib/presto/data
+installing to build/bdist.macosx-11.0-arm64/wheel
+running install
+running install_lib
+creating build/bdist.macosx-11.0-arm64/wheel
+creating build/bdist.macosx-11.0-arm64/wheel/presto
+creating build/bdist.macosx-11.0-arm64/wheel/presto/training
+copying build/lib/presto/training/data_support.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/training
+copying build/lib/presto/training/output_contract.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/training
+copying build/lib/presto/training/supported_outputs.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/training
+copying build/lib/presto/training/coverage_preflight.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/training
+copying build/lib/presto/training/tasks.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/training
+copying build/lib/presto/training/modular_run.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/training
+copying build/lib/presto/training/config.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/training
+copying build/lib/presto/training/config_io.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/training
+copying build/lib/presto/training/evaluation_ledger.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/training
+copying build/lib/presto/training/mil.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/training
+copying build/lib/presto/training/__init__.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/training
+copying build/lib/presto/training/modular_resume.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/training
+copying build/lib/presto/training/run_logger.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/training
+copying build/lib/presto/training/modular_sampling.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/training
+copying build/lib/presto/training/supervision.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/training
+copying build/lib/presto/training/output_updates.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/training
+copying build/lib/presto/training/modular_evaluation.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/training
+copying build/lib/presto/training/holdout_eval.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/training
+copying build/lib/presto/training/output_coverage.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/training
+copying build/lib/presto/training/losses.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/training
+copying build/lib/presto/training/trainer.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/training
+copying build/lib/presto/training/modular.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/training
+copying build/lib/presto/training/target_policy.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/training
+copying build/lib/presto/training/checkpointing.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/training
+creating build/bdist.macosx-11.0-arm64/wheel/presto/legacy
+copying build/lib/presto/legacy/pcgrad.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy
+copying build/lib/presto/legacy/shared_v3_support.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy
+copying build/lib/presto/legacy/shared_v4.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy
+copying build/lib/presto/legacy/shared_v4_support.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy
+copying build/lib/presto/legacy/__init__.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy
+copying build/lib/presto/legacy/modular_v2.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy
+copying build/lib/presto/legacy/modular_support_v2.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy
+copying build/lib/presto/legacy/shared_v3.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy
+creating build/bdist.macosx-11.0-arm64/wheel/presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/focused_binding_probe.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/train_modal.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/train_remote.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/benchmark_broad_frontier_5ep.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/benchmark_lr_schedule_bakeoff.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/benchmark_positional_composition.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/train_synthetic.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/probe_training.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/benchmark_directness_designs.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/train_iedb.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/assay_ablation_probe.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/sweep_20m_models.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/benchmark_distributional_ba_heads_v3.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/benchmark_runtime_variants.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/benchmark_design_round3.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/benchmark_lr_stability_7allele.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/benchmark_binding_latents.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/pretrain_mhc_encoder.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/benchmark_h100_batchsize.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/benchmark_design_round2.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/__init__.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/benchmark_register_designs.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/benchmark_assay_head_bakeoff.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/benchmark_distributional_ba_heads_v2.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/benchmark_presto_bakeoff.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+creating build/bdist.macosx-11.0-arm64/wheel/presto/legacy/scripts/distributional_ba
+copying build/lib/presto/legacy/scripts/distributional_ba/assay_combos.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts/distributional_ba
+copying build/lib/presto/legacy/scripts/distributional_ba/metrics.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts/distributional_ba
+copying build/lib/presto/legacy/scripts/distributional_ba/config.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts/distributional_ba
+copying build/lib/presto/legacy/scripts/distributional_ba/config_v5.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts/distributional_ba
+copying build/lib/presto/legacy/scripts/distributional_ba/__init__.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts/distributional_ba
+copying build/lib/presto/legacy/scripts/distributional_ba/encoders.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts/distributional_ba
+creating build/bdist.macosx-11.0-arm64/wheel/presto/legacy/scripts/distributional_ba/heads
+copying build/lib/presto/legacy/scripts/distributional_ba/heads/regression.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts/distributional_ba/heads
+copying build/lib/presto/legacy/scripts/distributional_ba/heads/quantile.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts/distributional_ba/heads
+copying build/lib/presto/legacy/scripts/distributional_ba/heads/hlgauss.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts/distributional_ba/heads
+copying build/lib/presto/legacy/scripts/distributional_ba/heads/__init__.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts/distributional_ba/heads
+copying build/lib/presto/legacy/scripts/distributional_ba/heads/distributional.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts/distributional_ba/heads
+copying build/lib/presto/legacy/scripts/distributional_ba/heads/twohot.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts/distributional_ba/heads
+copying build/lib/presto/legacy/scripts/distributional_ba/heads/base.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts/distributional_ba/heads
+copying build/lib/presto/legacy/scripts/distributional_ba/heads/gaussian.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts/distributional_ba/heads
+copying build/lib/presto/legacy/scripts/distributional_ba/config_v4.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts/distributional_ba
+copying build/lib/presto/legacy/scripts/distributional_ba/config_v3.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts/distributional_ba
+copying build/lib/presto/legacy/scripts/distributional_ba/config_v6.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts/distributional_ba
+copying build/lib/presto/legacy/scripts/distributional_ba/pretrain_mhc.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts/distributional_ba
+copying build/lib/presto/legacy/scripts/distributional_ba/train.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts/distributional_ba
+copying build/lib/presto/legacy/scripts/distributional_ba/config_v2.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts/distributional_ba
+copying build/lib/presto/legacy/scripts/distributional_ba/evaluate.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts/distributional_ba
+copying build/lib/presto/legacy/scripts/distributional_ba/losses.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts/distributional_ba
+copying build/lib/presto/legacy/scripts/distributional_ba/assay_context.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts/distributional_ba
+copying build/lib/presto/legacy/scripts/benchmark_runtime_multiallele.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/train_class1.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/benchmark_hardware_generalization.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/benchmark_distributional_ba_heads_v4.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/benchmark_distributional_ba_heads.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/benchmark_factorized_multioutput.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/sanity_check_modal.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/benchmark_factorized_ablation.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/groove_baseline_probe.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/benchmark_target_space_bakeoff.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/benchmark_assay_ablation.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/scripts/benchmark_modal_hardware.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy/scripts
+copying build/lib/presto/legacy/presto.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy
+copying build/lib/presto/legacy/training_sources.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy
+copying build/lib/presto/legacy/trainer.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy
+copying build/lib/presto/legacy/tcr_specificity.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/legacy
+copying build/lib/presto/__init__.py -> build/bdist.macosx-11.0-arm64/wheel/./presto
+creating build/bdist.macosx-11.0-arm64/wheel/presto/models
+copying build/lib/presto/models/modular_support.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/models
+copying build/lib/presto/models/pmhc.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/models
+copying build/lib/presto/models/independent_cut.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/models
+copying build/lib/presto/models/affinity.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/models
+copying build/lib/presto/models/__init__.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/models
+copying build/lib/presto/models/encoders.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/models
+copying build/lib/presto/models/steady_processing.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/models
+copying build/lib/presto/models/presto_modules.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/models
+copying build/lib/presto/models/presto.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/models
+copying build/lib/presto/models/fragment_state.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/models
+copying build/lib/presto/models/modular.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/models
+copying build/lib/presto/models/modular_dependencies.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/models
+copying build/lib/presto/models/tcr_specificity.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/models
+copying build/lib/presto/models/n_terminal_trimming.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/models
+copying build/lib/presto/models/heads.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/models
+copying build/lib/presto/models/substrate_entry.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/models
+copying build/lib/presto/models/peptide_availability.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/models
+creating build/bdist.macosx-11.0-arm64/wheel/presto/cli
+copying build/lib/presto/cli/predict.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/cli
+copying build/lib/presto/cli/__init__.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/cli
+copying build/lib/presto/cli/train.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/cli
+copying build/lib/presto/cli/evaluate.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/cli
+copying build/lib/presto/cli/training_sources.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/cli
+copying build/lib/presto/cli/main.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/cli
+copying build/lib/presto/cli/weights.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/cli
+copying build/lib/presto/cli/data.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/cli
+creating build/bdist.macosx-11.0-arm64/wheel/presto/scripts
+copying build/lib/presto/scripts/focused_binding_probe.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/experiment_registry.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/train_modal.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/train_remote.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/benchmark_broad_frontier_5ep.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/benchmark_lr_schedule_bakeoff.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/benchmark_positional_composition.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/train_synthetic.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/probe_training.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/audit_mhc_groove.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/benchmark_directness_designs.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/train_iedb.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/assay_ablation_probe.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/sweep_20m_models.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/benchmark_distributional_ba_heads_v3.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/benchmark_runtime_variants.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/benchmark_design_round3.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/benchmark_lr_stability_7allele.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/benchmark_binding_latents.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/pretrain_mhc_encoder.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/benchmark_h100_batchsize.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/benchmark_design_round2.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/__init__.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/benchmark_register_designs.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/benchmark_assay_head_bakeoff.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/aggregate_summary_runs.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/collect_modal_runs.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/benchmark_distributional_ba_heads_v2.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/benchmark_presto_bakeoff.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+creating build/bdist.macosx-11.0-arm64/wheel/presto/scripts/distributional_ba
+copying build/lib/presto/scripts/distributional_ba/__init__.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts/distributional_ba
+copying build/lib/presto/scripts/distributional_ba/pretrain_mhc.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts/distributional_ba
+copying build/lib/presto/scripts/distributional_ba/train.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts/distributional_ba
+copying build/lib/presto/scripts/benchmark_runtime_multiallele.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/train_class1.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/benchmark_hardware_generalization.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/benchmark_distributional_ba_heads_v4.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/fetch_experiment_modal_runs.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/benchmark_distributional_ba_heads.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/check_wheel.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/benchmark_factorized_multioutput.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/sanity_check_modal.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/benchmark_factorized_ablation.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/groove_baseline_probe.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/benchmark_target_space_bakeoff.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/benchmark_assay_ablation.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+copying build/lib/presto/scripts/benchmark_modal_hardware.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/scripts
+creating build/bdist.macosx-11.0-arm64/wheel/presto/inference
+copying build/lib/presto/inference/predictor.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/inference
+copying build/lib/presto/inference/__init__.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/inference
+copying build/lib/presto/inference/modular.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/inference
+creating build/bdist.macosx-11.0-arm64/wheel/presto/data
+copying build/lib/presto/data/hitlist_source.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/flank_selection.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/modular_auxiliary.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/scoped_partitions.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/collate.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/vocab.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/scoped_bulk.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/modular_ordinal.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/modular_quantitative.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/modular_reference.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/loaders.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/modular_preparation.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/__init__.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/modular_sources.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/modular_context.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/modular_hitlist.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/tokenizer.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/label_provenance.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/b2m_sequences.csv -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/mouse_mhc_overlay.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/downloaders.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/bulk_ms.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/modular_lineage.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/assay_context.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/allele_resolver.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/modular.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/assay_types.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/frozen_partitions.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/cross_source_dedup.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/sequence_augmentation.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/groove.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/source_lineage.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/species_context.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/tcr_specificity.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/mhc_index.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/modular_hitlist_ms.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/mhc_sequence_resolver.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/data/frozen_hitlist.py -> build/bdist.macosx-11.0-arm64/wheel/./presto/data
+copying build/lib/presto/__main__.py -> build/bdist.macosx-11.0-arm64/wheel/./presto
+running install_egg_info
+Copying presto.egg-info to build/bdist.macosx-11.0-arm64/wheel/./presto-0.1.22-py3.12.egg-info
+running install_scripts
+creating build/bdist.macosx-11.0-arm64/wheel/presto-0.1.22.dist-info/WHEEL
+creating '/Users/iskander/code/presto/.worktrees/shared-training/presto/artifacts/2026-10-27_2255_codex_shared-multi-assay-scale/software/ceebfb80/.tmp-yk4yr725/presto-0.1.22-py3-none-any.whl' and adding 'build/bdist.macosx-11.0-arm64/wheel' to it
+adding 'presto/__init__.py'
+adding 'presto/__main__.py'
+adding 'presto/cli/__init__.py'
+adding 'presto/cli/data.py'
+adding 'presto/cli/evaluate.py'
+adding 'presto/cli/main.py'
+adding 'presto/cli/predict.py'
+adding 'presto/cli/train.py'
+adding 'presto/cli/training_sources.py'
+adding 'presto/cli/weights.py'
+adding 'presto/data/__init__.py'
+adding 'presto/data/allele_resolver.py'
+adding 'presto/data/assay_context.py'
+adding 'presto/data/assay_types.py'
+adding 'presto/data/b2m_sequences.csv'
+adding 'presto/data/bulk_ms.py'
+adding 'presto/data/collate.py'
+adding 'presto/data/cross_source_dedup.py'
+adding 'presto/data/downloaders.py'
+adding 'presto/data/flank_selection.py'
+adding 'presto/data/frozen_hitlist.py'
+adding 'presto/data/frozen_partitions.py'
+adding 'presto/data/groove.py'
+adding 'presto/data/hitlist_source.py'
+adding 'presto/data/label_provenance.py'
+adding 'presto/data/loaders.py'
+adding 'presto/data/mhc_index.py'
+adding 'presto/data/mhc_sequence_resolver.py'
+adding 'presto/data/modular.py'
+adding 'presto/data/modular_auxiliary.py'
+adding 'presto/data/modular_context.py'
+adding 'presto/data/modular_hitlist.py'
+adding 'presto/data/modular_hitlist_ms.py'
+adding 'presto/data/modular_lineage.py'
+adding 'presto/data/modular_ordinal.py'
+adding 'presto/data/modular_preparation.py'
+adding 'presto/data/modular_quantitative.py'
+adding 'presto/data/modular_reference.py'
+adding 'presto/data/modular_sources.py'
+adding 'presto/data/mouse_mhc_overlay.py'
+adding 'presto/data/scoped_bulk.py'
+adding 'presto/data/scoped_partitions.py'
+adding 'presto/data/sequence_augmentation.py'
+adding 'presto/data/source_lineage.py'
+adding 'presto/data/species_context.py'
+adding 'presto/data/tcr_specificity.py'
+adding 'presto/data/tokenizer.py'
+adding 'presto/data/vocab.py'
+adding 'presto/inference/__init__.py'
+adding 'presto/inference/modular.py'
+adding 'presto/inference/predictor.py'
+adding 'presto/legacy/__init__.py'
+adding 'presto/legacy/modular_support_v2.py'
+adding 'presto/legacy/modular_v2.py'
+adding 'presto/legacy/pcgrad.py'
+adding 'presto/legacy/presto.py'
+adding 'presto/legacy/shared_v3.py'
+adding 'presto/legacy/shared_v3_support.py'
+adding 'presto/legacy/shared_v4.py'
+adding 'presto/legacy/shared_v4_support.py'
+adding 'presto/legacy/tcr_specificity.py'
+adding 'presto/legacy/trainer.py'
+adding 'presto/legacy/training_sources.py'
+adding 'presto/legacy/scripts/__init__.py'
+adding 'presto/legacy/scripts/assay_ablation_probe.py'
+adding 'presto/legacy/scripts/benchmark_assay_ablation.py'
+adding 'presto/legacy/scripts/benchmark_assay_head_bakeoff.py'
+adding 'presto/legacy/scripts/benchmark_binding_latents.py'
+adding 'presto/legacy/scripts/benchmark_broad_frontier_5ep.py'
+adding 'presto/legacy/scripts/benchmark_design_round2.py'
+adding 'presto/legacy/scripts/benchmark_design_round3.py'
+adding 'presto/legacy/scripts/benchmark_directness_designs.py'
+adding 'presto/legacy/scripts/benchmark_distributional_ba_heads.py'
+adding 'presto/legacy/scripts/benchmark_distributional_ba_heads_v2.py'
+adding 'presto/legacy/scripts/benchmark_distributional_ba_heads_v3.py'
+adding 'presto/legacy/scripts/benchmark_distributional_ba_heads_v4.py'
+adding 'presto/legacy/scripts/benchmark_factorized_ablation.py'
+adding 'presto/legacy/scripts/benchmark_factorized_multioutput.py'
+adding 'presto/legacy/scripts/benchmark_h100_batchsize.py'
+adding 'presto/legacy/scripts/benchmark_hardware_generalization.py'
+adding 'presto/legacy/scripts/benchmark_lr_schedule_bakeoff.py'
+adding 'presto/legacy/scripts/benchmark_lr_stability_7allele.py'
+adding 'presto/legacy/scripts/benchmark_modal_hardware.py'
+adding 'presto/legacy/scripts/benchmark_positional_composition.py'
+adding 'presto/legacy/scripts/benchmark_presto_bakeoff.py'
+adding 'presto/legacy/scripts/benchmark_register_designs.py'
+adding 'presto/legacy/scripts/benchmark_runtime_multiallele.py'
+adding 'presto/legacy/scripts/benchmark_runtime_variants.py'
+adding 'presto/legacy/scripts/benchmark_target_space_bakeoff.py'
+adding 'presto/legacy/scripts/focused_binding_probe.py'
+adding 'presto/legacy/scripts/groove_baseline_probe.py'
+adding 'presto/legacy/scripts/pretrain_mhc_encoder.py'
+adding 'presto/legacy/scripts/probe_training.py'
+adding 'presto/legacy/scripts/sanity_check_modal.py'
+adding 'presto/legacy/scripts/sweep_20m_models.py'
+adding 'presto/legacy/scripts/train_class1.py'
+adding 'presto/legacy/scripts/train_iedb.py'
+adding 'presto/legacy/scripts/train_modal.py'
+adding 'presto/legacy/scripts/train_remote.py'
+adding 'presto/legacy/scripts/train_synthetic.py'
+adding 'presto/legacy/scripts/distributional_ba/__init__.py'
+adding 'presto/legacy/scripts/distributional_ba/assay_combos.py'
+adding 'presto/legacy/scripts/distributional_ba/assay_context.py'
+adding 'presto/legacy/scripts/distributional_ba/config.py'
+adding 'presto/legacy/scripts/distributional_ba/config_v2.py'
+adding 'presto/legacy/scripts/distributional_ba/config_v3.py'
+adding 'presto/legacy/scripts/distributional_ba/config_v4.py'
+adding 'presto/legacy/scripts/distributional_ba/config_v5.py'
+adding 'presto/legacy/scripts/distributional_ba/config_v6.py'
+adding 'presto/legacy/scripts/distributional_ba/encoders.py'
+adding 'presto/legacy/scripts/distributional_ba/evaluate.py'
+adding 'presto/legacy/scripts/distributional_ba/losses.py'
+adding 'presto/legacy/scripts/distributional_ba/metrics.py'
+adding 'presto/legacy/scripts/distributional_ba/pretrain_mhc.py'
+adding 'presto/legacy/scripts/distributional_ba/train.py'
+adding 'presto/legacy/scripts/distributional_ba/heads/__init__.py'
+adding 'presto/legacy/scripts/distributional_ba/heads/base.py'
+adding 'presto/legacy/scripts/distributional_ba/heads/distributional.py'
+adding 'presto/legacy/scripts/distributional_ba/heads/gaussian.py'
+adding 'presto/legacy/scripts/distributional_ba/heads/hlgauss.py'
+adding 'presto/legacy/scripts/distributional_ba/heads/quantile.py'
+adding 'presto/legacy/scripts/distributional_ba/heads/regression.py'
+adding 'presto/legacy/scripts/distributional_ba/heads/twohot.py'
+adding 'presto/models/__init__.py'
+adding 'presto/models/affinity.py'
+adding 'presto/models/encoders.py'
+adding 'presto/models/fragment_state.py'
+adding 'presto/models/heads.py'
+adding 'presto/models/independent_cut.py'
+adding 'presto/models/modular.py'
+adding 'presto/models/modular_dependencies.py'
+adding 'presto/models/modular_support.py'
+adding 'presto/models/n_terminal_trimming.py'
+adding 'presto/models/peptide_availability.py'
+adding 'presto/models/pmhc.py'
+adding 'presto/models/presto.py'
+adding 'presto/models/presto_modules.py'
+adding 'presto/models/steady_processing.py'
+adding 'presto/models/substrate_entry.py'
+adding 'presto/models/tcr_specificity.py'
+adding 'presto/scripts/__init__.py'
+adding 'presto/scripts/aggregate_summary_runs.py'
+adding 'presto/scripts/assay_ablation_probe.py'
+adding 'presto/scripts/audit_mhc_groove.py'
+adding 'presto/scripts/benchmark_assay_ablation.py'
+adding 'presto/scripts/benchmark_assay_head_bakeoff.py'
+adding 'presto/scripts/benchmark_binding_latents.py'
+adding 'presto/scripts/benchmark_broad_frontier_5ep.py'
+adding 'presto/scripts/benchmark_design_round2.py'
+adding 'presto/scripts/benchmark_design_round3.py'
+adding 'presto/scripts/benchmark_directness_designs.py'
+adding 'presto/scripts/benchmark_distributional_ba_heads.py'
+adding 'presto/scripts/benchmark_distributional_ba_heads_v2.py'
+adding 'presto/scripts/benchmark_distributional_ba_heads_v3.py'
+adding 'presto/scripts/benchmark_distributional_ba_heads_v4.py'
+adding 'presto/scripts/benchmark_factorized_ablation.py'
+adding 'presto/scripts/benchmark_factorized_multioutput.py'
+adding 'presto/scripts/benchmark_h100_batchsize.py'
+adding 'presto/scripts/benchmark_hardware_generalization.py'
+adding 'presto/scripts/benchmark_lr_schedule_bakeoff.py'
+adding 'presto/scripts/benchmark_lr_stability_7allele.py'
+adding 'presto/scripts/benchmark_modal_hardware.py'
+adding 'presto/scripts/benchmark_positional_composition.py'
+adding 'presto/scripts/benchmark_presto_bakeoff.py'
+adding 'presto/scripts/benchmark_register_designs.py'
+adding 'presto/scripts/benchmark_runtime_multiallele.py'
+adding 'presto/scripts/benchmark_runtime_variants.py'
+adding 'presto/scripts/benchmark_target_space_bakeoff.py'
+adding 'presto/scripts/check_wheel.py'
+adding 'presto/scripts/collect_modal_runs.py'
+adding 'presto/scripts/experiment_registry.py'
+adding 'presto/scripts/fetch_experiment_modal_runs.py'
+adding 'presto/scripts/focused_binding_probe.py'
+adding 'presto/scripts/groove_baseline_probe.py'
+adding 'presto/scripts/pretrain_mhc_encoder.py'
+adding 'presto/scripts/probe_training.py'
+adding 'presto/scripts/sanity_check_modal.py'
+adding 'presto/scripts/sweep_20m_models.py'
+adding 'presto/scripts/train_class1.py'
+adding 'presto/scripts/train_iedb.py'
+adding 'presto/scripts/train_modal.py'
+adding 'presto/scripts/train_remote.py'
+adding 'presto/scripts/train_synthetic.py'
+adding 'presto/scripts/distributional_ba/__init__.py'
+adding 'presto/scripts/distributional_ba/pretrain_mhc.py'
+adding 'presto/scripts/distributional_ba/train.py'
+adding 'presto/training/__init__.py'
+adding 'presto/training/checkpointing.py'
+adding 'presto/training/config.py'
+adding 'presto/training/config_io.py'
+adding 'presto/training/coverage_preflight.py'
+adding 'presto/training/data_support.py'
+adding 'presto/training/evaluation_ledger.py'
+adding 'presto/training/holdout_eval.py'
+adding 'presto/training/losses.py'
+adding 'presto/training/mil.py'
+adding 'presto/training/modular.py'
+adding 'presto/training/modular_evaluation.py'
+adding 'presto/training/modular_resume.py'
+adding 'presto/training/modular_run.py'
+adding 'presto/training/modular_sampling.py'
+adding 'presto/training/output_contract.py'
+adding 'presto/training/output_coverage.py'
+adding 'presto/training/output_updates.py'
+adding 'presto/training/run_logger.py'
+adding 'presto/training/supervision.py'
+adding 'presto/training/supported_outputs.py'
+adding 'presto/training/target_policy.py'
+adding 'presto/training/tasks.py'
+adding 'presto/training/trainer.py'
+adding 'presto-0.1.22.dist-info/licenses/LICENSE'
+adding 'presto-0.1.22.dist-info/METADATA'
+adding 'presto-0.1.22.dist-info/WHEEL'
+adding 'presto-0.1.22.dist-info/entry_points.txt'
+adding 'presto-0.1.22.dist-info/top_level.txt'
+adding 'presto-0.1.22.dist-info/RECORD'
+removing build/bdist.macosx-11.0-arm64/wheel
+Successfully built presto-0.1.22.tar.gz and presto-0.1.22-py3-none-any.whl

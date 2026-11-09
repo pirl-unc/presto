@@ -1,0 +1,31 @@
+{
+  "started_unix": 1793170777.285236,
+  "conditions": [
+    "small-ic50-s42",
+    "wide-ic50-s42",
+    "wide-six-natural-s42",
+    "wide-six-class-balanced-s42",
+    "wide-six-primary-matched-s42",
+    "wide-six-primary-shuffled-s42",
+    "small-ic50-s43",
+    "wide-ic50-s43",
+    "wide-six-natural-s43",
+    "wide-six-class-balanced-s43",
+    "wide-six-primary-matched-s43",
+    "wide-six-primary-shuffled-s43"
+  ],
+  "source_sha256": "14a1277f039b079e5844fac639055aa5005fd2d989c6922297dd34f7488503cb",
+  "requested_gpu": null,
+  "cpu": 1,
+  "memory_mib": 1024,
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/modal",
+    "run",
+    "--detach",
+    "analysis/readback_modal.py",
+    "--watch",
+    "--recovery",
+    "--attempt",
+    "2"
+  ]
+}

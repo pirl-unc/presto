@@ -1,0 +1,139 @@
+{
+  "status": "source_validation_complete_partial_acquisition",
+  "agent_model": "Codex / GPT-6",
+  "requested_gpu": null,
+  "description": "Index of actual separately executed stages; no combined historical launch is claimed",
+  "stages": [
+    {
+      "receipt": "reproduce/acquisition-atlas-launch.json",
+      "sha256": "3addb87a4a5d093f919b80cc1f9223fed1c10e28e2a884e8fe87fd170017c7c0",
+      "argv": [
+        "python",
+        "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/acquire.py",
+        "--batch",
+        "acquisition-atlas"
+      ],
+      "source_snapshots": "reproduce/source/"
+    },
+    {
+      "receipt": "reproduce/acquisition-dtu-launch.json",
+      "sha256": "5a13d2315da6404d5586d72edc2a4eb35b85193f5738409283a10cfdc3897e0e",
+      "argv": [
+        "python",
+        "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/acquire.py",
+        "--batch",
+        "acquisition-dtu"
+      ],
+      "source_snapshots": "reproduce/source/"
+    },
+    {
+      "receipt": "reproduce/acquisition-launch.json",
+      "sha256": "0b5e47e394ffe0a299d3892423aa59ce35409bd2ca3db9167cbecaa211d69ead",
+      "argv": [
+        "python",
+        "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/acquire.py"
+      ],
+      "source_snapshots": "reproduce/source/"
+    },
+    {
+      "receipt": "reproduce/acquisition-strazar-launch.json",
+      "sha256": "d8aa84861ba064dd7afc9423421cedbd39cbb23f344d2af049eec9bbe95a4e63",
+      "argv": [
+        "python",
+        "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/acquire.py",
+        "--batch",
+        "acquisition-strazar"
+      ],
+      "source_snapshots": "reproduce/source/"
+    },
+    {
+      "receipt": "reproduce/acquisition-strazar-resume-launch.json",
+      "sha256": "8be8e793909cc24af10ddeaf49dd5db871725bcb6e8fd933d76725eb5413e4ae",
+      "argv": [
+        "python",
+        "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/acquire_serial.py"
+      ],
+      "source_snapshots": "reproduce/source/"
+    },
+    {
+      "receipt": "reproduce/curation-launch.json",
+      "sha256": "21848032468722ba47d57f5cb03ef36e2dc15b4a76e95f08cc852d982e03f8f8",
+      "argv": [
+        "python",
+        "-m",
+        "modal",
+        "run",
+        "--detach",
+        "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/curate.py"
+      ],
+      "source_snapshots": "reproduce/source/"
+    },
+    {
+      "receipt": "reproduce/massive-ftp-launch.json",
+      "sha256": "0ffc78153c00621adf609abf8268ba1b6a1f52552632c939ac3bac45650cac3b",
+      "argv": [
+        "python",
+        "-m",
+        "modal",
+        "run",
+        "--detach",
+        "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/massive_ftp.py"
+      ],
+      "source_snapshots": "reproduce/source/"
+    },
+    {
+      "receipt": "reproduce/recovery-admission-launch.json",
+      "sha256": "471abce3fcb7c0f6d1dcda93236842e9616c8da4d399fceee60e138ac1b59e50",
+      "argv": [
+        "python",
+        "-m",
+        "modal",
+        "run",
+        "--detach",
+        "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/admit_recovery.py"
+      ],
+      "source_snapshots": "reproduce/source/"
+    },
+    {
+      "receipt": "reproduce/stability-review-launch.json",
+      "sha256": "23981308fefa1082eb2fe2da7ac6fd7ec839b2fdcbbf1f3db7ca1e78f2a56d75",
+      "argv": [
+        "/Users/iskander/code/shared-virtual-env/bin/python",
+        "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/review_stability.py"
+      ],
+      "source_snapshots": "reproduce/source/review_stability.py"
+    },
+    {
+      "receipt": "reproduce/acquisition-strazar-late-launch.json",
+      "sha256": "938018fb44400bcc43fa2b1cbf83d9f28f1009d6f765796d26f37b3ad157f7a0",
+      "argv": [
+        "python",
+        "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/acquire_serial.py",
+        "--receipt-tag",
+        "acquisition-strazar-late",
+        "--rate-limit-attempts",
+        "1"
+      ],
+      "source_snapshots": "reproduce/source/"
+    },
+    {
+      "receipt": "reproduce/recovery-late-launch.json",
+      "sha256": "14aa84741e34972060c6e69e3f00d476c76c299d13004596a7b9d00805c745dd",
+      "argv": [
+        "/Users/iskander/code/shared-virtual-env/bin/python",
+        "-m",
+        "modal",
+        "run",
+        "--detach",
+        "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/recover_late.py"
+      ],
+      "source_snapshots": "reproduce/source/"
+    },
+    {
+      "receipt": "reproduce/hitlist-publication.json",
+      "sha256": "37e6185fd46ad718cfc3d4b114dddda92f19be72c54cece869b7c986d893382f",
+      "argv": null,
+      "source_snapshots": "reproduce/source/"
+    }
+  ]
+}

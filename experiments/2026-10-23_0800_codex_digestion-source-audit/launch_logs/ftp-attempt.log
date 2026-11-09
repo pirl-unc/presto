@@ -1,0 +1,14 @@
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0* Host massive-ftp.ucsd.edu:21 was resolved.
+* IPv6: (none)
+* IPv4: 169.228.32.139
+*   Trying 169.228.32.139:21...
+* Connected to massive-ftp.ucsd.edu (169.228.32.139) port 21
+< 220 SFTPGo_2.7.1
+> USER anonymous
+< 421 TLS is required
+* We got a 421 - timeout
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+* Closing connection
+curl: (28) Timeout was reached

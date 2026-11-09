@@ -1,0 +1,63 @@
+{
+  "stage": "fetch",
+  "attempt": 1,
+  "started_utc": "2026-10-25T14:54:45.477158+00:00",
+  "status": "passed",
+  "child_launched": true,
+  "exit_code": 0,
+  "resource_violation": null,
+  "memory_admission": {
+    "metric": "macos_free_plus_speculative",
+    "bytes": 8903688192
+  },
+  "disk_free_before_bytes": 19623337984,
+  "request_set_sha256": "79593f2a862825251cd5d5ef9668bc5d78ef9be28bbca24a8f2bd2c774208f56",
+  "request_set": {
+    "phase": "metadata",
+    "scope": "Michaud2018 exact public source routes; no quantitative values queried",
+    "requests": [
+      {
+        "name": "cptac-non-CPTAC-3588.html",
+        "url": "https://assays.cancer.gov/non-CPTAC-3588",
+        "expected_kind": "html",
+        "discovery_provenance": "Official CPTAC record linked to DOI10.1038/s42003-018-0087-6; public web inspection shows Panorama links41/28."
+      },
+      {
+        "name": "michaud2018.xml",
+        "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6123701/fullTextXML",
+        "expected_kind": "xml",
+        "discovery_provenance": "PMCID verified via PMID30271959 and official PMC article; official EuropePMC fullTextXML endpoint."
+      }
+    ]
+  },
+  "environment": {
+    "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "versions": {
+      "requests": "2.34.2",
+      "psutil": "7.2.2"
+    },
+    "overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUNBUFFERED": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    }
+  },
+  "child_pid": 96681,
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "-B",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1451_codex_mrm-anchor-admission/code/fetch.py",
+    "--requests",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1451_codex_mrm-anchor-admission/reproduce/requests/metadata-1.json"
+  ],
+  "elapsed_seconds": 2.587800415989477,
+  "peak_observed_process_tree_rss_bytes": 47742976,
+  "peak_child_process_rss_bytes": 48627712,
+  "rss_poll_interval_seconds": 0.05,
+  "disk_free_after_bytes": 19622998016
+}

@@ -19,8 +19,8 @@ torch = pytest.importorskip("torch")
 
 from presto.data.collate import PrestoCollator  # noqa: E402
 from presto.data.loaders import ElutionRecord, PrestoDataset  # noqa: E402
-from presto.models.presto import Presto  # noqa: E402
-from presto.scripts.train_synthetic import compute_loss  # noqa: E402
+from presto.legacy.presto import Presto  # noqa: E402
+from presto.legacy.scripts.train_synthetic import compute_loss  # noqa: E402
 
 CLASS1_SEQ = "GSHSMRYFYTAMSRPGRGEPRFIAVGYVDDTQFVRFDSDAASPR"
 

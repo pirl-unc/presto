@@ -1,0 +1,15 @@
+{
+  "stage": "fetch",
+  "attempt": 3,
+  "started_utc": "2026-10-26T01:29:06.828094+00:00",
+  "status": "preflight_refused",
+  "child_launched": false,
+  "exit_code": null,
+  "resource_violation": null,
+  "memory_admission": {
+    "metric": "macos_free_plus_speculative",
+    "bytes": 254410752
+  },
+  "disk_free_before_bytes": 6949478400,
+  "refusal": "startup_memory_floor"
+}

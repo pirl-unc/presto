@@ -1,0 +1,37 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "status": "positive-evidence-admission-independently-verified; predictive partitioning and training pending",
+  "source_release": "https://github.com/pirl-unc/hitlist/releases/tag/human-cohort-corrected-v1",
+  "raw_directory": "/private/tmp/presto-mhc2-20261026/ms-source",
+  "files": [
+    "training.parquet",
+    "manifest.json",
+    "SHA256SUMS",
+    "QUALIFICATION.md"
+  ],
+  "limits": {
+    "new_download_mib": 256,
+    "analysis_seconds": 300,
+    "analysis_rss_gib": 3,
+    "threads": 1
+  },
+  "training": null,
+  "test_split": {
+    "used": false,
+    "reason": "source admission, not predictive evaluation"
+  },
+  "git_commit": "2ff983d667c28ad644cbe0ad4a1665db8ddc450d",
+  "dirty": true,
+  "environment_overrides": {},
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "source_producer_version": "1.78.0",
+  "acquisition_command": "sh experiments/2026-10-26_1825_codex_mhc2-ms-admission/reproduce/launch.sh",
+  "verification_command": "/Users/iskander/code/shared-virtual-env/bin/python experiments/2026-10-26_1825_codex_mhc2-ms-admission/code/verify_source.py",
+  "verification_receipt": "reproduce/source-verification.json",
+  "acquisition_elapsed_seconds": null,
+  "verification_elapsed_seconds": null,
+  "source_admission_receipt": "results/admission-attempt01/summary.json",
+  "independent_verification": "results/admission-attempt01/independent-verification.json",
+  "admitted_positive_evidence_rows": 98220,
+  "model_training_rows": 0
+}

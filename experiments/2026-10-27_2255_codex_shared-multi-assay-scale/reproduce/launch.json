@@ -1,0 +1,47 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "argv": [
+    "modal",
+    "run",
+    "--detach",
+    "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-27_2255_codex_shared-multi-assay-scale/code/launch.py"
+  ],
+  "cwd": "/Users/iskander/code/presto/.worktrees/shared-training/presto",
+  "git_commit": "0c4c984b2628fecf54ef29e756fdfc0a74963dc4",
+  "git_dirty": true,
+  "source_pins": {
+    "worker.py": "471dc30b114d28a1c4798ae7d10f3f4ffc81f2afa6d292914d9e01c354f6615b",
+    "launch.py": "710d739a0e79ddf22f0b8d3a0e99cd28b0cb5cfb492f0896f093b3761d2d02f5",
+    "prepare.py": "d511aa98e1ce94e1558682a73c3afdccb95b8425d5226b0e727a6c4ff06c55ac",
+    "preflight.py": "20f21c4bfa22c9c6903657cfef30b0985be9cab040f8c065cf0b6f3470bccfdf"
+  },
+  "transport_metadata_sha256": "482e068c5eb31904f4fb100e36c8619febc448ded2d945678432404db5d25980",
+  "conditions": [
+    "ic50-exact-s42",
+    "ic50-bounds-s42",
+    "multi-assay-s42",
+    "multi-assay-wide-s42",
+    "ic50-exact-s43",
+    "ic50-bounds-s43",
+    "multi-assay-s43",
+    "multi-assay-wide-s43"
+  ],
+  "requirements": [
+    "torch==2.14.1",
+    "numpy==2.5.4",
+    "pyyaml==6.0.3",
+    "mhcgnomes==3.64.6",
+    "mhcseqs==2.6.13",
+    "tqdm==4.70.1",
+    "psutil==7.2.2"
+  ],
+  "requested_gpu": "H100!",
+  "cpu": 4,
+  "memory_mib": 32768,
+  "max_containers": 2,
+  "timeout_seconds": 14400,
+  "environment": {
+    "PRESTO_MODAL_GPU": "H100!"
+  },
+  "started_unix": 1793142616.609694
+}

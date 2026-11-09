@@ -1,0 +1,278 @@
+{
+  "status": "passed",
+  "original_held_out_used": false,
+  "prediction_rows": 47232,
+  "metric_records": 5824,
+  "maximum_prediction_error": 2.842170943040401e-14,
+  "calibrations": [
+    {
+      "fold": -1,
+      "independent_gamma": 0.051625509404046664,
+      "n_fitting_observations": 2952
+    },
+    {
+      "fold": 0,
+      "independent_gamma": 0.001651780069513737,
+      "n_fitting_observations": 2436
+    },
+    {
+      "fold": 1,
+      "independent_gamma": 0.14444799882162312,
+      "n_fitting_observations": 2352
+    },
+    {
+      "fold": 2,
+      "independent_gamma": 0.00880269202430432,
+      "n_fitting_observations": 2202
+    },
+    {
+      "fold": 3,
+      "independent_gamma": 0.059719345594107125,
+      "n_fitting_observations": 2400
+    },
+    {
+      "fold": 4,
+      "independent_gamma": 0.04497228957520187,
+      "n_fitting_observations": 2418
+    }
+  ],
+  "parameter_checks": {
+    "results/full/flexible_penalty": {
+      "kinetic_parameters": 117,
+      "changed": 117,
+      "train_mse": 0.011075881605736072
+    },
+    "results/full/flexible_unpenalized": {
+      "kinetic_parameters": 117,
+      "changed": 117,
+      "train_mse": 0.009784350189812482
+    },
+    "results/full/shared_penalty": {
+      "kinetic_parameters": 41,
+      "changed": 41,
+      "train_mse": 0.013009090055332233
+    },
+    "results/full/shared_unpenalized": {
+      "kinetic_parameters": 41,
+      "changed": 41,
+      "train_mse": 0.011224804621452929
+    },
+    "results/fold-0/flexible_penalty": {
+      "kinetic_parameters": 117,
+      "changed": 117,
+      "train_mse": 0.01096459309794608
+    },
+    "results/fold-0/flexible_unpenalized": {
+      "kinetic_parameters": 117,
+      "changed": 117,
+      "train_mse": 0.009954737340703387
+    },
+    "results/fold-0/shared_penalty": {
+      "kinetic_parameters": 41,
+      "changed": 41,
+      "train_mse": 0.01363798036529127
+    },
+    "results/fold-0/shared_unpenalized": {
+      "kinetic_parameters": 41,
+      "changed": 41,
+      "train_mse": 0.011546869426560922
+    },
+    "results/fold-1/flexible_penalty": {
+      "kinetic_parameters": 117,
+      "changed": 117,
+      "train_mse": 0.010763894721643217
+    },
+    "results/fold-1/flexible_unpenalized": {
+      "kinetic_parameters": 117,
+      "changed": 117,
+      "train_mse": 0.009179006028636003
+    },
+    "results/fold-1/shared_penalty": {
+      "kinetic_parameters": 41,
+      "changed": 41,
+      "train_mse": 0.012878125112565846
+    },
+    "results/fold-1/shared_unpenalized": {
+      "kinetic_parameters": 41,
+      "changed": 41,
+      "train_mse": 0.011051827168145715
+    },
+    "results/fold-2/flexible_penalty": {
+      "kinetic_parameters": 117,
+      "changed": 117,
+      "train_mse": 0.01086924947163665
+    },
+    "results/fold-2/flexible_unpenalized": {
+      "kinetic_parameters": 117,
+      "changed": 117,
+      "train_mse": 0.009147273016504053
+    },
+    "results/fold-2/shared_penalty": {
+      "kinetic_parameters": 41,
+      "changed": 41,
+      "train_mse": 0.012911741760584473
+    },
+    "results/fold-2/shared_unpenalized": {
+      "kinetic_parameters": 41,
+      "changed": 41,
+      "train_mse": 0.01075903753662769
+    },
+    "results/fold-3/flexible_penalty": {
+      "kinetic_parameters": 117,
+      "changed": 117,
+      "train_mse": 0.010696831155569925
+    },
+    "results/fold-3/flexible_unpenalized": {
+      "kinetic_parameters": 117,
+      "changed": 117,
+      "train_mse": 0.00878062000621362
+    },
+    "results/fold-3/shared_penalty": {
+      "kinetic_parameters": 41,
+      "changed": 41,
+      "train_mse": 0.012578888355036448
+    },
+    "results/fold-3/shared_unpenalized": {
+      "kinetic_parameters": 41,
+      "changed": 41,
+      "train_mse": 0.010914275091365739
+    },
+    "results/fold-4/flexible_penalty": {
+      "kinetic_parameters": 117,
+      "changed": 117,
+      "train_mse": 0.010808701238594644
+    },
+    "results/fold-4/flexible_unpenalized": {
+      "kinetic_parameters": 117,
+      "changed": 117,
+      "train_mse": 0.008907557463083046
+    },
+    "results/fold-4/shared_penalty": {
+      "kinetic_parameters": 41,
+      "changed": 41,
+      "train_mse": 0.012976252437041334
+    },
+    "results/fold-4/shared_unpenalized": {
+      "kinetic_parameters": 41,
+      "changed": 41,
+      "train_mse": 0.010967838167527591
+    }
+  },
+  "loss_decomposition": [
+    {
+      "variant": "condition",
+      "phase": "full_train",
+      "observed_mse": 0.013031326908389323,
+      "within_group_channel_mse": 0.002353625947458317,
+      "between_group_mean_error": 0.010677700960931005
+    },
+    {
+      "variant": "flexible_penalty",
+      "phase": "full_train",
+      "observed_mse": 0.011075881605736073,
+      "within_group_channel_mse": 0.002353625947458317,
+      "between_group_mean_error": 0.008722255658277755
+    },
+    {
+      "variant": "flexible_unpenalized",
+      "phase": "full_train",
+      "observed_mse": 0.009784350189812477,
+      "within_group_channel_mse": 0.002353625947458317,
+      "between_group_mean_error": 0.007430724242354159
+    },
+    {
+      "variant": "no_change",
+      "phase": "full_train",
+      "observed_mse": 0.013477188767990774,
+      "within_group_channel_mse": 0.002353625947458317,
+      "between_group_mean_error": 0.011123562820532456
+    },
+    {
+      "variant": "precursor_calibrated",
+      "phase": "full_train",
+      "observed_mse": 0.013014918004523668,
+      "within_group_channel_mse": 0.002353625947458317,
+      "between_group_mean_error": 0.010661292057065348
+    },
+    {
+      "variant": "precursor_fixed",
+      "phase": "full_train",
+      "observed_mse": 0.018552377955197215,
+      "within_group_channel_mse": 0.002353625947458317,
+      "between_group_mean_error": 0.016198752007738893
+    },
+    {
+      "variant": "shared_penalty",
+      "phase": "full_train",
+      "observed_mse": 0.013009090055332231,
+      "within_group_channel_mse": 0.002353625947458317,
+      "between_group_mean_error": 0.010655464107873913
+    },
+    {
+      "variant": "shared_unpenalized",
+      "phase": "full_train",
+      "observed_mse": 0.011224804621452925,
+      "within_group_channel_mse": 0.002353625947458317,
+      "between_group_mean_error": 0.008871178673994607
+    },
+    {
+      "variant": "condition",
+      "phase": "inner_cv",
+      "observed_mse": 0.013038127607935542,
+      "within_group_channel_mse": 0.002353625947458317,
+      "between_group_mean_error": 0.010684501660477224
+    },
+    {
+      "variant": "flexible_penalty",
+      "phase": "inner_cv",
+      "observed_mse": 0.013393507907204427,
+      "within_group_channel_mse": 0.002353625947458317,
+      "between_group_mean_error": 0.011039881959746107
+    },
+    {
+      "variant": "flexible_unpenalized",
+      "phase": "inner_cv",
+      "observed_mse": 0.016153414351202836,
+      "within_group_channel_mse": 0.002353625947458317,
+      "between_group_mean_error": 0.013799788403744516
+    },
+    {
+      "variant": "no_change",
+      "phase": "inner_cv",
+      "observed_mse": 0.013477188767990774,
+      "within_group_channel_mse": 0.002353625947458317,
+      "between_group_mean_error": 0.011123562820532456
+    },
+    {
+      "variant": "precursor_calibrated",
+      "phase": "inner_cv",
+      "observed_mse": 0.013164729437274737,
+      "within_group_channel_mse": 0.002353625947458317,
+      "between_group_mean_error": 0.010811103489816417
+    },
+    {
+      "variant": "precursor_fixed",
+      "phase": "inner_cv",
+      "observed_mse": 0.018600450915541276,
+      "within_group_channel_mse": 0.002353625947458317,
+      "between_group_mean_error": 0.016246824968082958
+    },
+    {
+      "variant": "shared_penalty",
+      "phase": "inner_cv",
+      "observed_mse": 0.013159449278938458,
+      "within_group_channel_mse": 0.002353625947458317,
+      "between_group_mean_error": 0.010805823331480138
+    },
+    {
+      "variant": "shared_unpenalized",
+      "phase": "inner_cv",
+      "observed_mse": 0.013568065521084813,
+      "within_group_channel_mse": 0.002353625947458317,
+      "between_group_mean_error": 0.011214439573626495
+    }
+  ],
+  "seconds": 28.70348708302481,
+  "peak_rss_bytes": 924073984,
+  "scope": "independent source, split, train-only scaling/calibration, scalar final physical/profiled predictions and metrics; no optimizer replay or fresh biological test"
+}

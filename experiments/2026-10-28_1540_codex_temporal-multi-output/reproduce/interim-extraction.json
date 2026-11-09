@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "experiments/2026-10-28_1540_codex_temporal-multi-output/analysis/summarize_interim.py"
+  ],
+  "recorded_unix": 1793252246.449405,
+  "source_sha256": "19029fd00033a6b9982980a7f047407275839a4df87c91acf4aaaee7431dde05",
+  "outputs_sha256": {
+    "experiments/2026-10-28_1540_codex_temporal-multi-output/results/provisional-first-validation.json": "47c7450af7ac6ad786aa62c8ed0bee12ae3369b75dd44482b384c8bfe89cb166",
+    "experiments/2026-10-28_1540_codex_temporal-multi-output/results/provisional-first-validation.csv": "342457cbea31b09cfa6bf9a74a622571aa90c72c3844394b2cc5108d58706057"
+  },
+  "policy": "Re-extract frozen intermediate worker validation summaries only; no model scoring, new selection or test access"
+}

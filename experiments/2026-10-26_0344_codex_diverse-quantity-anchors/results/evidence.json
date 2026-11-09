@@ -1,0 +1,42 @@
+{
+  "decision": "No new source admitted as a broad independently quantified nontryptic response anchor.",
+  "candidates": [
+    {
+      "id": "bohrer2010",
+      "doi": "10.1021/ac100910a",
+      "primary_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2927099/",
+      "evidence_receipts": ["discovery-03.json", "discovery-05.json"],
+      "evidence_access": "Indexed primary text; direct PMC challenge and author-hosted PDF403 retained.",
+      "reported_library_sizes": [3888, 5184, 4608, 4096],
+      "reported_lengths": [9, 10, 11, 12],
+      "terminal_support": "All designed libraries start synthesis on C-terminal K/R supports; tryptic-like by design.",
+      "quantity_assignment": "Author-claimed equimolar split/mix; dose uses average library molar mass. Synthesis checked by MS deletion search, not independent per-peptide amount certification.",
+      "measurement": "LCQ DecaXP Plus DDA identification/detectability study; replicate library injections. No original response table inspected.",
+      "unknowns": ["individual amount uncertainty", "physical preparation/run table", "processed absolute response export", "protocol bridge to native peptidomics"],
+      "decision": "excluded_for_this_endpoint",
+      "reason": "Tryptic-like terminal support cannot qualify the requested broad nontryptic observer."
+    },
+    {
+      "id": "jagannadham2021",
+      "doi": "10.7171/jbt.21-3201-001",
+      "accession": "PXD017992",
+      "primary_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7704033/",
+      "evidence_receipts": ["discovery-03.json", "discovery-04.json", "discovery-05.json"],
+      "evidence_access": "Indexed primary methods/results and publisher citation; repository UI yielded no inventory and API requests failed in web tool.",
+      "reported_peptides": 599,
+      "reported_human_proteins": 199,
+      "sequence_support": "Mostly in-silico tryptic peptides, some non-K/R terminal peptides; cysteine omitted. Nontryptic count unverified.",
+      "quantity_assignment": "Reported >85% purity, 1ug/uL stock and equal-volume pooling. Methods500fmol-1pmol and Results10-25uL injection statements lack a verified dose/preparation join here.",
+      "measurement": "Q-Exactive HF Plus LC-MS/MS, seven runs with differing gradients; identification workflow. Form-specific raw response/purity tables uninspected.",
+      "unknowns": ["individual independent amount assignment", "on-column doses", "nontryptic count", "physical preparation/run links", "raw signal and censoring export", "protocol bridge to native peptidomics"],
+      "decision": "not_qualified_within_screen",
+      "reason": "Broad nontryptic coverage and independent amount/response linkage not established; does not assert those data are absent from the deposit."
+    }
+  ],
+  "training": null,
+  "new_model_promoted": false,
+  "biological_holdouts_reopened": false,
+  "source_exposure": "Indexed article text included published aggregate detection results; no per-example quantitative source table was fetched or fitted. These sources are not claimed wholly uninspected.",
+  "next_action": "Audit the already identified APC-derived endolysosomal time-course original assets under a separate source contract; determine whether matched peptide changes can constrain processing with protocol response canceled. Preserve the distinction from absolute native APC concentrations. Do not open another generic calibration search automatically.",
+  "full_goal_complete": false
+}

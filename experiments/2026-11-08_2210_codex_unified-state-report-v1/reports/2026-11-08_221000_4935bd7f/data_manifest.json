@@ -1,0 +1,117 @@
+{
+  "datasets": [
+    {
+      "artifact": {
+        "bytes": 5977683393,
+        "include_in_report": false,
+        "license": "CARMEN source terms; redistribution review required",
+        "sha256": "6609ee375f6bb117f19035560daa6cf50a63b9c229fa46ae24e773afebdda2fc",
+        "uri": "modal-volume://presto-checkpoints/2026-11-07_1915_codex_unified-presentation/prepared-v2/presentation-train.jsonl"
+      },
+      "curation_contract": "Reported MS positives paired 1:1 with generated unobserved source-matched controls; exact HLA sets and 15-aa flanks retained",
+      "id": "presentation_train_v2",
+      "role": "train",
+      "rows": 1349378,
+      "source": "CARMEN v122 verified class-I source-matched paired ligand cohort",
+      "split_contract": "Whole-study plus exact/core8/Hamming-1 peptide and affinity-development embargo"
+    },
+    {
+      "artifact": {
+        "bytes": 218542980,
+        "include_in_report": false,
+        "license": "CARMEN source terms; redistribution review required",
+        "sha256": "0313b2d6b394320da7dcf6aa9144cbc44b73abe48b16380e03c1b27a9559fc52",
+        "uri": "modal-volume://presto-checkpoints/2026-11-07_1915_codex_unified-presentation/prepared-v2/presentation-val.jsonl"
+      },
+      "curation_contract": "Same paired ligand/control and biological-input contract used for Presto and MHCflurry",
+      "id": "presentation_development_v2",
+      "role": "development",
+      "rows": 48530,
+      "source": "Three whole CARMEN studies; 200 samples",
+      "split_contract": "Exposed development cohort used for equal-study checkpoint selection; not an external TEST"
+    },
+    {
+      "artifact": {
+        "bytes": 836622693,
+        "include_in_report": false,
+        "license": "IEDB data-use terms; redistribution review required",
+        "sha256": "8593fbd416a489b46397c4fae288d5916ad55d2febec7f7798bc4bb3f788ec1c",
+        "uri": "modal-volume://presto-checkpoints/2026-11-07_1915_codex_unified-presentation/prepared-v2/concentrations-s42-concentrations-s42-train.jsonl"
+      },
+      "curation_contract": "Literal physical affinity endpoints, units, qualifiers, bounds, study, assay method, and MHC grooves",
+      "id": "affinity_train_concentrations_s42",
+      "role": "train",
+      "rows": 160326,
+      "source": "Hitlist v4 IEDB human resolved concentration assays",
+      "split_contract": "Parent whole-study development split plus cross-endpoint TRAIN core-9 embargo"
+    },
+    {
+      "artifact": {
+        "bytes": 12196679,
+        "include_in_report": false,
+        "license": "IEDB data-use terms; redistribution review required",
+        "sha256": "08e41a6c006274b5929142fc6bd4687a289a08df9cc5212edd92399f907f2f8a",
+        "uri": "modal-volume://presto-checkpoints/2026-11-07_1915_codex_unified-presentation/prepared-v2/concentrations-s42-concentrations-s42-validation.jsonl"
+      },
+      "curation_contract": "Literal physical affinity endpoints and exact assay-aware output identity",
+      "id": "affinity_development_concentrations_s42",
+      "role": "development",
+      "rows": 2536,
+      "source": "Hitlist v4 IEDB human resolved concentration assays",
+      "split_contract": "Exposed whole-study development; 1,339 exact-IC50 rows used for headline class metrics"
+    },
+    {
+      "artifact": {
+        "bytes": 4563790,
+        "include_in_report": false,
+        "license": "IEDB data-use terms; observation rows plus derived predictions",
+        "sha256": "f77256ddd8e78696cf0cf2fa994297eafc1628e0c5e71dbc9d83d633c2e882fb",
+        "uri": "modal-volume://presto-checkpoints/2026-11-08_1130_codex_tcell-fixed-parent/binary-only/train-predictions.jsonl.gz"
+      },
+      "curation_contract": "Five literal assay-family/response/method tracks; observed labels only; no generated negatives or PRIME rows",
+      "id": "tcell_train_fixed_tracks",
+      "role": "train",
+      "rows": 15646,
+      "source": "IEDB accessible projection frozen by experiment 0540",
+      "split_contract": "Whole study/group chronology split with exact groove and semantic identity retained"
+    },
+    {
+      "artifact": {
+        "bytes": 434985,
+        "include_in_report": false,
+        "license": "IEDB data-use terms; observation rows plus derived predictions",
+        "sha256": "8c8868aeb1a721f7e1dae2539092484afc70985d9dc31090ace176b08fd36394",
+        "uri": "modal-volume://presto-checkpoints/2026-11-08_1130_codex_tcell-fixed-parent/binary-only/validation-predictions.jsonl.gz"
+      },
+      "curation_contract": "Five separate assay-aware tracks; functional selector excludes multimer binding",
+      "id": "tcell_development_fixed_tracks",
+      "role": "development",
+      "rows": 1530,
+      "source": "IEDB strict-clean accessible projection",
+      "split_contract": "Development-only recipe selection; locked confirmation, TEST, and PRIME were not accessed"
+    }
+  ],
+  "overlap_audits": [
+    {
+      "contract": "whole-study plus exact/core8/Hamming-1 peptide separation",
+      "result": "passed",
+      "scope": "presentation TRAIN versus development"
+    },
+    {
+      "contract": "whole-study plus exact/core9 and group separation",
+      "result": "passed",
+      "scope": "affinity TRAIN versus development"
+    },
+    {
+      "contract": "whole-study/group chronology and zero locked/TEST access",
+      "result": "passed",
+      "scope": "T-cell TRAIN versus development"
+    }
+  ],
+  "schema_version": 1,
+  "test_status": {
+    "available": false,
+    "reason": "The current families are development-only. Presentation confirmation remained unauthorized; T-cell locked confirmation and TEST stayed sealed; affinity used an exposed development split."
+  },
+  "timestamp_utc": "2026-11-08T22:10:00Z"
+}

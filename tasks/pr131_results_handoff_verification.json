@@ -1,0 +1,45 @@
+{
+  "base_commit": "a5db249b8b1d5a8a0ec140b00286369b837d40f2",
+  "scope": "Durable result publication; model/trainer source unchanged",
+  "artifact_formats": {
+    "json": 69,
+    "csv": 11,
+    "python": 6
+  },
+  "csv_widths": "passed",
+  "python_snapshot_syntax": "passed",
+  "relative_handoff_links": "passed",
+  "credential_pattern_scan": "no matches",
+  "curated_closeout_and_reporting_source_hashes": "passed",
+  "stability_prediction_hashes_and_metric_recomputation": "passed; see direct family results/stability-and-data-audit.json",
+  "lint": {
+    "command": "./lint.sh with pinned ruff 0.16.0",
+    "status": "passed",
+    "formatted_files": 506
+  },
+  "docs": {
+    "command": "python -m mkdocs build --strict",
+    "status": "passed"
+  },
+  "plot_visual_review": "performance-comparison.png inspected; readable and complete",
+  "full_suite": {
+    "source_commit": "a5db249b8b1d5a8a0ec140b00286369b837d40f2",
+    "passed": 2929,
+    "skipped": 4,
+    "rerun_for_reporting_only_changes": false
+  },
+  "issues": [
+    138,
+    139,
+    140,
+    141,
+    142
+  ],
+  "raw_artifacts": "Retained outside Git with collection hashes and Modal archive locators",
+  "merge": "not requested; PR remains draft",
+  "staged_whitespace": {
+    "status": "passed",
+    "command": "git -c core.whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol diff --cached --check",
+    "csv_policy": "Preserve generated CSV CRLF bytes; ordinary diff --check flags their CR as whitespace."
+  }
+}

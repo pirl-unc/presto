@@ -1,0 +1,50 @@
+{
+  "sources": [
+    {
+      "source": "hitlist-v4-iedb",
+      "population": "Human catalog-resolved MHC; public IEDB/CEDAR canonical Hitlist admission; host and antigen species retained separately",
+      "label_policy": "reported literal assay endpoints and qualifiers; declared reference DRA only; generated unobserved ligands explicitly marked",
+      "split_policy": "whole study components; metadata-only greedy coverage; exact peptide embargo test > validation > train; no pretrained weights",
+      "path": "hitlist-v4-iedb-train.jsonl",
+      "sha256": "a533666ada7b818a8253eda6e2f698d285f21119e3836745bda8ebcbfc5e18fc",
+      "full_source_path": "/runs/2026-10-28_1540_codex_temporal-multi-output/prepared/hitlist-v4-iedb-train.jsonl",
+      "declared_full_source_sha256": "c76aeafbb47c66b7fa904c191502de95f8812d45275cdfe680821838a37200b1",
+      "rows": 5000,
+      "bytes": 22305616
+    },
+    {
+      "source": "hitlist_ligand_background",
+      "population": "Human catalog-resolved MHC; public IEDB/CEDAR canonical Hitlist admission; host and antigen species retained separately",
+      "label_policy": "reported literal assay endpoints and qualifiers; declared reference DRA only; generated unobserved ligands explicitly marked",
+      "split_policy": "whole study components; metadata-only greedy coverage; exact peptide embargo test > validation > train; no pretrained weights",
+      "path": "hitlist_ligand_background-train.jsonl",
+      "sha256": "3ca2761226817eacb2c7ce285fb4c0427a43e704ed5fba2c663961e7974b39c7",
+      "full_source_path": "/runs/2026-10-28_1540_codex_temporal-multi-output/prepared/hitlist_ligand_background-train.jsonl",
+      "declared_full_source_sha256": "6c264dcdc771a400fe73a7730fe2149b205984ce24f21638e78faeb4f7e60b1d",
+      "rows": 5000,
+      "bytes": 41519689
+    },
+    {
+      "source": "hitlist_native_ms",
+      "population": "Human catalog-resolved MHC; public IEDB/CEDAR canonical Hitlist admission; host and antigen species retained separately",
+      "label_policy": "reported literal assay endpoints and qualifiers; declared reference DRA only; generated unobserved ligands explicitly marked",
+      "split_policy": "whole study components; metadata-only greedy coverage; exact peptide embargo test > validation > train; no pretrained weights",
+      "path": "hitlist_native_ms-train.jsonl",
+      "sha256": "7a297228535dc7469fa1314c37d9766087074797077952337b84a2cddcfe62d2",
+      "full_source_path": "/runs/2026-10-28_1540_codex_temporal-multi-output/prepared/hitlist_native_ms-train.jsonl",
+      "declared_full_source_sha256": "bc709276b36bd456a09451deba140aeb618c9614a79505981e7567d1a0b0e203",
+      "rows": 5000,
+      "bytes": 40572878
+    }
+  ],
+  "captured_unix": 1793249305.2525327,
+  "policy": "first 5000 TRAIN lines per source; full-source hashes inherited from verified staging; no model evaluation",
+  "container": "ta-01M62XMD3MJH3A3KEE8GVPRNKR",
+  "local_artifacts": "/Users/iskander/code/presto/.worktrees/shared-training/presto/artifacts/2026-10-29_0438_codex_shared-input-iteration",
+  "archive_sha256": "182ec80b610851fcfc38c035ef148f3d9c6036aac5ab67dca31b7dba3c59c5cb",
+  "capture_source_sha256": "b0d1531dc07d2dd85a034339df40f87366eb1f8d8baa37a6e2757d1a78d7cc45",
+  "remote_source_sha256": "3ac1130639ddd5e7df84a5913c467b7843ea731c8c02cefe77863255e7e1a1b7",
+  "modal_version": "1.6.1",
+  "transport": "explicit SDK PIPE streams drained to EOF before size/hash validation",
+  "completed_unix": 1793249308.052657
+}

@@ -1,0 +1,58 @@
+{
+  "status": "completed_source_structure_only",
+  "blocks": {
+    "human_native": {
+      "n_source_rows": 1783,
+      "sequence_parse:recognized_source_notation": 1681,
+      "length_status:matches": 1681,
+      "mapping:one_candidate_occurrence": 1602,
+      "coordinate_offsets:[(0, 0)]": 1602,
+      "sequence_parse:unsupported_or_noncanonical_sequence": 102,
+      "length_status:unresolved": 102,
+      "mapping:unparsed_peptide": 102,
+      "mapping:no_exact_accession_label_match": 69,
+      "mapping:multiple_candidate_occurrences": 10,
+      "coordinate_offsets:[(-1512, -1512), (-861, -861), (0, 0)]": 1,
+      "coordinate_offsets:[(-922, -922), (0, 0)]": 1,
+      "coordinate_offsets:[(-1761, -1761), (-128, -128), (0, 0)]": 1,
+      "coordinate_offsets:[(-2342, -2342), (-2268, -2268), (-2140, -2140), (-2012, -2012), (-1884, -1884), (-1628, -1628), (-590, -590), (-462, -462), (0, 0)]": 1,
+      "coordinate_offsets:[(-429, -429), (-231, -231), (0, 0)]": 1,
+      "coordinate_offsets:[(-165, -165), (0, 0)]": 1,
+      "coordinate_offsets:[(-528, -528), (-396, -396), (-66, -66), (0, 0)]": 1,
+      "coordinate_offsets:[(-198, -198), (0, 0)]": 1,
+      "coordinate_offsets:[(-170, -170), (-90, -90), (0, 0)]": 1,
+      "coordinate_offsets:[(-3513, -3513), (-3439, -3439), (-3311, -3311), (-3055, -3055), (-2927, -2927), (-2725, -2725), (-2273, -2273), (-2145, -2145), (-2017, -2017), (-1761, -1761), (-1633, -1633), (0, 0)]": 1,
+      "n_distinct_candidate_parent_sequences": 186
+    },
+    "dc_dia_database": {
+      "n_source_rows": 1581,
+      "sequence_parse:recognized_source_notation": 1581,
+      "length_status:conflicting": 1581,
+      "mapping:no_exact_accession_label_match": 706,
+      "mapping:one_candidate_occurrence": 874,
+      "coordinate_offsets:[(123, 122)]": 2,
+      "coordinate_offsets:[(63, 62)]": 2,
+      "coordinate_offsets:[(1, 0)]": 870,
+      "mapping:multiple_candidate_occurrences": 1,
+      "coordinate_offsets:[(-53, -54), (-47, -48), (-41, -42), (-23, -24), (-17, -18), (-11, -12), (-5, -6), (1, 0)]": 1,
+      "n_distinct_candidate_parent_sequences": 196
+    },
+    "dc_dia_library": {
+      "n_source_rows": 1020,
+      "sequence_parse:recognized_source_notation": 1020,
+      "length_status:conflicting": 1020,
+      "mapping:no_exact_accession_label_match": 79,
+      "mapping:one_candidate_occurrence": 941,
+      "coordinate_offsets:[(1, 0)]": 940,
+      "coordinate_offsets:[(201, 200)]": 1,
+      "n_distinct_candidate_parent_sequences": 191
+    }
+  },
+  "exact_accession_matching_only": false,
+  "declared_accession_token_matching": true,
+  "candidate_mappings_are_not_measured_origins": true,
+  "aggregation_or_training_admission": false,
+  "model_training_or_predictions": false,
+  "seconds": 5.120351459016092,
+  "peak_rss_gib": 0.4378662109375
+}

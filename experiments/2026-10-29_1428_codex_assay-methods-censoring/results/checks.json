@@ -1,0 +1,9 @@
+{
+  "ruff_version": "0.16.0",
+  "ruff_check": "passed: current analysis/ and code/ with --no-force-exclude",
+  "pytest_command": "python -m pytest -q experiments/2026-10-29_1428_codex_assay-methods-censoring/analysis/test_audit_methods.py",
+  "pytest_passed": 6,
+  "pytest_seconds": 5.39,
+  "independent_verification": "aggregate-verification.json",
+  "original_validation_test_outcomes_used": false
+}

@@ -1,0 +1,31 @@
+{
+  "registered_at": "2026-10-23T14:42:39.492632-04:00",
+  "source_hashes": {
+    "code/fit_direct.py": "6de814c681da6a0ac28c585d31f5548f0896ed08d2983ffda5fd7f84942c32b3",
+    "code/direct_rates.py": "31cd36f1d66f7ae5937b874d695e87180b296487b06198af134da1aaaf091fd4",
+    "code/source.py": "e81c4beca5c73e2aa91f356acb892401da402ce11c68cb13d608a266f7701df5"
+  },
+  "audit_sha256": "2ac9c066082ed539653a1d48c7a93c46a2638bdfc5ec2363a5fe4d9fca79550d",
+  "solver": {
+    "method": "trf",
+    "tr_solver": "lsmr",
+    "x_scale": "jac",
+    "ftol": 1e-12,
+    "xtol": 1e-12,
+    "gtol": 1e-10,
+    "max_nfev": 300,
+    "loss": "linear",
+    "tr_options": {
+      "atol": 1e-10,
+      "btol": 1e-10,
+      "maxiter": 500,
+      "regularize": true
+    }
+  },
+  "max_seconds_per_condition": 180,
+  "initialization": "Saved free condition-rate fit; one start only",
+  "bounds": "0 <= rate < infinity",
+  "objective": "Same global equal-parent condition/curve/time weighted MSE, no coefficient penalty. SciPy reports half-MSE cost.",
+  "termination": "Per-block function limit, callback wall limit, or SciPy tolerance; no restarts or budget extensions. Report raw gradient, continuous projected-gradient mapping, complementarity and solver optimality separately.",
+  "zero_limit": "Mathematical ratio closure only; zero reference mass is not a positive amount or independently calibrated concentration."
+}

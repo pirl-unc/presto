@@ -1,0 +1,2751 @@
+{
+  "members": [
+    {
+      "name": "mmc3.pdf",
+      "size_bytes": 220410,
+      "sha256": "eb6d1e6c598bd82094b6d9d77e008eec042882853812db5c044d3bb5809fae13"
+    },
+    {
+      "name": "mmc5.xlsx",
+      "size_bytes": 15874,
+      "sha256": "7bfe2706e4e1402f33fe5caa2eefd0ccc89a322c931a52e90bfd9eb3f4b56853"
+    },
+    {
+      "name": "mmc2.pdf",
+      "size_bytes": 195342,
+      "sha256": "e8083f81e8ef30955cd4bef3d561412ace77fac6807597bf4469df11d77fc7b0"
+    },
+    {
+      "name": "mmc1.pdf",
+      "size_bytes": 363536,
+      "sha256": "3b949e0f2272351892fe035b7cce9b6d9481dcd871b5eb6d970266a26953a1b4"
+    },
+    {
+      "name": "mmc6.csv",
+      "size_bytes": 4648173,
+      "sha256": "e017c1acc7d5fd94c103cd7b927d6a8723e6f756e04d5a2aedd8ede2d434570f"
+    },
+    {
+      "name": "mmc8.csv",
+      "size_bytes": 7353467,
+      "sha256": "067b92da4e7111e946e51714bfe682ea0f16f4782f397cd49d72096c8787f340"
+    },
+    {
+      "name": "mmc4.pdf",
+      "size_bytes": 8049840,
+      "sha256": "701a62b906df0e5cfcb23b5004f00ef362a62ea079868c301ac277db53ce585e"
+    },
+    {
+      "name": "mmc7.csv",
+      "size_bytes": 7583070,
+      "sha256": "3b3941ffb30a73db8e97747ac931cefffffa78b2329ddb36814ba135ae4af140"
+    }
+  ],
+  "csv_tables": {
+    "mmc6.csv": {
+      "n_rows": 20696,
+      "n_columns": 38,
+      "headers": [
+        "peptide",
+        "mapped_proteins",
+        "B2M_1_.sampling_density",
+        "B2M_2_.sampling_density",
+        "B2M_3_.sampling_density",
+        "CALR_1_.sampling_density",
+        "CALR_2_.sampling_density",
+        "CALR_3_.sampling_density",
+        "CANX_1_.sampling_density",
+        "CANX_2_.sampling_density",
+        "CANX_3_.sampling_density",
+        "ERAP1_1_.sampling_density",
+        "ERAP1_2_.sampling_density",
+        "ERAP1_3_.sampling_density",
+        "GANAB_1_.sampling_density",
+        "GANAB_2_.sampling_density",
+        "GANAB_3_.sampling_density",
+        "IRF2_1_.sampling_density",
+        "IRF2_2_.sampling_density",
+        "IRF2_3_.sampling_density",
+        "PDIA3_1_.sampling_density",
+        "PDIA3_2_.sampling_density",
+        "PDIA3_3_.sampling_density",
+        "SPPL3_1_.sampling_density",
+        "SPPL3_2_.sampling_density",
+        "SPPL3_3_.sampling_density",
+        "TAP1_1_.sampling_density",
+        "TAP1_2_.sampling_density",
+        "TAP1_3_.sampling_density",
+        "TAP2_1_.sampling_density",
+        "TAP2_2_.sampling_density",
+        "TAP2_3_.sampling_density",
+        "TAPBP_1_.sampling_density",
+        "TAPBP_2_.sampling_density",
+        "TAPBP_3_.sampling_density",
+        "wt_1_.sampling_density",
+        "wt_2_.sampling_density",
+        "wt_3_.sampling_density"
+      ],
+      "field_status_counts": {
+        "peptide": {
+          "text": 20696
+        },
+        "mapped_proteins": {
+          "text": 20696
+        },
+        "B2M_1_.sampling_density": {
+          "finite": 155,
+          "literal_NA": 20541
+        },
+        "B2M_2_.sampling_density": {
+          "finite": 445,
+          "literal_NA": 20251
+        },
+        "B2M_3_.sampling_density": {
+          "finite": 422,
+          "literal_NA": 20274
+        },
+        "CALR_1_.sampling_density": {
+          "finite": 16099,
+          "literal_NA": 4597
+        },
+        "CALR_2_.sampling_density": {
+          "finite": 15911,
+          "literal_NA": 4785
+        },
+        "CALR_3_.sampling_density": {
+          "finite": 15352,
+          "literal_NA": 5344
+        },
+        "CANX_1_.sampling_density": {
+          "finite": 14924,
+          "literal_NA": 5772
+        },
+        "CANX_2_.sampling_density": {
+          "finite": 14703,
+          "literal_NA": 5993
+        },
+        "CANX_3_.sampling_density": {
+          "finite": 13948,
+          "literal_NA": 6748
+        },
+        "ERAP1_1_.sampling_density": {
+          "finite": 7600,
+          "literal_NA": 13096
+        },
+        "ERAP1_2_.sampling_density": {
+          "finite": 7261,
+          "literal_NA": 13435
+        },
+        "ERAP1_3_.sampling_density": {
+          "finite": 7881,
+          "literal_NA": 12815
+        },
+        "GANAB_1_.sampling_density": {
+          "finite": 10252,
+          "literal_NA": 10444
+        },
+        "GANAB_2_.sampling_density": {
+          "finite": 9374,
+          "literal_NA": 11322
+        },
+        "GANAB_3_.sampling_density": {
+          "finite": 7568,
+          "literal_NA": 13128
+        },
+        "IRF2_1_.sampling_density": {
+          "finite": 4214,
+          "literal_NA": 16482
+        },
+        "IRF2_2_.sampling_density": {
+          "finite": 4133,
+          "literal_NA": 16563
+        },
+        "IRF2_3_.sampling_density": {
+          "finite": 4188,
+          "literal_NA": 16508
+        },
+        "PDIA3_1_.sampling_density": {
+          "finite": 6154,
+          "literal_NA": 14542
+        },
+        "PDIA3_2_.sampling_density": {
+          "finite": 5308,
+          "literal_NA": 15388
+        },
+        "PDIA3_3_.sampling_density": {
+          "finite": 5525,
+          "literal_NA": 15171
+        },
+        "SPPL3_1_.sampling_density": {
+          "finite": 12435,
+          "literal_NA": 8261
+        },
+        "SPPL3_2_.sampling_density": {
+          "finite": 13007,
+          "literal_NA": 7689
+        },
+        "SPPL3_3_.sampling_density": {
+          "finite": 11097,
+          "literal_NA": 9599
+        },
+        "TAP1_1_.sampling_density": {
+          "finite": 5648,
+          "literal_NA": 15048
+        },
+        "TAP1_2_.sampling_density": {
+          "finite": 7265,
+          "literal_NA": 13431
+        },
+        "TAP1_3_.sampling_density": {
+          "finite": 7653,
+          "literal_NA": 13043
+        },
+        "TAP2_1_.sampling_density": {
+          "finite": 2566,
+          "literal_NA": 18130
+        },
+        "TAP2_2_.sampling_density": {
+          "finite": 2323,
+          "literal_NA": 18373
+        },
+        "TAP2_3_.sampling_density": {
+          "finite": 2453,
+          "literal_NA": 18243
+        },
+        "TAPBP_1_.sampling_density": {
+          "finite": 3276,
+          "literal_NA": 17420
+        },
+        "TAPBP_2_.sampling_density": {
+          "finite": 3467,
+          "literal_NA": 17229
+        },
+        "TAPBP_3_.sampling_density": {
+          "finite": 3013,
+          "literal_NA": 17683
+        },
+        "wt_1_.sampling_density": {
+          "finite": 17544,
+          "literal_NA": 3152
+        },
+        "wt_2_.sampling_density": {
+          "finite": 16584,
+          "literal_NA": 4112
+        },
+        "wt_3_.sampling_density": {
+          "finite": 16735,
+          "literal_NA": 3961
+        }
+      },
+      "semantic_status": "raw header preserved; numeric magnitudes do not establish units"
+    },
+    "mmc8.csv": {
+      "n_rows": 6437,
+      "n_columns": 109,
+      "headers": [
+        "protein_id",
+        "B2M_1.intensity",
+        "B2M_2.intensity",
+        "B2M_3.intensity",
+        "CALR_1.intensity",
+        "CALR_2.intensity",
+        "CALR_3.intensity",
+        "CANX_1.intensity",
+        "CANX_2.intensity",
+        "CANX_3.intensity",
+        "ERAP1_1.intensity",
+        "ERAP1_2.intensity",
+        "ERAP1_3.intensity",
+        "GANAB_1.intensity",
+        "GANAB_2.intensity",
+        "GANAB_3.intensity",
+        "IRF2_1.intensity",
+        "IRF2_2.intensity",
+        "IRF2_3.intensity",
+        "PDIA3_1.intensity",
+        "PDIA3_2.intensity",
+        "PDIA3_3.intensity",
+        "SPPL3_1.intensity",
+        "SPPL3_2.intensity",
+        "SPPL3_3.intensity",
+        "TAP1_1.intensity",
+        "TAP1_2.intensity",
+        "TAP1_3.intensity",
+        "TAP2_1.intensity",
+        "TAP2_2.intensity",
+        "TAP2_3.intensity",
+        "TAPBP_1.intensity",
+        "TAPBP_2.intensity",
+        "TAPBP_3.intensity",
+        "wt_1.intensity",
+        "wt_2.intensity",
+        "wt_3.intensity",
+        "B2M_1_.sampling_density",
+        "B2M_2_.sampling_density",
+        "B2M_3_.sampling_density",
+        "CALR_1_.sampling_density",
+        "CALR_2_.sampling_density",
+        "CALR_3_.sampling_density",
+        "CANX_1_.sampling_density",
+        "CANX_2_.sampling_density",
+        "CANX_3_.sampling_density",
+        "ERAP1_1_.sampling_density",
+        "ERAP1_2_.sampling_density",
+        "ERAP1_3_.sampling_density",
+        "GANAB_1_.sampling_density",
+        "GANAB_2_.sampling_density",
+        "GANAB_3_.sampling_density",
+        "IRF2_1_.sampling_density",
+        "IRF2_2_.sampling_density",
+        "IRF2_3_.sampling_density",
+        "PDIA3_1_.sampling_density",
+        "PDIA3_2_.sampling_density",
+        "PDIA3_3_.sampling_density",
+        "SPPL3_1_.sampling_density",
+        "SPPL3_2_.sampling_density",
+        "SPPL3_3_.sampling_density",
+        "TAP1_1_.sampling_density",
+        "TAP1_2_.sampling_density",
+        "TAP1_3_.sampling_density",
+        "TAP2_1_.sampling_density",
+        "TAP2_2_.sampling_density",
+        "TAP2_3_.sampling_density",
+        "TAPBP_1_.sampling_density",
+        "TAPBP_2_.sampling_density",
+        "TAPBP_3_.sampling_density",
+        "wt_1_.sampling_density",
+        "wt_2_.sampling_density",
+        "wt_3_.sampling_density",
+        "B2M_1.protein_coverage_proteomics",
+        "B2M_2.protein_coverage_proteomics",
+        "B2M_3.protein_coverage_proteomics",
+        "CALR_1.protein_coverage_proteomics",
+        "CALR_2.protein_coverage_proteomics",
+        "CALR_3.protein_coverage_proteomics",
+        "CANX_1.protein_coverage_proteomics",
+        "CANX_2.protein_coverage_proteomics",
+        "CANX_3.protein_coverage_proteomics",
+        "ERAP1_1.protein_coverage_proteomics",
+        "ERAP1_2.protein_coverage_proteomics",
+        "ERAP1_3.protein_coverage_proteomics",
+        "GANAB_1.protein_coverage_proteomics",
+        "GANAB_2.protein_coverage_proteomics",
+        "GANAB_3.protein_coverage_proteomics",
+        "IRF2_1.protein_coverage_proteomics",
+        "IRF2_2.protein_coverage_proteomics",
+        "IRF2_3.protein_coverage_proteomics",
+        "PDIA3_1.protein_coverage_proteomics",
+        "PDIA3_2.protein_coverage_proteomics",
+        "PDIA3_3.protein_coverage_proteomics",
+        "SPPL3_1.protein_coverage_proteomics",
+        "SPPL3_2.protein_coverage_proteomics",
+        "SPPL3_3.protein_coverage_proteomics",
+        "TAP1_1.protein_coverage_proteomics",
+        "TAP1_2.protein_coverage_proteomics",
+        "TAP1_3.protein_coverage_proteomics",
+        "TAP2_1.protein_coverage_proteomics",
+        "TAP2_2.protein_coverage_proteomics",
+        "TAP2_3.protein_coverage_proteomics",
+        "TAPBP_1.protein_coverage_proteomics",
+        "TAPBP_2.protein_coverage_proteomics",
+        "TAPBP_3.protein_coverage_proteomics",
+        "wt_1.protein_coverage_proteomics",
+        "wt_2.protein_coverage_proteomics",
+        "wt_3.protein_coverage_proteomics"
+      ],
+      "field_status_counts": {
+        "protein_id": {
+          "text": 6437
+        },
+        "B2M_1.intensity": {
+          "finite": 4577,
+          "literal_NA": 1860
+        },
+        "B2M_2.intensity": {
+          "finite": 4563,
+          "literal_NA": 1874
+        },
+        "B2M_3.intensity": {
+          "finite": 4745,
+          "literal_NA": 1692
+        },
+        "CALR_1.intensity": {
+          "finite": 4601,
+          "literal_NA": 1836
+        },
+        "CALR_2.intensity": {
+          "finite": 4161,
+          "literal_NA": 2276
+        },
+        "CALR_3.intensity": {
+          "finite": 4146,
+          "literal_NA": 2291
+        },
+        "CANX_1.intensity": {
+          "finite": 4299,
+          "literal_NA": 2138
+        },
+        "CANX_2.intensity": {
+          "finite": 4154,
+          "literal_NA": 2283
+        },
+        "CANX_3.intensity": {
+          "finite": 4379,
+          "literal_NA": 2058
+        },
+        "ERAP1_1.intensity": {
+          "finite": 4805,
+          "literal_NA": 1632
+        },
+        "ERAP1_2.intensity": {
+          "finite": 4957,
+          "literal_NA": 1480
+        },
+        "ERAP1_3.intensity": {
+          "finite": 4640,
+          "literal_NA": 1797
+        },
+        "GANAB_1.intensity": {
+          "finite": 4605,
+          "literal_NA": 1832
+        },
+        "GANAB_2.intensity": {
+          "finite": 4848,
+          "literal_NA": 1589
+        },
+        "GANAB_3.intensity": {
+          "finite": 4771,
+          "literal_NA": 1666
+        },
+        "IRF2_1.intensity": {
+          "finite": 4886,
+          "literal_NA": 1551
+        },
+        "IRF2_2.intensity": {
+          "finite": 5298,
+          "literal_NA": 1139
+        },
+        "IRF2_3.intensity": {
+          "finite": 4772,
+          "literal_NA": 1665
+        },
+        "PDIA3_1.intensity": {
+          "finite": 5217,
+          "literal_NA": 1220
+        },
+        "PDIA3_2.intensity": {
+          "finite": 4789,
+          "literal_NA": 1648
+        },
+        "PDIA3_3.intensity": {
+          "finite": 4382,
+          "literal_NA": 2055
+        },
+        "SPPL3_1.intensity": {
+          "finite": 4509,
+          "literal_NA": 1928
+        },
+        "SPPL3_2.intensity": {
+          "finite": 4698,
+          "literal_NA": 1739
+        },
+        "SPPL3_3.intensity": {
+          "finite": 4458,
+          "literal_NA": 1979
+        },
+        "TAP1_1.intensity": {
+          "finite": 4584,
+          "literal_NA": 1853
+        },
+        "TAP1_2.intensity": {
+          "finite": 5092,
+          "literal_NA": 1345
+        },
+        "TAP1_3.intensity": {
+          "finite": 4931,
+          "literal_NA": 1506
+        },
+        "TAP2_1.intensity": {
+          "finite": 4396,
+          "literal_NA": 2041
+        },
+        "TAP2_2.intensity": {
+          "finite": 5124,
+          "literal_NA": 1313
+        },
+        "TAP2_3.intensity": {
+          "finite": 4858,
+          "literal_NA": 1579
+        },
+        "TAPBP_1.intensity": {
+          "finite": 4440,
+          "literal_NA": 1997
+        },
+        "TAPBP_2.intensity": {
+          "finite": 4415,
+          "literal_NA": 2022
+        },
+        "TAPBP_3.intensity": {
+          "finite": 4382,
+          "literal_NA": 2055
+        },
+        "wt_1.intensity": {
+          "finite": 4065,
+          "literal_NA": 2372
+        },
+        "wt_2.intensity": {
+          "finite": 4261,
+          "literal_NA": 2176
+        },
+        "wt_3.intensity": {
+          "finite": 4220,
+          "literal_NA": 2217
+        },
+        "B2M_1_.sampling_density": {
+          "literal_NA": 6437
+        },
+        "B2M_2_.sampling_density": {
+          "literal_NA": 6437
+        },
+        "B2M_3_.sampling_density": {
+          "literal_NA": 6437
+        },
+        "CALR_1_.sampling_density": {
+          "finite": 3327,
+          "literal_NA": 3110
+        },
+        "CALR_2_.sampling_density": {
+          "finite": 3050,
+          "literal_NA": 3387
+        },
+        "CALR_3_.sampling_density": {
+          "finite": 2983,
+          "literal_NA": 3454
+        },
+        "CANX_1_.sampling_density": {
+          "finite": 3084,
+          "literal_NA": 3353
+        },
+        "CANX_2_.sampling_density": {
+          "finite": 2985,
+          "literal_NA": 3452
+        },
+        "CANX_3_.sampling_density": {
+          "finite": 3051,
+          "literal_NA": 3386
+        },
+        "ERAP1_1_.sampling_density": {
+          "literal_NA": 3911,
+          "finite": 2526
+        },
+        "ERAP1_2_.sampling_density": {
+          "literal_NA": 3952,
+          "finite": 2485
+        },
+        "ERAP1_3_.sampling_density": {
+          "literal_NA": 3904,
+          "finite": 2533
+        },
+        "GANAB_1_.sampling_density": {
+          "literal_NA": 3614,
+          "finite": 2823
+        },
+        "GANAB_2_.sampling_density": {
+          "literal_NA": 3657,
+          "finite": 2780
+        },
+        "GANAB_3_.sampling_density": {
+          "literal_NA": 3929,
+          "finite": 2508
+        },
+        "IRF2_1_.sampling_density": {
+          "literal_NA": 4615,
+          "finite": 1822
+        },
+        "IRF2_2_.sampling_density": {
+          "literal_NA": 4548,
+          "finite": 1889
+        },
+        "IRF2_3_.sampling_density": {
+          "literal_NA": 4626,
+          "finite": 1811
+        },
+        "PDIA3_1_.sampling_density": {
+          "literal_NA": 4063,
+          "finite": 2374
+        },
+        "PDIA3_2_.sampling_density": {
+          "literal_NA": 4384,
+          "finite": 2053
+        },
+        "PDIA3_3_.sampling_density": {
+          "literal_NA": 4479,
+          "finite": 1958
+        },
+        "SPPL3_1_.sampling_density": {
+          "literal_NA": 3422,
+          "finite": 3015
+        },
+        "SPPL3_2_.sampling_density": {
+          "literal_NA": 3289,
+          "finite": 3148
+        },
+        "SPPL3_3_.sampling_density": {
+          "literal_NA": 3603,
+          "finite": 2834
+        },
+        "TAP1_1_.sampling_density": {
+          "literal_NA": 4490,
+          "finite": 1947
+        },
+        "TAP1_2_.sampling_density": {
+          "literal_NA": 3962,
+          "finite": 2475
+        },
+        "TAP1_3_.sampling_density": {
+          "literal_NA": 3899,
+          "finite": 2538
+        },
+        "TAP2_1_.sampling_density": {
+          "literal_NA": 5334,
+          "finite": 1103
+        },
+        "TAP2_2_.sampling_density": {
+          "literal_NA": 5300,
+          "finite": 1137
+        },
+        "TAP2_3_.sampling_density": {
+          "literal_NA": 5296,
+          "finite": 1141
+        },
+        "TAPBP_1_.sampling_density": {
+          "literal_NA": 5006,
+          "finite": 1431
+        },
+        "TAPBP_2_.sampling_density": {
+          "literal_NA": 4961,
+          "finite": 1476
+        },
+        "TAPBP_3_.sampling_density": {
+          "literal_NA": 5112,
+          "finite": 1325
+        },
+        "wt_1_.sampling_density": {
+          "finite": 3107,
+          "literal_NA": 3330
+        },
+        "wt_2_.sampling_density": {
+          "finite": 3149,
+          "literal_NA": 3288
+        },
+        "wt_3_.sampling_density": {
+          "finite": 3134,
+          "literal_NA": 3303
+        },
+        "B2M_1.protein_coverage_proteomics": {
+          "finite": 4577,
+          "literal_NA": 1860
+        },
+        "B2M_2.protein_coverage_proteomics": {
+          "finite": 4563,
+          "literal_NA": 1874
+        },
+        "B2M_3.protein_coverage_proteomics": {
+          "finite": 4745,
+          "literal_NA": 1692
+        },
+        "CALR_1.protein_coverage_proteomics": {
+          "finite": 4601,
+          "literal_NA": 1836
+        },
+        "CALR_2.protein_coverage_proteomics": {
+          "finite": 4161,
+          "literal_NA": 2276
+        },
+        "CALR_3.protein_coverage_proteomics": {
+          "finite": 4146,
+          "literal_NA": 2291
+        },
+        "CANX_1.protein_coverage_proteomics": {
+          "finite": 4299,
+          "literal_NA": 2138
+        },
+        "CANX_2.protein_coverage_proteomics": {
+          "finite": 4154,
+          "literal_NA": 2283
+        },
+        "CANX_3.protein_coverage_proteomics": {
+          "finite": 4379,
+          "literal_NA": 2058
+        },
+        "ERAP1_1.protein_coverage_proteomics": {
+          "finite": 4805,
+          "literal_NA": 1632
+        },
+        "ERAP1_2.protein_coverage_proteomics": {
+          "finite": 4957,
+          "literal_NA": 1480
+        },
+        "ERAP1_3.protein_coverage_proteomics": {
+          "finite": 4640,
+          "literal_NA": 1797
+        },
+        "GANAB_1.protein_coverage_proteomics": {
+          "finite": 4605,
+          "literal_NA": 1832
+        },
+        "GANAB_2.protein_coverage_proteomics": {
+          "finite": 4848,
+          "literal_NA": 1589
+        },
+        "GANAB_3.protein_coverage_proteomics": {
+          "finite": 4771,
+          "literal_NA": 1666
+        },
+        "IRF2_1.protein_coverage_proteomics": {
+          "finite": 4886,
+          "literal_NA": 1551
+        },
+        "IRF2_2.protein_coverage_proteomics": {
+          "finite": 5298,
+          "literal_NA": 1139
+        },
+        "IRF2_3.protein_coverage_proteomics": {
+          "finite": 4772,
+          "literal_NA": 1665
+        },
+        "PDIA3_1.protein_coverage_proteomics": {
+          "finite": 5217,
+          "literal_NA": 1220
+        },
+        "PDIA3_2.protein_coverage_proteomics": {
+          "finite": 4789,
+          "literal_NA": 1648
+        },
+        "PDIA3_3.protein_coverage_proteomics": {
+          "finite": 4382,
+          "literal_NA": 2055
+        },
+        "SPPL3_1.protein_coverage_proteomics": {
+          "finite": 4509,
+          "literal_NA": 1928
+        },
+        "SPPL3_2.protein_coverage_proteomics": {
+          "finite": 4698,
+          "literal_NA": 1739
+        },
+        "SPPL3_3.protein_coverage_proteomics": {
+          "finite": 4458,
+          "literal_NA": 1979
+        },
+        "TAP1_1.protein_coverage_proteomics": {
+          "finite": 4584,
+          "literal_NA": 1853
+        },
+        "TAP1_2.protein_coverage_proteomics": {
+          "finite": 5092,
+          "literal_NA": 1345
+        },
+        "TAP1_3.protein_coverage_proteomics": {
+          "finite": 4931,
+          "literal_NA": 1506
+        },
+        "TAP2_1.protein_coverage_proteomics": {
+          "finite": 4396,
+          "literal_NA": 2041
+        },
+        "TAP2_2.protein_coverage_proteomics": {
+          "finite": 5124,
+          "literal_NA": 1313
+        },
+        "TAP2_3.protein_coverage_proteomics": {
+          "finite": 4858,
+          "literal_NA": 1579
+        },
+        "TAPBP_1.protein_coverage_proteomics": {
+          "finite": 4440,
+          "literal_NA": 1997
+        },
+        "TAPBP_2.protein_coverage_proteomics": {
+          "finite": 4415,
+          "literal_NA": 2022
+        },
+        "TAPBP_3.protein_coverage_proteomics": {
+          "finite": 4382,
+          "literal_NA": 2055
+        },
+        "wt_1.protein_coverage_proteomics": {
+          "finite": 4065,
+          "literal_NA": 2372
+        },
+        "wt_2.protein_coverage_proteomics": {
+          "finite": 4261,
+          "literal_NA": 2176
+        },
+        "wt_3.protein_coverage_proteomics": {
+          "finite": 4220,
+          "literal_NA": 2217
+        }
+      },
+      "semantic_status": "raw header preserved; numeric magnitudes do not establish units"
+    },
+    "mmc7.csv": {
+      "n_rows": 27184,
+      "n_columns": 37,
+      "headers": [
+        "peptide",
+        "mapped_proteins",
+        "B2M_1_.sampling_density",
+        "B2M_2_.sampling_density",
+        "B2M_3_.sampling_density",
+        "CALR_1_.sampling_density",
+        "CALR_2_.sampling_density",
+        "CALR_3_.sampling_density",
+        "CANX_1_.sampling_density",
+        "CANX_2_.sampling_density",
+        "CANX_3_.sampling_density",
+        "ERAP1_1_.sampling_density",
+        "ERAP1_2_.sampling_density",
+        "ERAP1_3_.sampling_density",
+        "GANAB_1_.sampling_density",
+        "GANAB_2_.sampling_density",
+        "GANAB_3_.sampling_density",
+        "IRF2_1_.sampling_density",
+        "IRF2_2_.sampling_density",
+        "IRF2_3_.sampling_density",
+        "PDIA3_1_.sampling_density",
+        "PDIA3_2_.sampling_density",
+        "PDIA3_3_.sampling_density",
+        "SPPL3_1_.sampling_density",
+        "SPPL3_2_.sampling_density",
+        "SPPL3_3_.sampling_density",
+        "TAP1_1_.sampling_density",
+        "TAP1_2_.sampling_density",
+        "TAP1_3_.sampling_density",
+        "TAP2_1_.sampling_density",
+        "TAP2_2_.sampling_density",
+        "TAP2_3_.sampling_density",
+        "TAPBP_1_.sampling_density",
+        "TAPBP_2_.sampling_density",
+        "TAPBP_3_.sampling_density",
+        "wt_2_.sampling_density",
+        "wt_3_.sampling_density"
+      ],
+      "field_status_counts": {
+        "peptide": {
+          "text": 27184
+        },
+        "mapped_proteins": {
+          "text": 27184
+        },
+        "B2M_1_.sampling_density": {
+          "finite": 245,
+          "literal_NA": 26939
+        },
+        "B2M_2_.sampling_density": {
+          "finite": 887,
+          "literal_NA": 26297
+        },
+        "B2M_3_.sampling_density": {
+          "finite": 761,
+          "literal_NA": 26423
+        },
+        "CALR_1_.sampling_density": {
+          "finite": 19229,
+          "literal_NA": 7955
+        },
+        "CALR_2_.sampling_density": {
+          "finite": 18915,
+          "literal_NA": 8269
+        },
+        "CALR_3_.sampling_density": {
+          "finite": 18347,
+          "literal_NA": 8837
+        },
+        "CANX_1_.sampling_density": {
+          "finite": 17528,
+          "literal_NA": 9656
+        },
+        "CANX_2_.sampling_density": {
+          "finite": 17143,
+          "literal_NA": 10041
+        },
+        "CANX_3_.sampling_density": {
+          "finite": 16012,
+          "literal_NA": 11172
+        },
+        "ERAP1_1_.sampling_density": {
+          "finite": 8261,
+          "literal_NA": 18923
+        },
+        "ERAP1_2_.sampling_density": {
+          "finite": 7906,
+          "literal_NA": 19278
+        },
+        "ERAP1_3_.sampling_density": {
+          "finite": 8569,
+          "literal_NA": 18615
+        },
+        "GANAB_1_.sampling_density": {
+          "finite": 11861,
+          "literal_NA": 15323
+        },
+        "GANAB_2_.sampling_density": {
+          "finite": 10714,
+          "literal_NA": 16470
+        },
+        "GANAB_3_.sampling_density": {
+          "finite": 8440,
+          "literal_NA": 18744
+        },
+        "IRF2_1_.sampling_density": {
+          "finite": 4628,
+          "literal_NA": 22556
+        },
+        "IRF2_2_.sampling_density": {
+          "finite": 4599,
+          "literal_NA": 22585
+        },
+        "IRF2_3_.sampling_density": {
+          "finite": 4619,
+          "literal_NA": 22565
+        },
+        "PDIA3_1_.sampling_density": {
+          "finite": 7098,
+          "literal_NA": 20086
+        },
+        "PDIA3_2_.sampling_density": {
+          "finite": 5979,
+          "literal_NA": 21205
+        },
+        "PDIA3_3_.sampling_density": {
+          "finite": 6179,
+          "literal_NA": 21005
+        },
+        "SPPL3_1_.sampling_density": {
+          "finite": 14190,
+          "literal_NA": 12994
+        },
+        "SPPL3_2_.sampling_density": {
+          "finite": 15027,
+          "literal_NA": 12157
+        },
+        "SPPL3_3_.sampling_density": {
+          "finite": 12522,
+          "literal_NA": 14662
+        },
+        "TAP1_1_.sampling_density": {
+          "finite": 7193,
+          "literal_NA": 19991
+        },
+        "TAP1_2_.sampling_density": {
+          "finite": 8849,
+          "literal_NA": 18335
+        },
+        "TAP1_3_.sampling_density": {
+          "finite": 9577,
+          "literal_NA": 17607
+        },
+        "TAP2_1_.sampling_density": {
+          "finite": 3421,
+          "literal_NA": 23763
+        },
+        "TAP2_2_.sampling_density": {
+          "finite": 3089,
+          "literal_NA": 24095
+        },
+        "TAP2_3_.sampling_density": {
+          "finite": 3308,
+          "literal_NA": 23876
+        },
+        "TAPBP_1_.sampling_density": {
+          "finite": 3784,
+          "literal_NA": 23400
+        },
+        "TAPBP_2_.sampling_density": {
+          "finite": 4042,
+          "literal_NA": 23142
+        },
+        "TAPBP_3_.sampling_density": {
+          "finite": 3518,
+          "literal_NA": 23666
+        },
+        "wt_2_.sampling_density": {
+          "finite": 19973,
+          "literal_NA": 7211
+        },
+        "wt_3_.sampling_density": {
+          "finite": 21131,
+          "literal_NA": 6053
+        }
+      },
+      "semantic_status": "raw header preserved; numeric magnitudes do not establish units"
+    }
+  },
+  "sample_sheets": {
+    "immunopep_library_generation": {
+      "source_member": "mmc5.xlsx",
+      "n_rows": 61,
+      "headers": [
+        "raw_file",
+        "ko_cond",
+        "BR",
+        "TR",
+        "unique_identified_peptide_count_canonical_search"
+      ],
+      "rows": [
+        {
+          "raw_file": "20201218_COL032-00398_00399_00400_00401_00178-HLAIp_R01",
+          "ko_cond": "B2M",
+          "BR": 1,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 627
+        },
+        {
+          "raw_file": "20201218_COL032-00398_00399_00400_00401_00178-HLAIp_R02",
+          "ko_cond": "B2M",
+          "BR": 1,
+          "TR": 2,
+          "unique_identified_peptide_count_canonical_search": 208
+        },
+        {
+          "raw_file": "20201202_COL032-00345_00346-HLAIp_R01",
+          "ko_cond": "CALR",
+          "BR": 1,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 7317
+        },
+        {
+          "raw_file": "20201202_COL032-00345_00346-HLAIp_R02",
+          "ko_cond": "CALR",
+          "BR": 1,
+          "TR": 2,
+          "unique_identified_peptide_count_canonical_search": 7160
+        },
+        {
+          "raw_file": "20201202_COL032-00347_00348-HLAIp_R01",
+          "ko_cond": "CALR",
+          "BR": 2,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 6298
+        },
+        {
+          "raw_file": "20201202_COL032-00347_00348-HLAIp_R02",
+          "ko_cond": "CALR",
+          "BR": 2,
+          "TR": 2,
+          "unique_identified_peptide_count_canonical_search": 6071
+        },
+        {
+          "raw_file": "20201202_COL032-00349_00350-HLAIp_R01",
+          "ko_cond": "CALR",
+          "BR": 3,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 5199
+        },
+        {
+          "raw_file": "20201202_COL032-00349_00350-HLAIp_R02",
+          "ko_cond": "CALR",
+          "BR": 3,
+          "TR": 2,
+          "unique_identified_peptide_count_canonical_search": 5163
+        },
+        {
+          "raw_file": "20201009_COL032-00056-HLAIp_R01",
+          "ko_cond": "CANX",
+          "BR": 1,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 4985
+        },
+        {
+          "raw_file": "20201009_COL032-00056-HLAIp_R02",
+          "ko_cond": "CANX",
+          "BR": 1,
+          "TR": 2,
+          "unique_identified_peptide_count_canonical_search": 5225
+        },
+        {
+          "raw_file": "20210114_COL032-00133_00134_00135_00136_00137-HLAIp_R01",
+          "ko_cond": "CANX",
+          "BR": 2,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 11692
+        },
+        {
+          "raw_file": "20210122_COL032-00306_00307_00308_00309_00310-HLAIp_R01",
+          "ko_cond": "CANX",
+          "BR": 3,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 10329
+        },
+        {
+          "raw_file": "20210114_COL032-00413_00414-HLAIp_R01",
+          "ko_cond": "ERAP1",
+          "BR": 1,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 11320
+        },
+        {
+          "raw_file": "20210122_COL032-00417_00418_00183_00184_00185-HLAIp_R01",
+          "ko_cond": "ERAP1",
+          "BR": 2,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 8294
+        },
+        {
+          "raw_file": "20210122_COL032-00326_00327_00328_00329_00330-HLAIp_R01",
+          "ko_cond": "GANAB",
+          "BR": 1,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 7255
+        },
+        {
+          "raw_file": "20210122_COL032-00331_00332_00333_00334_00335-HLAIp_R01",
+          "ko_cond": "GANAB",
+          "BR": 2,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 6844
+        },
+        {
+          "raw_file": "20210122_COL032-00336_00337_00338_00339_00340-HLAIp_R01",
+          "ko_cond": "GANAB",
+          "BR": 3,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 7482
+        },
+        {
+          "raw_file": "20210122_COL032-00207_00208_00209_00210_00211-HLAIp_R01",
+          "ko_cond": "IRF2",
+          "BR": 1,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 7993
+        },
+        {
+          "raw_file": "20210122_COL032-00212_00213_00214_00447_00448-HLAIp_R01",
+          "ko_cond": "IRF2",
+          "BR": 2,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 8512
+        },
+        {
+          "raw_file": "20210122_COL032-00449_00450_00451_00452_00453-HLAIp_R01",
+          "ko_cond": "IRF2",
+          "BR": 3,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 8647
+        },
+        {
+          "raw_file": "20210126_COL032-00145_00146_00147_00148_00149-HLAIp_R01",
+          "ko_cond": "PDIA3",
+          "BR": 1,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 6496
+        },
+        {
+          "raw_file": "20210126_COL032-00150_00151_00152_00358_00359-HLAIp_R01",
+          "ko_cond": "PDIA3",
+          "BR": 2,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 5532
+        },
+        {
+          "raw_file": "20210126_COL032-00360_00361_00362_00363_00364-HLAIp_R01",
+          "ko_cond": "PDIA3",
+          "BR": 3,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 5122
+        },
+        {
+          "raw_file": "20210128_COL032-00560_00561-HLAIp_R01",
+          "ko_cond": "SPPL3",
+          "BR": 1,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 9999
+        },
+        {
+          "raw_file": "20210128_COL032-00562_00563-HLAIp_R01",
+          "ko_cond": "SPPL3",
+          "BR": 2,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 10235
+        },
+        {
+          "raw_file": "20210128_COL032-00564_00565-HLAIp_R01",
+          "ko_cond": "SPPL3",
+          "BR": 3,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 10470
+        },
+        {
+          "raw_file": "20201127_COL032-00231_00232_00233_00234_00235-HLAIp_R01",
+          "ko_cond": "TAP1",
+          "BR": 1,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 3500
+        },
+        {
+          "raw_file": "20201127_COL032-00231_00232_00233_00234_00235-HLAIp_R02",
+          "ko_cond": "TAP1",
+          "BR": 1,
+          "TR": 2,
+          "unique_identified_peptide_count_canonical_search": 3555
+        },
+        {
+          "raw_file": "20201127_COL032-00236_00237_00238_00239_00240-HLAIp_R01",
+          "ko_cond": "TAP1",
+          "BR": 2,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 2721
+        },
+        {
+          "raw_file": "20201127_COL032-00236_00237_00238_00239_00240-HLAIp_R02",
+          "ko_cond": "TAP1",
+          "BR": 2,
+          "TR": 2,
+          "unique_identified_peptide_count_canonical_search": 3099
+        },
+        {
+          "raw_file": "20201127_COL032-00241_00242_00243_00244_00245-HLAIp_R01",
+          "ko_cond": "TAP1",
+          "BR": 3,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 2151
+        },
+        {
+          "raw_file": "20201127_COL032-00241_00242_00243_00244_00245-HLAIp_R02",
+          "ko_cond": "TAP1",
+          "BR": 3,
+          "TR": 2,
+          "unique_identified_peptide_count_canonical_search": 2400
+        },
+        {
+          "raw_file": "20210127_COL032-00575_00576-HLAIp_R01",
+          "ko_cond": "TAP1",
+          "BR": 4,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 533
+        },
+        {
+          "raw_file": "20210127_COL032-00577_00578-HLAIp_R01",
+          "ko_cond": "TAP1",
+          "BR": 5,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 1737
+        },
+        {
+          "raw_file": "20210127_COL032-00579_00580-HLAIp_R01",
+          "ko_cond": "TAP1",
+          "BR": 6,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 1090
+        },
+        {
+          "raw_file": "20201127_COL032-00250_00251_00264-HLAIp_R01",
+          "ko_cond": "TAP2",
+          "BR": 1,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 559
+        },
+        {
+          "raw_file": "20201127_COL032-00250_00251_00264-HLAIp_R02",
+          "ko_cond": "TAP2",
+          "BR": 1,
+          "TR": 2,
+          "unique_identified_peptide_count_canonical_search": 609
+        },
+        {
+          "raw_file": "20201127_COL032-00263_00248_00249-HLAIp_R01",
+          "ko_cond": "TAP2",
+          "BR": 2,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 629
+        },
+        {
+          "raw_file": "20201127_COL032-00263_00248_00249-HLAIp_R02",
+          "ko_cond": "TAP2",
+          "BR": 2,
+          "TR": 2,
+          "unique_identified_peptide_count_canonical_search": 699
+        },
+        {
+          "raw_file": "20201127_COL032-00265_00252_00253-HLAIp_R01",
+          "ko_cond": "TAP2",
+          "BR": 3,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 938
+        },
+        {
+          "raw_file": "20201127_COL032-00265_00252_00253-HLAIp_R02",
+          "ko_cond": "TAP2",
+          "BR": 3,
+          "TR": 2,
+          "unique_identified_peptide_count_canonical_search": 885
+        },
+        {
+          "raw_file": "20210127_COL032-00266_00254_00255-HLAIp_R01",
+          "ko_cond": "TAP2",
+          "BR": 4,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 1380
+        },
+        {
+          "raw_file": "20210127_COL032-00267_00256_00257-HLAIp_R01",
+          "ko_cond": "TAP2",
+          "BR": 5,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 1177
+        },
+        {
+          "raw_file": "20210127_COL032-00268_00258_00259-HLAIp_R01",
+          "ko_cond": "TAP2",
+          "BR": 6,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 1081
+        },
+        {
+          "raw_file": "20210126_COL032-00377_00378_00379_00380_00381-HLAIp_R01",
+          "ko_cond": "TAPBP",
+          "BR": 1,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 4584
+        },
+        {
+          "raw_file": "20210126_COL032-00382_00383_00384_00385_00386-HLAIp_R01",
+          "ko_cond": "TAPBP",
+          "BR": 2,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 4641
+        },
+        {
+          "raw_file": "20210126_COL032-00387_00168_00169_00170_00171-HLAIp_R01",
+          "ko_cond": "TAPBP",
+          "BR": 3,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 4687
+        },
+        {
+          "raw_file": "20201009_COL032-00057-HLAIp_R01",
+          "ko_cond": "wt",
+          "BR": 1,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 2608
+        },
+        {
+          "raw_file": "20201009_COL032-00057-HLAIp_R02",
+          "ko_cond": "wt",
+          "BR": 1,
+          "TR": 2,
+          "unique_identified_peptide_count_canonical_search": 2971
+        },
+        {
+          "raw_file": "20201027_COL032-00120_00118_00119-HLAIp_R01",
+          "ko_cond": "wt",
+          "BR": 2,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 10736
+        },
+        {
+          "raw_file": "20201027_COL032-00120_00118_00119-HLAIp_R02",
+          "ko_cond": "wt",
+          "BR": 2,
+          "TR": 2,
+          "unique_identified_peptide_count_canonical_search": 10675
+        },
+        {
+          "raw_file": "20201027_COL032-00121_00122_00123-HLAIp_R01",
+          "ko_cond": "wt",
+          "BR": 3,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 10837
+        },
+        {
+          "raw_file": "20201027_COL032-00121_00122_00123-HLAIp_R02",
+          "ko_cond": "wt",
+          "BR": 3,
+          "TR": 2,
+          "unique_identified_peptide_count_canonical_search": 10719
+        },
+        {
+          "raw_file": "20201127_COL032-00274_00275_00276_00277_00278-HLAIp_R01",
+          "ko_cond": "wt",
+          "BR": 4,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 10940
+        },
+        {
+          "raw_file": "20201127_COL032-00274_00275_00276_00277_00278-HLAIp_R02",
+          "ko_cond": "wt",
+          "BR": 4,
+          "TR": 2,
+          "unique_identified_peptide_count_canonical_search": 11346
+        },
+        {
+          "raw_file": "20201127_COL032-00279_00280_00281_00282_00283-HLAIp_R01",
+          "ko_cond": "wt",
+          "BR": 5,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 9430
+        },
+        {
+          "raw_file": "20201127_COL032-00279_00280_00281_00282_00283-HLAIp_R02",
+          "ko_cond": "wt",
+          "BR": 5,
+          "TR": 2,
+          "unique_identified_peptide_count_canonical_search": 9717
+        },
+        {
+          "raw_file": "20201127_COL032-00284_00285_00286_00287_00288-HLAIp_R01",
+          "ko_cond": "wt",
+          "BR": 6,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 8986
+        },
+        {
+          "raw_file": "20201127_COL032-00284_00285_00286_00287_00288-HLAIp_R02",
+          "ko_cond": "wt",
+          "BR": 6,
+          "TR": 2,
+          "unique_identified_peptide_count_canonical_search": 9009
+        },
+        {
+          "raw_file": "20210114_COL032-00289_00290_00291_00292_00293-HLAIp_R01",
+          "ko_cond": "wt",
+          "BR": 7,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 8385
+        },
+        {
+          "raw_file": "20210122_COL032-00547_00548-HLAIp_R01",
+          "ko_cond": "wt",
+          "BR": 8,
+          "TR": 1,
+          "unique_identified_peptide_count_canonical_search": 11742
+        }
+      ]
+    },
+    "immunopep_library_search": {
+      "source_member": "mmc5.xlsx",
+      "n_rows": 67,
+      "headers": [
+        "knockout_condition",
+        "biological_replicate",
+        "raw_file",
+        "technical_replicate"
+      ],
+      "rows": [
+        {
+          "knockout_condition": "B2M",
+          "biological_replicate": 1,
+          "raw_file": "20201218_DIA_COL032-00395_00394-HLAIp_R04",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "B2M",
+          "biological_replicate": 1,
+          "raw_file": "20201218_DIA_COL032-00395_00394-HLAIp_R03",
+          "technical_replicate": 2
+        },
+        {
+          "knockout_condition": "B2M",
+          "biological_replicate": 2,
+          "raw_file": "20201218_DIA_COL032-00396_00397-HLAIp_R04",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "B2M",
+          "biological_replicate": 2,
+          "raw_file": "20201218_DIA_COL032-00396_00397-HLAIp_R03",
+          "technical_replicate": 2
+        },
+        {
+          "knockout_condition": "B2M",
+          "biological_replicate": 3,
+          "raw_file": "20201218_DIA_COL032-00398_00399_00400_00401_00178-HLAIp_R04",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "B2M",
+          "biological_replicate": 3,
+          "raw_file": "20201218_DIA_COL032-00398_00399_00400_00401_00178-HLAIp_R03",
+          "technical_replicate": 2
+        },
+        {
+          "knockout_condition": "CALR",
+          "biological_replicate": 1,
+          "raw_file": "20201202_DIA_COL032-00345_00346-HLAIp_R03",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "CALR",
+          "biological_replicate": 1,
+          "raw_file": "20201202_DIA_COL032-00345_00346-HLAIp_R04",
+          "technical_replicate": 2
+        },
+        {
+          "knockout_condition": "CALR",
+          "biological_replicate": 2,
+          "raw_file": "20201202_DIA_COL032-00347_00348-HLAIp_R03",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "CALR",
+          "biological_replicate": 2,
+          "raw_file": "20201202_DIA_COL032-00347_00348-HLAIp_R04",
+          "technical_replicate": 2
+        },
+        {
+          "knockout_condition": "CALR",
+          "biological_replicate": 3,
+          "raw_file": "20201202_DIA_COL032-00349_00350-HLAIp_R03",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "CALR",
+          "biological_replicate": 3,
+          "raw_file": "20201202_DIA_COL032-00349_00350-HLAIp_R04",
+          "technical_replicate": 2
+        },
+        {
+          "knockout_condition": "CANX",
+          "biological_replicate": 1,
+          "raw_file": "20201204_DIA_COL032-00300_00301-HLAIp_R03",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "CANX",
+          "biological_replicate": 1,
+          "raw_file": "20201204_DIA_COL032-00300_00301-HLAIp_R04",
+          "technical_replicate": 2
+        },
+        {
+          "knockout_condition": "CANX",
+          "biological_replicate": 2,
+          "raw_file": "20201204_DIA_COL032-00302_00303-HLAIp_R03",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "CANX",
+          "biological_replicate": 2,
+          "raw_file": "20201204_DIA_COL032-00302_00303-HLAIp_R04",
+          "technical_replicate": 2
+        },
+        {
+          "knockout_condition": "CANX",
+          "biological_replicate": 3,
+          "raw_file": "20201204_DIA_COL032-00304_00305-HLAIp_R03",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "CANX",
+          "biological_replicate": 3,
+          "raw_file": "20201204_DIA_COL032-00304_00305-HLAIp_R04",
+          "technical_replicate": 2
+        },
+        {
+          "knockout_condition": "ERAP1",
+          "biological_replicate": 1,
+          "raw_file": "20201211_DIA_COL032-00407_00408-HLAIp_R04",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "ERAP1",
+          "biological_replicate": 1,
+          "raw_file": "20201211_DIA_COL032-00407_00408-HLAIp_R03",
+          "technical_replicate": 2
+        },
+        {
+          "knockout_condition": "ERAP1",
+          "biological_replicate": 2,
+          "raw_file": "20201211_DIA_COL032-00409_00410-HLAIp_R03",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "ERAP1",
+          "biological_replicate": 2,
+          "raw_file": "20201211_DIA_COL032-00409_00410-HLAIp_R04",
+          "technical_replicate": 2
+        },
+        {
+          "knockout_condition": "ERAP1",
+          "biological_replicate": 3,
+          "raw_file": "20201211_DIA_COL032-00411_00412-HLAIp_R03",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "ERAP1",
+          "biological_replicate": 3,
+          "raw_file": "20201211_DIA_COL032-00411_00412-HLAIp_R04",
+          "technical_replicate": 2
+        },
+        {
+          "knockout_condition": "PDIA3",
+          "biological_replicate": 1,
+          "raw_file": "20201207_DIA_COL032-00352_00353-HLAIp_R03",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "PDIA3",
+          "biological_replicate": 1,
+          "raw_file": "20201207_DIA_COL032-00352_00353-HLAIp_R04",
+          "technical_replicate": 2
+        },
+        {
+          "knockout_condition": "PDIA3",
+          "biological_replicate": 2,
+          "raw_file": "20201207_DIA_COL032-00354_00355-HLAIp_R03",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "PDIA3",
+          "biological_replicate": 3,
+          "raw_file": "20201207_DIA_COL032-00356_00357-HLAIp_R04",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "PDIA3",
+          "biological_replicate": 3,
+          "raw_file": "20201207_DIA_COL032-00356_00357-HLAIp_R03",
+          "technical_replicate": 2
+        },
+        {
+          "knockout_condition": "GANAB",
+          "biological_replicate": 1,
+          "raw_file": "20201204_DIA_COL032-00320_00321-HLAIp_R03",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "GANAB",
+          "biological_replicate": 1,
+          "raw_file": "20201204_DIA_COL032-00320_00321-HLAIp_R04",
+          "technical_replicate": 2
+        },
+        {
+          "knockout_condition": "GANAB",
+          "biological_replicate": 2,
+          "raw_file": "20201204_DIA_COL032-00322_00323-HLAIp_R03",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "GANAB",
+          "biological_replicate": 2,
+          "raw_file": "20201204_DIA_COL032-00322_00323-HLAIp_R04",
+          "technical_replicate": 2
+        },
+        {
+          "knockout_condition": "GANAB",
+          "biological_replicate": 3,
+          "raw_file": "20201204_DIA_COL032-00324_00325-HLAIp_R03",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "GANAB",
+          "biological_replicate": 3,
+          "raw_file": "20201204_DIA_COL032-00324_00325-HLAIp_R04",
+          "technical_replicate": 2
+        },
+        {
+          "knockout_condition": "IRF2",
+          "biological_replicate": 1,
+          "raw_file": "20201214_DIA_COL032-00441_00442-HLAIp_R04",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "IRF2",
+          "biological_replicate": 1,
+          "raw_file": "20201214_DIA_COL032-00441_00442-HLAIp_R03",
+          "technical_replicate": 2
+        },
+        {
+          "knockout_condition": "IRF2",
+          "biological_replicate": 2,
+          "raw_file": "20201214_DIA_COL032-00443_00444-HLAIp_R03",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "IRF2",
+          "biological_replicate": 2,
+          "raw_file": "20201214_DIA_COL032-00443_00444-HLAIp_R04",
+          "technical_replicate": 2
+        },
+        {
+          "knockout_condition": "IRF2",
+          "biological_replicate": 3,
+          "raw_file": "20201214_DIA_COL032-00445_00446-HLAIp_R03",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "IRF2",
+          "biological_replicate": 3,
+          "raw_file": "20201214_DIA_COL032-00445_00446-HLAIp_R04",
+          "technical_replicate": 2
+        },
+        {
+          "knockout_condition": "SPPL3",
+          "biological_replicate": 1,
+          "raw_file": "20201211_DIA_COL032-00426_00427-HLAIp_R03",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "SPPL3",
+          "biological_replicate": 1,
+          "raw_file": "20201211_DIA_COL032-00426_00427-HLAIp_R04",
+          "technical_replicate": 2
+        },
+        {
+          "knockout_condition": "SPPL3",
+          "biological_replicate": 2,
+          "raw_file": "20201211_DIA_COL032-00428_00429-HLAIp_R03",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "SPPL3",
+          "biological_replicate": 2,
+          "raw_file": "20201211_DIA_COL032-00428_00429-HLAIp_R04",
+          "technical_replicate": 2
+        },
+        {
+          "knockout_condition": "SPPL3",
+          "biological_replicate": 3,
+          "raw_file": "20201211_DIA_COL032-00430_00431-HLAIp_R03",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "SPPL3",
+          "biological_replicate": 3,
+          "raw_file": "20201211_DIA_COL032-00430_00431-HLAIp_R04",
+          "technical_replicate": 2
+        },
+        {
+          "knockout_condition": "TAP1",
+          "biological_replicate": 1,
+          "raw_file": "20201127_DIA_COL032-00241_00242_00243_00244_00245-HLAIp_R03",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "TAP1",
+          "biological_replicate": 1,
+          "raw_file": "20201127_DIA_COL032-00241_00242_00243_00244_00245-HLAIp_R04",
+          "technical_replicate": 2
+        },
+        {
+          "knockout_condition": "TAP1",
+          "biological_replicate": 2,
+          "raw_file": "20201127_DIA_COL032-00236_00237_00238_00239_00240-HLAIp_R03",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "TAP1",
+          "biological_replicate": 3,
+          "raw_file": "20201127_DIA_COL032-00231_00232_00233_00234_00235-HLAIp_R03",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "TAP1",
+          "biological_replicate": 3,
+          "raw_file": "20201127_DIA_COL032-00231_00232_00233_00234_00235-HLAIp_R04",
+          "technical_replicate": 2
+        },
+        {
+          "knockout_condition": "TAP2",
+          "biological_replicate": 1,
+          "raw_file": "20201127_DIA_COL032-00265_00252_00253-HLAIp_R03",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "TAP2",
+          "biological_replicate": 2,
+          "raw_file": "20201127_DIA_COL032-00263_00248_00249-HLAIp_R03",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "TAP2",
+          "biological_replicate": 3,
+          "raw_file": "20201127_DIA_COL032-00250_00251_00264-HLAIp_R03",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "TAPBP",
+          "biological_replicate": 1,
+          "raw_file": "20201209_DIA_COL032-00371_00372-HLAIp_R03",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "TAPBP",
+          "biological_replicate": 1,
+          "raw_file": "20201209_DIA_COL032-00371_00372-HLAIp_R04",
+          "technical_replicate": 2
+        },
+        {
+          "knockout_condition": "TAPBP",
+          "biological_replicate": 2,
+          "raw_file": "20201209_DIA_COL032-00373_00374-HLAIp_R03",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "TAPBP",
+          "biological_replicate": 2,
+          "raw_file": "20201209_DIA_COL032-00373_00374-HLAIp_R04",
+          "technical_replicate": 2
+        },
+        {
+          "knockout_condition": "TAPBP",
+          "biological_replicate": 3,
+          "raw_file": "20201209_DIA_COL032-00375_00376-HLAIp_R03",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "TAPBP",
+          "biological_replicate": 3,
+          "raw_file": "20201209_DIA_COL032-00375_00376-HLAIp_R04",
+          "technical_replicate": 2
+        },
+        {
+          "knockout_condition": "wt",
+          "biological_replicate": 1,
+          "raw_file": "20201127_DIA_COL032-00274_00275_00276_00277_00278-HLAIp_R03",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "wt",
+          "biological_replicate": 1,
+          "raw_file": "20201127_DIA_COL032-00274_00275_00276_00277_00278-HLAIp_R04",
+          "technical_replicate": 2
+        },
+        {
+          "knockout_condition": "wt",
+          "biological_replicate": 2,
+          "raw_file": "20201127_DIA_COL032-00284_00285_00286_00287_00288-HLAIp_R04",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "wt",
+          "biological_replicate": 2,
+          "raw_file": "20201127_DIA_COL032-00284_00285_00286_00287_00288-HLAIp_R03",
+          "technical_replicate": 2
+        },
+        {
+          "knockout_condition": "wt",
+          "biological_replicate": 3,
+          "raw_file": "20201127_DIA_COL032-00279_00280_00281_00282_00283-HLAIp_R04",
+          "technical_replicate": 1
+        },
+        {
+          "knockout_condition": "wt",
+          "biological_replicate": 3,
+          "raw_file": "20201127_DIA_COL032-00279_00280_00281_00282_00283-HLAIp_R03",
+          "technical_replicate": 2
+        }
+      ]
+    },
+    "proteomics": {
+      "source_member": "mmc5.xlsx",
+      "n_rows": 36,
+      "headers": [
+        "knockout_condition",
+        "biological_replicate",
+        "raw_file"
+      ],
+      "rows": [
+        {
+          "knockout_condition": "B2M",
+          "biological_replicate": 1,
+          "raw_file": "20201224_COL032_00402_PROT_R01"
+        },
+        {
+          "knockout_condition": "B2M",
+          "biological_replicate": 2,
+          "raw_file": "20201224_COL032_00403_PROT_R01"
+        },
+        {
+          "knockout_condition": "B2M",
+          "biological_replicate": 3,
+          "raw_file": "20201224_COL032_00404_PROT_R01"
+        },
+        {
+          "knockout_condition": "CALR",
+          "biological_replicate": 1,
+          "raw_file": "20201220_COL032_00130_PROT_R01"
+        },
+        {
+          "knockout_condition": "CALR",
+          "biological_replicate": 2,
+          "raw_file": "20201220_COL032_00131_PROT_R01"
+        },
+        {
+          "knockout_condition": "CALR",
+          "biological_replicate": 3,
+          "raw_file": "20201220_COL032_00132_PROT_R01"
+        },
+        {
+          "knockout_condition": "CANX",
+          "biological_replicate": 1,
+          "raw_file": "20201220_COL032_00315_PROT_R01"
+        },
+        {
+          "knockout_condition": "CANX",
+          "biological_replicate": 2,
+          "raw_file": "20201220_COL032_00316_PROT_R01"
+        },
+        {
+          "knockout_condition": "CANX",
+          "biological_replicate": 3,
+          "raw_file": "20201220_COL032_00317_PROT_R01"
+        },
+        {
+          "knockout_condition": "ERAP1",
+          "biological_replicate": 1,
+          "raw_file": "20201222_COL032_00421_PROT_R01"
+        },
+        {
+          "knockout_condition": "ERAP1",
+          "biological_replicate": 2,
+          "raw_file": "20201222_COL032_00422_PROT_R01"
+        },
+        {
+          "knockout_condition": "ERAP1",
+          "biological_replicate": 3,
+          "raw_file": "20201222_COL032_00423_PROT_R01"
+        },
+        {
+          "knockout_condition": "GANAB",
+          "biological_replicate": 1,
+          "raw_file": "20201224_COL032_00342_PROT_R01"
+        },
+        {
+          "knockout_condition": "GANAB",
+          "biological_replicate": 2,
+          "raw_file": "20201224_COL032_00343_PROT_R01"
+        },
+        {
+          "knockout_condition": "GANAB",
+          "biological_replicate": 3,
+          "raw_file": "20201224_COL032_00344_PROT_R01"
+        },
+        {
+          "knockout_condition": "IRF2",
+          "biological_replicate": 1,
+          "raw_file": "20201222_COL032_00456_PROT_R01"
+        },
+        {
+          "knockout_condition": "IRF2",
+          "biological_replicate": 2,
+          "raw_file": "20201222_COL032_00457_PROT_R01"
+        },
+        {
+          "knockout_condition": "IRF2",
+          "biological_replicate": 3,
+          "raw_file": "20201222_COL032_00458_PROT_R01"
+        },
+        {
+          "knockout_condition": "PDIA3",
+          "biological_replicate": 1,
+          "raw_file": "20201224_COL032_00366_PROT_R01"
+        },
+        {
+          "knockout_condition": "PDIA3",
+          "biological_replicate": 2,
+          "raw_file": "20201224_COL032_00367_PROT_R01"
+        },
+        {
+          "knockout_condition": "PDIA3",
+          "biological_replicate": 3,
+          "raw_file": "20201224_COL032_00368_PROT_R01"
+        },
+        {
+          "knockout_condition": "SPPL3",
+          "biological_replicate": 1,
+          "raw_file": "20201224_COL032_00436_PROT_R01"
+        },
+        {
+          "knockout_condition": "SPPL3",
+          "biological_replicate": 2,
+          "raw_file": "20201224_COL032_00437_PROT_R01"
+        },
+        {
+          "knockout_condition": "SPPL3",
+          "biological_replicate": 3,
+          "raw_file": "20201224_COL032_00438_PROT_R01"
+        },
+        {
+          "knockout_condition": "TAP1",
+          "biological_replicate": 1,
+          "raw_file": "20201224_COL032_00515_PROT_R01"
+        },
+        {
+          "knockout_condition": "TAP1",
+          "biological_replicate": 2,
+          "raw_file": "20201224_COL032_00246_PROT_R01"
+        },
+        {
+          "knockout_condition": "TAP1",
+          "biological_replicate": 3,
+          "raw_file": "20201224_COL032_00247_PROT_R01"
+        },
+        {
+          "knockout_condition": "TAP2",
+          "biological_replicate": 1,
+          "raw_file": "20201224_COL032_00269_PROT_R01"
+        },
+        {
+          "knockout_condition": "TAP2",
+          "biological_replicate": 2,
+          "raw_file": "20201224_COL032_00270_PROT_R01"
+        },
+        {
+          "knockout_condition": "TAP2",
+          "biological_replicate": 3,
+          "raw_file": "20201224_COL032_00271_PROT_R01"
+        },
+        {
+          "knockout_condition": "TAPBP",
+          "biological_replicate": 1,
+          "raw_file": "20201224_COL032_00389_PROT_R01"
+        },
+        {
+          "knockout_condition": "TAPBP",
+          "biological_replicate": 2,
+          "raw_file": "20201224_COL032_00390_PROT_R01"
+        },
+        {
+          "knockout_condition": "TAPBP",
+          "biological_replicate": 3,
+          "raw_file": "20201224_COL032_00391_PROT_R01"
+        },
+        {
+          "knockout_condition": "wt",
+          "biological_replicate": 1,
+          "raw_file": "20201218_COL032_00295_PROT_R01"
+        },
+        {
+          "knockout_condition": "wt",
+          "biological_replicate": 2,
+          "raw_file": "20201218_COL032_00296_PROT_R01"
+        },
+        {
+          "knockout_condition": "wt",
+          "biological_replicate": 3,
+          "raw_file": "20201218_COL032_00297_PROT_R01"
+        }
+      ]
+    }
+  },
+  "receipts": [
+    {
+      "requested_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12090245/supplementaryFiles?includeInlineImage=false",
+      "started_at": "2026-10-24T10:13:12.079431+00:00",
+      "command": [
+        "experiments/2026-10-24_0612_codex_hap1-quantitative-admission/code/launch.py",
+        "europepmc-supplements",
+        "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12090245/supplementaryFiles?includeInlineImage=false"
+      ],
+      "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+      "platform": "macOS-26.5-arm64-arm-64bit",
+      "environment": {
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1"
+      },
+      "presto_head": "c7d538cfc64f2295e70c2bf693e333f08d1f34b6",
+      "launcher_sha256": "86c54f88a4c9edc743467e5a9acc2fd49d9fcdf57786562ac2f3b24a28eb1e4d",
+      "body_path": "/private/tmp/presto-modular-model/data/hap1_quantitative_source_admission/2026-10-24_0612_codex_hap1-quantitative-admission/retrieval/europepmc-supplements/body",
+      "purpose": "source-discovery-only; not a curated training observation",
+      "status_code": 200,
+      "final_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12090245/supplementaryFiles?includeInlineImage=false",
+      "content_type": "application/zip",
+      "response_headers": {
+        "Vary": "Origin, Access-Control-Request-Method, Access-Control-Request-Headers",
+        "Content-Type": "application/zip",
+        "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+        "Date": "Sat, 24 Oct 2026 10:13:14 GMT",
+        "Transfer-Encoding": "chunked",
+        "Content-Disposition": "attachment; filename=\"PMC12090245_SupplementaryFiles_noInlineImages.zip\"",
+        "Connection": "keep-alive",
+        "Set-Cookie": "JSESSIONID=63CEF28185070476CB148ED6A36193DF; Path=/europepmc/webservices/rest; Secure; HttpOnly"
+      },
+      "redirects": [],
+      "n_bytes": 14889810,
+      "sha256": "8f9327e501cdf4831fa2a9e25a67d986f631457ca331c15966f6180225b98153",
+      "elapsed_seconds": 17.185754625010304
+    },
+    {
+      "requested_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12090245/fullTextXML",
+      "started_at": "2026-10-24T10:13:08.981394+00:00",
+      "command": [
+        "experiments/2026-10-24_0612_codex_hap1-quantitative-admission/code/launch.py",
+        "europepmc-xml",
+        "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12090245/fullTextXML"
+      ],
+      "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+      "platform": "macOS-26.5-arm64-arm-64bit",
+      "environment": {
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1"
+      },
+      "presto_head": "c7d538cfc64f2295e70c2bf693e333f08d1f34b6",
+      "launcher_sha256": "86c54f88a4c9edc743467e5a9acc2fd49d9fcdf57786562ac2f3b24a28eb1e4d",
+      "body_path": "/private/tmp/presto-modular-model/data/hap1_quantitative_source_admission/2026-10-24_0612_codex_hap1-quantitative-admission/retrieval/europepmc-xml/body",
+      "purpose": "source-discovery-only; not a curated training observation",
+      "status_code": 200,
+      "final_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12090245/fullTextXML",
+      "content_type": "application/xml",
+      "response_headers": {
+        "Vary": "Origin, Access-Control-Request-Method, Access-Control-Request-Headers",
+        "Content-Type": "application/xml",
+        "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+        "Date": "Sat, 24 Oct 2026 10:13:09 GMT",
+        "Transfer-Encoding": "chunked",
+        "Connection": "keep-alive",
+        "Set-Cookie": "JSESSIONID=1C00531ECDE6D617A1554E3C384E94B4; Path=/europepmc/webservices/rest; Secure; HttpOnly"
+      },
+      "redirects": [],
+      "n_bytes": 144026,
+      "sha256": "cd648ff45478c7f826aa3f52fac7d708b49aef8b4e108e74f80a9c5012ec74c4",
+      "elapsed_seconds": 1.2202731249853969
+    },
+    {
+      "requested_url": "https://www.ebi.ac.uk/pride/ws/archive/v2/projects/PXD056426/files?pageSize=100&page=0",
+      "started_at": "2026-10-24T10:14:30.481026+00:00",
+      "command": [
+        "experiments/2026-10-24_0612_codex_hap1-quantitative-admission/code/launch.py",
+        "pride-files-page0",
+        "https://www.ebi.ac.uk/pride/ws/archive/v2/projects/PXD056426/files?pageSize=100&page=0"
+      ],
+      "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+      "platform": "macOS-26.5-arm64-arm-64bit",
+      "environment": {
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1"
+      },
+      "presto_head": "c7d538cfc64f2295e70c2bf693e333f08d1f34b6",
+      "launcher_sha256": "86c54f88a4c9edc743467e5a9acc2fd49d9fcdf57786562ac2f3b24a28eb1e4d",
+      "body_path": "/private/tmp/presto-modular-model/data/hap1_quantitative_source_admission/2026-10-24_0612_codex_hap1-quantitative-admission/retrieval/pride-files-page0/body",
+      "purpose": "source-discovery-only; not a curated training observation",
+      "status_code": 200,
+      "final_url": "https://www.ebi.ac.uk/pride/ws/archive/v2/projects/PXD056426/files?pageSize=100&page=0",
+      "content_type": "application/json",
+      "response_headers": {
+        "Vary": "Origin, Access-Control-Request-Method, Access-Control-Request-Headers",
+        "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+        "Content-Type": "application/json",
+        "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+        "total_records": "167",
+        "Expires": "0",
+        "Pragma": "no-cache",
+        "X-XSS-Protection": "0",
+        "transfer-encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "DENY",
+        "Referrer-Policy": "no-referrer"
+      },
+      "redirects": [],
+      "n_bytes": 117858,
+      "sha256": "c5cf319100948902911e634fb8def64892b71caaadbe65cc17f5e8810674c76e",
+      "elapsed_seconds": 0.8754605409922078
+    },
+    {
+      "requested_url": "https://www.ebi.ac.uk/pride/ws/archive/v2/projects/PXD056426/files?pageSize=100&page=1",
+      "started_at": "2026-10-24T10:16:01.576020+00:00",
+      "command": [
+        "experiments/2026-10-24_0612_codex_hap1-quantitative-admission/code/launch.py",
+        "pride-files-page1",
+        "https://www.ebi.ac.uk/pride/ws/archive/v2/projects/PXD056426/files?pageSize=100&page=1"
+      ],
+      "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+      "platform": "macOS-26.5-arm64-arm-64bit",
+      "environment": {
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1"
+      },
+      "presto_head": "c7d538cfc64f2295e70c2bf693e333f08d1f34b6",
+      "launcher_sha256": "86c54f88a4c9edc743467e5a9acc2fd49d9fcdf57786562ac2f3b24a28eb1e4d",
+      "body_path": "/private/tmp/presto-modular-model/data/hap1_quantitative_source_admission/2026-10-24_0612_codex_hap1-quantitative-admission/retrieval/pride-files-page1/body",
+      "purpose": "source-discovery-only; not a curated training observation",
+      "status_code": 200,
+      "final_url": "https://www.ebi.ac.uk/pride/ws/archive/v2/projects/PXD056426/files?pageSize=100&page=1",
+      "content_type": "application/json",
+      "response_headers": {
+        "Vary": "Origin, Access-Control-Request-Method, Access-Control-Request-Headers",
+        "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+        "Content-Type": "application/json",
+        "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+        "total_records": "167",
+        "Expires": "0",
+        "Pragma": "no-cache",
+        "X-XSS-Protection": "0",
+        "transfer-encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "DENY",
+        "Referrer-Policy": "no-referrer"
+      },
+      "redirects": [],
+      "n_bytes": 78940,
+      "sha256": "fb24f1a51db85017fe10ac7dabc62237cbf436c8aca4fc243a3a23dca9978e8d",
+      "elapsed_seconds": 0.9653840410173871
+    },
+    {
+      "requested_url": "https://www.ebi.ac.uk/pride/ws/archive/v2/projects/PXD056426",
+      "started_at": "2026-10-24T10:14:27.894826+00:00",
+      "command": [
+        "experiments/2026-10-24_0612_codex_hap1-quantitative-admission/code/launch.py",
+        "pride-project",
+        "https://www.ebi.ac.uk/pride/ws/archive/v2/projects/PXD056426"
+      ],
+      "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+      "platform": "macOS-26.5-arm64-arm-64bit",
+      "environment": {
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1"
+      },
+      "presto_head": "c7d538cfc64f2295e70c2bf693e333f08d1f34b6",
+      "launcher_sha256": "86c54f88a4c9edc743467e5a9acc2fd49d9fcdf57786562ac2f3b24a28eb1e4d",
+      "body_path": "/private/tmp/presto-modular-model/data/hap1_quantitative_source_admission/2026-10-24_0612_codex_hap1-quantitative-admission/retrieval/pride-project/body",
+      "purpose": "source-discovery-only; not a curated training observation",
+      "status_code": 200,
+      "final_url": "https://www.ebi.ac.uk/pride/ws/archive/v2/projects/PXD056426",
+      "content_type": "text/plain;charset=UTF-8",
+      "response_headers": {
+        "Vary": "Origin, Access-Control-Request-Method, Access-Control-Request-Headers",
+        "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+        "Content-Type": "text/plain;charset=UTF-8",
+        "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+        "Expires": "0",
+        "Pragma": "no-cache",
+        "X-XSS-Protection": "0",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "DENY",
+        "Referrer-Policy": "no-referrer",
+        "Content-Length": "9481"
+      },
+      "redirects": [],
+      "n_bytes": 9481,
+      "sha256": "df500d1321185fffa29a1dd3c66556062f4f866eeaa03818d5d94c7b3d91ec66",
+      "elapsed_seconds": 0.7032527079572901
+    }
+  ],
+  "license_text": [
+    "\u00a9 2025 The AuthorsThis is an open access article under the CC BY license (http://creativecommons.org/licenses/by/4.0/)."
+  ],
+  "supplement_links": [
+    {
+      "attributes": {
+        "id": "mmc1",
+        "position": "float"
+      },
+      "text": "Sup fig 1"
+    },
+    {
+      "attributes": {
+        "id": "mmc2",
+        "position": "float"
+      },
+      "text": "Sup fig 2"
+    },
+    {
+      "attributes": {
+        "id": "mmc3",
+        "position": "float"
+      },
+      "text": "Sup fig 3"
+    },
+    {
+      "attributes": {
+        "id": "mmc4",
+        "position": "float"
+      },
+      "text": "Sup fig 4"
+    },
+    {
+      "attributes": {
+        "id": "mmc5",
+        "position": "float"
+      },
+      "text": "Suppl-table1"
+    },
+    {
+      "attributes": {
+        "id": "mmc6",
+        "position": "float"
+      },
+      "text": "Suppl-table2"
+    },
+    {
+      "attributes": {
+        "id": "mmc7",
+        "position": "float"
+      },
+      "text": "Suppl-table3"
+    },
+    {
+      "attributes": {
+        "id": "mmc8",
+        "position": "float"
+      },
+      "text": "Suppl-table4"
+    },
+    {
+      "attributes": {
+        "id": "db_ds_supplementary-material1_reqid_",
+        "position": "float"
+      },
+      "text": "Sup fig 1"
+    },
+    {
+      "attributes": {
+        "id": "db_ds_supplementary-material2_reqid_",
+        "position": "float"
+      },
+      "text": "Sup fig 2"
+    },
+    {
+      "attributes": {
+        "id": "db_ds_supplementary-material3_reqid_",
+        "position": "float"
+      },
+      "text": "Sup fig 3"
+    },
+    {
+      "attributes": {
+        "id": "db_ds_supplementary-material4_reqid_",
+        "position": "float"
+      },
+      "text": "Sup fig 4"
+    },
+    {
+      "attributes": {
+        "id": "db_ds_supplementary-material5_reqid_",
+        "position": "float"
+      },
+      "text": "Suppl-table1"
+    },
+    {
+      "attributes": {
+        "id": "db_ds_supplementary-material6_reqid_",
+        "position": "float"
+      },
+      "text": "Suppl-table2"
+    },
+    {
+      "attributes": {
+        "id": "db_ds_supplementary-material7_reqid_",
+        "position": "float"
+      },
+      "text": "Suppl-table3"
+    },
+    {
+      "attributes": {
+        "id": "db_ds_supplementary-material8_reqid_",
+        "position": "float"
+      },
+      "text": "Suppl-table4"
+    }
+  ],
+  "n_deposited_files": 167,
+  "n_raw_files": 164,
+  "processed_files": [
+    {
+      "projectAccessions": [
+        "PXD056426"
+      ],
+      "accession": "c5599e6248dd1728028897e609fa58745c6899b8a4ef766d25b32248b377ad38",
+      "fileCategory": {
+        "@type": "CvParam",
+        "cvLabel": "PRIDE",
+        "accession": "PRIDE:0000408",
+        "name": "Search engine output file URI",
+        "value": "SEARCH"
+      },
+      "checksum": "",
+      "publicFileLocations": [
+        {
+          "@type": "CvParam",
+          "cvLabel": "PRIDE",
+          "accession": "PRIDE:0000468",
+          "name": "Aspera Protocol",
+          "value": "prd_ascp@fasp.ebi.ac.uk:pride/data/archive/2025/04/PXD056426/NonCanonical_search.zip"
+        },
+        {
+          "@type": "CvParam",
+          "cvLabel": "PRIDE",
+          "accession": "PRIDE:0000469",
+          "name": "FTP Protocol",
+          "value": "ftp://ftp.pride.ebi.ac.uk/pride/data/archive/2025/04/PXD056426/NonCanonical_search.zip"
+        }
+      ],
+      "fileSizeBytes": 197414967,
+      "fileName": "NonCanonical_search.zip",
+      "compress": false,
+      "submissionDate": "2024-10-01T14:44:19.564+00:00",
+      "publicationDate": "2025-04-04T09:48:19.198+00:00",
+      "updatedDate": "2024-10-01T14:44:19.564+00:00",
+      "additionalAttributes": [],
+      "totalDownloads": 41
+    },
+    {
+      "projectAccessions": [
+        "PXD056426"
+      ],
+      "accession": "0ebd3fbe723cc66c447318a03b8578a38ece30c6ffd65cba565ca9182fd2732b",
+      "fileCategory": {
+        "@type": "CvParam",
+        "cvLabel": "PRIDE",
+        "accession": "PRIDE:0000408",
+        "name": "Search engine output file URI",
+        "value": "SEARCH"
+      },
+      "checksum": "",
+      "publicFileLocations": [
+        {
+          "@type": "CvParam",
+          "cvLabel": "PRIDE",
+          "accession": "PRIDE:0000469",
+          "name": "FTP Protocol",
+          "value": "ftp://ftp.pride.ebi.ac.uk/pride/data/archive/2025/04/PXD056426/Search.zip"
+        },
+        {
+          "@type": "CvParam",
+          "cvLabel": "PRIDE",
+          "accession": "PRIDE:0000468",
+          "name": "Aspera Protocol",
+          "value": "prd_ascp@fasp.ebi.ac.uk:pride/data/archive/2025/04/PXD056426/Search.zip"
+        }
+      ],
+      "fileSizeBytes": 130237651,
+      "fileName": "Search.zip",
+      "compress": false,
+      "submissionDate": "2024-10-01T14:44:19.564+00:00",
+      "publicationDate": "2025-04-04T09:48:19.198+00:00",
+      "updatedDate": "2024-10-01T14:44:19.564+00:00",
+      "additionalAttributes": [],
+      "totalDownloads": 91
+    },
+    {
+      "projectAccessions": [
+        "PXD056426"
+      ],
+      "accession": "dfa4bf7de9f27470cfb610440d25d982237d3809f9f40f4a8a4478890df89e1a",
+      "fileCategory": {
+        "@type": "CvParam",
+        "cvLabel": "PRIDE",
+        "accession": "PRIDE:0000584",
+        "name": "Experimental design file URI",
+        "value": "EXPERIMENTAL DESIGN"
+      },
+      "checksum": "",
+      "publicFileLocations": [
+        {
+          "@type": "CvParam",
+          "cvLabel": "PRIDE",
+          "accession": "PRIDE:0000468",
+          "name": "Aspera Protocol",
+          "value": "prd_ascp@fasp.ebi.ac.uk:pride/data/archive/2025/04/PXD056426/PXD056426_community_annotated.sdrf.tsv"
+        },
+        {
+          "@type": "CvParam",
+          "cvLabel": "PRIDE",
+          "accession": "PRIDE:0000469",
+          "name": "FTP Protocol",
+          "value": "ftp://ftp.pride.ebi.ac.uk/pride/data/archive/2025/04/PXD056426/PXD056426_community_annotated.sdrf.tsv"
+        }
+      ],
+      "fileSizeBytes": 46722,
+      "fileName": "PXD056426_community_annotated.sdrf.tsv",
+      "compress": false,
+      "submissionDate": "2024-10-01T14:44:19.564+00:00",
+      "publicationDate": "2025-04-04T09:48:19.198+00:00",
+      "updatedDate": "2024-10-01T14:44:19.564+00:00",
+      "additionalAttributes": [],
+      "totalDownloads": 0
+    }
+  ],
+  "sample_run_reconciliation": {
+    "immunopep_library_generation": {
+      "n_rows": 61,
+      "n_unique_raw_names": 61,
+      "absent_from_deposit": []
+    },
+    "immunopep_library_search": {
+      "n_rows": 67,
+      "n_unique_raw_names": 67,
+      "absent_from_deposit": []
+    },
+    "proteomics": {
+      "n_rows": 36,
+      "n_unique_raw_names": 36,
+      "absent_from_deposit": [
+        "20201218_COL032_00295_PROT_R01",
+        "20201218_COL032_00296_PROT_R01",
+        "20201218_COL032_00297_PROT_R01",
+        "20201220_COL032_00130_PROT_R01",
+        "20201220_COL032_00131_PROT_R01",
+        "20201220_COL032_00132_PROT_R01",
+        "20201220_COL032_00315_PROT_R01",
+        "20201220_COL032_00316_PROT_R01",
+        "20201220_COL032_00317_PROT_R01",
+        "20201222_COL032_00421_PROT_R01",
+        "20201222_COL032_00422_PROT_R01",
+        "20201222_COL032_00423_PROT_R01",
+        "20201222_COL032_00456_PROT_R01",
+        "20201222_COL032_00457_PROT_R01",
+        "20201222_COL032_00458_PROT_R01",
+        "20201224_COL032_00246_PROT_R01",
+        "20201224_COL032_00247_PROT_R01",
+        "20201224_COL032_00269_PROT_R01",
+        "20201224_COL032_00270_PROT_R01",
+        "20201224_COL032_00271_PROT_R01",
+        "20201224_COL032_00342_PROT_R01",
+        "20201224_COL032_00343_PROT_R01",
+        "20201224_COL032_00344_PROT_R01",
+        "20201224_COL032_00366_PROT_R01",
+        "20201224_COL032_00367_PROT_R01",
+        "20201224_COL032_00368_PROT_R01",
+        "20201224_COL032_00389_PROT_R01",
+        "20201224_COL032_00390_PROT_R01",
+        "20201224_COL032_00391_PROT_R01",
+        "20201224_COL032_00402_PROT_R01",
+        "20201224_COL032_00403_PROT_R01",
+        "20201224_COL032_00404_PROT_R01",
+        "20201224_COL032_00436_PROT_R01",
+        "20201224_COL032_00437_PROT_R01",
+        "20201224_COL032_00438_PROT_R01",
+        "20201224_COL032_00515_PROT_R01"
+      ]
+    }
+  },
+  "sdrf": {
+    "headers": [
+      "source name",
+      "characteristics[organism]",
+      "characteristics[organism part]",
+      "characteristics[disease]",
+      "characteristics[age]",
+      "characteristics[sex]",
+      "characteristics[biological replicate]",
+      "assay name",
+      "technology type",
+      "comment[proteomics data acquisition method]",
+      "comment[label]",
+      "comment[instrument]",
+      "comment[cleavage agent details]",
+      "comment[technical replicate]",
+      "comment[fraction identifier]",
+      "comment[data file]",
+      "comment[sdrf version]",
+      "comment[sdrf template]",
+      "comment[sdrf template]",
+      "comment[sdrf annotation tool]",
+      "factor value[organism part]"
+    ],
+    "n_rows": 98,
+    "source name": {
+      "20201204_DIA_COL032-00324_00325-HLAIp_R04": 1,
+      "20201204_DIA_COL032-00304_00305-HLAIp_R03": 1,
+      "20201202_DIA_COL032-00349_00350-HLAIp_R03": 1,
+      "20210114_COL032-00289_00290_00291_00292_00293-HLAIp_R01": 1,
+      "20210128_COL032-00564_00565-HLAIp_R01": 1,
+      "20201209_DIA_COL032-00375_00376-HLAIp_R03": 1,
+      "20201224_COL032-00389-PROT_R01": 1,
+      "20201127_COL032-00250_00251_00264-HLAIp_R02": 1,
+      "20201202_COL032-00345_00346-HLAIp_R01": 1,
+      "20210127_COL032-00266_00254_00255-HLAIp_R01": 1,
+      "20201220_COL032-00131-PROT_R01": 1,
+      "20201211_DIA_COL032-00426_00427-HLAIp_R04": 1,
+      "20201204_DIA_COL032-00322_00323-HLAIp_R04": 1,
+      "20210127_COL032-00579_00580-HLAIp_R01": 1,
+      "20201202_COL032-00347_00348-HLAIp_R01": 1,
+      "20201211_DIA_COL032-00407_00408-HLAIp_R04": 1,
+      "20201224_COL032-00342-PROT_R01": 1,
+      "20201211_DIA_COL032-00411_00412-HLAIp_R04": 1,
+      "20201127_DIA_COL032-00279_00280_00281_00282_00283-HLAIp_R03": 1,
+      "20201127_COL032-00284_00285_00286_00287_00288-HLAIp_R01": 1,
+      "20201202_DIA_COL032-00345_00346-HLAIp_R04": 1,
+      "20201220_COL032-00317-PROT_R01": 1,
+      "20201224_COL032-00246-PROT_R01": 1,
+      "20210122_COL032-00417_00418_00183_00184_00185-HLAIp_R01": 1,
+      "20210126_COL032-00382_00383_00384_00385_00386-HLAIp_R01": 1,
+      "20201127_COL032-00236_00237_00238_00239_00240-HLAIp_R01": 1,
+      "20201127_DIA_COL032-00274_00275_00276_00277_00278-HLAIp_R04": 1,
+      "20201211_DIA_COL032-00428_00429-HLAIp_R03": 1,
+      "20201218_DIA_COL032-00396_00397-HLAIp_R04": 1,
+      "20201127_COL032-00236_00237_00238_00239_00240-HLAIp_R02": 1,
+      "20201127_DIA_COL032-00274_00275_00276_00277_00278-HLAIp_R03": 1,
+      "20201127_DIA_COL032-00231_00232_00233_00234_00235-HLAIp_R04": 1,
+      "20201127_COL032-00263_00248_00249-HLAIp_R01": 1,
+      "20201214_DIA_COL032-00445_00446-HLAIp_R03": 1,
+      "20201127_COL032-00263_00248_00249-HLAIp_R02": 1,
+      "20201222_COL032-00458-PROT_R01": 1,
+      "20210128_COL032-00560_00561-HLAIp_R01": 1,
+      "20210127_COL032-00267_00256_00257-HLAIp_R01": 1,
+      "20201211_DIA_COL032-00426_00427-HLAIp_R03": 1,
+      "20201127_COL032-00250_00251_00264-HLAIp_R01": 1,
+      "20201224_COL032-00367-PROT_R01": 1,
+      "20210127_COL032-00268_00258_00259-HLAIp_R01": 1,
+      "20201204_DIA_COL032-00300_00301-HLAIp_R04": 1,
+      "20201224_COL032-00403-PROT_R01": 1,
+      "20201218_DIA_COL032-00398_00399_00400_00401_00178-HLAIp_R03": 1,
+      "20201224_COL032-00269-PROT_R01": 1,
+      "20210122_COL032-00212_00213_00214_00447_00448-HLAIp_R01": 1,
+      "20201009_COL032-00057-HLAIp_R02": 1,
+      "20210127_COL032-00575_00576-HLAIp_R01": 1,
+      "20210122_COL032-00449_00450_00451_00452_00453-HLAIp_R01": 1,
+      "20201127_COL032-00279_00280_00281_00282_00283-HLAIp_R01": 1,
+      "20201204_DIA_COL032-00320_00321-HLAIp_R03": 1,
+      "20201127_DIA_COL032-00241_00242_00243_00244_00245-HLAIp_R03": 1,
+      "20210122_COL032-00326_00327_00328_00329_00330-HLAIp_R01": 1,
+      "20210127_COL032-00577_00578-HLAIp_R01": 1,
+      "20210122_COL032-00306_00307_00308_00309_00310-HLAIp_R01": 1,
+      "20201127_DIA_COL032-00250_00251_00264-HLAIp_R03": 1,
+      "20201224_COL032-00438-PROT_R01": 1,
+      "20201202_COL032-00349_00350-HLAIp_R01": 1,
+      "20201204_DIA_COL032-00304_00305-HLAIp_R04": 1,
+      "20201214_DIA_COL032-00443_00444-HLAIp_R04": 1,
+      "20201207_DIA_COL032-00354_00355-HLAIp_R03": 1,
+      "20201224_COL032-00247-PROT_R01": 1,
+      "20201207_DIA_COL032-00352_00353-HLAIp_R03": 1,
+      "20201214_DIA_COL032-00441_00442-HLAIp_R04": 1,
+      "20201224_COL032-00270-PROT_R01": 1,
+      "20201224_COL032-00402-PROT_R01": 1,
+      "20210122_COL032-00331_00332_00333_00334_00335-HLAIp_R01": 1,
+      "20201220_COL032-00130-PROT_R01": 1,
+      "20201127_COL032-00231_00232_00233_00234_00235-HLAIp_R02": 1,
+      "20201202_DIA_COL032-00345_00346-HLAIp_R03": 1,
+      "20210114_COL032-00133_00134_00135_00136_00137-HLAIp_R01": 1,
+      "20201214_DIA_COL032-00441_00442-HLAIp_R03": 1,
+      "20201211_DIA_COL032-00430_00431-HLAIp_R03": 1,
+      "20201204_DIA_COL032-00320_00321-HLAIp_R04": 1,
+      "20201202_COL032-00349_00350-HLAIp_R02": 1,
+      "20201127_DIA_COL032-00284_00285_00286_00287_00288-HLAIp_R04": 1,
+      "20201211_DIA_COL032-00407_00408-HLAIp_R03": 1,
+      "20201222_COL032-00421-PROT_R01": 1,
+      "20201222_COL032-00422-PROT_R01": 1,
+      "20201220_COL032-00316-PROT_R01": 1,
+      "20201127_DIA_COL032-00231_00232_00233_00234_00235-HLAIp_R03": 1,
+      "20201224_COL032-00391-PROT_R01": 1,
+      "20210122_COL032-00207_00208_00209_00210_00211-HLAIp_R01": 1,
+      "20201224_COL032-00271-PROT_R01": 1,
+      "20201202_DIA_COL032-00347_00348-HLAIp_R04": 1,
+      "20201204_DIA_COL032-00322_00323-HLAIp_R03": 1,
+      "20201204_DIA_COL032-00324_00325-HLAIp_R03": 1,
+      "20201127_DIA_COL032-00265_00252_00253-HLAIp_R03": 1,
+      "20201222_COL032-00423-PROT_R01": 1,
+      "20201127_COL032-00265_00252_00253-HLAIp_R01": 1,
+      "20201209_DIA_COL032-00373_00374-HLAIp_R03": 1,
+      "20210122_COL032-00547_00548-HLAIp_R01": 1,
+      "20201127_COL032-00274_00275_00276_00277_00278-HLAIp_R01": 1,
+      "20201218_DIA_COL032-00398_00399_00400_00401_00178-HLAIp_R04": 1,
+      "20210126_COL032-00360_00361_00362_00363_00364-HLAIp_R01": 1,
+      "20201207_DIA_COL032-00356_00357-HLAIp_R04": 1,
+      "20201224_COL032-00404-PROT_R01": 1
+    },
+    "characteristics[biological replicate]": {
+      "1": 98
+    },
+    "comment[technical replicate]": {
+      "1": 98
+    },
+    "comment[data file]": {
+      "20201204_DIA_COL032-00324_00325-HLAIp_R04.raw": 1,
+      "20201204_DIA_COL032-00304_00305-HLAIp_R03.raw": 1,
+      "20201202_DIA_COL032-00349_00350-HLAIp_R03.raw": 1,
+      "20210114_COL032-00289_00290_00291_00292_00293-HLAIp_R01.raw": 1,
+      "20210128_COL032-00564_00565-HLAIp_R01.raw": 1,
+      "20201209_DIA_COL032-00375_00376-HLAIp_R03.raw": 1,
+      "20201224_COL032-00389-PROT_R01.raw": 1,
+      "20201127_COL032-00250_00251_00264-HLAIp_R02.raw": 1,
+      "20201202_COL032-00345_00346-HLAIp_R01.raw": 1,
+      "20210127_COL032-00266_00254_00255-HLAIp_R01.raw": 1,
+      "20201220_COL032-00131-PROT_R01.raw": 1,
+      "20201211_DIA_COL032-00426_00427-HLAIp_R04.raw": 1,
+      "20201204_DIA_COL032-00322_00323-HLAIp_R04.raw": 1,
+      "20210127_COL032-00579_00580-HLAIp_R01.raw": 1,
+      "20201202_COL032-00347_00348-HLAIp_R01.raw": 1,
+      "20201211_DIA_COL032-00407_00408-HLAIp_R04.raw": 1,
+      "20201224_COL032-00342-PROT_R01.raw": 1,
+      "20201211_DIA_COL032-00411_00412-HLAIp_R04.raw": 1,
+      "20201127_DIA_COL032-00279_00280_00281_00282_00283-HLAIp_R03.raw": 1,
+      "20201127_COL032-00284_00285_00286_00287_00288-HLAIp_R01.raw": 1,
+      "20201202_DIA_COL032-00345_00346-HLAIp_R04.raw": 1,
+      "20201220_COL032-00317-PROT_R01.raw": 1,
+      "20201224_COL032-00246-PROT_R01.raw": 1,
+      "20210122_COL032-00417_00418_00183_00184_00185-HLAIp_R01.raw": 1,
+      "20210126_COL032-00382_00383_00384_00385_00386-HLAIp_R01.raw": 1,
+      "20201127_COL032-00236_00237_00238_00239_00240-HLAIp_R01.raw": 1,
+      "20201127_DIA_COL032-00274_00275_00276_00277_00278-HLAIp_R04.raw": 1,
+      "20201211_DIA_COL032-00428_00429-HLAIp_R03.raw": 1,
+      "20201218_DIA_COL032-00396_00397-HLAIp_R04.raw": 1,
+      "20201127_COL032-00236_00237_00238_00239_00240-HLAIp_R02.raw": 1,
+      "20201127_DIA_COL032-00274_00275_00276_00277_00278-HLAIp_R03.raw": 1,
+      "20201127_DIA_COL032-00231_00232_00233_00234_00235-HLAIp_R04.raw": 1,
+      "20201127_COL032-00263_00248_00249-HLAIp_R01.raw": 1,
+      "20201214_DIA_COL032-00445_00446-HLAIp_R03.raw": 1,
+      "20201127_COL032-00263_00248_00249-HLAIp_R02.raw": 1,
+      "20201222_COL032-00458-PROT_R01.raw": 1,
+      "20210128_COL032-00560_00561-HLAIp_R01.raw": 1,
+      "20210127_COL032-00267_00256_00257-HLAIp_R01.raw": 1,
+      "20201211_DIA_COL032-00426_00427-HLAIp_R03.raw": 1,
+      "20201127_COL032-00250_00251_00264-HLAIp_R01.raw": 1,
+      "20201224_COL032-00367-PROT_R01.raw": 1,
+      "20210127_COL032-00268_00258_00259-HLAIp_R01.raw": 1,
+      "20201204_DIA_COL032-00300_00301-HLAIp_R04.raw": 1,
+      "20201224_COL032-00403-PROT_R01.raw": 1,
+      "20201218_DIA_COL032-00398_00399_00400_00401_00178-HLAIp_R03.raw": 1,
+      "20201224_COL032-00269-PROT_R01.raw": 1,
+      "20210122_COL032-00212_00213_00214_00447_00448-HLAIp_R01.raw": 1,
+      "20201009_COL032-00057-HLAIp_R02.raw": 1,
+      "20210127_COL032-00575_00576-HLAIp_R01.raw": 1,
+      "20210122_COL032-00449_00450_00451_00452_00453-HLAIp_R01.raw": 1,
+      "20201127_COL032-00279_00280_00281_00282_00283-HLAIp_R01.raw": 1,
+      "20201204_DIA_COL032-00320_00321-HLAIp_R03.raw": 1,
+      "20201127_DIA_COL032-00241_00242_00243_00244_00245-HLAIp_R03.raw": 1,
+      "20210122_COL032-00326_00327_00328_00329_00330-HLAIp_R01.raw": 1,
+      "20210127_COL032-00577_00578-HLAIp_R01.raw": 1,
+      "20210122_COL032-00306_00307_00308_00309_00310-HLAIp_R01.raw": 1,
+      "20201127_DIA_COL032-00250_00251_00264-HLAIp_R03.raw": 1,
+      "20201224_COL032-00438-PROT_R01.raw": 1,
+      "20201202_COL032-00349_00350-HLAIp_R01.raw": 1,
+      "20201204_DIA_COL032-00304_00305-HLAIp_R04.raw": 1,
+      "20201214_DIA_COL032-00443_00444-HLAIp_R04.raw": 1,
+      "20201207_DIA_COL032-00354_00355-HLAIp_R03.raw": 1,
+      "20201224_COL032-00247-PROT_R01.raw": 1,
+      "20201207_DIA_COL032-00352_00353-HLAIp_R03.raw": 1,
+      "20201214_DIA_COL032-00441_00442-HLAIp_R04.raw": 1,
+      "20201224_COL032-00270-PROT_R01.raw": 1,
+      "20201224_COL032-00402-PROT_R01.raw": 1,
+      "20210122_COL032-00331_00332_00333_00334_00335-HLAIp_R01.raw": 1,
+      "20201220_COL032-00130-PROT_R01.raw": 1,
+      "20201127_COL032-00231_00232_00233_00234_00235-HLAIp_R02.raw": 1,
+      "20201202_DIA_COL032-00345_00346-HLAIp_R03.raw": 1,
+      "20210114_COL032-00133_00134_00135_00136_00137-HLAIp_R01.raw": 1,
+      "20201214_DIA_COL032-00441_00442-HLAIp_R03.raw": 1,
+      "20201211_DIA_COL032-00430_00431-HLAIp_R03.raw": 1,
+      "20201204_DIA_COL032-00320_00321-HLAIp_R04.raw": 1,
+      "20201202_COL032-00349_00350-HLAIp_R02.raw": 1,
+      "20201127_DIA_COL032-00284_00285_00286_00287_00288-HLAIp_R04.raw": 1,
+      "20201211_DIA_COL032-00407_00408-HLAIp_R03.raw": 1,
+      "20201222_COL032-00421-PROT_R01.raw": 1,
+      "20201222_COL032-00422-PROT_R01.raw": 1,
+      "20201220_COL032-00316-PROT_R01.raw": 1,
+      "20201127_DIA_COL032-00231_00232_00233_00234_00235-HLAIp_R03.raw": 1,
+      "20201224_COL032-00391-PROT_R01.raw": 1,
+      "20210122_COL032-00207_00208_00209_00210_00211-HLAIp_R01.raw": 1,
+      "20201224_COL032-00271-PROT_R01.raw": 1,
+      "20201202_DIA_COL032-00347_00348-HLAIp_R04.raw": 1,
+      "20201204_DIA_COL032-00322_00323-HLAIp_R03.raw": 1,
+      "20201204_DIA_COL032-00324_00325-HLAIp_R03.raw": 1,
+      "20201127_DIA_COL032-00265_00252_00253-HLAIp_R03.raw": 1,
+      "20201222_COL032-00423-PROT_R01.raw": 1,
+      "20201127_COL032-00265_00252_00253-HLAIp_R01.raw": 1,
+      "20201209_DIA_COL032-00373_00374-HLAIp_R03.raw": 1,
+      "20210122_COL032-00547_00548-HLAIp_R01.raw": 1,
+      "20201127_COL032-00274_00275_00276_00277_00278-HLAIp_R01.raw": 1,
+      "20201218_DIA_COL032-00398_00399_00400_00401_00178-HLAIp_R04.raw": 1,
+      "20210126_COL032-00360_00361_00362_00363_00364-HLAIp_R01.raw": 1,
+      "20201207_DIA_COL032-00356_00357-HLAIp_R04.raw": 1,
+      "20201224_COL032-00404-PROT_R01.raw": 1
+    }
+  },
+  "elapsed_seconds": 2.9848642500001006
+}

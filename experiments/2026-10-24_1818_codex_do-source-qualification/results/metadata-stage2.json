@@ -1,0 +1,50 @@
+{
+  "manifest": "experiments/2026-10-24_1818_codex_do-source-qualification/reproduce/metadata-stage2.json",
+  "assets": [
+    {
+      "name": "oa.xml",
+      "url": "https://www.ncbi.nlm.nih.gov/pmc/utils/oa/oa.fcgi?id=PMC6398211",
+      "started_utc": "2026-10-24T18:18:33.125712+00:00",
+      "status_code": 404,
+      "final_url": "https://www.ncbi.nlm.nih.gov/pmc/utils/oa/oa.fcgi?id=PMC6398211",
+      "headers": {
+        "Content-Type": "text/html; charset=ISO-8859-1"
+      },
+      "status": "failed",
+      "error": "HTTPError: 404 Client Error: Not Found for url: https://www.ncbi.nlm.nih.gov/pmc/utils/oa/oa.fcgi?id=PMC6398211",
+      "seconds": 0.28008912497898564
+    },
+    {
+      "name": "massive-files.html",
+      "url": "https://massive.ucsd.edu/ProteoSAFe/dataset_files.jsp?task=7a44ccefbda54a309035f5757850fbd4",
+      "started_utc": "2026-10-24T18:18:33.406553+00:00",
+      "status_code": 200,
+      "final_url": "https://massive.ucsd.edu/ProteoSAFe/dataset_files.jsp?task=7a44ccefbda54a309035f5757850fbd4",
+      "headers": {
+        "Content-Type": "text/html;charset=UTF-8"
+      },
+      "status": "retrieved",
+      "bytes": 148183,
+      "sha256": "4a9b96fa9e65df9c1b743bcea0ac34f54728c9517cd7a3e98cbe0ee94776f58e",
+      "path": "/private/tmp/presto-modular-model/data/do_source_qualification/2026-10-24_1818_v1/massive-files.html",
+      "seconds": 1.0365050000254996
+    },
+    {
+      "name": "publisher.html",
+      "url": "https://doi.org/10.1074/mcp.RA118.000956",
+      "started_utc": "2026-10-24T18:18:34.443774+00:00",
+      "status_code": 200,
+      "final_url": "https://linkinghub.elsevier.com/retrieve/pii/S1535947620318533",
+      "headers": {
+        "Content-Type": "text/html;charset=UTF-8",
+        "Content-Length": "2617"
+      },
+      "status": "retrieved",
+      "bytes": 2617,
+      "sha256": "25517c736f069bdeb32c847c5f9f551239c3903949b2c7f8c32aa51720552830",
+      "path": "/private/tmp/presto-modular-model/data/do_source_qualification/2026-10-24_1818_v1/publisher.html",
+      "seconds": 0.5610159579664469
+    }
+  ],
+  "total_stored_bytes": 237021
+}

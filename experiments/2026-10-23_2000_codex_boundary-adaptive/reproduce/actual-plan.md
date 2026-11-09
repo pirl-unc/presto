@@ -1,0 +1,3 @@
+# Full-parent stage admission
+
+All48 small-system primary cases and independent reference/path/statistic replay pass. Execute the unchanged21cases, counts, groups, targets, seed rule, learned-parameter readout and original mean-absolute-log gate in the registered parent plan. Only boundary proposal adaptation changes. Reuse previous CRAM48 arrays and readout gradients by exact hashes, preserving their eligibility and positivity limitations. Reference hash/config/log-rate matches must pass before each worker. Record conditional sampling time separately from reference loading and total worker/artifact time; prior worker totals included reference construction. No source quantity/development/test tables or new labels. Preserve any budget/error statuses and all outputs.

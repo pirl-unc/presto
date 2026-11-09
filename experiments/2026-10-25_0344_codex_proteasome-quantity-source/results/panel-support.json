@@ -1,0 +1,198 @@
+{
+  "source_file": "/private/tmp/presto-modular-model/data/proteasome_quantity_sources/2026-10-25_0344_codex_proteasome-quantity-source/complete-members/41467_2021_26427_MOESM10_ESM.xlsx",
+  "source_sha256": "f29811e09144f6d526ce1f2955681bb5f07a7ed0a4957e1a9f596740fc492ea5",
+  "sheet": "peptides",
+  "data_rows": 10647,
+  "unique_sequences": 10647,
+  "literal_protein_accession_tokens": 6202,
+  "headers": [
+    "Sequence",
+    "Length",
+    "Mass",
+    "Proteins",
+    "Leading razor protein",
+    "Start position",
+    "End position",
+    "Gene names",
+    "Protein names",
+    "Unique (Groups)",
+    "Unique (Proteins)",
+    "Charges",
+    "PEP",
+    "Score",
+    "Identification type Cont1",
+    "Identification type Cont2",
+    "Identification type Cont3",
+    "Identification type KD1",
+    "Identification type KD2",
+    "Identification type KD3",
+    "Experiment Cont1",
+    "Experiment Cont2",
+    "Experiment Cont3",
+    "Experiment KD1",
+    "Experiment KD2",
+    "Experiment KD3",
+    "Intensity",
+    "Intensity Cont1",
+    "Intensity Cont2",
+    "Intensity Cont3",
+    "Intensity KD1",
+    "Intensity KD2",
+    "Intensity KD3",
+    "Reverse",
+    "Potential contaminant"
+  ],
+  "sample_labels": [
+    "Cont1",
+    "Cont2",
+    "Cont3",
+    "KD1",
+    "KD2",
+    "KD3"
+  ],
+  "measurement_state_counts": {
+    "Cont1": {
+      "zero": 6781,
+      "positive": 3866
+    },
+    "Cont2": {
+      "zero": 6466,
+      "positive": 4181
+    },
+    "Cont3": {
+      "zero": 6604,
+      "positive": 4043
+    },
+    "KD1": {
+      "positive": 7418,
+      "zero": 3229
+    },
+    "KD2": {
+      "zero": 3679,
+      "positive": 6968
+    },
+    "KD3": {
+      "positive": 7560,
+      "zero": 3087
+    }
+  },
+  "identification_type_counts": {
+    "Cont1": {
+      "None": 6724,
+      "By MS/MS": 2964,
+      "By matching": 959
+    },
+    "Cont2": {
+      "None": 6432,
+      "By matching": 931,
+      "By MS/MS": 3284
+    },
+    "Cont3": {
+      "None": 6448,
+      "By matching": 979,
+      "By MS/MS": 3220
+    },
+    "KD1": {
+      "By matching": 2017,
+      "By MS/MS": 5509,
+      "None": 3121
+    },
+    "KD2": {
+      "By MS/MS": 4951,
+      "By matching": 2115,
+      "None": 3581
+    },
+    "KD3": {
+      "By MS/MS": 6453,
+      "By matching": 1236,
+      "None": 2958
+    }
+  },
+  "source_flags": {
+    "Reverse": {
+      "None": 10625,
+      "+": 22
+    },
+    "Potential contaminant": {
+      "None": 10494,
+      "+": 153
+    }
+  },
+  "positive_presence_patterns": {
+    "000101": 670,
+    "010111": 93,
+    "000111": 3953,
+    "001011": 10,
+    "000011": 230,
+    "000001": 528,
+    "001111": 66,
+    "111001": 35,
+    "111000": 1097,
+    "000000": 228,
+    "111111": 1437,
+    "000110": 153,
+    "111101": 57,
+    "101111": 37,
+    "011111": 137,
+    "111010": 148,
+    "111100": 133,
+    "011000": 184,
+    "011010": 23,
+    "110101": 5,
+    "111110": 274,
+    "100111": 57,
+    "110111": 68,
+    "000100": 91,
+    "011001": 8,
+    "111011": 61,
+    "110000": 145,
+    "101000": 110,
+    "110010": 8,
+    "000010": 61,
+    "011110": 44,
+    "010001": 12,
+    "110100": 15,
+    "110001": 6,
+    "100000": 101,
+    "101100": 6,
+    "100010": 5,
+    "100001": 11,
+    "010101": 10,
+    "100101": 7,
+    "011100": 21,
+    "010110": 13,
+    "010000": 84,
+    "010100": 12,
+    "010011": 10,
+    "001000": 64,
+    "101010": 8,
+    "101101": 7,
+    "101110": 8,
+    "011011": 11,
+    "001001": 7,
+    "001110": 14,
+    "100110": 5,
+    "110011": 5,
+    "001010": 10,
+    "010010": 13,
+    "100100": 2,
+    "011101": 10,
+    "001100": 5,
+    "001101": 6,
+    "101011": 3,
+    "101001": 2,
+    "110110": 2,
+    "100011": 1
+  },
+  "observed_sequence_length_range": [
+    8,
+    25
+  ],
+  "amount_or_effect_summaries_computed": false,
+  "training_rows_admitted": 0,
+  "zero_interpretation": "Source zero; cause of nondetection unknown, not a true peptide absence.",
+  "quantity_contract": "Source sequence-level Intensity columns; not certified LFQ values, unmodified-peptidoform amounts, precursor-normalized abundance, or molarity.",
+  "scope": "Source support only; no condition-based eligibility or model scores.",
+  "seconds": 2.0345767920371145,
+  "peak_rss_bytes": 55705600
+}

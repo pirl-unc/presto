@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-26_0236_codex_nontryptic-source-package/code/verify.py", line 218, in <module>
+    main()
+  File "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-26_0236_codex_nontryptic-source-package/code/verify.py", line 23, in main
+    write_nontryptic_calibration_package(
+  File "/Users/iskander/code/presto/.worktrees/hitlist-nontryptic-calibration/hitlist/nontryptic_calibration.py", line 134, in write_nontryptic_calibration_package
+    counts = write_nontryptic_tables(
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/presto/.worktrees/hitlist-nontryptic-calibration/hitlist/nontryptic_calibration_compiler.py", line 761, in write_nontryptic_tables
+    tables = compile_nontryptic_source(source_directory, contract)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/presto/.worktrees/hitlist-nontryptic-calibration/hitlist/nontryptic_calibration_compiler.py", line 753, in compile_nontryptic_source
+    return Compiler(source_directory, contract).compile()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/presto/.worktrees/hitlist-nontryptic-calibration/hitlist/nontryptic_calibration_compiler.py", line 733, in compile
+    self.panel()
+  File "/Users/iskander/code/presto/.worktrees/hitlist-nontryptic-calibration/hitlist/nontryptic_calibration_compiler.py", line 205, in panel
+    raise ValueError("Panel sequence length differs")
+ValueError: Panel sequence length differs

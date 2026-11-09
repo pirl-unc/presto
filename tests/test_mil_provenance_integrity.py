@@ -16,8 +16,8 @@ torch = pytest.importorskip("torch")
 
 from presto.data.collate import PrestoCollator  # noqa: E402
 from presto.data.loaders import ElutionRecord, PrestoDataset  # noqa: E402
-from presto.models.presto import Presto  # noqa: E402
-from presto.scripts.train_synthetic import (  # noqa: E402
+from presto.legacy.presto import Presto  # noqa: E402
+from presto.legacy.scripts.train_synthetic import (  # noqa: E402
     _build_contrastive_mil_channel,
     _get_mil_channel,
     _slice_mil_channel,
@@ -178,7 +178,7 @@ class TestMILMachineryIsDeclaredNotPredicted:
     def test_forward_receives_machinery(self):
         import inspect
 
-        from presto.scripts import train_synthetic
+        from presto.legacy.scripts import train_synthetic
 
         source = inspect.getsource(train_synthetic._run_mil_forward)
         assert "machinery=" in source, (

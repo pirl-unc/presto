@@ -1,0 +1,30 @@
+{
+  "registered_utc": "2026-10-23T08:43:14.855507+00:00",
+  "asset_root": "/private/tmp/presto-mapp-controlled-assets",
+  "source_sha256": "5bf84012ee1b80ffd28ab3096275d1166116ecaf94653273d9fa55de6bb08933",
+  "scope": "two processed MaxQuant archives and public manuscript only; no raw acquisitions",
+  "asset_policy": "stream bounded chunks; verify published size/SHA1 and format; preserve failed partials; no overwrite",
+  "assets": [
+    {
+      "path": "PXD009508/search.tar.gz",
+      "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2018/10/PXD009508/search.tar.gz",
+      "expected_size_bytes": 386079581,
+      "expected_sha1": "d2a715024497a083af0c86c0c45d1a866a71c6b3",
+      "magic_hex": "1f8b",
+      "metadata_sha256": "826a2c36d2c9be44bb11502f504fb504773bed4505f24069dfe9b8915c51dfdf"
+    },
+    {
+      "path": "PXD007263/search.tar.gz",
+      "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2018/10/PXD007263/search.tar.gz",
+      "expected_size_bytes": 205717009,
+      "expected_sha1": "13d131409b009bea62def66a56294c23511899cf",
+      "magic_hex": "1f8b",
+      "metadata_sha256": "63b9ad9f1e25a36677c81b520208dd1a59f0bf8b9996a1caba8e5cda22d029bb"
+    },
+    {
+      "path": "author-manuscript.pdf",
+      "url": "https://weizmann.elsevierpure.com/ws/files/111310290/ym_NatBio_RevealingTheCellularDegradomeByMassSpectrometry_AM2018.pdf",
+      "magic_hex": "25504446"
+    }
+  ]
+}

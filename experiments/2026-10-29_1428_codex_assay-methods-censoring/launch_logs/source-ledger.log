@@ -1,0 +1,17 @@
+Note that running a local entrypoint in detached mode only keeps the last triggered Modal function alive after the parent process has been killed or disconnected.
+✓ Initialized. View run at 
+https://modal.com/apps/iskandr/main/ap-xMly6y2mdHdqHmOGBMrke4
+✓ Created objects.
+├── ✓ Uploaded 
+│   /Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/20
+│   26-10-29_1428_codex_assay-methods-censoring/code/source_ledger.py
+├── ✓ Uploaded 
+│   /Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/20
+│   26-10-28_1540_codex_temporal-multi-output/reproduce/manifests/wide-multi-s42
+│   .json
+└── ✓ Created Function run.
+error: unable to normalize alternate object path: /private/tmp/presto-shared-core-20261027/presto/.git/objects
+{"status": "verified_source_ledger", "train": {"path": "/volume/2026-10-28_1540_codex_temporal-multi-output/revisions/kinetic-review-v2/prepared/hitlist_native_ms-train.jsonl", "sha256": "bc709276b36bd456a09451deba140aeb618c9614a79505981e7567d1a0b0e203", "rows": 1641063, "source_counts": {"iedb": 1641063}}, "seconds": 263.974800616}
+Runner terminated.
+✓ App completed. View run at 
+https://modal.com/apps/iskandr/main/ap-xMly6y2mdHdqHmOGBMrke4

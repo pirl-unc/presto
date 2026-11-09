@@ -1,0 +1,49 @@
+{
+  "policy": "lexicographically first unused study-component with PMID and >=100 literal IC50 fluorescence rows, validation then test, class I then II; no outcomes/predictions used",
+  "interpretation": "retrospective source-separated development holdouts, previously TRAIN in v5; new fits start from scratch",
+  "source": "/Users/iskander/code/presto/artifacts/2026-10-29_1653_codex_measurement-curation-recovery/curated/train.jsonl.gz",
+  "sha256": "15a842746bd2fb2cf9af872d8c9fb0a3d241e2dddc7f6ff019e7205993baaa6e",
+  "groups": {
+    "study-component:757f402ba94217180233f2b5157e4faeaabb46ba74f9bffa99dc3a86a9a646f3": {
+      "split": "validation",
+      "selected_for_class": "I",
+      "counts": {
+        "I": 203
+      },
+      "pmids": [
+        "22943201"
+      ]
+    },
+    "study-component:08618db3b82084556de1a8ce9bfd42183bd4d78d40a749d2ce5f37863b8444ef": {
+      "split": "validation",
+      "selected_for_class": "II",
+      "counts": {
+        "II": 124
+      },
+      "pmids": [
+        "8958223"
+      ]
+    },
+    "study-component:d5e4f46b0f33b07be2673d0b8dc3d7e4a7721b286a3903756d6a4172a296e65c": {
+      "split": "test",
+      "selected_for_class": "I",
+      "counts": {
+        "II": 322,
+        "I": 212
+      },
+      "pmids": [
+        "34305923"
+      ]
+    },
+    "study-component:2980ddb491f912ff8fdb30cecf0cd305d97a0b146c4b8677fa7615084617f3bf": {
+      "split": "test",
+      "selected_for_class": "II",
+      "counts": {
+        "II": 210
+      },
+      "pmids": [
+        "24788397"
+      ]
+    }
+  }
+}

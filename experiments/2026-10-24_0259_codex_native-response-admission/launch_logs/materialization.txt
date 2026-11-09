@@ -1,0 +1,88 @@
+{
+  "hitlist_version": "2.0.17",
+  "source_package": "/private/tmp/presto-modular-model/data/native_peptidome_recipes/2026-10-24_0259_codex_native-response-admission/source-package",
+  "recipe_directory": "/private/tmp/presto-modular-model/data/native_peptidome_recipes/2026-10-24_0259_codex_native-response-admission/response-recipe",
+  "source_manifest_sha256": "7f80844bc39748bb4fbd06e5747bac0769e06d1f7a1038f82daeae29b41b406f",
+  "recipe_manifest_sha256": "c72980c070cb1296609bbe7d296e27b6a2a22d3ff354ef846c1c99ad7959ccfc",
+  "source_replay": {
+    "n_original_field_invariants": 1736376,
+    "n_source_rows": 10564,
+    "n_measurement_slots": 61908,
+    "n_known_sequence_reuse_groups": 830,
+    "n_total_possible_reuse_groups": 1383,
+    "n_unidentified_possible_reuse_groups": 553,
+    "n_candidate_rows": 2766,
+    "source_manifest_sha256": "7f80844bc39748bb4fbd06e5747bac0769e06d1f7a1038f82daeae29b41b406f"
+  },
+  "recipe_coverage": {
+    "absolute_concentration_claim": false,
+    "defer_reason_counts": {
+      "deferred_conflicting_possible_reuse_context": 1100,
+      "deferred_control_or_derived_average": 30954,
+      "deferred_nonquantifiable": 2399,
+      "deferred_tentative": 135,
+      "deferred_unidentified": 15798,
+      "deferred_unresolved_annotation": 27
+    },
+    "groups_by_split": {
+      "test": 631,
+      "train": 1861,
+      "val": 245
+    },
+    "n_admitted_source_slots": 11495,
+    "n_components": 4843,
+    "n_conflicting_reuse_groups": 412,
+    "n_control_proxies_crossing_splits": 33,
+    "n_deferred_source_slots": 50413,
+    "n_effective_observations": 10114,
+    "n_full_parent_supported_groups": 2731,
+    "n_reference_occurrences": 1155,
+    "n_reference_proteins": 42562,
+    "n_response_groups": 2737,
+    "n_source_measurement_slots": 61908,
+    "n_source_rows": 10564,
+    "n_source_sequences": 571,
+    "n_used_reference_proteins": 345,
+    "observations_by_censoring_status": {
+      "exact": 6083,
+      "source_declared_bound": 4031
+    },
+    "specimen_independence": "unresolved"
+  },
+  "split_coverage": {
+    "train": {
+      "n_response_groups": 1861,
+      "n_components": 86,
+      "n_conditions": 28,
+      "n_effective_observations": 6735,
+      "n_exact_observations": 4301,
+      "n_bounded_observations": 2434,
+      "n_full_parent_supported_groups": 1855,
+      "total_weight": 1.0
+    },
+    "val": {
+      "n_response_groups": 245,
+      "n_components": 19,
+      "n_conditions": 27,
+      "n_effective_observations": 932,
+      "n_exact_observations": 504,
+      "n_bounded_observations": 428,
+      "n_full_parent_supported_groups": 245,
+      "total_weight": 0.9999999999999999
+    },
+    "test": {
+      "n_response_groups": 631,
+      "n_components": 16,
+      "n_conditions": 28,
+      "n_effective_observations": 2447,
+      "n_exact_observations": 1278,
+      "n_bounded_observations": 1169,
+      "n_full_parent_supported_groups": 631,
+      "total_weight": 0.9999999999999999
+    }
+  },
+  "seconds": 54.87044499994954,
+  "peak_rss_bytes": 1518764032,
+  "independent_recipe_verification": "pending",
+  "biological_training": false
+}

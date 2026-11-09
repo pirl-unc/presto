@@ -1,0 +1,37 @@
+{
+  "utc": "2026-10-27T01:40:15.422168+00:00",
+  "agent_model": "Codex / GPT-6",
+  "git_commit": "e04dfcf9cffdfd8e0b8d27d185650e1df6353484",
+  "dirty_status": "?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/continue_comparators.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/remaining-controller-state.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/source/continue_comparators.py\n?? tasks/mhc2_continuation_20261027_spec.md\n?? tasks/mhc2_publication_status.json\n",
+  "controller_sha256": "4a27d35c7752bb9a7cb8361152fcfabb4de3161a3c03ddab739c4c20587aaae0",
+  "code_hashes": {
+    "streaming_recovery.py": "f8aaaee5257ecf1d4a66a1648b172e78b01d64b29fa54d71f2ed34c96bab95e8",
+    "continue_streaming.py": "e50c8d361edbe5d5b468b6772bd1fc8a4220f83f1c2b0a6634bc1bb67bd9ea1a",
+    "logistic_controls_streaming.py": "b396996d13d9dc2cfb48ce5d0a5ae66c4d746371530096d6b1da46aea6b5bb1e"
+  },
+  "plan_sha256": "e0e261f3b2512ed2599de3da6ccda2f1fe955a5797154331bd29018f479d6eb1",
+  "plan": "tasks/mhc2_continuation_20261027_spec.md",
+  "prior_controller_sha256": "0f01340a3553a014a238a053d0f00197696eefe89c64cec2b263ca16d24b0b85",
+  "prior_controller_result": "1802.965seconds;zero action launches;extra20GiB scheduling admission never satisfied",
+  "scheduling_change": "independent comparator stage first;original13/10GiB action RAM contract,not the extra20GiB all-arm scheduling threshold",
+  "admission": {
+    "available_ram_bytes": 13958643712,
+    "sustained_seconds": 30,
+    "sample_seconds": 5,
+    "deadline_seconds": 900
+  },
+  "environment": {
+    "PYTHONPATH": "/private/tmp/presto-mhc2-evaluation-20261027:/private/tmp/presto-pr-completion-20261026/dependencies",
+    "OMP_NUM_THREADS": "2",
+    "MKL_NUM_THREADS": "2",
+    "OPENBLAS_NUM_THREADS": "2",
+    "PYTORCH_ENABLE_MPS_FALLBACK": "0"
+  },
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "/private/tmp/presto-mhc2-evaluation-20261027/presto/experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/continue_comparators.py"
+  ],
+  "no_automatic_retry": true,
+  "native_or_censor_overlap": false
+}

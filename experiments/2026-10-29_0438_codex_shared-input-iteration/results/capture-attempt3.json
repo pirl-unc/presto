@@ -1,0 +1,6 @@
+{
+  "status": "failed",
+  "stage": "SDK event-loop bridge",
+  "error": "Modal internal stream reader requires its synchronizer event loop; no sample admitted",
+  "resolution": "Run the asynchronous capture on the SDK synchronizer loop, as the installed CLI does."
+}

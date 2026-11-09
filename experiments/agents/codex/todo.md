@@ -4,6 +4,11 @@ Use this file for coarse-grained, agent-specific experimental backlog items.
 
 ## Active
 
+- [ ] Restore the [shared assay measurement layer](plans/2026-10-29_shared-assay-measurement-layer.md):
+  fixed joint quantity/preparation/mechanism/detector outputs, factorized embeddings,
+  one biological core, cellular process separation and assay-stratified matched
+  comparisons. Current shared-v5 has no method layer; legacy panels are inactive.
+
 - [ ] H100! batch-size sweep on broad 7-allele class-I contract
   - Fixed model/data contract, vary only batch size on `H100!`
   - Candidate designs:
@@ -103,3 +108,313 @@ Use this file for coarse-grained, agent-specific experimental backlog items.
 - [ ] Complete the separate prospective effective-target fit after #110 software release, preserving raw-measurement evaluation.
 
 - [x] Native-presenter audit published: all 18 public assets and source/target joins independently verify; initial failed packaging evidence preserved.
+
+- [x] Qualify fragment solver on complete required training support (2026-10-23_2029); all84fixed states pass, with unobserved-tail limitations retained.
+- [x] Qualify [matched minibatch objective](plans/fragment-minibatch-objective.md), freeze and run a bounded biological length-effect comparison under [full-observation plan](plans/fragment-observation-domain.md).
+
+- [x] Close 2026-10-23_2108: both real biological fits independently verify; small matched gain, no new best model.
+- [x] Run [exactly profiled condition-offset comparison](plans/fragment-profiled-minibatches.md) with unchanged physical models/data/schedule; retain joint-offset results.
+
+- [x] Training-only residual decomposition (2026-10-23_2214): persistent curve means account for ~77% of remaining error; independent replay passes. Paired fit now complete: weak improvement, no concentration validation. Next hypothesis should address persistent cross-peptide prediction error.
+
+- [x] Run [nested sequence-context/response comparison](plans/digestion-sequence-context.md): four exact fits plus one prospectively gated conditional sampled hybrid; biological error and source scope remain primary.
+
+- [ ] After2358closure, qualify and run [frozen cleavage-prior cellular transfer](plans/digestion-to-mapp-transfer.md), with an explicit input/removal bridge and unchanged canonical MAPP targets.
+- [ ] Admit native intracellular peptidome panels through Hitlist788 before any workbook-based fit; preserve censored ratios and reused-measurement lineage.
+
+## Frozen digestion-to-cellular transfer closure
+
+- [x] Complete the registered0043 transfer comparison on unchanged MAPP data: all3exact2000stepfits independently verified; no method beats uniform composition.
+- [x] Preserve sampled numerical success and original cost rejection; do not report an unperformed biological RL comparison.
+- [x] Execute the bounded train-only monotone amplitude diagnostic in plans/cellular-transfer-amplitude.md, with controls and stop rule fixed before arithmetic.
+- [ ] Prioritize canonical native cellular source788 and independent response/precursor evidence; do not repeatedly tune the same MAPP development set.
+
+## Cellular amplitude diagnostic decision
+
+- [x] Execute0106 and independently verify all scalar fits and prediction/metric outputs.
+- [x] Enforce the stop rule: neither sequence prior beats calibrated uniform cleavage; no more tuning of this MAPP transfer bridge.
+- [x] Record calibrated uniform cleavage as a provisional development control, with historical exposure and measurement limits explicit.
+- [ ] Execute plans/native-cellular-peptidome-admission.md through the canonical Hitlist system, beginning with registered public-source/lineage audit. No Presto-only source adapter or shared-environment change.
+
+## Native intracellular source audit and corrections
+
+- [x] Complete available-source0117audit through the merged canonical package; all raw cells/ratios replay, semantic admission fails.
+- [x] File concrete upstream findings as Hitlist791, including reuse matching, sequence/modification errors, heatmap projection and protocol provenance.
+- [ ] Execute plans/native-peptidome-semantic-corrections.md against current upstream; preserve source values and explicit unknowns.
+- [ ] Admit a canonical native-response recipe and preregister the next bounded real-data exact-versus-sampled comparison. No APC concentration claim from source admission alone.
+
+## Native-to-APC response outcome
+
+- [x] Canonical native recipe admitted0259; native controls0314 and exact/sampled processing0410 completed. Native processing gain small: testexactRMSE.243207 versus condition.250953.
+- [x] Actual macrophage precursor/processing family0449 completed and independently verified: condition testRMSE.120011, precursor+sequence.139278, withoutprecursor.120008. Negative; no useful processing increment, no concentration claim.
+- [x] Preserve all fixed outcomes and stop tuning inspected native/MAPP/APC test partitions. Exact and conditional sampled agree; no sampling advantage.
+- [x] Diagnose precursor calibration and kinetic identifiability using training data only (0527); independent biological evaluation remains required. Do not conflate context offsets or nonconstant surrogate inputs with learned peptide-specific biology.
+
+## APC diagnostic closure and independent machinery source
+
+- [x] Complete0527training-only calibration/penalty/condition-preference factorial and independent closure. Gamma.0516; flexible models fit training but worsen innerCV. No outertest use or baseline promotion.
+- [x] Enforce predeclared sampled biological gate: candidate worsens innerCVRMSE10.77%,so no sampled run. Preserve unexecuted path and failure, do not claim a new RLcomparison.
+- [x] File/readback Hitlist798 for independent primaryDC immunoproteasome-loss sourcePMID20484733; existingbroadmouse13does not admit its quantitative contract.
+- [ ] Admit that source through shared Hitlist APIs with original measurements/replicate/context and explicit RNA-versus-protein/machinery uncertainties; freeze independent evaluation before fitting. No Presto workbook curator or APC-concentration claim from elution alone.
+
+
+- [x] After independently closing1007, execute the [frozen HAP1 outer evaluation](plans/hap1-frozen-outer-evaluation.md), without further fitting or selecting on held-out outcomes. This confirms elution-response generalization; APC concentration qualification remains separate.
+- [x] Qualify original APC-derived endolysosomal numeric source under Hitlist812: no numeric peptide cohort in five official supplements; synthetic demo excluded. Source gap remains upstream.
+- [x] Qualify broader measured non-MHC peptide MS1-response data underHitlist762: PXD021013 original samples and full intended-pool mapping recovered/verified in1546.
+- [x] Implement and independently qualify canonical PXD021013 source/recipe in1635; Hitlist814 is merged and2.0.26 is published with matching tested artifact hashes.
+- [x] Preregister a larger grouped relative-MS1 predictive comparison. This is an observation prior until independent transfer, not calibrated molarity.
+
+- [x] Close 1635 canonical PXD021013 admission against original source quantities and intended-product groups.
+- [x] Freeze additional pool selection and held-out relative-response evaluation.
+
+- [x] Run 1702 grouped nontryptic MS1 observer from the frozen 24-pool plan; preserve
+  prospective selection, canonical admission, sealed test predictions and all outcomes.
+
+- [x] Publish1702 and complete Hitlist814 clean-main release. Primary sequence
+  observer passes held-out screen (13.57%test gain; Spearman0.52564), but pool-fixed
+  C termini and unknown purity/load prevent pure detector/molar interpretation.
+- [ ] Qualify a new prospective biological transfer test before treating this
+  observer as a processing correction; exact/sampled arms must share its frozen
+  parameters/objective. Previously inspected biological held-outs remain closed.
+
+1702 is published at03f03c5; Hitlist762 and Presto130 comments are exact-body
+verified in tasks/modular_model/ms1-observer-publication.json. Release40115753764
+passed and2.0.26 is verified on PyPI; shared editables unchanged. Next admission specification:
+[observer composition transfer](plans/observer-composition-transfer-admission.md).
+A static peptide MS response cancels from same-peptide condition ratios; do not
+claim that simply adding it can remedy the prior response-model failures.
+
+- [x]1938independent lymph composition:21fits, numerical/data/prediction replay and report closed; no biological promotion.
+- [x] Finish Hitlist818/819 source and recipe releases:2.0.27/2.0.28 bytes independently verified.
+- [ ] After this failed transfer, specify a training-only or new-cohort test of separately calibrated observation and processing/selection assumptions; keep1938heldoutsclosed and preserve the full APCavailability objective.
+
+- [x] 2018 HAP1 context diagnostic: frozen nine-arm training-only comparison; retain old outer sets closed. Plan: plans/hap1-context-ablation.md.
+
+- [x] 2041 frozen MHC-score diagnostic: qualify available predictor, then fixed six-arm training-only comparison (plans/hap1-affinity-control.md).
+
+- [x] Execute2106 shared TAP-route response exact/conditional-sampled comparison (plans/hap1-tap-route-response.md); independent concentration qualification remains required.
+
+- [ ] After2106 failed its matched-feature gate, qualify baseline peptide amounts and their observation/selection contract before another response-only mechanism fit. Preserve old test closures and the full precursor-relative APC availability goal.
+
+- [x]2210 baseline source and candidate decisions independently verify; Hitlist827 CI/release pending.
+- [x] Execute2244 prospective baseline-composition comparison from the shared recipe; preserve full APC availability goal and prior test closures.
+
+- [x] 2244: original baseline MAPP model and exact/REINFORCE comparison; modest signal, primary testgatefails, outcomes independently verified.
+- [x] Finish Hitlist829CI/merge/release and827testedrelease40140479531; published bytes verified.
+- [x] Qualify newly merged PXD009438 PBMC source828: support fails in2315 before scoring. Preserve PBMC-versus-serum conflict and unknown specimen/precursor links.
+
+
+## Intact-degradomics constraint and recent source closure
+
+- [x] 2315 PBMC qualification: support fails before scoring; no external-validation result.
+- [x] Hitlist827 source2.0.30 published;829and830passed hosted checks and merged.
+- [x] Finish exact existing recipe release jobs40143097533and40144589370; published bytes verified.
+- [x] 2338 PXD058121 original kinetic-source audit and Hitlist831 with concrete exceptions.
+- [x] Shared intact-degradomics source adapter and independent canonical replay.
+- [x] Separately register generation/destruction exact-versus-sampled prediction,
+  constrained by original quantitative time courses and honest holdout scope.
+  Full precursor-relative APC availability/concentration remains the objective.
+
+## Current intact-kinetic outcome and next representation question
+
+- [x]0021 canonical source independently verified; source832merged18bbf81d with all hosted checks passing.
+- [x]0046 measured temporal exact/conditional-score comparison completed and independently closed; physical testRMSE.359038 loses to direct.228184. No concentration result or RL advantage.
+- [x]0116 training-only shape/optimizer diagnosis: six fits and independent replay; both registered materiality thresholds fail. No new held-out access.
+- [x]2.0.31 and2.0.32 published artifacts independently byte-verified.
+- [x] Finish exact source release40149903223 and recipe833 merge/release40151233071; Hitlist2.0.33/2.0.34 published bytes match successful builds.
+- [x] Test parsimonious sequence features in0143:8.772%development RMSE gain overlength; paired uncertainty includeszero. Removing physical penalty gains1.362%, failing5%gate. All predictions/selection/metrics independently replay.
+- [ ] Qualify broader prospective biological transfer of the frozen direct sequence comparator, then a matched exact/discrete processing comparison; do not tune original100/120minute outcomes or claim blind transfer from same-parent development CV.
+- [ ] Extend to precursor-relative intracellular/APC quantities with measured initial/observation calibration; do not substitute observed-set or response-only success for the full availability goal.
+
+## Native PSMD2 processing constraint after temporal development
+
+- [x]0344recovers Sahu2021/PXD018722 native intracellular peptide quantities:
+  10,647sequences,34,036positive cells; original run/search metadata and293,009
+  source cells independently verified with13date-shaped gene annotations flagged.
+- [ ] Implement shared Hitlist admission of the native Hi20S panel, exact reference,
+  quantity aggregation and homogeneous preparation/machinery/search metadata.
+- [ ] Register same-parent control/KD contrasts to test sequence-dependent relative
+  product changes while cancelling shared precursor/run scale and fixed MS response.
+  Plan:plans/native-psmd2-canonical-and-contrast.md. Model assumptions, source zeros,
+  unsearched short products and APC/general concentration limits stay explicit.
+- [ ] Follow a qualified direct representation with a matched exact/discrete
+  generative comparison; preserve prior references and simulator/hybrid distinctions.
+
+- [x] 0424 verifies the exact deposited reference, five original processed members,
+  all quantities/IDs and all candidate origins. Raw/LFQ and modified-form quantities
+  remain separate; original text resolves the 13 date-corrupted gene annotations.
+- [x] Replay all 10,647 dependence assignments and descriptive support strata:
+  complete-acquisition support has 82 parents, 81 components and 228 potential
+  contrasts, before choosing a recipe or computing effects.
+- [ ] Implement/release the canonical source in the durable isolated checkout
+  `/Users/iskander/code/presto/.worktrees/hitlist-native-psmd2`, following
+  `tasks/native_psmd2_source_spec.md`. Then register and run the biological comparison.
+
+- Native contrast screen0630 failed the fixed outer gate. Next: register training-only acquisition sensitivity per plans/native-contrast-training-reliability.md; preserve inspected outer partitions and finish recipe2.0.38 tested publication.
+
+- [x] 0711 acquisition sensitivity: median training Pearson0.8382, all9positive; independently replayed. Hitlist2.0.38published/byte-verified.
+- [ ] Execute plans/native-boundary-context-development.md with fixed training-only nestedCV; outer groups remain closed and full APC availability goal unachieved.
+
+- [x] 0726 boundary-context development completed: all4gatesfail; all240fits/632OOFpredictions independently verified. Original outer groups stay closed.
+- [x] Execute plans/native-reference-invariant-development.md: compare unchanged features with an all-pairs response loss, retaining frozen0726controls. If it fails, stop response-only feature/optimizer expansion and move to native baseline quantity/observation contract.
+
+- [x] 0747 all-pair comparison fails all four gates; independently replayed. Stop expanding the native response-only cohort's features/optimizer.
+- [ ] Execute plans/native-baseline-observation-admission.md: qualify dose/response/protocol support, then register an identifiable native baseline. PXD024809 is an unqualified calibration candidate; no concentration claim or new fit yet.
+
+- [x] 0813 source audit independently verifies PXD024809 complete quantity grid and nominal standard panel. Source materialization supported; calibration fitting unadmitted.
+- [x] Shared source/reconciliation under Hitlist #845: source family0959 passes full independent replay; PR846 merged and tested PyPI2.0.40 verified byte-for-byte. Dilution conflict and amount/certification limits remain explicit.
+- [x] family1423 executes the conditional-dose plan through the generic shared recipe: 24 verified fits; unit slope gives 49.75% lower development RMSE than constant. No native/APC calibration claim.
+- [ ] Qualify independent peptide amount/response anchors and protocol transfer beyond nine selected standards, then resume the native-baseline/full-candidate comparison under the broader observation-admission plan.
+
+
+## Frozen organ transfer decision
+
+- [x]1735qualifies original no-additional-modification search declaration without rewriting raw nulls.
+- [x]1747new method-supported cohort passes source gates;21fixed models/8,925predictions and all metrics replay. SequenceRMSE0.288802 loses to no-change0.216691; no learned model is promoted.
+- [x] Hitlist848 new-head CI passed and merged as85ff2c81; preserve original source generation and strict endpoints.
+- [x] Exact tested2.0.41 release40220737944 passed; both distributions match clean main and Actions.
+- [ ] Publish those exact artifacts only after the pending explicit user approval. Automatic review rejected public PyPI publication before execution; do not retry or bypass. Then independently verify PyPI bytes.
+- [ ] Qualify broader amount/processing-context support before another matched exact/discrete biological comparison. Do not refit/tune F3, reopen old native/F2 held-outs, or mistake this one-substrate transfer for APC concentration validation.
+
+
+## Broader nontryptic response calibration
+
+- [x] 1816 closes the bounded original-source screen. PXD024917 supplies separate
+  nominal doses and339 positive signals across348 original slots, but acquisition
+  joins and chemical-form assertions remain unresolved. No fitting admitted.
+- [x] File and verify Hitlist849 with exact sources, omitted-dose/missing-cell rules,
+  isotope conflicts and transition-export requirements; extends existing24/436.
+- [ ] Implement shared source ingestion and a documented empirical-response recipe
+  retaining metadata uncertainty. Then preregister peptide-grouped validation of
+  sequence-dependent response against dose-only and constant baselines.
+- [ ] Qualify transfer to the native observation contract before claiming that this
+  calibration improves machinery-conditioned APC amounts or exact/RL processing.
+  Keep prior biological held-outs closed; the full goal remains unchanged.
+
+
+## Nontryptic response calibration decision
+
+- [x]0236qualifies shared source package; Hitlistac3e048 exact-head CI passes.
+- [x]0308 runs fixed precursor-grouped response comparison: all663fits/10,863
+  predictions independently verified; sequence ridge fails improvement gate.
+  Fixed-dose predictions remain nearly constant. Close these folds to retuning.
+- [ ] Resume native-baseline-observation-admission.md with independent diverse
+  amount/response anchors and source-matched protocol evidence. Do not promote
+  this failed18-standard MS2 observer or relabel residual intensity as availability.
+
+- [x]0344 completes a12-operation primary-source screen; neither candidate admits
+  a broad independently quantified nontryptic response panel. Requests/hashes and
+  explicit exclusions/unknowns are preserved; no numerical fit or model promotion.
+- [ ] Audit original APC-derived endolysosomal time-course source assets already
+  identified under Hitlist812. First qualify measured sample/run/precursor/spike
+  scale, response normalization and original numeric accessibility; synthetic
+  PeptideStudio sample_data is excluded. Matched within-peptide effects could
+  cancel response only with verified protocol/run-scale comparability. No new
+  generic calibration search or relaxation of native concentration requirements.
+
+## 2026-10-27 — Cross-class/flank benchmark
+
+- [x] Close the superseding ten-condition H100 comparison and live dashboard.
+  Records: 2026-10-27_1930_codex_modal-cross-class; weak transfer, no v4 affinity promotion.
+
+## 2026-10-27 — Shared interaction and exposure comparison
+
+- [x] Complete twelve fits and promote validation-selected common v5 interaction.
+- [x] Keep natural sampling default; balancing fails class-I validation protection.
+- [x] Retain complete predictions, runtime, independent metrics and H100 replay.
+- [x] Compare a larger bounded budget: the 2255 family completes 6,000 updates with
+  fixed validation cadence. It improves the practical IC50 reference; budget and
+  cadence effects are not isolated. Explicit checkpoint objectives now use the
+  same generic trainer and still require prospective class-protection evaluation.
+- [ ] Curate matched peptide-series conditions; audit fixed assay-unit pooling and
+  aligned groove coordinates as separate future hypotheses.
+
+Results belong to 2026-10-27_2100_codex_transfer-improvements, not this backlog.
+
+## Shared-v5 scale-up (2026-10-27)
+
+- [x] Audit old checkpoint coordinates, constant inputs and heldout failures.
+- [x] Generalize strict source admission; independently verify168,210 observations.
+- [x] Make shared capacity configurable; preserve element masks and exact step-cadence resume.
+- [x] Freeze and launch eight H100! comparisons, six outputs,134,561training observations.
+- [x] Seal validation decisions, independently verify every new heldout dump and replay checkpoints.
+- [x] Apply supported recipe/capacity wins; close canonical experiment and update practical baseline.
+- [x] Prospectively test matched IC50 exposure and class/endpoint-aware sampling in
+  the same trainer; keep these inspected tests closed. Do not assume repeated rare
+  class-II labels supply new information. Broader natural sampling regressed II.
+- [ ] Later: real same-protein ligand ranking and source-qualified cell/TCR inputs remain separate gaps.
+
+## 2026-10-28 — Auxiliary transfer mechanisms
+
+- [x] Complete the fixed twelve-fit capacity/exposure/auxiliary-permutation comparison.
+- [x] Report allele/species/class/assay/qualifier concentration and source attrition.
+- [x] Apply supported common sampling options; retain one model/training interface. No six-output default passes the validation gates.
+- [x] Data curation implemented and expanded cohort independently verified: use a declared DRA*01:01 reference for otherwise
+  eligible allele-resolved ordinary human DR observations in the deferred pool
+  (33,165 IC50 and 20,654 KD-via-IC50 class-II source rows, mostly DR). Preserve
+  reported versus assumed identities through the existing reference-assumption
+  contract, and honor reported alpha/construct exceptions. DP/DQ, serotype-only
+  and mutant labels need separate resolution. Freeze and validate the expanded
+  cohort prospectively through the same manifest trainer; the closed strict
+  comparison is unchanged. Basis: NetMHCIIpan-4.0 official instructions specify
+  only the beta chain as variable for DR; see tasks/lessons.md (2026-10-28).
+
+The12-fit follow-up is closed in [2026-10-28_0250_codex_assay-transfer-mechanisms](../../2026-10-28_0250_codex_assay-transfer-mechanisms/README.md): primary exposure explains much of II loss; auxiliary numeric benefit is clearer for I. Preserve these inspected partitions; next data-curation work remains separately prospective.
+
+- [ ] Add a separately scoped microarray/display binding readout to the same shared
+  manifest/model path. Fresh inventory has468,548 multiplexed rows, including
+ 418,890 PMID32903714 microarray labels with curator-confirmed assay comments.
+  Preserve literal qualitative labels and assay modality; do not call these IC50
+  or mass-spectrometry outcomes. Freeze any expanded cohort before its own fit.
+
+- [ ] General ingestion performance: profile and reduce repeated large-manifest
+  preflight scans and per-observation file open/stat/seek in the shared
+  ObservationIndex. The expanded cohort's H100 startup spent over20minutes before
+  an optimizer update; the recorded probe has93.16GB process read characters
+  and5.71GB RSS. Preserve source mutation guards, exact row ordering, scales,
+  sampler/RNG and resumed results. Any cache belongs in the common path and must
+  bind source/config/code hashes. Current fits remain on their frozen runtime.
+
+  Sequential file-handle reuse is qualified in
+  [shared-input-iteration](../../2026-10-29_0438_codex_shared-input-iteration/README.md):
+  1.2694x local warm-cache throughput, exact 15,000-row contents and common-fit
+  parity, full 2,860-test suite pass. Repeated full passes and random-access reads
+  remain future work; this does not measure total H100 training speedup.
+
+- [ ] Use the assay-overlap audit to qualify publication/submission reuse before
+  endpoint merging or panel ranking. Preserve raw labels while testing a common
+  affinity latent variable with method-aware calibration. Strong IC50/KD(~IC50)
+  agreement is dominated by a few source components and is not independent
+  replication evidence. See the 2026-10-29_1318 family and detailed plan.
+
+- [ ] Use the completed 2026-10-29_1428 source audit to recover qualified data:
+  resolve supplied/unknown supplementary PTM metadata (Hitlist#854;535,026 rows),
+  verify method tags against protocol citations (#721), and review assay-limit
+  candidates before any censor overrides. Original labels and unresolved status
+  must remain queryable. Preserve the common observation/model path and temporal
+  split policy; candidate counts are not promised independent training growth.
+## 2026-10-29 — Identity pretraining and overridable conditioning
+
+Assessment and issue filing completed; detailed scope:
+[plan](plans/2026-10-29_identity-pretraining-issues.md). Follow-ups extend the
+single canonical encoder/manifest/trainer and existing #130 requirements.
+
+- [ ] Start with [molecular identity #133](https://github.com/pirl-unc/presto/issues/133)
+  and [MHC pair consistency #134](https://github.com/pirl-unc/presto/issues/134),
+  measuring downstream I/II affinity transfer, not just annotation accuracy.
+- [ ] Compare [auxiliary-only versus soft conditioning/overrides #137](https://github.com/pirl-unc/presto/issues/137)
+  on qualified identity data, retaining the richer sequence representations.
+- [ ] Qualify [phenotyped CD4/CD8 receptor pretraining #135](https://github.com/pirl-unc/presto/issues/135)
+  with donor/receptor-group holdouts and independent downstream outcomes.
+- [ ] Revisit [peptide/protein taxonomy #136](https://github.com/pirl-unc/presto/issues/136)
+  only with explicit ambiguity/context contracts and the prior failed reference
+  screen as a comparator. Lower priority than molecular identity/pair consistency.
+
+
+## 2026-10-30 — Post-fit follow-ups
+
+[Scientific handoff](plans/2026-10-30_post-fit-handoff.md). Newly filed #138–#142
+cover shared stability decoding, MHC-II coverage, assay-level qualification and
+external benchmarks, exposure/schedule/ranking experiments, and explicitly
+synthetic affinity priors. Existing source qualification stays in Hitlist
+#875/#871/#721/#785. No new fit has been launched for these follow-ups.

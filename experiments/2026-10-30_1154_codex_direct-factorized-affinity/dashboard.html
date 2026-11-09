@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Presto · direct factorized affinity</title>
+<style>body{font:15px system-ui;margin:36px auto;max-width:1250px;padding:0 20px;color:#183142;background:#f7fafb}h1{font-size:27px}p{max-width:1000px;line-height:1.5}table{border-collapse:collapse;width:100%;background:white}th,td{text-align:left;padding:14px;border-bottom:1px solid #dbe4e8}th{font-size:12px;background:#eaf0f3}td{font-variant-numeric:tabular-nums}small{display:block;color:#5d707b;margin-top:5px}.status{padding:14px;background:#e6f1ef;border-left:4px solid #237d70;margin:20px 0}select{padding:6px;margin-bottom:14px}</style>
+<h1>One shared affinity head, categorical assay vectors</h1>
+<p>Direct factorized decoder · two seeds · 4,000 updates each · ten training outputs. One head combines the shared biological latent with separate quantity, preparation, mechanism and detector vectors. Five concentration quantities use this head. These are inspected development holdouts. The table shows literal IC50 only.</p>
+<div class="status" id="status">Reading queue status…</div>
+<label>Evaluation <select id="split"><option value="validation">Validation</option><option value="test">Selected-checkpoint test</option></select></label>
+<table><thead><tr><th>Condition</th><th>Progress</th><th>MHC-I IC50 radioactivity<small>Spearman · RMSE</small></th><th>MHC-I IC50 fluorescence<small>Spearman · RMSE</small></th><th>MHC-II IC50 radioactivity<small>Spearman · RMSE</small></th><th>MHC-II IC50 fluorescence<small>Spearman · RMSE</small></th></tr></thead><tbody id="rows"></tbody></table>
+<p><a href="../2026-10-29_2303_codex_assay-measurement-layer/results/pooled-s42/report.json">Frozen pooled control report</a> · reports and full assay metrics are saved under results/ after completion.</p>
+<p><small>RMSE is in log10(nM); regression uses exact values only. Bounds remain in the training loss. Each validation class/method cell is one study. Fluorescence validation: I has 28 exact + 175 bounded observations; II has 41 exact + 83 bounded. Missing cells mean no result yet. Software checks do not establish predictive gains.</small></p>
+<script>
+let last;
+const fmt=x=>x===undefined||x===null?'—':x.toFixed(3);
+function render(d){last=d;const split=document.getElementById('split').value;const status=document.getElementById('status');status.textContent=(d.coordinator.status||'Awaiting coordinator')+' · '+new Date(d.refreshed_unix*1000).toLocaleTimeString();const body=document.getElementById('rows');body.replaceChildren();for(const r of d.runs){const tr=document.createElement('tr');const values=[r.condition,`${r.status} · ${r.steps||0}/4000`];for(const c of ['I','II'])for(const detector of ['radioactivity','fluorescence']){const v=r[split]?.ic50?.by_assay_method?.[`purified/competitive/${detector}/source_tag_unreviewed`]?.by_class?.[c];values.push(`${fmt(v?.spearman)} · ${fmt(v?.rmse)}${v ? ` (exact n=${v.n})` : ""}`)}for(const value of values){const td=document.createElement('td');td.textContent=value;tr.append(td)}body.append(tr)}}
+async function refresh(){try{const response=await fetch('results/live.json',{cache:'no-store'});if(!response.ok)throw Error(response.status);render(await response.json())}catch(e){document.getElementById('status').textContent='Status unavailable: '+e.message}}
+document.getElementById('split').onchange=()=>last&&render(last);refresh();setInterval(refresh,20000);
+</script></html>

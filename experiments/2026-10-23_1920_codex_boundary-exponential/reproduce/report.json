@@ -1,0 +1,15 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "source_sha256": "250fe0dc57871ed3acb78dffa1a9db5022e4a4d004b592c621b0064babec73de",
+  "scope": "Saved numerical outcomes only; no fitting/reselection",
+  "families": [
+    "2026-10-23_1909_codex_boundary-importance",
+    "2026-10-23_1920_codex_boundary-exponential"
+  ],
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "MPLCONFIGDIR": "/private/tmp/presto-boundary-matplotlib"
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "status": "scored",
+  "primary_times_minutes": [
+    30,
+    60
+  ],
+  "secondary_times_minutes": [
+    90,
+    120
+  ],
+  "n_primary_cells": 236,
+  "n_secondary_cells": 189,
+  "preselected_arm": "sequence",
+  "gains": {
+    "versus_zero": -0.33278601617250425,
+    "versus_length": 0.17067953074290143
+  },
+  "organ_sequence_to_length_rmse_ratios": {
+    "Brain": 0.6717606296261791,
+    "Liver": 0.9760217824632569,
+    "Spleen": 0.8429521416575648
+  },
+  "gates": {
+    "rmse_gain_versus_zero_at_least_5pct": false,
+    "rmse_gain_versus_length_at_least_5pct": true,
+    "positive_pearson": true,
+    "positive_spearman": true,
+    "prediction_sd_at_least_0_1_target_sd": true,
+    "no_organ_more_than_10pct_worse_than_length": true
+  },
+  "quality_passed": false,
+  "bootstrap": {
+    "draws": 1000,
+    "seed": 31415,
+    "unit": "peptide identity jointly across organs; equal-organ renormalization",
+    "n_invalid_draws": 0,
+    "percentile_95_intervals": {
+      "length": [
+        0.3181124850078922,
+        0.3770406572604414
+      ],
+      "original_residue-exact-0-42": [
+        0.3723392421318177,
+        0.4557265629838486
+      ],
+      "original_residue-score-16-42": [
+        0.37189720081006444,
+        0.45520754103262456
+      ],
+      "original_residue-score-16-43": [
+        0.3722111061194607,
+        0.45552915338788097
+      ],
+      "original_residue-score-16-44": [
+        0.3727451542988441,
+        0.4562080599624531
+      ],
+      "original_residue-score-64-42": [
+        0.37250189651181936,
+        0.4559119776458642
+      ],
+      "original_residue-score-64-43": [
+        0.3726897312355762,
+        0.4561372705997463
+      ],
+      "original_residue-score-64-44": [
+        0.3724926203527902,
+        0.4559180239108904
+      ],
+      "original_uniform-exact-0-42": [
+        0.37211367900824077,
+        0.45537833126806054
+      ],
+      "original_uniform-score-16-42": [
+        0.37142757932994164,
+        0.45456583775897996
+      ],
+      "original_uniform-score-16-43": [
+        0.37198159911980794,
+        0.45522243621112995
+      ],
+      "original_uniform-score-16-44": [
+        0.37286122131500504,
+        0.4562551230954525
+      ],
+      "original_uniform-score-64-42": [
+        0.3716384477791588,
+        0.45481789379564613
+      ],
+      "original_uniform-score-64-43": [
+        0.37228065542476535,
+        0.4555762230874791
+      ],
+      "original_uniform-score-64-44": [
+        0.3724941773976904,
+        0.45582651521260775
+      ],
+      "physical_residue_penalized": [
+        0.3480911390779281,
+        0.42752281331520364
+      ],
+      "physical_residue_unpenalized": [
+        0.3550662190132926,
+        0.44754819628867465
+      ],
+      "physical_uniform": [
+        0.34639520973448223,
+        0.4242682966030343
+      ],
+      "sequence": [
+        0.22930542349300548,
+        0.34847594800987525
+      ],
+      "shared_slope": [
+        0.3175153322081714,
+        0.37858055925854667
+      ],
+      "zero": [
+        0.17128175864916712,
+        0.2633227737029879
+      ],
+      "gain_vs_zero": [
+        -0.7050330417146256,
+        -0.056159946655447775
+      ],
+      "gain_vs_length": [
+        -0.013482263198875334,
+        0.3325304277698336
+      ]
+    }
+  },
+  "sd_contract": "population SD under registered observation weights; unweighted SD also reported",
+  "decision": "close failed transfer; no F3 refitting, feature search or secondary-time rescue",
+  "new_fits": 0
+}

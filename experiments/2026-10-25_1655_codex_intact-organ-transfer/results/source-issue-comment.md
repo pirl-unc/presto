@@ -1,0 +1,7 @@
+The frozen F3 organ-transfer admission exposed an additional source-interpretation dependency (related recipe #847 / draft PR #848). All 4,198 F3 assignments retain `Localized Mod="0"`, `Term Mod="0"`, but `Unlocalized Mod=null`. Independent source-header inspection confirms the expected column name in all 44 worksheets. An independent OOXML read of the original `F3_SF7_SearchResults.xlsx` confirms that all 4,198 corresponding column-K cells are absent, rather than a parser dropping values. Workbook SHA256: `71f6ef6327387a0b739c358015a49f9b39c7bc6f3703e6cc413ee9eaf307f55f`.
+
+The previously frozen explicit-unmodified gate therefore admits zero examples in every organ. No model was fitted or scored, and no quality threshold was relaxed. An independent source-table replay agrees on all 8,138 assignment dispositions.
+
+Needed: source-backed documentation of the F3 ClipsMS search/export settings and the meaning of a blank `Unlocalized Mod` field, or original explicit modification annotations. If blanks signify “none” under a documented search contract, preserve that as a separate provenance-bearing interpretation; do not silently overwrite null values or infer it from downstream model scores. The current source parser is faithful.
+
+The existing family stops at its support gate. Any newly qualified interpretation/cohort needs a separately registered comparison. The precursor/MS scaling questions above remain unresolved.

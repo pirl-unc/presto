@@ -1,0 +1,32 @@
+{
+  "biopython": "1.88",
+  "complete_scan_method": "independent character-level Aho-Corasick, all reference residues",
+  "component_method": "independent bipartite graph traversal, all-source mappings",
+  "elapsed_seconds": 17.73374458399485,
+  "input_hashes_checked": 9,
+  "output_hashes_checked": 15,
+  "passed": true,
+  "references": {
+    "reviewed_2023_canonical": {
+      "complete_scan_matches": 14258,
+      "component_assignments": 8753,
+      "peptide_summary_rows": 10673,
+      "reference_records": 20422,
+      "source_accession_rows": 32269,
+      "source_negative_candidates": 9,
+      "source_positive_candidates": 13802
+    },
+    "reviewed_2026_03_isoforms": {
+      "complete_scan_matches": 23463,
+      "component_assignments": 8790,
+      "peptide_summary_rows": 10673,
+      "reference_records": 42562,
+      "source_accession_rows": 32269,
+      "source_negative_candidates": 5,
+      "source_positive_candidates": 13176
+    }
+  },
+  "source_candidate_method": "overlapping regular-expression lookahead, all positive and negative candidates",
+  "source_rows": 10673,
+  "verifier_sha256": "b909465a20fdce9f27989f91bd59b0428a02ea8fe675b0455f7c2a5f93fcde80"
+}

@@ -1,0 +1,46 @@
+{
+  "validation_screen": {
+    "status": "failed",
+    "underpowered_categories": [],
+    "comparisons": {
+      "training_prevalence": {
+        "mean_difference": -0.0067340599862287485,
+        "interval_95": [
+          -0.009580752499832203,
+          -0.0035643001152416303
+        ],
+        "components": 705,
+        "resamples": 2000,
+        "seed": 20261021
+      },
+      "composition_logistic": {
+        "mean_difference": -0.0005057273264416027,
+        "interval_95": [
+          -0.001970605811003731,
+          0.0011168099643307625
+        ],
+        "components": 705,
+        "resamples": 2000,
+        "seed": 20261021
+      }
+    }
+  },
+  "macro_ce": {
+    "training_prevalence": {
+      "train": 0.3033575884155195,
+      "validation": 0.29255960514596596,
+      "test": 0.30843467755787474
+    },
+    "composition_logistic": {
+      "train": 0.29497337369690796,
+      "validation": 0.28633127248617884,
+      "test": 0.30086379157794246
+    },
+    "modular_peptide_source": {
+      "train": 0.2952011537110873,
+      "validation": 0.2858255451597373,
+      "test": 0.30203177870568887
+    }
+  },
+  "elapsed_seconds": 69.92971829100861
+}

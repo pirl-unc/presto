@@ -1,0 +1,34 @@
+{
+  "agent_model": "Codex / GPT-5",
+  "command": "PRESTO_REPORT_OUTPUT_ROOT=experiments/2026-11-09_1000_codex_unified-state-report-v2/reports experiments/2026-11-09_1000_codex_unified-state-report-v2/reproduce/launch.sh",
+  "experiment_id": "2026-11-09_1000_codex_unified-state-report-v2",
+  "files": {
+    "builder": {
+      "bytes": 27454,
+      "path": "../code/build_manifest.py",
+      "sha256": "796921e0866a38db60ac281b29e7cf85c6b81bbfcfe21bbbb95c1d6f1549909e"
+    },
+    "launcher": {
+      "bytes": 629,
+      "path": "launch.sh",
+      "sha256": "f24c6b4c9ff17242cf20571143d0b6258ccad6a46c2e8fa15206de09c253c991"
+    },
+    "manifest": {
+      "bytes": 77281,
+      "path": "../report_manifest.json",
+      "sha256": "f7a862fb83056e911805ee19b9a2d0c0e38d105c3c39a2f19e2be6652fea9e64"
+    }
+  },
+  "git_commit": "1cca535e99a20e58c0ce00bc27edcbefbba3ad7d",
+  "git_dirty": false,
+  "input_builder": "../code/build_manifest.py",
+  "input_manifest": "../report_manifest.json",
+  "non_default_environment": {
+    "MPLCONFIGDIR": "/private/tmp/presto-mpl-config",
+    "PRESTO_PYTHONPATH": "/private/tmp/presto-import-post153"
+  },
+  "report_hardware": "local CPU",
+  "report_id": "2026-11-09_150000_1cca535e",
+  "schema": "presto.experiment_launch.v1",
+  "source_training_hardware": "requested H100!; observed NVIDIA H100 80GB HBM3"
+}

@@ -1,0 +1,26 @@
+{
+  "MSMS_policy": "at_least_one_direct_MSMS_record_per_arm;not_each_run",
+  "admission": "base_run_admission;PXD009508;alpha6;three_positive_runs_each_arm;one_direct_MSMS_each_arm",
+  "base_recipe": "mapp_controlled_run_intensity_v1",
+  "endpoint": "complete_case_alpha6_untreated_epoxomicin_captured_signal",
+  "limitations": [
+    "captured_MS_signal_not_molar_concentration",
+    "positive_response_selection_not_detection_probability",
+    "unresolved_biological_specimens_and_pairing",
+    "same_study_all_splits;not_external_biological_validation",
+    "exact_parent_sequence_components_not_homology_clusters",
+    "original_2016_search_reference_unavailable",
+    "no_independent_precursor_or_capture_MS_response_calibration",
+    "cytokine_exposure_time_not_time_since_substrate_synthesis"
+  ],
+  "normalization": "none;retain_six_values_and_two_arithmetic_means",
+  "pairing_policy": "unpaired_acquisition_numbers;no_specimen_pairing_inferred",
+  "parent_policy": "all_exact_reference_alternatives_retained;no_unique_parent_assignment",
+  "recipe_id": "mapp_controlled_complete_alpha6_response_v1",
+  "schema_version": 1,
+  "selection_policy": "both_arm_positive_complete_cases;not_prospective_detection_or_unobserved_product_labels",
+  "source_id": "wolflevy2018_controlled",
+  "split": "all_source_peptide_components_union_identical_sequence_and_shared_full_reference_sequence;sha256(recipe_id+component_id)_mod_20:0-13_train,14-16_val,17-19_test",
+  "target": "arithmetic_mean_of_three_reported_positive_run_intensities_per_arm",
+  "zero_policy": "exclude_from_positive_response_targets;retain_source_zero_not_absence"
+}

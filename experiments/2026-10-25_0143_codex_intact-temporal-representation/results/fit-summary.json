@@ -1,0 +1,15 @@
+{
+  "n_physical_starts": 45,
+  "n_prediction_rows": 16205,
+  "n_inner_prediction_rows": 14816,
+  "n_direct_fit_records": 135,
+  "output_hashes": {
+    "results/inner-predictions.parquet": "aa6fabd496630f51dbfd67b15d02e9413de3c5571c49a00a48e93e3666dad802",
+    "results/predictions.parquet": "35d291a98ddb26923e8531c4e39024f3e2ffd039510592a8e490dd30a025e6e6",
+    "results/direct-fits.json": "d64b63e2a790de1a80ff0173ffbd260059de051ac6b381e6587bd0b924bc90ba",
+    "results/physical-fits.json": "7285df978d8e27661beea1b3c93b0a7295cf389ebce380ac51b445a3a95b3cd2"
+  },
+  "initializer_uses_labels": false,
+  "new_heldout_biological_test": false,
+  "scope": "nested_development_CV_in_original_training"
+}

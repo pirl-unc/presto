@@ -1,0 +1,42 @@
+{
+  "requested_url": "https://www.ncbi.nlm.nih.gov/pmc/utils/oa/oa.fcgi?id=PMC2938112",
+  "started_at": "2026-10-24T10:07:03.874287+00:00",
+  "command": [
+    "experiments/2026-10-24_0602_codex_dc-machinery-admission/code/launch.py",
+    "pmc-oa-network",
+    "https://www.ncbi.nlm.nih.gov/pmc/utils/oa/oa.fcgi?id=PMC2938112"
+  ],
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "presto_head": "c7d538cfc64f2295e70c2bf693e333f08d1f34b6",
+  "launcher_sha256": "86c54f88a4c9edc743467e5a9acc2fd49d9fcdf57786562ac2f3b24a28eb1e4d",
+  "body_path": "/private/tmp/presto-modular-model/data/dc_machinery_source_admission/2026-10-24_0602_codex_dc-machinery-admission/retrieval/pmc-oa-network/body",
+  "purpose": "source-discovery-only; not a curated training observation",
+  "status_code": 404,
+  "final_url": "https://www.ncbi.nlm.nih.gov/pmc/utils/oa/oa.fcgi?id=PMC2938112",
+  "content_type": "text/html; charset=ISO-8859-1",
+  "response_headers": {
+    "Date": "Sat, 24 Oct 2026 10:07:04 GMT",
+    "Server": "Apache",
+    "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
+    "Referrer-Policy": "origin-when-cross-origin",
+    "Content-Security-Policy": "upgrade-insecure-requests",
+    "Content-Type": "text/html; charset=ISO-8859-1",
+    "Vary": "Accept-Encoding",
+    "Content-Encoding": "gzip",
+    "X-Ua-Compatible": "IE=Edge",
+    "X-Xss-Protection": "1; mode=block",
+    "Via": "1.1 google",
+    "Alt-Svc": "clear",
+    "Transfer-Encoding": "chunked"
+  },
+  "redirects": [],
+  "n_bytes": 1584,
+  "sha256": "9e1a142b5ae85d6d81632224ee9f0d865ad584397f7d1b366ff3e8ffe037e78c",
+  "elapsed_seconds": 0.3755106250173412
+}

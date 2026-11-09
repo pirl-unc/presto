@@ -1,0 +1,37 @@
+{
+  "status": "passed",
+  "predictions_sha256": "10dd9cdafb20670816886e49b22a92cef1df7a527ff146ebbc93d7c6b622745e",
+  "checkpoint_sha256": "f469314e44cd22ef8c155f85042747f999f4361ab31a9dc42a405a33b140c61f",
+  "unique_training_observations": 23512,
+  "scope": "Saved training predictions and frozen source identity/units/loss/metrics only; no new fitting or held-out inference.",
+  "rows": [
+    {
+      "condition": "ic50-bounds-s43",
+      "endpoint": "ic50",
+      "mhc_class": "I",
+      "n_all": 15246,
+      "loss": 0.4148383410982436,
+      "censor_satisfaction": 0.3605051664753157,
+      "n": 14375,
+      "spearman": 0.7810149541852728,
+      "pearson": 0.795582128331851,
+      "rmse": 0.8684978461865835,
+      "prediction_sd": 1.1346801136259186,
+      "target_sd": 1.429159801746066
+    },
+    {
+      "condition": "ic50-bounds-s43",
+      "endpoint": "ic50",
+      "mhc_class": "II",
+      "n_all": 8266,
+      "loss": 0.26627244214426915,
+      "censor_satisfaction": 0.21990049751243781,
+      "n": 7261,
+      "spearman": 0.6894097456316072,
+      "pearson": 0.7090457045556933,
+      "rmse": 0.6971398091889255,
+      "prediction_sd": 0.775500117404876,
+      "target_sd": 0.9737040446382063
+    }
+  ]
+}

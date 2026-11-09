@@ -1,0 +1,15 @@
+{
+  "stage": "mapping_audit",
+  "attempt": 1,
+  "started_utc": "2026-10-26T01:55:52.317348+00:00",
+  "status": "preflight_refused",
+  "child_launched": false,
+  "exit_code": null,
+  "resource_violation": null,
+  "memory_admission": {
+    "metric": "macos_free_plus_speculative",
+    "bytes": 1667219456
+  },
+  "disk_free_before_bytes": 3953004544,
+  "refusal": "startup_memory_floor"
+}

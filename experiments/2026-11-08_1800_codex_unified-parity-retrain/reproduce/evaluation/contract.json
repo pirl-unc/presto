@@ -1,0 +1,50 @@
+{
+  "bootstrap": {
+    "replicates": 2000,
+    "seed": 42
+  },
+  "evaluator": {
+    "bytes": 29944,
+    "filename": "code/evaluate_pair.py",
+    "sha256": "b5a8df93e39d160f0b9eb87c4be3ff7d8001b26122c94f283ffac089a437c1ab",
+    "source_commit": "2d980da730eb2430c6162cf9f806cebafaad36dd"
+  },
+  "expected": {
+    "development_rows": 51066,
+    "endpoint_census": {
+      "ec50": 69,
+      "elution_observation": 48530,
+      "ic50": 1597,
+      "kd_via_ec50": 528,
+      "kd_via_ic50": 342
+    }
+  },
+  "inputs": {
+    "affinity_comparator": {
+      "bytes": 1164733,
+      "filename": "affinity-baseline-predictions.json",
+      "sha256": "3ffe283974a93e151f3d159e986b715781b4431c88d9392cac389d131f50fcb6"
+    },
+    "parity_predictions": {
+      "bytes": 24301300,
+      "filename": "parity-validation-predictions.jsonl.gz",
+      "sha256": "d85c2987e1eceb5487dc6e04c9e25dc9eee5bfaea87a756fa86f1bf87fa8a278"
+    },
+    "presentation_comparator": {
+      "bytes": 7272830,
+      "filename": "matched-presentation.jsonl.gz",
+      "sha256": "9d9cba9260142373dfe747ac9cf109a46b1b468df107e3ba0c93b37e146e643a"
+    },
+    "reference_predictions": {
+      "bytes": 24362809,
+      "filename": "reference-validation-predictions.jsonl.gz",
+      "sha256": "81d0bfbcd6432c93ba261461b0ffc01d4978a6ece94b8405133d34cb6f5db3d2"
+    },
+    "stage_b_predictions": {
+      "bytes": 24362137,
+      "filename": "stage-b-validation-predictions.jsonl.gz",
+      "sha256": "46bd116569a73a654411775192b76779aaeb7c0b2cb00a07a71584933f986068"
+    }
+  },
+  "schema": "presto.unified_parity_evaluation.v1"
+}

@@ -1,0 +1,551 @@
+"""Modular pMHC predictor blocks used by Presto.
+
+The canonical assay contract is sequence-only on the input side:
+`nflank`, `peptide`, `cflank`, `mhc_a`, and `mhc_b` drive the shared trunk,
+while assay identity remains output-side supervision only.
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+import math
+from typing import Dict, Optional
+
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+from .affinity import binding_logit_from_kd_log10
+from .heads import AssayHeads, smooth_lower_bound, smooth_range_bound
+from .pmhc import BindingModule
+from ..data.vocab import (
+    BINDING_ASSAY_TYPES,
+    BINDING_ASSAY_PREP,
+    BINDING_ASSAY_GEOMETRY,
+    BINDING_ASSAY_READOUT,
+)
+
+
+#: Residual modes that actually consume the factorized assay context. Under
+#: any other mode -- including the "legacy" default -- the embeddings and
+#: projection below feed nothing, so they are not allocated.
+#:
+#: Note this only became true after `binding_context` was wired into the
+#: training loop: before that the assay path could not train under *any* mode,
+#: because the metadata never reached the model at all.
+_FACTORIZED_CONTEXT_MODES = frozenset(
+    {
+        "shared_base_factorized_context_residual",
+        "shared_base_factorized_context_plus_segment_residual",
+        "dag_family",
+        "dag_method_leaf",
+        "dag_prep_readout_leaf",
+    }
+)
+
+#: Residual modes that consume the pep/MHC sequence summary.
+_SEQUENCE_SUMMARY_MODES = frozenset(
+    {
+        "shared_base_segment_residual",
+        "shared_base_factorized_context_plus_segment_residual",
+        "dag_family",
+        "dag_method_leaf",
+        "dag_prep_readout_leaf",
+    }
+)
+
+
+@dataclass
+class PrestoTrunkState:
+    """Shared pMHC trunk features consumed by modular predictor heads."""
+
+    processing_vec: torch.Tensor
+    interaction_vec: torch.Tensor
+    pep_vec: torch.Tensor
+    mhc_a_vec: torch.Tensor
+    mhc_b_vec: torch.Tensor
+    binding_affinity_vec: torch.Tensor
+    binding_stability_vec: torch.Tensor
+    recognition_vec: torch.Tensor
+    processing_class1_vec: torch.Tensor
+    processing_class2_vec: torch.Tensor
+    presentation_class1_vec: torch.Tensor
+    presentation_class2_vec: torch.Tensor
+    immunogenicity_cd8_vec: torch.Tensor
+    immunogenicity_cd4_vec: torch.Tensor
+    class_probs: torch.Tensor
+
+
+class ClassProcessingPredictor(nn.Module):
+    """One class-specific processing predictor."""
+
+    def __init__(self, d_model: int):
+        super().__init__()
+        self.head = nn.Linear(d_model, 1)
+
+    def forward(self, processing_vec: torch.Tensor) -> Dict[str, torch.Tensor]:
+        logit = self.head(processing_vec)
+        return {
+            "logit": logit,
+            "prob": torch.sigmoid(logit),
+        }
+
+
+class ClassPresentationPredictor(nn.Module):
+    """One class-specific presentation predictor."""
+
+    def __init__(self, d_model: int):
+        super().__init__()
+        self.head = nn.Linear(d_model, 1)
+
+    def forward(self, presentation_vec: torch.Tensor) -> Dict[str, torch.Tensor]:
+        logit = self.head(presentation_vec)
+        return {
+            "logit": logit,
+            "prob": torch.sigmoid(logit),
+        }
+
+
+class AffinityPredictor(nn.Module):
+    """Shared affinity predictor with sequence-only inputs and assay-specific outputs."""
+
+    def __init__(
+        self,
+        *,
+        d_model: int,
+        interaction_dim: Optional[int] = None,
+        max_log10_nM: float,
+        binding_midpoint_nM: float,
+        binding_log10_scale: float,
+        binding_kinetic_input_mode: str = "affinity_vec",
+        affinity_assay_residual_mode: str = "legacy",
+        kd_grouping_mode: str = "merged_kd",
+        affinity_target_encoding: str = "log10",
+        max_affinity_nM: float = 50000.0,
+    ) -> None:
+        super().__init__()
+        self.d_model = int(d_model)
+        self.interaction_dim = int(interaction_dim or d_model)
+        self.binding_midpoint_nM = float(binding_midpoint_nM)
+        self.binding_midpoint_log10_nM = math.log10(max(self.binding_midpoint_nM, 1e-12))
+        self.binding_log10_scale = max(float(binding_log10_scale), 1e-6)
+        self.max_log10_nM = float(max_log10_nM)
+        binding_kinetic_input_mode = str(binding_kinetic_input_mode).strip().lower()
+        if binding_kinetic_input_mode not in {"affinity_vec", "interaction_vec", "fused"}:
+            raise ValueError(
+                f"Unsupported binding_kinetic_input_mode: {binding_kinetic_input_mode!r}"
+            )
+        self.binding_kinetic_input_mode = binding_kinetic_input_mode
+        affinity_assay_residual_mode = str(affinity_assay_residual_mode).strip().lower()
+        if affinity_assay_residual_mode not in {
+            "legacy",
+            "pooled_single_output",
+            "shared_base_segment_residual",
+            "shared_base_factorized_context_residual",
+            "shared_base_factorized_context_plus_segment_residual",
+            "dag_family",
+            "dag_method_leaf",
+            "dag_prep_readout_leaf",
+        }:
+            raise ValueError(
+                f"Unsupported affinity_assay_residual_mode: {affinity_assay_residual_mode!r}"
+            )
+        self.affinity_assay_residual_mode = affinity_assay_residual_mode
+        kd_grouping_mode = str(kd_grouping_mode).strip().lower()
+        if kd_grouping_mode not in {"merged_kd", "split_kd_proxy"}:
+            raise ValueError(f"Unsupported kd_grouping_mode: {kd_grouping_mode!r}")
+        self.kd_grouping_mode = kd_grouping_mode
+        self.affinity_target_encoding = str(affinity_target_encoding).strip().lower()
+        self.max_affinity_nM = float(max_affinity_nM)
+        self.context_dim = max(8, d_model // 8)
+
+        self.binding_affinity_probe = nn.Sequential(
+            nn.Linear(d_model, d_model // 2),
+            nn.GELU(),
+            nn.Linear(d_model // 2, 1),
+        )
+        self.binding_stability_score_head = nn.Sequential(
+            nn.Linear(d_model, d_model // 2),
+            nn.GELU(),
+            nn.Linear(d_model // 2, 1),
+        )
+        if self.binding_kinetic_input_mode == "fused":
+            self.binding_input_fuse = nn.Sequential(
+                nn.Linear(self.interaction_dim + d_model, self.interaction_dim),
+                nn.GELU(),
+                nn.Linear(self.interaction_dim, self.interaction_dim),
+            )
+        else:
+            self.binding_input_fuse = None
+        binding_input_dim = (
+            d_model if self.binding_kinetic_input_mode == "affinity_vec" else self.interaction_dim
+        )
+        self.binding = BindingModule(d_model=binding_input_dim)
+        _uses_summary = self.affinity_assay_residual_mode in _SEQUENCE_SUMMARY_MODES
+        self.sequence_summary_proj = (
+            nn.Sequential(
+                nn.Linear(d_model * 3, d_model),
+                nn.GELU(),
+                nn.Linear(d_model, d_model),
+            )
+            if _uses_summary
+            else None
+        )
+        # Factorized assay context embeddings, allocated only when a mode reads
+        # them. See _FACTORIZED_CONTEXT_MODES.
+        _fac_embed_dim = max(d_model // 4, 8)
+        self._fac_embed_dim = _fac_embed_dim
+        _uses_factorized = self.affinity_assay_residual_mode in _FACTORIZED_CONTEXT_MODES
+        # Output-side assay panel.
+        #
+        # docs/assay_modeling_contract.md forbids consuming assay-selector
+        # metadata as predictive input: "assay labels may not condition the
+        # predictive input path". Indexing an assay embedding by the observed
+        # value is precisely that -- at inference you would have to declare an
+        # assay before the model would return a number.
+        #
+        # The T-cell side already solved this (AssayHeads.predict_panel):
+        # sweep the axis embedding table to predict the observable under
+        # *every* value of the axis, and let the label choose only which output
+        # is supervised. This does the same for binding, turning the assay
+        # descriptors from input configuration into joint outputs.
+        self.assay_panel_axes = {
+            "assay_type": len(BINDING_ASSAY_TYPES),
+            "assay_prep": len(BINDING_ASSAY_PREP),
+            "assay_geometry": len(BINDING_ASSAY_GEOMETRY),
+            "assay_readout": len(BINDING_ASSAY_READOUT),
+        }
+        self.assay_panel_embed = nn.ModuleDict(
+            {
+                axis: nn.Embedding(size, _fac_embed_dim)
+                for axis, size in self.assay_panel_axes.items()
+            }
+        )
+        self.assay_panel_head = nn.Sequential(
+            nn.Linear(d_model + _fac_embed_dim, max(d_model // 2, 4)),
+            nn.GELU(),
+            nn.Linear(max(d_model // 2, 4), 1),
+        )
+
+        # The input-side assay-context path is gone.
+        #
+        # It indexed an assay embedding by the observed value and concatenated
+        # it into the per-assay residual head input, so the assay identity
+        # conditioned that example's own prediction -- the pattern
+        # docs/assay_modeling_contract.md forbids. The assay structure it was
+        # trying to capture now lives in predict_assay_panel, on the output
+        # side, where sweeping the table gives one prediction per assay
+        # configuration instead of one prediction for the declared assay.
+        #
+        # factorized_context_dim=0 removes the slot entirely rather than
+        # leaving a zero-filled one, so a future caller cannot refill it.
+        factorized_context_dim = 0
+
+        # class_probs is [B, 2], species_probs is [B, N_MHC_SPECIES=6]
+        self._class_probs_dim = 2
+        self._species_probs_dim = 6
+        self.assay_heads = AssayHeads(
+            d_model=d_model,
+            max_log10_nM=self.max_log10_nM,
+            max_affinity_nM=self.max_affinity_nM,
+            affinity_target_encoding=self.affinity_target_encoding,
+            assay_context_dim=0,
+            affinity_assay_residual_mode=self.affinity_assay_residual_mode,
+            sequence_summary_dim=(
+                d_model
+                if self.affinity_assay_residual_mode
+                in {
+                    "shared_base_segment_residual",
+                    "shared_base_factorized_context_plus_segment_residual",
+                    "dag_family",
+                    "dag_method_leaf",
+                    "dag_prep_readout_leaf",
+                }
+                else 0
+            ),
+            factorized_context_dim=factorized_context_dim,
+            kd_grouping_mode=self.kd_grouping_mode,
+            class_probs_dim=self._class_probs_dim,
+            species_probs_dim=self._species_probs_dim,
+        )
+        if self.affinity_assay_residual_mode == "legacy":
+            kd_bias_input_dim = d_model
+        elif self.affinity_assay_residual_mode == "shared_base_segment_residual":
+            kd_bias_input_dim = d_model + 1
+        elif self.affinity_assay_residual_mode == "shared_base_factorized_context_residual":
+            kd_bias_input_dim = 1
+        elif self.affinity_assay_residual_mode in {
+            "shared_base_factorized_context_plus_segment_residual",
+            "dag_family",
+            "dag_method_leaf",
+            "dag_prep_readout_leaf",
+        }:
+            kd_bias_input_dim = d_model + 1
+        else:
+            kd_bias_input_dim = 0
+        self.kd_assay_bias = (
+            nn.Sequential(
+                nn.Linear(kd_bias_input_dim, d_model // 2),
+                nn.GELU(),
+                nn.Linear(d_model // 2, 1),
+            )
+            if kd_bias_input_dim > 0
+            else None
+        )
+        self.kd_assay_bias_scale = nn.Parameter(torch.tensor(-1.5))
+        self.binding_probe_mix_logit = nn.Parameter(torch.tensor(math.log(3.0)))
+        self.w_binding_class1_calibration = nn.Parameter(torch.tensor(0.2))
+        self.w_binding_class2_calibration = nn.Parameter(torch.tensor(0.2))
+
+    def predict_assay_panel(self, binding_affinity_vec: torch.Tensor) -> Dict[str, torch.Tensor]:
+        """Predicted KD offset under every value of every assay axis.
+
+        One tensor per axis, shaped ``[batch, n_values_for_that_axis]``.
+
+        The observed assay is deliberately not an argument. A caller asking
+        "what would this read as on a purified competitive radioactivity
+        assay" indexes the result; a training loop routes its loss to the
+        observed column. Neither conditions the input path, which is what
+        distinguishes this from an assay-context feature.
+        """
+        batch_size = binding_affinity_vec.shape[0]
+        panel: Dict[str, torch.Tensor] = {}
+        for axis, size in self.assay_panel_axes.items():
+            table = self.assay_panel_embed[axis].weight
+            expanded_vec = binding_affinity_vec.unsqueeze(1).expand(
+                batch_size, size, binding_affinity_vec.shape[-1]
+            )
+            expanded_axis = table.unsqueeze(0).expand(batch_size, size, table.shape[-1])
+            joined = torch.cat([expanded_vec, expanded_axis], dim=-1)
+            panel[f"binding_assay_panel_{axis}"] = self.assay_panel_head(joined).squeeze(-1)
+        return panel
+
+    def forward(
+        self,
+        *,
+        interaction_vec: torch.Tensor,
+        binding_affinity_vec: torch.Tensor,
+        binding_stability_vec: torch.Tensor,
+        class_probs: torch.Tensor,
+        species_probs: Optional[torch.Tensor] = None,
+        pep_vec: Optional[torch.Tensor] = None,
+        mhc_a_vec: Optional[torch.Tensor] = None,
+        mhc_b_vec: Optional[torch.Tensor] = None,
+        mhc_class: Optional[object] = None,
+        binding_context: Optional[Dict[str, torch.Tensor]] = None,
+    ) -> Dict[str, torch.Tensor]:
+        outputs: Dict[str, torch.Tensor] = {}
+        assay_context_vec = binding_affinity_vec.new_zeros(binding_affinity_vec.shape)
+        outputs["binding_assay_context_vec"] = assay_context_vec
+
+        # `binding_context` is accepted for signature compatibility and
+        # deliberately ignored. Reading it would condition this example's
+        # prediction on its own assay label, which docs/assay_modeling_contract.md
+        # forbids; the assay structure lives in predict_assay_panel instead,
+        # where every configuration is predicted rather than one selected.
+        factorized_assay_context_vec = None
+
+        probe_kd = self.binding_affinity_probe(binding_affinity_vec)
+        stability_score_raw = self.binding_stability_score_head(binding_stability_vec)
+        stability_score = smooth_range_bound(stability_score_raw, -8.0, 8.0)
+        outputs["binding_affinity_score_raw"] = probe_kd
+        outputs["binding_affinity_score"] = smooth_range_bound(probe_kd, -3.0, 8.0)
+        outputs["binding_affinity_probe_kd_raw"] = probe_kd
+        outputs["binding_affinity_probe_kd"] = outputs["binding_affinity_score"]
+        outputs["binding_stability_score_raw"] = stability_score_raw
+        outputs["binding_stability_score"] = stability_score
+        if (
+            self.sequence_summary_proj is not None
+            and pep_vec is not None
+            and mhc_a_vec is not None
+            and mhc_b_vec is not None
+        ):
+            sequence_summary_vec = self.sequence_summary_proj(
+                torch.cat([pep_vec, mhc_a_vec, mhc_b_vec], dim=-1)
+            )
+        else:
+            sequence_summary_vec = binding_affinity_vec.new_zeros(binding_affinity_vec.shape)
+        outputs["binding_sequence_summary_vec"] = sequence_summary_vec
+
+        # Joint assay panel. Swept, not indexed -- see predict_assay_panel.
+        outputs.update(self.predict_assay_panel(binding_affinity_vec))
+
+        if self.binding_kinetic_input_mode == "affinity_vec":
+            binding_input = binding_affinity_vec
+        elif self.binding_kinetic_input_mode == "interaction_vec":
+            binding_input = interaction_vec
+        else:
+            binding_input = self.binding_input_fuse(
+                torch.cat([interaction_vec, binding_affinity_vec], dim=-1)
+            )
+        outputs["binding_kinetic_input_mode"] = self.binding_kinetic_input_mode
+
+        binding_latents = self.binding(
+            binding_input,
+            mhc_class=mhc_class,
+            class_probs=class_probs,
+        )
+        outputs["binding_latents"] = binding_latents
+
+        log_kd_per_sample = self.binding.derive_kd(binding_latents).squeeze(-1)
+        binding_logit_from_core = binding_logit_from_kd_log10(
+            log_kd_per_sample,
+            midpoint_nM=self.binding_midpoint_nM,
+            log10_scale=self.binding_log10_scale,
+        )
+        binding_logit_from_core = smooth_range_bound(binding_logit_from_core, -20.0, 20.0)
+        outputs["binding_logit_from_core"] = binding_logit_from_core
+
+        kd_from_binding = (
+            self.binding_midpoint_log10_nM - self.binding_log10_scale * binding_logit_from_core
+        ).unsqueeze(-1)
+        if self.affinity_assay_residual_mode == "shared_base_segment_residual":
+            kd_bias_parts = [sequence_summary_vec]
+            kd_bias_parts.append(outputs["binding_affinity_score"])
+            kd_bias_input = torch.cat(kd_bias_parts, dim=-1)
+        elif self.affinity_assay_residual_mode == "shared_base_factorized_context_residual":
+            kd_bias_input = outputs["binding_affinity_score"]
+        elif self.affinity_assay_residual_mode in {
+            "shared_base_factorized_context_plus_segment_residual",
+            "dag_family",
+            "dag_method_leaf",
+            "dag_prep_readout_leaf",
+        }:
+            kd_bias_input = torch.cat(
+                [sequence_summary_vec, outputs["binding_affinity_score"]],
+                dim=-1,
+            )
+        elif self.affinity_assay_residual_mode == "pooled_single_output":
+            kd_bias_input = None
+        else:
+            kd_bias_input = binding_affinity_vec
+        if self.kd_assay_bias is not None and kd_bias_input is not None:
+            kd_bias_raw = self.kd_assay_bias(kd_bias_input)
+            kd_bias_cap = F.softplus(self.kd_assay_bias_scale)
+            kd_bias = F.softsign(kd_bias_raw) * kd_bias_cap
+        else:
+            kd_bias_raw = kd_from_binding.new_zeros(kd_from_binding.shape)
+            kd_bias_cap = F.softplus(self.kd_assay_bias_scale)
+            kd_bias = kd_from_binding.new_zeros(kd_from_binding.shape)
+        outputs["binding_kd_bias_raw"] = kd_bias_raw
+        outputs["binding_kd_bias"] = kd_bias
+        outputs["binding_kd_bias_cap"] = kd_bias_cap.view(1)
+
+        binding_probe_mix = torch.sigmoid(self.binding_probe_mix_logit)
+        outputs["binding_probe_mix_weight"] = binding_probe_mix.view(1)
+
+        assays = self.assay_heads(
+            binding_affinity_vec,
+            binding_stability_vec,
+            binding_latents=binding_latents,
+            binding_affinity_score=(
+                outputs["binding_affinity_score"]
+                if (
+                    self.affinity_assay_residual_mode == "shared_base_segment_residual"
+                    or self.affinity_assay_residual_mode
+                    in {
+                        "shared_base_factorized_context_residual",
+                        "shared_base_factorized_context_plus_segment_residual",
+                        "dag_family",
+                        "dag_method_leaf",
+                        "dag_prep_readout_leaf",
+                    }
+                )
+                else None
+            ),
+            # The stability heads reserve an input slot for this
+            # (`stability_score_dim`) and fill it with zeros when it is None.
+            # Passing None therefore did two things at once: left a whole input
+            # channel permanently dead, and starved binding_stability_score_head
+            # of gradient. It is computed a few lines above; feed it.
+            binding_stability_score=stability_score,
+            assay_context_vec=None,
+            factorized_assay_context_vec=factorized_assay_context_vec,
+            sequence_summary_vec=(
+                sequence_summary_vec
+                if self.affinity_assay_residual_mode
+                in {
+                    "shared_base_segment_residual",
+                    "shared_base_factorized_context_plus_segment_residual",
+                    "dag_family",
+                    "dag_method_leaf",
+                    "dag_prep_readout_leaf",
+                }
+                else None
+            ),
+            class_probs=class_probs,
+            species_probs=species_probs,
+        )
+        core_kd_log10 = smooth_lower_bound(kd_from_binding + kd_bias, -3.0)
+        outputs["binding_core_kd_log10"] = core_kd_log10
+        kd_log10 = (1.0 - binding_probe_mix) * core_kd_log10 + (
+            binding_probe_mix * outputs["binding_affinity_probe_kd"]
+        )
+        outputs["binding_mixed_kd_log10"] = kd_log10
+        affinity_obs = self.assay_heads.derive_affinity_observables(
+            binding_affinity_vec,
+            kd_log10,
+            assay_context_vec=None,
+            binding_affinity_score=(
+                outputs["binding_affinity_score"]
+                if (
+                    self.affinity_assay_residual_mode == "shared_base_segment_residual"
+                    or self.affinity_assay_residual_mode
+                    in {
+                        "shared_base_factorized_context_residual",
+                        "shared_base_factorized_context_plus_segment_residual",
+                        "dag_family",
+                        "dag_method_leaf",
+                        "dag_prep_readout_leaf",
+                    }
+                )
+                else None
+            ),
+            factorized_assay_context_vec=factorized_assay_context_vec,
+            sequence_summary_vec=(
+                sequence_summary_vec
+                if self.affinity_assay_residual_mode
+                in {
+                    "shared_base_segment_residual",
+                    "shared_base_factorized_context_plus_segment_residual",
+                    "dag_family",
+                    "dag_method_leaf",
+                    "dag_prep_readout_leaf",
+                }
+                else None
+            ),
+            class_probs=class_probs,
+            species_probs=species_probs,
+        )
+        assays.update(affinity_obs)
+        outputs["assays"] = assays
+
+        binding_base_logit = binding_logit_from_kd_log10(
+            assays["KD_nM"].squeeze(-1),
+            midpoint_nM=self.binding_midpoint_nM,
+            log10_scale=self.binding_log10_scale,
+        )
+        binding_base_logit = smooth_range_bound(binding_base_logit, -20.0, 20.0)
+        class_margin = class_probs[:, :1] - class_probs[:, 1:2]
+        binding_class1_logit = (
+            binding_base_logit.unsqueeze(-1)
+            + F.softplus(self.w_binding_class1_calibration) * class_margin
+        )
+        binding_class2_logit = (
+            binding_base_logit.unsqueeze(-1)
+            - F.softplus(self.w_binding_class2_calibration) * class_margin
+        )
+        binding_logit = (
+            class_probs[:, :1] * binding_class1_logit + class_probs[:, 1:2] * binding_class2_logit
+        ).squeeze(-1)
+
+        outputs["binding_base_logit"] = binding_base_logit
+        outputs["binding_class1_logit"] = binding_class1_logit
+        outputs["binding_class2_logit"] = binding_class2_logit
+        outputs["binding_logit"] = binding_logit
+        outputs["binding_mixed_logit"] = binding_logit.unsqueeze(-1)
+        outputs["binding_class1_prob"] = torch.sigmoid(binding_class1_logit)
+        outputs["binding_class2_prob"] = torch.sigmoid(binding_class2_logit)
+        outputs["binding_prob"] = torch.sigmoid(binding_logit)
+        outputs["binding_mixed_prob"] = outputs["binding_prob"].unsqueeze(-1)
+        return outputs

@@ -1,0 +1,50 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "argv": [
+    "experiments/2026-10-21_0512_codex_weirdo-reference-pretraining/code/launch.py"
+  ],
+  "conditions": [
+    "training_prevalence",
+    "composition_logistic",
+    "modular_peptide_source"
+  ],
+  "cwd": "/private/tmp/presto-modular-model",
+  "device": "cpu",
+  "environment": {
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PYTHONPATH": "/private/tmp/presto-modular-imports"
+  },
+  "executable": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "fit_argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "/private/tmp/presto-modular-model/experiments/2026-10-21_0512_codex_weirdo-reference-pretraining/code/launch.py",
+    "--output",
+    "/private/tmp/presto-modular-model/experiments/2026-10-21_0512_codex_weirdo-reference-pretraining",
+    "--manifest",
+    "/private/tmp/presto-modular-model/data/modular_cohorts/2026-10-21-weirdo-reference/manifest.json",
+    "--mode",
+    "fit"
+  ],
+  "git_commit": "1d3c96b41cebdcb4cf7e9cadb14f4fa9f1d4446d",
+  "git_status": "?? data/modular_cohorts/2026-10-21-weirdo-reference/\n",
+  "gpu": null,
+  "manifest": {
+    "path": "/private/tmp/presto-modular-model/data/modular_cohorts/2026-10-21-weirdo-reference/manifest.json",
+    "sha256": "ca008ea769c6dc5332cb14f4ef1d7bd125c79064223692596608588b8e4cff8f"
+  },
+  "network_subprocess_ceiling_seconds": 900,
+  "preparation": {
+    "path": "/private/tmp/presto-modular-model/experiments/2026-10-21_0512_codex_weirdo-reference-pretraining/attempts/reference-groups",
+    "sha256": "bebbb268c5fc40102bf650517e32a51f24b6ad1ef87f61ebce1ee4ef76fdc0a4"
+  },
+  "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "torch_threads": 1,
+  "versions": {
+    "numpy": "2.5.4",
+    "scikit-learn": "1.9.1",
+    "scipy": "1.18.1",
+    "torch": "2.14.1"
+  }
+}

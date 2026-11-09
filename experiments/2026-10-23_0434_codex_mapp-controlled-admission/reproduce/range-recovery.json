@@ -1,0 +1,27 @@
+{
+  "registered_utc": "2026-10-23T08:48:54.477156+00:00",
+  "amendment": "Both full HTTP200 streams ended early after about146s, with only16.5MB/22.3MB instead of386.1MB/205.7MB; validation correctly failed. Preserve original partial files/receipts. HTTP206 range probe succeeded; recover with bounded byte ranges, exact Content-Range and full published SHA1 validation before any source admission.",
+  "asset_root": "/private/tmp/presto-mapp-controlled-assets",
+  "source_sha256": "fa20991f2c5cb726cd7f9e5746cac00f5cbf9e1054183f25cac6f1b2d1f41465",
+  "chunk_bytes": 4194304,
+  "workers": 8,
+  "max_attempts": 3,
+  "assets": [
+    {
+      "path": "PXD009508/search.tar.gz",
+      "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2018/10/PXD009508/search.tar.gz",
+      "expected_size_bytes": 386079581,
+      "expected_sha1": "d2a715024497a083af0c86c0c45d1a866a71c6b3",
+      "magic_hex": "1f8b",
+      "metadata_sha256": "826a2c36d2c9be44bb11502f504fb504773bed4505f24069dfe9b8915c51dfdf"
+    },
+    {
+      "path": "PXD007263/search.tar.gz",
+      "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2018/10/PXD007263/search.tar.gz",
+      "expected_size_bytes": 205717009,
+      "expected_sha1": "13d131409b009bea62def66a56294c23511899cf",
+      "magic_hex": "1f8b",
+      "metadata_sha256": "63b9ad9f1e25a36677c81b520208dd1a59f0bf8b9996a1caba8e5cda22d029bb"
+    }
+  ]
+}

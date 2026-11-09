@@ -34,9 +34,9 @@ jobs:
           # hard 100-column limit, so a new rule promoted into E or F, or a
           # change in how E501 measures width, would red-light an unrelated
           # PR. Bump deliberately.
-          python -m pip install 'ruff==0.16.0' pytest
+          python -m pip install 'ruff==0.16.10' pytest
           python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
-          python -m pip install -e '.[hitlist]'
+          python -m pip install -e '.[hitlist,dev]'
       - name: Lint
         run: ./lint.sh
       - name: Test

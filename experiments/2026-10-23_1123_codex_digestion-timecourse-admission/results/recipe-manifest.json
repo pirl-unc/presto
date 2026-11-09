@@ -1,0 +1,96 @@
+{
+  "catalog_schema_version": 14,
+  "coverage": {
+    "curves_by_condition": {
+      "soh2024_digestion:condition:aSPIRE_AnnexinA1": 1600,
+      "soh2024_digestion:condition:aSPIRE_FFH_12p5": 5058,
+      "soh2024_digestion:condition:aSPIRE_FFH_6p25": 5400,
+      "soh2024_digestion:condition:aSPIRE_H2A": 1394,
+      "soh2024_digestion:condition:aSPIRE_H2B": 1500,
+      "soh2024_digestion:condition:aSPIRE_H3": 644,
+      "soh2024_digestion:condition:aSPIRE_H4": 1588,
+      "soh2024_digestion:condition:aSPIRE_IL37b": 1140,
+      "soh2024_digestion:condition:aSPIRE_LEDGF": 3888,
+      "soh2024_digestion:condition:aSPIRE_UBE2K": 1200,
+      "soh2024_digestion:condition:aSPIRE_aSyn": 2480,
+      "soh2024_digestion:condition:aSPIRE_hTau": 4674
+    },
+    "curves_by_split": {
+      "test": 3680,
+      "train": 23054,
+      "val": 3832
+    },
+    "n_components": 15,
+    "n_constructs": 15,
+    "n_curve_candidates": 50372,
+    "n_examples": 30566,
+    "n_source_final_vectors": 53413,
+    "reason_counts": {
+      "annotation_only": 206,
+      "conflicting_IL_alias_or_repeated_slot_values": 1,
+      "fewer_than_three_positive_nonzero_times": 907,
+      "insufficient_repeated_common_positive_times": 2880,
+      "no_actual_zero_baseline_for_every_technical_label": 10641,
+      "not_exclusively_source_contiguous": 7094,
+      "not_one_IL_equivalent_contiguous_span": 6912,
+      "unresolved_condition_time_conflict": 2198
+    }
+  },
+  "files": {
+    "components.json": {
+      "sha256": "f671af6267de6e1531027bb14fc4e76f8c3617b94e42c0b7913c8093daed74a9",
+      "size_bytes": 3729
+    },
+    "dispositions.json": {
+      "sha256": "979e89d584df2e995217f4ec18501d89920b8b3ee2caf11336b5ada7ede8fd43",
+      "size_bytes": 150623157
+    },
+    "examples.json": {
+      "sha256": "e318c882a7bef44d04c58160cafcdb1d08ebe84a06f6d0e16aa1a0e3a736bf25",
+      "size_bytes": 222936987
+    },
+    "recipe.json": {
+      "sha256": "155b68053f0045fb0a09b112124a7a9b74ed9203bf4ce9fb398aa3c40d364a7d",
+      "size_bytes": 1373
+    },
+    "source_manifest.json": {
+      "sha256": "b3cfffc444f922803625735bd1e712a2f734513fc4bd8e83f8fd83759f55410c",
+      "size_bytes": 56874
+    },
+    "source_tables/constructs.parquet": {
+      "sha256": "dfc590ecda8ebdf294ac268d931d6f2e191e8da96bc7814fe04c430c91e0bf75",
+      "size_bytes": 13361
+    },
+    "source_tables/contexts.parquet": {
+      "sha256": "3405f7768b66deb9eb03edb011f9cf31cde67b26b3d4fae351db4f813e94b077",
+      "size_bytes": 18096
+    },
+    "source_tables/filtered_vectors.parquet": {
+      "sha256": "84b20ffbeafed3cb1c9d164b1c2830d62edce42dc4c468564b02211e91245c23",
+      "size_bytes": 9394411
+    },
+    "source_tables/final_vectors.parquet": {
+      "sha256": "6e75ff952a809e1a867d39e6e03ce1dbb4690d35c7173f36eaecdef463315e85",
+      "size_bytes": 21570631
+    },
+    "source_tables/raw_quantities.parquet": {
+      "sha256": "55168afcbe50b635e4436dbbcbc4e181aaa37c0e331dfbd0596ed637e22a1e02",
+      "size_bytes": 46075323
+    },
+    "summary.json": {
+      "sha256": "72edbbe78c1231afdf63c12644941f434dd01015c84d8f545f1e03aa9ef825e2",
+      "size_bytes": 1321
+    }
+  },
+  "hitlist_version": "2.0.9",
+  "output_kind": "registered_digestion_timecourses",
+  "recipe": {
+    "name": "digestion_contiguous_timecourses_v1",
+    "registered_recipe": "digestion_contiguous_timecourses_v1",
+    "schema_version": 1
+  },
+  "recipe_sha256": "23358361211ceddf1362ae43bcf83f3041626e13976f9a98dbd5e9e7c56afb7d",
+  "schema_version": 1,
+  "source_package_manifest_sha256": "b3cfffc444f922803625735bd1e712a2f734513fc4bd8e83f8fd83759f55410c",
+  "source_package_schema_version": 9
+}

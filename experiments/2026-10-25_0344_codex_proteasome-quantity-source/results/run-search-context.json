@@ -1,0 +1,92 @@
+{
+  "project": "PXD018722",
+  "source_panel": "Sahu2021_Dataset7_Hi20S",
+  "run_mapping": [
+    {
+      "sample_label": "Cont1",
+      "raw_filename": "Seq61406_HFX.raw",
+      "raw_accession": "537ff7216de263ea02a11e3077ed22eac7d4f24695266bf6c4e9e722912c1578",
+      "raw_downloaded": false,
+      "design_fraction": "",
+      "design_ptm": ""
+    },
+    {
+      "sample_label": "Cont2",
+      "raw_filename": "Seq61407_HFX.raw",
+      "raw_accession": "c7eb5d8dd8ee65838c2a26faa26f126de9066b2a3f565d0625ffa64495884209",
+      "raw_downloaded": false,
+      "design_fraction": "",
+      "design_ptm": ""
+    },
+    {
+      "sample_label": "Cont3",
+      "raw_filename": "Seq61408_HFX.raw",
+      "raw_accession": "1a69e49edf23e9bbdff6a15ac33bd1f1560d6847e6cc4dd6d974a38a75a11bb7",
+      "raw_downloaded": false,
+      "design_fraction": "",
+      "design_ptm": ""
+    },
+    {
+      "sample_label": "KD1",
+      "raw_filename": "Seq61409_HFX.raw",
+      "raw_accession": "e746155af63c4b4971ee7fd81ae2e4ce89eb7903d1cbe9fca7b663030f68bb69",
+      "raw_downloaded": false,
+      "design_fraction": "",
+      "design_ptm": ""
+    },
+    {
+      "sample_label": "KD2",
+      "raw_filename": "Seq61410_HFX.raw",
+      "raw_accession": "8995e48f724f4d31b17ee16b6d39dfe6b93751b9cb270af3ac05e143d2438241",
+      "raw_downloaded": false,
+      "design_fraction": "",
+      "design_ptm": ""
+    },
+    {
+      "sample_label": "KD3",
+      "raw_filename": "Seq61411_HFX.raw",
+      "raw_accession": "9f10c0cff74c065b459a4208ca8e2f119f51650a193028ba36c478bc4ebbb535",
+      "raw_downloaded": false,
+      "design_fraction": "",
+      "design_ptm": ""
+    }
+  ],
+  "search_settings": {
+    "maxQuantVersion": "1.6.7.0",
+    "matchBetweenRuns": "True",
+    "matchBetweenRunsFdr": "False",
+    "peptideFdr": "0.01",
+    "proteinFdr": "0.01",
+    "minPeptideLengthForUnspecificSearch": "8",
+    "maxPeptideLengthForUnspecificSearch": "25",
+    "parameterGroups/parameterGroup/enzymeMode": "4",
+    "parameterGroups/parameterGroup/lfqMode": "1",
+    "parameterGroups/parameterGroup/lfqSkipNorm": "False",
+    "variable_modifications": [
+      "Oxidation (M)",
+      "Acetyl (Protein N-term)"
+    ],
+    "fixed_modifications": [],
+    "fasta_basename": "HUMAN_NS3_Cyclin.fasta"
+  },
+  "article_minimum_length_claim": 7,
+  "deposited_search_length_range": [
+    8,
+    25
+  ],
+  "context": "Human HEK293T control versus inducible PSMD2/Rpn1 knockdown; native intracellular hot-water peptide extraction described by primary study.",
+  "not_assumed": [
+    "professional_APC",
+    "complete_KO",
+    "numeric_remaining_activity",
+    "matched_precursor_quantity",
+    "known_extraction_recovery",
+    "molar_calibration",
+    "independent_biological_replicates_from_numbered_labels",
+    "paired_control_KD_specimens",
+    "Intensity_is_LFQ",
+    "unmodified_peptidoform"
+  ],
+  "original_file_inventory_rows": 48,
+  "original_raw_files_downloaded": 0
+}

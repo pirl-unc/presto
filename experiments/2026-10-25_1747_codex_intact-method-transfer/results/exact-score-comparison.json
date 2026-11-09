@@ -1,0 +1,122 @@
+[
+  {
+    "kind": "uniform",
+    "draws": 16,
+    "seed": 42,
+    "score_arm": "original_uniform-score-16-42",
+    "exact_arm": "original_uniform-exact-0-42",
+    "score_minus_exact_rmse": -0.0006455451224894881,
+    "score_vs_exact_prediction_rmse": 0.0008232349026739265,
+    "max_prediction_difference": 0.001465045357480932
+  },
+  {
+    "kind": "uniform",
+    "draws": 16,
+    "seed": 43,
+    "score_arm": "original_uniform-score-16-43",
+    "exact_arm": "original_uniform-exact-0-42",
+    "score_minus_exact_rmse": -0.00011777315822725232,
+    "score_vs_exact_prediction_rmse": 0.00016157132839316339,
+    "max_prediction_difference": 0.0002924587036894355
+  },
+  {
+    "kind": "uniform",
+    "draws": 16,
+    "seed": 44,
+    "score_arm": "original_uniform-score-16-44",
+    "exact_arm": "original_uniform-exact-0-42",
+    "score_minus_exact_rmse": 0.0006114370119941204,
+    "score_vs_exact_prediction_rmse": 0.0009701065253445663,
+    "max_prediction_difference": 0.001840367035421675
+  },
+  {
+    "kind": "uniform",
+    "draws": 64,
+    "seed": 42,
+    "score_arm": "original_uniform-score-64-42",
+    "exact_arm": "original_uniform-exact-0-42",
+    "score_minus_exact_rmse": -0.0004171768988499025,
+    "score_vs_exact_prediction_rmse": 0.0005866403410064108,
+    "max_prediction_difference": 0.001074963911469995
+  },
+  {
+    "kind": "uniform",
+    "draws": 64,
+    "seed": 43,
+    "score_arm": "original_uniform-score-64-43",
+    "exact_arm": "original_uniform-exact-0-42",
+    "score_minus_exact_rmse": 0.00015921658494028046,
+    "score_vs_exact_prediction_rmse": 0.0001998163157437328,
+    "max_prediction_difference": 0.00035689240697234226
+  },
+  {
+    "kind": "uniform",
+    "draws": 64,
+    "seed": 44,
+    "score_arm": "original_uniform-score-64-44",
+    "exact_arm": "original_uniform-exact-0-42",
+    "score_minus_exact_rmse": 0.00032815845866540627,
+    "score_vs_exact_prediction_rmse": 0.0004745709363681002,
+    "max_prediction_difference": 0.000879801026314464
+  },
+  {
+    "kind": "residue",
+    "draws": 16,
+    "seed": 42,
+    "score_arm": "original_residue-score-16-42",
+    "exact_arm": "original_residue-exact-0-42",
+    "score_minus_exact_rmse": -0.0004177661032661595,
+    "score_vs_exact_prediction_rmse": 0.000532897257221191,
+    "max_prediction_difference": 0.0009044154364010737
+  },
+  {
+    "kind": "residue",
+    "draws": 16,
+    "seed": 43,
+    "score_arm": "original_residue-score-16-43",
+    "exact_arm": "original_residue-exact-0-42",
+    "score_minus_exact_rmse": -3.851829358131331e-05,
+    "score_vs_exact_prediction_rmse": 0.00042618522169088563,
+    "max_prediction_difference": 0.001038920051382064
+  },
+  {
+    "kind": "residue",
+    "draws": 16,
+    "seed": 44,
+    "score_arm": "original_residue-score-16-44",
+    "exact_arm": "original_residue-exact-0-42",
+    "score_minus_exact_rmse": 0.000365975199305979,
+    "score_vs_exact_prediction_rmse": 0.000508025718681972,
+    "max_prediction_difference": 0.001013323016355705
+  },
+  {
+    "kind": "residue",
+    "draws": 64,
+    "seed": 42,
+    "score_arm": "original_residue-score-64-42",
+    "exact_arm": "original_residue-exact-0-42",
+    "score_minus_exact_rmse": 0.0001596837058892575,
+    "score_vs_exact_prediction_rmse": 0.000207811339207282,
+    "max_prediction_difference": 0.000406431309253108
+  },
+  {
+    "kind": "residue",
+    "draws": 64,
+    "seed": 43,
+    "score_arm": "original_residue-score-64-43",
+    "exact_arm": "original_residue-exact-0-42",
+    "score_minus_exact_rmse": 0.0002976829208541365,
+    "score_vs_exact_prediction_rmse": 0.00044504582933228105,
+    "max_prediction_difference": 0.0008815921932305848
+  },
+  {
+    "kind": "residue",
+    "draws": 64,
+    "seed": 44,
+    "score_arm": "original_residue-score-64-44",
+    "exact_arm": "original_residue-exact-0-42",
+    "score_minus_exact_rmse": 0.00016032009103045253,
+    "score_vs_exact_prediction_rmse": 0.0001933815466811268,
+    "max_prediction_difference": 0.00035238280321792104
+  }
+]

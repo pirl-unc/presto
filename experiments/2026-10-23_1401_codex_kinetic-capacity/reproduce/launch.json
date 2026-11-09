@@ -1,0 +1,32 @@
+{
+  "registered_at": "2026-10-23T14:01:30.161821-04:00",
+  "agent_model": "Codex / GPT-6",
+  "presto_commit": "311744eee9aa72c9b9ff4d44529a494982a8dd92",
+  "presto_dirty": " M experiments/experiment_log.md\n M tasks/todo.md\n?? data/availability_recipes/\n?? experiments/2026-10-23_1324_codex_substrate-entry/\n?? experiments/2026-10-23_1401_codex_kinetic-capacity/\n?? experiments/agents/codex/plans/digestion-capacity-decomposition.md\n?? experiments/agents/codex/plans/full-ic50-fitting.md\n?? models/substrate_entry.py\n?? tasks/modular_model/trajectory-sampling-issue.md\n?? tests/test_substrate_entry.py\n",
+  "recipe_directory": "/private/tmp/hitlist-digestion-209-review-candidate",
+  "recipe_manifest_sha256": "5f616170b5514cb4d8f0c7b7843d232959e9514eebbca6483f976e17b0846615",
+  "reference_family": "/private/tmp/presto-modular-model/experiments/2026-10-23_1202_codex_biological-cut-rates",
+  "reference_fits_sha256": "2400f214141b6ab421cc0b5168ec08b3209507b62b7cf0a590fd719937bd267f",
+  "allowed_splits": [
+    "train"
+  ],
+  "test_policy": "Training-capacity diagnostic; both previous held-out strata excluded before target construction",
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "PYTHONPATH": "/private/tmp/presto-modular-imports"
+  },
+  "runtime_context": "May overlap substrate-entry sampled fit; no isolated hardware benchmark claim",
+  "source_hashes": {
+    "code/source.py": "e81c4beca5c73e2aa91f356acb892401da402ce11c68cb13d608a266f7701df5",
+    "code/shape_bounds.py": "1c474babf64fd46f0ef5647d8a1054d92de83159de25c83eb4fa1f377599cfc6"
+  },
+  "argv": [
+    "sh",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_1401_codex_kinetic-capacity/reproduce/launch.sh"
+  ],
+  "shape_registered_at": "2026-10-23T14:04:42.399131-04:00",
+  "reference_metrics_sha256": "521d30036046b665651f2be0f0c533436a837b9eb612d8d4ac13b9ece18ce3e9"
+}

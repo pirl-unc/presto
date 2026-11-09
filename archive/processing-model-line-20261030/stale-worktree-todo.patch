@@ -1,0 +1,502 @@
+diff --git a/tasks/todo.md b/tasks/todo.md
+index efde5d72..b16e0c3f 100644
+--- a/tasks/todo.md
++++ b/tasks/todo.md
+@@ -12138,6 +12138,317 @@ Log: `/private/tmp/presto-full-ic50-adapter-regression.log`. Source/test files
+ remained unchanged; only experiment analysis/artifacts/documentation were added
+ while it ran. Repository Ruff and explicit current recipe/analyzer checks pass.
+ 
++### Full-cohort assay-only fitting comparison
++
++Follow the [prospective fit contract](../experiments/agents/codex/plans/full-ic50-fitting.md).
++Use all exact training measurements and unchanged held-outs. Compare fixed mean,
++length/composition/class ridge, three fresh network seeds and a within-class
++training-label permutation control. Auxiliary qualification is not a prerequisite.
++
++- [ ] Preserve complete resolved metadata/register/source diagnostics in prediction records.
++- [ ] Register/freeze source, manifests, baseline definitions and GPU execution contract.
++- [ ] Fit baselines and launch the prespecified neural conditions with durable handles/artifacts.
++- [ ] Collect all metrics, uncertainty, source replay and fresh-process checkpoint evidence.
++- [ ] Close the experiment without conflating fitting with broader biological qualification.
++
++### Antigen-processing trajectory sampler: requested design issue
++
++Write a separate research extension to #130/#131, preserving the active fitting
++work. The specification must define the target distribution and normalization,
++the distinction between a biological trajectory and a computational proposal,
++source abundance versus processing flux and surface residence, class-I/class-II
++routes, context overrides, the separate MS observation process, and partial-data
++training. Compare likelihood/distribution matching with RL and GFlowNet sampling;
++do not use self-scored reward as evidence of biological accuracy. Specify a
++small initial model, data readiness gates, falsifiable baselines and milestones.
++This task files a design issue; it does not launch another fit or claim a working
++trajectory model.
++
++- [x] Inspect existing issues/code and primary literature for overlap and assumptions.
++- [x] Draft and review the issue against the holistic model contract.
++- [x] File the issue, verify its exact published body, and record the link here.
++
++Review: filed [#132](https://github.com/pirl-unc/presto/issues/132) and fetched
++the published issue to verify exact title/body equality with the reviewed
++[local specification](modular_model/trajectory-sampling-issue.md). Body SHA256:
++`ed0bd8c920e8c3e57b5f65f7c8a8b2dd9468ceb7a74f81e5fc00ffb1a40881ed`.
++The 2,452-word design separates source flux, pool abundance and MS observation;
++defines coarse latent paths, class-specific support and source/allele accounting;
++and compares likelihood training, sampled gradients and reward-proportional
++generation. It includes identifiability limits, partial-data supervision,
++upstream audit requirements and staged qualification. This is a separate research
++issue linked to #130/#131; no model code changed and no experiment was launched.
++
++### Correction: retain nonbinding processing products in #132
++
++The requested sampler covers the broader processing-product pool, including
++short/sub-ligand fragments and other peptides that cannot bind the supplied MHC.
++Revise the primary target and trajectory state accordingly; make the bound
++ligand repertoire a downstream conditional distribution. Keep nonbinding peptide
++identities/amounts separate from degradation/removal, missing observations and
++unknown compatibility. Propagate this correction through observation/data
++contracts, RL targets, evaluation and milestones; update the issue title/body
++and verify the published content.
++
++- [x] Revise the complete specification and record the correction lesson.
++- [x] Publish and verify the amended issue title/body.
++
++Review: revised local specification is 3,059 words with body SHA256
++`98c16fc3fc56822beee448c92d564fd3d758867ff7a574068cefab2731679e2d`.
++It defines the broader product distribution and separate bound-only distribution,
++retains nonbinding products and optional MHC occupancy, distinguishes removal,
++and propagates the correction through data/RL/evaluation/delivery requirements.
++Local formatting and specification-content checks pass. No model code changed.
++The original published body was fetched and matched before editing. Two REST
++PATCH attempts and a follow-up REST read failed with GitHub connection errors;
++the independent GitHub connector read also failed with a transport error.
++Publication of this amendment remains unverified and must be retried/read back.
++The exact request is preserved at
++`/private/tmp/presto-trajectory-issue-peptide-pool-request.json`; the authoritative
++amended prose is `tasks/modular_model/trajectory-sampling-issue.md`.
++
++Publication closure: GitHub access recovered during the subsequent design task.
++The expanded architecture document supersedes that pending amendment and retains
++the complete nonbinder correction. Issue #132 now contains the detailed design;
++its title/body were fetched and checked for exact equality with the request.
++
++### Processing and MS architecture design document
++
++Write `docs/processing_model_design.md` as a proposed extension to #130/#132,
++with a concrete recommendation and an explicit comparison of weighted spans,
++differentiable discrete marginalization, relaxed discrete sampling and RL.
++Specify the full product pool including nonbinders, amount versus probability,
++long-sequence/span representation, machinery conditioning and override semantics,
++coupling to the existing pMHC affinity/stability/register representation, and
++separate digestion/recovery/MS observation. Give a coherent minimal first model
++and a route to sparse discrete trajectories without naming unanchored scores as
++physical probabilities. Map supervision, partial-data training, identifiability,
++subset support and current implementation gaps. Preserve the current fitting work.
++
++- [x] Inspect relevant model/data contracts and verify scientific/method references.
++- [x] Write and review the design, with architecture diagram and framework comparison.
++- [x] Link the repository documentation and verify its build and content.
++- [x] Reconcile the pending #132 correction and link the detailed design if publication is available.
++
++Review: published documentation commit `23558a14f72c2db4f980992a6bbddf68b765db9a`
++on the existing draft PR branch. The 3,473-word design recommends weighted spans
++and differentiable marginalization, then supported sparse processing transitions
++and optional sampling/gradient approximations. It specifies machinery interactions,
++effective supply/retention and MS observation, component identifiability gates,
++subset compilation and implementation gaps. Elution-only subsets collapse
++unanchored supply/retention instead of allocating canceling free terms.
++
++Strict MkDocs builds and local link/structure/span-count checks pass. The generated
++page contains all five tables and three code/diagram blocks, with valid navigation.
++The published repository file matches local bytes; the issue body matches its
++request and local mirror exactly (SHA256
++`e037c1b94903a8e680a3dcb8a50b3c3c85662f4aadb7d34556711d3caacb3068`).
++Both exact-head GitHub docs jobs passed; both lint-test jobs were still running
++at the last check. No application code changed and no experiment was launched.
++
++### Matched differentiable and discrete algorithm experiments
++
++Follow the [prospective generic comparison](../experiments/agents/codex/plans/discrete-distribution-comparison.md).
++Run both methods on synthetic integer-symbol spans with a known target, matched
++models/seeds/objectives and explicit noncompatible products. Keep this algorithm
++experiment separate from biological simulator qualification and the pending
++real-assay work.
++
++- [x] Implement and verify the exact and discrete estimators and data contract.
++- [x] Register/freeze the family and run the prespecified conditions.
++- [x] Independently verify held-out metrics, teacher data and checkpoint replay.
++- [x] Close and publish the full comparison with limits and actual outcomes.
++
++Review: all ten fits completed on frozen source `adab28ad8ac389a5f3a395b0b8dfd6e89253221c`.
++All three seeds of exact, REINFORCE 8 and REINFORCE 64 pass the prospective
++synthetic recovery screen. Mean test TV is 0.010716/0.013602/0.011359 versus
++uniform 0.831593; reward-only is 0.253689 and fails. Six focused tests, independent
++teacher/metric/sample checks and fresh-process replay of all ten selected
++checkpoints pass. The complete raw bundle retains all split predictions and
++checkpoints with verified hashes. This is an integer-symbol algorithm experiment,
++not real processing/assay qualification; application model/trainer code is unchanged.
++
++Publication closure: report and complete bundle pushed as
++`af74af65f6a65e4ead63988e4459c211e46ef3da` on draft PR #131. Issue #132 retains
++the full design and now includes the outcome table and immutable report link;
++published issue and report were fetched and matched to local bytes. Both push/PR
++lint-test jobs and both docs jobs passed on this exact commit. The pending real
++IC50 comparison and broader architecture qualification remain open.
++
++### Active availability goal: optimizer controls, observation models, biological data
++
++Keep the full [availability-learning program](../experiments/agents/codex/plans/availability-learning-program.md)
++active. Previous synthetic success does not prove biological concentration recovery.
++
++- [x] Inspect current worktree, goal state and experiment/source contracts.
++- [x] Specify the requested factorial, exact/RL references, reuse budgets and hybrid.
++- [x] Verify/freeze/run the 69 fits and gradient probes; close independent evidence.
++- [x] Specify/run partial-observation and whole-multiset objective comparisons.
++- [ ] Audit quantitative biological sources and precursor/observation identifiability.
++- [ ] Run registered comparisons on admitted biological data and integrate supported models.
++- [ ] Validate precursor-normalized availability/concentration claims on held-out measurements.
++
++Review: all 69 factorial/hybrid fits completed on frozen source 4a31eaa. Independent
++metrics, 69 checkpoint replays and nine reference replays passed. Full results and
++artifact bundle are in the dated family; exact/original RL stay the references.
++Partial-observation/multiset and biological-data stages remain active.
++
++### Finite-observation and multiset follow-up
++
++Follow the detailed `experiments/agents/codex/plans/partial-observation-multiset.md`
++contract. Hold the distribution target fixed for exact L2 and corrected multiset
++L2; explicitly isolate naive histogram variance bias and blind-support limits.
++
++- [x] Write specification and check in with the user before implementation.
++- [x] Implement finite observations, isolated fitting inputs and matched losses.
++- [x] Verify estimator expectations/gradients and data/selection boundaries.
++- [x] Freeze/register and run all 60 conditions without posthoc tuning.
++- [x] Independently reconstruct observations/metrics and replay checkpoints.
++- [ ] Close and publish evidence, then proceed with biological source admission.
++
++Publication closure for the preceding factorial: commit 59bf871 is pushed;
++all four exact-head checks passed. Issue #132 was read back after updating and
++its exact full body matches the prepared request and local mirror; issue open.
++
++Review: all60 fits completed on source942cb62; eight pre-fit tests, all924metric
++sets, full count regeneration and60fresh-process training-row checkpoint replays
++pass. Exact CE wins mean TV across all four contracts. Full report/bundle closed
++locally; publication pending. Biological availability goal remains active.
++
++Publication closure: report/bundle pushed as ed340662154c116317b77bf005aa28154f0c3e61.
++Issue132 readback matches request exactly and remains open; published report
++bytes match the reviewed local file. CI: lint-test:in_progress, docs:success, lint-test:in_progress, docs:success.
++
++### Homogeneous study/sample metadata for availability datasets
++
++User requires all important source and sample distinctions in one curation system.
++Use the existing Hitlist 2.0 catalog/material/protocol/cross-modality roadmap
++(#733/#736/#737), rather than a second Presto registry. Detailed consumer contract:
++`docs/study_curation_contract.md`; biological source-admission plan updated.
++
++- [x] Inspect existing Hitlist/Presto identity, condition, species and quantity contracts.
++- [x] Specify metadata coverage, scoped assertions, joins, uncertainty and eligibility.
++- [x] Add concrete cross-study acceptance requirements to upstream work and verify publication.
++- [ ] Qualify the producer/consumer metadata path before admitting new biological fits.
++- [ ] Curate deposited sample/run/channel records and verify exact downstream preservation.
++
++The last two items require actual implementation/source qualification; a written
++contract is not a claim that those records already exist. Full availability goal
++remains active.
++
++Review: shared curation contract and prospective biological admission plan published
++on draft PR131 at932ccef. Strict MkDocs build passes. Hitlist issues736/737 retain
++their original scope and now include concrete metadata and cross-study acceptance
++cases; exact published bodies were read back and verified, both issues open.
++No source-specific sample IDs or measurements have been fabricated or admitted.
++Producer/consumer implementation qualification and source-table curation remain
++next work under the active availability goal.
++
++### Availability source audit execution
++
++Previous goal turn classified as progress:129new synthetic fits plus published
++shared metadata/source-admission contracts and verified upstream issue updates.
++Current authoritative worktree932ccef; original checkouts preserved.
++
++- [x] Recheck current worktree, source plans, metadata ownership and CI state.
++- [x] Register source audit with no-fit/no-held-out-metric scope.
++- [x] Retrieve and hash PXD057588 tables/SDRF/file mappings; exclude partial Wolf archive.
++- [x] Audit sample/assay scopes, scales and pairing evidence; record unresolved joins.
++- [x] Publish machine-readable coverage and source-linked deferral decisions.
++- [ ] Qualify shared metadata integration and then freeze biological fit contract.
++
++Source-audit review: six workbooks and community SDRF pinned in a17asset datacache
++bundle;35,772peptide rows,309,126quantities,6/50rawfiles SDRF-covered. Eight of nine
++Table9/11channel mappings differ. Partner-specific MHC loss, digest-peptide versus
++protein quantities, conflicts and independent table panels are explicit shared
++curation acceptance cases. Independent OOXML/TSV verification passes. The partial
++Wolf-Levy archive is excluded; no biological rows admitted or model fitted.
++Publication and source-specific Hitlist integration remain separate steps.
++
++Source-audit publication:51b895eb3925de87df7710c7bd6c78d131c25697 pushed to draftPR131.
++Published report bytes match local; Hitlist736/737 and Presto132 bodies match exact
++prepared requests and all remain open. Strict docs, explicit audit lint and
++independent source verification pass. Current exact-head CI: [('lint-test', 'queued', None), ('docs', 'completed', 'success'), ('lint-test', 'queued', None), ('docs', 'completed', 'success')].
++The shared metadata implementation/admission and availability goal remain active.
++
++### Shared-context implementation continuation
++
++Previous goal turn was progress: published PXD057588 source evidence and acceptance
++requirements. Current authoritative Presto head51b895e. Hitlist main95a693a has
++catalog PR1; separate worktree has committed PR2 3499292. Created isolated
++`/private/tmp/hitlist-study-context`, branch `codex/study-material-protocols-20261022`,
++to build the shared material/protocol layer without touching that worktree. Detailed
++spec and checklist are in its `tasks/pr3-study-context-spec.md` and `tasks/todo.md`.
++The source audit is not a biological fit or concentration validation.
++
++Ownership replan16:01UTC: the separate Hitlist worktree now contains the actual
++PR3 implementation (`context_evidence.py`, `pr3-context-evidence-spec.md`) on merged
++PR2 e7c74d9. Stop developing/publishing the competing isolated prototype. Preserve
++it for reference, and keep canonical metadata ownership upstream. Continue actual
++PXD057588 quantity-transform reconciliation and biological endpoint definition;
++these do not overlap the upstream schema implementation.
++
++### PXD057588 quantity reconciliation
++
++Plan: `experiments/agents/codex/plans/pxd057588-quantity-reconciliation.md`.
++- [x] Register exact source/policy comparison before computing results.
++- [x] Reconstruct primary log2FCs and wrong-policy controls from original cells.
++- [x] Audit parent support and independently verify every comparison.
++- [x] Publish results and refine the biological endpoint contract.
++
++Quantity review: all200,724 source FC cells reconcile to the frozen paper policy;
++all200,724 disagree under opposite normalization. Independent scalar replay and
++source/derived hashes pass; only110 shared labels have multiple observed ligands
++and digest peptides. No biological fit or normalized metadata admission claimed.
++
++Published quantity/recovery audit as30cc5368bfa58b936339c3e5600309625831d851
++to PR131. IssuesHitlist736/737 andPresto132 preserve prior bodies and exact
++readbacks pass. Published report byte-matches. Strict docs and explicit Ruff
++pass. Final-head CI at checkpoint: [('lint-test', 'in_progress', None), ('docs', 'completed', 'success'), ('lint-test', 'in_progress', None), ('docs', 'completed', 'success')].
++Biological admission and the availability goal remain active. Next independent
++work is processed Wolf-Levy table semantics/source sample mapping; upstream
++canonical Hitlist context implementation remains in its existing worktree.
++
++### MAPP source-admission continuation
++
++Previous goal turn: progress (published quantity reconciliation and recovered
++archive, independent verification, shared-curation acceptance evidence).
++Current head30cc536; authoritative Hitlist context0976ad1 is committed separately,
++with final gates pending. Read current state before source work.
++Plan: experiments/agents/codex/plans/mapp-source-admission.md.
++- [x] Register source-contract audit before derived data computation.
++- [x] Map seven source deposits and inspect recovered processed tables.
++- [x] Reconcile original rows/IDs and preserve metadata/eligibility gaps.
++- [x] Publish source decision and specify the biological comparison it supports.
++
++MAPP review: attempt1stopped on source empty group IDs, preserved recipe/log;
++attempt2quarantines36records and audits149,959evidence rows. Independent replay
++verifies160,095quantity comparisons and10,673ledger rows. 2,272peptides/572groups
++have structural contrast support; no biological rows admitted. PXD009360archive
++now checksum/CRC-verified, but9tryptic runs have numeric labels without condition
++map. Previous published head30cc536has all4CIchecks successful.
++
++MAPP audit published as ef4b4c1a51e74add1557b8aa5fcc8d95a84309c5 on PR131.
++Hitlist737/Presto132 exact-body readbacks verified open; published README byte
++matches. Current exact-head CI: [('docs', 'completed', 'success'), ('lint-test', 'in_progress', None), ('docs', 'completed', 'success'), ('lint-test', 'in_progress', None)].
++Next independent work: recover the published whole-proteome sample map and
++source filter semantics; inspect native quantities and qualify a shared Hitlist
++source export before the fixed-reference biological exact/REINFORCE comparison.
++All download/verification tool handles in this turn are terminal success; the
++tryptic archive has an immutable receipt and is not a partial download.
++Goal remains active; progress is real source support and acquisition, not a fit.
++
++### MAPP publisher reconciliation
++
++Previous goal turn was progress. Current authoritative Prestoef4b4c1; Hitlist
++context0976ad1unchanged at inspection. Public publisher links obtained via Chrome
++after automated PMC downloads returned challenge HTML (excluded inputs).
++Plan: experiments/agents/codex/plans/mapp-publisher-reconciliation.md.
++- [x] Register questions, fixed filter hypotheses and source scope.
++- [ ] Freeze source workbooks and inspect their actual schema/mappings.
++- [ ] Reconcile source quantities/filter decisions and independently verify.
++- [ ] Publish source/admission decision and progress toward biological fitting.
++
+ ## 2026-10-22 local training request
+ 
+ - [x] Check CPU/MPS execution and register local feasibility specification.
+@@ -12149,16 +12460,20 @@ Review: Modal is no longer the execution assumption; availability-source admissi
+ 
+ Local-run review: one complete CPU epoch and three-method prediction replay pass;35training/resume tests and strict docs pass. PR publication follows this checkpoint.
+ 
++Local feasibility publication: e80fd42 pushed to draftPR131; report and issue132 readbacks byte-identical. Docs CI passed; lint/test CI still running at last check. Broader availability goal remains active.
++
+ ## 2026-10-22 MAPP publisher reconciliation continuation
+ 
+ - [x] Revalidate prior local-training progress and shared Hitlist ownership.
+ - [x] Freeze cell comparison and nine background-rule diagnostics before computation.
+ - [x] Reconcile publisher peptide/protein summaries and deposited background masks.
+ - [x] Independently replay source comparisons and record remaining admission gaps.
+-- [ ] Publish evidence into the shared curation requirements and design issue.
++- [x] Publish evidence into the shared curation requirements and design issue.
+ 
+ Review: all quantity/filter and membership comparisons verified; source imputation conflict and parent ambiguity retained. Shared ingestion belongs to Hitlist746. No biological fit or concentration claim.
+ 
++Publisher reconciliation publication:4d938e0 pushed to draftPR131; report and Presto132/Hitlist746 bodies read back byte-identically and both issues remain open. New-head docs CI passes; lint/test CI remains running. No source-training or concentration qualification claimed.
++
+ ## 2026-10-22 MAPP parent sequence context
+ 
+ - [x] Revalidate source reconciliation and register reference-mapping specification.
+@@ -12170,6 +12485,8 @@ Continuation audit: the preceding benchmark-status reply was no goal progress; r
+ 
+ Review: both complete-reference scans independently verified;2,269/2,272contrast peptides map, but1,256have multiple full parent sequences. Shared source ingestion and endpoint admission remain pending. Parent graph components constrain future splits; no homology or concentration claim. Publication/readback pending.
+ 
++Parent mapping publication: 6cd7edc367109379b8e5f649c99b2b3a37591e22 pushed to draft PR131; published README and Presto132/Hitlist746 bodies read back byte-identically. Hitlist752created and read back open;746remains closed. Current exact-head CI: [{'name': 'docs', 'status': 'completed', 'conclusion': 'success'}, {'name': 'lint-test', 'status': 'in_progress', 'conclusion': None}, {'name': 'lint-test', 'status': 'in_progress', 'conclusion': None}, {'name': 'docs', 'status': 'completed', 'conclusion': 'success'}]. All mapping/verification/push handles terminal success. Goal remains active; next work is shared-source admission and a registered local biological comparison, retaining parent ambiguity and endpoint limitations.
++
+ ## 2026-10-22 shared PXD057588 sequence admission
+ 
+ Previous goal turn: progress. Plan: experiments/agents/codex/plans/pxd057588-shared-sequence-admission.md.
+@@ -12180,6 +12497,8 @@ Previous goal turn: progress. Plan: experiments/agents/codex/plans/pxd057588-sha
+ 
+ Review: actual shared generation and all mouse-reference mappings independently verified. Source-label support reduces663to661shared parents; exact specimen pairing and aggregate precursor quantities remain unresolved. No biological fit. Publication follows verification.
+ 
++Shared PXD057588 admission evidence published at24f1d2b on draftPR131. README and additive Hitlist739/Presto132 updates read back byte-identically; both issues open. All closure hashes verified. Current exact-head CI: [{'name': 'lint-test', 'status': 'in_progress', 'conclusion': None}, {'name': 'docs', 'status': 'completed', 'conclusion': 'success'}, {'name': 'lint-test', 'status': 'in_progress', 'conclusion': None}, {'name': 'docs', 'status': 'completed', 'conclusion': 'success'}]. No live source-audit/download/push handles; no biological fitting or concentration claim. Goal remains active.
++
+ ## 2026-10-22 variable-length availability policy
+ 
+ Previous goal turn: progress. Plan: experiments/agents/codex/plans/variable-span-policy.md.
+@@ -12191,6 +12510,8 @@ Previous goal turn: progress. Plan: experiments/agents/codex/plans/variable-span
+ 
+ Review: exact/lazy computation and independently derived NumPy gradients agree; actual CPU/network savings measured on full proteins.14unit tests, formatting/lint and strict docs pass. Source admission and biological training remain open.
+ 
++Variable-span policy/benchmark published as80d5f9c on draftPR131. All46closure hashes and executed model snapshot verified. Published README and additive Presto132 body read back byte-identically; issue remains open. Exact-head CI:[{'name': 'docs', 'status': 'completed', 'conclusion': 'success'}, {'name': 'lint-test', 'status': 'in_progress', 'conclusion': None}, {'name': 'lint-test', 'status': 'in_progress', 'conclusion': None}, {'name': 'docs', 'status': 'completed', 'conclusion': 'success'}]. Fourteen local tests, Ruff, independent NumPy verification and strict docs passed. CSV CRLF preserved as hashed source output; whitespace check passes with cr-at-eol. All publication handles terminal success; no biological fit; broader goal active.
++
+ ## 2026-10-22 MAPP shared import
+ 
+ Prior turn: progress. Plan: experiments/agents/codex/plans/mapp-shared-import.md.
+@@ -12200,6 +12521,8 @@ Prior turn: progress. Plan: experiments/agents/codex/plans/mapp-shared-import.md
+ 
+ MAPP import review: first shared generation and original TSV/XML replay verified;3,224full/16focused Hitlist tests and lint pass. DraftHitlist758published atd012527; issue757filed/read back for missing parallel-proteome/precursor metadata. No biological fit; source-reference/query/release work remains.
+ 
++MAPP source report published396f771 to draftPresto131; Hitlist draft758atd012527; new metadata issue757. Report and additive752/132 bodies verified byte-identically, all remain open. All41closure hashes match. PrestoCI:[{'name': 'docs', 'status': 'completed', 'conclusion': 'success'}, {'name': 'lint-test', 'status': 'in_progress', 'conclusion': None}, {'name': 'docs', 'status': 'completed', 'conclusion': 'success'}, {'name': 'lint-test', 'status': 'in_progress', 'conclusion': None}]. Hitlist exact-head check list empty at last poll. No live test/import/push handles. Next: reference-scoped alternatives in shared adapter and declared biological recipe; no biological fit or concentration claim. Goal remains active.
++
+ ## 2026-10-22 shared MAPP reference integration
+ 
+ Previous goal turn: progress. Plan: experiments/agents/codex/plans/mapp-shared-references.md.
+@@ -12211,6 +12534,8 @@ Reference integration review: shared adapter schema2 verifies all37,721occurrenc
+ 
+ Reference software closure: normal full suite passes3,236tests/10warnings in320.81s with one worker and intact memoryguard. Format/lint and21focused tests pass; independent complete source/reference replay passes. Indexed-corpus integration CI remains separate. No source code changed after validation.
+ 
++Reference publication closure: Hitlist1ad9aae pushed to draft758; Presto5deda4f pushed to draft131. Published README, both PR descriptions and additive Hitlist752/Presto132 issue updates read back byte-identically; all31closure hashes verify. Hitlist lint/build and Python3.10–3.14unit CI pass; indexed-corpus integration still running. Presto docs pass; two lint-test jobs running. No local test/import/push handles remain. Existing notes preserved; goal remains active. Next: shared endpoint recipe/admission and registered local biological comparison, with explicit parent mixtures, observable target, source independence limits and precursor gap757.
++
+ ## 2026-10-22 first biological MAPP distribution comparison
+ 
+ Previous goal turn: progress. Plan: experiments/agents/codex/plans/mapp-biological-comparison.md.
+@@ -12231,6 +12556,9 @@ Previous goal turn: progress. Plan: mapp-run-repeatability (Presto) / tasks/mapp
+ 
+ Review: shared source and every run/feature/metric/checkpoint replay pass; all 186 archived fitting files and nine recipe files match original bytes. Baseline repeats (r=0.914); treatment-change repeatability is weak (r=0.172). Thirty regularized fits complete in 25.81s; all allocated weights train, but none beats uniform. Hitlist b94289d: 20 focused tests and strict docs pass; normal local full-suite memory preflight refused twice. Hosted Python 3.10–3.14 unit CI and integration/coverage/lint/docs all pass (3.11: 3,247 passed/2 optional skips; integration: 96 passed). Calibration data request #762 filed and read back exactly; precursor #757 and perturbation #759 remain open. Artifacts/report published at6845eb9 and independently read back. PR/issue bodies match intended edits; #739 was already closed by concurrent2.0 release761, preserved. Final current-head CI is being checked. Full concentration goal remains active; next integration spec is experiments/agents/codex/plans/mapp-v2-integration.md.
+ 
++Current publication closure: Presto c06fcb7 published; immutable README and all73closure hashes verify. Presto132 and PR131/Hitlist760 bodies read back exactly. Hitlist739 preserved closed after concurrent release761; no reopening or relabeling of inputs. Issue762 exact/open. Hitlist d9b929c current CI: Python3.10–3.14unit/lint/docs pass, integration pending; original code b94289d fullCI passed. Presto c06fcb7 docs/lint-test pending. No live local training, test or publication processes. Prior unrelated task notes/untracked work preserved. Goal remains active; next prospective integration spec: experiments/agents/codex/plans/mapp-v2-integration.md.
++
++
+ ## 2026-10-23 canonical MAPP integration audit
+ 
+ Previous goal turn: progress. Registered 2026-10-23_0149_codex_mapp-v2-integration.
+@@ -12254,7 +12582,7 @@ Review: five affected families pass17.32s; Ruff and strict docs pass. Frozen man
+ Plan: experiments/agents/codex/plans/ms-calibration-admission.md.
+ - [x] Pin public source files and independently audit actual workbook schemas.
+ - [x] Verify source joins/selection limits and specify shared Hitlist admission.
+-- [ ] Publish the complete source audit into Hitlist762.
++- [x] Publish the complete source audit into Hitlist762; exact body/state readback verified.
+ 
+ No new fit or biological concentration claim; availability goal remains active.
+ 
+@@ -12262,28 +12590,35 @@ MS source admission review: all4 original files retrieved; publisher/archive cop
+ 
+ Final integration CI verification: Hitlist6e275fe passes allPython3.10–3.14unit, corpus integration, coverage, lint and docs checks. Presto7020b62 passes both full lint/test/distribution jobs and both docs jobs (last job completed06:31:09Z). No live training/download/test handles remain. The normal local Hitlist runner refusal is still disclosed; release/review remain separate.
+ 
++Source-audit publication closure: Presto3f1ae1b published; immutable README and all51closure hashes verify. Hitlist762, Presto132 and PR131/760 updates read back exactly; issues remain open,758 remains superseded/closed. Current audit-only head CI: [{"name": "lint-test", "status": "in_progress", "conclusion": null}, {"name": "docs", "status": "completed", "conclusion": "success"}, {"name": "lint-test", "status": "in_progress", "conclusion": null}, {"name": "docs", "status": "completed", "conclusion": "success"}]. No live local download, test, training or publication handles. Prior unrelated work preserved. Goal-turn classification: progress; next action is shared Hitlist calibration source ingestion and bounded raw-S4 eligibility, retaining molecular-form, nominal-load, acquisition-slot and normalization conflicts. No new fit or completed concentration model.
++
+ ## Shared MS calibration source integration
+ 
+ Previous goal turn: progress. Registered 2026-10-23_0316_codex_shared-ms-calibration. Plan: Hitlist tasks/ms-calibration-source-spec.md.
+ - [x] Produce canonical combined source generation with protocol context.
+ - [x] Independently verify source/old-generation/recipe conservation and close report.
+-- [ ] Publish shared source and establish the bounded nominal-response recipe.
++- [x] Publish shared source and independent registered audit.
++- [ ] Establish the bounded nominal-response recipe and run the next local diagnostic.
+ 
+ Goal remains full APC availability/concentration modulo precursor abundance; this is a necessary observation-response data stage, not a substitute objective.
+ 
+ Shared calibration review: attempt1 preserved; corrected04f7369 retains32 cross-asset reporter IDs rather than31. Full independent source/query/157-file/3-recipe conservation passes;28 archive files match original bytes. Format/lint56 focused tests and strict docs pass. Normal full-suite refuses0.65GiB/2.5GiB, not bypassed. Hitlist762 updated and exact body/state read back. Presto3f1ae1b all CI passes. Publication and bounded raw-S4 recipe remain pending; no model fit or concentration claim.
+ 
++Publication closure: source draft Hitlist767 published atad60a8f (executable implementation identical to executed04f7369). Presto50dbfad publishes all76 checked closure files; immutable README bytes match. Hitlist762 and PR767, Presto132 and PR131 bodies/state read back exactly; all remain open/draft as appropriate. Hitlist current CI: Python3.10–3.14 unit, lint and build pass; integration running. Presto50dbfad: both docs pass, both lint/test jobs running. No live local training/source-build/verification/publication process remains. Normal local full-suite refusal is retained. Goal-turn classification: progress; next prospective specification is experiments/agents/codex/plans/raw-s4-nominal-response.md. No predictive fitting in this family and no complete concentration model. Unrelated task notes and untracked work preserved.
++
+ ## Bounded raw-S4 response diagnostic
+ 
+ Previous goal turn: progress. Registered 2026-10-23_0359_codex_raw-s4-response.
+ - [x] Shared recipe materialization and independent original-source admission.
+ - [x] Fixed nested grouped local response fits and independent replay.
+-- [ ] Full report, artifacts, registry and issue/PR publication.
++- [x] Full report, artifacts, registry and issue/PR publication.
+ 
+ Full APC availability goal remains active; this measures only the observation component.
+ 
+ Raw-S4 review: shared recipe96b9232 and independent original XML replay admit1,974 observations/224 summaries/22 peptides.295 local fits and all12,544 validation/672 outer-test predictions independently replay. Context RMSE0.8084 beats mean1.1796; sequence1.2762 worsens and shrinks context under a shared penalty. No transferable detector/concentration claim. All8 recipe files archived exactly; source/full fit receipts retained.61 focused tests/format/lint/docs pass; normal full runner refuses0.30/2.5GiB. Publication remains; next biological data target is controlled processing#759.
+ 
++Raw-S4 publication closure: Presto9f8e4e0 publishes the full report/checkpoints/predictions and62 verified closure files; exact CSV bytes preserved in gzip. Immutable report bytes match. Hitlist implementation96b9232 published, docs-only head e186dd7; executable hashes unchanged. Hitlist762/PR767 and Presto132/PR131 updated with exact body/state readback, open/draft state preserved. Previousad60a8f/50dbfad full CI passes;96b9232 all five Python unit/lint/build jobs pass, integration pending at last check. No live local source/training/verification/publication handles remain. Goal-turn classification: progress. Next biological spec: experiments/agents/codex/plans/mapp-controlled-panels-admission.md; active concentration objective remains unachieved.
++
+ ## Controlled processing source admission
+ 
+ Previous goal turn: progress. Registered 2026-10-23_0434_codex_mapp-controlled-admission.
+@@ -12296,6 +12631,7 @@ Controlled-source review: all146,832 peptide/run arithmetic comparisons and ten
+ 
+ Controlled-source publication: Presto dfe3af2 publishes the complete audit; remote immutable README bytes match local. Hitlist759 and Presto131 bodies exactly read back with open/draft states preserved. Hitlist770 source-specific request is open and verified. Source and both starting-code hosted workflows pass; current publication CI is being checked separately. No live local download/analysis/training handles remain. Goal-turn classification: progress. Next action is shared Hitlist controls source/recipe admission, then repeatability and a frozen local biological comparison; full concentration objective remains unachieved.
+ 
++
+ ## Adjudication and external-source conservation
+ 
+ Previous goal turn: progress. Plan: experiments/agents/codex/plans/adjudication-source-conservation.md.
+@@ -12357,6 +12693,7 @@ Source audit review:18 original files/17 condition archives recovered; all CRCs
+ 
+ Publication closure: controlled-response report1110d49 and source audit0b92401 are pushed to Presto131. All53 source-audit closure files are tracked with exact hashes and immutable remote README bytes match. Hitlist759/770 and Presto131 updates read back exactly; issues remain open and PR remains draft. All local transfer/audit/replay handles are terminal. Authoritative progress this turn: recovered full processed source, established H4 arithmetic correctness, and found the RF1 timing conflict that changes admission. No kinetic fit or concentration qualification. Next action: isolated shared Hitlist770 adapter with source-conflict handling, then frozen exact/sampled kinetics; unrelated checkout work preserved.
+ 
++
+ ## Shared digestion admission and kinetic mathematics
+ 
+ Previous goal turn: progress (recovered source, H4 replay and RF1 conflict).
+@@ -12372,6 +12709,7 @@ Review: shared source retains all218 old payloads and all original typed values;
+ 
+ Publication closure: Presto1503d67 reports have exact remote/local README blobs and all77 closure artifacts are tracked with matching hashes. Hitlist draft773 opened; issue770 and Presto131 body updates read back exactly, both open and PRs draft. Source code977adc2 and documentation623afcb published; local3,341 tests pass. Hosted CI is in progress. The merge hook refreshed existing editable Hitlist metadata with no dependencies; pip check passes. Goal-turn classification: progress. No live local fitting/audit process remains. Next: all-admitted-substrate arithmetic, source-backed temporal observation recipe and parsimonious sequence-to-rate fitting, while checking final-head CI.
+ 
++
+ ## Digestion arithmetic and biological observation contract
+ 
+ Previous goal turn: progress. Plan: experiments/agents/codex/plans/digestion-arithmetic.md.
+@@ -12398,6 +12736,7 @@ Review:30,566curves/125,423positive measurements from6/3/2 train/val/test parent
+ 
+ Publication closure: Presto1d585b9 pushed; all87 closure-file hashes match tracked blobs and all three immutable remote README hashes match. Hitlist775/770 and Presto131 updates read back exactly, open/draft preserved. Connector writes403; authenticated CLI fallback succeeded with fresh GET/compare/PATCH/readback. Hosted Presto CI39982266193 is confirmed in progress for1d585b9; prior5a10094CI passed. No live local experiment/test handles. Full APC concentration objective remains active. Next action: implement and qualify the frozen ordered sequence-to-bond-rate model on the shared reviewed recipe, then real exact fit and matched sampled-gradient experiments.
+ 
++
+ ## Biological sequence-to-cut-rate qualification
+ 
+ Previous goal turn: progress (shared admission, arithmetic, temporal signal and publication).
+@@ -12410,6 +12749,7 @@ Plan: experiments/agents/codex/plans/biological-independent-cut-fit.md plus regi
+ 
+ Review: 8,000 real exact/hybrid updates independently replayed; 562,404 predictions verified. All 1/39/40 coefficients trained, 18 focused tests pass. Exact and hybrid outputs vary, but no sequence model beats all controls on both held-out splits. Conditional reference-signal calibration and restrictive kinetic shapes remain limitations. Reports/registry and biological experiment1497d9b are pushed to draft131. All87 closure files match committed hashes and immutable remote README bytes match; Hitlist770/Presto131 body readbacks are exact and states preserved. Recipe775 remains closed. CI for1497d9b is in progress. No local training/test handles remain. Next work is source-linked observation diagnostics; this turn made biological fitting/verification progress. Full APC concentration goal remains active; preserve unrelated work and concurrent Hitlist review.
+ 
++
+ ## Digestion observation-effects diagnostic
+ 
+ Previous goal turn: progress (published real exact/hybrid fits and independent verification).
+@@ -12421,6 +12761,7 @@ Plan: experiments/agents/codex/plans/digestion-observation-effects.md.
+ 
+ Review: all91,226 training points and three observation layers independently replay;94.73% of weight has small baseline fraction, and93%/99% of original growth/concavity violations persist after baseline restoration. Reporting-weight label correction preserves all numeric fits. No new fit or held-out evaluation; next entry-process specification frozen. Published3de2666 to draft131; all36 closure files match committed hashes and immutable remote README bytes match. Hitlist770 and Presto131 exact body/state readback pass; source support already exists, no new import needed. Previousaa4c809CI passed; current3de2666CI is in progress. All local analysis/verification handles terminal. Goal-turn classification: progress. Next action: implement/qualify frozen substrate-entry process before matched biological fitting. Full concentration goal active.
+ 
++
+ ## Substrate-entry process and development comparison
+ 
+ Previous goal turn: progress (independent observation-layer diagnostic ruled out baseline subtraction as sole explanation).
+@@ -12470,6 +12811,7 @@ Continuation 2026-10-23T17:57:59.749605-04:00: previous goal turn was no experim
+ 
+ Publication closure: all115 closure-file hashes match committed blobs and immutable remote README bytes match. Hitlist770/762 and Presto131 body-only updates read back exactly, with open/draft states preserved;775 remains closed. Prior ce86bdb CI passed; report commit d92dad0 CI40032238888 is in progress. All local experiment/verification/publication handles are terminal. Goal-turn classification: progress. Next action: implement and qualify the frozen single fragment-state length effect before biological fitting. No APC-concentration promotion.
+ 
++
+ ## Fragment-state length effect qualification
+ 
+ Previous goal turn: progress (completed/published shared-observation and conditional-hybrid biological comparison; all115 artifact hashes and remote bodies verified). Current report-head CI0361e0d remains in progress.

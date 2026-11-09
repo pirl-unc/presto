@@ -1,0 +1,7 @@
+# Reconstructible inputs; canonical shared package and hashes recorded in reproduce/.
+results/covariates.json
+results/*-labels.json
+# Raw dump retained locally; exact equivalent predictions.parquet is published.
+results/predictions.csv.gz
+__pycache__/
+*.log

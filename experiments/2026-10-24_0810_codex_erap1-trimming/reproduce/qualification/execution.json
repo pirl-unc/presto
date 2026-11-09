@@ -1,0 +1,25 @@
+{
+  "action": "qualification",
+  "argv": [
+    "experiments/2026-10-24_0810_codex_erap1-trimming/code/launch.py",
+    "qualify"
+  ],
+  "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "torch": "2.14.1",
+  "numpy": "2.5.4",
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "git_commit": "5699b9f4e73a31c65eddc414f5d6a41f2fae24d2",
+  "git_dirty": " M tasks/todo.md\n",
+  "source_sha256": {
+    "core.py": "94cab889ac0e1d686ff53c341549ae044bc5b507e1c776265bcae35cb4341e74",
+    "launch.py": "9492ab357b660040a358a9c635419d7797b4602a13bc2a4a5e5f38f9606f93d9",
+    "n_terminal_trimming.py": "f7b29761c1f3d04d0bb9dd4a7c62e8fbc0a241e2a8de88afddc440e1129ad685",
+    "steady_processing.py": "1c6dc0038eea7cd685a0a058f871193993ce3258c580a0b3083d69b836e56bc2"
+  },
+  "environment": {
+    "PYTHONPATH": "/private/tmp/presto-native-import",
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1"
+  }
+}

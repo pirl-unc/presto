@@ -1,0 +1,55 @@
+{
+  "archive": "2026-10-29_1653_codex_measurement-curation-recovery/recovered-admission.tar.gz",
+  "sha256": "ba53961343e37c321cbcba8b24273f972b1f0417e254b64b6c9a293c351c3a73",
+  "summary": {
+    "status": "verified_candidate_cohort",
+    "counts": {
+      "common_adapter_admitted": 13898,
+      "excluded:unsupported_peptide": 289,
+      "pmhc_not_seen_in_prior_admitted_positives": 13518,
+      "heldout_peptide_embargo": 348,
+      "pmhc_seen_in_other_studies": 32
+    },
+    "train_observations": 13550,
+    "source_sha256": "bfb0b3b75a70aeceb7870c2ec7c78a2c072c12a6324f6dec4f7ad9ba0277c4c6",
+    "source_evidence_sha256": "a69833dbd4b163ceeb49aed6ea82da1e8fcbbd84693c90fe956a6c2b7f98b202",
+    "catalog_sha256": "ddc3493c64f4328de174a6c2cda1f007ec2f93a1ef649add25d2ef9c1720add1",
+    "wheel_sha256": "844b1ad9c99e278240eb6aa5083c6949af8a5227462256e716306ff898f94b3d",
+    "contributor_metadata": {
+      "schema_version": 1,
+      "sources": {
+        "supplement:strazar_2023_recovered_unmodified.csv": {
+          "path": "/bundle/strazar_2023_recovered_unmodified.csv",
+          "sha256": "bfb0b3b75a70aeceb7870c2ec7c78a2c072c12a6324f6dec4f7ad9ba0277c4c6",
+          "size_bytes": 1868003,
+          "upstream_description": "Source-reviewed human monoallelic PSM intersection with published Stra\u017ear 2023 ligand set; see linked evidence ledger",
+          "locator_basis": "ingested_csv_logical_data_row_1_based",
+          "upstream_record_locator_status": "not_available"
+        }
+      },
+      "contributors": {
+        "file": "contributors.parquet",
+        "sha256": "654e3ae9c8ccbffd5ab23b75d58ce0eee2e8eba0dc23ce0353e726a1ef6e759e",
+        "size_bytes": 1585799
+      },
+      "n_contributor_links": 14187
+    },
+    "seconds": 49.973547771999996,
+    "requested_gpu": null,
+    "files": {
+      "contributors.parquet": {
+        "sha256": "654e3ae9c8ccbffd5ab23b75d58ce0eee2e8eba0dc23ce0353e726a1ef6e759e",
+        "bytes": 1585799
+      },
+      "observations.parquet": {
+        "sha256": "9d116627942221cb2f1683f17d187c3dd166a9ac8605e29d8521d23900713ab9",
+        "bytes": 1142284
+      },
+      "train.jsonl.gz": {
+        "sha256": "2538b7bd578f83363d3525389fb3772522b52c0a51cd107e0794602ba7612a62",
+        "bytes": 1886716
+      }
+    },
+    "limitations": "Only acquired and source-reviewed forms; no generated negatives and no retraining in this curation family. Existing fits remain unchanged."
+  }
+}

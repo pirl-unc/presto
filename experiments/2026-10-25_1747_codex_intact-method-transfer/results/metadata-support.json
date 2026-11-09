@@ -1,0 +1,97 @@
+{
+  "status": "metadata_supported_numeric_admission_pending",
+  "metadata_gate_passed": true,
+  "source_manifest_sha256": "fd91bb6ff3178a2246b760f6b0f99bc3824d83815a65719c34587816f3459974",
+  "hitlist_commit": "d76c225a0aa741a1a1b0aee707bff328ca467c7c",
+  "n_queried_rows": {
+    "intact_source_views": 133,
+    "intact_acquisitions": 102,
+    "intact_reconciliations": 3436
+  },
+  "n_F2_acquisitions": 21,
+  "n_F3_views": 44,
+  "n_selected_F3_acquisitions": 44,
+  "n_F2_F3_reuse_claims": 0,
+  "n_shared_acquisition_ids": 0,
+  "excluded_reasons": {},
+  "coverage": [
+    {
+      "organ": "Brain",
+      "minutes": 0.0,
+      "n_acquisitions": 3
+    },
+    {
+      "organ": "Brain",
+      "minutes": 30.0,
+      "n_acquisitions": 3
+    },
+    {
+      "organ": "Brain",
+      "minutes": 60.0,
+      "n_acquisitions": 3
+    },
+    {
+      "organ": "Brain",
+      "minutes": 90.0,
+      "n_acquisitions": 3
+    },
+    {
+      "organ": "Brain",
+      "minutes": 120.0,
+      "n_acquisitions": 3
+    },
+    {
+      "organ": "Liver",
+      "minutes": 0.0,
+      "n_acquisitions": 3
+    },
+    {
+      "organ": "Liver",
+      "minutes": 30.0,
+      "n_acquisitions": 3
+    },
+    {
+      "organ": "Liver",
+      "minutes": 60.0,
+      "n_acquisitions": 3
+    },
+    {
+      "organ": "Liver",
+      "minutes": 90.0,
+      "n_acquisitions": 3
+    },
+    {
+      "organ": "Liver",
+      "minutes": 120.0,
+      "n_acquisitions": 3
+    },
+    {
+      "organ": "Spleen",
+      "minutes": 0.0,
+      "n_acquisitions": 3
+    },
+    {
+      "organ": "Spleen",
+      "minutes": 30.0,
+      "n_acquisitions": 2
+    },
+    {
+      "organ": "Spleen",
+      "minutes": 60.0,
+      "n_acquisitions": 3
+    },
+    {
+      "organ": "Spleen",
+      "minutes": 90.0,
+      "n_acquisitions": 3
+    },
+    {
+      "organ": "Spleen",
+      "minutes": 120.0,
+      "n_acquisitions": 3
+    }
+  ],
+  "numeric_outcomes_queried": false,
+  "physical_independence": "unresolved; one source animal and one substrate",
+  "next_action": "Qualify shared F3 zero-baseline endpoint before any predictions"
+}

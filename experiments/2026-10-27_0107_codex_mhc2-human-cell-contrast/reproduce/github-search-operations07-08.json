@@ -1,0 +1,105 @@
+[
+  {
+    "status": "fulfilled",
+    "value": {
+      "content": [
+        {
+          "type": "text",
+          "text": "Action completed."
+        }
+      ],
+      "structuredContent": {
+        "issues": []
+      },
+      "isError": false
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "content": [
+        {
+          "type": "text",
+          "text": "Action completed."
+        }
+      ],
+      "structuredContent": {
+        "issues": [
+          {
+            "url": "https://github.com/pirl-unc/hitlist/issues/593",
+            "title": "engineering_drift_audit: 71 arms silent on an engineering column a sibling asserts",
+            "issue_number": 593,
+            "body": "Split out of #586 / #587, where `hitlist.qc.engineering_drift_audit` was added and immediately surfaced this.\n\n> **Kept current.** This body is rewritten whenever the audit changes, rather than corrected in a comment — a stale instruction in an issue body is the same trap #587 hit four times: guidance that no longer matches the data or no longer loads. Last verified against Hitlist 1.82.11 / #720: **55 findings across 9 studies**, 39 `error` / 16 `warn`.\n\n## The rule\n\nAn arm that is **silent** (`\"\"`) on an `ENGINEERING_CONDITION_COLUMNS` value a **same-material sibling asserts** is flagged. Since #576 the engineered flag is per arm, so one blanked arm is already the #586 defect: `\"\"` means \"not established\", the arm stops satisfying `is_engineered_material()`, and `resolve_sample_expression_anchor` hands it the reference line's RNA at **tier 1** — reported as RNA measured in the sample — while its sibling correctly resolves at tier 2.\n\n`none` is a curated claim of absence and passes. PMID 40113210's `hap1_wildtype` is the worked example: it sits beside eleven knockout siblings and does **not** flag, because someone curated `none` onto it.\n\nRun it with `hitlist qc engineering-drift [--severity warn|error]`, or find it under `engineering_drift` in `hitlist qc`.\n\n## What it flags today\n\n| PMID | findings | err | warn | columns | study |\n| --- | --- | --- | --- | --- | --- |\n| 31495665 | 20 | 6 | 14 | mhc_context, transfection | Abelin 2019 — MAPTAC HLA-II + class I |\n| 32350084 | 19 | 19 | 0 | mhc_context | van Balen 2020 — HLA-DP allelic variants |\n| 34428180 | 5 | 3 | 2 | knockout_genes, mhc_context, transduction | Son 2021 — mouse transplant tolerance |\n| 38480730 | 5 | 5 | 0 | transfection | Gomez-Zepeda 2024 — Thunder-DDA-PASEF |\n| 36010968 | 2 | 2 | 0 | genetic_variants, transfection | Vadakekolathu 2022 — SaOS-2 p53 |\n| 29769354 | 1 | 1 | 0 | overexpression_genes | Sanz-Bravo 2018b — ERAP2 overexpression |\n| 30778243 | 1 | 1 | 0 | mhc_context | Koutsakos 2019 — influenza A/B/C |\n| 34006841 | 1 | 1 | 0 | mhc_context | Hensen / Habel 2021 — HLA-A*24:02 |\n| 36796642 | 1 | 1 | 0 | mhc_context | Pyke / SHERPA 2023 |\n\nThe exact set is in `tests/data/engineering_drift_baseline.yaml`, keyed `<condition_id>|<column>|<severity>` and asserted by **equality** in `tests/test_qc.py` — new drift fails CI, an entry fixed in the YAML but left in the baseline fails too, and a `warn` that becomes an `error` cannot reuse its entry.\n\n**Changelog of removals** — each recorded so the falling count is auditable rather than mysterious:\n\n- *71 → 69:* **PMID 27862975** dropped out. Its siblings asserted only `soluble_mhc`, a capture token, so nothing was engineered on either side and no tier differed — those findings were never drift.\n- *69 → 66:* **PMID 33592498**'s three parental class-I arms (`hrog02_parental_class_i`, `hrog17_parental_class_i`, `ra_parental_class_i`) dropped out because #584 curated `condition_transduction: \"none\"` onto them. **This is the first real fix of debt recorded here**, and it is shape A resolved exactly as intended: a genuine parental arm beside a transduced sibling, annotated with the claim of absence rather than left silent. The baseline-equality assertion caught the stale entries on merge and named all three.\n- *66 → 59:* **#716** recorded seven source-backed `none` claims for control arms in PMIDs 27371725, 30573663, 31092671, 32161166 and 36215666. The audit fell from 47 `error` / 19 `warn` to 43 / 16, with no change to any arm's engineered-material verdict or expression tier. PMID 29769354 remains open under #715 because its PF-GFP control is transduced.\n- *59 → 55:* **#720** recorded four source-backed `none` claims for the parental wild-type THP-1 and primary hMDM arms in PMID 39438697. The audit fell from 43 `error` / 16 `warn` to 39 / 16. The four arms retained their unengineered verdicts and expression-anchor tiers.\n\n## The remedies, and what the loader demands of each\n\nEvery remedy below was verified by running it through `load_pmid_overrides()`; `tests/test_qc.py` keeps them honest.\n\n| remedy | the loader demands |\n| --- | --- |\n| `none` | only in the six engineering columns that permit it — **never** `condition_mhc_context` |\n| `mhc_genotype` + `mhc_genotype_cell` + `mhc_genotype_source` | **all three together**; `mhc_genotype_cell` alone is rejected. `mhc_genotype` is ploidy-audited and checked against `mhc_genotype_complete_loci` |\n| `sample_group` | on **every** arm of the study, and **not** one group per arm — so it **cannot** separate a two-arm study at all |\n\nThat last constraint decides the approach for 30778243, 34006841 and 36796642 (2–3 arms each): `sample_group` is unavailable to them, so the `mhc_genotype` trio is the only route.\n\n## Two shapes of work\n\n**A. A genuine wild-type or untreated arm beside an engineered sibling** — remedy `none`. Still a positive claim about an experiment, so it needs its own Methods check; no bulk application. The THP-1 wild-type and primary hMDM arms of 39438697 were cleared in #720; PMID 36215666's mock and siCTRL controls were cleared in #716.\n\n**B. Arms that are different materials grouped together.** `sample_group` is unset on **all 9 remaining** studies, so a study's arms collapse into one group unless `mhc_genotype` or a context column separates them. 38480730 is the clearest: HeLa, a commercial human plasma pool, JY, Raji and SK-MEL-37 in one group, where the single transfected arm makes the other five look silent.\n\n31495665 (MAPTAC) and 32350084 (HLA-DP variants) are together **39 of the 55** and are probably mostly shape B — each arm is a different mono-allelic construct.\n\n## Why expression tiers are NOT demoted on silence\n\n**The baseline is not \"accepted forever\"** — it is debt with a known reason it cannot be paid by code alone.\n\nThe obvious fix, demoting an arm to tier 2 whenever a same-material sibling is engineered, would key expression resolution off **this audit's grouping**, which shape B shows is unreliable. Demoting 38480730's five arms would report *the wrong parent line's RNA as a surrogate* for four unrelated materials — a new and less visible error than the one it fixes.\n\nSo: **fix the grouping first, then reconsider resolution.** Until material identity is trustworthy, the honest behaviour is what ships today — those arms resolve at tier 1 and the audit says loudly which are suspect.\n\n## Known gaps the audit deliberately does not catch\n\n- **`condition_mhc_context` cannot state absence.** It is the one engineering column `NONE_PERMITTED_CONDITION_COLUMNS` excludes, so an arm whose MHC genuinely is not introduced has no token to say so and its finding cannot be cleared by curation at all. Fixing that means permitting `none` there — a vocabulary change worth its own discussion.\n- **A capture-only `condition_mhc_context` is not treated as silence**, for the same reason. PMID 28514659's `721_221_transfectant_shla_b_46_01` and `..._b_15_01` are 721.221 **transfectants** curated `soluble_mhc` alone, so they read as unengineered and are not flagged.\n\n## Suggested order\n\n1. Resolve PMID 29769354's PF/PF-GFP arm identity in #715 before any absence claim.\n2. 28514659's two transfectant arms, above.\n3. Shape B via the `mhc_genotype` trio for the 2–3 arm studies (30778243, 34006841, 36796642).\n   *(33592498 is done — #584 resolved its three via `none`.)*\n4. 38480730 — the clearest multi-material group, and the best test of whether fixing grouping is enough to revisit tier resolution.\n5. 31495665 and 32350084 last: 39 of the 55, and worth deciding the MAPTAC / DP-construct convention once rather than per arm.\n\nEvery fix removes its entry from `tests/data/engineering_drift_baseline.yaml` in the same PR, which the equality assertion enforces.\n\nhttps://claude.ai/code/session_01UfmwqWGdHv9QTHWQXXhNdD\n\n\n",
+            "state": null,
+            "user": null,
+            "assignees": null,
+            "labels": null,
+            "milestone": null,
+            "state_reason": null,
+            "comments": null,
+            "created_at": null,
+            "updated_at": null,
+            "closed_at": null,
+            "display_url": "https://github.com/pirl-unc/hitlist/issues/593",
+            "display_title": "engineering_drift_audit: 71 arms silent on an engineering column a sibling asserts"
+          },
+          {
+            "url": "https://github.com/pirl-unc/hitlist/issues/576",
+            "title": "Curated engineered samples resolve to parental exact-line RNA (tier 1) when their label matches the parent's alias",
+            "issue_number": 576,
+            "body": "Found while reviewing #575 (HAP1 reference RNA, #358).\n\n`resolve_sample_expression_anchor` decides \"exact line\" from the label alone. When an engineered sample's label matches the **parental** registry entry's alias instead of an engineered-derivative entry, it resolves at tier 1 with `expression_parent_key=None` — presenting parental RNA as RNA measured in the engineered sample. Tier 2 exists precisely to keep that distinction visible.\n\nEleven curated samples carry curated engineering (`condition_knockout_genes`, `condition_knockdown_genes`, `condition_transduction`, `condition_transfection`, `condition_genetic_variants`) yet match a parental entry (no `parent_line`):\n\n| PMID | sample_label | matched entry | curated engineering |\n| --- | --- | --- | --- |\n| 31092671 | 721.221-B*51:01 ERAP1 KO | 721.221 | KO ERAP1 |\n| 31092671 | 721.221-B*51:01 ERAP2 KO | 721.221 | KO ERAP2 |\n| 31092671 | 721.221-B*51:01 ERAP1+ERAP2 double KO (clone 1) | 721.221 | KO ERAP1;ERAP2 |\n| 31092671 | 721.221-B*51:01 ERAP1+ERAP2 double KO (clone 19) | 721.221 | KO ERAP1;ERAP2 |\n| 36010968 | SaOS-2 + TP53 R175H | SaOS-2 | transfection TP53, variant R175H |\n| 36010968 | SaOS-2 + TP53 R273H | SaOS-2 | transfection TP53, variant R273H |\n| 36215666 | HeLa-CIITA (Mock) | HeLa | transduction CIITA |\n| 36215666 | HeLa-CIITA (control siRNA) | HeLa | transduction CIITA |\n| 36215666 | HeLa-CIITA + T6BP siRNA | HeLa | transduction CIITA, knockdown TAX1BP1 |\n| 39438697 | THP-1 TAP1 knockout + mock infection | THP-1 | KO TAP1 |\n| 39438697 | THP-1 TAP1 knockout + Mtb H37Rv infection | THP-1 | KO TAP1 |\n\nWith the DepMap bundle installed, the SaOS-2, HeLa and THP-1 rows export as tier-1 exact-line RNA today (721.221 has no data yet, so it falls through). The 12 Shapiro HAP1 arms are correct after #575 because each KO label is a `HAP1-KO` alias, but any HAP1 label outside that list (`HAP1 B2M-KO`, `HAP1 sgB2M`, `HAP1 HLA-A KO`, …) would also resolve at tier 1. `cell_name_parser`'s `genetic_modification` misses most of those spellings, so a label heuristic is not a fix.\n\nProposed fix: the curated condition columns already say whether a sample is engineered. Pass that into the resolver from both export call sites (`export.py` sample anchors and observations anchors), and demote a tier-1 hit on an engineered sample to tier 2 with `expression_parent_key` = the matched line (same data, honest provenance). Add a corpus drift guard: no curated engineered sample resolves at tier 1, independent of which optional expression data is installed.\n",
+            "state": null,
+            "user": null,
+            "assignees": null,
+            "labels": null,
+            "milestone": null,
+            "state_reason": null,
+            "comments": null,
+            "created_at": null,
+            "updated_at": null,
+            "closed_at": null,
+            "display_url": "https://github.com/pirl-unc/hitlist/issues/576",
+            "display_title": "Curated engineered samples resolve to parental exact-line RNA (tier 1) when their label matches the parent's alias"
+          },
+          {
+            "url": "https://github.com/pirl-unc/hitlist/issues/555",
+            "title": "Curation follow-up: verify B-LCL versus primary samples and missing HeLa/ERAP arms",
+            "issue_number": 555,
+            "body": "The September 24 sanity pass found further study-level leads that need a dedicated source/deposit audit:\n\n- **PMID 32502341:** the two curated arms claim primary ALL-patient and healthy B cells. All 10 deposited MS rows instead explicitly identify an EBV-transformed B-LCL from healthy PBMCs. The primary-paper abstract is https://pubmed.ncbi.nlm.nih.gov/32502341/ (doi:10.1021/acs.analchem.0c01545); the complete paper/supplement is needed to establish its full MS sample roster before replacing the entry. This is a potentially false clinical-sample claim.\n- **PMID 36215666:** the paper and deposit include Mock, siCTRL and siT6BP HeLa-CIITA arms, but curation omits Mock. In 14,903 observations there are 21 distinct statements, including 3,513 exact Mock-only, 1,143 exact siCTRL-only and 2,181 exact siT6BP-only statements, plus antibody-qualified variants and shared arms. Source: https://pmc.ncbi.nlm.nih.gov/articles/PMC9724678/, Fig. 3 and immunopeptidome methods. Audit provenance of the class-I genotype as well: the text explicitly supports DRB1*01:02 but the existing note also claims exact endogenous class-I alleles.\n- **PMID 28063628:** the study-level perturbation says ERAP1/ERAP2 KO/variant combinations. All 3,454 deposited rows enumerate combinations of 6370 (ERAP2+, ERAP1 Hap2), 15510 (ERAP2-, Hap1), 10151 (ERAP2-, Hap2), P50 (ERAP2+, Hap10), never a single line. Primary abstract: https://pubmed.ncbi.nlm.nih.gov/28063628/. Verify naturally occurring ERAP backgrounds versus experimental KO, establish each line's provenance, and preserve shared-line uncertainty.\n\nAlso audit `cell_line` inheritance for PBMC/primary-fibroblast samples in PMIDs 26154972, 27846572 and 28228285. These were mechanical flags, not source-verified corrections in this pass. Do not treat cultured primary cells, transformed lines and direct clinical tissue as interchangeable.\n",
+            "state": null,
+            "user": null,
+            "assignees": null,
+            "labels": null,
+            "milestone": null,
+            "state_reason": null,
+            "comments": null,
+            "created_at": null,
+            "updated_at": null,
+            "closed_at": null,
+            "display_url": "https://github.com/pirl-unc/hitlist/issues/555",
+            "display_title": "Curation follow-up: verify B-LCL versus primary samples and missing HeLa/ERAP arms"
+          },
+          {
+            "url": "https://github.com/pirl-unc/hitlist/issues/70",
+            "title": "Improve Sarango 2022 (PMID 36215666) — more siRNAs than T6BP; MHC-I also profiled",
+            "issue_number": 70,
+            "body": "## Imprecision\n\n`hitlist/data/pmid_overrides.yaml` entry for PMID 36215666 (Sarango 2022, \\\"The Autophagy Receptor TAX1BP1 (T6BP) improves antigen presentation by MHC-II molecules\\\") currently frames the study as HeLa-CIITA + T6BP siRNA + class II only. This is imprecise but not wrong:\n\n1. **More siRNAs than just T6BP**: Paper also uses siRNAs against NDP52, OPTN, p62, and later CANX (calnexin). Verbatim: *\\\"HeLa cells modified to express CIITA (HeLa-CIITA) were silenced for the expression of ARs using siRNAs targeting NDP52, OPTN, and T6BP\\\"*.\n2. **MHC-I immunopeptidome ALSO profiled** (Fig EV2): W6/32 IP captured HLA-A*68:02, B*15:09, C*12:03 ligandomes. YAML framing as \\\"forced HLA-II expression\\\" implicitly treats this as class II only.\n3. Additional plasmid-encoded antigens (Gag, Gag-LC3, Gag-LC3 G120A, pp65, GFP-T6BP) were transfected in some experiments.\n\nCore claim (HeLa-CIITA cancer line, IEDB 'healthy cervix' is wrong) is **accurate**.\n\n## Fix\n\n- Expand note to list all siRNAs used.\n- Indicate both class I (W6/32) and class II (TÜ39) IPs were performed.\n- If class I ms_samples entries should exist for this PMID, add them.\n- Perturbations list should include all siRNAs, not only T6BP.\n\n## Discovery\n\nFound while verifying \\\"IEDB is WRONG\\\" claims against source papers.",
+            "state": null,
+            "user": null,
+            "assignees": null,
+            "labels": null,
+            "milestone": null,
+            "state_reason": null,
+            "comments": null,
+            "created_at": null,
+            "updated_at": null,
+            "closed_at": null,
+            "display_url": "https://github.com/pirl-unc/hitlist/issues/70",
+            "display_title": "Improve Sarango 2022 (PMID 36215666) — more siRNAs than T6BP; MHC-I also profiled"
+          }
+        ]
+      },
+      "isError": false
+    }
+  }
+]

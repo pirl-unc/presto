@@ -1,0 +1,18 @@
+{
+  "phase": "metadata",
+  "scope": "Inspect official PASS accession pages for public processed-file inventories; no raw-MS downloads or numerical response queries",
+  "requests": [
+    {
+      "name": "pass01163.html",
+      "url": "https://www.peptideatlas.org/PASS/PASS01163",
+      "expected_kind": "html",
+      "discovery_provenance": "PASS01163 is the experiment 1-2 accession in archived Michaud2018 full-text XML, using the official PeptideAtlas PASS accession landing route."
+    },
+    {
+      "name": "pass01200.html",
+      "url": "https://www.peptideatlas.org/PASS/PASS01200",
+      "expected_kind": "html",
+      "discovery_provenance": "PASS01200 is the experiment 3-5 accession in archived Michaud2018 full-text XML, using the official PeptideAtlas PASS accession landing route."
+    }
+  ]
+}

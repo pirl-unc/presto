@@ -1,0 +1,94 @@
+{
+  "registered_utc": "2026-10-25T00:47:55.729371+00:00",
+  "agent": "Codex",
+  "model": "GPT-6",
+  "presto_commit": "3ab625edce9ceb6aed9d94ee104306dcf84e248c",
+  "presto_dirty_status": " M tasks/todo.md\n",
+  "hitlist": "/private/tmp/hitlist-intact-kinetics-20261025",
+  "hitlist_commit": "97d3311a239cd901aa11b8ff8b627a7ce910cbd4",
+  "hitlist_status": " M hitlist/distribution_recipe.py\n M hitlist/evidence_recipe.py\n M hitlist/version.py\n M tasks/todo.md\n?? hitlist/intact_kinetics.py\n?? tasks/intact-kinetic-recipe-spec.md\n?? tests/test_intact_kinetics.py\n",
+  "runtime_sha256": {
+    "hitlist/distribution_recipe.py": "f80146bac5ee4cb0b3dd9253b2af595ad999b420c4b0790dbd8ef0fa48e9dbb8",
+    "hitlist/evidence_recipe.py": "88a051ca806f18ca16c09005bd3db10a6bb6277edcfbf9aee78a4b34a22a5e68",
+    "hitlist/version.py": "2daabfa247081887f15e5acf6e672e721d9557926f3a358403cbd778456b3c69",
+    "hitlist/intact_kinetics.py": "7a0f1f1f4ab4a23da764fba4c3849ffbc55e969703eaba0fbcdbd4ccd8e29bb3"
+  },
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "python_version": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "source_package": "/private/tmp/presto-modular-model/data/intact_degradomics_canonical/2026-10-25_0021_codex_intact-canonical",
+  "source_manifest_sha256": "fd91bb6ff3178a2246b760f6b0f99bc3824d83815a65719c34587816f3459974",
+  "recipe_package": "/private/tmp/presto-modular-model/data/intact_kinetic_recipes/2026-10-25_0046_codex_intact-kinetic-forecast",
+  "prior_support_directory": "/private/tmp/presto-modular-model/experiments/2026-10-25_0021_codex_intact-canonical",
+  "limits": {
+    "free_disk_floor_bytes": 1073741824,
+    "rss_bytes": 3221225472,
+    "stage_seconds": 1200,
+    "new_physical_bytes": 134217728
+  },
+  "environment_overrides": {
+    "PYTHONPATH": "/private/tmp/hitlist-intact-kinetics-20261025",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "commands": [
+    "sh reproduce/launch.sh admit",
+    "sh reproduce/launch.sh audit",
+    "sh reproduce/launch.sh qualify",
+    "sh reproduce/launch.sh controls",
+    "sh reproduce/launch.sh fit-uniform-exact-0-42",
+    "sh reproduce/launch.sh fit-residue-exact-0-42",
+    "sh reproduce/launch.sh fit-uniform-score-16-42",
+    "sh reproduce/launch.sh fit-uniform-score-16-43",
+    "sh reproduce/launch.sh fit-uniform-score-16-44",
+    "sh reproduce/launch.sh fit-uniform-score-64-42",
+    "sh reproduce/launch.sh fit-uniform-score-64-43",
+    "sh reproduce/launch.sh fit-uniform-score-64-44",
+    "sh reproduce/launch.sh fit-residue-score-16-42",
+    "sh reproduce/launch.sh fit-residue-score-16-43",
+    "sh reproduce/launch.sh fit-residue-score-16-44",
+    "sh reproduce/launch.sh fit-residue-score-64-42",
+    "sh reproduce/launch.sh fit-residue-score-64-43",
+    "sh reproduce/launch.sh fit-residue-score-64-44",
+    "sh reproduce/launch.sh evaluate",
+    "sh reproduce/launch.sh replay",
+    "sh reproduce/launch.sh closure"
+  ],
+  "model_plan": "reproduce/plan.md",
+  "training": {
+    "updates": 800,
+    "lr": 0.03,
+    "dtype": "float64",
+    "sampler_draws": [
+      16,
+      64
+    ],
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "residue_penalty": 0.01,
+    "time_scale_minutes": 80
+  },
+  "heldout_outcomes_opened_for_predictive_evaluation": false,
+  "fit_conditions": [
+    "fit-uniform-exact-0-42",
+    "fit-residue-exact-0-42",
+    "fit-uniform-score-16-42",
+    "fit-uniform-score-16-43",
+    "fit-uniform-score-16-44",
+    "fit-uniform-score-64-42",
+    "fit-uniform-score-64-43",
+    "fit-uniform-score-64-44",
+    "fit-residue-score-16-42",
+    "fit-residue-score-16-43",
+    "fit-residue-score-16-44",
+    "fit-residue-score-64-42",
+    "fit-residue-score-64-43",
+    "fit-residue-score-64-44"
+  ],
+  "family_initial_free_bytes": 1254203392,
+  "numerical_contract": "reproduce/numerical-contract.md"
+}

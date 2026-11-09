@@ -1,0 +1,40 @@
+{
+  "artifacts": {
+    "netmhciipan43": {
+      "bytes": 112640875,
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared-v2/netmhciipan43-ba-train.jsonl",
+      "sha256": "9fe752274c895cb4cd46e36dfeff43a3db73e0c96fa24ba495e1fcfd7f24c66a"
+    },
+    "netmhcpan42": {
+      "bytes": 141870035,
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared-v2/netmhcpan42-ba-train.jsonl",
+      "sha256": "2c007e6b46a99835f95ec612aeb498f4e52940aa81c22809ad48b5e922d6d0ca"
+    },
+    "v1-admitted-row-dispositions": {
+      "bytes": 5581707,
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared-v2/v1-admitted-row-dispositions.jsonl.gz",
+      "sha256": "c9c7a384e6affe555d2fae3a6e8ba37c324763bc586c43c7b5a84107d7ad9f3d"
+    }
+  },
+  "dispositions": {
+    "presentation_development_core8_embargo": 91,
+    "presentation_development_exact_peptide_embargo": 1,
+    "presentation_development_hamming1_embargo": 2,
+    "retained_v2_train": 143213
+  },
+  "output_rows": 143213,
+  "resources": {
+    "cpu": 4,
+    "elapsed_seconds": 55.337911701,
+    "memory_mib": 16384,
+    "observed_gpu": null,
+    "peak_rss_bytes": 3895259136,
+    "requested_gpu": null
+  },
+  "status": "completed",
+  "summary": {
+    "bytes": 3281,
+    "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared-v2/summary.json",
+    "sha256": "ec21c6e9aae67c71345a256c0b62231339d73e2f2dffe6942863314c0c20c08b"
+  }
+}

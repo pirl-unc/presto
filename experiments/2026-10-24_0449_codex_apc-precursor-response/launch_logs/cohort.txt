@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/private/tmp/presto-modular-model/experiments/2026-10-24_0449_codex_apc-precursor-response/code/cohort.py", line 289, in <module>
+    main()
+  File "/private/tmp/presto-modular-model/experiments/2026-10-24_0449_codex_apc-precursor-response/code/cohort.py", line 78, in main
+    assert sha_sequence(row["sequence"]) == key
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/presto-modular-model/experiments/2026-10-24_0449_codex_apc-precursor-response/code/cohort.py", line 285, in sha_sequence
+    return hashlib.sha256(sequence.encode()).hexdigest()
+                          ^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'encode'

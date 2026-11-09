@@ -1,0 +1,53 @@
+{
+  "alternatives": "collapse_identical_full_sequences_keep_all_accessions_and_positions",
+  "conditions": [
+    "UT",
+    "TNF+IFN"
+  ],
+  "endpoint": "relative_captured_fragment_intensity_given_admitted_parent_set",
+  "limitations": [
+    "conditional_captured_signal_not_molar_fraction_or_free_concentration",
+    "peptide_specific_capture_and_ms_response_unidentified",
+    "outside_admitted_set_mass_unidentified_not_negative",
+    "original_search_scope_6_to_40",
+    "original_2016_search_reference_unavailable",
+    "peptide_PEP_selection_not_resolution_of_source_FDR_conflict",
+    "source_leading_match_not_proof_of_biological_origin",
+    "exact_components_not_homology_or_specimen_independence",
+    "human_HEK293_not_professional_APC_validation",
+    "same_peptide_response_cancellation_across_conditions_is_an_assumption"
+  ],
+  "quantity": "published_nonimputed_log10_median_three_filtered_runs_including_zeros",
+  "recipe_id": "mapp_captured_composition_v1",
+  "reference_id": "reviewed_2026_03_isoforms",
+  "schema_version": 1,
+  "selection": {
+    "canonical_peptide_and_parent": "ACDEFGHIKLMNPQRSTVWY",
+    "max_reported_peptide_pep": 0.01,
+    "min_direct_msms_runs_per_condition": 1,
+    "min_eligible_peptides_per_parent": 3,
+    "min_positive_filtered_runs_per_condition": 2,
+    "n_distinct_full_parent_sequences": 1,
+    "n_source_groups": 1,
+    "reverse_or_contaminant": "excluded",
+    "source_leading_coordinate_and_flanks": "required_match"
+  },
+  "source_id": "pxd009092",
+  "split": {
+    "bucket": "first_8_digest_bytes_big_endian_modulo_100",
+    "graph": "all_source_peptides_joined_by_reference_sequence_components_and_source_groups",
+    "key": "sha256(recipe_id + ':' + lexically_smallest_component_peptide_id)",
+    "test": [
+      85,
+      99
+    ],
+    "train": [
+      0,
+      69
+    ],
+    "validation": [
+      70,
+      84
+    ]
+  }
+}

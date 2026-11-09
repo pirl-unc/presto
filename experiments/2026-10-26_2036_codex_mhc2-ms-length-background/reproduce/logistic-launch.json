@@ -1,0 +1,10 @@
+{
+  "utc": "2026-10-26T20:45:59.550754+00:00",
+  "agent_model": "Codex / GPT-6",
+  "code_sha256": {
+    "continue_logistic.py": "6a42cd282401e1f475135248391d737500fc8c013011de3bce54450f36d4db9d",
+    "logistic_controls.py": "1f691cd47a997d54fdebc9d7de063d06b4967c8a88054a3dcb72fcda7a7bdd0c"
+  },
+  "invocation": "env PYTHONPATH=/private/tmp/presto-mhc2-20261026:/private/tmp/presto-pr-completion-20261026/dependencies OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 PYTORCH_ENABLE_MPS_FALLBACK=0 /Users/iskander/code/shared-virtual-env/bin/python /private/tmp/presto-mhc2-20261026/presto/experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/continue_logistic.py",
+  "schedule": "after all native fits/scoring; stop if native controller fails; no automatic retry"
+}

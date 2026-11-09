@@ -1,0 +1,60 @@
+{
+  "initial_automatic_review": "Rejected before execution because ignored log contents were not established safe for publication.",
+  "resolution": "All nine complete plaintext logs inspected before retry. Contents are aggregate metrics from public HAP1 data, verifier status/numerical errors and local script/cache paths. No credentials, authentication output, private study data or environment secrets. Exact reviewed-byte hashes enforced before compression.",
+  "files": {
+    "launch_logs/fit.log.gz": {
+      "original_local_path": "experiments/2026-10-24_2018_codex_hap1-context-ablation/launch_logs/fit.log",
+      "original_sha256": "2751c801252be9890bcce8e1a8026cbae6bc2a296469e99b49181268834173aa",
+      "original_bytes": 5886,
+      "roundtrip_equal": true
+    },
+    "launch_logs/report-final.log.gz": {
+      "original_local_path": "experiments/2026-10-24_2018_codex_hap1-context-ablation/launch_logs/report-final.log",
+      "original_sha256": "48cd9e5fa8b9703441d6a59a19d4c6c2241b4dcc999761a12765e024a4cb6623",
+      "original_bytes": 1220,
+      "roundtrip_equal": true
+    },
+    "launch_logs/report.log.gz": {
+      "original_local_path": "experiments/2026-10-24_2018_codex_hap1-context-ablation/launch_logs/report.log",
+      "original_sha256": "404d4d6cdc0872bea722c2d5ebae59cacadf8f991c4b1345b468c80ffdf290d1",
+      "original_bytes": 1660,
+      "roundtrip_equal": true
+    },
+    "launch_logs/source-audit.log.gz": {
+      "original_local_path": "experiments/2026-10-24_2018_codex_hap1-context-ablation/launch_logs/source-audit.log",
+      "original_sha256": "a35553022fc74b5ab2e98d9ac6c2c81ae542285ce288f7cec4bb4513a336351b",
+      "original_bytes": 122,
+      "roundtrip_equal": true
+    },
+    "launch_logs/verify-diagnostic.log.gz": {
+      "original_local_path": "experiments/2026-10-24_2018_codex_hap1-context-ablation/launch_logs/verify-diagnostic.log",
+      "original_sha256": "60328c619417072c920a36fda7d405de74757f0986b9244901e5270ac7b1a265",
+      "original_bytes": 925,
+      "roundtrip_equal": true
+    },
+    "launch_logs/verify-final.log.gz": {
+      "original_local_path": "experiments/2026-10-24_2018_codex_hap1-context-ablation/launch_logs/verify-final.log",
+      "original_sha256": "ec6a1cfc77485a2a318977447d4a6ca1e4b3b6c1fec8a9c02e0c6bc0826c9c07",
+      "original_bytes": 2590,
+      "roundtrip_equal": true
+    },
+    "launch_logs/verify.log.gz": {
+      "original_local_path": "experiments/2026-10-24_2018_codex_hap1-context-ablation/launch_logs/verify.log",
+      "original_sha256": "340fb44e5484f47787314dc50695be2d68188e1f30c043a11bf658c5778c59e9",
+      "original_bytes": 717,
+      "roundtrip_equal": true
+    },
+    "results/attempt-verifier-metric/verify-diagnostic.log.gz": {
+      "original_local_path": "experiments/2026-10-24_2018_codex_hap1-context-ablation/results/attempt-verifier-metric/verify-diagnostic.log",
+      "original_sha256": "60328c619417072c920a36fda7d405de74757f0986b9244901e5270ac7b1a265",
+      "original_bytes": 925,
+      "roundtrip_equal": true
+    },
+    "results/attempt-verifier-metric/verify.log.gz": {
+      "original_local_path": "experiments/2026-10-24_2018_codex_hap1-context-ablation/results/attempt-verifier-metric/verify.log",
+      "original_sha256": "340fb44e5484f47787314dc50695be2d68188e1f30c043a11bf658c5778c59e9",
+      "original_bytes": 717,
+      "roundtrip_equal": true
+    }
+  }
+}

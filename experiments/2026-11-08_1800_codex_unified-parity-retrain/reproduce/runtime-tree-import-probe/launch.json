@@ -1,0 +1,58 @@
+{
+  "schema": "presto.runtime_tree_import_probe_launch.v1",
+  "experiment": "2026-11-08_1800_codex_unified-parity-retrain",
+  "created_utc": "2026-11-09T01:41:29Z",
+  "purpose": "Measure exact source-tree changes caused by the fit imports before correcting the H100 guard",
+  "git": {
+    "branch": "codex/post-pr153-unified-retraining-20261108",
+    "source_commit": "e2e2ad94c0fd2161ee0d9e938cfb1341fe6d6508",
+    "dirty": false
+  },
+  "source_sha256": {
+    "code/runtime_tree_import_probe.py": "348ed12e36af6b1aba6616a1b86b7476ea3291b8ff6e2085217db1a79d6e7788",
+    "reproduce/runtime-tree-import-probe/launch.sh": "129810e3b6c06fc1490fca4a92aebd03924d62fccd934e8690b77f1a5ee404c3",
+    "reproduce/runtime-tree-import-probe/collect.sh": "db571f232b05e142acf2741dac5edacfa27c17537e3df5af0e85a49975f846d4",
+    "reproduce/runtime-tree-import-probe/source/collect.py": "59e6af4423b7812e834a59c6b9ccbad191d6ec24cccd03e1fd1482e0bdc9cb98"
+  },
+  "local_expected": {
+    "files": 89,
+    "bytes": 1711245,
+    "sha256": "3c3c39fc2c570bcb1ae68f5572889249770024648b00b3bc429162e98fb06d64"
+  },
+  "image": {
+    "python": "3.12",
+    "requirements": [
+      "torch==2.14.1",
+      "numpy==2.5.4",
+      "pyyaml==6.0.3",
+      "mhcgnomes==3.64.6",
+      "mhcseqs==2.6.13",
+      "tqdm==4.70.1",
+      "psutil==7.2.2"
+    ],
+    "matches_fit_image": true
+  },
+  "imports": [
+    "psutil",
+    "torch",
+    "presto.data.modular_sources.ObservationIndex",
+    "presto.training.modular_run"
+  ],
+  "resources": {
+    "cpu": 2,
+    "memory_mib": 4096,
+    "timeout_seconds": 600,
+    "network": "blocked",
+    "volume_mounted": false,
+    "requested_gpu": null
+  },
+  "data_access": {
+    "training_rows": false,
+    "development_rows": false,
+    "test": false,
+    "locked_confirmation": false,
+    "model": false,
+    "optimizer_steps": 0
+  },
+  "launch_command": "PRESTO_EXPERIMENT_DIR=experiments/2026-11-08_1800_codex_unified-parity-retrain modal run --detach experiments/2026-11-08_1800_codex_unified-parity-retrain/code/runtime_tree_import_probe.py"
+}

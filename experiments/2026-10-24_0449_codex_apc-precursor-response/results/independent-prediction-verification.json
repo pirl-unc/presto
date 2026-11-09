@@ -1,0 +1,56 @@
+{
+  "status": "passed",
+  "n_prediction_rows": 38718,
+  "n_metric_records": 4743,
+  "maximum_prediction_error": 3.552713678800501e-15,
+  "checks": [
+    {
+      "variant": "condition",
+      "n_prediction_rows": 4302,
+      "maximum_scalar_error": 0.0
+    },
+    {
+      "variant": "condition_precursor",
+      "n_prediction_rows": 4302,
+      "maximum_scalar_error": 0.0
+    },
+    {
+      "variant": "no_change",
+      "n_prediction_rows": 4302,
+      "maximum_scalar_error": 0.0
+    },
+    {
+      "variant": "precursor",
+      "n_prediction_rows": 4302,
+      "maximum_scalar_error": 0.0
+    },
+    {
+      "variant": "prior_exact",
+      "n_prediction_rows": 4302,
+      "maximum_scalar_error": 3.552713678800501e-15
+    },
+    {
+      "variant": "sequence_exact",
+      "n_prediction_rows": 4302,
+      "maximum_scalar_error": 2.6645352591003757e-15
+    },
+    {
+      "variant": "sequence_hybrid",
+      "n_prediction_rows": 4302,
+      "maximum_scalar_error": 2.6645352591003757e-15
+    },
+    {
+      "variant": "sequence_no_precursor",
+      "n_prediction_rows": 4302,
+      "maximum_scalar_error": 2.6645352591003757e-15
+    },
+    {
+      "variant": "uniform_exact",
+      "n_prediction_rows": 4302,
+      "maximum_scalar_error": 2.6645352591003757e-15
+    }
+  ],
+  "seconds": 7.211229375039693,
+  "peak_rss_bytes": 342327296,
+  "scope": "source-linked predictions, scalar final physical arithmetic and independent metrics; no optimizer replay or external biological validation"
+}

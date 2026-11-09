@@ -1,0 +1,111 @@
+✓ Initialized. View run at 
+https://modal.com/apps/iskandr/main/ap-l1z5g1JVlHxvDyCcg3Ei5r
+✓ Created objects.
+├── ✓ Uploaded 
+│   /Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/20
+│   26-10-27_2255_codex_shared-multi-assay-scale/analysis/replay_modal.py
+├── ✓ Uploaded 
+│   /Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/20
+│   26-10-27_2255_codex_shared-multi-assay-scale/analysis/replay_remote.py
+├── ✓ Uploaded 
+│   /Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/20
+│   26-10-27_2255_codex_shared-multi-assay-scale/code/worker.py
+├── ✓ Uploaded 
+│   /Users/iskander/code/presto/.worktrees/shared-training/presto/artifacts/2026
+│   -10-27_2255_codex_shared-multi-assay-scale/upload/source-pins.json
+├── ✓ Uploaded 
+│   /Users/iskander/code/presto/.worktrees/shared-training/presto/artifacts/2026
+│   -10-27_2255_codex_shared-multi-assay-scale/upload/inputs
+├── ✓ Uploaded 
+│   /Users/iskander/code/presto/.worktrees/shared-training/presto/artifacts/2026
+│   -10-27_2255_codex_shared-multi-assay-scale/upload/runtimes
+└── ✓ Created Function verify.
+Traceback (most recent call last):
+  File "/bundle/replay_remote.py", line 90, in <module>
+    main()
+  File "/bundle/replay_remote.py", line 31, in main
+    from presto.inference.modular import ModularPredictor
+ModuleNotFoundError: No module named 'presto.inference'
+Traceback (most recent call last):
+  File "/pkg/modal/_runtime/container_io_manager.py", line 987, in handle_input_exception
+    yield
+  File "/pkg/modal/_container_entrypoint.py", line 189, in run_input_sync
+    values = io_context.call_function_sync()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/pkg/modal/_runtime/container_io_manager.py", line 266, in call_function_sync
+    expected_value_or_values = self.finalized_function.callable(*args, **kwargs)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/replay_modal.py", line 42, in verify
+    output = subprocess.check_output(
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/subprocess.py", line 466, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/usr/local/bin/python', '/bundle/replay_remote.py', 'ic50-exact-s42', 'original_cuda']' returned non-zero exit status 1.
+Stopping app - uncaught exception raised locally: CalledProcessError(1, ['/usr/local/bin/python', '/bundle/replay_remote.py', 'ic50-exact-s42', 'original_cuda']).
+╭───────────────────── Traceback (most recent call last) ──────────────────────╮
+│ /Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/20 │
+│ 26-10-27_2255_codex_shared-multi-assay-scale/analysis/replay_modal.py:54 in  │
+│ main                                                                         │
+│                                                                              │
+│   53 │   started = time.time()                                               │
+│ ❱ 54 │   results = verify.remote()                                           │
+│   55 │   destination = FAMILY / "results/gpu-training-replay.json"           │
+│                                                                              │
+│ /Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_ │
+│ object.py:49 in wrapped                                                      │
+│                                                                              │
+│    48 │   │   await self.hydrate()                                           │
+│ ❱  49 │   │   return await method(self, *args, **kwargs)                     │
+│    50                                                                        │
+│                                                                              │
+│ /Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_ │
+│ functions.py:2067 in remote                                                  │
+│                                                                              │
+│   2066 │   │                                                                 │
+│ ❱ 2067 │   │   return await self._call_function(args, kwargs)                │
+│   2068                                                                       │
+│                                                                              │
+│ /Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_ │
+│ functions.py:2004 in _call_function                                          │
+│                                                                              │
+│   2003 │   │                                                                 │
+│ ❱ 2004 │   │   return await invocation.run_function()                        │
+│   2005                                                                       │
+│                                                                              │
+│ /Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_ │
+│ functions.py:515 in run_function                                             │
+│                                                                              │
+│    514 │   │   │   # No more retries left.                                   │
+│ ❱  515 │   │   │   return await _process_result(                             │
+│    516 │   │   │   │   await_response.output.result, await_response.output.d │
+│                                                                              │
+│ /Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_ │
+│ utils/function_utils.py:572 in _process_result                               │
+│                                                                              │
+│   571 │   │   │                                                              │
+│ ❱ 572 │   │   │   raise exc_with_hints(exc)                                  │
+│   573                                                                        │
+│                                                                              │
+│     ...Remote call to Modal Function (ta-01M601BJDF5732Y6P5J5S8HFDR)...      │
+│                                                                              │
+│ /root/replay_modal.py:42 in verify                                           │
+│                                                                              │
+│ ❱ 42 output = subprocess.check_output(                                       │
+│                                                                              │
+│                                                                              │
+│ /usr/local/lib/python3.12/subprocess.py:466 in check_output                  │
+│                                                                              │
+│ ❱ 466 return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,       │
+│                                                                              │
+│                                                                              │
+│ /usr/local/lib/python3.12/subprocess.py:571 in run                           │
+│                                                                              │
+│ ❱ 571 raise CalledProcessError(retcode, process.args,                        │
+│                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+CalledProcessError: Command '['/usr/local/bin/python', 
+'/bundle/replay_remote.py', 'ic50-exact-s42', 'original_cuda']' returned 
+non-zero exit status 1.

@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0424_codex_native-psmd2-source/code/verify_reconciliation.py", line 69, in <module>
+    if cell.coordinate not in date_exceptions:
+       ^^^^^^^^^^^^^^^
+AttributeError: 'EmptyCell' object has no attribute 'coordinate'

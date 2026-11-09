@@ -1,0 +1,3 @@
+# Independent state-adaptive proposal verification
+
+Same independent21-fragment generator/Frechet and analytical rare-eta references as the preceding family. Recompute all sufficient-statistic algebra, plain/control diagnostics and unchanged gates. Replay all48 complete primary raw groups and384 saved event histories. NumPy/scalar path_reference.py rebuilds original/proposal segment survival and boundary event terms from complete event histories; it imports no producer sampler. Its fixed-path bond/eta derivatives passed96 directional finite differences in16 paths before qualification. Preserve all reference/probability/log/gradient failures. No claim about unsaved paths or biological predictive quality.
