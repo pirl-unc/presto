@@ -1,0 +1,74 @@
+{
+  "schema": "presto.runtime_tree_import_probe_launch.v2",
+  "experiment": "2026-11-08_1800_codex_unified-parity-retrain",
+  "created_utc": "2026-11-09T01:46:37Z",
+  "purpose": "Return the exact import-time source-tree diff below Modal's inline transport threshold",
+  "git": {
+    "branch": "codex/post-pr153-unified-retraining-20261108",
+    "source_commit": "71e31872ac384d6562c21026a0a58ab8d8f31d0e",
+    "dirty": false
+  },
+  "source_sha256": {
+    "code/runtime_tree_import_probe_v2.py": "33b883a83bc67f11e2431f564b7d78940f1a457a9bd218fb2a17269e7e6240d6",
+    "reproduce/runtime-tree-import-probe-v2/launch.sh": "4345a3190bfcac55c45518d9956a1035fac49ee1c26feaaf7939d640a2d8d260",
+    "reproduce/runtime-tree-import-probe-v2/collect.sh": "17e821c3da83f50799cea0fbd812ebd8ac1e7fbfcc3ee6e60ac759a4de3fd8d1",
+    "reproduce/runtime-tree-import-probe-v2/source/collect.py": "6beecf60f688d5cd83d89e6ef0d6704b68c28160778ecc924439e1f21888aa8f"
+  },
+  "local_expected": {
+    "files": 89,
+    "bytes": 1711245,
+    "sha256": "3c3c39fc2c570bcb1ae68f5572889249770024648b00b3bc429162e98fb06d64"
+  },
+  "baseline_receipt": {
+    "path": "results/runtime-tree-probe/receipt.json",
+    "bytes": 14741,
+    "sha256": "b2c5406c375ad11342fa209c76b871b7e246da72024b0b2bf3eb5b33a6d0491f"
+  },
+  "prior_transport_stop": {
+    "app_id": "ap-n71agHZtH4WggiHQJgUXdx",
+    "call_id": "fc-01M6YZMJ1FVR875D02722GRBPQ",
+    "reason": "duplicated full inventories exceeded inline return threshold; blocked worker could not upload blob"
+  },
+  "image": {
+    "python": "3.12",
+    "requirements": [
+      "torch==2.14.1",
+      "numpy==2.5.4",
+      "pyyaml==6.0.3",
+      "mhcgnomes==3.64.6",
+      "mhcseqs==2.6.13",
+      "tqdm==4.70.1",
+      "psutil==7.2.2"
+    ],
+    "matches_fit_image": true
+  },
+  "imports": [
+    "psutil",
+    "torch",
+    "presto.data.modular_sources.ObservationIndex",
+    "presto.training.modular_run"
+  ],
+  "return_contract": {
+    "before": "aggregate identity only; complete rows are in the pinned baseline receipt",
+    "after": "aggregate identity only",
+    "diff": "complete canonical added, removed, and changed rows",
+    "collector_verification": "apply diff to pinned baseline rows and require exact after identity"
+  },
+  "resources": {
+    "cpu": 2,
+    "memory_mib": 4096,
+    "timeout_seconds": 600,
+    "network": "blocked",
+    "volume_mounted": false,
+    "requested_gpu": null
+  },
+  "data_access": {
+    "training_rows": false,
+    "development_rows": false,
+    "test": false,
+    "locked_confirmation": false,
+    "model": false,
+    "optimizer_steps": 0
+  },
+  "launch_command": "PRESTO_EXPERIMENT_DIR=experiments/2026-11-08_1800_codex_unified-parity-retrain modal run --detach experiments/2026-11-08_1800_codex_unified-parity-retrain/code/runtime_tree_import_probe_v2.py"
+}
