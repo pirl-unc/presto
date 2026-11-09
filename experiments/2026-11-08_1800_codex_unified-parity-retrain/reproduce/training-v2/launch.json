@@ -1,0 +1,154 @@
+{
+  "schema": "presto.unified_parity_fit_launch.v2",
+  "experiment": "2026-11-08_1800_codex_unified-parity-retrain",
+  "created_utc": "2026-11-09T01:55:09Z",
+  "agent_model": "Codex / GPT-5",
+  "git": {
+    "branch": "codex/post-pr153-unified-retraining-20261108",
+    "source_commit": "0f00931a2aedcb3f661f8c9377b9211c65f745f5",
+    "dirty": false
+  },
+  "source_sha256": {
+    "code/fit_pair.py": "550dbb82bb6dde99d8ca53eb0c81db841d407a747adee43859957d4d72bccf8f",
+    "reproduce/training/reference-manifest.json": "e2724c0ba873a98fa15f90c6ccc06013f320e65eb8968af0400bf7722e6db16d",
+    "reproduce/training/parity-manifest.json": "8259d1ec1b59430d7078174a7718d8b7157e351a0261e70384996692605bbd7c",
+    "reproduce/training-v2/launch.sh": "9db618573dd6e095b1b83d475ce5c91b8fd867e4cf138a7f8b834c994009014d",
+    "reproduce/training-v2/collect.sh": "f26b9847ae3b68cfaf328b16bce4c858d77a13592ffb12c931260182a4078e3d",
+    "reproduce/training-v2/source/collect.py": "56d56e22d64d7c51eac8de992d684eb82e40d8ece8ccd31e4f1966f801f88784"
+  },
+  "runtime_tree_scope": "__init__.py plus every non-pyc file under data/, models/ and training/",
+  "runtime_tree": {
+    "files": 89,
+    "bytes": 1711245,
+    "sha256": "3c3c39fc2c570bcb1ae68f5572889249770024648b00b3bc429162e98fb06d64"
+  },
+  "guard_correction": {
+    "scientific_change": false,
+    "old_calls": {
+      "reference": "fc-01M6YZ10NHMN1FHFBRX8YRAQ91",
+      "parity": "fc-01M6YZ10QXBK1RR2WCZ4QFC6EZ"
+    },
+    "old_failure": "descriptive paths metadata made whole-object equality false before any volume or scientific-state access",
+    "fit_root_absent_before_continuation": true,
+    "fit_root_absence_check": "modal volume ls --json presto-checkpoints 2026-11-08_1800_codex_unified-parity-retrain/fits returned No such file or directory",
+    "cpu_import_probe_receipt_sha256": "88c933ce39f22e4df9cd7a42f84b1b93a85663ce4d7e0483138d47750199283f",
+    "h100_probe_receipt_sha256": "8de64679952aeda1f3325b9281992edb41483949f2bb357ec25787ccf86bbd60",
+    "identity_fields": [
+      "files",
+      "bytes",
+      "sha256"
+    ]
+  },
+  "preflight_closure": {
+    "path": "2026-11-08_1800_codex_unified-parity-retrain/preflight-v2-verification-comparison/receipt.json",
+    "bytes": 3901,
+    "sha256": "b60d3f9343808b23fa67a6f636df0be01699f59475f7af596701c1ac00121c16"
+  },
+  "parent": {
+    "path": "2026-11-07_1915_codex_unified-presentation/stage-a/raw/selected.pt",
+    "bytes": 3910569,
+    "sha256": "e6cc6fbb9950ace32efe418bfa96b119e1b94f0399e6843db0a16b0208937c06"
+  },
+  "inputs": {
+    "presentation_train": {
+      "path": "2026-11-07_1915_codex_unified-presentation/prepared-v2/presentation-train.jsonl",
+      "bytes": 5977683393,
+      "sha256": "6609ee375f6bb117f19035560daa6cf50a63b9c229fa46ae24e773afebdda2fc"
+    },
+    "presentation_development": {
+      "path": "2026-11-07_1915_codex_unified-presentation/prepared-v2/presentation-val.jsonl",
+      "bytes": 218542980,
+      "sha256": "0313b2d6b394320da7dcf6aa9144cbc44b73abe48b16380e03c1b27a9559fc52"
+    },
+    "affinity_train": {
+      "path": "2026-11-07_1915_codex_unified-presentation/prepared-v2/concentrations-s42-concentrations-s42-train.jsonl",
+      "bytes": 836622693,
+      "sha256": "8593fbd416a489b46397c4fae288d5916ad55d2febec7f7798bc4bb3f788ec1c"
+    },
+    "affinity_development": {
+      "path": "2026-11-07_1915_codex_unified-presentation/prepared-v2/concentrations-s42-concentrations-s42-validation.jsonl",
+      "bytes": 12196679,
+      "sha256": "08e41a6c006274b5929142fc6bd4687a289a08df9cc5212edd92399f907f2f8a"
+    },
+    "netmhcpan42_ba_train_v2": {
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared-v2/netmhcpan42-ba-train.jsonl",
+      "bytes": 141870035,
+      "rows": 80674,
+      "sha256": "2c007e6b46a99835f95ec612aeb498f4e52940aa81c22809ad48b5e922d6d0ca"
+    },
+    "netmhciipan43_ba_train_v2": {
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared-v2/netmhciipan43-ba-train.jsonl",
+      "bytes": 112640875,
+      "rows": 62539,
+      "sha256": "9fe752274c895cb4cd46e36dfeff43a3db73e0c96fa24ba495e1fcfd7f24c66a"
+    }
+  },
+  "conditions": {
+    "reference": {
+      "manifest_sha256": "e2724c0ba873a98fa15f90c6ccc06013f320e65eb8968af0400bf7722e6db16d",
+      "train_rows": 1509704,
+      "development_rows": 51066,
+      "difference": "none; exact historical Stage B source contract"
+    },
+    "parity": {
+      "manifest_sha256": "8259d1ec1b59430d7078174a7718d8b7157e351a0261e70384996692605bbd7c",
+      "train_rows": 1652917,
+      "development_rows": 51066,
+      "difference": "reference plus exactly two BA v2 TRAIN sources"
+    }
+  },
+  "training": {
+    "initialization": "same Stage A selected checkpoint",
+    "seed": 42,
+    "max_steps": 5000,
+    "batch_size": 128,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "warmup_steps": 300,
+    "decay": "cosine",
+    "decay_steps": 5000,
+    "min_lr_fraction": 0.05,
+    "checkpoint_every_steps": 500,
+    "validation_every_steps": 500,
+    "selection_endpoint": "elution_observation",
+    "selection_reduction": "study_mean",
+    "balance_by": [
+      "endpoint",
+      "mhc_class"
+    ],
+    "test_policy": "no_test_training_diagnostic",
+    "tf32": false,
+    "amp": false,
+    "compile": false
+  },
+  "requirements": [
+    "torch==2.14.1",
+    "numpy==2.5.4",
+    "pyyaml==6.0.3",
+    "mhcgnomes==3.64.6",
+    "mhcseqs==2.6.13",
+    "tqdm==4.70.1",
+    "psutil==7.2.2"
+  ],
+  "resources_per_condition": {
+    "requested_gpu": "H100!",
+    "cpu": 4,
+    "memory_mib": 32768,
+    "ephemeral_disk_mib": 524288,
+    "timeout_seconds": 10800,
+    "cooperative_stop_seconds": 9900,
+    "network": "blocked"
+  },
+  "concurrency": {
+    "conditions": 2,
+    "maximum_containers": 2
+  },
+  "outputs": {
+    "root": "2026-11-08_1800_codex_unified-parity-retrain/fits",
+    "validation_predictions": "complete per-example gzip",
+    "train_predictions": "configured 2048-row diagnostic gzip",
+    "test_predictions": "required empty gzip and zero available TEST rows",
+    "large_artifacts": "presto-checkpoints Modal volume; receipts only in Git"
+  },
+  "launch_command": "PRESTO_MODAL_GPU=H100! PRESTO_EXPERIMENT_DIR=experiments/2026-11-08_1800_codex_unified-parity-retrain modal run --detach experiments/2026-11-08_1800_codex_unified-parity-retrain/code/fit_pair.py"
+}
