@@ -14861,7 +14861,8 @@ Canonical preregistration:
 
 - [x] Freeze reference and parity manifests from the same Stage A checkpoint.
 - [x] Run and independently verify full common-loader preflight for both.
-- [ ] Launch both exact 5,000-update conditions on requested `H100!`.
+- [x] Launch both exact 5,000-update conditions on requested `H100!` under the
+  scientifically unchanged training-v2 continuation.
 - [x] Prove the first H100 stop was not a mount-packaging drift: CPU remote and
   local runtime trees match at 89 files / 1,711,245 bytes / aggregate SHA-256
   `3c3c39fc2c570bcb1ae68f5572889249770024648b00b3bc429162e98fb06d64`.
@@ -14871,8 +14872,8 @@ Canonical preregistration:
   scientific state: the H100 tree is byte-identical and the diff is empty.
 - [x] Diagnose the guard root cause: descriptive `paths` metadata was compared
   as identity, so structurally unequal dictionaries rejected identical trees.
-- [ ] Preserve the stopped launch and submit a new immutable `training-v2`
-  continuation after the three-field identity fix; `fits/` is confirmed absent.
+- [x] Preserve the stopped launch and submit a new immutable `training-v2`
+  continuation after the three-field identity fix; old `fits/` was absent.
 - [ ] Collect checkpoints, coverage, resource receipts, and all development
   prediction dumps; verify hashes independently.
 - [ ] Repeat matched affinity/presentation/processing evaluation and figures.

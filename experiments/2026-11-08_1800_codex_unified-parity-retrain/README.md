@@ -137,3 +137,18 @@ family `fits/` path does not exist, so the two stopped calls created no executio
 contract, checkpoint, or partial fit. Training-v2 compares only the three
 identity fields, keeps scope prose separate, and otherwise leaves every
 scientific input and training parameter unchanged.
+
+## Training-v2 active calls
+
+The corrected contract is frozen at source commit `0f00931a` and launch commit
+`fd32cb1e`. A machine comparison confirms the original and v2 preflight closure,
+parent, inputs, condition manifests/counts, training schedule, requirements,
+resources, concurrency, and outputs are equal. Only guard identity selection and
+its diagnostics changed.
+
+App `ap-dvE960vcRK3jSN6SPedzYN` submitted reference call
+`fc-01M6Z0B76ZWEY1GFPF8C4S2JT3` and parity call
+`fc-01M6Z0B798HD8Z8520Q7N605Q4`. Both passed the corrected runtime/closure gates
+and persisted their execution contract plus NVIDIA H100 hardware receipt before
+source copying/training. Final scientific status remains pending until both calls
+reach exactly 5,000 steps and their complete receipts are collected and verified.
