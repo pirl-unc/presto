@@ -14865,8 +14865,10 @@ Canonical preregistration:
 - [x] Prove the first H100 stop was not a mount-packaging drift: CPU remote and
   local runtime trees match at 89 files / 1,711,245 bytes / aggregate SHA-256
   `3c3c39fc2c570bcb1ae68f5572889249770024648b00b3bc429162e98fb06d64`.
-- [ ] Freeze a same-image before/after-import probe, identify the exact
-  import-time tree mutation, and verify the corrected pre-import guard.
+- [x] Freeze and run the same-image before/after-import probe: imports leave the
+  89-file tree byte-identical, so reject the proposed pre-import guard move.
+- [ ] Run one exact-resource H100 environment probe without volume reads or
+  scientific state; diagnose any GPU-container-specific tree difference.
 - [ ] Preserve the stopped launch and submit a new immutable `training-v2`
   continuation only after confirming both failed calls wrote no fit state.
 - [ ] Collect checkpoints, coverage, resource receipts, and all development

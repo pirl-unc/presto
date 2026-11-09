@@ -110,3 +110,14 @@ No volume was mounted and no data, checkpoint, model, or optimizer was touched.
 The preserved v2 continuation returns only aggregate identities and canonical
 path differences; combined with the full mount receipt above, that losslessly
 reconstructs the post-import tree while staying below the inline limit.
+
+Import-probe v2 call `fc-01M6YZT56SZ3CAJW0B0VDTEEYQ` under app
+`ap-UXDHVsmq7U4JyIz8o1uuBP` completed with a 946-byte inline payload. Before and
+after all four exact fit imports, the tree is the same 89 files / 1,711,245 bytes /
+SHA-256 `3c3c39fc2c570bcb1ae68f5572889249770024648b00b3bc429162e98fb06d64`;
+added, removed, and changed sets are all empty. Imports are therefore not the
+cause; local receipt SHA-256 is
+`88c933ce39f22e4df9cd7a42f84b1b93a85663ce4d7e0483138d47750199283f`,
+and the proposed guard reordering is rejected. A minimal H100 environment
+probe will now test the remaining GPU/container contract with the exact fit
+resources and volume mount but no volume read or scientific-state access.

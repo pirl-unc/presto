@@ -211,6 +211,21 @@ two failed H100 calls and both diagnostic probes. Use a new immutable
 record of the stopped contract. Confirm that neither failed call created a fit
 execution directory before reusing the unchanged `fits/{condition}` destinations.
 
+Import-probe v2 call `fc-01M6YZT56SZ3CAJW0B0VDTEEYQ` falsified that conditional:
+the pre- and post-import trees are both exactly 89 files / 1,711,245 bytes /
+SHA-256 `3c3c39fc2c570bcb1ae68f5572889249770024648b00b3bc429162e98fb06d64`,
+and the canonical diff is empty. Do not move the guard on this evidence alone.
+Instead run one minimal requested-`H100!` environment probe using the exact fit
+image, imports, CPU/memory/ephemeral-disk settings, source mounts, and volume
+mount. It must not call `volume.reload`, list or read the volume, load data or a
+checkpoint, construct a model, or create an optimizer. Return the before/after
+tree identities and diff, actual GPU identity/memory, CUDA/Torch versions, and
+the exact pinned source/manifest bundle checks. If the H100 tree differs, use its
+canonical diff to correct only the diagnosed contract. If it matches, classify
+the first pair as a transient or launch-image mismatch, add observed identities
+to future guard errors/receipts, independently prove both target fit directories
+absent, and submit the immutable training-v2 continuation unchanged scientifically.
+
 ## Preregistered decisions
 
 1. Prefer P as the next affinity/presentation parent only if it improves MHC-II
