@@ -6055,3 +6055,51 @@ data-only successor arm after a canonical combined-loader preflight. This is
 comparator-parity training, not independent evidence against NetMHCpan or
 NetMHCIIpan; genuinely new study-disjoint affinity data remain mandatory for a
 superiority claim.
+
+<!-- active-2026-11-08_1800_codex_unified-parity-retrain -->
+## 2026-11-08 — Newer-code unified comparator-parity retrain
+
+**Agent/model:** Codex / GPT-5
+
+**Experiment:** [2026-11-08_1800_codex_unified-parity-retrain](2026-11-08_1800_codex_unified-parity-retrain/README.md)
+
+**Status:** corrected full common-loader gate passed; H100 reference/parity fits
+not yet launched.
+
+### Frozen dataset and training contract
+
+Both conditions restart from Stage A checkpoint SHA-256
+`e6cc6fbb9950ace32efe418bfa96b119e1b94f0399e6843db0a16b0208937c06`.
+Reference uses exact historical Stage B presentation TRAIN/development and
+affinity TRAIN/development sources. Parity differs only by appending verified
+NetMHCpan 4.2 / NetMHCIIpan 4.3 BA v2 TRAIN rows: 80,674 MHC-I and 62,539
+MHC-II, literal censoring, unknown-method reference IC50 routing, canonical
+measurement lineage, affinity exact/core-9 and presentation
+exact/core-8/Hamming-1 development embargoes. No synthetic affinity data are
+used. Assay-aware output mapping and the historical 5,000-step Stage B model,
+loss, balancing, selection, and optimizer contract remain identical.
+
+### Corrected preflight evidence
+
+Primary app/call `ap-dBDyzedkYeSHH7SCN0EKLT` /
+`fc-01M6YSQBZ1AKY6WW2NN1ZBQD9N` passed 1,560,770 reference rows (1,509,704
+TRAIN + 51,066 development) and 1,703,983 parity rows (1,652,917 TRAIN +
+51,066 development). Runtime was 1,010.20 seconds on 8 CPU / 32 GiB / 512 GiB
+scratch, peak RSS 4,817,805,312 bytes; requested/observed GPU were null.
+
+Atomic independent app/call `ap-FMlOBE4ADcMdKxRwETVd70` /
+`fc-01M6YWM3TV4JF1CT6HACAQW0M7` independently repeated both full passes with
+identical condition counts, partitions, manifest hashes, source hashes, and
+condition passes. Runtime was 1,623.50 seconds; peak RSS 4,823,691,264 bytes.
+Its raw Python comparison stopped on tuple/list representation at
+`reference/model`; both immutable persisted receipts were then compared by
+CPU-only closure app/call `ap-KMHe8cOf1BqdxQ7c7acXTL` /
+`fc-01M6YYDWEEHT574AQTDNNQCRYT`. Canonical JSON equality passes for rows,
+partitions, census, both manifest hashes, model, training, scales, admission,
+parent/source contracts, and every source-copy byte count/hash. Closure receipt
+SHA-256 is `b60d3f9343808b23fa67a6f636df0be01699f59475f7af596701c1ac00121c16`.
+
+TEST and locked access are false; model predictions are false; optimizer steps
+are zero. There are no validation/test predictive metrics yet because this
+entry records the mandatory data/loader gate, not a fit. The two matched H100!
+fits and per-example development evaluation remain open.

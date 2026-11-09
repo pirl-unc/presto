@@ -14820,7 +14820,7 @@ Spec: `tasks/post-pr153-unified-retraining-spec.md`.
 - [ ] Add standardized per-example affinity, presentation/processing, and
   T-cell figure panels beyond the v1 comparator/composition overview.
 - [ ] Freeze the successor training commit after the new cohort contracts pass.
-- [ ] Project the audited NetMHCpan 4.2 / NetMHCIIpan 4.3 BA archives into a
+- [x] Project the audited NetMHCpan 4.2 / NetMHCIIpan 4.3 BA archives into a
   source-faithful, development-embargoed comparator-parity TRAIN cohort; verify
   every row/receipt and freeze the combined-loader preflight.
 - [ ] Install and pin licensed MixMHCpred 3.x; smoke-test PRIME 2.1 through
@@ -14859,8 +14859,8 @@ preflight is frozen and passes.
 Canonical preregistration:
 `experiments/agents/codex/plans/2026-11-08_unified-parity-retrain.md`.
 
-- [ ] Freeze reference and parity manifests from the same Stage A checkpoint.
-- [ ] Run and independently verify full common-loader preflight for both.
+- [x] Freeze reference and parity manifests from the same Stage A checkpoint.
+- [x] Run and independently verify full common-loader preflight for both.
 - [ ] Launch both exact 5,000-update conditions on requested `H100!`.
 - [ ] Collect checkpoints, coverage, resource receipts, and all development
   prediction dumps; verify hashes independently.
@@ -14878,3 +14878,11 @@ No GPU or optimizer ran. Continuation plan:
 The corrective v2 projection is now complete and independently verified on
 143,213 rows. A new immutable preflight continuation must point to v2; the
 executed failed contract remains unchanged as audit evidence.
+
+Corrected gate closure: primary and independent canonical loaders both pass
+1,560,770 reference and 1,703,983 parity rows with identical 51,066-row
+development partitions. The independent raw receipt's tuple/list comparison
+stop is closed by a separate hash-pinned canonical-JSON receipt that matches all
+rows, partitions, census, manifests, model/training/scales/admission, and source
+hashes. TEST/locked/prediction/optimizer/GPU access remain absent. Matched H100!
+training may now launch from the frozen Stage A parent.
