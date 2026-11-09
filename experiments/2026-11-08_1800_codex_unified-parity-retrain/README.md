@@ -81,3 +81,23 @@ Across primary and independent work: TEST and locked confirmation access are
 false; predictions are false; optimizer steps are zero; requested/observed GPU
 are null. The corrected H100 training gate is therefore open. This remains a
 development comparison and does not create independent superiority evidence.
+
+## Initial H100 packaging stop
+
+The first frozen fit submissions under app `ap-O6aCKv3NIhBIqQjIt6jjAm`,
+reference call `fc-01M6YZ10NHMN1FHFBRX8YRAQ91` and parity call
+`fc-01M6YZ10QXBK1RR2WCZ4QFC6EZ`, both stopped at the runtime-source-tree guard.
+The guard preceded volume reload, preflight-closure reading, source copying,
+parent loading, fit-directory creation, model construction, and optimization.
+They are packaging diagnostics with zero scientific steps, not failed fits.
+
+CPU mount probe `fc-01M6YZ6XQQZQ00JFADC534HBQW` under app
+`ap-VdvBuCHsMr0pFjDQEGWw8s` then inspected the same four local mounts with no
+data, model, optimizer, or GPU access. The clean local and remote inventories
+are exactly equal: 89 files, 1,711,245 bytes, aggregate SHA-256
+`3c3c39fc2c570bcb1ae68f5572889249770024648b00b3bc429162e98fb06d64`.
+The complete 89-row receipt is 14,741 bytes at SHA-256
+`b2c5406c375ad11342fa209c76b871b7e246da72024b0b2bf3eb5b33a6d0491f`.
+This rules out source-mount drift. A same-image CPU probe now measures the tree
+immediately before and after the exact fit imports; H100 continuation remains
+blocked until that root cause and a pre-import guard correction are frozen.

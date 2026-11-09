@@ -14862,6 +14862,13 @@ Canonical preregistration:
 - [x] Freeze reference and parity manifests from the same Stage A checkpoint.
 - [x] Run and independently verify full common-loader preflight for both.
 - [ ] Launch both exact 5,000-update conditions on requested `H100!`.
+- [x] Prove the first H100 stop was not a mount-packaging drift: CPU remote and
+  local runtime trees match at 89 files / 1,711,245 bytes / aggregate SHA-256
+  `3c3c39fc2c570bcb1ae68f5572889249770024648b00b3bc429162e98fb06d64`.
+- [ ] Freeze a same-image before/after-import probe, identify the exact
+  import-time tree mutation, and verify the corrected pre-import guard.
+- [ ] Preserve the stopped launch and submit a new immutable `training-v2`
+  continuation only after confirming both failed calls wrote no fit state.
 - [ ] Collect checkpoints, coverage, resource receipts, and all development
   prediction dumps; verify hashes independently.
 - [ ] Repeat matched affinity/presentation/processing evaluation and figures.

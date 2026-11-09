@@ -176,6 +176,29 @@ hashing or change manifests, data, parent, training, GPU, or evaluation policy.
 Freeze a new launch continuation and require its local and CPU-remote tree checks
 to pass before the two H100 calls are submitted again.
 
+The first CPU probe closed the mount question: the remote tree is exactly 89
+files / 1,711,245 bytes / SHA-256
+`3c3c39fc2c570bcb1ae68f5572889249770024648b00b3bc429162e98fb06d64`,
+identical to the clean local inventory. The remaining diagnostic must therefore
+use the fit image with the exact pinned dependencies and record the complete tree
+immediately before and after the four fit imports (`psutil`, `torch`,
+`ObservationIndex`, and `training.modular_run`). It may not mount the volume,
+read any cohort, load the parent, initialize a model, or create an optimizer.
+Persist the added, removed, and changed path rows, dependency versions, source
+commit, and both aggregate tree identities.
+
+If and only if that probe shows an import-time filesystem change while the
+pre-import tree matches the frozen contract, move the runtime-tree guard ahead
+of those imports. Keep the imports local to the function so the guard observes
+the pristine mounted tree, retain the per-file fit-source and manifest checks,
+and add an explicit post-import receipt field rather than treating generated
+import artifacts as frozen source. Verify the ordering in a focused local test
+and repeat the CPU import probe against the corrected continuation. Preserve the
+two failed H100 calls and both diagnostic probes. Use a new immutable
+`training-v2` launch/call bundle; the existing `training` bundle remains the
+record of the stopped contract. Confirm that neither failed call created a fit
+execution directory before reusing the unchanged `fits/{condition}` destinations.
+
 ## Preregistered decisions
 
 1. Prefer P as the next affinity/presentation parent only if it improves MHC-II
