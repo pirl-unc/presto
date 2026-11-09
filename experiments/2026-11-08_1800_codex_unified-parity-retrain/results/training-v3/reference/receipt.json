@@ -1,0 +1,230 @@
+{
+  "checkpoint_sha256": "1d0d4122abf022830ea97fcc247b1d28c0645d7d42d206130cdf8a5d7762815a",
+  "condition": "reference",
+  "experiment": "2026-11-08_1800_codex_unified-parity-retrain",
+  "files": {
+    "execution-contract.json": {
+      "bytes": 576,
+      "path": "execution-contract.json",
+      "sha256": "cbd2d99bbfb8adac47c9f21c10794d601976616e0f9ed2a0a67bc5a27a57da57"
+    },
+    "hardware.json": {
+      "bytes": 277,
+      "path": "hardware.json",
+      "sha256": "33f0ce7e7cd6f5e72b18cdad7ff28f607cd9db9561ff716d77f92fb44c0156de"
+    },
+    "raw/.training.lock": {
+      "bytes": 0,
+      "path": "raw/.training.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "raw/admission.json": {
+      "bytes": 1576,
+      "path": "raw/admission.json",
+      "sha256": "355667bda0d2b25986e79247946c61ba4b43cd157d27a9d0152c107fc1a33edd"
+    },
+    "raw/completed.json": {
+      "bytes": 1419,
+      "path": "raw/completed.json",
+      "sha256": "4c6328d05cbb24eee91a3a9a37775596103c9fc7a39380ac2a10625ba950baf0"
+    },
+    "raw/coverage.json": {
+      "bytes": 77293,
+      "path": "raw/coverage.json",
+      "sha256": "3a601cc3d7536ca503630820ca8e0e768ce3f5b879ea8ce66ce0c07fee881fd3"
+    },
+    "raw/evaluations/test-started.json": {
+      "bytes": 200,
+      "path": "raw/evaluations/test-started.json",
+      "sha256": "a04ab45c56bab06f9901e2b35171118311ebb02864e2ab3d99450385575ef43f"
+    },
+    "raw/evaluations/test.json": {
+      "bytes": 372,
+      "path": "raw/evaluations/test.json",
+      "sha256": "2eaa9a1ccf289b5d463e1f5d545573e5b79e99e8cd36340a78470757e42d8c1f"
+    },
+    "raw/evaluations/train-started.json": {
+      "bytes": 201,
+      "path": "raw/evaluations/train-started.json",
+      "sha256": "084b3a17bb28191b6df6a98d2103a2e21885efad581ea59d14c752206ea12145"
+    },
+    "raw/evaluations/train.json": {
+      "bytes": 71852979,
+      "path": "raw/evaluations/train.json",
+      "sha256": "a06d053a6ebe8083a3874fe3c3ca3a3a71e3ef53b9fb689b7cd86ab699dc484c"
+    },
+    "raw/evaluations/validation-started.json": {
+      "bytes": 206,
+      "path": "raw/evaluations/validation-started.json",
+      "sha256": "a54f896ec71c37e8f333613afbc228b9ecdd00d03e5ce2340ca0d02971570247"
+    },
+    "raw/evaluations/validation.json": {
+      "bytes": 1878351229,
+      "path": "raw/evaluations/validation.json",
+      "sha256": "5edebb931357f06a5771acda84ba42e14b7176cf18da62ba6c5b15e2e78fcff4"
+    },
+    "raw/history.json": {
+      "bytes": 338380,
+      "path": "raw/history.json",
+      "sha256": "048d7f49f8976faa6086adc51cfea261b71c455c45b7c2d8a933456b2b8431fd"
+    },
+    "raw/host-history.jsonl": {
+      "bytes": 3407,
+      "path": "raw/host-history.jsonl",
+      "sha256": "4439ffcd4bca68a432ff4b7384210b2caa67be4372fec7320195f432c99e1d17"
+    },
+    "raw/initial.pt": {
+      "bytes": 3357401,
+      "path": "raw/initial.pt",
+      "sha256": "a6d1fdd41163b8d5389738400ebd1e883d77197b3b2ab53adb76562c176b3925"
+    },
+    "raw/last.pt": {
+      "bytes": 8270723,
+      "path": "raw/last.pt",
+      "sha256": "41760d2d529af47301ab9b6c672ee0d5f44af81022f737bbf18df4088b5d7675"
+    },
+    "raw/resolved-config.json": {
+      "bytes": 5715,
+      "path": "raw/resolved-config.json",
+      "sha256": "f57b977c8867fbfeb38a7c2186c2612c053e3c90f1b5088882fc335ea9d1745c"
+    },
+    "raw/resume.pt": {
+      "bytes": 33503935,
+      "path": "raw/resume.pt",
+      "sha256": "dceca3e9a7e3e75f91cacd44184d0b82fae6c15747a7f37c09d5d3ea0aec9c37"
+    },
+    "raw/selected.pt": {
+      "bytes": 8270787,
+      "path": "raw/selected.pt",
+      "sha256": "1d0d4122abf022830ea97fcc247b1d28c0645d7d42d206130cdf8a5d7762815a"
+    },
+    "raw/summary.json": {
+      "bytes": 69801,
+      "path": "raw/summary.json",
+      "sha256": "73fc78e06c33f207c04b7832952741d2848b9e385fbb8f364d34b06e10f7c37b"
+    },
+    "raw/test-predictions.jsonl": {
+      "bytes": 0,
+      "path": "raw/test-predictions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "raw/train-predictions.jsonl": {
+      "bytes": 39245266,
+      "path": "raw/train-predictions.jsonl",
+      "sha256": "3c71e8d24c41d6e1ce0e3c26083d118ebbd69ecb88018a4c69c7aa8c0bdd4990"
+    },
+    "raw/validation-predictions.jsonl": {
+      "bytes": 1021789033,
+      "path": "raw/validation-predictions.jsonl",
+      "sha256": "21249b2057c4338af56b24f91412f9865a1ec547344a285866a1310fab91581a"
+    },
+    "resources.json": {
+      "bytes": 2469,
+      "path": "resources.json",
+      "sha256": "88a96d722ccac7fa4552c634bebee26b1520e1ce66ebce10f6e9ddd03eca0cef"
+    },
+    "segments/1794190721765645220-end.json": {
+      "bytes": 142,
+      "path": "segments/1794190721765645220-end.json",
+      "sha256": "9c9fa98236cee16b118f67db0198d7d383ba324751df2492c39bd084d685ab90"
+    },
+    "segments/1794190721765645220-hardware.json": {
+      "bytes": 277,
+      "path": "segments/1794190721765645220-hardware.json",
+      "sha256": "33f0ce7e7cd6f5e72b18cdad7ff28f607cd9db9561ff716d77f92fb44c0156de"
+    },
+    "test-predictions.jsonl.gz": {
+      "bytes": 20,
+      "path": "test-predictions.jsonl.gz",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    "train-predictions.jsonl.gz": {
+      "bytes": 1035873,
+      "path": "train-predictions.jsonl.gz",
+      "sha256": "a533b6988a7690e85d965a2d261dd394c7fa3118b4a9f64c923d4a0f20a9f8c2"
+    },
+    "validation-predictions.jsonl.gz": {
+      "bytes": 24362809,
+      "path": "validation-predictions.jsonl.gz",
+      "sha256": "81d0bfbcd6432c93ba261461b0ffc01d4978a6ece94b8405133d34cb6f5db3d2"
+    }
+  },
+  "hardware": {
+    "actual_gpu": "NVIDIA H100 80GB HBM3",
+    "amp": false,
+    "compile": false,
+    "cuda": "13.0",
+    "gpu_bytes": 85009367040,
+    "nvidia_smi": "NVIDIA H100 80GB HBM3, 81559 MiB, 610.57.04",
+    "requested_gpu": "H100!",
+    "tf32": false,
+    "threads": 4,
+    "torch": "2.14.1+cu130"
+  },
+  "locked_confirmation_accessed": false,
+  "manifest_sha256": "e2724c0ba873a98fa15f90c6ccc06013f320e65eb8968af0400bf7722e6db16d",
+  "parent_sha256": "e6cc6fbb9950ace32efe418bfa96b119e1b94f0399e6843db0a16b0208937c06",
+  "preflight_closure_sha256": "b60d3f9343808b23fa67a6f636df0be01699f59475f7af596701c1ac00121c16",
+  "resources": {
+    "cpu": 4,
+    "current_segment_seconds": 9177.218193464,
+    "elapsed_seconds": 9177.218190118001,
+    "ephemeral_disk_mib": 524288,
+    "initial_steps": 0,
+    "memory_mib": 32768,
+    "new_examples": 640000,
+    "new_steps": 5000,
+    "peak_gpu_allocated_bytes": 1657151488,
+    "peak_gpu_reserved_bytes": 3311403008,
+    "peak_rss_bytes": 11313487872,
+    "prior_segment_seconds": 0,
+    "source_copies": {
+      "concentrations-s42-concentrations-s42-train.jsonl": {
+        "bytes": 836622693,
+        "elapsed_seconds": 0.9815029189999986,
+        "scratch_path": "/tmp/presto-unified-parity-v2-input/concentrations-s42-concentrations-s42-train.jsonl",
+        "sha256": "8593fbd416a489b46397c4fae288d5916ad55d2febec7f7798bc4bb3f788ec1c",
+        "source_path": "2026-11-07_1915_codex_unified-presentation/prepared-v2/concentrations-s42-concentrations-s42-train.jsonl"
+      },
+      "concentrations-s42-concentrations-s42-validation.jsonl": {
+        "bytes": 12196679,
+        "elapsed_seconds": 0.016868380000000016,
+        "scratch_path": "/tmp/presto-unified-parity-v2-input/concentrations-s42-concentrations-s42-validation.jsonl",
+        "sha256": "08e41a6c006274b5929142fc6bd4687a289a08df9cc5212edd92399f907f2f8a",
+        "source_path": "2026-11-07_1915_codex_unified-presentation/prepared-v2/concentrations-s42-concentrations-s42-validation.jsonl"
+      },
+      "presentation-train.jsonl": {
+        "bytes": 5977683393,
+        "elapsed_seconds": 6.942516156,
+        "scratch_path": "/tmp/presto-unified-parity-v2-input/presentation-train.jsonl",
+        "sha256": "6609ee375f6bb117f19035560daa6cf50a63b9c229fa46ae24e773afebdda2fc",
+        "source_path": "2026-11-07_1915_codex_unified-presentation/prepared-v2/presentation-train.jsonl"
+      },
+      "presentation-val.jsonl": {
+        "bytes": 218542980,
+        "elapsed_seconds": 0.24502449300000073,
+        "scratch_path": "/tmp/presto-unified-parity-v2-input/presentation-val.jsonl",
+        "sha256": "0313b2d6b394320da7dcf6aa9144cbc44b73abe48b16380e03c1b27a9559fc52",
+        "source_path": "2026-11-07_1915_codex_unified-presentation/prepared-v2/presentation-val.jsonl"
+      },
+      "selected-stage-a.pt": {
+        "bytes": 3910569,
+        "elapsed_seconds": 0.005594165000001539,
+        "scratch_path": "/tmp/presto-unified-parity-v2-input/selected-stage-a.pt",
+        "sha256": "e6cc6fbb9950ace32efe418bfa96b119e1b94f0399e6843db0a16b0208937c06",
+        "source_path": "2026-11-07_1915_codex_unified-presentation/stage-a/raw/selected.pt"
+      }
+    },
+    "steps": 5000
+  },
+  "runtime_tree": {
+    "bytes": 1713821,
+    "files": 94,
+    "sha256": "f75502f1b21c2ce1b765b28e49b0649890f9a0793e5a9b9f6ce7450d2f6abb7a"
+  },
+  "schema": "presto.unified_parity_fit.v1",
+  "source_commit": "0211e72206e6ac9abfc53e814419124c63327f08",
+  "status": "completed",
+  "steps": 5000,
+  "test_accessed": false
+}

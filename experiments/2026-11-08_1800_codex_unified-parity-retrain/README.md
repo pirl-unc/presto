@@ -2,8 +2,8 @@
 
 Date: 2026-11-08
 Agent/model: Codex / GPT-5
-Status: corrected common-loader preflight passed and independently closed;
-no optimizer launched yet
+Status: closed; both matched H100 fits, deterministic development evaluation,
+independent metric replay, and the preregistered parent decision are complete
 
 Specification:
 [`2026-11-08_unified-parity-retrain.md`](../agents/codex/plans/2026-11-08_unified-parity-retrain.md).
@@ -165,7 +165,7 @@ under `results/training-v2-failure/`. This is software evidence only—no model,
 optimizer, prediction, or TEST result exists. Training-v3 mounts and guards the
 entire declared resume-source set and uses a new `fits-v3` root.
 
-## Training-v3 active calls
+## Training-v3 completed calls
 
 The full-source fix is frozen at source commit `0211e722` and launch commit
 `e0ee1fb2`. Its remote runtime guard covers 94 files / 1,713,821 bytes / SHA-256
@@ -173,6 +173,57 @@ The full-source fix is frozen at source commit `0211e722` and launch commit
 and explicitly requires all 29 resume-fingerprint source paths before volume
 reload. App `ap-ba8CEsStF9Zd7lnDy1UGH3` submitted reference call
 `fc-01M6Z1KA29EZ4TAFTAT2JNQXPM` and parity call
-`fc-01M6Z1KA5C8GNCCYZ3CQR2CXGB`. Both passed that guard and persisted new
-`fits-v3` execution/H100 hardware contracts. No optimizer claim is made until a
-durable checkpoint appears.
+`fc-01M6Z1KA5C8GNCCYZ3CQR2CXGB`. Both passed that guard, persisted new
+`fits-v3` execution/H100 hardware contracts, and completed exactly 5,000
+optimizer steps / 640,000 examples. Requested `H100!` resolved in both cases to
+NVIDIA H100 80GB HBM3. Reference ran for 9,177.22 seconds and parity for
+9,171.69 seconds. Neither fit accessed TEST or locked confirmation rows.
+
+Reference selected checkpoint SHA-256 is
+`1d0d4122abf022830ea97fcc247b1d28c0645d7d42d206130cdf8a5d7762815a`;
+parity selected checkpoint SHA-256 is
+`02c9ccfc328be847bb674f7abc2112d1ce392e56a9cecd3e3d82be620203d81e`.
+Both coverage gates passed with no untrained selected parameters or assay
+tracks. Complete compact receipts and histories are under `results/training-v3/`;
+large raw checkpoints and per-example dumps remain hash-pinned on the Modal
+volume.
+
+## Matched development evaluation
+
+The frozen evaluator preserves EC50, IC50, KD-via-EC50, and KD-via-IC50 as
+distinct assay-aware outputs. Comparator affinity claims use exact IC50 only.
+The evaluation covers all 51,066 development rows and no TEST rows. Two runs
+produced byte-identical figures, tables, and prediction dumps; an independent
+SciPy/scikit-learn replay passed all 110 comparisons with maximum absolute
+delta `3.33e-16`.
+
+| Development comparison | Reference | Parity | External comparator |
+|---|---:|---:|---:|
+| MHC-I pooled exact-IC50 Spearman (169 rows) | 0.6697 | 0.7058 | NetMHCpan 4.2c: 0.7584 |
+| MHC-II pooled exact-IC50 Spearman (1,170 rows) | 0.4997 | 0.5060 | NetMHCIIpan 4.3e: 0.7779 |
+| presentation equal-study AUROC (3 studies) | 0.9520 | 0.9523 | MHCflurry 2.3.16: 0.9484 |
+| operational-processing equal-study AUROC (3 studies) | 0.9058 | 0.9068 | MHCflurry 2.3.16: 0.8057 |
+
+The processing advantage is decisive: parity minus MHCflurry equal-study AUROC
+is `+0.10114`, bootstrap 95% CI `[+0.07829, +0.14520]`. Presentation is similar,
+not superior: parity minus MHCflurry AUROC is `+0.00382`, CI
+`[-0.01193, +0.02070]`. These rows were matched after training and the complete
+Stage B development union was embargoed from the added BA data; no direct
+development-row, TEST, or locked-cohort leakage was found. The evidence is
+still development-only and spans only three presentation/processing studies.
+
+## Decision and next mechanism
+
+The data-only parity arm fails its preregistered MHC-II parent gate. Pooled
+MHC-II exact-IC50 Spearman changed by only `+0.00636`, below the required
+`+0.05`; equal-study Spearman changed by `-0.03648`, bootstrap 95% CI
+`[-0.08256, +0.00961]`. The reference checkpoint is therefore retained.
+
+The result isolates the class-II problem: more comparator-derived BA rows are
+not enough. The follow-on plan uses genuinely new whole-study-disjoint affinity
+data and one neutral-start class-II alpha/beta-chain interaction adapter, with
+unchanged assay-aware output semantics. Newly disjoint T-cell negatives and
+calibration, followed by PRIME evaluation through the now-working mhctools
+integration, remain gated on that affinity/mechanism comparison. See
+`results/decision.json` and
+`../agents/codex/plans/2026-11-08_disjoint-unified-qualification.md`.

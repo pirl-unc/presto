@@ -14879,13 +14879,16 @@ Canonical preregistration:
   resume-source fingerprint exposed missing CLI/script mounts after preflight.
 - [x] Freeze and launch training-v3 with the complete declared resume-source
   set and a new immutable output root; both remote source guards passed.
-- [ ] Collect checkpoints, coverage, resource receipts, and all development
+- [x] Collect checkpoints, coverage, resource receipts, and all development
   prediction dumps; verify hashes independently.
 - [x] Freeze the exact matched parity-evaluation and timestamped-report contract
   before implementing or collecting final metrics.
-- [ ] Repeat matched affinity/presentation/processing evaluation and figures.
-- [ ] Apply the preregistered data-only decision and regression gates.
-- [ ] If required, specify and implement the single chain-aware class-II arm.
+- [x] Repeat matched affinity/presentation/processing evaluation and figures.
+- [x] Apply the preregistered data-only decision and regression gates; retain
+  reference because parity fails the MHC-II parent gate.
+- [x] Specify the single chain-aware class-II arm in the follow-on plan.
+- [ ] Implement the single chain-aware class-II arm in the post-merge PR only
+  after its genuinely new affinity cohort contract closes.
 - [ ] Extend the selected checkpoint with fixed assay-aware T-cell tracks only
   after the affinity/presentation decision; do not access locked or TEST rows.
 - [x] Freeze the follow-on genuinely new affinity, single chain-aware MHC-II,
@@ -14908,3 +14911,13 @@ stop is closed by a separate hash-pinned canonical-JSON receipt that matches all
 rows, partitions, census, manifests, model/training/scales/admission, and source
 hashes. TEST/locked/prediction/optimizer/GPU access remain absent. Matched H100!
 training may now launch from the frozen Stage A parent.
+
+Final review: both H100 fits completed exactly 5,000 steps / 640,000 examples,
+with passed coverage and no TEST/locked access. Two evaluation renders are
+scientifically byte-identical and independent replay passes 110 comparisons to
+`3.33e-16`. Added BA data improves MHC-I but fails the MHC-II parent gate, so
+the reference checkpoint is retained. Processing remains decisively above
+MHCflurry (`+0.10114` equal-study AUROC, CI `[+0.07829,+0.14520]`), while
+presentation is similar rather than superior. The next PR owns the new
+whole-study-disjoint affinity cohort, class-II chain adapter, disjoint T-cell
+negative/calibration work, and PRIME accuracy evaluation.

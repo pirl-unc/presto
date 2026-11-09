@@ -6056,15 +6056,15 @@ comparator-parity training, not independent evidence against NetMHCpan or
 NetMHCIIpan; genuinely new study-disjoint affinity data remain mandatory for a
 superiority claim.
 
-<!-- active-2026-11-08_1800_codex_unified-parity-retrain -->
+<!-- closed-2026-11-08_1800_codex_unified-parity-retrain -->
 ## 2026-11-08 — Newer-code unified comparator-parity retrain
 
 **Agent/model:** Codex / GPT-5
 
 **Experiment:** [2026-11-08_1800_codex_unified-parity-retrain](2026-11-08_1800_codex_unified-parity-retrain/README.md)
 
-**Status:** corrected full common-loader gate passed; H100 reference/parity fits
-not yet launched.
+**Status:** closed; matched H100 training, deterministic development evaluation,
+independent replay, and the preregistered parent decision are complete.
 
 ### Frozen dataset and training contract
 
@@ -6099,10 +6099,44 @@ partitions, census, both manifest hashes, model, training, scales, admission,
 parent/source contracts, and every source-copy byte count/hash. Closure receipt
 SHA-256 is `b60d3f9343808b23fa67a6f636df0be01699f59475f7af596701c1ac00121c16`.
 
-TEST and locked access are false; model predictions are false; optimizer steps
-are zero. There are no validation/test predictive metrics yet because this
-entry records the mandatory data/loader gate, not a fit. The two matched H100!
-fits and per-example development evaluation remain open.
+### H100 training, evaluation, and decision
+
+App `ap-ba8CEsStF9Zd7lnDy1UGH3` completed reference call
+`fc-01M6Z1KA29EZ4TAFTAT2JNQXPM` and parity call
+`fc-01M6Z1KA5C8GNCCYZ3CQR2CXGB`. Each ran exactly 5,000 steps / 640,000
+examples on requested `H100!`, observed NVIDIA H100 80GB HBM3. Runtime was
+9,177.22 seconds reference and 9,171.69 seconds parity. Reference/parity selected
+checkpoint hashes are respectively `1d0d4122abf022830ea97fcc247b1d28c0645d7d42d206130cdf8a5d7762815a`
+and `02c9ccfc328be847bb674f7abc2112d1ce392e56a9cecd3e3d82be620203d81e`.
+Both coverage gates pass; TEST and locked access remain false.
+
+The final evaluator preserves EC50, IC50, KD-via-EC50, and KD-via-IC50 output
+identities; NetMHC comparisons use exact IC50 only. It evaluated all 51,066
+development rows. Two independent runs produced byte-identical scientific
+artifacts, and a separate SciPy/scikit-learn replay passed 110 comparisons with
+maximum absolute delta `3.33e-16`.
+
+| Condition / comparator | MHC-I exact-IC50 pooled Spearman (n=169) | MHC-II exact-IC50 pooled Spearman (n=1,170) | presentation equal-study AUROC (3 studies) | processing equal-study AUROC (3 studies) |
+|---|---:|---:|---:|---:|
+| Presto reference | 0.6697 | 0.4997 | 0.9520 | 0.9058 |
+| Presto parity | 0.7058 | 0.5060 | 0.9523 | 0.9068 |
+| external comparator | NetMHCpan 4.2c: 0.7584 | NetMHCIIpan 4.3e: 0.7779 | MHCflurry 2.3.16: 0.9484 | MHCflurry 2.3.16: 0.8057 |
+
+Parity minus MHCflurry processing AUROC is `+0.10114`, study-bootstrap 95% CI
+`[+0.07829, +0.14520]`, a decisive development result. Presentation remains
+similar: AUROC delta `+0.00382`, CI `[-0.01193, +0.02070]`. The complete Stage B
+development peptide union was embargoed from added BA training; no direct row,
+TEST, or locked-cohort leakage was found, but only three development studies
+support those binary-task estimates.
+
+**Preferred condition / decision:** retain reference. Parity improves MHC-I,
+but MHC-II pooled Spearman changes only `+0.00636` versus the preregistered
+`+0.05` gate and equal-study Spearman changes `-0.03648`, CI
+`[-0.08256, +0.00961]`. Next use genuinely new whole-study-disjoint affinity
+data plus one neutral-start alpha/beta-chain class-II adapter. Newly disjoint
+T-cell negatives/calibration and PRIME accuracy evaluation follow after that
+mechanism gate; PRIME-through-mhctools software integration is already proven.
+No independent TEST superiority claim is made.
 
 <!-- closed-2026-11-08_2225_codex_prime-mhctools-smoke -->
 ## 2026-11-08 — PRIME 2.1 through mhctools smoke test
