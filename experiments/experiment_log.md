@@ -6103,3 +6103,38 @@ TEST and locked access are false; model predictions are false; optimizer steps
 are zero. There are no validation/test predictive metrics yet because this
 entry records the mandatory data/loader gate, not a fit. The two matched H100!
 fits and per-example development evaluation remain open.
+
+<!-- closed-2026-11-08_2225_codex_prime-mhctools-smoke -->
+## 2026-11-08 — PRIME 2.1 through mhctools smoke test
+
+**Agent/model:** Codex / GPT-5
+
+**Experiment:** [2026-11-08_2225_codex_prime-mhctools-smoke](2026-11-08_2225_codex_prime-mhctools-smoke/README.md)
+
+**Reproduction:** `reproduce/launch.sh`; source commit
+`bd15a430fa0831a818ccfbc917d787d2958fc83d`; non-default
+`MPLCONFIGDIR=/private/tmp/presto-mpl-config`; local CPU, no requested or
+observed GPU.
+
+This is a two-peptide integration smoke, not predictive evaluation. Inputs are
+fixed unlabeled peptides `NLVPMVATV` and `GILGFVFTL` with HLA-A*02:01. There is
+no TRAIN, pretraining, loss, synthetic biological label, validation, TEST,
+locked cohort, or assay-label/output mapping. Per-example output is preserved
+in the 3,785-byte `results/smoke.json` at SHA-256
+`f3e9411b81a7c55b3bf5b99395957d18da5b3820b5a8bb82ded3ec4ef65aad59`;
+a separate prediction dump is unnecessary because the receipt contains every
+input and prediction.
+
+The licensed local PRIME 2.1 wrapper (SHA-256
+`4db2323413bdd0f0cffffd9321b9439cd7c4569716aaa342a49a0b9b18a9a598`)
+ran through `mhctools.PRIME` using MixMHCpred 3.0 (wrapper SHA-256
+`f2db4120eddf4f17daec1183c9a466fa105ed97915c8fb724bc9c6e06405498b`)
+and an isolated Python 3.12.6 backend. Runtime was 1.19 seconds. PRIME scores /
+percentile ranks were 0.190731 / 0.027 for NLVPMVATV and 0.277195 / 0.004 for
+GILGFVFTL. Editable source describes mhctools v4.9.4 while stale installed
+distribution metadata says 4.5.1; both are recorded.
+
+**Preferred condition / decision:** the explicit local path is operational and
+will be used on the newly disjoint class-I T-cell evaluation cohort. PRIME is no
+longer a software blocker. Its academic/non-commercial license remains binding,
+and this smoke makes no immunogenicity-performance claim.

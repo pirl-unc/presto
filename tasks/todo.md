@@ -14823,8 +14823,9 @@ Spec: `tasks/post-pr153-unified-retraining-spec.md`.
 - [x] Project the audited NetMHCpan 4.2 / NetMHCIIpan 4.3 BA archives into a
   source-faithful, development-embargoed comparator-parity TRAIN cohort; verify
   every row/receipt and freeze the combined-loader preflight.
-- [ ] Install and pin licensed MixMHCpred 3.x; smoke-test PRIME 2.1 through
-  mhctools with explicit executable paths. Keep 2.0.2 fail-closed.
+- [x] Resolve and hash-pin the existing licensed MixMHCpred 3.0 isolation;
+  smoke-test PRIME 2.1 through mhctools with explicit executable paths. Keep
+  the unrelated 2.0.2 bundle fail-closed for PRIME.
 - [ ] Freeze newly disjoint MHC-I/MHC-II affinity, presentation/processing, and
   assay-aware T-cell cohorts with whole-study and sequence-family embargoes.
 - [ ] Run the preregistered data-only, class-II mechanism, calibration, and

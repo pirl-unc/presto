@@ -1,0 +1,129 @@
+{
+  "alleles": [
+    "HLA-A*02:01"
+  ],
+  "elapsed_seconds": 1.189884208026342,
+  "executables": {
+    "backend_python": {
+      "path": "/Users/iskander/code/weirdo/tmp/prime-env/bin/python"
+    },
+    "mixmhcpred": {
+      "path": "/Users/iskander/code/weirdo/tmp/MixMHCpred-3.0/MixMHCpred",
+      "sha256": "f2db4120eddf4f17daec1183c9a466fa105ed97915c8fb724bc9c6e06405498b"
+    },
+    "prime": {
+      "path": "/Users/iskander/code/PRIME/PRIME",
+      "sha256": "4db2323413bdd0f0cffffd9321b9439cd7c4569716aaa342a49a0b9b18a9a598"
+    }
+  },
+  "license_scope": "academic/non-commercial; see local PRIME and MixMHCpred licenses",
+  "mhctools_checkout_describe": "v4.9.4",
+  "mhctools_distribution_version": "4.5.1",
+  "observed_gpu": null,
+  "peptides": [
+    "NLVPMVATV",
+    "GILGFVFTL"
+  ],
+  "predictions": [
+    {
+      "preds": [
+        {
+          "allele": "HLA-A*02:01",
+          "c_flank": "",
+          "cache_key": null,
+          "kind": "immunogenicity",
+          "measurement_context": {
+            "analyte": null,
+            "class_label": null,
+            "compartment": null,
+            "concentration_basis": null,
+            "detail": null,
+            "estimate_type": "ml_predicted",
+            "matrix": null,
+            "pk_scope": null,
+            "schema_version": 1,
+            "score_semantics": null,
+            "series_id": null,
+            "status": "available",
+            "time_origin": null,
+            "time_unit": null,
+            "timepoint": null,
+            "transform": null,
+            "unit": null
+          },
+          "n_flank": "",
+          "offset": 0,
+          "peptide": "NLVPMVATV",
+          "peptide_input": null,
+          "percentile_rank": 0.027,
+          "predictor_name": "prime",
+          "predictor_version": "",
+          "score": 0.190731,
+          "source_sequence_name": null,
+          "tcr": "",
+          "value": null
+        }
+      ]
+    },
+    {
+      "preds": [
+        {
+          "allele": "HLA-A*02:01",
+          "c_flank": "",
+          "cache_key": null,
+          "kind": "immunogenicity",
+          "measurement_context": {
+            "analyte": null,
+            "class_label": null,
+            "compartment": null,
+            "concentration_basis": null,
+            "detail": null,
+            "estimate_type": "ml_predicted",
+            "matrix": null,
+            "pk_scope": null,
+            "schema_version": 1,
+            "score_semantics": null,
+            "series_id": null,
+            "status": "available",
+            "time_origin": null,
+            "time_unit": null,
+            "timepoint": null,
+            "transform": null,
+            "unit": null
+          },
+          "n_flank": "",
+          "offset": 0,
+          "peptide": "GILGFVFTL",
+          "peptide_input": null,
+          "percentile_rank": 0.004,
+          "predictor_name": "prime",
+          "predictor_version": "",
+          "score": 0.277195,
+          "source_sequence_name": null,
+          "tcr": "",
+          "value": null
+        }
+      ]
+    }
+  ],
+  "requested_gpu": null,
+  "runtime_info": {
+    "backend": {
+      "logomaker_version": "0.8.7",
+      "matplotlib_version": "3.11.2",
+      "numpy_version": "2.5.4",
+      "pandas_version": "2.3.3",
+      "python_executable": "/Users/iskander/code/weirdo/tmp/prime-env/bin/python",
+      "python_version": "3.12.6",
+      "reported_executable": "/Users/iskander/code/weirdo/tmp/prime-env/bin/python",
+      "scipy_version": "1.18.1"
+    },
+    "host_pandas_version": "3.1.0",
+    "mixmhcpred_executable": "/Users/iskander/code/weirdo/tmp/MixMHCpred-3.0/MixMHCpred",
+    "mixmhcpred_version": "3.0"
+  },
+  "schema": "presto.prime_mhctools_smoke.v1",
+  "status": "passed",
+  "training": null,
+  "validation_or_test": null
+}
