@@ -164,3 +164,15 @@ complete execution, hardware, segment-end, and failure artifacts are preserved
 under `results/training-v2-failure/`. This is software evidence only—no model,
 optimizer, prediction, or TEST result exists. Training-v3 mounts and guards the
 entire declared resume-source set and uses a new `fits-v3` root.
+
+## Training-v3 active calls
+
+The full-source fix is frozen at source commit `0211e722` and launch commit
+`e0ee1fb2`. Its remote runtime guard covers 94 files / 1,713,821 bytes / SHA-256
+`f75502f1b21c2ce1b765b28e49b0649890f9a0793e5a9b9f6ce7450d2f6abb7a`,
+and explicitly requires all 29 resume-fingerprint source paths before volume
+reload. App `ap-ba8CEsStF9Zd7lnDy1UGH3` submitted reference call
+`fc-01M6Z1KA29EZ4TAFTAT2JNQXPM` and parity call
+`fc-01M6Z1KA5C8GNCCYZ3CQR2CXGB`. Both passed that guard and persisted new
+`fits-v3` execution/H100 hardware contracts. No optimizer claim is made until a
+durable checkpoint appears.

@@ -14876,8 +14876,8 @@ Canonical preregistration:
   continuation after the three-field identity fix; old `fits/` was absent.
 - [x] Preserve both symmetric training-v2 zero-step failure directories; the
   resume-source fingerprint exposed missing CLI/script mounts after preflight.
-- [ ] Freeze training-v3 with the complete declared resume-source set and a new
-  immutable output root; prove all source paths before relaunch.
+- [x] Freeze and launch training-v3 with the complete declared resume-source
+  set and a new immutable output root; both remote source guards passed.
 - [ ] Collect checkpoints, coverage, resource receipts, and all development
   prediction dumps; verify hashes independently.
 - [ ] Repeat matched affinity/presentation/processing evaluation and figures.
