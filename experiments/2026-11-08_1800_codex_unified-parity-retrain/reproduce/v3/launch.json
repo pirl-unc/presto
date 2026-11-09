@@ -1,0 +1,109 @@
+{
+  "schema": "presto.unified_parity_verification_transport.v3",
+  "experiment": "2026-11-08_1800_codex_unified-parity-retrain",
+  "created_utc": "2026-11-09T00:21:13Z",
+  "purpose": "Independent full corrected preflight with compact return transport; no primary rerun",
+  "continuation_of": {
+    "app_id": "ap-dBDyzedkYeSHH7SCN0EKLT",
+    "call_id": "fc-01M6YSQBZ1AKY6WW2NN1ZBQD9N",
+    "primary_status": "passed",
+    "transport_failure": "complete receipt return exceeded inline threshold and blob upload was unavailable under blocked network",
+    "scientific_contract_changed": false
+  },
+  "git": {
+    "branch": "codex/post-pr153-unified-retraining-20261108",
+    "source_commit": "16a39eaf62c90a0b39a145c9e076db4714c2efd2",
+    "dirty": false
+  },
+  "source_sha256": {
+    "code/preflight_v2.py": "5d0b10b1d300ec3768e4df4b7013d17b7debed4bfc23ffe99d58114f7eb151cf",
+    "reproduce/base-manifest.json": "88c695fed61cf3e28b4c7c6359addf93d84a7d19e417630f4b86bb7c6c168db5",
+    "reproduce/v3/verify.sh": "d3f5bc82733a234344c0650d4104c314fe366506b345d3e952509d7d424f8abd",
+    "reproduce/v3/collect.sh": "e2246d60e1c8754c9ab0dd1200766c528d4dfdcb52c466b84126235e9fa5d469",
+    "reproduce/v3/source/collect.py": "c78a3b833bed9012453d04440f5495658c36f7f5e815b3f0f9446871a4420eed"
+  },
+  "primary_receipt": {
+    "path": "2026-11-08_1800_codex_unified-parity-retrain/preflight-v2-primary/receipt.json",
+    "bytes": 25681,
+    "sha256": "6efe6b3f64cbff080f9b03b9dce0ca1906a008d487fee3bd7d9eb8532ac6aaa2"
+  },
+  "requirements": [
+    "torch==2.14.1",
+    "numpy==2.5.4",
+    "pyyaml==6.0.3",
+    "mhcgnomes==3.64.6",
+    "mhcseqs==2.6.13",
+    "tqdm==4.70.1",
+    "psutil==7.2.2"
+  ],
+  "resources": {
+    "cpu": 8,
+    "memory_mib": 32768,
+    "ephemeral_disk_mib": 524288,
+    "timeout_seconds": 7200,
+    "network": "blocked",
+    "requested_gpu": null
+  },
+  "parent": {
+    "path": "2026-11-07_1915_codex_unified-presentation/stage-a/raw/selected.pt",
+    "bytes": 3910569,
+    "sha256": "e6cc6fbb9950ace32efe418bfa96b119e1b94f0399e6843db0a16b0208937c06"
+  },
+  "inputs": {
+    "presentation_train": {
+      "path": "2026-11-07_1915_codex_unified-presentation/prepared-v2/presentation-train.jsonl",
+      "bytes": 5977683393,
+      "sha256": "6609ee375f6bb117f19035560daa6cf50a63b9c229fa46ae24e773afebdda2fc"
+    },
+    "presentation_development": {
+      "path": "2026-11-07_1915_codex_unified-presentation/prepared-v2/presentation-val.jsonl",
+      "bytes": 218542980,
+      "sha256": "0313b2d6b394320da7dcf6aa9144cbc44b73abe48b16380e03c1b27a9559fc52"
+    },
+    "affinity_train": {
+      "path": "2026-11-07_1915_codex_unified-presentation/prepared-v2/concentrations-s42-concentrations-s42-train.jsonl",
+      "bytes": 836622693,
+      "sha256": "8593fbd416a489b46397c4fae288d5916ad55d2febec7f7798bc4bb3f788ec1c"
+    },
+    "affinity_development": {
+      "path": "2026-11-07_1915_codex_unified-presentation/prepared-v2/concentrations-s42-concentrations-s42-validation.jsonl",
+      "bytes": 12196679,
+      "sha256": "08e41a6c006274b5929142fc6bd4687a289a08df9cc5212edd92399f907f2f8a"
+    },
+    "netmhcpan42_ba_train_v2": {
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared-v2/netmhcpan42-ba-train.jsonl",
+      "bytes": 141870035,
+      "rows": 80674,
+      "sha256": "2c007e6b46a99835f95ec612aeb498f4e52940aa81c22809ad48b5e922d6d0ca"
+    },
+    "netmhciipan43_ba_train_v2": {
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared-v2/netmhciipan43-ba-train.jsonl",
+      "bytes": 112640875,
+      "rows": 62539,
+      "sha256": "9fe752274c895cb4cd46e36dfeff43a3db73e0c96fa24ba495e1fcfd7f24c66a"
+    }
+  },
+  "comparison": {
+    "primary_reference_rows": 1560770,
+    "primary_parity_rows": 1703983,
+    "primary_development_rows": 51066,
+    "exact_keys": [
+      "rows",
+      "partitions",
+      "census",
+      "manifest_sha256",
+      "model",
+      "training",
+      "scales",
+      "admission"
+    ]
+  },
+  "return_transport": "compact status and full receipt path/bytes/SHA-256 only; collector downloads and verifies the committed artifact",
+  "launch_command": "PRESTO_EXPERIMENT_DIR=experiments/2026-11-08_1800_codex_unified-parity-retrain modal run --detach experiments/2026-11-08_1800_codex_unified-parity-retrain/code/preflight_v2.py --verify",
+  "test_policy": {
+    "test_accessed": false,
+    "locked_confirmation_accessed": false,
+    "predictions": false,
+    "optimizer_steps": 0
+  }
+}
