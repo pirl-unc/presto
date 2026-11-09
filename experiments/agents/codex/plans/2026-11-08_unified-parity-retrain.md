@@ -130,6 +130,35 @@ Report at minimum:
 
 No threshold, calibration, architecture, or stopping decision may use a TEST.
 
+## Frozen H100 execution implementation
+
+Use the two exact manifests emitted by the passed primary preflight, with
+SHA-256 `e2724c0ba873a98fa15f90c6ccc06013f320e65eb8968af0400bf7722e6db16d`
+(reference) and `8259d1ec1b59430d7078174a7718d8b7157e351a0261e70384996692605bbd7c`
+(parity). Their absolute scratch paths and complete scientific content remain
+byte-identical to preflight. Before either H100 worker loads data, it must verify
+the canonical comparison-closure receipt SHA-256
+`b60d3f9343808b23fa67a6f636df0be01699f59475f7af596701c1ac00121c16`,
+its manifest hash, the Stage A parent, every source byte count/hash, and the
+clean source commit/runtime-file hashes.
+
+Launch reference and parity from one frozen app with requested GPU `H100!`, at
+most two containers, 4 CPU / 32 GiB / 512 GiB scratch per worker, blocked
+external network, TF32/AMP/compile disabled, and the historical 10,800-second
+segment bound. The workers may run concurrently, but each writes only to its
+own immutable `fits/{condition}` directory. Checkpoint/resume state is committed
+at checkpoint boundaries so a platform retry resumes the same frozen condition;
+it must never silently restart with a changed manifest or seed.
+
+Preserve selected/last/resume checkpoints, summary/history/config/coverage/
+admission, gzipped per-example TRAIN and development predictions, the empty TEST
+prediction contract, hardware evidence, resource measurements, and a complete
+artifact receipt. Return only a compact receipt pointer from the network-blocked
+worker. A condition is complete only at exactly 5,000 steps, passed coverage,
+zero TEST rows, a zero-byte raw TEST prediction dump, and a locally hash-verified
+receipt. Do not choose between conditions until both receipts and development
+prediction dumps are independently collected.
+
 ## Preregistered decisions
 
 1. Prefer P as the next affinity/presentation parent only if it improves MHC-II
