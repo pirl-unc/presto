@@ -6172,3 +6172,66 @@ distribution metadata says 4.5.1; both are recorded.
 will be used on the newly disjoint class-I T-cell evaluation cohort. PRIME is no
 longer a software blocker. Its academic/non-commercial license remains binding,
 and this smoke makes no immunogenicity-performance claim.
+
+<!-- closed-2026-11-09_1000_codex_unified-state-report-v2 -->
+## 2026-11-09 — Unified state report v2
+
+**Agent/model:** Codex / GPT-5
+
+**Experiment:** [2026-11-09_1000_codex_unified-state-report-v2](2026-11-09_1000_codex_unified-state-report-v2/README.md)
+
+**Source and reproduction:** clean closure commit
+`1cca535e99a20e58c0ce00bc27edcbefbba3ad7d`; canonical report
+`reports/2026-11-09_150000_1cca535e`; manifest SHA-256
+`f7a862fb83056e911805ee19b9a2d0c0e38d105c3c39a2f19e2be6652fea9e64`;
+`reproduce/launch.sh`; local CPU report generation with non-default
+`PRESTO_PYTHONPATH=/private/tmp/presto-import-post153` and
+`MPLCONFIGDIR=/private/tmp/presto-mpl-config`. Two independent renders contain
+41 byte-identical files, and every committed checksum passes.
+
+### Dataset, training, and output contract
+
+The retained reference uses 1,349,378 presentation/processing TRAIN rows plus
+160,326 physical-affinity TRAIN rows and the shared 51,066-row development
+population (48,530 presentation/processing; 2,536 affinity). The rejected
+parity arm adds 80,674 MHC-I and 62,539 MHC-II archive-derived BA TRAIN rows,
+with literal qualifiers, canonical measurement lineage, unknown-method IC50
+routing, and affinity exact/core9 plus presentation exact/core8/Hamming-1
+development embargoes. No synthetic affinity labels are used. Presentation
+backgrounds are separately identified 1:1 source-matched generated controls.
+Historical assay-aware T-cell rows are report context only and did not fit the
+retained checkpoint. TEST and locked confirmation access are false.
+
+Both conditions restart Stage A SHA-256
+`e6cc6fbb9950ace32efe418bfa96b119e1b94f0399e6843db0a16b0208937c06`
+and run 5,000 updates / 640,000 examples, batch 128, seed 42, 50:50 EL/physical
+affinity replay, and the frozen Stage B development selector. Requested
+`H100!` resolved twice to NVIDIA H100 80GB HBM3. Reference/parity runtimes were
+9,177.22/9,171.69 seconds. The retained reference checkpoint is 8,270,787 bytes,
+SHA-256 `1d0d4122abf022830ea97fcc247b1d28c0645d7d42d206130cdf8a5d7762815a`.
+EC50, IC50, KD-via-EC50, KD-via-IC50, presentation, and operational processing
+remain distinct outputs.
+
+### Development metrics
+
+| Condition / comparator | MHC-I exact-IC50 Spearman, equal-study (2 studies) | MHC-II exact-IC50 Spearman, equal-study (2 studies) | presentation AUROC, equal-study (3 studies) | processing AUROC, equal-study (3 studies) |
+|---|---:|---:|---:|---:|
+| retained reference | 0.5850 | 0.5765 | 0.9520 | 0.9058 |
+| experimental parity | 0.6211 | 0.5400 | 0.9523 | 0.9068 |
+| external comparator | NetMHCpan 4.2c: 0.6834 | NetMHCIIpan 4.3e: 0.8070 | MHCflurry 2.3.16: 0.9484 | MHCflurry 2.3.16: 0.8057 |
+
+The complete supplemental tables preserve pooled/equal-study Spearman, Pearson,
+RMSE, 500-nM accuracy/balanced accuracy/precision/recall/F1/AUROC/AUPRC,
+presentation/processing AUROC/AUPRC, per-study metrics, and per-example artifact
+hashes. Independent SciPy/scikit-learn replay passes 110 estimates with maximum
+absolute delta `3.33e-16`.
+
+**Winner / preferred condition:** retain reference. The parity arm improves
+MHC-I but improves pooled MHC-II Spearman only `+0.00636` versus the required
+`+0.05`; equal-study MHC-II changes `-0.03648`, CI
+`[-0.08256,+0.00961]`. Processing passes versus MHCflurry: parity's paired
+AUROC delta is `+0.10114`, CI `[+0.07829,+0.14520]`, with parity-reference
+preservation near zero. Presentation remains similar rather than superior.
+Both affinity comparator gates, PRIME accuracy, and independent all-task TEST
+remain open. PRIME 2.1 through mhctools/MixMHCpred 3.0 is operational but only
+smoke-tested.

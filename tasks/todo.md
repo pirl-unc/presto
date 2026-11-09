@@ -14921,3 +14921,13 @@ MHCflurry (`+0.10114` equal-study AUROC, CI `[+0.07829,+0.14520]`), while
 presentation is similar rather than superior. The next PR owns the new
 whole-study-disjoint affinity cohort, class-II chain adapter, disjoint T-cell
 negative/calibration work, and PRIME accuracy evaluation.
+
+### Unified state report v2 — 2026-11-09
+
+Spec: `experiments/agents/codex/plans/2026-11-09_unified-state-report-v2.md`.
+
+- [x] Freeze the clean experiment-closure commit and report evidence boundary.
+- [x] Build the report manifest from hash-pinned training/evaluation receipts.
+- [x] Render twice and prove byte equality; all 41 report files and checksums
+  match.
+- [x] Register the report; update PR #154 after the closure commit is pushed.
