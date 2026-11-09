@@ -14888,6 +14888,9 @@ Canonical preregistration:
 - [ ] If required, specify and implement the single chain-aware class-II arm.
 - [ ] Extend the selected checkpoint with fixed assay-aware T-cell tracks only
   after the affinity/presentation decision; do not access locked or TEST rows.
+- [x] Freeze the follow-on genuinely new affinity, single chain-aware MHC-II,
+  assay-aware T-cell calibration, PRIME, final retrain, and reporting plan before
+  accessing a new cohort or implementing the adapter.
 
 Preflight stop: the frozen reference manifest passed on 1,560,770 rows, but the
 parity manifest failed at its first BA row because the v1 projection lacked the
