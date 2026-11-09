@@ -952,3 +952,16 @@ Keep applicability reporting separate from model features and the measured label
   revision and existing completed local/hosted runs before repeating that caveat.
 - Report software correctness, optimizer execution and held-out predictive quality
   separately. A queued or indexing GPU job is not yet an optimizing trained model.
+
+## 2026-11-09 — Compare persisted scientific receipts canonically
+
+- When one side of an independent comparison is a JSON-loaded receipt and the
+  other is a live Python structure, normalize both through canonical JSON before
+  equality checks. Tuple/list or key-type normalization can otherwise create a
+  false mismatch despite byte-identical persisted values. Preserve the raw failed
+  comparison, pin both receipt hashes, and close it with a separate deterministic
+  comparison receipt rather than rerunning expensive scientific work.
+- Network-blocked Modal functions must persist full receipts to a volume and
+  return only a compact artifact pointer. Build final result trees in local
+  scratch and atomically publish them; make completed receipt publication
+  idempotent across platform restarts while rejecting partial final directories.

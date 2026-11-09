@@ -131,3 +131,33 @@ source commit; if the final path exists without a valid receipt, fail closed.
 This is a persistence/retry correction only. Input hashes, manifests, canonical
 loader/preflight logic, comparison keys, resource policy, and promotion gate
 remain unchanged.
+
+## Serialized-receipt comparison closure
+
+Atomic verifier call `fc-01M6YWM3TV4JF1CT6HACAQW0M7` completed both full
+canonical passes and reproduced the exact row, partition, manifest, source-hash,
+and no-TEST contracts, but its raw Python comparison stopped at
+`reference/model`. The primary and independent model/training/scale values are
+byte-identical after JSON serialization. The mismatch is a representation bug:
+the verifier compared live structures (which may contain tuples) against the
+JSON-loaded primary receipt (which contains lists).
+
+Do not rerun either 1.5M/1.7M-row pass and do not rewrite the failed verifier
+receipt. Freeze a small CPU-only comparison closure that:
+
+1. pins and verifies the primary receipt SHA-256
+   `6efe6b3f64cbff080f9b03b9dce0ca1906a008d487fee3bd7d9eb8532ac6aaa2`
+   and independent receipt SHA-256
+   `fdce01321abedf12f0e3aa961f0bd8ab93bade1896a101bc65530d6015178326`;
+2. requires both condition-level passes, the expected raw comparison error, the
+   same parent/source contracts, matched manifests, and false
+   TEST/locked/prediction/optimizer/GPU access;
+3. canonical-JSON compares `rows`, `partitions`, `census`, `manifest_sha256`,
+   `model`, `training`, `scales`, and `admission` for reference and parity;
+4. compares every source-copy byte count and SHA-256, ignoring runtime only;
+5. writes a new immutable closure receipt with per-field canonical hashes and
+   leaves both source receipts unchanged.
+
+The closure may pass the H100 gate only if every scientific comparison succeeds.
+Also change future in-process verification to compare canonical JSON values, not
+live Python container types.
