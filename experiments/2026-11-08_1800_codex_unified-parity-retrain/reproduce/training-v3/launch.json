@@ -1,0 +1,161 @@
+{
+  "schema": "presto.unified_parity_fit_launch.v3",
+  "experiment": "2026-11-08_1800_codex_unified-parity-retrain",
+  "created_utc": "2026-11-09T02:13:20Z",
+  "agent_model": "Codex / GPT-5",
+  "git": {
+    "branch": "codex/post-pr153-unified-retraining-20261108",
+    "source_commit": "0211e72206e6ac9abfc53e814419124c63327f08",
+    "dirty": false
+  },
+  "source_sha256": {
+    "code/fit_pair.py": "4de73549e5d31e04a347cb04a6cb26e5b80f16be1057d35b65268d58e2eb2937",
+    "reproduce/training/reference-manifest.json": "e2724c0ba873a98fa15f90c6ccc06013f320e65eb8968af0400bf7722e6db16d",
+    "reproduce/training/parity-manifest.json": "8259d1ec1b59430d7078174a7718d8b7157e351a0261e70384996692605bbd7c",
+    "reproduce/training-v3/launch.sh": "9db618573dd6e095b1b83d475ce5c91b8fd867e4cf138a7f8b834c994009014d",
+    "reproduce/training-v3/collect.sh": "2d083fbd95e69a912a5a94ba7044cd12e93892ccbc98704d917264dd1ef4ff46",
+    "reproduce/training-v3/source/collect.py": "62ffa5c184f9585f35368c2d8743ac2ccf58c1e146cdca59411913b1edfbf8dd"
+  },
+  "runtime_tree_scope": "__init__.py; every non-pyc file under data/, models/, and training/; plus the five exact CLI/script mount files",
+  "runtime_tree": {
+    "files": 94,
+    "bytes": 1713821,
+    "sha256": "f75502f1b21c2ce1b765b28e49b0649890f9a0793e5a9b9f6ce7450d2f6abb7a"
+  },
+  "extra_runtime_files": {
+    "cli/__init__.py": "fcbe77ba38aba1b6959b35e9d913abf2f38737e1c9ac9dab1ad65adf2a64d1a2",
+    "cli/train.py": "64b852afbb3c09fe4d394836980362e1ec27d723efbec59c5eb854c796476133",
+    "cli/training_sources.py": "4b277f695786d74edb4eca4bea545a961495c6dad99833ed416bf7d4bd215018",
+    "scripts/__init__.py": "99879d42283a570e00d820e9dac887020c0583a570ed008ae2a263f656ce61d9",
+    "scripts/train_iedb.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10"
+  },
+  "continuation_corrections": {
+    "scientific_change": false,
+    "training_v1_calls": {
+      "reference": "fc-01M6YZ10NHMN1FHFBRX8YRAQ91",
+      "parity": "fc-01M6YZ10QXBK1RR2WCZ4QFC6EZ"
+    },
+    "training_v1_failure": "descriptive paths metadata made whole-object runtime identity equality false",
+    "training_v2_calls": {
+      "reference": "fc-01M6Z0B76ZWEY1GFPF8C4S2JT3",
+      "parity": "fc-01M6Z0B798HD8Z8520Q7N605Q4"
+    },
+    "training_v2_failure": "resume implementation fingerprint required cli/train.py outside the narrowed image mount",
+    "training_v2_failure_sha256": "6cf05c4c2be05c6fa64da8f582728ef8ee61812211bf4def567338c06b42a4cf",
+    "training_v2_optimizer_steps": 0,
+    "training_v2_examples": 0,
+    "v3_policy": "mount and precheck every modular_resume.SOURCE_FILES path before volume reload; preserve earlier roots; write fits-v3"
+  },
+  "preflight_closure": {
+    "path": "2026-11-08_1800_codex_unified-parity-retrain/preflight-v2-verification-comparison/receipt.json",
+    "bytes": 3901,
+    "sha256": "b60d3f9343808b23fa67a6f636df0be01699f59475f7af596701c1ac00121c16"
+  },
+  "parent": {
+    "path": "2026-11-07_1915_codex_unified-presentation/stage-a/raw/selected.pt",
+    "bytes": 3910569,
+    "sha256": "e6cc6fbb9950ace32efe418bfa96b119e1b94f0399e6843db0a16b0208937c06"
+  },
+  "inputs": {
+    "presentation_train": {
+      "path": "2026-11-07_1915_codex_unified-presentation/prepared-v2/presentation-train.jsonl",
+      "bytes": 5977683393,
+      "sha256": "6609ee375f6bb117f19035560daa6cf50a63b9c229fa46ae24e773afebdda2fc"
+    },
+    "presentation_development": {
+      "path": "2026-11-07_1915_codex_unified-presentation/prepared-v2/presentation-val.jsonl",
+      "bytes": 218542980,
+      "sha256": "0313b2d6b394320da7dcf6aa9144cbc44b73abe48b16380e03c1b27a9559fc52"
+    },
+    "affinity_train": {
+      "path": "2026-11-07_1915_codex_unified-presentation/prepared-v2/concentrations-s42-concentrations-s42-train.jsonl",
+      "bytes": 836622693,
+      "sha256": "8593fbd416a489b46397c4fae288d5916ad55d2febec7f7798bc4bb3f788ec1c"
+    },
+    "affinity_development": {
+      "path": "2026-11-07_1915_codex_unified-presentation/prepared-v2/concentrations-s42-concentrations-s42-validation.jsonl",
+      "bytes": 12196679,
+      "sha256": "08e41a6c006274b5929142fc6bd4687a289a08df9cc5212edd92399f907f2f8a"
+    },
+    "netmhcpan42_ba_train_v2": {
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared-v2/netmhcpan42-ba-train.jsonl",
+      "bytes": 141870035,
+      "rows": 80674,
+      "sha256": "2c007e6b46a99835f95ec612aeb498f4e52940aa81c22809ad48b5e922d6d0ca"
+    },
+    "netmhciipan43_ba_train_v2": {
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared-v2/netmhciipan43-ba-train.jsonl",
+      "bytes": 112640875,
+      "rows": 62539,
+      "sha256": "9fe752274c895cb4cd46e36dfeff43a3db73e0c96fa24ba495e1fcfd7f24c66a"
+    }
+  },
+  "conditions": {
+    "reference": {
+      "manifest_sha256": "e2724c0ba873a98fa15f90c6ccc06013f320e65eb8968af0400bf7722e6db16d",
+      "train_rows": 1509704,
+      "development_rows": 51066,
+      "difference": "none; exact historical Stage B source contract"
+    },
+    "parity": {
+      "manifest_sha256": "8259d1ec1b59430d7078174a7718d8b7157e351a0261e70384996692605bbd7c",
+      "train_rows": 1652917,
+      "development_rows": 51066,
+      "difference": "reference plus exactly two BA v2 TRAIN sources"
+    }
+  },
+  "training": {
+    "initialization": "same Stage A selected checkpoint",
+    "seed": 42,
+    "max_steps": 5000,
+    "batch_size": 128,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "warmup_steps": 300,
+    "decay": "cosine",
+    "decay_steps": 5000,
+    "min_lr_fraction": 0.05,
+    "checkpoint_every_steps": 500,
+    "validation_every_steps": 500,
+    "selection_endpoint": "elution_observation",
+    "selection_reduction": "study_mean",
+    "balance_by": [
+      "endpoint",
+      "mhc_class"
+    ],
+    "test_policy": "no_test_training_diagnostic",
+    "tf32": false,
+    "amp": false,
+    "compile": false
+  },
+  "requirements": [
+    "torch==2.14.1",
+    "numpy==2.5.4",
+    "pyyaml==6.0.3",
+    "mhcgnomes==3.64.6",
+    "mhcseqs==2.6.13",
+    "tqdm==4.70.1",
+    "psutil==7.2.2"
+  ],
+  "resources_per_condition": {
+    "requested_gpu": "H100!",
+    "cpu": 4,
+    "memory_mib": 32768,
+    "ephemeral_disk_mib": 524288,
+    "timeout_seconds": 10800,
+    "cooperative_stop_seconds": 9900,
+    "network": "blocked"
+  },
+  "concurrency": {
+    "conditions": 2,
+    "maximum_containers": 2
+  },
+  "outputs": {
+    "root": "2026-11-08_1800_codex_unified-parity-retrain/fits-v3",
+    "validation_predictions": "complete per-example gzip",
+    "train_predictions": "configured 2048-row diagnostic gzip",
+    "test_predictions": "required empty gzip and zero available TEST rows",
+    "large_artifacts": "presto-checkpoints Modal volume; receipts only in Git"
+  },
+  "launch_command": "PRESTO_MODAL_GPU=H100! PRESTO_EXPERIMENT_DIR=experiments/2026-11-08_1800_codex_unified-parity-retrain modal run --detach experiments/2026-11-08_1800_codex_unified-parity-retrain/code/fit_pair.py"
+}

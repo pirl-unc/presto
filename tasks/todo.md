@@ -14805,3 +14805,129 @@ Plan: `experiments/agents/claude/plans/2026-10-30_joint-model-vs-netmhc.md`.
 - [ ] PR 1: matched external benchmark harness (#140), CPU only.
 - [ ] PR 2: score existing checkpoints.
 - [ ] PR 3-5: coverage (#139), training experiments (#141), full-epoch fit (needs approval).
+
+## 2026-11-08 — Post-PR153 unified retraining and performance reporting
+
+Spec: `tasks/post-pr153-unified-retraining-spec.md`.
+
+- [x] Review PR #153, verify exact-head hosted CI, record evidence boundaries,
+  mark ready, merge, and verify merge commit `5a44a0dd`.
+- [x] Create successor branch from the merged base in an isolated sparse
+  worktree; keep the approximately 900-MB experiment bundle out of Git.
+- [x] Implement deterministic timestamped performance reports and reusable
+  figure generation with full model/data/comparator/artifact provenance.
+- [x] Open draft successor PR #154 and freeze report code commit `4935bd7f`.
+- [ ] Add standardized per-example affinity, presentation/processing, and
+  T-cell figure panels beyond the v1 comparator/composition overview.
+- [ ] Freeze the successor training commit after the new cohort contracts pass.
+- [x] Project the audited NetMHCpan 4.2 / NetMHCIIpan 4.3 BA archives into a
+  source-faithful, development-embargoed comparator-parity TRAIN cohort; verify
+  every row/receipt and freeze the combined-loader preflight.
+- [x] Resolve and hash-pin the existing licensed MixMHCpred 3.0 isolation;
+  smoke-test PRIME 2.1 through mhctools with explicit executable paths. Keep
+  the unrelated 2.0.2 bundle fail-closed for PRIME.
+- [ ] Freeze newly disjoint MHC-I/MHC-II affinity, presentation/processing, and
+  assay-aware T-cell cohorts with whole-study and sequence-family embargoes.
+- [ ] Run the preregistered data-only, class-II mechanism, calibration, and
+  ordinal ablations on explicit `H100!` under the experiment registry.
+- [ ] Compare a frozen checkpoint on identical rows against NetMHCpan,
+  NetMHCIIpan, MHCflurry, and PRIME; preserve every per-row output.
+- [x] Generate a timestamped state-of-Presto report with figures, complete data
+  manifests, hashes, and explicit promotion-gate pass/fail results.
+
+Review: report v1 is registered under
+`experiments/2026-11-08_2210_codex_unified-state-report-v1`. Two independent
+renders are byte-identical. Six exact TRAIN/development row bundles, four
+per-example prediction artifacts, the selected checkpoint, and all comparator
+receipts resolve to hash-pinned Modal-volume paths; no large/licensed payload is
+in Git. The report says development-only, preserves method-specific output
+identities, passes only the processing gate, and leaves affinity, presentation,
+PRIME, and independent TEST claims open.
+
+Projection progress: experiment
+`2026-11-08_1740_codex_netmhc-ba-parity-projection` independently verifies
+143,213 v2 comparator-parity TRAIN rows (80,674 MHC-I / 62,539 MHC-II), exact
+archive censoring, canonical original-measurement lineage, unknown assay-method
+routing, and both affinity exact/core-9 and presentation exact/core-8/Hamming-1
+development embargoes. The continuation removed 94 presentation-near v1 rows;
+independent verification passed unique measurement/observation identities and
+all hashes. No model, prediction, validation, TEST, or locked cohort was
+accessed. The checklist stays open until the corrected combined common-loader
+preflight is frozen and passes.
+
+### Newer-code parity retrain — 2026-11-08
+
+Canonical preregistration:
+`experiments/agents/codex/plans/2026-11-08_unified-parity-retrain.md`.
+
+- [x] Freeze reference and parity manifests from the same Stage A checkpoint.
+- [x] Run and independently verify full common-loader preflight for both.
+- [x] Launch both exact 5,000-update conditions on requested `H100!` under the
+  scientifically unchanged training-v2 continuation.
+- [x] Prove the first H100 stop was not a mount-packaging drift: CPU remote and
+  local runtime trees match at 89 files / 1,711,245 bytes / aggregate SHA-256
+  `3c3c39fc2c570bcb1ae68f5572889249770024648b00b3bc429162e98fb06d64`.
+- [x] Freeze and run the same-image before/after-import probe: imports leave the
+  89-file tree byte-identical, so reject the proposed pre-import guard move.
+- [x] Run one exact-resource H100 environment probe without volume reads or
+  scientific state: the H100 tree is byte-identical and the diff is empty.
+- [x] Diagnose the guard root cause: descriptive `paths` metadata was compared
+  as identity, so structurally unequal dictionaries rejected identical trees.
+- [x] Preserve the stopped launch and submit a new immutable `training-v2`
+  continuation after the three-field identity fix; old `fits/` was absent.
+- [x] Preserve both symmetric training-v2 zero-step failure directories; the
+  resume-source fingerprint exposed missing CLI/script mounts after preflight.
+- [x] Freeze and launch training-v3 with the complete declared resume-source
+  set and a new immutable output root; both remote source guards passed.
+- [x] Collect checkpoints, coverage, resource receipts, and all development
+  prediction dumps; verify hashes independently.
+- [x] Freeze the exact matched parity-evaluation and timestamped-report contract
+  before implementing or collecting final metrics.
+- [x] Repeat matched affinity/presentation/processing evaluation and figures.
+- [x] Apply the preregistered data-only decision and regression gates; retain
+  reference because parity fails the MHC-II parent gate.
+- [x] Specify the single chain-aware class-II arm in the follow-on plan.
+- [ ] Implement the single chain-aware class-II arm in the post-merge PR only
+  after its genuinely new affinity cohort contract closes.
+- [ ] Extend the selected checkpoint with fixed assay-aware T-cell tracks only
+  after the affinity/presentation decision; do not access locked or TEST rows.
+- [x] Freeze the follow-on genuinely new affinity, single chain-aware MHC-II,
+  assay-aware T-cell calibration, PRIME, final retrain, and reporting plan before
+  accessing a new cohort or implementing the adapter.
+
+Preflight stop: the frozen reference manifest passed on 1,560,770 rows, but the
+parity manifest failed at its first BA row because the v1 projection lacked the
+canonical original-measurement identity required for cross-source deduplication.
+No GPU or optimizer ran. Continuation plan:
+`experiments/agents/codex/plans/2026-11-08_ba-projection-lineage-continuation.md`.
+The corrective v2 projection is now complete and independently verified on
+143,213 rows. A new immutable preflight continuation must point to v2; the
+executed failed contract remains unchanged as audit evidence.
+
+Corrected gate closure: primary and independent canonical loaders both pass
+1,560,770 reference and 1,703,983 parity rows with identical 51,066-row
+development partitions. The independent raw receipt's tuple/list comparison
+stop is closed by a separate hash-pinned canonical-JSON receipt that matches all
+rows, partitions, census, manifests, model/training/scales/admission, and source
+hashes. TEST/locked/prediction/optimizer/GPU access remain absent. Matched H100!
+training may now launch from the frozen Stage A parent.
+
+Final review: both H100 fits completed exactly 5,000 steps / 640,000 examples,
+with passed coverage and no TEST/locked access. Two evaluation renders are
+scientifically byte-identical and independent replay passes 110 comparisons to
+`3.33e-16`. Added BA data improves MHC-I but fails the MHC-II parent gate, so
+the reference checkpoint is retained. Processing remains decisively above
+MHCflurry (`+0.10114` equal-study AUROC, CI `[+0.07829,+0.14520]`), while
+presentation is similar rather than superior. The next PR owns the new
+whole-study-disjoint affinity cohort, class-II chain adapter, disjoint T-cell
+negative/calibration work, and PRIME accuracy evaluation.
+
+### Unified state report v2 — 2026-11-09
+
+Spec: `experiments/agents/codex/plans/2026-11-09_unified-state-report-v2.md`.
+
+- [x] Freeze the clean experiment-closure commit and report evidence boundary.
+- [x] Build the report manifest from hash-pinned training/evaluation receipts.
+- [x] Render twice and prove byte equality; all 41 report files and checksums
+  match.
+- [x] Register the report; update PR #154 after the closure commit is pushed.

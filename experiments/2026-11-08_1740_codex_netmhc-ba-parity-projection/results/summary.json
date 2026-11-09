@@ -1,0 +1,164 @@
+{
+  "archive_pseudosequences": {
+    "netmhciipan43": 5641,
+    "netmhcpan42": 326
+  },
+  "artifacts": {
+    "netmhciipan43-ba-train": {
+      "bytes": 91225030,
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared/netmhciipan43-ba-train.jsonl",
+      "sha256": "153a51f8997093c0b8cf724dc8ff649a676ee3ee2e516c52dff810bb18d00ee2"
+    },
+    "netmhcpan42-ba-train": {
+      "bytes": 114297607,
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared/netmhcpan42-ba-train.jsonl",
+      "sha256": "4491918763c1cf1c64825af0228357f43516293d1b6ea73ef8a6a7554d4635df"
+    },
+    "source-exact-duplicates": {
+      "bytes": 9654,
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared/source-exact-duplicates.jsonl.gz",
+      "sha256": "f0766129bd266828a6e614d183181fd33bfa9403ee11f8e5b8307cfeeffe0b0b"
+    },
+    "source-row-dispositions": {
+      "bytes": 29476224,
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared/source-row-dispositions.jsonl.gz",
+      "sha256": "4d35b9008d2236bc0c0ffd8d9e2c951a273ac2eb576b2e848f83a584521cbe59"
+    },
+    "source-target-conflicts": {
+      "bytes": 13472,
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared/source-target-conflicts.jsonl.gz",
+      "sha256": "16527971728905d27de71e1845cef36bafe6518fa7ec722be086bd60da77d5da"
+    }
+  },
+  "assay_label_output_mapping": {
+    "archive_ba": "ic50/reference with unknown preparation, mechanism and detector",
+    "target": "IC50_nM=50000**(1-y); y=0 => >=50000; y=1 => <=1"
+  },
+  "current_identity": {
+    "development": {
+      "cores9": 3612,
+      "peptides": 1022,
+      "pmhc": 2514
+    },
+    "train": {
+      "cores9": 77897,
+      "peptides": 35341,
+      "pmhc": 146621
+    }
+  },
+  "dispositions": {
+    "admitted_train": 143307,
+    "conflicting_source_targets": 20,
+    "current_train_exact_pmhc_dedup": 138168,
+    "development_core9_embargo": 7451,
+    "development_exact_peptide_embargo": 11552,
+    "noncanonical_peptide": 2,
+    "nonhuman_or_unresolved_mhc": 43414
+  },
+  "evaluation": {
+    "current_outcomes_read": false,
+    "locked_confirmation_accessed": false,
+    "model_loaded": false,
+    "predictions": false,
+    "test_accessed": false
+  },
+  "experiment": "2026-11-08_1740_codex_netmhc-ba-parity-projection",
+  "inputs": {
+    "archives": {
+      "netmhciipan43": {
+        "bytes": 139440263,
+        "path": "2026-11-07_1645_codex_unified-data-audit/audit/sources/netmhciipan43.tar.gz",
+        "pseudo_member": "NetMHCIIpan_train/pseudosequence.2023.dat",
+        "sha256": "b3602edd48fd34a2d4dcd574bea7781bb75c50f9f4dbc3a2d7178301b735c521",
+        "source": "NetMHCIIpan-4.3-training/BA"
+      },
+      "netmhcpan42": {
+        "bytes": 269075958,
+        "path": "2026-11-07_1645_codex_unified-data-audit/audit/sources/netmhcpan42.tar.gz",
+        "pseudo_member": "NetMHCpan_train/pseudoseqs",
+        "sha256": "243a3075887fef3c975da232a87e8d1e17b1aafbf7dba4e52180361d657b5d14",
+        "source": "NetMHCpan-4.2-training/BA"
+      }
+    },
+    "audit": {
+      "admission": {
+        "path": "2026-11-08_0542_codex_baseline-training-admission-audit/audit-phase2-continuation/admission-decisions.json",
+        "sha256": "84fb6dfeec2e6c64f227721d7d99236e2079038f8fc9efc56d6b3e451c499d0a"
+      },
+      "summary": {
+        "path": "2026-11-08_0542_codex_baseline-training-admission-audit/audit-phase2-continuation/summary.json",
+        "sha256": "b4f86522dd5fb0a22a90261d979613dec03d17c229f4a3a146410f563b9cd91f"
+      }
+    },
+    "catalog": {
+      "bytes": 61469362,
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/inputs/mhc-full-seqs.csv",
+      "sha256": "0e26d38ed0c572692a3486e100272c56bd1134ce74d2b6122fa4be2f4c6b0a82"
+    },
+    "current_identity_only": {
+      "development": {
+        "path": "2026-11-07_1720_codex_affinity-development/prepared/concentrations-s42-validation.jsonl",
+        "sha256": "08e41a6c006274b5929142fc6bd4687a289a08df9cc5212edd92399f907f2f8a"
+      },
+      "train": {
+        "path": "2026-11-07_1720_codex_affinity-development/prepared/concentrations-s42-train.jsonl",
+        "sha256": "acc22d1481ce8e0b45a6df86ca9a62e70721752955070b7eb26b85e48361635d"
+      }
+    }
+  },
+  "loss_terms": null,
+  "output_archive_identities": {
+    "netmhciipan43": 60,
+    "netmhcpan42": 108
+  },
+  "output_peptide_lengths": {
+    "8": 4411,
+    "9": 58395,
+    "10": 8539,
+    "11": 3820,
+    "12": 1823,
+    "13": 4191,
+    "14": 2800,
+    "15": 50204,
+    "16": 2606,
+    "17": 1512,
+    "18": 1290,
+    "19": 484,
+    "20": 3021,
+    "21": 211
+  },
+  "output_rows": 143307,
+  "output_rows_by_archive": {
+    "netmhciipan43": 62563,
+    "netmhcpan42": 80744
+  },
+  "output_rows_by_class": {
+    "I": 80744,
+    "II": 62563
+  },
+  "output_rows_by_qualifier": {
+    "<=": 2313,
+    "=": 121447,
+    ">=": 19547
+  },
+  "policy": "TRAIN-only comparator-parity projection; source semantics and censoring preserved; current outcomes, model, predictions, TEST and locked confirmation never accessed",
+  "resources": {
+    "cpu": 8,
+    "elapsed_seconds": 58.122464543,
+    "memory_mib": 32768,
+    "observed_gpu": null,
+    "peak_rss_bytes": 1160929280,
+    "requested_gpu": null
+  },
+  "source_exact_duplicate_keys": 137,
+  "source_rows": 343914,
+  "source_target_conflict_keys": 640,
+  "split": {
+    "test": 0,
+    "test_absence_reason": "Comparator training archives overlap known data and expose no source-study IDs; they cannot define an independent test.",
+    "train": 143307,
+    "validation": 0
+  },
+  "status": "completed",
+  "synthetic_data": null
+}

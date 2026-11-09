@@ -1,0 +1,87 @@
+{
+  "agent_model": "Codex / GPT-5",
+  "command": [
+    "PRESTO_EXPERIMENT_DIR=/private/tmp/presto-post-pr153-20261108/experiments/2026-11-08_1740_codex_netmhc-ba-parity-projection",
+    "/Users/iskander/code/shared-virtual-env/bin/modal",
+    "run",
+    "--detach",
+    "code/launch.py"
+  ],
+  "created_utc": "2026-11-08T22:45:15Z",
+  "continuation_of": {
+    "app_id": "ap-E5gNDZmqElXSoi7Rw8Cp0T",
+    "failure": "131072 MiB ephemeral disk below Modal's 524288 MiB minimum; no function call created",
+    "scientific_contract_changed": false
+  },
+  "experiment": "2026-11-08_1740_codex_netmhc-ba-parity-projection",
+  "git": {
+    "branch": "codex/post-pr153-unified-retraining-20261108",
+    "dirty": false,
+    "source_commit": "9043ef295c7bd1f4b47493ade18820366ceab483"
+  },
+  "inputs": {
+    "admission_decisions": {
+      "path": "2026-11-08_0542_codex_baseline-training-admission-audit/audit-phase2-continuation/admission-decisions.json",
+      "sha256": "84fb6dfeec2e6c64f227721d7d99236e2079038f8fc9efc56d6b3e451c499d0a"
+    },
+    "admission_summary": {
+      "path": "2026-11-08_0542_codex_baseline-training-admission-audit/audit-phase2-continuation/summary.json",
+      "sha256": "b4f86522dd5fb0a22a90261d979613dec03d17c229f4a3a146410f563b9cd91f"
+    },
+    "current_development_identity_only": {
+      "path": "2026-11-07_1720_codex_affinity-development/prepared/concentrations-s42-validation.jsonl",
+      "sha256": "08e41a6c006274b5929142fc6bd4687a289a08df9cc5212edd92399f907f2f8a"
+    },
+    "current_train_identity_only": {
+      "path": "2026-11-07_1720_codex_affinity-development/prepared/concentrations-s42-train.jsonl",
+      "sha256": "acc22d1481ce8e0b45a6df86ca9a62e70721752955070b7eb26b85e48361635d"
+    },
+    "mhcseqs_catalog": {
+      "bytes": 61469362,
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/inputs/mhc-full-seqs.csv",
+      "sha256": "0e26d38ed0c572692a3486e100272c56bd1134ce74d2b6122fa4be2f4c6b0a82"
+    },
+    "netmhciipan43": {
+      "bytes": 139440263,
+      "path": "2026-11-07_1645_codex_unified-data-audit/audit/sources/netmhciipan43.tar.gz",
+      "sha256": "b3602edd48fd34a2d4dcd574bea7781bb75c50f9f4dbc3a2d7178301b735c521"
+    },
+    "netmhcpan42": {
+      "bytes": 269075958,
+      "path": "2026-11-07_1645_codex_unified-data-audit/audit/sources/netmhcpan42.tar.gz",
+      "sha256": "243a3075887fef3c975da232a87e8d1e17b1aafbf7dba4e52180361d657b5d14"
+    }
+  },
+  "policy": {
+    "assay_mapping": "archive BA -> IC50 reference output with unknown preparation, mechanism and detector",
+    "current_outcomes_read": false,
+    "development_embargo": "exact peptide plus any shared 9-mer core, irrespective of MHC",
+    "locked_confirmation_accessed": false,
+    "model_loaded": false,
+    "predictions": false,
+    "test_accessed": false,
+    "train_dedup": "exact peptide plus resolved groove1/groove2",
+    "training_role": "comparator-parity TRAIN only"
+  },
+  "runtime": {
+    "block_network": true,
+    "cpu": 8,
+    "ephemeral_disk_mib": 524288,
+    "memory_mib": 32768,
+    "mhcseqs": "2.6.13",
+    "observed_gpu": null,
+    "python": "3.12",
+    "requested_gpu": null,
+    "timeout_seconds": 3600
+  },
+  "source_sha256": {
+    "code/launch.py": "0a1f17361a56802d6edcb597aca37c1e51fcfd3f6b0917c5ec4f91daedab7427",
+    "data/netmhc_training.py": "d61446559b6576f4891fffe155e8192f445b02e77f6188cc9ad0c9c90981c3b3",
+    "reproduce/source/collect.py": "be9712691da9516357f92de41bd1cba82c35e1b2b2080eec4817fa316afe8181"
+  },
+  "storage": {
+    "git_payload": "scripts, plans, hashes, summaries and receipts only",
+    "large_outputs": "presto-checkpoints Modal volume",
+    "redistribution_status": "NetMHC training archive redistribution unresolved"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "schema": "presto.unified_parity_fit_attempt_failure.v1",
+  "app_id": "ap-dvE960vcRK3jSN6SPedzYN",
+  "source_commit": "0f00931a2aedcb3f661f8c9377b9211c65f745f5",
+  "failure": {
+    "error_type": "FileNotFoundError",
+    "error": "[Errno 2] No such file or directory: '/runtime/presto/cli/train.py'",
+    "receipt_sha256": "6cf05c4c2be05c6fa64da8f582728ef8ee61812211bf4def567338c06b42a4cf"
+  },
+  "conditions": {
+    "reference": {
+      "call_id": "fc-01M6Z0B76ZWEY1GFPF8C4S2JT3",
+      "elapsed_seconds": 587.2078375030001,
+      "new_steps": 0,
+      "new_examples": 0,
+      "execution_contract_sha256": "1f121c44c077c791b5d3ed6594891ca0111905c0b29e8ccd3c9c266f246ba65d",
+      "end_receipt_sha256": "dc8b36ecc67aa0a053b300bb1b39e18229447a22bb7b92c7f44a35e5c7a67dc5"
+    },
+    "parity": {
+      "call_id": "fc-01M6Z0B798HD8Z8520Q7N605Q4",
+      "elapsed_seconds": 629.617445127,
+      "new_steps": 0,
+      "new_examples": 0,
+      "execution_contract_sha256": "45c21a652a6ecd6022861be33568b961c96e2fbcf45628409fa0d40997f988ee",
+      "end_receipt_sha256": "58c17d132b3a6909ecf042bba3ec59b4fe84ff6b0cc417c47ed24c85da91d39a"
+    }
+  },
+  "hardware": {
+    "requested_gpu": "H100!",
+    "actual_gpu": "NVIDIA H100 80GB HBM3",
+    "gpu_bytes": 85009367040,
+    "torch": "2.14.1+cu130",
+    "cuda": "13.0",
+    "tf32": false,
+    "amp": false,
+    "compile": false,
+    "receipt_sha256": "33f0ce7e7cd6f5e72b18cdad7ff28f607cd9db9561ff716d77f92fb44c0156de"
+  },
+  "scientific_state": {
+    "optimizer_steps": 0,
+    "examples": 0,
+    "predictions": false,
+    "test_accessed": false,
+    "locked_confirmation_accessed": false
+  },
+  "decision": "Preserve this attempt and mount the complete modular_resume.SOURCE_FILES set under a new output root before relaunch."
+}
