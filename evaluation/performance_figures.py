@@ -233,9 +233,7 @@ def render_affinity_scatter(records: list[dict], output_dir: Path) -> list[Path]
             if not selected:
                 continue
             truth = np.asarray([row["target_log10_nM"] for row in selected], dtype=float)
-            prediction = np.asarray(
-                [row["prediction_log10_nM"] for row in selected], dtype=float
-            )
+            prediction = np.asarray([row["prediction_log10_nM"] for row in selected], dtype=float)
             rho = _correlation(_ranks(truth), _ranks(prediction))
             label = f"{method} (ρ={rho:.3f})" if rho is not None else f"{method} (ρ=NA)"
             axis.scatter(
@@ -284,9 +282,7 @@ def render_affinity_calibration(records: list[dict], output_dir: Path) -> list[P
             if not selected:
                 continue
             truth = np.asarray([row["target_log10_nM"] for row in selected], dtype=float)
-            prediction = np.asarray(
-                [row["prediction_log10_nM"] for row in selected], dtype=float
-            )
+            prediction = np.asarray([row["prediction_log10_nM"] for row in selected], dtype=float)
             order = np.argsort(prediction, kind="mergesort")
             bins = [chunk for chunk in np.array_split(order, min(10, len(order))) if len(chunk)]
             axes[0, column].plot(

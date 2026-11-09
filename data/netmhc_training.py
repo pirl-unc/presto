@@ -239,9 +239,7 @@ def project_ba_rows(
         if any(core in development_cores8 for core in peptide_cores(row.peptide, 8)):
             disposition(row, "development_core8_embargo")
             continue
-        if any(
-            mask in development_hamming1_masks for mask in peptide_deletion_masks(row.peptide)
-        ):
+        if any(mask in development_hamming1_masks for mask in peptide_deletion_masks(row.peptide)):
             disposition(row, "development_hamming1_embargo")
             continue
         pmhc = (row.peptide, str(resolution["groove1"]), str(resolution["groove2"]))

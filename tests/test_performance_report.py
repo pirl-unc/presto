@@ -211,9 +211,7 @@ def test_report_copies_supplemental_figures_and_tables(tmp_path):
             **_artifact(table, include=True),
         },
     ]
-    report = generate_report(
-        _write_manifest(tmp_path, manifest), tmp_path / "reports-supplemental"
-    )
+    report = generate_report(_write_manifest(tmp_path, manifest), tmp_path / "reports-supplemental")
     assert (report / "figures" / "affinity_scatter.svg").read_bytes() == figure.read_bytes()
     assert (report / "tables" / "affinity_metrics.csv").read_bytes() == table.read_bytes()
     saved = json.loads((report / "report.json").read_text())

@@ -147,9 +147,7 @@ def test_study_bootstraps_are_paired_and_deterministic():
     )
     assert first == second
     assert first["studies"] == 2
-    method = study_bootstrap(
-        rows, "first", metric="auroc", kind="binary", replicates=100
-    )
+    method = study_bootstrap(rows, "first", metric="auroc", kind="binary", replicates=100)
     assert method["estimate"] == 0.875
     assert method["ci_low"] == 0.75
     assert method["ci_high"] == 1

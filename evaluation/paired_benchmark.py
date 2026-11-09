@@ -56,9 +56,7 @@ def prediction_identity(record: Mapping) -> str:
         "pair_id": provenance.get("pair_id"),
     }
     if identity["split"] != "validation":
-        raise ValueError(
-            f"prediction {identity['observation_id']} is not on the validation split"
-        )
+        raise ValueError(f"prediction {identity['observation_id']} is not on the validation split")
     if not isinstance(identity["observation_id"], str) or not identity["observation_id"]:
         raise ValueError("prediction lacks observation_id")
     return json.dumps(identity, sort_keys=True, separators=(",", ":"), allow_nan=False)
@@ -180,9 +178,7 @@ def affinity_threshold_metrics(
         qualifier = qualifier_code(row["qualifier"])
         at_or_below = target <= cutoff
         usable = (
-            qualifier == 0
-            or qualifier < 0 and at_or_below
-            or qualifier > 0 and not at_or_below
+            qualifier == 0 or qualifier < 0 and at_or_below or qualifier > 0 and not at_or_below
         )
         if not usable:
             continue
@@ -342,16 +338,12 @@ def paired_study_bootstrap(
     seed: int = 42,
 ) -> dict:
     """Bootstrap equal-study paired metric differences."""
-    per_study = paired_study_metrics(
-        records, first, second, metric=metric, kind=kind
-    )
+    per_study = paired_study_metrics(records, first, second, metric=metric, kind=kind)
     if not per_study:
         raise ValueError(f"no paired eligible studies for {metric}")
     deltas = np.asarray([row["delta"] for row in per_study], dtype=float)
     rng = np.random.default_rng(seed)
-    sampled = deltas[
-        rng.integers(0, len(deltas), size=(replicates, len(deltas)))
-    ].mean(axis=1)
+    sampled = deltas[rng.integers(0, len(deltas), size=(replicates, len(deltas)))].mean(axis=1)
     return {
         "first": first,
         "second": second,
