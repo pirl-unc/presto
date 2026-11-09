@@ -1,0 +1,21 @@
+{
+  "agent_model": "Codex / GPT-5",
+  "assay_label_to_output_mapping": null,
+  "command": "experiments/2026-11-08_2225_codex_prime-mhctools-smoke/reproduce/launch.sh",
+  "dataset": "two fixed unlabeled integration peptides; no biological evaluation cohort",
+  "experiment_id": "2026-11-08_2225_codex_prime-mhctools-smoke",
+  "git": {
+    "branch": "codex/post-pr153-unified-retraining-20261108",
+    "dirty": true,
+    "source_commit": null
+  },
+  "loss_terms": null,
+  "non_default_environment": {
+    "MPLCONFIGDIR": "/private/tmp/presto-mpl-config"
+  },
+  "pretraining": null,
+  "requested_gpu": null,
+  "schema": "presto.experiment_launch.v1",
+  "synthetic_data_contract": "two fixed peptide strings for integration only; no labels",
+  "training": null
+}
