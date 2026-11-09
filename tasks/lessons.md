@@ -965,3 +965,8 @@ Keep applicability reporting separate from model features and the measured label
   return only a compact artifact pointer. Build final result trees in local
   scratch and atomically publish them; make completed receipt publication
   idempotent across platform restarts while rejecting partial final directories.
+- Keep descriptive scope/prose outside machine identity objects. Compare an
+  explicit schema of immutable identity fields (for example files/bytes/hash),
+  and include observed plus expected values in guard errors. Whole-dictionary
+  equality can deterministically reject identical artifacts when one side also
+  carries human-readable metadata.

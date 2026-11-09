@@ -226,6 +226,19 @@ the first pair as a transient or launch-image mismatch, add observed identities
 to future guard errors/receipts, independently prove both target fit directories
 absent, and submit the immutable training-v2 continuation unchanged scientifically.
 
+H100 probe `fc-01M6Z019GVD99NQJHT8G7P5A9M` matched the same identity before and
+after imports on an NVIDIA H100 80GB HBM3, so no source, import, GPU, or mount
+drift exists. The deterministic root cause is guard-schema inequality: the
+frozen training JSON's `runtime_tree` object includes a descriptive `paths`
+field, while `runtime_tree()` returns only `files`, `bytes`, and `sha256`; direct
+dictionary equality therefore always failed. Correct the fit runner to compare
+only those three immutable identity fields, move the path-scope description to
+a separate `runtime_tree_scope` field in training-v2, and include expected and
+observed identities in errors and receipts. This is a guard-only correction.
+The read-only volume listing returned `No such file or directory` for the family
+`fits/` path, independently confirming neither stopped call created fit state.
+The training-v2 continuation may reuse the unchanged `fits/{condition}` targets.
+
 ## Preregistered decisions
 
 1. Prefer P as the next affinity/presentation parent only if it improves MHC-II

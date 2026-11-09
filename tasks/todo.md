@@ -14867,10 +14867,12 @@ Canonical preregistration:
   `3c3c39fc2c570bcb1ae68f5572889249770024648b00b3bc429162e98fb06d64`.
 - [x] Freeze and run the same-image before/after-import probe: imports leave the
   89-file tree byte-identical, so reject the proposed pre-import guard move.
-- [ ] Run one exact-resource H100 environment probe without volume reads or
-  scientific state; diagnose any GPU-container-specific tree difference.
+- [x] Run one exact-resource H100 environment probe without volume reads or
+  scientific state: the H100 tree is byte-identical and the diff is empty.
+- [x] Diagnose the guard root cause: descriptive `paths` metadata was compared
+  as identity, so structurally unequal dictionaries rejected identical trees.
 - [ ] Preserve the stopped launch and submit a new immutable `training-v2`
-  continuation only after confirming both failed calls wrote no fit state.
+  continuation after the three-field identity fix; `fits/` is confirmed absent.
 - [ ] Collect checkpoints, coverage, resource receipts, and all development
   prediction dumps; verify hashes independently.
 - [ ] Repeat matched affinity/presentation/processing evaluation and figures.

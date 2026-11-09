@@ -6,14 +6,13 @@ import gzip
 import hashlib
 import json
 import os
-from pathlib import Path
 import resource
 import shutil
 import subprocess
 import time
+from pathlib import Path
 
 import modal
-
 
 FID = "2026-11-08_1800_codex_unified-parity-retrain"
 GPU_FID = "2026-11-07_1915_codex_unified-presentation"
@@ -84,6 +83,7 @@ REQUIREMENTS = (
     "tqdm==4.70.1",
     "psutil==7.2.2",
 )
+RUNTIME_IDENTITY_KEYS = ("files", "bytes", "sha256")
 
 app = modal.App("presto-unified-parity-fits-20261109")
 volume = modal.Volume.from_name("presto-checkpoints")
@@ -106,7 +106,9 @@ if modal.is_local():
     ).resolve()
     ROOT = FAMILY.parents[1]
     image = (
-        image.add_local_file(FAMILY / "reproduce/training/launch.json", "/bundle/launch.json")
+        image.add_local_file(
+            FAMILY / "reproduce/training-v2/launch.json", "/bundle/launch.json"
+        )
         .add_local_file(FAMILY / "code/fit_pair.py", "/bundle/fit_pair.py")
         .add_local_file(
             FAMILY / "reproduce/training/reference-manifest.json",
@@ -139,7 +141,9 @@ def write_json(path: str | Path, value) -> None:
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json.dumps(value, indent=2, sort_keys=True, allow_nan=False) + "\n")
+    temporary.write_text(
+        json.dumps(value, indent=2, sort_keys=True, allow_nan=False) + "\n"
+    )
     temporary.replace(path)
 
 
@@ -149,7 +153,9 @@ def runtime_tree(root: Path) -> dict:
         paths.extend(
             path
             for path in (root / directory).rglob("*")
-            if path.is_file() and "__pycache__" not in path.parts and path.suffix != ".pyc"
+            if path.is_file()
+            and "__pycache__" not in path.parts
+            and path.suffix != ".pyc"
         )
     rows = [
         {
@@ -165,6 +171,13 @@ def runtime_tree(root: Path) -> dict:
         "bytes": sum(row["bytes"] for row in rows),
         "sha256": hashlib.sha256(payload).hexdigest(),
     }
+
+
+def runtime_identity(contract: dict) -> dict:
+    missing = [key for key in RUNTIME_IDENTITY_KEYS if key not in contract]
+    if missing:
+        raise ValueError(f"runtime tree contract lacks identity fields: {missing}")
+    return {key: contract[key] for key in RUNTIME_IDENTITY_KEYS}
 
 
 def verified_copy(source: Path, destination: Path, spec: dict) -> dict:
@@ -248,15 +261,29 @@ def fit(condition: str) -> dict:
         path = Path(spec["bundle"])
         if path.stat().st_size != spec["bytes"] or sha256(path) != spec["sha256"]:
             raise ValueError(f"{name} manifest differs from frozen contract")
-    if runtime_tree(Path("/runtime/presto")) != pins["runtime_tree"]:
-        raise ValueError("runtime source tree differs from frozen contract")
+    observed_runtime_tree = runtime_tree(Path("/runtime/presto"))
+    expected_runtime_tree = runtime_identity(pins["runtime_tree"])
+    if observed_runtime_tree != expected_runtime_tree:
+        raise ValueError(
+            "runtime source tree differs from frozen contract: "
+            + json.dumps(
+                {"expected": expected_runtime_tree, "observed": observed_runtime_tree},
+                sort_keys=True,
+            )
+        )
 
     volume.reload()
     closure_path = Path("/volume") / CLOSURE["path"]
-    if closure_path.stat().st_size != CLOSURE["bytes"] or sha256(closure_path) != CLOSURE["sha256"]:
+    if (
+        closure_path.stat().st_size != CLOSURE["bytes"]
+        or sha256(closure_path) != CLOSURE["sha256"]
+    ):
         raise ValueError("corrected preflight closure changed")
     closure = read_json(closure_path)
-    if closure["status"] != "passed" or not closure["scientific_fields_canonical_equal"]:
+    if (
+        closure["status"] != "passed"
+        or not closure["scientific_fields_canonical_equal"]
+    ):
         raise ValueError("corrected preflight gate did not pass")
 
     target = Path("/volume") / FID / "fits" / condition
@@ -274,6 +301,7 @@ def fit(condition: str) -> dict:
         "manifest_sha256": MANIFESTS[condition]["sha256"],
         "parent_sha256": PARENT["sha256"],
         "preflight_closure_sha256": CLOSURE["sha256"],
+        "runtime_tree": observed_runtime_tree,
         "seed": 42,
         "max_steps": 5000,
         "requested_gpu": GPU,
@@ -341,7 +369,9 @@ def fit(condition: str) -> dict:
     parent = Path(manifest["pretrained"]["path"])
     if parent != scratch_root / "selected-stage-a.pt":
         raise ValueError("manifest parent scratch path changed")
-    copies[parent.name] = verified_copy(Path("/volume") / PARENT["path"], parent, PARENT)
+    copies[parent.name] = verified_copy(
+        Path("/volume") / PARENT["path"], parent, PARENT
+    )
 
     raw = target / "raw"
     resume = (raw / "resume.pt").exists()
@@ -350,7 +380,9 @@ def fit(condition: str) -> dict:
         saved = torch.load(raw / "resume.pt", map_location="cpu", weights_only=True)
         initial_steps = saved["metadata"]["resume"]["state"]["steps"]
         del saved
-    prior_seconds = sum(read_json(path)["elapsed_seconds"] for path in events.glob("*-end.json"))
+    prior_seconds = sum(
+        read_json(path)["elapsed_seconds"] for path in events.glob("*-end.json")
+    )
     state = {
         "initial_steps": initial_steps,
         "new_steps": 0,
@@ -364,11 +396,15 @@ def fit(condition: str) -> dict:
 
     def observed(model, optimizer, rows, scales, **kwargs):
         if time.monotonic() - began > 9900:
-            raise TimeoutError("bounded parity-fit runtime reached; exact continuation required")
+            raise TimeoutError(
+                "bounded parity-fit runtime reached; exact continuation required"
+            )
         result = original_train_step(model, optimizer, rows, scales, **kwargs)
         state["new_steps"] += 1
         state["new_examples"] += len(rows)
-        state["peak_rss_bytes"] = max(state["peak_rss_bytes"], process.memory_info().rss)
+        state["peak_rss_bytes"] = max(
+            state["peak_rss_bytes"], process.memory_info().rss
+        )
         if state["new_steps"] == 1 or state["new_steps"] % 100 == 0:
             print(
                 json.dumps(
@@ -407,7 +443,10 @@ def fit(condition: str) -> dict:
             raise ValueError("TEST prediction dump is not empty")
 
         for name in ("train", "validation", "test"):
-            gzip_copy(raw / f"{name}-predictions.jsonl", target / f"{name}-predictions.jsonl.gz")
+            gzip_copy(
+                raw / f"{name}-predictions.jsonl",
+                target / f"{name}-predictions.jsonl.gz",
+            )
         resources = {
             **state,
             "steps": summary["steps"],
@@ -444,6 +483,7 @@ def fit(condition: str) -> dict:
             "manifest_sha256": MANIFESTS[condition]["sha256"],
             "preflight_closure_sha256": CLOSURE["sha256"],
             "parent_sha256": sha256(parent),
+            "runtime_tree": observed_runtime_tree,
             "steps": summary["steps"],
             "checkpoint_sha256": sha256(raw / "selected.pt"),
             "test_accessed": False,
@@ -487,21 +527,27 @@ def local_contract_test() -> None:
         "netmhciipan43-ba-train.jsonl",
     ]:
         raise ValueError("parity training manifest lacks the exact BA sources")
-    if reference["training"] != parity["training"] or reference["model"] != parity["model"]:
+    if (
+        reference["training"] != parity["training"]
+        or reference["model"] != parity["model"]
+    ):
         raise ValueError("training/model contract differs between conditions")
     if reference["pretrained"] != parity["pretrained"]:
         raise ValueError("parent contract differs between conditions")
     if any("test" in row["path"] for row in parity["sources"]):
         raise ValueError("TEST source appears in a training manifest")
+    example = {"paths": "descriptive scope", "files": 1, "bytes": 2, "sha256": "x"}
+    if runtime_identity(example) != {"files": 1, "bytes": 2, "sha256": "x"}:
+        raise ValueError("runtime identity includes descriptive metadata")
 
 
 @app.local_entrypoint()
 def main() -> None:
     local_contract_test()
-    pins = read_json(FAMILY / "reproduce/training/launch.json")
+    pins = read_json(FAMILY / "reproduce/training-v2/launch.json")
     if sha256(FAMILY / "code/fit_pair.py") != pins["source_sha256"]["code/fit_pair.py"]:
         raise ValueError("local fit source differs from frozen contract")
-    calls_path = FAMILY / "reproduce/training/calls.json"
+    calls_path = FAMILY / "reproduce/training-v2/calls.json"
     calls = read_json(calls_path) if calls_path.exists() else {}
     for condition in ("reference", "parity"):
         if condition in calls:

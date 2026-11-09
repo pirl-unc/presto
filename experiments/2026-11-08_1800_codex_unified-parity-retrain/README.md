@@ -121,3 +121,19 @@ cause; local receipt SHA-256 is
 and the proposed guard reordering is rejected. A minimal H100 environment
 probe will now test the remaining GPU/container contract with the exact fit
 resources and volume mount but no volume read or scientific-state access.
+
+H100 probe `fc-01M6Z019GVD99NQJHT8G7P5A9M` under app
+`ap-QHyE2DqLr9a9e1BqQNfnyI` resolved requested `H100!` to an NVIDIA H100 80GB
+HBM3 (85,009,367,040 bytes; 81,559 MiB reported by `nvidia-smi`). With Torch
+2.14.1+cu130/CUDA 13.0, the before/after identities again match exactly and the
+canonical diff is empty. Receipt SHA-256 is
+`8de64679952aeda1f3325b9281992edb41483949f2bb357ec25787ccf86bbd60`.
+
+The failure was instead a deterministic schema bug: `training/launch.json`
+placed a descriptive `paths` string inside `runtime_tree`, but the runtime
+function returns only `files`, `bytes`, and `sha256`. Direct dictionary equality
+thus rejected the identical tree. A read-only volume listing also confirms the
+family `fits/` path does not exist, so the two stopped calls created no execution
+contract, checkpoint, or partial fit. Training-v2 compares only the three
+identity fields, keeps scope prose separate, and otherwise leaves every
+scientific input and training parameter unchanged.
