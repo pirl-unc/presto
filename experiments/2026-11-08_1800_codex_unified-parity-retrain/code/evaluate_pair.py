@@ -109,6 +109,16 @@ def verify_inputs(contract_path: Path, input_root: Path) -> tuple[dict, dict[str
         raise ValueError("unsupported evaluation contract")
     if contract.get("bootstrap") != {"replicates": 2000, "seed": 42}:
         raise ValueError("bootstrap contract changed")
+    expected = {
+        "development_rows": EXPECTED_ROWS,
+        "endpoint_census": EXPECTED_CENSUS,
+    }
+    if contract.get("expected") != expected:
+        raise ValueError("development cohort contract changed")
+    evaluator = contract.get("evaluator", {})
+    source_path = Path(__file__).resolve()
+    if evaluator.get("sha256") != sha256(source_path):
+        raise ValueError("evaluation source differs from the frozen contract")
     specs = contract.get("inputs", {})
     if set(specs) != set(INPUT_KEYS):
         raise ValueError("evaluation contract input set changed")
