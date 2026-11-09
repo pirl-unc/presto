@@ -167,6 +167,7 @@ def test_generate_report_is_complete_and_deterministic(tmp_path):
     readme = (first / "README.md").read_text()
     assert "No independent TEST superiority claim" in readme
     assert "NetMHCIIpan" in readme
+    assert json.loads((first / "report.json").read_text())["report_engine_version"] == "2"
 
 
 def test_report_refuses_overwrite(tmp_path):

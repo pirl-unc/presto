@@ -20,7 +20,7 @@ import tempfile
 from .performance_figures import render_comparator_overview, render_data_composition
 
 SCHEMA_VERSION = 1
-REPORT_ENGINE_VERSION = "1"
+REPORT_ENGINE_VERSION = "2"
 ROLES = {"train", "calibration", "development", "confirmation", "test"}
 SHA256 = re.compile(r"[0-9a-f]{64}")
 COMMIT = re.compile(r"[0-9a-f]{40}")

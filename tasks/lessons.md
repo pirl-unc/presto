@@ -970,3 +970,13 @@ Keep applicability reporting separate from model features and the measured label
   and include observed plus expected values in guard errors. Whole-dictionary
   equality can deterministically reject identical artifacts when one side also
   carries human-readable metadata.
+
+## 2026-11-08 — Search explicit licensed runtimes before declaring a comparator blocked
+
+- A missing executable on the default `PATH` or an outdated shared bundle does
+  not prove a licensed comparator is unavailable. Inventory existing isolated
+  runtimes and prior provenance receipts under the user-scoped workspace, verify
+  versions and license scope, then smoke-test the wrapper with explicit paths.
+- Report default-path readiness separately from explicit-path availability. For
+  editable packages, record both installed distribution metadata and checkout
+  revision when they disagree; do not let stale metadata hide working source.
