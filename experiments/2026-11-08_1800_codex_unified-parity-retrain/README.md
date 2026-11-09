@@ -101,3 +101,12 @@ The complete 89-row receipt is 14,741 bytes at SHA-256
 This rules out source-mount drift. A same-image CPU probe now measures the tree
 immediately before and after the exact fit imports; H100 continuation remains
 blocked until that root cause and a pre-import guard correction are frozen.
+
+Import-probe v1 call `fc-01M6YZMJ1FVR875D02722GRBPQ` under app
+`ap-n71agHZtH4WggiHQJgUXdx` completed its measurement but stopped while Modal
+packaged the duplicated full inventories: the return exceeded the inline limit,
+and the intentionally network-blocked worker could not upload the oversized blob.
+No volume was mounted and no data, checkpoint, model, or optimizer was touched.
+The preserved v2 continuation returns only aggregate identities and canonical
+path differences; combined with the full mount receipt above, that losslessly
+reconstructs the post-import tree while staying below the inline limit.

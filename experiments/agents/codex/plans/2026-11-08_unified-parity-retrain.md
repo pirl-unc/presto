@@ -187,6 +187,18 @@ read any cohort, load the parent, initialize a model, or create an optimizer.
 Persist the added, removed, and changed path rows, dependency versions, source
 commit, and both aggregate tree identities.
 
+Import-probe v1 call `fc-01M6YZMJ1FVR875D02722GRBPQ` completed the measurement
+but its duplicated full 89-row before/after inventories exceeded Modal's inline
+return threshold. With network blocked and no volume mounted, Modal's attempted
+blob upload failed. Preserve that transport stop. A v2 probe may return only
+the two aggregate identities plus the canonical added/removed/changed rows.
+The already frozen full 89-row mount receipt at SHA-256
+`b2c5406c375ad11342fa209c76b871b7e246da72024b0b2bf3eb5b33a6d0491f`
+is the complete pre-import baseline, so baseline plus canonical diff must
+reconstruct and re-hash to the reported post-import identity. This narrows
+transport only; image, imports, mounts, network, and access prohibitions remain
+unchanged.
+
 If and only if that probe shows an import-time filesystem change while the
 pre-import tree matches the frozen contract, move the runtime-tree guard ahead
 of those imports. Keep the imports local to the function so the guard observes
