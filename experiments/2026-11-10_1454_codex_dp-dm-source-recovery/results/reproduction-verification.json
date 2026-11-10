@@ -1,0 +1,56 @@
+{
+  "status": "passed",
+  "scope": "Fresh-output launch.sh replay; exact uncompressed per-record outputs and independent source verification",
+  "checks": [
+    {
+      "original": "/private/tmp/presto-dp-dm-source-20261110/extraction-v1/source-psms.jsonl.gz",
+      "replay": "/private/tmp/presto-dp-dm-source-20261110/replay-v1/mzid/source-psms.jsonl.gz",
+      "uncompressed_sha256": "85eb72f112cce15865c56d3ef89bc1cdd54306185433765cfffbba42b69f4729",
+      "n_rows": 121783,
+      "byte_identical_uncompressed": true
+    },
+    {
+      "original": "/private/tmp/presto-dp-dm-source-20261110/native-extraction-v2/native-high-confidence-psms.jsonl.gz",
+      "replay": "/private/tmp/presto-dp-dm-source-20261110/replay-v1/native/native-high-confidence-psms.jsonl.gz",
+      "uncompressed_sha256": "9fa5c7797c864c5851f3906cff98a6f5d5717ddf44892a505f214c25c42b0fca",
+      "n_rows": 69327,
+      "byte_identical_uncompressed": true
+    },
+    {
+      "original": "/private/tmp/presto-dp-dm-source-20261110/native-extraction-v2/native-peptide-samples.jsonl.gz",
+      "replay": "/private/tmp/presto-dp-dm-source-20261110/replay-v1/native/native-peptide-samples.jsonl.gz",
+      "uncompressed_sha256": "774f87d547130f894a8ce4b55adca3985a8f822c6e98d47138cbe1c4dd58fbd0",
+      "n_rows": 21634,
+      "byte_identical_uncompressed": true
+    }
+  ],
+  "independent_verifications": {
+    "mzid": {
+      "status": "passed",
+      "n_original_files": 32,
+      "n_psms_replayed": 121783,
+      "checks": [
+        "source hashes",
+        "complete PSM and result attributes",
+        "peptide sequences/forms",
+        "original protein evidence and decoys",
+        "score fields",
+        "original sample names",
+        "group counts",
+        "no training eligibility"
+      ],
+      "seconds": 10.470910542004276
+    },
+    "native": {
+      "status": "passed",
+      "n_native_files": 32,
+      "n_original_high_psms_replayed": 69327,
+      "n_peptide_sample_rows_replayed": 21634,
+      "n_source_qualified_candidate_rows": 21547,
+      "n_distinct_candidate_peptides": 10143,
+      "n_training_eligible_rows": 0,
+      "seconds": 2.432239625020884,
+      "verification_basis": "original hash-verified read-only SQLite query outputs and independent SQL histograms; no extractor imports"
+    }
+  }
+}

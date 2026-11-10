@@ -1,0 +1,70 @@
+[
+  {
+    "factor": "intervention:knockdown:ERAP1",
+    "mhc_class": "I",
+    "pmid": 32161166,
+    "qualification": "candidate only; molecule/cell/capture/specimen confounding not yet reviewed",
+    "states": {
+      "absent": {
+        "condition_ids": [
+          "hela_abc_ko_hla_b_51_01_control_shrna"
+        ],
+        "n_observation_rows": 2650
+      },
+      "present": {
+        "condition_ids": [
+          "hela_abc_ko_hla_b_51_01_erap1_shrna"
+        ],
+        "n_observation_rows": 2544
+      }
+    }
+  },
+  {
+    "factor": "intervention:transduction:CIITA",
+    "mhc_class": "I",
+    "pmid": 33592498,
+    "qualification": "candidate only; molecule/cell/capture/specimen confounding not yet reviewed",
+    "states": {
+      "absent": {
+        "condition_ids": [
+          "hrog02_parental_class_i",
+          "hrog17_parental_class_i",
+          "ra_parental_class_i"
+        ],
+        "n_observation_rows": 2786
+      },
+      "present": {
+        "condition_ids": [
+          "hrog02_ciita_transduced_class_i",
+          "hrog17_ciita_transduced_class_i",
+          "ra_ciita_transduced_class_i"
+        ],
+        "n_observation_rows": 7832
+      }
+    }
+  },
+  {
+    "factor": "intervention:transduction:CIITA",
+    "mhc_class": "II",
+    "pmid": 33592498,
+    "qualification": "candidate only; molecule/cell/capture/specimen confounding not yet reviewed",
+    "states": {
+      "absent": {
+        "condition_ids": [
+          "hrog02_parental_class_ii",
+          "hrog17_parental_class_ii",
+          "ra_parental_class_ii"
+        ],
+        "n_observation_rows": 538
+      },
+      "present": {
+        "condition_ids": [
+          "hrog02_ciita_transduced_class_ii",
+          "hrog17_ciita_transduced_class_ii",
+          "ra_ciita_transduced_class_ii"
+        ],
+        "n_observation_rows": 35071
+      }
+    }
+  }
+]

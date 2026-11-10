@@ -1,0 +1,33 @@
+{
+  "family": "2026-11-10_1454_codex_dp-dm-source-recovery",
+  "agent": "Codex / GPT-6",
+  "git_commit": "04a9d2d9f1c3986ae4bf165dd2e008fc3d74979e",
+  "dirty_at_start": false,
+  "dataset": "PXD017154 / PMID33025005",
+  "gpu": null,
+  "mode": "source_recovery_no_training",
+  "raw_root": "/private/tmp/presto-dp-dm-source-20261110",
+  "python": "3.12.6",
+  "local_python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "native_modal": {
+    "app": "presto-dp-dm-native-source-20261110",
+    "cpu": 1,
+    "memory_mib": 2048,
+    "max_containers": 2,
+    "region_requested": "eu",
+    "timeout_seconds": 900,
+    "gpu": null,
+    "requests_version": "2.32.5"
+  },
+  "replay_environment": {
+    "PRESTO_DP_DM_SOURCE_ROOT": "/private/tmp/presto-dp-dm-source-20261110",
+    "PRESTO_DP_DM_OUTPUT": "/private/tmp/presto-dp-dm-source-20261110/replay-v1",
+    "PRESTO_DP_DM_SDRF": "/private/tmp/presto-ms-condition-contrasts-20261110/source-review/pride-sdrf"
+  },
+  "replay_command": "bash experiments/2026-11-10_1454_codex_dp-dm-source-recovery/reproduce/launch.sh",
+  "native_manifest": "reproduce/native-full-manifest.json",
+  "native_queries": "reproduce/native-full-queries.json",
+  "native_calls": "reproduce/native-full-calls.jsonl",
+  "common_mhc_catalog_sha256": "ddc3493c64f4328de174a6c2cda1f007ec2f93a1ef649add25d2ef9c1720add1",
+  "non_default_environment": "Only documented input/output paths and PYTHONPATH=/private/tmp/presto-conditions-import for common MHC resolution; shared environment unchanged"
+}

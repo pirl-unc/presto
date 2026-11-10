@@ -1,0 +1,64 @@
+{
+  "pxd017154": {
+    "n_sdrf_acquisitions": 32,
+    "n_sdrf_source_labels": 11,
+    "source_labels": [
+      "DP10_A",
+      "DP10_B",
+      "DP10_DM_A",
+      "DP10_DM_B",
+      "DP401_DM_A",
+      "DP401_DM_B",
+      "DP402_A",
+      "DP402_B",
+      "DP402_DM_A",
+      "DP402_DM_B",
+      "No_DP_control_A"
+    ],
+    "beta_typing": [
+      "HLA-DPB1*04:01",
+      "HLA-DPB1*04:02",
+      "HLA-DPB1*10:01",
+      "not applicable"
+    ],
+    "dm_labels": [
+      "HLA-DM co-expressed",
+      "HLA-DM co-expression not reported",
+      "HLA-DM not co-expressed"
+    ],
+    "alpha_identity": "unresolved in reviewed metadata",
+    "annotation_origin": "community SDRF, requires primary-source verification",
+    "issue": "https://github.com/pirl-unc/hitlist/issues/895"
+  },
+  "supplement_peptidoforms": {
+    "issue": "https://github.com/pirl-unc/hitlist/issues/896",
+    "methods": "Immunopeptidomics preparation includes iodoacetamide; search includes fixed cysteine carbamidomethylation and multiple variable modifications. Preserve preparation versus native-form provenance.",
+    "primary_article": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10519123/",
+    "original_data": "MSV000089225",
+    "article_local_path": "/private/tmp/presto-ms-condition-contrasts-20261110/source-review/strazar-bioc",
+    "n_condition_qualified_deferred_rows_by_source": {
+      "Abelin2019_cross_presentation": 15146,
+      "Strazar2023": 290461
+    }
+  },
+  "ciita_parental": {
+    "pmid": 33592498,
+    "condition_ids": [
+      "hrog02_parental_class_ii",
+      "hrog17_parental_class_ii",
+      "ra_parental_class_ii"
+    ],
+    "n_admitted_audit_rows": 538,
+    "disposition": "do_not_fit_as_positive_pmhc_or_measured_negative",
+    "reason": "Current upstream curation, derived from the authors interpretation, qualifies parental class-II detections as probable background.",
+    "source_commit": "43e226621434a483141764ed54faba725bbb3869",
+    "source_path": "hitlist/data/pmid_overrides.yaml",
+    "prior_issue": "https://github.com/pirl-unc/hitlist/issues/567"
+  },
+  "fetch_policy": {
+    "n_new_public_requests": 8,
+    "raw_spectra_downloaded": false,
+    "processed_outcomes_downloaded_from_pxd017154": false,
+    "api_file_inventory": "first page only; not a complete-file count"
+  }
+}

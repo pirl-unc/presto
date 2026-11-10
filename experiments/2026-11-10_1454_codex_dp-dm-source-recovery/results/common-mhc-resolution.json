@@ -1,0 +1,34 @@
+{
+  "status": "passed",
+  "catalog_sha256": "ddc3493c64f4328de174a6c2cda1f007ec2f93a1ef649add25d2ef9c1720add1",
+  "common_resolver": "presto.data.modular_hitlist.HumanMHCCatalog",
+  "constructs": [
+    {
+      "construct": "DP401",
+      "restriction": "HLA-DPA1*01:03/HLA-DPB1*04:01",
+      "alpha_groove_length": 83,
+      "beta_groove_length": 91,
+      "alpha_groove_sha256": "c296c29d54eb8804ad98a92e40f305b198e41866a656efc7120e2a690431eb4a",
+      "beta_groove_sha256": "05915bceacf8fdc2f1838647f7f1cd20bb7a7c30e586bec911eea1439a74d2ee",
+      "partner_imputation": false
+    },
+    {
+      "construct": "DP402",
+      "restriction": "HLA-DPA1*01:03/HLA-DPB1*04:02",
+      "alpha_groove_length": 83,
+      "beta_groove_length": 91,
+      "alpha_groove_sha256": "c296c29d54eb8804ad98a92e40f305b198e41866a656efc7120e2a690431eb4a",
+      "beta_groove_sha256": "e02064f52f90de84656f4dc0745b4416a43539c5094838b6e21489f9016c3752",
+      "partner_imputation": false
+    },
+    {
+      "construct": "DP10",
+      "restriction": "HLA-DPA1*02:01/HLA-DPB1*10:01",
+      "alpha_groove_length": 83,
+      "beta_groove_length": 91,
+      "alpha_groove_sha256": "1ab0ac311b299d953e9d0abe4f636143b4f84a2ff9dc14b0fb8cdb2606bdb5fb",
+      "beta_groove_sha256": "9e0365e40fe0f12560e4dda7be0ea839f563f1ba10c5df78681831dd3ae88b76",
+      "partner_imputation": false
+    }
+  ]
+}

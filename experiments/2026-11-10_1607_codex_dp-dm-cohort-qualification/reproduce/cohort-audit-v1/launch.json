@@ -1,0 +1,100 @@
+{
+  "archive_members": {
+    "atlas": {
+      "path": "identity-inputs/atlas-dispositions.parquet",
+      "sha256": "8332c0a8181416f3d51007708723e48fe12f4f8c13b03eef17b9788200ac3e27",
+      "size_bytes": 40921739
+    },
+    "candidate_export": {
+      "path": "attempt02/shared-export.parquet",
+      "sha256": "b7ac777432942bab9f56f72c840876d125a26acba8048936ddcf2616a4b91d00",
+      "size_bytes": 2298947
+    },
+    "presentation": {
+      "path": "identity-inputs/presentation-identities.parquet",
+      "sha256": "0d95780f2c918ed73fb6d0a8b1a0d6dafcaf45f32ab7b49340bc7ad08b530df0",
+      "size_bytes": 114540121
+    }
+  },
+  "base_commit": "e0759165b5bc389d2ac978dc5340ac76e93288ed",
+  "cohort_roles": {
+    "affinity:historical_test_identity_only": "protected",
+    "affinity:historical_train": "train",
+    "affinity:historical_validation": "protected",
+    "affinity:netmhciipan43_ba_v2": "train",
+    "affinity:netmhcpan42_ba_v2": "train",
+    "affinity:stage_b_development": "protected",
+    "affinity:stage_b_train": "train",
+    "atlas:test": "protected",
+    "atlas:train": "train",
+    "atlas:validation": "protected",
+    "presentation:consumed_development": "protected",
+    "presentation:reserved_full": "protected",
+    "presentation:train": "train",
+    "tcell:calibration": "protected",
+    "tcell:development": "protected",
+    "tcell:test": "protected",
+    "tcell:train": "train"
+  },
+  "command": "/Users/iskander/code/shared-virtual-env/bin/modal run --detach experiments/2026-11-10_1607_codex_dp-dm-cohort-qualification/code/submit_audit.py",
+  "dirty": true,
+  "inputs": {
+    "affinity_manifest": {
+      "bytes": 5374,
+      "location": "volume",
+      "path": "2026-11-10_1607_codex_dp-dm-cohort-qualification/affinity-identities-v1/manifest.json",
+      "sha256": "dc5bca7b57bd17290813016aca16876969b82139cf4544d5490bf833370340e8"
+    },
+    "presentation_reserved": {
+      "bytes": 845940,
+      "location": "bundle",
+      "path": "held-sequence-embargo.txt.gz",
+      "sha256": "1cfe25cfc6f3d636e0a49f1359b4eafb5fdf39ea7ec52a541629905c3c68ce57"
+    },
+    "presentation_studies": {
+      "bytes": 1446,
+      "location": "bundle",
+      "path": "reserved-study-closure.json",
+      "sha256": "2b3a40b53fd5c73de3ad45ae2bf6fb3ac83eee651087489ce5310264faad303d"
+    },
+    "prior_bundle": {
+      "bytes": 162944527,
+      "location": "volume",
+      "path": "2026-11-10_1535_codex_dp-dm-shared-integration/shared-integration-v1.tar.gz",
+      "sha256": "d95c71a867c7c425569185bff22b19c75a87318af2af3bf7d5ebc6ea5a331278"
+    },
+    "tcell_components": {
+      "bytes": 112257,
+      "location": "volume",
+      "path": "2026-11-09_1708_codex_tcell-disjoint-split/tcell-disjoint-split-v1/split/component-membership.jsonl.gz",
+      "sha256": "1199ea932d78e4bafeae21faa8f451c3799861bb1a5e9526301375a8fa77d6f0"
+    },
+    "tcell_drops": {
+      "bytes": 128077,
+      "location": "volume",
+      "path": "2026-11-09_1708_codex_tcell-disjoint-split/tcell-disjoint-split-v1/split/sequence-embargo-drops.jsonl.gz",
+      "sha256": "ea36c8fe710f25005aeb4a7b27ef3508ed859bbcf652f2d5f0f0bfc54b40d18e"
+    },
+    "tcell_rows": {
+      "bytes": 1477999,
+      "location": "volume",
+      "path": "2026-11-09_1708_codex_tcell-disjoint-split/tcell-disjoint-split-v1/split/row-membership.jsonl.gz",
+      "sha256": "706544a88a1b3e18c397fa65d3248c00333c3fe93f6248f21c633b680b91e77e"
+    }
+  },
+  "locked_confirmation_records_accessed": false,
+  "outcome_access": false,
+  "output_prefix": "2026-11-10_1607_codex_dp-dm-cohort-qualification/cohort-audit-v1",
+  "resources": {
+    "cpu": 8,
+    "gpu": null,
+    "max_containers": 1,
+    "memory_mib": 16384
+  },
+  "schema": "presto.dp_dm_complete_identity_audit.v1",
+  "source_sha256": {
+    "cohort_audit.py": "e82e4dba165fbb6a7d8eca0c869b6508d1f050d2a1f01a158225b2ede30b1769",
+    "identity_projection.py": "734b2dcd0c3d9d3877ef3cc0e582117d106543d0195ea20734a23608addfa89c",
+    "submit_audit.py": "014483fca0b306fb76fa3288c5c878c2d8c7f27cb61935517ecd318d1b180da3"
+  }
+}

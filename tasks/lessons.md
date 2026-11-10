@@ -980,3 +980,13 @@ Keep applicability reporting separate from model features and the measured label
 - Report default-path readiness separately from explicit-path availability. For
   editable packages, record both installed distribution metadata and checkout
   revision when they disagree; do not let stale metadata hide working source.
+
+## 2026-11-10 — Verify converted MS confidence against native evidence
+
+- A converted `passThreshold` boolean is not proof of the publication's FDR
+  filter. Compare it with original target/decoy, native confidence, rank and
+  validation parameters before source admission. Preserve discrepant exports
+  and recover native evidence rather than guessing a score cutoff.
+- Collapse technical acquisitions only after preserving PSM/file lineage and
+  biological sample identity. Keep capture controls and their overlapping
+  sequences explicit; a control detection is not an affinity-negative label.

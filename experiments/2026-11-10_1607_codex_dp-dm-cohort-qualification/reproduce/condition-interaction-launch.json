@@ -1,0 +1,17 @@
+{
+  "command": "PYTHONPATH=/private/tmp/presto-conditions-import /Users/iskander/code/shared-virtual-env/bin/python experiments/2026-11-10_1607_codex_dp-dm-cohort-qualification/code/probe_condition_interaction.py",
+  "source_sha256": "dbb451ac63f16f784a155a201b4803c100193403589cc81f8752b396bc5f9079",
+  "git_base": "b8913a692b21b428c2efc6da4f4a13ba667ca02a",
+  "dirty": true,
+  "seeds": [
+    42,
+    43
+  ],
+  "model_runtime_sha256": {
+    "models/presto.py": "328619fc16f41c278a1b261d7125a33d93a103c376b2ef81dc0617b7c0d67e4f",
+    "models/assay_measurement.py": "03ec177bb70a671dd83a35287e9d8c4fb5a91486dbf3d33569b69c48694789db",
+    "models/modular_support.py": "fecc8a87ef6882f8bfba1bc4105cf07d91063320ac00c1127ba759aa57029a61"
+  },
+  "biological_performance": false,
+  "training": "none; artificial fixture only"
+}

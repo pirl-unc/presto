@@ -14931,3 +14931,108 @@ Spec: `experiments/agents/codex/plans/2026-11-09_unified-state-report-v2.md`.
 - [x] Render twice and prove byte equality; all 41 report files and checksums
   match.
 - [x] Register the report; update PR #154 after the closure commit is pushed.
+
+## 2026-11-10 — Preserve qualified processing-condition inputs
+
+Plan: `experiments/agents/codex/plans/2026-11-10_processing-condition-preservation.md`.
+
+- [x] Inspect current shared code, Hitlist condition schema and existing issues.
+- [x] Register metadata-only source audit with pinned inputs and arm/study counts.
+- [x] Preserve four dropped intervention families in the common MS adapter.
+- [x] Verify source semantics, common-model gradients and affinity invariance.
+- [x] Record review, follow-up issue and publish the scoped fix: PR156, issue155.
+
+Review: source audit covers 63 curated arms; actual admitted peptide counts and
+scientific benefit remain open in #155. On the PR131 publication base, 219
+focused tests pass, all repository lint/format checks pass, and independent
+metadata replay matches. No current Atlas/T-cell experiment changes included.
+
+## 2026-11-10 — Quantify native MS condition contrasts
+
+Plan: `experiments/agents/codex/plans/2026-11-10_ms-condition-contrasts.md`.
+- [x] Locate frozen canonical export and original MHC catalog receipts.
+- [x] Verify inputs and inventory source-qualified condition observations.
+- [x] Identify and independently verify actual class-II candidate contrasts.
+- [x] Record scientific next step, source gaps and canonical audit artifacts.
+
+Review: all 139,434 admitted rows independently replayed; only class-II paired
+factor is confounded by probable-background parental identifications. No fit
+launched from that candidate. Hitlist895/896 track the precise new source and
+large supplementary chemistry gap; Presto155 remains the next scientific gate.
+
+## 2026-11-10 — Recover paired HLA-DP/DM source data
+
+Spec: `experiments/agents/codex/plans/2026-11-10_dp-dm-source-recovery.md`.
+- [x] Retrieve complete inventory and primary construct/sample evidence.
+- [x] Recover processed source forms/confidence and map actual acquisitions.
+- [x] Independently verify source extraction and identify admission gaps.
+- [x] Publish reusable evidence and update Hitlist895/Presto155.
+
+Review: all 32 native sources are checksum-verified. Independent replay covers
+69,327 original high-confidence PSMs and 21,634 peptide–sample records; the fresh
+launcher replay also reproduces all three biological record dumps exactly after
+decompression. There are 21,547 conservative DP candidates / 10,143 distinct
+peptides. All three exact DP pairs resolve through the common MHC catalog.
+Converted pass flags include low-confidence/decoy matches and are unsuitable
+for admission. Raw evidence is durably verified on Modal; no GPU, fit or new
+performance claim. Shared Hitlist integration and split/overlap qualification
+remain open, with the implementation spec included in this family's handoff.
+Published in PR156 at `e21d6dbf`; both issue bodies and the PR description were
+read back after update. Hosted CI is running for that commit. The source recovery
+and publication are complete; shared integration and scientific training remain
+open. PR131 is still open/draft and has not been merged.
+
+## 2026-11-10 — Shared DP/DM source integration
+
+Plan: `experiments/agents/codex/plans/2026-11-10_dp-dm-shared-integration.md`.
+- [x] Implement packaged source, exact DP/DM curation and shared origin in Hitlist.
+- [x] Verify full contributor/export/common-Presto admission against original rows.
+- [x] Audit presentation/Atlas identities and independently verify the embargo.
+- [x] Reconcile the known affinity/presentation/Atlas/T-cell reserved identities.
+- [ ] Freeze source release, comparison/background/split and model-feature gates before TRAIN admission.
+- [x] Publish source PR898, checks and reproducibility records; retain scientific gates.
+
+## 2026-11-10 — Publish current work and conversation follow-ups
+
+User request: commit the work and observations to PRs and file necessary issues.
+- [x] Freeze verification evidence and publish Hitlist source integration as draft PR898.
+- [x] File reproduced upstream compatibility failures with baseline evidence: Hitlist897.
+- [x] Commit the source-integration record and future-work map in `cc832aba`.
+- [x] Push both branches, link related issues/PRs and verify remote heads.
+
+Scope: publish owned source integration, audits and observations. Preserve the
+other active Atlas/T-cell worktrees and the unrelated dirty root checkout.
+Keep PR131 draft; scientific qualification and any failed software gates remain
+explicit. Publishing this work does not authorize claiming training gains.
+
+Publication review: Hitlist PR898 is verified at `4e700744`; isolated wheel,
+format/lint/pip checks pass, while full/integration gates remain open in #897.
+All 21,547 rows pass common export/adapter verification. Independent identity
+replay confirms 8,338 protected overlaps and zero TRAIN-eligible additions.
+The 162,944,527-byte raw bundle was uploaded to Modal and downloaded again with
+identical SHA256 `d95c71a867c7c425569185bff22b19c75a87318af2af3bf7d5ebc6ea5a331278`.
+The registry and future-work map retain scientific gates and source limitations.
+No new training or performance improvement is claimed.
+
+Publication readback: Presto PR156 is `cc832aba`, Hitlist draft PR898 is
+`4e700744`; issue895/155 and PR156 bodies exactly match submitted text. Parent
+PR131 remains open/draft; the handoff is linked in comment6779147294. Hosted
+Hitlist Python3.14 confirms 90 unit failures on published mhcgnomes3.70.2;
+logs/failure list are preserved and #897 tracks resolution. Publication is
+complete; neither source release nor scientific qualification is complete.
+
+## 2026-11-10 — Complete DP/DM identity qualification
+
+Plan: `experiments/agents/codex/plans/2026-11-10_dp-dm-cohort-qualification.md`.
+- [x] Pin full reserved presentation, affinity and T-cell identity namespaces.
+- [x] Materialize reusable outcome-free affinity indexes and audit all overlaps.
+- [x] Independently verify per-row embargo and per-condition remaining support.
+- [x] Record the decision and shared-selection implementation/fit gates; prepare publication.
+
+Qualification review:17cohort namespaces independently replay, leaving10,034
+source rows/4,871peptides clear and11,513embargoed. DM absent6,058/present3,976.
+No source study collision found in checked aliases; no TRAIN eligibility yet.
+The artificial model probe establishes an MHC-by-condition capacity gap in
+staged elution; Presto157 tracks the shared-core correction/comparison. Both
+CPU apps are terminal/passed, artifacts verified after download. No biological
+training or new accuracy gain is claimed.

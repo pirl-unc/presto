@@ -1,0 +1,91 @@
+{
+  "allowed_fields": [
+    "peptide",
+    "observation_id",
+    "study_id",
+    "group_id",
+    "original_measurement_id",
+    "source",
+    "pmid",
+    "reference_iri"
+  ],
+  "command": "/Users/iskander/code/shared-virtual-env/bin/modal run --detach experiments/2026-11-10_1607_codex_dp-dm-cohort-qualification/code/project_affinity.py",
+  "git": {
+    "base": "4da30f7470bfb562f56023cc2ae053a6889b6c4e",
+    "dirty": true
+  },
+  "input_namespace_parent": "/private/tmp/presto-disjoint-qualification-20261109/experiments/2026-11-09_1021_codex_new-affinity-source-inventory/reproduce/affinity-identity-components-v1-1/launch.json",
+  "inputs": [
+    {
+      "bytes": 836622693,
+      "default_source": "",
+      "name": "stage_b_train",
+      "path": "2026-11-07_1915_codex_unified-presentation/prepared-v2/concentrations-s42-concentrations-s42-train.jsonl",
+      "role": "consumed_model",
+      "sha256": "8593fbd416a489b46397c4fae288d5916ad55d2febec7f7798bc4bb3f788ec1c"
+    },
+    {
+      "bytes": 12196679,
+      "default_source": "",
+      "name": "stage_b_development",
+      "path": "2026-11-07_1915_codex_unified-presentation/prepared-v2/concentrations-s42-concentrations-s42-validation.jsonl",
+      "role": "consumed_model",
+      "sha256": "08e41a6c006274b5929142fc6bd4687a289a08df9cc5212edd92399f907f2f8a"
+    },
+    {
+      "bytes": 1271713077,
+      "default_source": "",
+      "name": "historical_train",
+      "path": "2026-10-29_1956_codex_curated-data-retrain/revisions/source-review-v2/prepared/hitlist-v4-iedb-train.jsonl",
+      "role": "consumed_model",
+      "sha256": "17a6c65cfbe566efca0c85ffccd3a9d5e4f2392fb74d7b393a3f3104afe83fd0"
+    },
+    {
+      "bytes": 18814243,
+      "default_source": "",
+      "name": "historical_validation",
+      "path": "2026-10-29_1956_codex_curated-data-retrain/revisions/source-review-v2/prepared/hitlist-v4-iedb-validation.jsonl",
+      "role": "consumed_model",
+      "sha256": "cc93d281fd2138cc7a7af1c262f694dd0a28012da22e91098a76e36bbda27fd5"
+    },
+    {
+      "bytes": 13734097,
+      "default_source": "",
+      "name": "historical_test_identity_only",
+      "path": "2026-10-29_1956_codex_curated-data-retrain/revisions/source-review-v2/prepared/hitlist-v4-iedb-test.jsonl",
+      "role": "consumed_model",
+      "sha256": "0bfcabe1c2b0765fcf912460d76699ef0196f4c66c866950b613897564304d67"
+    },
+    {
+      "bytes": 141870035,
+      "default_source": "netmhcpan42",
+      "name": "netmhcpan42_ba_v2",
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared-v2/netmhcpan42-ba-train.jsonl",
+      "role": "netmhc_embargo",
+      "sha256": "2c007e6b46a99835f95ec612aeb498f4e52940aa81c22809ad48b5e922d6d0ca"
+    },
+    {
+      "bytes": 112640875,
+      "default_source": "netmhciipan43",
+      "name": "netmhciipan43_ba_v2",
+      "path": "2026-11-08_1740_codex_netmhc-ba-parity-projection/prepared-v2/netmhciipan43-ba-train.jsonl",
+      "role": "netmhc_embargo",
+      "sha256": "9fe752274c895cb4cd46e36dfeff43a3db73e0c96fa24ba495e1fcfd7f24c66a"
+    }
+  ],
+  "locked_confirmation_access": false,
+  "outcome_access": false,
+  "output_prefix": "2026-11-10_1607_codex_dp-dm-cohort-qualification/affinity-identities-v1",
+  "resources": {
+    "cpu": 8,
+    "gpu": null,
+    "max_containers": 1,
+    "memory_mib": 16384
+  },
+  "schema": "presto.dp_dm_identity_projection.v1",
+  "source_sha256": {
+    "identity_projection.py": "734b2dcd0c3d9d3877ef3cc0e582117d106543d0195ea20734a23608addfa89c",
+    "project_affinity.py": "5c55184fe6e3e17176c40e200b054bebdf016fd7a1fe7ccf6dee793ba79c1c0d"
+  },
+  "training": "none"
+}

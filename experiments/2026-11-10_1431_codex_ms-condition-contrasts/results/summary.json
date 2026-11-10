@@ -1,0 +1,108 @@
+{
+  "access": {
+    "confirmation": false,
+    "designated_test": false,
+    "native_positive_source": true,
+    "predictions": false
+  },
+  "dispositions": [
+    {
+      "disposition": "admitted",
+      "mhc_class": "I",
+      "n_rows": 102939
+    },
+    {
+      "disposition": "attempted",
+      "mhc_class": "I",
+      "n_rows": 291426
+    },
+    {
+      "disposition": "deferred:unresolved_candidate_scope",
+      "mhc_class": "I",
+      "n_rows": 46371
+    },
+    {
+      "disposition": "deferred:unresolved_catalog_name",
+      "mhc_class": "I",
+      "n_rows": 7929
+    },
+    {
+      "disposition": "deferred:unspecified_peptidoform",
+      "mhc_class": "I",
+      "n_rows": 117655
+    },
+    {
+      "disposition": "excluded:modified_peptidoform",
+      "mhc_class": "I",
+      "n_rows": 16489
+    },
+    {
+      "disposition": "excluded:unsupported_peptide",
+      "mhc_class": "I",
+      "n_rows": 43
+    },
+    {
+      "disposition": "admitted",
+      "mhc_class": "II",
+      "n_rows": 36495
+    },
+    {
+      "disposition": "attempted",
+      "mhc_class": "II",
+      "n_rows": 357750
+    },
+    {
+      "disposition": "deferred:missing_explicit_mhc_partner",
+      "mhc_class": "II",
+      "n_rows": 7297
+    },
+    {
+      "disposition": "deferred:unresolved_candidate_scope",
+      "mhc_class": "II",
+      "n_rows": 7522
+    },
+    {
+      "disposition": "deferred:unspecified_peptidoform",
+      "mhc_class": "II",
+      "n_rows": 305607
+    },
+    {
+      "disposition": "excluded:modified_peptidoform",
+      "mhc_class": "II",
+      "n_rows": 829
+    }
+  ],
+  "elapsed_seconds": 54.579706666991115,
+  "inputs": {
+    "catalog": {
+      "path": "/Users/iskander/code/presto/artifacts/2026-11-07_1645_codex_unified-data-audit/upload/mhc-full-seqs.csv",
+      "sha256": "ddc3493c64f4328de174a6c2cda1f007ec2f93a1ef649add25d2ef9c1720add1"
+    },
+    "source": {
+      "path": "/private/tmp/presto-ms-condition-contrasts-20261110/canonical-ms-export.parquet",
+      "sha256": "4a739794ab7a21ceb633df6e4cde4c01054f3e53213a5a8dcdc4d78604dde58f"
+    }
+  },
+  "n_arm_contexts": 148,
+  "n_candidate_factor_contrasts": 3,
+  "n_metadata_signatures": 1347,
+  "n_source_rows": 5440019,
+  "n_source_rows_with_qualified_factors_by_class": {
+    "I": 291426,
+    "II": 357750
+  },
+  "observations": {
+    "bytes": 12528670,
+    "path": "/private/tmp/presto-ms-condition-contrasts-20261110/condition-observations.jsonl.gz",
+    "sha256": "6bc2ff0dad1497cbbb12e6402a92a49f2b190c60443bc379c2904d241f44ead9"
+  },
+  "runtime": {
+    "cpu_threads": 1,
+    "gpu": null,
+    "pyarrow": "26.0.0",
+    "python": "3.12.6"
+  },
+  "schema": "presto.ms_condition_contrast_audit.v1",
+  "status": "passed",
+  "training_eligibility": "unassigned; contributor, source overlap, split and contrast qualification required"
+}

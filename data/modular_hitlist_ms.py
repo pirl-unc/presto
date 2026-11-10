@@ -29,6 +29,10 @@ INTERVENTION_FIELDS = {
     "condition_transfection": "transfection",
     "condition_transduction": "transduction",
     "condition_drugs": "drug",
+    "condition_genetic_variants": "genetic_variant",
+    "condition_infection": "infection",
+    "condition_stimulation": "stimulation",
+    "condition_antigen_exposure": "antigen_exposure",
 }
 FACTOR_FIELDS = (*INTERVENTION_FIELDS, "condition_cytokines")
 UNKNOWN_TOKENS = frozenset(
@@ -45,6 +49,16 @@ def condition_tokens(value):
     tokens = tuple(dict.fromkeys(part.strip() for part in value.split(";") if part.strip()))
     if "none" in tokens and len(tokens) != 1:
         raise AdmissionError("contradictory_none_condition", deferred=True)
+    return tokens
+
+
+def factor_tokens(raw, field):
+    """Keep categorical exposures distinct from measured pathway activity."""
+    tokens = condition_tokens(raw.get(field))
+    # Hitlist permits explicit absence for interventions, but its antigen
+    # exposure vocabulary has no `none` value. Do not manufacture one.
+    if field == "condition_antigen_exposure" and "none" in tokens:
+        raise AdmissionError("unsupported_antigen_exposure_absence", deferred=True)
     return tokens
 
 
@@ -69,7 +83,7 @@ def study_factor_vocabulary(records):
             for field in FACTOR_FIELDS:
                 values[str(raw.get("pmid") or "")][field].update(
                     token
-                    for token in condition_tokens(raw.get(field))
+                    for token in factor_tokens(raw, field)
                     if token != "none" and token not in UNKNOWN_TOKENS
                 )
     return {
@@ -87,13 +101,13 @@ def source_condition(raw, vocabulary):
         "sample_attribution": raw.get("sample_attribution"),
         "evidence_kind": raw.get("condition_evidence"),
         "reference": raw.get("condition_reference"),
-        "policy": "unique_arm_explicit_tokens_v1",
+        "policy": "unique_arm_explicit_tokens_v2",
     }
     if not admitted:
         return Context(provenance=provenance)
     interventions, cytokines = {}, {}
     for field in FACTOR_FIELDS:
-        tokens = condition_tokens(raw.get(field))
+        tokens = factor_tokens(raw, field)
         absent = tokens == ("none",)
         names = vocabulary.get(field, ()) if absent else tokens
         for name in names:

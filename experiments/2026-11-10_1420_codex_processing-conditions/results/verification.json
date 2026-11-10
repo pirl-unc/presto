@@ -1,0 +1,36 @@
+{
+  "status": "passed",
+  "source_commit": "55d397b5",
+  "baseline": "189fe276",
+  "before_n_added_factors": 0,
+  "after_n_added_factors": 5,
+  "before_policy": "unique_arm_explicit_tokens_v1",
+  "after_policy": "unique_arm_explicit_tokens_v2",
+  "active_adapter_sha256": "78eb36fc1398c0554a166db661bc598a16a6b37c764666821ac9c9dc2abea546",
+  "source_arm_csv_byte_identical_on_replay": true,
+  "summary_equal_except_elapsed_seconds": true,
+  "fixture_only": true,
+  "outcomes_or_sealed_splits_accessed": false,
+  "python": "3.12.6",
+  "torch": "2.15.0",
+  "pytest": "9.1.1",
+  "focused_tests": 219,
+  "focused_test_seconds": 5.34,
+  "repository_lint": "passed",
+  "repository_format_files": 516,
+  "full_repository_tests_run_locally": false,
+  "test_environment_overrides": {
+    "PYTHONPATH": "/private/tmp/presto-conditions-import"
+  },
+  "test_modules": [
+    "test_modular_hitlist_ms",
+    "test_modular_hitlist",
+    "test_modular_context_assertions",
+    "test_modular_cell_context",
+    "test_modular_ordinal_context",
+    "test_modular_preparation_metadata",
+    "test_modular_training",
+    "test_staged_elution",
+    "test_shared_capacity_coverage"
+  ]
+}

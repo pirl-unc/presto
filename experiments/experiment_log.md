@@ -6235,3 +6235,219 @@ preservation near zero. Presentation remains similar rather than superior.
 Both affinity comparator gates, PRIME accuracy, and independent all-task TEST
 remain open. PRIME 2.1 through mhctools/MixMHCpred 3.0 is operational but only
 smoke-tested.
+
+## 2026-11-10 — Preserve processing-condition inputs from Hitlist
+
+- **Agent/model:** Codex / GPT-6.
+- **Directory:** [2026-11-10_1420_codex_processing-conditions](2026-11-10_1420_codex_processing-conditions/README.md).
+- **Source contract:** Hitlist `43e2266`, hash-verified arm curation only: 216
+  studies / 807 arms. No outcomes, TRAIN/validation/TEST table, or confirmation
+  predictions accessed. Full hashes and source-arm CSV are in the directory.
+- **Finding:** infection (46 arms / 20 studies), stimulation (13 / 8), antigen
+  exposure (4 / 4), and genetic variants (4 / 3) were retained only in provenance
+  by the shared MS adapter. 63 distinct arms carry one or more such fields.
+  These are metadata counts, not peptide counts or newly qualified examples.
+- **Change:** retain those categorical annotations through the existing common
+  cellular input path for both MHC classes, with unchanged unique-arm/evidence
+  gates and explicit-absence semantics. Do not infer active pathways or measured
+  component activity. Frozen cohorts and checkpoints remain unchanged.
+- **Verification:** source audit took 0.548 seconds on local CPU; reproduction
+  bundle freezes the script/invocation. Regression tests exercise real shared
+  forward/training paths on artificial fixtures. See README and final test receipt.
+- **Training/pretraining/synthetic-data/loss/assay mapping:** no biological fit,
+  synthetic training labels, loss or qualifier changes. Source categorical
+  conditions feed cellular context; purified affinity and MS response remain
+  separate. No GPU requested or used. No predictive validation/test metrics or
+  dumps apply to this metadata-only audit.
+- **Decision:** preserve source facts in the common adapter. Biological benefit
+  is unmeasured; [#155](https://github.com/pirl-unc/presto/issues/155) specifies the
+  source-matched, condition-aware training comparison. Existing upstream
+  DM/DO/arm-identity issues are reused rather than duplicated.
+
+## 2026-11-10 — Native MS condition contrasts and source gaps
+
+- **Agent/model:** Codex / GPT-6; source `038ffbcc`.
+- **Directory:** [2026-11-10_1431_codex_ms-condition-contrasts](2026-11-10_1431_codex_ms-condition-contrasts/README.md).
+- **Dataset/curation:** frozen Hitlist2.1.3 canonical native MS export, 5,440,019
+  rows; source/catalog hashes and the exact invocation are in the reproducibility
+  bundle. Shared unique-arm, chemistry, candidate-set and explicit-factor policy;
+  declared ordinary human DRA reference unchanged. No current-YAML overlay.
+- **Counts:** 649,176 rows have qualified categorical factors; 139,434 pass the
+  shared molecular/MS adapter (102,939 I; 36,495 II). These are unsplit source
+  observations, not new TRAIN examples or independent specimens. Output remains
+  `predict/unpartitioned` with an explicit not-train-eligible marker.
+- **Condition result:** the only class-II present/absent candidate is CIITA:
+  35,071 transduced / 538 parental rows. Upstream primary-source curation calls
+  the parental class-II identifications probable background. Do not fit them as
+  positive pMHCs or measured affinity negatives; source qualification is required.
+- **Coverage bottleneck:** 305,607 class-II condition-bearing rows are deferred
+  for unknown forms (290,461 Stražar; 15,146 Abelin cross-presentation). Filed
+  [Hitlist896](https://github.com/pirl-unc/hitlist/issues/896) for original-form /
+  preparation provenance after confirming #854's importer fix is already done.
+- **New source:** [Hitlist895](https://github.com/pirl-unc/hitlist/issues/895)
+  covers PXD017154/PMID33025005 paired DM/HLA-DP data. Public metadata and a
+  community SDRF with 32 acquisitions / 11 source labels are preserved by hash.
+  DPA identity and primary run mapping remain unresolved; no raw spectra or
+  processed biological outcomes were downloaded from that source.
+- **Verification/runtime:** 54.58s local CPU audit; independent 14.43s replay
+  matched 139,434 source rows × 56 fields and explicit claims/contrast counts.
+  Raw audit observations remain hash-pinned outside Git; compact results committed.
+- **Training/pretraining, loss, assays, synthetic data and evaluation:** none;
+  positive native MS source admission only. No new target, bound or affinity loss,
+  no synthetic label, GPU, predictive validation/test metrics or prediction dumps.
+  No designated TEST, confirmation or comparator prediction file was accessed.
+- **Decision:** source recovery and paired-context qualification precede the
+  condition-aware fit in Presto155. No scientific performance winner is claimed;
+  all binding/MS/processing objectives remain active.
+
+## 2026-11-10 — Recover paired HLA-DP/DM source observations
+
+- **Agent/model:** Codex / GPT-6; clean base `04a9d2d9`, then an uncommitted
+  experiment-local source snapshot. Runtime model code is unchanged.
+- **Directory:** [2026-11-10_1454_codex_dp-dm-source-recovery](2026-11-10_1454_codex_dp-dm-source-recovery/README.md).
+  The frozen requests, SQL, launch commands, failed attempts and independent
+  verifiers are under `reproduce/`; the exact replay environment is in
+  `reproduce/launch.json`.
+- **Source/curation:** PMID33025005 / PXD017154, all 32 original processed MSF
+  databases and 32 mzIdentML exports. Primary supplemental Methods resolves
+  DP401/402 to DPA1*01:03 and DP10 to DPA1*02:01. All three exact heterodimers
+  resolve through the existing common MHC catalog without partner imputation.
+  Original acquisition sample labels match the SDRF. Ten DP biological samples
+  and one no-DP control retain their acquisition and replicate lineage.
+- **Confidence finding:** all 121,783 converted PSMs say `passThreshold=true`,
+  including 2,017 records with decoy mappings. In the pilot this also includes
+  243 native low-confidence targets. Use the original native high-confidence
+  category and explicit `TargetFPRHigh=0.01`, not the converted boolean.
+- **Admission contract:** retain all 69,327 native high-confidence targets as
+  source evidence. The conservative candidate tier requires an unmodified
+  canonical 10–512-aa peptide, unique visible rank-1 match, complete original
+  protein references, DP capture and no sequence overlap with the no-DP control.
+  The resulting 57,259 candidate PSMs collapse to 21,634 peptide–sample records;
+  excluding 17 control rows and 70 overlapping DP rows leaves **21,547 candidate
+  rows / 10,143 distinct peptides**. They are unpartitioned and not train-eligible.
+
+| Source condition | Biological samples | Candidate peptide–sample rows |
+|---|---:|---:|
+| DP10, DM absent | 2 | 6,604 |
+| DP10, DM present | 2 | 3,415 |
+| DP402, DM absent | 2 | 5,771 |
+| DP402, DM present | 2 | 2,558 |
+| DP401, DM present | 2 | 3,199 |
+
+- **Assay/output and qualifier policy:** native MS detection candidates only;
+  no affinity, abundance, DO-MS or measured pathway labels are inferred. DM
+  absence means no additional DM transduction relative to the declared engineered
+  CD74/CD80/DP background. Controls and nondetections are not affinity negatives.
+  No quantitative censor policy changes apply.
+- **Training/pretraining, losses and synthetic data:** none. No optimizer,
+  model selection or designated held-out outcome access. Validation/test metrics
+  and prediction dumps are inapplicable to unpartitioned source recovery.
+- **Hardware/runtime:** no GPU requested or used. At most two Modal CPU workers,
+  each 1 CPU / 2,048 MiB, requested region `eu`; actual CPU/location not recorded.
+  All 32 native files (6,397,444,096 bytes) pass original checksums. Summed
+  download time 836.31s is neither elapsed wall time nor billed runtime. Local
+  mzIdentML extraction/independent verification: 16.69s/11.85s; native:
+  3.71s/2.54s. The full fresh-output launcher replay independently passes and
+  reproduces all three record dumps byte-for-byte after decompression.
+- **Artifacts:** `results/publication.json` verifies the 58,883,809-byte archive
+  on Modal volume `presto-checkpoints` at
+  `2026-11-10_1454_codex_dp-dm-source-recovery/source-recovery-v1.tar.gz`, SHA256
+  `b8ecc4413dde2f76a271d81f6f8359580d11ea794bfd61f0ae13813888a1abcc`.
+  The original MSF files remain under the same family's `native-v1/` prefix.
+  PDFs, raw biological records and large databases are outside Git.
+- **Decision / next work:** the native confidence extraction is preferred;
+  there is no predictive winner. This closes the preceding audit's DPA/source
+  recovery uncertainty, but not training admission or biological qualification.
+  [Hitlist895](https://github.com/pirl-unc/hitlist/issues/895) owns shared
+  supplementary/provenance integration; [Presto155](https://github.com/pirl-unc/presto/issues/155)
+  owns overlap qualification and matched condition-aware training. A detailed
+  Hitlist implementation spec is preserved in `source-review/`. Existing
+  checkpoints and the binding/MS/processing performance objectives remain open.
+
+## 2026-11-10 — Shared DP/DM integration and partial identity embargo
+
+- **Agent/model:** Codex / GPT-6. Presto base `9a99bbf0`; Hitlist base `43e2266`;
+  executed dirty source snapshots are pinned in the reproduction bundle.
+- **Directory:** [2026-11-10_1535_codex_dp-dm-shared-integration](2026-11-10_1535_codex_dp-dm-shared-integration/README.md).
+- **Dataset/curation:** original PXD017154 / PMID33025005 native high-confidence,
+  unmodified canonical 10–512-aa DP captures, unique visible rank-1 match, complete
+  protein references, no-DP-control exclusion. Ten sample assets; exact DP pairs;
+  shared source origin with unknown physical specimen/donor. All 21,547 rows /
+  10,143 sequences pass common Hitlist export → Presto MS adapter with original
+  contributor evidence. DM absent 12,375 / present 9,172 relative to the declared
+  engineered background. [Hitlist PR898](https://github.com/pirl-unc/hitlist/pull/898)
+  publishes the data/curation at `4e700744`; release gates remain open.
+- **Identity results:** 8,338 rows share protected presentation/Atlas sequence
+  identities or contiguous 8-mers; 13,209 / 6,434 peptides clear those checks.
+  Independent replay verifies every row × 12 membership/eligibility fields.
+  Affinity/other reserved identities remain unchecked: **zero TRAIN additions**.
+- **Assay/output, censoring and synthetic contract:** positive MS detection only;
+  no affinity/abundance label from detections, controls or counts; no new bounds,
+  synthetic examples or loss. Exact chain and intervention evidence is retained
+  through the common source/model path.
+- **Training/pretraining/evaluation:** none; no optimizer, checkpoint selection
+  or designated held-out outcome access. Test identities alone are used for
+  embargo. Predictive validation/test metrics and dumps are inapplicable.
+- **Hardware/runtime:** local CPU only; no Modal GPU requested/observed.
+  Source/export audit 12.104s, identity audit 4.885s; audit peak RSS unmeasured.
+- **Software checks:** format/lint/pip check and wheel assets pass. Full local
+  Hitlist default suite 3,729 passed / 91 failed before the new census-test marker
+  correction; 9 baseline failures reproduced. [Hitlist897](https://github.com/pirl-unc/hitlist/issues/897)
+  owns current dependency compatibility. Post-fix isolated pytest was refused
+  by the unchanged host-memory guard; full/integration qualification is pending.
+- **Artifacts:** frozen `reproduce/` invocations/source snapshots, summary JSON/CSV
+  and compressed logs are committed. Modal volume `presto-checkpoints`,
+  `2026-11-10_1535_codex_dp-dm-shared-integration/shared-integration-v1.tar.gz`;
+  `results/publication.json` records archive/member hashes and verified readback.
+- **Preferred path/decision:** shared source integration with native evidence;
+  no predictive winner. Continue [Presto155](https://github.com/pirl-unc/presto/issues/155)
+  overlap qualification before a matched condition-aware fit. Existing biological
+  objectives and draft PR131 milestones remain open.
+
+  Hosted follow-up at Hitlist `4e700744`: Python3.14/published mhcgnomes3.70.2
+  unit suite finished 3,727 passed / 90 failed / 2 skipped in129.19s. The source
+  unit tests do not appear in the failure list. Known parsing/serotype/deprecated
+  access failures persist; #897 owns the fix. Other matrix arms were cancelled;
+  integration is pending. Failure list and complete compressed log are committed.
+
+## 2026-11-10 — Full DP/DM cohort embargo and MHC-by-condition capacity
+
+- **Agent/model:** Codex / GPT-6. Base4da30f74, projectione0759165, full auditb8913a69;
+  exact source snapshots and invocations in `reproduce/`.
+- **Directory:** [2026-11-10_1607_codex_dp-dm-cohort-qualification](2026-11-10_1607_codex_dp-dm-cohort-qualification/README.md).
+- **Data/curation:** 21,547 native high-confidence, unmodified, unique-rank DP
+  peptide–sample candidates from PXD017154/PMID33025005; original source policy
+  unchanged. Seventeen identity namespaces cover full reserved presentation
+  closure, Atlas, seven affinity cohorts and T-cell partition/drop/component
+  identities. Only explicit identity fields are decoded. Locked confirmation
+  observations and all biological held-out outcomes/predictions remain closed.
+- **Result:** 11,513 rows embargoed; **10,034 rows /4,871 peptides clear** known
+  identity checks, 3,175 fewer than the partial audit. Clear DM counts:6,058 absent
+  /3,976 present. Allotype rows:DP4011,275;DP4023,790;DP104,969. Paired DP402
+  retains1,573 absent/701present peptides (358both); DP10 retains1,995/924
+  (465both). DP401 has no absent arm. Zero rows are yet TRAIN-eligible.
+- **Verification:** all17 exact/core8/Hamming<=1 sets independently replay with
+  substitution enumeration; final row unions and artifact hashes independently
+  rechecked. Five focused software fixtures pass; Ruff passes.
+- **Structural probe:** existing staged model cannot express MHC-dependent DM
+  logit changes or condition-dependent register weights when other inputs are
+  fixed. Twenty-four artificial conditions across two seeds/both classes prove
+  exact processing-delta equality; max logit interaction7.45e-9roundoff versus
+  0.0012063in existing joint fusion. Affinity is context-invariant. This is
+  untrained capacity evidence, not predictive performance. [Issue157](https://github.com/pirl-unc/presto/issues/157).
+- **Training/pretraining/assay/loss/synthetic contract:** no fitting, optimizer or
+  biological labels added. Native MS positives only; no inferred affinity,
+  abundance or pathway target, no qualifier change. Synthetic strings belong
+  only to the artificial software probe, not a training/evaluation population.
+  Predictive validation/test metrics/dumps are inapplicable.
+- **Hardware/runtime:** two sequential Modal CPU jobs, each one8-CPU/16-GiB
+  container; no requested/observed GPU. Projection176.84s; full audit/replay122.47s.
+  CPU model/peak RSS unrecorded. Published affinity index has546,876rows.
+- **Artifacts:** Modal `presto-checkpoints`, family prefixes
+  `affinity-identities-v1/` and `cohort-audit-v1/`; compact receipts, tables,
+  logs, capacity outputs and source snapshots committed. Downloaded artifacts
+  match the publication receipt and were not regenerated after log timeouts.
+- **Preferred next action:** retain the qualified paired support; compare shared
+  MHC-conditioned selection against masked/current-staged controls. No scientific
+  winner yet. Hitlist release and predeclared split/background/fit gates remain
+  open; [Presto155](https://github.com/pirl-unc/presto/issues/155) and157 own them.

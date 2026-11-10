@@ -1,0 +1,16 @@
+{
+  "agent": "Codex / GPT-6",
+  "date": "2026-11-10",
+  "git_commit_at_audit": "e554e7d3e3fa0b0e472f96e600140c749d4a804c",
+  "git_dirty": true,
+  "dirty_scope": "processing-condition adapter/tests, plan, tasks/todo and this new audit family",
+  "publication_base": "189fe2761228833a4e48cba38190b1bec504e521",
+  "argv": ["/Users/iskander/code/shared-virtual-env/bin/python", "experiments/2026-11-10_1420_codex_processing-conditions/code/audit.py", "--hitlist", "/Users/iskander/code/hitlist", "--output", "experiments/2026-11-10_1420_codex_processing-conditions/results"],
+  "cwd": "/private/tmp/presto-mhc2-condition-audit-20261110",
+  "environment_overrides": {},
+  "hardware": "local CPU; no Modal/GPU",
+  "data_contract": "curated arm metadata only; no outcomes or split access",
+  "test_split": "not applicable: no model evaluation",
+  "training": "none",
+  "synthetic_data": "none (unit tests separately use artificial fixtures)"
+}

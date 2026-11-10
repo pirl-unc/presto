@@ -1,0 +1,34 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "git_commit": "038ffbccd37dbc0e5799e4600e1098a465c53e5e",
+  "dirty_scope": "new metadata admission audit and plan only",
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "experiments/2026-11-10_1431_codex_ms-condition-contrasts/reproduce/source/audit.py",
+    "--source",
+    "/private/tmp/presto-ms-condition-contrasts-20261110/canonical-ms-export.parquet",
+    "--catalog",
+    "/Users/iskander/code/presto/artifacts/2026-11-07_1645_codex_unified-data-audit/upload/mhc-full-seqs.csv",
+    "--output",
+    "experiments/2026-11-10_1431_codex_ms-condition-contrasts/results",
+    "--observations",
+    "/private/tmp/presto-ms-condition-contrasts-20261110/condition-observations.jsonl.gz"
+  ],
+  "cwd": "/private/tmp/presto-mhc2-condition-audit-20261110",
+  "environment": {
+    "PYTHONPATH": "/private/tmp/presto-conditions-import"
+  },
+  "source_pins": {
+    "experiments/2026-11-10_1431_codex_ms-condition-contrasts/reproduce/source/audit.py": "7eabd0c72deeccf9c5e57df3128ea4d6673cf7bad5965ae02cfe7591f3a8adb9",
+    "data/modular_hitlist_ms.py": "78eb36fc1398c0554a166db661bc598a16a6b37c764666821ac9c9dc2abea546",
+    "data/modular_hitlist.py": "cd13aca5168b4d3ebdb167c858c35fa39540365f32dcc4daeb82c45b22c80137",
+    "data/modular.py": "199bf94dc4337b235197a4d1afd41f41c74978c44a33bfa08ec944edc2fd51cf",
+    "data/modular_context.py": "fe98a9b7716f1fae2197133e08f1ff4dbc56c9bd156efb41e0586c1272c01935"
+  },
+  "hardware": {
+    "gpu": null,
+    "cpu_threads": 1
+  },
+  "training": "none; source admission only",
+  "test_policy": "No designated TEST, confirmation or prediction files accessed; native positive source inventory is unsplit."
+}

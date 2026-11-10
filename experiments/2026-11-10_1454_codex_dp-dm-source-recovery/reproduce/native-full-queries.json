@@ -1,0 +1,14 @@
+{
+  "target_psms": "SELECT PeptideID, SpectrumID, ConfidenceLevel, SearchEngineRank, Hidden, Sequence FROM Peptides ORDER BY PeptideID",
+  "decoy_counts": "SELECT ConfidenceLevel, COUNT(*) FROM Peptides_decoy GROUP BY ConfidenceLevel",
+  "scores": "SELECT ScoreID, ScoreName, FriendlyName, Description FROM ProcessingNodeScores",
+  "confidence_parameters": "SELECT ParameterName, ParameterValue, ValueDisplayString FROM ProcessingNodeParameters WHERE lower(ParameterName) LIKE '%fdr%' OR lower(ParameterName) LIKE '%confiden%' OR lower(ParameterName) LIKE '%target%' OR lower(FriendlyName) LIKE '%false%'",
+  "custom_fields": "SELECT FieldID, DisplayName, DataPurpose FROM CustomDataFields",
+  "nodes": "SELECT ProcessingNodeNumber, NodeName, FriendlyName FROM ProcessingNodes",
+  "native_modifications": "SELECT a.PeptideID,a.Position,a.AminoAcidModificationID,m.ModificationName,m.UnimodAccession,m.DeltaMass,m.PositionType,m.IsSubstitution FROM PeptidesAminoAcidModifications a LEFT JOIN AminoAcidModifications m ON m.AminoAcidModificationID=a.AminoAcidModificationID ORDER BY a.PeptideID,a.Position",
+  "native_terminal_modifications": "SELECT t.PeptideID,t.TerminalModificationID,m.ModificationName,m.UnimodAccession,m.DeltaMass,m.PositionType FROM PeptidesTerminalModifications t LEFT JOIN AminoAcidModifications m ON m.AminoAcidModificationID=t.TerminalModificationID ORDER BY t.PeptideID",
+  "native_protein_mappings": "SELECT p.PeptideID,p.ProteinID FROM PeptidesProteins p ORDER BY p.PeptideID,p.ProteinID",
+  "native_protein_annotations": "SELECT ProteinID,ProteinAnnotationID,Description,TaxonomyID FROM ProteinAnnotations ORDER BY ProteinID,ProteinAnnotationID",
+  "file_identities": "SELECT FileID,FileName,FileType FROM FileInfos",
+  "independent_high_counts": "SELECT ConfidenceLevel,Hidden,SearchEngineRank,COUNT(*),COUNT(DISTINCT Sequence) FROM Peptides GROUP BY ConfidenceLevel,Hidden,SearchEngineRank"
+}
