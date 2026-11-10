@@ -76,3 +76,9 @@ and durable artifact receipts; update experiment_log.md and Presto155. Predictiv
 validation/test metrics and dumps are inapplicable: no model fit or held-out
 outcome use occurs. No release merge or model-improvement claim follows from
 admission. Other Atlas/T-cell work remains owned by the independent worktree.
+
+Pre-execution source-identity detail: include the same frozen T-cell split's
+`component-membership.jsonl.gz`, projecting only component_id, base_partition,
+pmid and doi. Row membership alone omits PMID, so it cannot prove absence of a
+shared source study. A protected component matching PMID33025005 embargoes the
+entire DP/DM source. Preserve this check independently of peptide overlap.
