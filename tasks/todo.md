@@ -14937,7 +14937,12 @@ Spec: `experiments/agents/codex/plans/2026-11-09_unified-state-report-v2.md`.
 Plan: `experiments/agents/codex/plans/2026-11-10_processing-condition-preservation.md`.
 
 - [x] Inspect current shared code, Hitlist condition schema and existing issues.
-- [ ] Register metadata-only source audit with pinned inputs and arm/study counts.
-- [ ] Preserve four dropped intervention families in the common MS adapter.
-- [ ] Verify source semantics, common-model gradients and affinity invariance.
+- [x] Register metadata-only source audit with pinned inputs and arm/study counts.
+- [x] Preserve four dropped intervention families in the common MS adapter.
+- [x] Verify source semantics, common-model gradients and affinity invariance.
 - [ ] Record review, follow-up issue and publish the scoped fix.
+
+Review: source audit covers 63 curated arms; actual admitted peptide counts and
+scientific benefit remain open in #155. On the PR131 publication base, 219
+focused tests pass, all repository lint/format checks pass, and independent
+metadata replay matches. No current Atlas/T-cell experiment changes included.

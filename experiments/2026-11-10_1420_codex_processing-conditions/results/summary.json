@@ -1,0 +1,73 @@
+{
+  "contract": "curation metadata only; no export join, peptide count, outcome, or split access",
+  "elapsed_seconds": 0.5479941249941476,
+  "fields": {
+    "condition_antigen_exposure": {
+      "n_arms": 4,
+      "n_arms_by_annotation_status": {
+        "annotated": 4
+      },
+      "n_arms_by_declared_mhc_class": {
+        "I": 2,
+        "I+II": 1,
+        "II": 1
+      },
+      "n_studies": 4
+    },
+    "condition_genetic_variants": {
+      "n_arms": 4,
+      "n_arms_by_annotation_status": {
+        "annotated": 2,
+        "partial": 2
+      },
+      "n_arms_by_declared_mhc_class": {
+        "I": 4
+      },
+      "n_studies": 3
+    },
+    "condition_infection": {
+      "n_arms": 46,
+      "n_arms_by_annotation_status": {
+        "annotated": 44,
+        "partial": 2
+      },
+      "n_arms_by_declared_mhc_class": {
+        "I": 31,
+        "I+II": 7,
+        "II": 8
+      },
+      "n_studies": 20
+    },
+    "condition_stimulation": {
+      "n_arms": 13,
+      "n_arms_by_annotation_status": {
+        "annotated": 12,
+        "partial": 1
+      },
+      "n_arms_by_declared_mhc_class": {
+        "I": 5,
+        "I+II": 7,
+        "II": 1
+      },
+      "n_studies": 8
+    }
+  },
+  "hitlist_commit": "43e226621434a483141764ed54faba725bbb3869",
+  "inputs": {
+    "hitlist/conditions.py": {
+      "bytes": 36918,
+      "sha256": "04841efe89ce652c93e1acf5ceb72070705adbab375c105ee0e2c09937a63b91"
+    },
+    "hitlist/data/condition_vocabulary.yaml": {
+      "bytes": 6804,
+      "sha256": "e46e37742428a5fea2d7167f88da56ac4a3b570d0a758585a01c0b5880e63ed2"
+    },
+    "hitlist/data/pmid_overrides.yaml": {
+      "bytes": 746730,
+      "sha256": "e6c68558da6cdb78ae2c3f11ae48fa96a4b9a6b3979cd43ea16abf87148e5afe"
+    }
+  },
+  "n_arms_with_any_added_field": 63,
+  "n_curated_arms": 807,
+  "n_curated_studies": 216
+}
