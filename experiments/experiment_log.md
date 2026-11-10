@@ -6263,3 +6263,39 @@ smoke-tested.
   is unmeasured; [#155](https://github.com/pirl-unc/presto/issues/155) specifies the
   source-matched, condition-aware training comparison. Existing upstream
   DM/DO/arm-identity issues are reused rather than duplicated.
+
+## 2026-11-10 — Native MS condition contrasts and source gaps
+
+- **Agent/model:** Codex / GPT-6; source `038ffbcc`.
+- **Directory:** [2026-11-10_1431_codex_ms-condition-contrasts](2026-11-10_1431_codex_ms-condition-contrasts/README.md).
+- **Dataset/curation:** frozen Hitlist2.1.3 canonical native MS export, 5,440,019
+  rows; source/catalog hashes and the exact invocation are in the reproducibility
+  bundle. Shared unique-arm, chemistry, candidate-set and explicit-factor policy;
+  declared ordinary human DRA reference unchanged. No current-YAML overlay.
+- **Counts:** 649,176 rows have qualified categorical factors; 139,434 pass the
+  shared molecular/MS adapter (102,939 I; 36,495 II). These are unsplit source
+  observations, not new TRAIN examples or independent specimens. Output remains
+  `predict/unpartitioned` with an explicit not-train-eligible marker.
+- **Condition result:** the only class-II present/absent candidate is CIITA:
+  35,071 transduced / 538 parental rows. Upstream primary-source curation calls
+  the parental class-II identifications probable background. Do not fit them as
+  positive pMHCs or measured affinity negatives; source qualification is required.
+- **Coverage bottleneck:** 305,607 class-II condition-bearing rows are deferred
+  for unknown forms (290,461 Stražar; 15,146 Abelin cross-presentation). Filed
+  [Hitlist896](https://github.com/pirl-unc/hitlist/issues/896) for original-form /
+  preparation provenance after confirming #854's importer fix is already done.
+- **New source:** [Hitlist895](https://github.com/pirl-unc/hitlist/issues/895)
+  covers PXD017154/PMID33025005 paired DM/HLA-DP data. Public metadata and a
+  community SDRF with 32 acquisitions / 11 source labels are preserved by hash.
+  DPA identity and primary run mapping remain unresolved; no raw spectra or
+  processed biological outcomes were downloaded from that source.
+- **Verification/runtime:** 54.58s local CPU audit; independent 14.43s replay
+  matched 139,434 source rows × 56 fields and explicit claims/contrast counts.
+  Raw audit observations remain hash-pinned outside Git; compact results committed.
+- **Training/pretraining, loss, assays, synthetic data and evaluation:** none;
+  positive native MS source admission only. No new target, bound or affinity loss,
+  no synthetic label, GPU, predictive validation/test metrics or prediction dumps.
+  No designated TEST, confirmation or comparator prediction file was accessed.
+- **Decision:** source recovery and paired-context qualification precede the
+  condition-aware fit in Presto155. No scientific performance winner is claimed;
+  all binding/MS/processing objectives remain active.

@@ -418,3 +418,19 @@ cover shared stability decoding, MHC-II coverage, assay-level qualification and
 external benchmarks, exposure/schedule/ranking experiments, and explicitly
 synthetic affinity priors. Existing source qualification stays in Hitlist
 #875/#871/#721/#785. No new fit has been launched for these follow-ups.
+
+## 2026-11-10 — Follow condition audit into source recovery
+
+- [ ] Recover PXD017154 processed results plus primary run/construct mapping,
+  especially DPA identity, using Hitlist895; implement through shared Hitlist
+  evidence and common Presto context, then qualify a real DM contrast cohort.
+- [ ] Recover original Stražar/MAPTAC forms and preparation provenance under
+  Hitlist896. Current condition-qualified class-II deferrals are 290,461 and
+  15,146 rows; do not blanket-impute unmodified or confuse preparation chemistry
+  with native pMHC chemistry.
+- [ ] Fit and evaluate the preregistered condition-aware comparison in Presto155
+  after source/independence qualification. The CIITA parental candidate is
+  probable background and cannot serve as ordinary positive-pMHC training.
+
+Evidence: `experiments/2026-11-10_1431_codex_ms-condition-contrasts/README.md`.
+Full binding, ligand and processing improvement objective remains active.

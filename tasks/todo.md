@@ -14946,3 +14946,16 @@ Review: source audit covers 63 curated arms; actual admitted peptide counts and
 scientific benefit remain open in #155. On the PR131 publication base, 219
 focused tests pass, all repository lint/format checks pass, and independent
 metadata replay matches. No current Atlas/T-cell experiment changes included.
+
+## 2026-11-10 — Quantify native MS condition contrasts
+
+Plan: `experiments/agents/codex/plans/2026-11-10_ms-condition-contrasts.md`.
+- [x] Locate frozen canonical export and original MHC catalog receipts.
+- [x] Verify inputs and inventory source-qualified condition observations.
+- [x] Identify and independently verify actual class-II candidate contrasts.
+- [x] Record scientific next step, source gaps and canonical audit artifacts.
+
+Review: all 139,434 admitted rows independently replayed; only class-II paired
+factor is confounded by probable-background parental identifications. No fit
+launched from that candidate. Hitlist895/896 track the precise new source and
+large supplementary chemistry gap; Presto155 remains the next scientific gate.
