@@ -15019,3 +15019,11 @@ PR131 remains open/draft; the handoff is linked in comment6779147294. Hosted
 Hitlist Python3.14 confirms 90 unit failures on published mhcgnomes3.70.2;
 logs/failure list are preserved and #897 tracks resolution. Publication is
 complete; neither source release nor scientific qualification is complete.
+
+## 2026-11-10 — Complete DP/DM identity qualification
+
+Plan: `experiments/agents/codex/plans/2026-11-10_dp-dm-cohort-qualification.md`.
+- [ ] Pin full reserved presentation, affinity and T-cell identity namespaces.
+- [ ] Materialize reusable outcome-free affinity indexes and audit all overlaps.
+- [ ] Independently verify per-row embargo and per-condition remaining support.
+- [ ] Record decision and next matched scientific experiment; publish evidence.
