@@ -1,7 +1,11 @@
 """Artificial fixtures for source semantics; no biological performance claims."""
 
-import pytest
+from dataclasses import replace
 
+import pytest
+import torch
+
+from presto.data.modular import Observation
 from presto.data.modular_hitlist import AdmissionError, HumanMHCCatalog
 from presto.data.modular_hitlist_ms import (
     class_ii_ms_observation,
@@ -290,3 +294,127 @@ def test_only_explicit_none_supplies_absence_within_study():
     )
     with pytest.raises(AdmissionError, match="contradictory_none_condition"):
         study_factor_vocabulary([raw(condition_drugs="none;drug_a")])
+
+
+NEW_CONDITIONS = {
+    "condition_genetic_variants": "GENE_A variant_1",
+    "condition_infection": "organism_a;organism_b",
+    "condition_stimulation": "stimulus_a",
+    "condition_antigen_exposure": "peptide_pulse",
+}
+NEW_FACTORS = {
+    "genetic_variant:GENE_A variant_1",
+    "infection:organism_a",
+    "infection:organism_b",
+    "stimulation:stimulus_a",
+    "antigen_exposure:peptide_pulse",
+}
+
+
+def test_processing_condition_facts_survive_admission_and_roundtrip(catalog):
+    row = admit(catalog, **NEW_CONDITIONS)
+    assert NEW_FACTORS <= set(row.context.interventions)
+    assert not row.context.processing_pathways and not row.context.components
+    assert row.context.provenance["policy"] == "unique_arm_explicit_tokens_v2"
+    for name in NEW_FACTORS:
+        assertion = row.context.interventions[name]
+        assert assertion.state == "present"
+        assert (
+            assertion.evidence["source_value"] == NEW_CONDITIONS[assertion.evidence["source_field"]]
+        )
+        assert assertion.evidence["reference"] == "artificial software fixture"
+    assert Observation.from_dict(row.to_dict()) == row
+
+
+@pytest.mark.parametrize(
+    "field,prefix",
+    [
+        ("condition_genetic_variants", "genetic_variant"),
+        ("condition_infection", "infection"),
+        ("condition_stimulation", "stimulation"),
+    ],
+)
+def test_new_condition_absence_requires_explicit_none_in_same_family(field, prefix):
+    treated = raw(**{field: "factor_a"})
+    control = raw(**{field: "none"})
+    vocabulary = study_factor_vocabulary([treated, control])["fixture-study"]
+    name = f"{prefix}:factor_a"
+    assert source_condition(control, vocabulary).interventions[name].state == "absent"
+    for value in (None, "", "unknown", "unspecified"):
+        assert name not in source_condition(raw(**{field: value}), vocabulary).interventions
+    assert not any(
+        key.startswith("antigen_exposure:")
+        for key in source_condition(control, vocabulary).interventions
+    )
+
+
+def test_antigen_exposure_has_no_source_supported_none():
+    value = raw(condition_antigen_exposure="none")
+    with pytest.raises(AdmissionError, match="unsupported_antigen_exposure_absence"):
+        study_factor_vocabulary([value])
+    with pytest.raises(AdmissionError, match="unsupported_antigen_exposure_absence"):
+        source_condition(value, {})
+
+
+@pytest.mark.parametrize(
+    "changes",
+    [
+        {"sample_attribution": "pmid_ambiguous"},
+        {"condition_status": "partial"},
+        {"condition_status": "mixed"},
+        {"condition_evidence": "unknown"},
+        {"condition_reference": ""},
+    ],
+)
+def test_new_condition_facts_keep_existing_evidence_gates(catalog, changes):
+    row = admit(catalog, **(NEW_CONDITIONS | changes))
+    assert not row.context.interventions
+    assert row.provenance["raw_record"]["condition_antigen_exposure"] == "peptide_pulse"
+
+
+@pytest.mark.parametrize("mhc_class", ["I", "II"])
+@pytest.mark.parametrize("staging", ["legacy_joint", "affinity_downstream"])
+def test_admitted_conditions_train_common_cellular_path_without_changing_affinity(
+    catalog, mhc_class, staging
+):
+    from test_modular_hitlist import reference
+    from presto.models.modular import ModularConfig, ModularPresto
+    from presto.training.modular import train_step
+
+    changes = dict(NEW_CONDITIONS)
+    if mhc_class == "I":
+        catalog = HumanMHCCatalog([reference()])
+        changes.update(mhc_class="I", peptide="ACDEFGHIK", mhc_allele_set="HLA-A*02:01")
+    source = raw(**changes)
+    row = ms_observation(source, catalog, source_sha256="a" * 64, ordinal=0, study_factors={})
+    row = replace(row, split="train", group_id="artificial-training-fixture")
+    control_source = source | {field: "" for field in NEW_CONDITIONS}
+    control = replace(row, context=source_condition(control_source, {}), value=0)
+    network = ModularPresto(
+        ModularConfig(
+            endpoints=("ic50", "elution_observation"),
+            mhc_classes=(mhc_class,),
+            dropout=0,
+            interventions=tuple(sorted(row.context.interventions)),
+            elution_staging=staging,
+            elution_affinity_endpoint="ic50" if staging == "affinity_downstream" else None,
+        )
+    ).eval()
+    a, b = network([row, control])
+    assert not torch.allclose(a.value, b.value)
+    torch.testing.assert_close(
+        a.components["ms_response"], b.components["ms_response"], rtol=0, atol=0
+    )
+    binding = replace(row, endpoint="ic50", value=10, unit="nM")
+    a, b = network([binding, replace(binding, context=control.context)])
+    torch.testing.assert_close(a.value, b.value, rtol=0, atol=0)
+    optimizer = torch.optim.AdamW(network.parameters(), lr=0.001)
+    train_step(network, optimizer, [row, control], {})
+    parameter = (
+        "elution_processing.0.weight"
+        if staging == "affinity_downstream"
+        else "context_fusion.0.weight"
+    )
+    labels = network.feature_layout[parameter][1]
+    trained = {labels[i] for i in network.trained_features[parameter]}
+    assert {f"intervention:{name}:present" for name in NEW_FACTORS} <= trained

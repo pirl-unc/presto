@@ -14931,3 +14931,13 @@ Spec: `experiments/agents/codex/plans/2026-11-09_unified-state-report-v2.md`.
 - [x] Render twice and prove byte equality; all 41 report files and checksums
   match.
 - [x] Register the report; update PR #154 after the closure commit is pushed.
+
+## 2026-11-10 — Preserve qualified processing-condition inputs
+
+Plan: `experiments/agents/codex/plans/2026-11-10_processing-condition-preservation.md`.
+
+- [x] Inspect current shared code, Hitlist condition schema and existing issues.
+- [ ] Register metadata-only source audit with pinned inputs and arm/study counts.
+- [ ] Preserve four dropped intervention families in the common MS adapter.
+- [ ] Verify source semantics, common-model gradients and affinity invariance.
+- [ ] Record review, follow-up issue and publish the scoped fix.

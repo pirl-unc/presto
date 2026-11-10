@@ -6235,3 +6235,31 @@ preservation near zero. Presentation remains similar rather than superior.
 Both affinity comparator gates, PRIME accuracy, and independent all-task TEST
 remain open. PRIME 2.1 through mhctools/MixMHCpred 3.0 is operational but only
 smoke-tested.
+
+## 2026-11-10 — Preserve processing-condition inputs from Hitlist
+
+- **Agent/model:** Codex / GPT-6.
+- **Directory:** [2026-11-10_1420_codex_processing-conditions](2026-11-10_1420_codex_processing-conditions/README.md).
+- **Source contract:** Hitlist `43e2266`, hash-verified arm curation only: 216
+  studies / 807 arms. No outcomes, TRAIN/validation/TEST table, or confirmation
+  predictions accessed. Full hashes and source-arm CSV are in the directory.
+- **Finding:** infection (46 arms / 20 studies), stimulation (13 / 8), antigen
+  exposure (4 / 4), and genetic variants (4 / 3) were retained only in provenance
+  by the shared MS adapter. 63 distinct arms carry one or more such fields.
+  These are metadata counts, not peptide counts or newly qualified examples.
+- **Change:** retain those categorical annotations through the existing common
+  cellular input path for both MHC classes, with unchanged unique-arm/evidence
+  gates and explicit-absence semantics. Do not infer active pathways or measured
+  component activity. Frozen cohorts and checkpoints remain unchanged.
+- **Verification:** source audit took 0.548 seconds on local CPU; reproduction
+  bundle freezes the script/invocation. Regression tests exercise real shared
+  forward/training paths on artificial fixtures. See README and final test receipt.
+- **Training/pretraining/synthetic-data/loss/assay mapping:** no biological fit,
+  synthetic training labels, loss or qualifier changes. Source categorical
+  conditions feed cellular context; purified affinity and MS response remain
+  separate. No GPU requested or used. No predictive validation/test metrics or
+  dumps apply to this metadata-only audit.
+- **Decision:** preserve source facts in the common adapter. Biological benefit
+  is unmeasured; [#155](https://github.com/pirl-unc/presto/issues/155) specifies the
+  source-matched, condition-aware training comparison. Existing upstream
+  DM/DO/arm-identity issues are reused rather than duplicated.
