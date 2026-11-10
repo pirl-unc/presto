@@ -14959,3 +14959,21 @@ Review: all 139,434 admitted rows independently replayed; only class-II paired
 factor is confounded by probable-background parental identifications. No fit
 launched from that candidate. Hitlist895/896 track the precise new source and
 large supplementary chemistry gap; Presto155 remains the next scientific gate.
+
+## 2026-11-10 — Recover paired HLA-DP/DM source data
+
+Spec: `experiments/agents/codex/plans/2026-11-10_dp-dm-source-recovery.md`.
+- [x] Retrieve complete inventory and primary construct/sample evidence.
+- [x] Recover processed source forms/confidence and map actual acquisitions.
+- [x] Independently verify source extraction and identify admission gaps.
+- [ ] Publish reusable evidence and update Hitlist895/Presto155.
+
+Review: all 32 native sources are checksum-verified. Independent replay covers
+69,327 original high-confidence PSMs and 21,634 peptide–sample records; the fresh
+launcher replay also reproduces all three biological record dumps exactly after
+decompression. There are 21,547 conservative DP candidates / 10,143 distinct
+peptides. All three exact DP pairs resolve through the common MHC catalog.
+Converted pass flags include low-confidence/decoy matches and are unsuitable
+for admission. Raw evidence is durably verified on Modal; no GPU, fit or new
+performance claim. Shared Hitlist integration and split/overlap qualification
+remain open, with the implementation spec included in this family's handoff.

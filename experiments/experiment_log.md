@@ -6299,3 +6299,67 @@ smoke-tested.
 - **Decision:** source recovery and paired-context qualification precede the
   condition-aware fit in Presto155. No scientific performance winner is claimed;
   all binding/MS/processing objectives remain active.
+
+## 2026-11-10 — Recover paired HLA-DP/DM source observations
+
+- **Agent/model:** Codex / GPT-6; clean base `04a9d2d9`, then an uncommitted
+  experiment-local source snapshot. Runtime model code is unchanged.
+- **Directory:** [2026-11-10_1454_codex_dp-dm-source-recovery](2026-11-10_1454_codex_dp-dm-source-recovery/README.md).
+  The frozen requests, SQL, launch commands, failed attempts and independent
+  verifiers are under `reproduce/`; the exact replay environment is in
+  `reproduce/launch.json`.
+- **Source/curation:** PMID33025005 / PXD017154, all 32 original processed MSF
+  databases and 32 mzIdentML exports. Primary supplemental Methods resolves
+  DP401/402 to DPA1*01:03 and DP10 to DPA1*02:01. All three exact heterodimers
+  resolve through the existing common MHC catalog without partner imputation.
+  Original acquisition sample labels match the SDRF. Ten DP biological samples
+  and one no-DP control retain their acquisition and replicate lineage.
+- **Confidence finding:** all 121,783 converted PSMs say `passThreshold=true`,
+  including 2,017 records with decoy mappings. In the pilot this also includes
+  243 native low-confidence targets. Use the original native high-confidence
+  category and explicit `TargetFPRHigh=0.01`, not the converted boolean.
+- **Admission contract:** retain all 69,327 native high-confidence targets as
+  source evidence. The conservative candidate tier requires an unmodified
+  canonical 10–512-aa peptide, unique visible rank-1 match, complete original
+  protein references, DP capture and no sequence overlap with the no-DP control.
+  The resulting 57,259 candidate PSMs collapse to 21,634 peptide–sample records;
+  excluding 17 control rows and 70 overlapping DP rows leaves **21,547 candidate
+  rows / 10,143 distinct peptides**. They are unpartitioned and not train-eligible.
+
+| Source condition | Biological samples | Candidate peptide–sample rows |
+|---|---:|---:|
+| DP10, DM absent | 2 | 6,604 |
+| DP10, DM present | 2 | 3,415 |
+| DP402, DM absent | 2 | 5,771 |
+| DP402, DM present | 2 | 2,558 |
+| DP401, DM present | 2 | 3,199 |
+
+- **Assay/output and qualifier policy:** native MS detection candidates only;
+  no affinity, abundance, DO-MS or measured pathway labels are inferred. DM
+  absence means no additional DM transduction relative to the declared engineered
+  CD74/CD80/DP background. Controls and nondetections are not affinity negatives.
+  No quantitative censor policy changes apply.
+- **Training/pretraining, losses and synthetic data:** none. No optimizer,
+  model selection or designated held-out outcome access. Validation/test metrics
+  and prediction dumps are inapplicable to unpartitioned source recovery.
+- **Hardware/runtime:** no GPU requested or used. At most two Modal CPU workers,
+  each 1 CPU / 2,048 MiB, requested region `eu`; actual CPU/location not recorded.
+  All 32 native files (6,397,444,096 bytes) pass original checksums. Summed
+  download time 836.31s is neither elapsed wall time nor billed runtime. Local
+  mzIdentML extraction/independent verification: 16.69s/11.85s; native:
+  3.71s/2.54s. The full fresh-output launcher replay independently passes and
+  reproduces all three record dumps byte-for-byte after decompression.
+- **Artifacts:** `results/publication.json` verifies the 58,883,809-byte archive
+  on Modal volume `presto-checkpoints` at
+  `2026-11-10_1454_codex_dp-dm-source-recovery/source-recovery-v1.tar.gz`, SHA256
+  `b8ecc4413dde2f76a271d81f6f8359580d11ea794bfd61f0ae13813888a1abcc`.
+  The original MSF files remain under the same family's `native-v1/` prefix.
+  PDFs, raw biological records and large databases are outside Git.
+- **Decision / next work:** the native confidence extraction is preferred;
+  there is no predictive winner. This closes the preceding audit's DPA/source
+  recovery uncertainty, but not training admission or biological qualification.
+  [Hitlist895](https://github.com/pirl-unc/hitlist/issues/895) owns shared
+  supplementary/provenance integration; [Presto155](https://github.com/pirl-unc/presto/issues/155)
+  owns overlap qualification and matched condition-aware training. A detailed
+  Hitlist implementation spec is preserved in `source-review/`. Existing
+  checkpoints and the binding/MS/processing performance objectives remain open.

@@ -1,0 +1,10 @@
+{
+  "purpose": "shared Hitlist integration after verified native extraction",
+  "source_identity": "PXD017154 and PMID33025005; all 32 public original result files",
+  "chemistry": "row-qualified native amino-acid and terminal modifications; no blanket sequence-based imputation",
+  "candidate_policy": "ConfidenceLevel=3 with explicit native TargetFPRHigh=.01; unique visible rank-1; canonical unmodified 10-512 aa; control overlap flagged",
+  "replicates": "preserve 32 acquisition identifiers and 11 biological-source labels; one CSV per biological sample avoids supplementary file/peptide/MHC identity collapsing different specimens",
+  "condition_scope": "additional DM transduction relative to the primary-described CD74/CD80/HLA-DP HeLa background; keep common background explicit, do not describe all historical transductions as absent",
+  "quantities": "no abundance inferred from Mascot scores or PSM counts; published Progenesis quantity tables not in the 193-file archive",
+  "test_status": "no predictive evaluation; cohort remains unpartitioned until source/peptide overlap and prospective comparison are fixed"
+}

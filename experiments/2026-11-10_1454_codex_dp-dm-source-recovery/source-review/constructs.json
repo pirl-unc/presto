@@ -1,0 +1,31 @@
+{
+  "source": "https://ars.els-cdn.com/content/image/1-s2.0-S000649712100313X-mmc1.pdf",
+  "source_sha256": "1ed9901a59d79fa78f12162a38a10bd17384806b8634a28651511eb71e5a6d3e",
+  "locator": "Supplemental Methods, p2, Cell lines, antibodies, and flow cytometry",
+  "verified_by": "text and rendered page inspection",
+  "constructs": {
+    "DP401": {
+      "alpha": "HLA-DPA1*01:03",
+      "beta": "HLA-DPB1*04:01"
+    },
+    "DP402": {
+      "alpha": "HLA-DPA1*01:03",
+      "beta": "HLA-DPB1*04:02"
+    },
+    "DP10": {
+      "alpha": "HLA-DPA1*02:01",
+      "beta": "HLA-DPB1*10:01"
+    }
+  },
+  "cell_line": "HeLa",
+  "shared_transductions": [
+    "CD74",
+    "CD80",
+    "HLA-DP alpha/beta"
+  ],
+  "DM_negative_then_DM_alpha_beta_transduced": true,
+  "DO_immunopeptidomes_reported": false,
+  "DO_note": "DM/DO cells described for cellular assays; do not assume DO arm present in these MS acquisitions",
+  "confidence_protocol": "High-confidence peptide identifications, FDR<1%, peptide length >9 (Methods p3)",
+  "admission_state": "source_only_pending_confidence_and_independence"
+}

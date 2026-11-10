@@ -1,0 +1,21 @@
+{
+  "sample": "L20192001657a / DP401_DM_A1",
+  "n_converted_psms": 1909,
+  "converted_passThreshold_true": true,
+  "native_label_counts_of_converted_psms": {
+    "high_native": 1662,
+    "low_native": 243,
+    "not_native_target": 4
+  },
+  "n_native_high_psms": 1672,
+  "n_native_high_psms_absent_from_conversion": 10,
+  "native_high_fdr_parameter": 0.01,
+  "native_middle_fdr_parameter": 0.05,
+  "converted_threshold_literal": "10",
+  "all_converted_mapping_decoy_state_counts": {
+    "false": 119766,
+    "true": 2017
+  },
+  "disposition": "Use original native confidence and forms; do not treat mzIdentML passThreshold as the published high-confidence filter",
+  "confidence_level_semantics_source": "https://github.com/PRIDE-Archive/pride-converter-2/wiki/ProteomeDiscoverer"
+}

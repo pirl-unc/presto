@@ -1,0 +1,866 @@
+[
+  {
+    "call_id": "fc-01M73H6BW54S72D2NHAVF77TMN",
+    "source_file": "L20192001657a.msf",
+    "spawned_unix": 1794341285.7087371,
+    "queries": "native-full-queries.json",
+    "gpu": null,
+    "status": "completed",
+    "receipt": {
+      "cpu": 1,
+      "download_seconds": 20.51473879814148,
+      "gpu": null,
+      "n_bytes": 70082560,
+      "region": "eu",
+      "sha1": "78b415fc4ead0d0c4f0f5bf7e70df1b3063f3e2d",
+      "sha256": "2a2072b6abdbca00063d639d04c75718312502419627782be1caf3a18df7781b",
+      "source": {
+        "expected_sha1": "78b415fc4ead0d0c4f0f5bf7e70df1b3063f3e2d",
+        "max_bytes": 70082560,
+        "name": "L20192001657a.msf",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2022/11/PXD017154/L20192001657a.msf"
+      }
+    },
+    "n_target_psms": 3204,
+    "n_high_psms": 1672,
+    "local_result": "/private/tmp/presto-dp-dm-source-20261110/native-results/L20192001657a.msf.json.gz",
+    "result_sha256": "369bfd6bd4136f0da2ffc62de4885a1f80e4a89b92eaf865cad3a668624b13d8"
+  },
+  {
+    "call_id": "fc-01M73H6BYDY1FE0HE3MT04Q7D2",
+    "source_file": "L20192001657c.msf",
+    "spawned_unix": 1794341285.793658,
+    "queries": "native-full-queries.json",
+    "gpu": null,
+    "status": "completed",
+    "receipt": {
+      "cpu": 1,
+      "download_seconds": 21.28357720375061,
+      "gpu": null,
+      "n_bytes": 177209344,
+      "region": "eu",
+      "sha1": "7223206788a5d9b9e4b69cd7aa0c16252b89e547",
+      "sha256": "504dac1c2e1b9d15d07a46a4995658331733a5a45be9501754d55cf8815d95c0",
+      "source": {
+        "expected_sha1": "7223206788a5d9b9e4b69cd7aa0c16252b89e547",
+        "max_bytes": 177209344,
+        "name": "L20192001657c.msf",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2022/11/PXD017154/L20192001657c.msf"
+      }
+    },
+    "n_target_psms": 7597,
+    "n_high_psms": 3361,
+    "local_result": "/private/tmp/presto-dp-dm-source-20261110/native-results/L20192001657c.msf.json.gz",
+    "result_sha256": "3fe45d5600313e3efdcccbf4a35dde1da41731684a37acb09a4e8739b6df85e4"
+  },
+  {
+    "call_id": "fc-01M73H6C18XDS4RYPJPYAT3QJF",
+    "source_file": "L20192001658a.msf",
+    "spawned_unix": 1794341285.926657,
+    "queries": "native-full-queries.json",
+    "gpu": null,
+    "status": "completed",
+    "receipt": {
+      "cpu": 1,
+      "download_seconds": 9.244198560714722,
+      "gpu": null,
+      "n_bytes": 66707456,
+      "region": "eu",
+      "sha1": "ba29c0416b1bd7dd500dee7cb2a04aca2c77b912",
+      "sha256": "793b72d8d831694101e3710c7719e782616bde57352d8d192fbcfb28d4fdbbc8",
+      "source": {
+        "expected_sha1": "ba29c0416b1bd7dd500dee7cb2a04aca2c77b912",
+        "max_bytes": 66707456,
+        "name": "L20192001658a.msf",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2022/11/PXD017154/L20192001658a.msf"
+      }
+    },
+    "n_target_psms": 3149,
+    "n_high_psms": 1466,
+    "local_result": "/private/tmp/presto-dp-dm-source-20261110/native-results/L20192001658a.msf.json.gz",
+    "result_sha256": "927b9aadd7c078741c1551a3fb39e01763b06ff0d2405a6270f378a19308e8db"
+  },
+  {
+    "call_id": "fc-01M73H6C5DQVFR9DYTEN86WXXD",
+    "source_file": "L20192001658b.msf",
+    "spawned_unix": 1794341286.013323,
+    "queries": "native-full-queries.json",
+    "gpu": null,
+    "status": "completed",
+    "receipt": {
+      "cpu": 1,
+      "download_seconds": 24.90398097038269,
+      "gpu": null,
+      "n_bytes": 206045184,
+      "region": "eu",
+      "sha1": "f8653d8a74e32e9a17bdc34026675d89b368efe4",
+      "sha256": "6236afa848c6566250614e49d28c7d99d3911cbe1f46c699717b0b9ae1861b56",
+      "source": {
+        "expected_sha1": "f8653d8a74e32e9a17bdc34026675d89b368efe4",
+        "max_bytes": 206045184,
+        "name": "L20192001658b.msf",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2022/11/PXD017154/L20192001658b.msf"
+      }
+    },
+    "n_target_psms": 7036,
+    "n_high_psms": 3435,
+    "local_result": "/private/tmp/presto-dp-dm-source-20261110/native-results/L20192001658b.msf.json.gz",
+    "result_sha256": "43c7081f0cd069e6aa9a99900a3e5c79b45fc86fe5bea9c0dc65967dfbd1b1ee"
+  },
+  {
+    "call_id": "fc-01M73H6C80P68W6R0EK38KFWP9",
+    "source_file": "L20192001658c.msf",
+    "spawned_unix": 1794341286.099157,
+    "queries": "native-full-queries.json",
+    "gpu": null,
+    "status": "completed",
+    "receipt": {
+      "cpu": 1,
+      "download_seconds": 24.424785614013672,
+      "gpu": null,
+      "n_bytes": 169189376,
+      "region": "eu",
+      "sha1": "47bbe246850ae88c50768c24ef513f4e2866a2ed",
+      "sha256": "02a4f7a8741b794ea1d07f858b421536e566d02f3ef8ee5877efc320a44b4d75",
+      "source": {
+        "expected_sha1": "47bbe246850ae88c50768c24ef513f4e2866a2ed",
+        "max_bytes": 169189376,
+        "name": "L20192001658c.msf",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2022/11/PXD017154/L20192001658c.msf"
+      }
+    },
+    "n_target_psms": 7247,
+    "n_high_psms": 3330,
+    "local_result": "/private/tmp/presto-dp-dm-source-20261110/native-results/L20192001658c.msf.json.gz",
+    "result_sha256": "4ec833fc3699cf75672a9bba069c300810bdc51d25688f011fbd6e5dcab3c885"
+  },
+  {
+    "call_id": "fc-01M73H6CAGZVAHWJAFQMYW48PN",
+    "source_file": "OEI21916.msf",
+    "spawned_unix": 1794341286.215204,
+    "queries": "native-full-queries.json",
+    "gpu": null,
+    "status": "completed",
+    "receipt": {
+      "cpu": 1,
+      "download_seconds": 26.602620840072632,
+      "gpu": null,
+      "n_bytes": 233807872,
+      "region": "eu",
+      "sha1": "88348c390741e0fcd49d8a49e667031d5b619c9f",
+      "sha256": "1447ea5c5820987883f3b4f29ebef57bccedbaf87356ca47113a4a936c2c38e8",
+      "source": {
+        "expected_sha1": "88348c390741e0fcd49d8a49e667031d5b619c9f",
+        "max_bytes": 233807872,
+        "name": "OEI21916.msf",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2022/11/PXD017154/OEI21916.msf"
+      }
+    },
+    "n_target_psms": 20544,
+    "n_high_psms": 3798,
+    "local_result": "/private/tmp/presto-dp-dm-source-20261110/native-results/OEI21916.msf.json.gz",
+    "result_sha256": "2ae60996f49ef774590a80ed6b75e330804194c73d48f7c0ad88c711f0ee48ec"
+  },
+  {
+    "call_id": "fc-01M73H6CEB6M4ME285W2VVDGYR",
+    "source_file": "OEI21918.msf",
+    "spawned_unix": 1794341286.307374,
+    "queries": "native-full-queries.json",
+    "gpu": null,
+    "status": "completed",
+    "receipt": {
+      "cpu": 1,
+      "download_seconds": 37.864649534225464,
+      "gpu": null,
+      "n_bytes": 215470080,
+      "region": "eu",
+      "sha1": "662893b3ec2da10746146aa371bf9a56da4c5aab",
+      "sha256": "91b6795caa71adf85b734d1f69dc32d38b809baa830a2ae13ed82825a49e29ae",
+      "source": {
+        "expected_sha1": "662893b3ec2da10746146aa371bf9a56da4c5aab",
+        "max_bytes": 215470080,
+        "name": "OEI21918.msf",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2022/11/PXD017154/OEI21918.msf"
+      }
+    },
+    "n_target_psms": 14992,
+    "n_high_psms": 1718,
+    "local_result": "/private/tmp/presto-dp-dm-source-20261110/native-results/OEI21918.msf.json.gz",
+    "result_sha256": "3b27b5dc72d2820670c1fc18da72e7e2cb19db726c811a9f4cc7aad6b418a24c"
+  },
+  {
+    "call_id": "fc-01M73H6CHH6Z5SNZAE1PECA3R4",
+    "source_file": "OEI21920.msf",
+    "spawned_unix": 1794341286.399644,
+    "queries": "native-full-queries.json",
+    "gpu": null,
+    "status": "completed",
+    "receipt": {
+      "cpu": 1,
+      "download_seconds": 35.16142559051514,
+      "gpu": null,
+      "n_bytes": 294965248,
+      "region": "eu",
+      "sha1": "a7f9e45b095f78ddb214c02937c5fe45be37f72b",
+      "sha256": "ad43ce1d08dbf97ffdb1eb1d246a0c449d7c8e24f989c95a3e563ac9834e4404",
+      "source": {
+        "expected_sha1": "a7f9e45b095f78ddb214c02937c5fe45be37f72b",
+        "max_bytes": 294965248,
+        "name": "OEI21920.msf",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2022/11/PXD017154/OEI21920.msf"
+      }
+    },
+    "n_target_psms": 22022,
+    "n_high_psms": 2943,
+    "local_result": "/private/tmp/presto-dp-dm-source-20261110/native-results/OEI21920.msf.json.gz",
+    "result_sha256": "9569e0e0be900f1c4748cad391bbb7de2e8b9d709cf7721c45c9941da0afdf04"
+  },
+  {
+    "call_id": "fc-01M73H6CKX8027ASSE89ACVEH8",
+    "source_file": "OEI21922.msf",
+    "spawned_unix": 1794341286.496785,
+    "queries": "native-full-queries.json",
+    "gpu": null,
+    "status": "completed",
+    "receipt": {
+      "cpu": 1,
+      "download_seconds": 40.37257981300354,
+      "gpu": null,
+      "n_bytes": 279220224,
+      "region": "eu",
+      "sha1": "3df223543ef283a8555aa3f5b77ecf300cfcdb13",
+      "sha256": "c912997caed6fe82fa12b1f777492ab89545f403485f745f163559a3e2e2147b",
+      "source": {
+        "expected_sha1": "3df223543ef283a8555aa3f5b77ecf300cfcdb13",
+        "max_bytes": 279220224,
+        "name": "OEI21922.msf",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2022/11/PXD017154/OEI21922.msf"
+      }
+    },
+    "n_target_psms": 15011,
+    "n_high_psms": 2097,
+    "local_result": "/private/tmp/presto-dp-dm-source-20261110/native-results/OEI21922.msf.json.gz",
+    "result_sha256": "b9017d107caa49da97d6982e6e56994de199b4338230ade608fa22b2942f38b4"
+  },
+  {
+    "call_id": "fc-01M73H6CQA53FRDDTVGX5N1CY0",
+    "source_file": "OEI21924.msf",
+    "spawned_unix": 1794341286.648736,
+    "queries": "native-full-queries.json",
+    "gpu": null,
+    "status": "completed",
+    "receipt": {
+      "cpu": 1,
+      "download_seconds": 9.778377532958984,
+      "gpu": null,
+      "n_bytes": 92651520,
+      "region": "eu",
+      "sha1": "6ffd1e376c2b00415196f6cdd4c9985d95bed698",
+      "sha256": "ac0ab467a88296eb7d7619d5bf2dda44e28e65de59ba749365c707e93be7e439",
+      "source": {
+        "expected_sha1": "6ffd1e376c2b00415196f6cdd4c9985d95bed698",
+        "max_bytes": 92651520,
+        "name": "OEI21924.msf",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2022/11/PXD017154/OEI21924.msf"
+      }
+    },
+    "n_target_psms": 4170,
+    "n_high_psms": 13,
+    "local_result": "/private/tmp/presto-dp-dm-source-20261110/native-results/OEI21924.msf.json.gz",
+    "result_sha256": "ebcdc706da68de13094b4bcc3f33542816176452dfe5f8c172366c6c6f7eb9bf"
+  },
+  {
+    "call_id": "fc-01M73H6CW1658KMFDMFWM9T5KN",
+    "source_file": "OEI21926.msf",
+    "spawned_unix": 1794341286.731473,
+    "queries": "native-full-queries.json",
+    "gpu": null,
+    "status": "completed",
+    "receipt": {
+      "cpu": 1,
+      "download_seconds": 24.01088809967041,
+      "gpu": null,
+      "n_bytes": 227573760,
+      "region": "eu",
+      "sha1": "e6dfc898f4d75f5812d23c151b669e886e1cbb15",
+      "sha256": "b5697a1f5061caddea041928eb18781d434688c2f2fb75f054c15a427d6d5372",
+      "source": {
+        "expected_sha1": "e6dfc898f4d75f5812d23c151b669e886e1cbb15",
+        "max_bytes": 227573760,
+        "name": "OEI21926.msf",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2022/11/PXD017154/OEI21926.msf"
+      }
+    },
+    "n_target_psms": 20771,
+    "n_high_psms": 3666,
+    "local_result": "/private/tmp/presto-dp-dm-source-20261110/native-results/OEI21926.msf.json.gz",
+    "result_sha256": "198136819abd9acafda8be1a2a601e7ab92d529dd61511a94f3f264596ec4caf"
+  },
+  {
+    "call_id": "fc-01M73H6CYEAN21C9A69GFY193Y",
+    "source_file": "OEI21928.msf",
+    "spawned_unix": 1794341286.843658,
+    "queries": "native-full-queries.json",
+    "gpu": null,
+    "status": "completed",
+    "receipt": {
+      "cpu": 1,
+      "download_seconds": 37.38095259666443,
+      "gpu": null,
+      "n_bytes": 185311232,
+      "region": "eu",
+      "sha1": "d5ded612287f227db222fd6e8b1a2d8badba45d1",
+      "sha256": "038889cbdabe167837de2f6b9e77fcd4e194b783e7c499980a7b814e83a1e5c6",
+      "source": {
+        "expected_sha1": "d5ded612287f227db222fd6e8b1a2d8badba45d1",
+        "max_bytes": 185311232,
+        "name": "OEI21928.msf",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2022/11/PXD017154/OEI21928.msf"
+      }
+    },
+    "n_target_psms": 13995,
+    "n_high_psms": 1502,
+    "local_result": "/private/tmp/presto-dp-dm-source-20261110/native-results/OEI21928.msf.json.gz",
+    "result_sha256": "a0fc3fd330f243a35dfac45386af6c7aa40b753059f2ce3770791c5cb994ebae"
+  },
+  {
+    "call_id": "fc-01M73H6D202ZQJXFKAXMNW1SQJ",
+    "source_file": "OEI21930.msf",
+    "spawned_unix": 1794341286.9236429,
+    "queries": "native-full-queries.json",
+    "gpu": null,
+    "status": "completed",
+    "receipt": {
+      "cpu": 1,
+      "download_seconds": 36.72671461105347,
+      "gpu": null,
+      "n_bytes": 320413696,
+      "region": "eu",
+      "sha1": "0a00385311ebd31e5462e25aba12024621483efd",
+      "sha256": "1848021def8bd8eaa24b93a54c8a142c51c7a7078da1803587d5b190661a5d5b",
+      "source": {
+        "expected_sha1": "0a00385311ebd31e5462e25aba12024621483efd",
+        "max_bytes": 320413696,
+        "name": "OEI21930.msf",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2022/11/PXD017154/OEI21930.msf"
+      }
+    },
+    "n_target_psms": 24837,
+    "n_high_psms": 3810,
+    "local_result": "/private/tmp/presto-dp-dm-source-20261110/native-results/OEI21930.msf.json.gz",
+    "result_sha256": "a2aba98236250e5d7016029d1b9a181376ad0edc2b150f0bf2f83a0e0ec9ce4d"
+  },
+  {
+    "call_id": "fc-01M73H6D4JDH57W1AHAZW48AV2",
+    "source_file": "OEI21932.msf",
+    "spawned_unix": 1794341287.012768,
+    "queries": "native-full-queries.json",
+    "gpu": null,
+    "status": "completed",
+    "receipt": {
+      "cpu": 1,
+      "download_seconds": 54.343541622161865,
+      "gpu": null,
+      "n_bytes": 286121984,
+      "region": "eu",
+      "sha1": "07a05efe004402aeaef3e844e92d5114c5236ae1",
+      "sha256": "3604cd8ef41cef9d73ac0089b9f1abb654ce31b9966784b202fa174402112bd7",
+      "source": {
+        "expected_sha1": "07a05efe004402aeaef3e844e92d5114c5236ae1",
+        "max_bytes": 286121984,
+        "name": "OEI21932.msf",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2022/11/PXD017154/OEI21932.msf"
+      }
+    },
+    "n_target_psms": 15081,
+    "n_high_psms": 1998,
+    "local_result": "/private/tmp/presto-dp-dm-source-20261110/native-results/OEI21932.msf.json.gz",
+    "result_sha256": "65ab0a42698f9d97683864e9724f1e5257ac6e2b768690fde24b91c2e6e089fb"
+  },
+  {
+    "call_id": "fc-01M73H6D74DCEKCTG65RJ1WGDF",
+    "source_file": "OEI21934.msf",
+    "spawned_unix": 1794341287.08095,
+    "queries": "native-full-queries.json",
+    "gpu": null,
+    "status": "completed",
+    "receipt": {
+      "cpu": 1,
+      "download_seconds": 20.74587368965149,
+      "gpu": null,
+      "n_bytes": 183746560,
+      "region": "eu",
+      "sha1": "6d3001685d5159b35ce58e3b2ae4d288efb2aec9",
+      "sha256": "3b58c4ddbdefa48c3698bebe6d6697c962a84e955b24fab2619033e6c200c47a",
+      "source": {
+        "expected_sha1": "6d3001685d5159b35ce58e3b2ae4d288efb2aec9",
+        "max_bytes": 183746560,
+        "name": "OEI21934.msf",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2022/11/PXD017154/OEI21934.msf"
+      }
+    },
+    "n_target_psms": 13811,
+    "n_high_psms": 2216,
+    "local_result": "/private/tmp/presto-dp-dm-source-20261110/native-results/OEI21934.msf.json.gz",
+    "result_sha256": "c46398e24ba3757786d2569c2d7ce06aacddd5d056d9ac8c207cf62d9d674e30"
+  },
+  {
+    "call_id": "fc-01M73H6D9JP3B5A2D7BGM88TB8",
+    "source_file": "OEI21936.msf",
+    "spawned_unix": 1794341287.185241,
+    "queries": "native-full-queries.json",
+    "gpu": null,
+    "status": "completed",
+    "receipt": {
+      "cpu": 1,
+      "download_seconds": 23.072219371795654,
+      "gpu": null,
+      "n_bytes": 202817536,
+      "region": "eu",
+      "sha1": "ef239768cd5ad337e0bb5f4f0502f051ea7d5f0a",
+      "sha256": "cc870eb426984dc8b27632dce20922583f8b867073c998e776b5ea90cfade54f",
+      "source": {
+        "expected_sha1": "ef239768cd5ad337e0bb5f4f0502f051ea7d5f0a",
+        "max_bytes": 202817536,
+        "name": "OEI21936.msf",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2022/11/PXD017154/OEI21936.msf"
+      }
+    },
+    "n_target_psms": 14663,
+    "n_high_psms": 1784,
+    "local_result": "/private/tmp/presto-dp-dm-source-20261110/native-results/OEI21936.msf.json.gz",
+    "result_sha256": "0f57f38d46f90d04af303e6495bd3617984fccd65caf88971a2e8212d276f3f7"
+  },
+  {
+    "call_id": "fc-01M73H6DCJGDYRZTW2B8FYC5QJ",
+    "source_file": "OEI21938.msf",
+    "spawned_unix": 1794341287.256008,
+    "queries": "native-full-queries.json",
+    "gpu": null,
+    "status": "completed",
+    "receipt": {
+      "cpu": 1,
+      "download_seconds": 45.72880673408508,
+      "gpu": null,
+      "n_bytes": 295219200,
+      "region": "eu",
+      "sha1": "48a15718c2b576044846115786e275df19772ad4",
+      "sha256": "d584936f11b7d89308ead883c5bd019e621fe24f70cd99a9f34aeeb0ab50c547",
+      "source": {
+        "expected_sha1": "48a15718c2b576044846115786e275df19772ad4",
+        "max_bytes": 295219200,
+        "name": "OEI21938.msf",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2022/11/PXD017154/OEI21938.msf"
+      }
+    },
+    "n_target_psms": 22401,
+    "n_high_psms": 3163,
+    "local_result": "/private/tmp/presto-dp-dm-source-20261110/native-results/OEI21938.msf.json.gz",
+    "result_sha256": "8f1c54abdea117aa601162b5ec675cb299ee9837222cf4d235c2bf9d92f9cd45"
+  },
+  {
+    "call_id": "fc-01M73H6DET5ZTQQ648JJ3E7FH9",
+    "source_file": "OEI21940.msf",
+    "spawned_unix": 1794341287.359007,
+    "queries": "native-full-queries.json",
+    "gpu": null,
+    "status": "completed",
+    "receipt": {
+      "cpu": 1,
+      "download_seconds": 27.862054109573364,
+      "gpu": null,
+      "n_bytes": 279289856,
+      "region": "eu",
+      "sha1": "78788867f818573afb08746c60942372cb696574",
+      "sha256": "d7ecda8fa86b6f2fff9d893c30dd3422d5e2b9c9446db07c3754dbfc3269a2e5",
+      "source": {
+        "expected_sha1": "78788867f818573afb08746c60942372cb696574",
+        "max_bytes": 279289856,
+        "name": "OEI21940.msf",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2022/11/PXD017154/OEI21940.msf"
+      }
+    },
+    "n_target_psms": 15247,
+    "n_high_psms": 2002,
+    "local_result": "/private/tmp/presto-dp-dm-source-20261110/native-results/OEI21940.msf.json.gz",
+    "result_sha256": "cdcca6b2ea9b2461ccdbc2ab02f7e2a958f4b8afd12c67df25884dc78bb03458"
+  },
+  {
+    "call_id": "fc-01M73H6DHZX7JE5S7PH44CRBFZ",
+    "source_file": "OEI21945.msf",
+    "spawned_unix": 1794341287.432539,
+    "queries": "native-full-queries.json",
+    "gpu": null,
+    "status": "completed",
+    "receipt": {
+      "cpu": 1,
+      "download_seconds": 7.092987298965454,
+      "gpu": null,
+      "n_bytes": 66510848,
+      "region": "eu",
+      "sha1": "3955d3a35a67de88bf9d86258a18e38e2765f900",
+      "sha256": "cbfa8cfa1da55b1a12a5355041ffa83c73a236059ed91b72e5cb5366e738b2db",
+      "source": {
+        "expected_sha1": "3955d3a35a67de88bf9d86258a18e38e2765f900",
+        "max_bytes": 66510848,
+        "name": "OEI21945.msf",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2022/11/PXD017154/OEI21945.msf"
+      }
+    },
+    "n_target_psms": 3501,
+    "n_high_psms": 2,
+    "local_result": "/private/tmp/presto-dp-dm-source-20261110/native-results/OEI21945.msf.json.gz",
+    "result_sha256": "5e9f59f16fb41f808e63407533d84171c9c4ad03e2e75ffcd5b1f75890f294a1"
+  },
+  {
+    "call_id": "fc-01M73H6DMENDMTK48KMC6G6W4Q",
+    "source_file": "OEI21947.msf",
+    "spawned_unix": 1794341287.5202692,
+    "queries": "native-full-queries.json",
+    "gpu": null,
+    "status": "completed",
+    "receipt": {
+      "cpu": 1,
+      "download_seconds": 19.491920948028564,
+      "gpu": null,
+      "n_bytes": 154664960,
+      "region": "eu",
+      "sha1": "ce19d9bff384d2ba16ff45d28b7305cff6196425",
+      "sha256": "3e7ed8eaf3478a2873564124844fd6c6c4eab4ab73201e2f22f3f048e1c171a1",
+      "source": {
+        "expected_sha1": "ce19d9bff384d2ba16ff45d28b7305cff6196425",
+        "max_bytes": 154664960,
+        "name": "OEI21947.msf",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2022/11/PXD017154/OEI21947.msf"
+      }
+    },
+    "n_target_psms": 15490,
+    "n_high_psms": 2433,
+    "local_result": "/private/tmp/presto-dp-dm-source-20261110/native-results/OEI21947.msf.json.gz",
+    "result_sha256": "9488b91c0383c8db4721421f7482d444d98a29afba9145d6df4c7eecd2f0eb0e"
+  },
+  {
+    "call_id": "fc-01M73H6DQ6V8HEXZMKSEW29CT9",
+    "source_file": "OEI21949.msf",
+    "spawned_unix": 1794341287.606993,
+    "queries": "native-full-queries.json",
+    "gpu": null,
+    "status": "completed",
+    "receipt": {
+      "cpu": 1,
+      "download_seconds": 13.942381620407104,
+      "gpu": null,
+      "n_bytes": 150786048,
+      "region": "eu",
+      "sha1": "cfa05e1f9594b3354d121c1f92b0aa7842e4b097",
+      "sha256": "977888a09a81e9d59439861d5849fc76801c2fde7767819c27c0e28fc0227822",
+      "source": {
+        "expected_sha1": "cfa05e1f9594b3354d121c1f92b0aa7842e4b097",
+        "max_bytes": 150786048,
+        "name": "OEI21949.msf",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2022/11/PXD017154/OEI21949.msf"
+      }
+    },
+    "n_target_psms": 12691,
+    "n_high_psms": 1194,
+    "local_result": "/private/tmp/presto-dp-dm-source-20261110/native-results/OEI21949.msf.json.gz",
+    "result_sha256": "4903d7eb6920bb439059b0113c370e58d421ac41b0d385f412b27f98d54a9f54"
+  },
+  {
+    "call_id": "fc-01M73H6DSQDNEPBA6A7H4DCW9C",
+    "source_file": "OEI21951.msf",
+    "spawned_unix": 1794341287.6797729,
+    "queries": "native-full-queries.json",
+    "gpu": null,
+    "status": "completed",
+    "receipt": {
+      "cpu": 1,
+      "download_seconds": 28.787771224975586,
+      "gpu": null,
+      "n_bytes": 245366784,
+      "region": "eu",
+      "sha1": "070e64b51beb4fe8231a223de6748f337311b3df",
+      "sha256": "4540d4eadf4dfe00626538bb8bd834212d98653afcade4359b2b2153f765c54c",
+      "source": {
+        "expected_sha1": "070e64b51beb4fe8231a223de6748f337311b3df",
+        "max_bytes": 245366784,
+        "name": "OEI21951.msf",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2022/11/PXD017154/OEI21951.msf"
+      }
+    },
+    "n_target_psms": 21701,
+    "n_high_psms": 3180,
+    "local_result": "/private/tmp/presto-dp-dm-source-20261110/native-results/OEI21951.msf.json.gz",
+    "result_sha256": "83a24713e31682537789bfba8fba0b9c3951afbef184b8263ff2895a69c29976"
+  },
+  {
+    "call_id": "fc-01M73H6DW7QK0VWH6TPQ6AAARY",
+    "source_file": "OEI21953.msf",
+    "spawned_unix": 1794341287.7697742,
+    "queries": "native-full-queries.json",
+    "gpu": null,
+    "status": "completed",
+    "receipt": {
+      "cpu": 1,
+      "download_seconds": 26.783194541931152,
+      "gpu": null,
+      "n_bytes": 244969472,
+      "region": "eu",
+      "sha1": "2dcad16a1d6b12d6137aba58e71650327b6d9a94",
+      "sha256": "558b93a8b6e121521b2e8679dff9fd8bff76ca52f72a9c1f3ed6f2983d07be3b",
+      "source": {
+        "expected_sha1": "2dcad16a1d6b12d6137aba58e71650327b6d9a94",
+        "max_bytes": 244969472,
+        "name": "OEI21953.msf",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2022/11/PXD017154/OEI21953.msf"
+      }
+    },
+    "n_target_psms": 14393,
+    "n_high_psms": 1802,
+    "local_result": "/private/tmp/presto-dp-dm-source-20261110/native-results/OEI21953.msf.json.gz",
+    "result_sha256": "581733d7d4f4dd7537bd93b0ced97258a3f0d19ff6034afa302e577da6fb15bc"
+  },
+  {
+    "call_id": "fc-01M73H6DYV4WVBE1TSTD03FNS1",
+    "source_file": "OEI21955.msf",
+    "spawned_unix": 1794341287.847063,
+    "queries": "native-full-queries.json",
+    "gpu": null,
+    "status": "completed",
+    "receipt": {
+      "cpu": 1,
+      "download_seconds": 22.266783237457275,
+      "gpu": null,
+      "n_bytes": 178352128,
+      "region": "eu",
+      "sha1": "63cad1d333c3b18ca1ad4414ef0b88bba94c61d8",
+      "sha256": "b45d2ba540408ef72407bcaac3e33a74bb5cb124f0b94872544db7d7d367c729",
+      "source": {
+        "expected_sha1": "63cad1d333c3b18ca1ad4414ef0b88bba94c61d8",
+        "max_bytes": 178352128,
+        "name": "OEI21955.msf",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2022/11/PXD017154/OEI21955.msf"
+      }
+    },
+    "n_target_psms": 16376,
+    "n_high_psms": 2589,
+    "local_result": "/private/tmp/presto-dp-dm-source-20261110/native-results/OEI21955.msf.json.gz",
+    "result_sha256": "55cc964ea2eba2a34419eecb8b70d55a6dd539bd777075cc3ba4f18724303309"
+  },
+  {
+    "call_id": "fc-01M73H6E1CZCA120H1VYR1885X",
+    "source_file": "OEI21957.msf",
+    "spawned_unix": 1794341287.942794,
+    "queries": "native-full-queries.json",
+    "gpu": null,
+    "status": "completed",
+    "receipt": {
+      "cpu": 1,
+      "download_seconds": 20.55601167678833,
+      "gpu": null,
+      "n_bytes": 176930816,
+      "region": "eu",
+      "sha1": "054c4eb6c3c9ea3ec015bc07d5057880f14b5dee",
+      "sha256": "ac4e262ef152b7b5a89e0973d309b6a64ea9e169988684dbb49ea532472a943f",
+      "source": {
+        "expected_sha1": "054c4eb6c3c9ea3ec015bc07d5057880f14b5dee",
+        "max_bytes": 176930816,
+        "name": "OEI21957.msf",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2022/11/PXD017154/OEI21957.msf"
+      }
+    },
+    "n_target_psms": 13406,
+    "n_high_psms": 1286,
+    "local_result": "/private/tmp/presto-dp-dm-source-20261110/native-results/OEI21957.msf.json.gz",
+    "result_sha256": "28503eec29456efdd1fbf0c92242903a0b366558f3b046b3855b4a6b9da07a62"
+  },
+  {
+    "call_id": "fc-01M73H6E491TA5KYQ7QC064PBD",
+    "source_file": "OEI21959.msf",
+    "spawned_unix": 1794341288.040482,
+    "queries": "native-full-queries.json",
+    "gpu": null,
+    "status": "completed",
+    "receipt": {
+      "cpu": 1,
+      "download_seconds": 31.01731276512146,
+      "gpu": null,
+      "n_bytes": 259342336,
+      "region": "eu",
+      "sha1": "d8d246120eb52e3ed029516dab3cc4fed6a97f98",
+      "sha256": "7e142404ac55a33d6c708c3efb1dad29bcadc93c32a592d3aa18581873135aa0",
+      "source": {
+        "expected_sha1": "d8d246120eb52e3ed029516dab3cc4fed6a97f98",
+        "max_bytes": 259342336,
+        "name": "OEI21959.msf",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2022/11/PXD017154/OEI21959.msf"
+      }
+    },
+    "n_target_psms": 21320,
+    "n_high_psms": 3022,
+    "local_result": "/private/tmp/presto-dp-dm-source-20261110/native-results/OEI21959.msf.json.gz",
+    "result_sha256": "e42d2de9c70fc4d298131a256456c1b4e9e76d9849adf8200edb9811edf88707"
+  },
+  {
+    "call_id": "fc-01M73H6E7H6X9K73ZFWDTKB182",
+    "source_file": "OEI21961.msf",
+    "spawned_unix": 1794341288.1246452,
+    "queries": "native-full-queries.json",
+    "gpu": null,
+    "status": "completed",
+    "receipt": {
+      "cpu": 1,
+      "download_seconds": 24.903345584869385,
+      "gpu": null,
+      "n_bytes": 237944832,
+      "region": "eu",
+      "sha1": "ebaa741dc8b08784c06aec0121cfb297ff4c7314",
+      "sha256": "5479e32f15d78051b712e2bd51fa5fa9ed44fe8d756b42b365b22115c562a505",
+      "source": {
+        "expected_sha1": "ebaa741dc8b08784c06aec0121cfb297ff4c7314",
+        "max_bytes": 237944832,
+        "name": "OEI21961.msf",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2022/11/PXD017154/OEI21961.msf"
+      }
+    },
+    "n_target_psms": 14082,
+    "n_high_psms": 1551,
+    "local_result": "/private/tmp/presto-dp-dm-source-20261110/native-results/OEI21961.msf.json.gz",
+    "result_sha256": "7c9403029a1c3de89e36b94aa691f3654c6b1ed78372b668bce8e4b438092eee"
+  },
+  {
+    "call_id": "fc-01M73H6EA42H7V3BPDWP57APTB",
+    "source_file": "OEI21963.msf",
+    "spawned_unix": 1794341288.214408,
+    "queries": "native-full-queries.json",
+    "gpu": null,
+    "status": "completed",
+    "receipt": {
+      "cpu": 1,
+      "download_seconds": 9.3283052444458,
+      "gpu": null,
+      "n_bytes": 79634432,
+      "region": "eu",
+      "sha1": "e8de06d58fb6688dce2b50925fd6ed2bb7df9848",
+      "sha256": "7a437d2dd405b8d7fe08ab870b568ee9d157fd7c8ce1d76b7e0215f3d6b72f0e",
+      "source": {
+        "expected_sha1": "e8de06d58fb6688dce2b50925fd6ed2bb7df9848",
+        "max_bytes": 79634432,
+        "name": "OEI21963.msf",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2022/11/PXD017154/OEI21963.msf"
+      }
+    },
+    "n_target_psms": 3585,
+    "n_high_psms": 11,
+    "local_result": "/private/tmp/presto-dp-dm-source-20261110/native-results/OEI21963.msf.json.gz",
+    "result_sha256": "984d21bfdf073b8d48a4c1aa9d57c40ca538c2679ee39b758fa9cf998152a372"
+  },
+  {
+    "call_id": "fc-01M73H6ECSAYQZ8NQ2ZT76H0AK",
+    "source_file": "OEI21965.msf",
+    "spawned_unix": 1794341288.294692,
+    "queries": "native-full-queries.json",
+    "gpu": null,
+    "status": "completed",
+    "receipt": {
+      "cpu": 1,
+      "download_seconds": 18.83171582221985,
+      "gpu": null,
+      "n_bytes": 170889216,
+      "region": "eu",
+      "sha1": "10396b47d440608cf51f7c9d2d537c5b245a9496",
+      "sha256": "be369a18f8de71c5659c28a77e3233e969f22837a6e7f631e5d664d06d8e16ac",
+      "source": {
+        "expected_sha1": "10396b47d440608cf51f7c9d2d537c5b245a9496",
+        "max_bytes": 170889216,
+        "name": "OEI21965.msf",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2022/11/PXD017154/OEI21965.msf"
+      }
+    },
+    "n_target_psms": 15135,
+    "n_high_psms": 2346,
+    "local_result": "/private/tmp/presto-dp-dm-source-20261110/native-results/OEI21965.msf.json.gz",
+    "result_sha256": "33f5bad7b4c26bcf9ed33324de3da9b9dc3f2ae255fef27eed253e81f3959d6f"
+  },
+  {
+    "call_id": "fc-01M73H6EF2E8NGKA82ADTPVGSZ",
+    "source_file": "OEI21967.msf",
+    "spawned_unix": 1794341288.514924,
+    "queries": "native-full-queries.json",
+    "gpu": null,
+    "status": "completed",
+    "receipt": {
+      "source": {
+        "name": "OEI21967.msf",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2022/11/PXD017154/OEI21967.msf",
+        "max_bytes": 146288640,
+        "expected_sha1": "82c5626455ff2b2d32922eda8f9c640aaa0425f7"
+      },
+      "n_bytes": 146288640,
+      "sha256": "d182fd921373ff00511551e8657f5c1a8c56ee37dfaed533167f4074ad677730",
+      "sha1": "82c5626455ff2b2d32922eda8f9c640aaa0425f7",
+      "download_seconds": 18.417304039001465,
+      "gpu": null,
+      "cpu": 1,
+      "region": "eu"
+    },
+    "n_target_psms": 11521,
+    "n_high_psms": 821,
+    "local_result": "/private/tmp/presto-dp-dm-source-20261110/native-results/OEI21967.msf.json.gz",
+    "result_sha256": "7b910f3709c74904d0c69f5b71a73f11eabba9c71e990025d914a4b4561774fa"
+  },
+  {
+    "call_id": "fc-01M73H6EP5QCER8W35P9DRXA8E",
+    "source_file": "OEI21969.msf",
+    "spawned_unix": 1794341288.6117709,
+    "queries": "native-full-queries.json",
+    "gpu": null,
+    "status": "completed",
+    "receipt": {
+      "source": {
+        "name": "OEI21969.msf",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2022/11/PXD017154/OEI21969.msf",
+        "max_bytes": 263245824,
+        "expected_sha1": "8280bdf1ed7416f93a522f0d45eda3317929211f"
+      },
+      "n_bytes": 263245824,
+      "sha256": "502afd649d2b85b979f8de0847f08704d091fcad0633b84b206730eae885b540",
+      "sha1": "8280bdf1ed7416f93a522f0d45eda3317929211f",
+      "download_seconds": 34.99383211135864,
+      "gpu": null,
+      "cpu": 1,
+      "region": "eu"
+    },
+    "n_target_psms": 22493,
+    "n_high_psms": 3273,
+    "local_result": "/private/tmp/presto-dp-dm-source-20261110/native-results/OEI21969.msf.json.gz",
+    "result_sha256": "07986f78bdf5e8223cab27db527521c57bee600899423952ddba3fc0a28b2dcf"
+  },
+  {
+    "call_id": "fc-01M73H6ESDQJ2YWAHG0492W096",
+    "source_file": "OEI21971.msf",
+    "spawned_unix": 1794341288.718395,
+    "queries": "native-full-queries.json",
+    "gpu": null,
+    "status": "completed",
+    "receipt": {
+      "source": {
+        "name": "OEI21971.msf",
+        "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2022/11/PXD017154/OEI21971.msf",
+        "max_bytes": 236675072,
+        "expected_sha1": "dd215d8421d98a035181e7fe8ec439414461e536"
+      },
+      "n_bytes": 236675072,
+      "sha256": "e22355406b4e1ca1629d6330cde60888edf8448cd8b25563dbd56c01b71c9403",
+      "sha1": "dd215d8421d98a035181e7fe8ec439414461e536",
+      "download_seconds": 39.87336301803589,
+      "gpu": null,
+      "cpu": 1,
+      "region": "eu"
+    },
+    "n_target_psms": 13847,
+    "n_high_psms": 1843,
+    "local_result": "/private/tmp/presto-dp-dm-source-20261110/native-results/OEI21971.msf.json.gz",
+    "result_sha256": "289b70d349334e4073f335155bfc7e9697ef16d38521d04bc63bdca3408f6ea3"
+  }
+]

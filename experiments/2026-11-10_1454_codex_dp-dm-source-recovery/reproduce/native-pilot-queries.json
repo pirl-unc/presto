@@ -1,0 +1,8 @@
+{
+  "target_psms": "SELECT PeptideID, SpectrumID, ConfidenceLevel, SearchEngineRank, Hidden, Sequence FROM Peptides ORDER BY PeptideID",
+  "decoy_counts": "SELECT ConfidenceLevel, COUNT(*) FROM Peptides_decoy GROUP BY ConfidenceLevel",
+  "scores": "SELECT ScoreID, ScoreName, FriendlyName, Description FROM ProcessingNodeScores",
+  "confidence_parameters": "SELECT ParameterName, ParameterValue, ValueDisplayString FROM ProcessingNodeParameters WHERE lower(ParameterName) LIKE '%fdr%' OR lower(ParameterName) LIKE '%confiden%' OR lower(ParameterName) LIKE '%target%' OR lower(FriendlyName) LIKE '%false%'",
+  "custom_fields": "SELECT FieldID, DisplayName, DataPurpose FROM CustomDataFields",
+  "nodes": "SELECT ProcessingNodeNumber, NodeName, FriendlyName FROM ProcessingNodes"
+}

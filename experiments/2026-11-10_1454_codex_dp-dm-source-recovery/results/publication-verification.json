@@ -1,0 +1,21 @@
+{
+  "status": "passed",
+  "scope": "Source-recovery publication; model runtime unchanged",
+  "checks": [
+    "fresh-output launch.sh replay passes both independent verifiers",
+    "all 3 per-record dumps byte-identical after decompression",
+    "all JSON/JSONL parse",
+    "9 live Python scripts exactly match frozen current snapshots",
+    "isolated Ruff lint and format pass for 9 scripts",
+    "Python compileall pass for current scripts",
+    "bash syntax passes",
+    "git -c core.whitespace=cr-at-eol diff --cached --check passes; preserves source-generated CSV CRLF",
+    "raw biological records and article PDFs excluded from Git"
+  ],
+  "n_json_files": 84,
+  "n_current_scripts": 9,
+  "replay_receipt_sha256": "8a254bf23e86ff63cafb155bda122425e859bc746256e6d3298e1aa47d8653e2",
+  "previous_head": "04a9d2d9f1c3986ae4bf165dd2e008fc3d74979e",
+  "previous_head_ci": "GitHub lint-test/docs passed; new-head CI must be reported separately",
+  "full_suite_rerun_locally": false
+}

@@ -421,9 +421,15 @@ synthetic affinity priors. Existing source qualification stays in Hitlist
 
 ## 2026-11-10 — Follow condition audit into source recovery
 
-- [ ] Recover PXD017154 processed results plus primary run/construct mapping,
-  especially DPA identity, using Hitlist895; implement through shared Hitlist
-  evidence and common Presto context, then qualify a real DM contrast cohort.
+- [x] Recover PXD017154 processed results plus primary run/construct mapping,
+  including DPA identity. Family `2026-11-10_1454_codex_dp-dm-source-recovery`
+  independently verifies 21,547 candidate peptide–sample rows / 10,143 sequences.
+- [ ] Integrate recovered PXD017154 through shared Hitlist supplementary evidence
+  and common Presto context under Hitlist895, then qualify source/sequence overlap
+  before freezing a real DM contrast cohort. Preserve original native confidence;
+  converted pass flags are unsuitable. Detailed spec is in the recovery family's
+  `source-review/hitlist-integration-spec.md` and the isolated Hitlist checkout
+  `/private/tmp/hitlist-dp-dm-source-20261110`, branch `codex/dp-dm-source-20261110`.
 - [ ] Recover original Stražar/MAPTAC forms and preparation provenance under
   Hitlist896. Current condition-qualified class-II deferrals are 290,461 and
   15,146 rows; do not blanket-impute unmodified or confuse preparation chemistry
