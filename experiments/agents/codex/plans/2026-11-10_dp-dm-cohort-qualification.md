@@ -82,3 +82,17 @@ Pre-execution source-identity detail: include the same frozen T-cell split's
 pmid and doi. Row membership alone omits PMID, so it cannot prove absence of a
 shared source study. A protected component matching PMID33025005 embargoes the
 entire DP/DM source. Preserve this check independently of peptide overlap.
+
+## Pre-fit structural check (frozen before fixture execution)
+
+Code inspection finds that `affinity_downstream` computes its context-sensitive
+term from full peptide + APC/source context, without the MHC representation,
+then adds context-independent affinity/stability. Probe the interaction capacity
+before proposing a fit: two artificial MHC identities in each class, three
+synthetic canonical peptides per class, seeds42/43, both existing staging modes,
+DM present/absent, dropout0/eval. Preserve logits, intervention deltas, register
+weight deltas, and purified-affinity invariance. No learned checkpoint, optimizer,
+real biological target or accuracy metric. This distinguishes feature sensitivity
+from the ability to learn MHC-dependent editing. A structural limitation should
+be recorded in a focused issue and the next shared-model comparison plan; do not
+silently reinterpret a supply-side processing term as measured peptide editing.

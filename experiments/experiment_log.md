@@ -6409,3 +6409,45 @@ smoke-tested.
   unit tests do not appear in the failure list. Known parsing/serotype/deprecated
   access failures persist; #897 owns the fix. Other matrix arms were cancelled;
   integration is pending. Failure list and complete compressed log are committed.
+
+## 2026-11-10 — Full DP/DM cohort embargo and MHC-by-condition capacity
+
+- **Agent/model:** Codex / GPT-6. Base4da30f74, projectione0759165, full auditb8913a69;
+  exact source snapshots and invocations in `reproduce/`.
+- **Directory:** [2026-11-10_1607_codex_dp-dm-cohort-qualification](2026-11-10_1607_codex_dp-dm-cohort-qualification/README.md).
+- **Data/curation:** 21,547 native high-confidence, unmodified, unique-rank DP
+  peptide–sample candidates from PXD017154/PMID33025005; original source policy
+  unchanged. Seventeen identity namespaces cover full reserved presentation
+  closure, Atlas, seven affinity cohorts and T-cell partition/drop/component
+  identities. Only explicit identity fields are decoded. Locked confirmation
+  observations and all biological held-out outcomes/predictions remain closed.
+- **Result:** 11,513 rows embargoed; **10,034 rows /4,871 peptides clear** known
+  identity checks, 3,175 fewer than the partial audit. Clear DM counts:6,058 absent
+  /3,976 present. Allotype rows:DP4011,275;DP4023,790;DP104,969. Paired DP402
+  retains1,573 absent/701present peptides (358both); DP10 retains1,995/924
+  (465both). DP401 has no absent arm. Zero rows are yet TRAIN-eligible.
+- **Verification:** all17 exact/core8/Hamming<=1 sets independently replay with
+  substitution enumeration; final row unions and artifact hashes independently
+  rechecked. Five focused software fixtures pass; Ruff passes.
+- **Structural probe:** existing staged model cannot express MHC-dependent DM
+  logit changes or condition-dependent register weights when other inputs are
+  fixed. Twenty-four artificial conditions across two seeds/both classes prove
+  exact processing-delta equality; max logit interaction7.45e-9roundoff versus
+  0.0012063in existing joint fusion. Affinity is context-invariant. This is
+  untrained capacity evidence, not predictive performance. [Issue157](https://github.com/pirl-unc/presto/issues/157).
+- **Training/pretraining/assay/loss/synthetic contract:** no fitting, optimizer or
+  biological labels added. Native MS positives only; no inferred affinity,
+  abundance or pathway target, no qualifier change. Synthetic strings belong
+  only to the artificial software probe, not a training/evaluation population.
+  Predictive validation/test metrics/dumps are inapplicable.
+- **Hardware/runtime:** two sequential Modal CPU jobs, each one8-CPU/16-GiB
+  container; no requested/observed GPU. Projection176.84s; full audit/replay122.47s.
+  CPU model/peak RSS unrecorded. Published affinity index has546,876rows.
+- **Artifacts:** Modal `presto-checkpoints`, family prefixes
+  `affinity-identities-v1/` and `cohort-audit-v1/`; compact receipts, tables,
+  logs, capacity outputs and source snapshots committed. Downloaded artifacts
+  match the publication receipt and were not regenerated after log timeouts.
+- **Preferred next action:** retain the qualified paired support; compare shared
+  MHC-conditioned selection against masked/current-staged controls. No scientific
+  winner yet. Hitlist release and predeclared split/background/fit gates remain
+  open; [Presto155](https://github.com/pirl-unc/presto/issues/155) and157 own them.

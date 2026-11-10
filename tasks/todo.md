@@ -14988,7 +14988,8 @@ Plan: `experiments/agents/codex/plans/2026-11-10_dp-dm-shared-integration.md`.
 - [x] Implement packaged source, exact DP/DM curation and shared origin in Hitlist.
 - [x] Verify full contributor/export/common-Presto admission against original rows.
 - [x] Audit presentation/Atlas identities and independently verify the embargo.
-- [ ] Reconcile affinity/other reserved identities before any training admission.
+- [x] Reconcile the known affinity/presentation/Atlas/T-cell reserved identities.
+- [ ] Freeze source release, comparison/background/split and model-feature gates before TRAIN admission.
 - [x] Publish source PR898, checks and reproducibility records; retain scientific gates.
 
 ## 2026-11-10 — Publish current work and conversation follow-ups
@@ -15023,7 +15024,15 @@ complete; neither source release nor scientific qualification is complete.
 ## 2026-11-10 — Complete DP/DM identity qualification
 
 Plan: `experiments/agents/codex/plans/2026-11-10_dp-dm-cohort-qualification.md`.
-- [ ] Pin full reserved presentation, affinity and T-cell identity namespaces.
-- [ ] Materialize reusable outcome-free affinity indexes and audit all overlaps.
-- [ ] Independently verify per-row embargo and per-condition remaining support.
-- [ ] Record decision and next matched scientific experiment; publish evidence.
+- [x] Pin full reserved presentation, affinity and T-cell identity namespaces.
+- [x] Materialize reusable outcome-free affinity indexes and audit all overlaps.
+- [x] Independently verify per-row embargo and per-condition remaining support.
+- [x] Record the decision and shared-selection implementation/fit gates; prepare publication.
+
+Qualification review:17cohort namespaces independently replay, leaving10,034
+source rows/4,871peptides clear and11,513embargoed. DM absent6,058/present3,976.
+No source study collision found in checked aliases; no TRAIN eligibility yet.
+The artificial model probe establishes an MHC-by-condition capacity gap in
+staged elution; Presto157 tracks the shared-core correction/comparison. Both
+CPU apps are terminal/passed, artifacts verified after download. No biological
+training or new accuracy gain is claimed.

@@ -1,0 +1,250 @@
+{
+  "cohorts": {
+    "affinity:historical_test_identity_only": {
+      "independent_replay": "passed",
+      "input_rows": 2990,
+      "n_core8_candidate_rows": 0,
+      "n_exact_candidate_rows": 0,
+      "n_hamming1_candidate_rows": 0,
+      "n_union_candidate_rows": 0,
+      "role": "protected",
+      "source_token_matches": 0,
+      "unique_reference_peptides": 1349
+    },
+    "affinity:historical_train": {
+      "independent_replay": "passed",
+      "input_rows": 233719,
+      "n_core8_candidate_rows": 918,
+      "n_exact_candidate_rows": 14,
+      "n_hamming1_candidate_rows": 26,
+      "n_union_candidate_rows": 919,
+      "role": "train",
+      "source_token_matches": 0,
+      "unique_reference_peptides": 50823
+    },
+    "affinity:historical_validation": {
+      "independent_replay": "passed",
+      "input_rows": 4092,
+      "n_core8_candidate_rows": 0,
+      "n_exact_candidate_rows": 0,
+      "n_hamming1_candidate_rows": 0,
+      "n_union_candidate_rows": 0,
+      "role": "protected",
+      "source_token_matches": 0,
+      "unique_reference_peptides": 1098
+    },
+    "affinity:netmhciipan43_ba_v2": {
+      "independent_replay": "passed",
+      "input_rows": 62539,
+      "n_core8_candidate_rows": 378,
+      "n_exact_candidate_rows": 12,
+      "n_hamming1_candidate_rows": 12,
+      "n_union_candidate_rows": 378,
+      "role": "train",
+      "source_token_matches": 0,
+      "unique_reference_peptides": 6243
+    },
+    "affinity:netmhcpan42_ba_v2": {
+      "independent_replay": "passed",
+      "input_rows": 80674,
+      "n_core8_candidate_rows": 722,
+      "n_exact_candidate_rows": 2,
+      "n_hamming1_candidate_rows": 2,
+      "n_union_candidate_rows": 722,
+      "role": "train",
+      "source_token_matches": 0,
+      "unique_reference_peptides": 23621
+    },
+    "affinity:stage_b_development": {
+      "independent_replay": "passed",
+      "input_rows": 2536,
+      "n_core8_candidate_rows": 0,
+      "n_exact_candidate_rows": 0,
+      "n_hamming1_candidate_rows": 0,
+      "n_union_candidate_rows": 0,
+      "role": "protected",
+      "source_token_matches": 0,
+      "unique_reference_peptides": 1022
+    },
+    "affinity:stage_b_train": {
+      "independent_replay": "passed",
+      "input_rows": 160326,
+      "n_core8_candidate_rows": 173,
+      "n_exact_candidate_rows": 0,
+      "n_hamming1_candidate_rows": 0,
+      "n_union_candidate_rows": 173,
+      "role": "train",
+      "source_token_matches": 0,
+      "unique_reference_peptides": 34232
+    },
+    "atlas:test": {
+      "independent_replay": "passed",
+      "input_rows": 140757,
+      "n_core8_candidate_rows": 6467,
+      "n_exact_candidate_rows": 1169,
+      "n_hamming1_candidate_rows": 1197,
+      "n_union_candidate_rows": 6467,
+      "role": "protected",
+      "source_token_matches": 0,
+      "unique_reference_peptides": 50559
+    },
+    "atlas:train": {
+      "independent_replay": "passed",
+      "input_rows": 710520,
+      "n_core8_candidate_rows": 11330,
+      "n_exact_candidate_rows": 2611,
+      "n_hamming1_candidate_rows": 2701,
+      "n_union_candidate_rows": 11341,
+      "role": "train",
+      "source_token_matches": 0,
+      "unique_reference_peptides": 170756
+    },
+    "atlas:validation": {
+      "independent_replay": "passed",
+      "input_rows": 141843,
+      "n_core8_candidate_rows": 6458,
+      "n_exact_candidate_rows": 1083,
+      "n_hamming1_candidate_rows": 1141,
+      "n_union_candidate_rows": 6466,
+      "role": "protected",
+      "source_token_matches": 0,
+      "unique_reference_peptides": 54893
+    },
+    "presentation:consumed_development": {
+      "independent_replay": "passed",
+      "input_rows": 48530,
+      "n_core8_candidate_rows": 83,
+      "n_exact_candidate_rows": 7,
+      "n_hamming1_candidate_rows": 7,
+      "n_union_candidate_rows": 83,
+      "role": "protected",
+      "source_token_matches": 0,
+      "unique_reference_peptides": 17573
+    },
+    "presentation:reserved_full": {
+      "independent_replay": "passed",
+      "input_rows": 180116,
+      "n_core8_candidate_rows": 9317,
+      "n_exact_candidate_rows": 436,
+      "n_hamming1_candidate_rows": 443,
+      "n_union_candidate_rows": 9318,
+      "role": "protected",
+      "source_token_matches": 0,
+      "unique_reference_peptides": 180116
+    },
+    "presentation:train": {
+      "independent_replay": "passed",
+      "input_rows": 1349378,
+      "n_core8_candidate_rows": 7904,
+      "n_exact_candidate_rows": 52,
+      "n_hamming1_candidate_rows": 55,
+      "n_union_candidate_rows": 7906,
+      "role": "train",
+      "source_token_matches": 0,
+      "unique_reference_peptides": 336020
+    },
+    "tcell:calibration": {
+      "independent_replay": "passed",
+      "input_rows": 3651,
+      "n_core8_candidate_rows": 46,
+      "n_exact_candidate_rows": 0,
+      "n_hamming1_candidate_rows": 0,
+      "n_union_candidate_rows": 46,
+      "role": "protected",
+      "source_token_matches": 0,
+      "unique_reference_peptides": 1634
+    },
+    "tcell:development": {
+      "independent_replay": "passed",
+      "input_rows": 4055,
+      "n_core8_candidate_rows": 88,
+      "n_exact_candidate_rows": 0,
+      "n_hamming1_candidate_rows": 0,
+      "n_union_candidate_rows": 88,
+      "role": "protected",
+      "source_token_matches": 0,
+      "unique_reference_peptides": 2767
+    },
+    "tcell:test": {
+      "independent_replay": "passed",
+      "input_rows": 7276,
+      "n_core8_candidate_rows": 47,
+      "n_exact_candidate_rows": 0,
+      "n_hamming1_candidate_rows": 0,
+      "n_union_candidate_rows": 47,
+      "role": "protected",
+      "source_token_matches": 0,
+      "unique_reference_peptides": 3893
+    },
+    "tcell:train": {
+      "independent_replay": "passed",
+      "input_rows": 69977,
+      "n_core8_candidate_rows": 223,
+      "n_exact_candidate_rows": 0,
+      "n_hamming1_candidate_rows": 2,
+      "n_union_candidate_rows": 223,
+      "role": "train",
+      "source_token_matches": 0,
+      "unique_reference_peptides": 27381
+    }
+  },
+  "condition_identity_clear_rows": {
+    "HLA-DM": 3976,
+    "none": 6058
+  },
+  "locked_confirmation_records_accessed": false,
+  "n_candidate_peptides": 10143,
+  "n_candidate_rows": 21547,
+  "n_identity_clear_peptides": 4871,
+  "n_identity_clear_rows": 10034,
+  "n_protected_overlap_rows": 11513,
+  "n_training_eligible_rows": 0,
+  "note": "Identity qualification only. Training remains pending source release, a frozen comparison/background/split contract and model-feature coverage. Nondetection is not an affinity-negative label.",
+  "outcome_access": false,
+  "pair_identity_clear_rows": {
+    "HLA-DPA1*01:03/DPB1*04:01": 1275,
+    "HLA-DPA1*01:03/DPB1*04:02": 3790,
+    "HLA-DPA1*02:01/DPB1*10:01": 4969
+  },
+  "paired_detection_support": [
+    {
+      "mhc_pair": "HLA-DPA1*01:03/DPB1*04:01",
+      "n_absent_only_peptides": 0,
+      "n_absent_peptides": 0,
+      "n_both_peptides": 0,
+      "n_present_only_peptides": 792,
+      "n_present_peptides": 792
+    },
+    {
+      "mhc_pair": "HLA-DPA1*01:03/DPB1*04:02",
+      "n_absent_only_peptides": 1215,
+      "n_absent_peptides": 1573,
+      "n_both_peptides": 358,
+      "n_present_only_peptides": 343,
+      "n_present_peptides": 701
+    },
+    {
+      "mhc_pair": "HLA-DPA1*02:01/DPB1*10:01",
+      "n_absent_only_peptides": 1530,
+      "n_absent_peptides": 1995,
+      "n_both_peptides": 465,
+      "n_present_only_peptides": 459,
+      "n_present_peptides": 924
+    }
+  ],
+  "sample_identity_clear_rows": {
+    "DP10_A": 1563,
+    "DP10_B": 1814,
+    "DP10_DM_A": 788,
+    "DP10_DM_B": 804,
+    "DP401_DM_A": 650,
+    "DP401_DM_B": 625,
+    "DP402_A": 1375,
+    "DP402_B": 1306,
+    "DP402_DM_A": 643,
+    "DP402_DM_B": 466
+  },
+  "seconds": 122.46727144,
+  "source_matches": {},
+  "status": "passed"
+}
