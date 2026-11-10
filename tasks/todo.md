@@ -14996,8 +14996,8 @@ Plan: `experiments/agents/codex/plans/2026-11-10_dp-dm-shared-integration.md`.
 User request: commit the work and observations to PRs and file necessary issues.
 - [x] Freeze verification evidence and publish Hitlist source integration as draft PR898.
 - [x] File reproduced upstream compatibility failures with baseline evidence: Hitlist897.
-- [x] Close the source-integration record and prepare the future-work map for commit.
-- [ ] Push both branches, link related issues/PRs and verify remote heads.
+- [x] Commit the source-integration record and future-work map in `cc832aba`.
+- [x] Push both branches, link related issues/PRs and verify remote heads.
 
 Scope: publish owned source integration, audits and observations. Preserve the
 other active Atlas/T-cell worktrees and the unrelated dirty root checkout.
@@ -15012,3 +15012,10 @@ The 162,944,527-byte raw bundle was uploaded to Modal and downloaded again with
 identical SHA256 `d95c71a867c7c425569185bff22b19c75a87318af2af3bf7d5ebc6ea5a331278`.
 The registry and future-work map retain scientific gates and source limitations.
 No new training or performance improvement is claimed.
+
+Publication readback: Presto PR156 is `cc832aba`, Hitlist draft PR898 is
+`4e700744`; issue895/155 and PR156 bodies exactly match submitted text. Parent
+PR131 remains open/draft; the handoff is linked in comment6779147294. Hosted
+Hitlist Python3.14 confirms 90 unit failures on published mhcgnomes3.70.2;
+logs/failure list are preserved and #897 tracks resolution. Publication is
+complete; neither source release nor scientific qualification is complete.

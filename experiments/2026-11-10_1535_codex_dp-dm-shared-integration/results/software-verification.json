@@ -13,5 +13,19 @@
   "isolated_post_fix_pytest": "not started: normal host memory guard refused at 0.18 GiB and 0.14 GiB",
   "integration_phase": "not run",
   "compatibility_issue": "https://github.com/pirl-unc/hitlist/issues/897",
-  "shared_environment_modified": false
+  "shared_environment_modified": false,
+  "hosted_python314_after_marker_fix": {
+    "source_commit": "4e700744b196c7cb088be9772f1b7cd37a61406e",
+    "job_url": "https://github.com/pirl-unc/hitlist/actions/runs/42900255536/job/130124027023",
+    "python": "3.14",
+    "mhcgnomes": "3.70.2 published wheel",
+    "passed": 3727,
+    "failed": 90,
+    "skipped": 2,
+    "seconds": 129.19,
+    "log_sha256": "420102017aeb323efa97b1367b390d1eeb69a91fc3dfc4e941c78ee31dab2c07",
+    "source_test_in_failure_list": false,
+    "integration": "pending at publication",
+    "note": "Full local pre-fix evidence remains separate; current stable dependency CI confirms the compatibility gap."
+  }
 }

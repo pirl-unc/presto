@@ -6403,3 +6403,9 @@ smoke-tested.
   no predictive winner. Continue [Presto155](https://github.com/pirl-unc/presto/issues/155)
   overlap qualification before a matched condition-aware fit. Existing biological
   objectives and draft PR131 milestones remain open.
+
+  Hosted follow-up at Hitlist `4e700744`: Python3.14/published mhcgnomes3.70.2
+  unit suite finished 3,727 passed / 90 failed / 2 skipped in129.19s. The source
+  unit tests do not appear in the failure list. Known parsing/serotype/deprecated
+  access failures persist; #897 owns the fix. Other matrix arms were cancelled;
+  integration is pending. Failure list and complete compressed log are committed.

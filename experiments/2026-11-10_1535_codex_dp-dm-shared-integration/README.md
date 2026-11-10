@@ -120,3 +120,11 @@ versus masked fit through the common model. The conversation's broader
 [future-work map](../agents/codex/plans/2026-11-10_conversation-followups.md)
 links stability, affinity, censoring, data coverage and transfer requirements.
 Scientific parent PR131 stays draft until its qualification milestones pass.
+
+Hosted update on Hitlist `4e700744`: Python 3.14 with published mhcgnomes
+3.70.2 finished **3,727 passed / 90 failed / 2 skipped** (129.19s). The failure
+list includes the existing parsing, serotype and deprecated cytosolic-access
+paths and no new source unit test. This independently confirms the compatibility
+gap on published dependencies; other unit matrix jobs were cancelled by the
+failed matrix arm, and integration remains pending at publication. The full log
+and failure list are preserved in `results/hosted-unit-verification.json`.
