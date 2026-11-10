@@ -14940,7 +14940,7 @@ Plan: `experiments/agents/codex/plans/2026-11-10_processing-condition-preservati
 - [x] Register metadata-only source audit with pinned inputs and arm/study counts.
 - [x] Preserve four dropped intervention families in the common MS adapter.
 - [x] Verify source semantics, common-model gradients and affinity invariance.
-- [ ] Record review, follow-up issue and publish the scoped fix.
+- [x] Record review, follow-up issue and publish the scoped fix: PR156, issue155.
 
 Review: source audit covers 63 curated arms; actual admitted peptide counts and
 scientific benefit remain open in #155. On the PR131 publication base, 219

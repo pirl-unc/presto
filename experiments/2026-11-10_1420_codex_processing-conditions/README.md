@@ -92,3 +92,8 @@ launcher snapshot and invocation are under `reproduce/`. Set
 `PRESTO_CONDITION_AUDIT_OUTPUT` to a fresh output directory for replay; the
 launcher refuses overwrite. Summary counts and CSV should replay exactly;
 elapsed wall time is deliberately not expected to match.
+
+Publication: [PR156](https://github.com/pirl-unc/presto/pull/156), stacked on
+draft PR131. Code commit `55d397b5`; audit/verification commit `b87868ea`.
+Issue155 body was read back and matched the prepared source. Full GitHub CI
+was running at publication; local verification above remains the completed check.
