@@ -172,3 +172,11 @@ An isolated Hitlist checkout is prepared at
 with `tasks/dp_dm_source_integration_spec.md`. No Hitlist implementation change
 or release is claimed yet. The broader binding, ligand and processing objective
 remains active; no existing checkpoint or model baseline is promoted here.
+
+Published in [PR156](https://github.com/pirl-unc/presto/pull/156), source record
+commit `e21d6dbf135400b5d8a598fca4016a8cbc217f53`. Hitlist895 and Presto155 were
+updated with these counts, confidence findings and remaining acceptance steps;
+both were read back successfully. Local source checks pass, and hosted CI for
+the publication commit was still running at handoff. The parent scientific
+PR131 remains draft. Earlier stability, assay calibration, coverage and sampling
+observations remain in the committed post-fit handoff and issues #138–#142.

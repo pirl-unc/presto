@@ -14966,7 +14966,7 @@ Spec: `experiments/agents/codex/plans/2026-11-10_dp-dm-source-recovery.md`.
 - [x] Retrieve complete inventory and primary construct/sample evidence.
 - [x] Recover processed source forms/confidence and map actual acquisitions.
 - [x] Independently verify source extraction and identify admission gaps.
-- [ ] Publish reusable evidence and update Hitlist895/Presto155.
+- [x] Publish reusable evidence and update Hitlist895/Presto155.
 
 Review: all 32 native sources are checksum-verified. Independent replay covers
 69,327 original high-confidence PSMs and 21,634 peptide–sample records; the fresh
@@ -14977,3 +14977,7 @@ Converted pass flags include low-confidence/decoy matches and are unsuitable
 for admission. Raw evidence is durably verified on Modal; no GPU, fit or new
 performance claim. Shared Hitlist integration and split/overlap qualification
 remain open, with the implementation spec included in this family's handoff.
+Published in PR156 at `e21d6dbf`; both issue bodies and the PR description were
+read back after update. Hosted CI is running for that commit. The source recovery
+and publication are complete; shared integration and scientific training remain
+open. PR131 is still open/draft and has not been merged.
