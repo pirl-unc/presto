@@ -1,0 +1,40 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "presto_commit": "9a99bbf0207af70b4e168385a1daa0cf98cc5ece",
+  "hitlist_base": "43e226621434a483141764ed54faba725bbb3869",
+  "dirty_scope": "Hitlist DP/DM source curation, assets, tests and packaging; new Presto integration audit",
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "experiments/2026-11-10_1535_codex_dp-dm-shared-integration/reproduce/source/verify_shared-attempt02.py",
+    "--native",
+    "/private/tmp/presto-dp-dm-source-20261110/native-extraction-v2/native-peptide-samples.jsonl.gz",
+    "--catalog",
+    "/Users/iskander/code/presto/artifacts/2026-11-07_1645_codex_unified-data-audit/upload/mhc-full-seqs.csv",
+    "--output",
+    "/private/tmp/presto-dp-dm-shared-20261110/attempt02"
+  ],
+  "environment": {
+    "PYTHONPATH": "/private/tmp/hitlist-dp-dm-source-20261110:/private/tmp/presto-conditions-import"
+  },
+  "source_pins": {
+    "/private/tmp/hitlist-dp-dm-source-20261110/hitlist/data/pmid_overrides.yaml": "db99169e0b29396d6073e535b952a484ba73b4b733cbf7833a972ee3f0667cf7",
+    "/private/tmp/hitlist-dp-dm-source-20261110/hitlist/data/specimen_lineage.yaml": "e34c23ec451a2aee4bc0825f03e6121246a7484f3d58910cb150c0e8e90e6014",
+    "/private/tmp/hitlist-dp-dm-source-20261110/hitlist/data/supplementary.yaml": "e49a938450f1b6dd343c50981e93c358531ae2043882259d36f1febd10ca41c6",
+    "/private/tmp/hitlist-dp-dm-source-20261110/scripts/curate_meurer_dp_dm.py": "4009d56bd9e6ccfd1d3a826a8021477b6997bba892032951e64d72abe9aefeb5",
+    "/private/tmp/hitlist-dp-dm-source-20261110/hitlist/data/supplementary/meurer_2021_dp_dm_controls.csv.gz": "4140b446add6df6cd7eb0af47a39d38ce096fe7b92f4adcf9f237d559eb7d0c1",
+    "/private/tmp/hitlist-dp-dm-source-20261110/hitlist/data/supplementary/meurer_2021_dp_dm_dp10_a.csv.gz": "f75037be9c7720ab395a9cd621c99e8cc818a97088c057a9929bc2c6ec0d308e",
+    "/private/tmp/hitlist-dp-dm-source-20261110/hitlist/data/supplementary/meurer_2021_dp_dm_dp10_b.csv.gz": "426cf772fc1bd55760d450853fd5236c18f5425964cdadaeda097eb1c8ba8bed",
+    "/private/tmp/hitlist-dp-dm-source-20261110/hitlist/data/supplementary/meurer_2021_dp_dm_dp10_dm_a.csv.gz": "9eb5768e1e49adeeb04b61161b47a9fb0965489bf37eb657e05fc2167fad9f56",
+    "/private/tmp/hitlist-dp-dm-source-20261110/hitlist/data/supplementary/meurer_2021_dp_dm_dp10_dm_b.csv.gz": "8acf7269bca17a7340b6aec0708723785ed8a522e969d97ac802f4b61d32ac1d",
+    "/private/tmp/hitlist-dp-dm-source-20261110/hitlist/data/supplementary/meurer_2021_dp_dm_dp401_dm_a.csv.gz": "430507001d7390e4873a67852316418749d1f916c7af2a18d8a192518162be89",
+    "/private/tmp/hitlist-dp-dm-source-20261110/hitlist/data/supplementary/meurer_2021_dp_dm_dp401_dm_b.csv.gz": "4a031ff2cff92e62e2f73a6d9dd5d93c6c45b515ff80684d49eb3e78479d81e9",
+    "/private/tmp/hitlist-dp-dm-source-20261110/hitlist/data/supplementary/meurer_2021_dp_dm_dp402_a.csv.gz": "89f3761fce8d419bb6d68570be24e5dc8f977c641900e55a97cf233a0a1c2da2",
+    "/private/tmp/hitlist-dp-dm-source-20261110/hitlist/data/supplementary/meurer_2021_dp_dm_dp402_b.csv.gz": "426431316bec44860ad88514015ba50d04e95dbd5144d621ccecdec76dc36b23",
+    "/private/tmp/hitlist-dp-dm-source-20261110/hitlist/data/supplementary/meurer_2021_dp_dm_dp402_dm_a.csv.gz": "f09c09fd026ff32bddcc0641042d5ce4238292991d5f34b058cd122468f5cdb5",
+    "/private/tmp/hitlist-dp-dm-source-20261110/hitlist/data/supplementary/meurer_2021_dp_dm_dp402_dm_b.csv.gz": "abf2c29e2df994f6590b04ff232aeca3882469798bf703cf9ce4626ebf82523b",
+    "/private/tmp/hitlist-dp-dm-source-20261110/hitlist/data/supplementary/meurer_2021_dp_dm_source.yaml": "7480e6afb39d2166333c8fbc0095951df67801370a629d21f2230bb124bd9754"
+  },
+  "gpu": null,
+  "training": "none; source integration only",
+  "test_policy": "No designated held-out outcomes or predictions accessed"
+}

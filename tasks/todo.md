@@ -14981,3 +14981,34 @@ Published in PR156 at `e21d6dbf`; both issue bodies and the PR description were
 read back after update. Hosted CI is running for that commit. The source recovery
 and publication are complete; shared integration and scientific training remain
 open. PR131 is still open/draft and has not been merged.
+
+## 2026-11-10 — Shared DP/DM source integration
+
+Plan: `experiments/agents/codex/plans/2026-11-10_dp-dm-shared-integration.md`.
+- [x] Implement packaged source, exact DP/DM curation and shared origin in Hitlist.
+- [x] Verify full contributor/export/common-Presto admission against original rows.
+- [x] Audit presentation/Atlas identities and independently verify the embargo.
+- [ ] Reconcile affinity/other reserved identities before any training admission.
+- [x] Publish source PR898, checks and reproducibility records; retain scientific gates.
+
+## 2026-11-10 — Publish current work and conversation follow-ups
+
+User request: commit the work and observations to PRs and file necessary issues.
+- [x] Freeze verification evidence and publish Hitlist source integration as draft PR898.
+- [x] File reproduced upstream compatibility failures with baseline evidence: Hitlist897.
+- [x] Close the source-integration record and prepare the future-work map for commit.
+- [ ] Push both branches, link related issues/PRs and verify remote heads.
+
+Scope: publish owned source integration, audits and observations. Preserve the
+other active Atlas/T-cell worktrees and the unrelated dirty root checkout.
+Keep PR131 draft; scientific qualification and any failed software gates remain
+explicit. Publishing this work does not authorize claiming training gains.
+
+Publication review: Hitlist PR898 is verified at `4e700744`; isolated wheel,
+format/lint/pip checks pass, while full/integration gates remain open in #897.
+All 21,547 rows pass common export/adapter verification. Independent identity
+replay confirms 8,338 protected overlaps and zero TRAIN-eligible additions.
+The 162,944,527-byte raw bundle was uploaded to Modal and downloaded again with
+identical SHA256 `d95c71a867c7c425569185bff22b19c75a87318af2af3bf7d5ebc6ea5a331278`.
+The registry and future-work map retain scientific gates and source limitations.
+No new training or performance improvement is claimed.

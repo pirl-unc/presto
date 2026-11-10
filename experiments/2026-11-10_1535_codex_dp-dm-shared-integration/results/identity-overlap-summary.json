@@ -1,0 +1,59 @@
+{
+  "cohorts": {
+    "atlas:test": {
+      "n_core8_overlap_candidate_peptides": 2825,
+      "n_core8_overlap_candidate_rows": 6467,
+      "n_exact_overlap_candidate_peptides": 437,
+      "n_exact_overlap_candidate_rows": 1169,
+      "n_index_rows": 140757,
+      "n_source_token_matches": null
+    },
+    "atlas:train": {
+      "n_core8_overlap_candidate_peptides": 5106,
+      "n_core8_overlap_candidate_rows": 11330,
+      "n_exact_overlap_candidate_peptides": 1017,
+      "n_exact_overlap_candidate_rows": 2611,
+      "n_index_rows": 710520,
+      "n_source_token_matches": null
+    },
+    "atlas:validation": {
+      "n_core8_overlap_candidate_peptides": 2856,
+      "n_core8_overlap_candidate_rows": 6458,
+      "n_exact_overlap_candidate_peptides": 416,
+      "n_exact_overlap_candidate_rows": 1083,
+      "n_index_rows": 141843,
+      "n_source_token_matches": null
+    },
+    "presentation:consumed_development": {
+      "n_core8_overlap_candidate_peptides": 42,
+      "n_core8_overlap_candidate_rows": 83,
+      "n_exact_overlap_candidate_peptides": 1,
+      "n_exact_overlap_candidate_rows": 7,
+      "n_index_rows": 48530,
+      "n_source_token_matches": 0
+    },
+    "presentation:train": {
+      "n_core8_overlap_candidate_peptides": 3683,
+      "n_core8_overlap_candidate_rows": 7904,
+      "n_exact_overlap_candidate_peptides": 29,
+      "n_exact_overlap_candidate_rows": 52,
+      "n_index_rows": 1349378,
+      "n_source_token_matches": 0
+    }
+  },
+  "inputs": {
+    "/private/tmp/presto-disjoint-qualification-20261109/experiments/2026-11-10_1230_codex_hla-ligand-atlas-bag-transfer/results/training-projection-v1/dispositions.parquet": "8332c0a8181416f3d51007708723e48fe12f4f8c13b03eef17b9788200ac3e27",
+    "/private/tmp/presto-dp-dm-shared-20261110/attempt02/shared-export.parquet": "b7ac777432942bab9f56f72c840876d125a26acba8048936ddcf2616a4b91d00",
+    "/private/tmp/presto-dp-dm-shared-20261110/presentation-identities.parquet": "0d95780f2c918ed73fb6d0a8b1a0d6dafcaf45f32ab7b49340bc7ad08b530df0"
+  },
+  "n_candidate_peptides": 10143,
+  "n_candidate_peptides_clear_of_these_protected_identities": 6434,
+  "n_candidate_rows": 21547,
+  "n_candidate_rows_clear_of_these_protected_identities": 13209,
+  "n_candidate_rows_overlapping_protected_identities": 8338,
+  "n_training_eligible_rows": 0,
+  "outcomes_or_predictions_accessed": false,
+  "scope_limit": "Presentation and Atlas identities only; quantitative-affinity and other reserved cohort identities still require reconciliation before training. TRAIN identity overlap does not establish independent new measurement or label conflict.",
+  "seconds": 4.884892625035718,
+  "status": "presentation_and_atlas_identity_audit_complete"
+}

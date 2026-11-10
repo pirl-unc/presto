@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+set -euo pipefail
+/Users/iskander/code/shared-virtual-env/bin/python experiments/2026-11-10_1535_codex_dp-dm-shared-integration/reproduce/source/identity_overlap.py --presentation /private/tmp/presto-dp-dm-shared-20261110/presentation-identities.parquet --atlas /private/tmp/presto-disjoint-qualification-20261109/experiments/2026-11-10_1230_codex_hla-ligand-atlas-bag-transfer/results/training-projection-v1/dispositions.parquet --export /private/tmp/presto-dp-dm-shared-20261110/attempt02/shared-export.parquet --output /private/tmp/presto-dp-dm-shared-20261110/identity-overlap-v1

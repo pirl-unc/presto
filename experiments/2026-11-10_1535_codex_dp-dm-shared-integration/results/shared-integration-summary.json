@@ -1,0 +1,45 @@
+{
+  "catalog_sha256": "ddc3493c64f4328de174a6c2cda1f007ec2f93a1ef649add25d2ef9c1720add1",
+  "dm_context_counts": {
+    "absent": 12375,
+    "present": 9172
+  },
+  "export": {
+    "path": "/private/tmp/presto-dp-dm-shared-20261110/attempt02/shared-export.parquet",
+    "sha256": "b7ac777432942bab9f56f72c840876d125a26acba8048936ddcf2616a4b91d00"
+  },
+  "hitlist_source": "/private/tmp/hitlist-dp-dm-source-20261110/hitlist/__init__.py",
+  "mhc_pair_counts": {
+    "HLA-DPA1*01:03/DPB1*04:01": 3199,
+    "HLA-DPA1*01:03/DPB1*04:02": 8329,
+    "HLA-DPA1*02:01/DPB1*10:01": 10019
+  },
+  "n_distinct_peptides": 10143,
+  "n_independently_verified_contributor_links": 21547,
+  "n_shared_export_rows": 21547,
+  "n_source_candidates": 21547,
+  "n_training_eligible_rows": 0,
+  "native_input_sha256": "daaa04962f690a184c553ac8ec55c8545f40bdfbecac61ce89a8997d94124beb",
+  "observations": {
+    "path": "/private/tmp/presto-dp-dm-shared-20261110/attempt02/presto-source-observations.jsonl.gz",
+    "sha256": "8aaaef0fd73737b2252b7a2c18762ec9a6398a3f7a9082fc44eaa2c3294bbd3f"
+  },
+  "pending": [
+    "prior-cohort source/peptide overlap",
+    "prospective comparison and training"
+  ],
+  "sample_counts": {
+    "DP10_A": 3052,
+    "DP10_B": 3552,
+    "DP10_DM_A": 1687,
+    "DP10_DM_B": 1728,
+    "DP401_DM_A": 1602,
+    "DP401_DM_B": 1597,
+    "DP402_A": 2956,
+    "DP402_B": 2815,
+    "DP402_DM_A": 1446,
+    "DP402_DM_B": 1112
+  },
+  "seconds": 12.104222666006535,
+  "status": "passed"
+}

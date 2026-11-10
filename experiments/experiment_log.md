@@ -6363,3 +6363,43 @@ smoke-tested.
   owns overlap qualification and matched condition-aware training. A detailed
   Hitlist implementation spec is preserved in `source-review/`. Existing
   checkpoints and the binding/MS/processing performance objectives remain open.
+
+## 2026-11-10 — Shared DP/DM integration and partial identity embargo
+
+- **Agent/model:** Codex / GPT-6. Presto base `9a99bbf0`; Hitlist base `43e2266`;
+  executed dirty source snapshots are pinned in the reproduction bundle.
+- **Directory:** [2026-11-10_1535_codex_dp-dm-shared-integration](2026-11-10_1535_codex_dp-dm-shared-integration/README.md).
+- **Dataset/curation:** original PXD017154 / PMID33025005 native high-confidence,
+  unmodified canonical 10–512-aa DP captures, unique visible rank-1 match, complete
+  protein references, no-DP-control exclusion. Ten sample assets; exact DP pairs;
+  shared source origin with unknown physical specimen/donor. All 21,547 rows /
+  10,143 sequences pass common Hitlist export → Presto MS adapter with original
+  contributor evidence. DM absent 12,375 / present 9,172 relative to the declared
+  engineered background. [Hitlist PR898](https://github.com/pirl-unc/hitlist/pull/898)
+  publishes the data/curation at `4e700744`; release gates remain open.
+- **Identity results:** 8,338 rows share protected presentation/Atlas sequence
+  identities or contiguous 8-mers; 13,209 / 6,434 peptides clear those checks.
+  Independent replay verifies every row × 12 membership/eligibility fields.
+  Affinity/other reserved identities remain unchecked: **zero TRAIN additions**.
+- **Assay/output, censoring and synthetic contract:** positive MS detection only;
+  no affinity/abundance label from detections, controls or counts; no new bounds,
+  synthetic examples or loss. Exact chain and intervention evidence is retained
+  through the common source/model path.
+- **Training/pretraining/evaluation:** none; no optimizer, checkpoint selection
+  or designated held-out outcome access. Test identities alone are used for
+  embargo. Predictive validation/test metrics and dumps are inapplicable.
+- **Hardware/runtime:** local CPU only; no Modal GPU requested/observed.
+  Source/export audit 12.104s, identity audit 4.885s; audit peak RSS unmeasured.
+- **Software checks:** format/lint/pip check and wheel assets pass. Full local
+  Hitlist default suite 3,729 passed / 91 failed before the new census-test marker
+  correction; 9 baseline failures reproduced. [Hitlist897](https://github.com/pirl-unc/hitlist/issues/897)
+  owns current dependency compatibility. Post-fix isolated pytest was refused
+  by the unchanged host-memory guard; full/integration qualification is pending.
+- **Artifacts:** frozen `reproduce/` invocations/source snapshots, summary JSON/CSV
+  and compressed logs are committed. Modal volume `presto-checkpoints`,
+  `2026-11-10_1535_codex_dp-dm-shared-integration/shared-integration-v1.tar.gz`;
+  `results/publication.json` records archive/member hashes and verified readback.
+- **Preferred path/decision:** shared source integration with native evidence;
+  no predictive winner. Continue [Presto155](https://github.com/pirl-unc/presto/issues/155)
+  overlap qualification before a matched condition-aware fit. Existing biological
+  objectives and draft PR131 milestones remain open.
