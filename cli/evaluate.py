@@ -7,11 +7,6 @@ import tempfile
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional
 
-import torch
-from ..data import PrestoCollator, PrestoDataset, create_dataloader
-from ..legacy.scripts import train_synthetic
-from ..training.checkpointing import load_model_from_checkpoint
-
 
 def _binary_auc(labels: Iterable[float], scores: Iterable[float]) -> Optional[float]:
     ys = list(labels)
@@ -33,6 +28,8 @@ def _binary_auc(labels: Iterable[float], scores: Iterable[float]) -> Optional[fl
 
 
 def _collect_aux_metrics(model, val_loader, device: str) -> Dict[str, Any]:
+    import torch
+
     model.eval()
     tcell_labels: List[float] = []
     tcell_scores: List[float] = []
@@ -86,6 +83,12 @@ def _collect_aux_metrics(model, val_loader, device: str) -> Dict[str, Any]:
 
 def cmd_evaluate_synthetic(args: Any) -> int:
     """Evaluate a checkpoint on synthetic data."""
+    import torch
+
+    from ..data import PrestoCollator, PrestoDataset, create_dataloader
+    from ..legacy.scripts import train_synthetic
+    from ..training.checkpointing import load_model_from_checkpoint
+
     if not args.checkpoint:
         raise ValueError("Missing --checkpoint")
 

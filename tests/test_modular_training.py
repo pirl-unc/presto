@@ -82,7 +82,13 @@ def test_affinity_adapter_raw_units_proxies_and_stability():
         ("tm", 55, "C"),
     ]
     kinetic = KineticsRecord("ACDEFGHIK", "example", kon=1, koff=0.1, evidence_row_id="k")
-    assert affinity_observations(kinetic, mhc, split="train", group_id="g")[0].endpoint == "koff"
+    assert [
+        (x.endpoint, x.value, x.unit)
+        for x in affinity_observations(kinetic, mhc, split="train", group_id="g")
+    ] == [
+        ("kon", 1, "1/(M*s)"),
+        ("koff", 0.1, "1/s"),
+    ]
     with pytest.raises(ValueError, match="generated"):
         affinity_observations(
             replace(record, generation_kind="random"), mhc, split="train", group_id="g"
