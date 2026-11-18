@@ -39,6 +39,31 @@ from presto.training.holdout_eval import (
 
 BA_ENDPOINTS = ("ic50", "kd", "kd_via_ic50", "kd_via_ec50")
 QUALITATIVE_ENDPOINT = "qualitative_binding"
+NM_UNIT_FACTORS = {
+    "nM": 1.0,
+    "uM": 1e3,
+    "\u00b5M": 1e3,
+    "\u03bcM": 1e3,
+    "mM": 1e6,
+    "M": 1e9,
+    "pM": 1e-3,
+}
+RECORD_COLUMNS = (
+    "observation_id",
+    "peptide",
+    "mhc_class",
+    "endpoint",
+    "detector",
+    "study_id",
+    "qualifier",
+    "raw_value",
+    "raw_nM",
+    "target_log10",
+    "presto",
+    "n_mhc_entries",
+    "catalog_alleles",
+    "bound_source",
+)
 STANDARD_AA = set("ACDEFGHIKLMNPQRSTVWY")
 LENGTH_WINDOW = {"I": (8, 15), "II": (9, 30)}
 THRESHOLD_NM = 500.0
@@ -93,8 +118,20 @@ def extract_record(row: Mapping) -> Optional[dict]:
     method = obs.get("assay_method") or {}
     curation = (prov.get("measurement_curation") or {}).get("status")
     raw_value = row.get("raw_value")
-    raw_nm = float(raw_value) if row.get("raw_unit") == "nM" and raw_value else float("nan")
+    raw_unit = row.get("raw_unit")
     target = row.get("target")
+    target_log10 = (
+        float(target) if endpoint in BA_ENDPOINTS and target is not None else float("nan")
+    )
+    raw_nm = float("nan")
+    if endpoint in BA_ENDPOINTS and raw_value is not None and raw_unit in NM_UNIT_FACTORS:
+        numeric_raw = float(raw_value)
+        if math.isfinite(numeric_raw) and numeric_raw > 0:
+            raw_nm = numeric_raw * NM_UNIT_FACTORS[raw_unit]
+            if not math.isfinite(target_log10):
+                target_log10 = math.log10(raw_nm)
+    elif endpoint in BA_ENDPOINTS and math.isfinite(target_log10):
+        raw_nm = 10.0**target_log10
     return {
         "observation_id": row["observation_id"],
         "peptide": row["peptide"],
@@ -105,7 +142,7 @@ def extract_record(row: Mapping) -> Optional[dict]:
         "qualifier": row.get("qualifier") or "=",
         "raw_value": raw_value,
         "raw_nM": raw_nm,
-        "target_log10": float(target) if endpoint in BA_ENDPOINTS else float("nan"),
+        "target_log10": target_log10,
         "presto": float(row["prediction"]),
         "n_mhc_entries": len(mhc),
         "catalog_alleles": "|".join(catalog),
@@ -120,7 +157,7 @@ def extract_records(path: os.PathLike) -> pd.DataFrame:
             record = extract_record(json.loads(line))
             if record is not None:
                 rows.append(record)
-    return pd.DataFrame(rows)
+    return pd.DataFrame(rows) if rows else pd.DataFrame(columns=RECORD_COLUMNS)
 
 
 # ----------------------------------------------------------------------------
@@ -352,7 +389,14 @@ def run_bundle_tool(
             job_rows, log = future.result()
             rows.extend(job_rows)
             logs.append(log)
-    return pd.DataFrame(rows), logs
+    out = (
+        pd.DataFrame(rows)
+        if rows
+        else pd.DataFrame(
+            columns=["tool", "allele", "peptide", "ic50_nM", "allele_distance_to_training"]
+        )
+    )
+    return out, logs
 
 
 def run_mhcflurry(pairs: pd.DataFrame, executable: str, workdir: str) -> pd.DataFrame:
@@ -405,6 +449,47 @@ METRICS = (
     "spearman", "pearson", "rmse", "accuracy", "balanced_accuracy",
     "precision", "recall", "f1", "auroc", "auprc",
 )  # fmt: skip
+UNIT_COLUMNS = (
+    *UNIT_KEYS,
+    "method",
+    "n",
+    *METRICS,
+    "spearman_ci_lo",
+    "spearman_ci_hi",
+    "rmse_ci_lo",
+    "rmse_ci_hi",
+)
+POOLED_COLUMNS = (
+    *POOL_KEYS,
+    "method",
+    "metric",
+    "n_studies",
+    "n_rows",
+    "mean_of_study",
+    "ci_lo",
+    "ci_hi",
+    "diff_vs_presto",
+    "diff_ci_lo",
+    "diff_ci_hi",
+    "fisher_z_weighted",
+)
+CENSORED_COLUMNS = (
+    "mhc_class",
+    "detector",
+    "study_id",
+    "endpoint",
+    "direction",
+    "bound_source",
+    "method",
+    "n",
+    "bound_threshold_median_nM",
+    "satisfied",
+    "n_violated",
+    "median_violation_log10",
+    "mean_violation_log10",
+)
+QUALITATIVE_COLUMNS = ("mhc_class", "study_id", "method", "n", "n_pos", "n_neg", "auroc")
+CENSUS_COLUMNS = ("mhc_class", "kind", "exclusion", "n")
 
 
 def methods_for(mhc_class: str) -> List[str]:
@@ -453,6 +538,8 @@ def unit_metrics(
     exact: pd.DataFrame, *, row_draws: int = 1000, seed: int = BOOTSTRAP_SEED
 ) -> pd.DataFrame:
     """Per class x endpoint x detector x study metrics for every method (exact rows)."""
+    if exact.empty:
+        return pd.DataFrame(columns=UNIT_COLUMNS)
     rows = []
     for key, group in exact.groupby(UNIT_KEYS, sort=True):
         cls = key[0]
@@ -469,7 +556,7 @@ def unit_metrics(
                 record["spearman_ci_lo"], record["spearman_ci_hi"] = _ci(sp)
                 record["rmse_ci_lo"], record["rmse_ci_hi"] = _ci(rm)
             rows.append(record)
-    return pd.DataFrame(rows)
+    return pd.DataFrame(rows) if rows else pd.DataFrame(columns=UNIT_COLUMNS)
 
 
 def _fisher_mean(rho: np.ndarray, n: np.ndarray) -> float:
@@ -489,7 +576,11 @@ def pooled_metrics(
     CI: percentile of the study-level cluster bootstrap. ``diff_vs_presto`` is always
     method minus Presto on paired draws (so for RMSE a negative value favours the method).
     """
+    if units.empty or "n" not in units.columns:
+        return pd.DataFrame(columns=POOLED_COLUMNS)
     eligible = units[units["n"] >= MIN_UNIT_ROWS]
+    if eligible.empty:
+        return pd.DataFrame(columns=POOLED_COLUMNS)
     rows = []
     for pool_key, pool in eligible.groupby(POOL_KEYS, sort=True):
         per_study = {}
@@ -524,11 +615,13 @@ def pooled_metrics(
                         fisher_src["spearman"].to_numpy(float), fisher_src["n"].to_numpy(float)
                     )
                 rows.append(record)
-    return pd.DataFrame(rows)
+    return pd.DataFrame(rows) if rows else pd.DataFrame(columns=POOLED_COLUMNS)
 
 
 def censored_metrics(censored: pd.DataFrame) -> pd.DataFrame:
     """Bound satisfaction by class x detector x study x direction x bound source."""
+    if censored.empty:
+        return pd.DataFrame(columns=CENSORED_COLUMNS)
     frame = censored.copy()
     frame["direction"] = np.where(
         frame["qualifier"].isin([">", ">="]), "lower_bound", "upper_bound"
@@ -536,7 +629,21 @@ def censored_metrics(censored: pd.DataFrame) -> pd.DataFrame:
     rows = []
     keys = ["mhc_class", "detector", "study_id", "endpoint", "direction", "bound_source"]
     for key, group in frame.groupby(keys, sort=True):
-        bound = np.log10(group["raw_nM"].to_numpy(float))
+        raw_nm = (
+            group["raw_nM"].to_numpy(float)
+            if "raw_nM" in group.columns
+            else np.full(len(group), np.nan, dtype=float)
+        )
+        with np.errstate(divide="ignore", invalid="ignore"):
+            raw_log10 = np.where(raw_nm > 0, np.log10(raw_nm), np.nan)
+        if "target_log10" in group.columns:
+            target_col = group["target_log10"].to_numpy(float)
+            bound = np.where(np.isfinite(target_col), target_col, raw_log10)
+        else:
+            bound = raw_log10
+        if not np.isfinite(bound).all():
+            raise ValueError("censored bound requires finite target_log10 or positive raw_nM")
+        bound_nm = np.power(10.0, bound)
         lower = key[4] == "lower_bound"
         for method in methods_for(key[0]):
             pred = _pred(group, method)
@@ -545,7 +652,7 @@ def censored_metrics(censored: pd.DataFrame) -> pd.DataFrame:
             rows.append(
                 dict(
                     zip(keys, key), method=method, n=len(group),
-                    bound_threshold_median_nM=float(np.median(group["raw_nM"])),
+                    bound_threshold_median_nM=float(np.median(bound_nm)),
                     satisfied=float(np.mean(~failed)),
                     n_violated=int(failed.sum()),
                     median_violation_log10=(
@@ -554,13 +661,15 @@ def censored_metrics(censored: pd.DataFrame) -> pd.DataFrame:
                     mean_violation_log10=float(np.mean(violation)),
                 )
             )  # fmt: skip
-    return pd.DataFrame(rows)
+    return pd.DataFrame(rows) if rows else pd.DataFrame(columns=CENSORED_COLUMNS)
 
 
 def qualitative_metrics(qualitative: pd.DataFrame) -> pd.DataFrame:
     """AUROC per class x study on literal Positive/Negative rows (identical rows)."""
     from presto.training.holdout_eval import auroc
 
+    if qualitative.empty:
+        return pd.DataFrame(columns=QUALITATIVE_COLUMNS)
     rows = []
     for key, group in qualitative.groupby(["mhc_class", "study_id"], sort=True):
         labels = (group["raw_value"].astype(float) > 0.5).astype(float).to_numpy()
@@ -576,11 +685,13 @@ def qualitative_metrics(qualitative: pd.DataFrame) -> pd.DataFrame:
                      n_pos=int(labels.sum()), n_neg=int(len(labels) - labels.sum()),
                      auroc=float("nan") if value is None else value)
             )  # fmt: skip
-    return pd.DataFrame(rows)
+    return pd.DataFrame(rows) if rows else pd.DataFrame(columns=QUALITATIVE_COLUMNS)
 
 
 def exclusion_census(frame: pd.DataFrame) -> pd.DataFrame:
     """Row counts by class, scope kind and exclusion reason."""
+    if frame.empty:
+        return pd.DataFrame(columns=CENSUS_COLUMNS)
     kind = np.where(
         frame["endpoint"] == QUALITATIVE_ENDPOINT,
         "qualitative",

@@ -21,21 +21,102 @@ def sigmoid(value: float) -> float:
     return exponent / (1.0 + exponent)
 
 
+def _publication_study_id(provenance: Mapping) -> str | None:
+    raw = provenance.get("raw_record")
+    raw_map = raw if isinstance(raw, Mapping) else {}
+    for candidate in (
+        provenance.get("study_id"),
+        provenance.get("pmid"),
+        provenance.get("pubmed_id"),
+        provenance.get("reference_id"),
+        provenance.get("reference_iri"),
+        raw_map.get("study_id"),
+        raw_map.get("pmid"),
+        raw_map.get("pubmed_id"),
+        raw_map.get("reference_id"),
+        raw_map.get("reference_iri"),
+    ):
+        if candidate is not None and not isinstance(candidate, bool):
+            text = str(candidate).strip()
+            if text:
+                return text
+    return None
+
+
 def study_id(record: Mapping) -> str:
-    """Return the frozen study identity carried by a modular prediction row."""
-    provenance = record.get("observation", {}).get("provenance", {})
-    value = provenance.get("study_id") or record.get("group_id")
-    if not isinstance(value, str) or not value:
+    """Return the frozen publication/study identity carried by a modular prediction row."""
+    observation = record.get("observation")
+    provenance = observation.get("provenance", {}) if isinstance(observation, Mapping) else {}
+    if not isinstance(provenance, Mapping):
+        provenance = {}
+    value = _publication_study_id(provenance)
+    if not value:
         raise ValueError(f"prediction {record.get('observation_id')} lacks study identity")
     return value
 
 
+def _canonical_mhc(observation: Mapping) -> list[dict]:
+    raw_mhc = observation.get("mhc") or ()
+    if not isinstance(raw_mhc, Sequence) or isinstance(raw_mhc, (str, bytes)):
+        raise ValueError("observation.mhc must be a sequence")
+    out = []
+    for item in raw_mhc:
+        if not isinstance(item, Mapping):
+            raise ValueError("MHC candidate must be a mapping")
+        prov = item.get("provenance")
+        prov_map = prov if isinstance(prov, Mapping) else {}
+        out.append(
+            {
+                "groove1": item.get("groove1"),
+                "groove2": item.get("groove2"),
+                "mhc_class": item.get("mhc_class"),
+                "class_override": item.get("class_override"),
+                "species1": item.get("species1"),
+                "species2": item.get("species2"),
+                "catalog_alleles": prov_map.get("catalog_alleles"),
+            }
+        )
+    return out
+
+
+def _canonical_context(observation: Mapping) -> dict:
+    context = observation.get("context")
+    if context is None:
+        return {}
+    if not isinstance(context, Mapping):
+        raise ValueError("observation.context must be a mapping")
+    return {key: value for key, value in context.items() if key != "provenance"}
+
+
 def prediction_identity(record: Mapping) -> str:
-    """Canonical truth identity used to reject cohort or label drift."""
+    """Canonical truth and input-context identity used to reject cohort or label drift."""
     observation = record.get("observation")
     if not isinstance(observation, Mapping):
         raise ValueError("prediction lacks its frozen observation")
+    for key in (
+        "observation_id",
+        "endpoint",
+        "source",
+        "group_id",
+        "split",
+        "peptide",
+        "qualifier",
+    ):
+        if key in observation and observation[key] != record.get(key):
+            raise ValueError(
+                f"prediction {record.get('observation_id')} disagrees with observation.{key}"
+            )
+    if "value" in observation and observation["value"] != record.get("raw_value"):
+        raise ValueError(
+            f"prediction {record.get('observation_id')} disagrees with observation.value"
+        )
+    if "unit" in observation and observation["unit"] != record.get("raw_unit"):
+        raise ValueError(
+            f"prediction {record.get('observation_id')} disagrees with observation.unit"
+        )
     provenance = observation.get("provenance", {})
+    if not isinstance(provenance, Mapping):
+        raise ValueError("observation.provenance must be a mapping")
     assay = record.get("assay_method")
     identity = {
         "observation_id": record.get("observation_id"),
@@ -46,12 +127,20 @@ def prediction_identity(record: Mapping) -> str:
         "peptide": record.get("peptide"),
         "qualifier": record.get("qualifier"),
         "mhc_classes": record.get("mhc_classes"),
+        "mhc": _canonical_mhc(observation),
+        "tcr_a": observation.get("tcr_a") or "",
+        "tcr_b": observation.get("tcr_b") or "",
+        "context": _canonical_context(observation),
         "target": record.get("target"),
         "raw_value": record.get("raw_value"),
         "raw_unit": record.get("raw_unit"),
         "target_space": record.get("target_space"),
+        "quantity_contract": record.get("quantity_contract", observation.get("quantity_contract")),
+        "value_encoding": record.get("value_encoding", observation.get("value_encoding", "linear")),
+        "tcell_track": record.get("tcell_track", observation.get("tcell_track")),
+        "tcell_intensity": record.get("tcell_intensity", observation.get("tcell_intensity")),
         "assay_method": assay,
-        "study_id": provenance.get("study_id") or record.get("group_id"),
+        "study_id": study_id(record),
         "original_measurement_id": provenance.get("original_measurement_id"),
         "pair_id": provenance.get("pair_id"),
     }
@@ -170,19 +259,27 @@ def affinity_threshold_metrics(
     records: Sequence[Mapping], *, threshold_nm: float = 500.0
 ) -> dict[str, float]:
     """Qualifier-aware affinity classification metrics on long-table rows."""
+    if threshold_nm <= 0 or not math.isfinite(threshold_nm):
+        raise ValueError("threshold_nm must be positive and finite")
     cutoff = math.log10(threshold_nm)
     labels, scores = [], []
     for row in records:
         target = float(row["target_log10_nM"])
         prediction = float(row["prediction_log10_nM"])
-        qualifier = qualifier_code(row["qualifier"])
-        at_or_below = target <= cutoff
-        usable = (
-            qualifier == 0 or qualifier < 0 and at_or_below or qualifier > 0 and not at_or_below
-        )
+        raw_qual = str(row["qualifier"]).strip()
+        qualifier = qualifier_code(raw_qual)
+        if qualifier == 0:
+            is_binder = target <= cutoff
+            usable = True
+        elif qualifier < 0:
+            is_binder = True
+            usable = target <= cutoff
+        else:
+            is_binder = False
+            usable = (target >= cutoff) if raw_qual == ">" else (target > cutoff)
         if not usable:
             continue
-        labels.append(float(at_or_below))
+        labels.append(float(is_binder))
         scores.append(-prediction)
     if not labels:
         return {}

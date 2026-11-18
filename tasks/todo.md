@@ -11935,9 +11935,9 @@ conditioned vs unconditioned data fit.
 - [x] Add regression tests for items 1–4, verify focused suites + CLI import isolation + Ruff lint/format, and publish PR 1.
 
 ## Stage B — PR 2: Review fixes 5–7
-- [ ] Fix external benchmark unit conversion, canonical `target_log10` censored scoring, and empty exact-row cohort handling (`evaluation/external_benchmark.py`).
-- [ ] Fix paired benchmark molecular/context alignment, publication-only study provenance, strict `>` lower bounds at cutoff, and performance-report split-to-dataset validation (`evaluation/paired_benchmark.py`, `evaluation/performance_report.py`).
-- [ ] Add regression tests for items 5–6 (completing all 15 items), verify focused suites + CLI import isolation + Ruff lint/format, and publish PR 2.
+- [x] Fix external benchmark unit conversion, canonical `target_log10` censored scoring, and empty exact-row cohort handling (`evaluation/external_benchmark.py`).
+- [x] Fix paired benchmark molecular/context alignment, publication-only study provenance, strict `>` lower bounds at cutoff, and performance-report split-to-dataset validation (`evaluation/paired_benchmark.py`, `evaluation/performance_report.py`).
+- [x] Add regression tests for items 5–6 (completing all 15 items), verify focused suites + CLI import isolation + Ruff lint/format, and publish PR 2.
 
 ## Stage C — Shared-mechanism retraining, `mhctools` benchmark & APC condition semantics
 - [ ] Inventory runnable `mhctools` class-I/II predictors and build unified evaluation harness across ordinary presentation, BA-matched processing, and APC-conditioned validation cohorts (`TEST` stays sealed).

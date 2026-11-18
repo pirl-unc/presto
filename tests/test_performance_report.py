@@ -219,3 +219,18 @@ def test_report_copies_supplemental_figures_and_tables(tmp_path):
         "affinity_metrics",
         "affinity_scatter",
     ]
+
+
+def test_report_rejects_prediction_or_metric_splits_without_matching_dataset_role(tmp_path):
+    manifest = _manifest(tmp_path)
+    manifest["prediction_artifacts"][0]["split"] = "confirmation"
+    path = _write_manifest(tmp_path, manifest)
+    with pytest.raises(ValueError, match="no matching dataset role"):
+        validate_manifest(manifest, path)
+
+    manifest = _manifest(tmp_path)
+    for row in manifest["metrics"]:
+        row["split"] = "confirmation"
+    path = _write_manifest(tmp_path, manifest)
+    with pytest.raises(ValueError, match="no matching dataset role"):
+        validate_manifest(manifest, path)

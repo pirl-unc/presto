@@ -11,6 +11,7 @@ from presto.evaluation.paired_benchmark import (
     paired_study_bootstrap,
     require_aligned_predictions,
     study_bootstrap,
+    study_id,
 )
 
 
@@ -54,6 +55,51 @@ def test_complete_prediction_alignment_rejects_label_drift():
     second[0]["target"] = 3.0
     with pytest.raises(ValueError, match="truth identity differs"):
         require_aligned_predictions({"first": first, "second": second})
+
+
+def test_prediction_alignment_rejects_molecular_and_context_drift_and_requires_publication_study():
+    base = _prediction()
+    base["observation"]["mhc"] = [
+        {
+            "groove1": "ACDEFGHIKLM",
+            "groove2": "NPQRSTVWYAC",
+            "mhc_class": "I",
+            "provenance": {"catalog_alleles": ["HLA-A*02:01"]},
+        }
+    ]
+    base["observation"]["context"] = {
+        "cell_type": "B-cell",
+        "interventions": {"knockout:TAP1": {"state": "present", "evidence": {}}},
+        "source_n": "MMM",
+    }
+
+    changed_mhc = copy.deepcopy(base)
+    changed_mhc["observation"]["mhc"][0]["groove1"] = "WWWWWWWWWWW"
+    with pytest.raises(ValueError, match="truth identity differs"):
+        require_aligned_predictions({"first": [base], "second": [changed_mhc]})
+
+    changed_context = copy.deepcopy(base)
+    changed_context["observation"]["context"]["interventions"] = {}
+    with pytest.raises(ValueError, match="truth identity differs"):
+        require_aligned_predictions({"first": [base], "second": [changed_context]})
+
+    # Provenance-only context differences do not masquerade as model input drift.
+    prov_context = copy.deepcopy(base)
+    prov_context["observation"]["context"]["provenance"] = {"note": "harmless"}
+    assert set(require_aligned_predictions({"first": [base], "second": [prov_context]})) == {
+        "first",
+        "second",
+    }
+
+    # Publication-only study provenance: group_id alone must not be accepted as a study.
+    no_pub = copy.deepcopy(base)
+    del no_pub["observation"]["provenance"]["study_id"]
+    with pytest.raises(ValueError, match="lacks study identity"):
+        study_id(no_pub)
+
+    pmid_row = copy.deepcopy(no_pub)
+    pmid_row["observation"]["provenance"]["raw_record"] = {"pmid": 32161166}
+    assert study_id(pmid_row) == "32161166"
 
 
 def test_operational_processing_reconstructs_candidate_pooling():
@@ -114,6 +160,29 @@ def test_affinity_threshold_metrics_use_definite_censored_labels():
     assert result["n"] == 2
     assert result["accuracy"] == 1
     assert result["auroc"] == 1
+
+    # Strict `> 500 nM` at the 500 nM cutoff is a definite non-binder; `>= 500 nM` is ambiguous.
+    boundary_rows = [
+        {
+            "qualifier": "<=",
+            "target_log10_nM": math.log10(500.0),
+            "prediction_log10_nM": math.log10(100.0),
+        },
+        {
+            "qualifier": ">",
+            "target_log10_nM": math.log10(500.0),
+            "prediction_log10_nM": math.log10(2000.0),
+        },
+        {
+            "qualifier": ">=",
+            "target_log10_nM": math.log10(500.0),
+            "prediction_log10_nM": math.log10(50.0),
+        },
+    ]
+    boundary = affinity_threshold_metrics(boundary_rows, threshold_nm=500.0)
+    assert boundary["n"] == 2
+    assert boundary["accuracy"] == 1.0
+    assert boundary["auroc"] == 1.0
 
 
 def _binary_rows():
