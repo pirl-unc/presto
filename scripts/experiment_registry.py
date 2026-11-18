@@ -3,15 +3,19 @@
 
 from __future__ import annotations
 
+from contextlib import contextmanager
+from datetime import datetime
+import json
 import os
+from pathlib import Path
 import re
 import shutil
 import subprocess
 import sys
-from datetime import datetime
-from pathlib import Path
+import tempfile
+import threading
+import time
 from typing import Any, Mapping, Sequence
-import json
 
 
 SOURCE_ROOT = Path(__file__).resolve().parent.parent
@@ -22,6 +26,131 @@ ROOT = Path(os.environ.get("PRESTO_WORKSPACE", Path.cwd())).resolve()
 EXPERIMENTS_ROOT = ROOT / "experiments"
 REGISTRY_MD = EXPERIMENTS_ROOT / "experiment_log.md"
 REPRO_DIRNAME = "reproduce"
+
+REPRODUCIBLE_ENVIRONMENT_KEYS = frozenset(
+    {
+        "CUBLAS_WORKSPACE_CONFIG",
+        "CUDA_LAUNCH_BLOCKING",
+        "CUDA_VISIBLE_DEVICES",
+        "HITLIST_DATA_DIR",
+        "MKL_NUM_THREADS",
+        "MODAL_ENVIRONMENT",
+        "OMP_NUM_THREADS",
+        "OPENBLAS_NUM_THREADS",
+        "PRESTO_AGENT",
+        "PRESTO_ALLOW_ZERO_MHC",
+        "PRESTO_BATCH_SIZE",
+        "PRESTO_BULK_CELL_LINE",
+        "PRESTO_BULK_MS",
+        "PRESTO_CUDA_DEVICE",
+        "PRESTO_D_MODEL",
+        "PRESTO_EPOCHS",
+        "PRESTO_EXCISION_NEGATIVE_RATIO",
+        "PRESTO_EXPERIMENT_AGENT",
+        "PRESTO_EXPERIMENT_DIR",
+        "PRESTO_EXTRA_ARGS",
+        "PRESTO_FACTORIAL",
+        "PRESTO_HITLIST_ALLELE",
+        "PRESTO_HITLIST_BUILD",
+        "PRESTO_HITLIST_BUNDLE",
+        "PRESTO_HITLIST_BUNDLE_SHA256",
+        "PRESTO_HITLIST_MHC_CLASS",
+        "PRESTO_LATENT_TOPOLOGY",
+        "PRESTO_LR",
+        "PRESTO_MAX_BINDING",
+        "PRESTO_MAX_BULK_MS",
+        "PRESTO_MAX_ELUTION",
+        "PRESTO_MAX_KINETICS",
+        "PRESTO_MAX_STABILITY",
+        "PRESTO_MERGED_TSV",
+        "PRESTO_MHCSEQS_SEARCH_DIR",
+        "PRESTO_MODAL_GPU",
+        "PRESTO_MODAL_REPO_REF",
+        "PRESTO_MODAL_REPO_URL",
+        "PRESTO_MODAL_SOURCE",
+        "PRESTO_MODAL_TIMEOUT_SECONDS",
+        "PRESTO_MODAL_VOLUME",
+        "PRESTO_MODAL_WHEEL",
+        "PRESTO_N_HEADS",
+        "PRESTO_N_LAYERS",
+        "PRESTO_QUALIFICATION_WHEEL",
+        "PRESTO_REPO_ROOT",
+        "PRESTO_SEED",
+        "PRESTO_WORKSPACE",
+        "PYTORCH_CUDA_ALLOC_CONF",
+        "PYTORCH_ENABLE_MPS_FALLBACK",
+    }
+)
+_CREDENTIAL_MARKERS = (
+    "TOKEN",
+    "SECRET",
+    "PASSWORD",
+    "API_KEY",
+    "ACCESS_KEY",
+    "CREDENTIAL",
+    "PRIVATE_KEY",
+)
+_REGISTRY_THREAD_LOCK = threading.Lock()
+
+
+def _atomic_write_bytes(path: Path, value: bytes) -> None:
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, raw_temp = tempfile.mkstemp(dir=path.parent, prefix=f".{path.name}.", suffix=".tmp")
+    temporary = Path(raw_temp)
+    try:
+        with os.fdopen(fd, "wb") as stream:
+            stream.write(value)
+            stream.flush()
+            os.fsync(stream.fileno())
+        temporary.replace(path)
+    except BaseException:
+        temporary.unlink(missing_ok=True)
+        raise
+
+
+@contextmanager
+def _portable_file_lock(lock_path: Path, *, blocking: bool = True):
+    try:
+        import fcntl
+    except ImportError:  # pragma: no cover - Windows
+        fcntl = None
+
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    with lock_path.open("a+b") as stream:
+        if fcntl is not None:
+            flags = fcntl.LOCK_EX | (0 if blocking else fcntl.LOCK_NB)
+            fcntl.flock(stream.fileno(), flags)
+            try:
+                yield
+            finally:
+                fcntl.flock(stream.fileno(), fcntl.LOCK_UN)
+        else:  # pragma: no cover - Windows
+            import msvcrt
+
+            while True:
+                stream.seek(0)
+                try:
+                    msvcrt.locking(stream.fileno(), msvcrt.LK_NBLCK, 1)
+                    break
+                except OSError:
+                    if not blocking:
+                        raise
+                    time.sleep(0.01)
+            try:
+                yield
+            finally:
+                stream.seek(0)
+                msvcrt.locking(stream.fileno(), msvcrt.LK_UNLCK, 1)
+
+
+@contextmanager
+def registry_lock(registry_path: Path | None = None):
+    """Serialize read-modify-write updates to the canonical markdown registry."""
+    target = Path(registry_path) if registry_path is not None else REGISTRY_MD
+    lock_path = target.parent / f".{target.name}.lock"
+    with _REGISTRY_THREAD_LOCK, _portable_file_lock(lock_path, blocking=True):
+        yield
 
 
 def _sanitize_component(value: str) -> str:
@@ -54,32 +183,33 @@ def _to_repo_relative(path: Path) -> str:
 
 
 def _append_markdown_stub(entry: Mapping[str, Any]) -> None:
-    REGISTRY_MD.parent.mkdir(parents=True, exist_ok=True)
-    if REGISTRY_MD.exists():
-        text = REGISTRY_MD.read_text(encoding="utf-8")
-    else:
-        text = "# Presto Experiment Log\n\n"
-    marker = f"### {entry['id']}"
-    if marker in text:
-        return
-    dataset = json.dumps(entry.get("dataset_contract", {}), sort_keys=True)
-    training = json.dumps(entry.get("training", {}), sort_keys=True)
-    tested = json.dumps(entry.get("tested", []), sort_keys=True)
-    block = "\n".join(
-        [
-            "",
-            marker,
-            f"- **Agent**: {entry.get('agent', '')}",
-            f"- **Dir**: [{entry['id']}]({entry.get('experiment_dir', '')})",
-            f"- **Source script**: `{entry.get('source_script', '')}`",
-            f"- **Status**: {entry.get('status', 'launched')}",
-            f"- **Dataset**: `{dataset}`",
-            f"- **Training**: `{training}`",
-            f"- **Tested**: `{tested}`",
-            "",
-        ]
-    )
-    REGISTRY_MD.write_text(text.rstrip() + "\n" + block, encoding="utf-8")
+    with registry_lock():
+        REGISTRY_MD.parent.mkdir(parents=True, exist_ok=True)
+        if REGISTRY_MD.exists():
+            text = REGISTRY_MD.read_text(encoding="utf-8")
+        else:
+            text = "# Presto Experiment Log\n\n"
+        marker = f"### {entry['id']}"
+        if marker in text:
+            return
+        dataset = json.dumps(entry.get("dataset_contract", {}), sort_keys=True)
+        training = json.dumps(entry.get("training", {}), sort_keys=True)
+        tested = json.dumps(entry.get("tested", []), sort_keys=True)
+        block = "\n".join(
+            [
+                "",
+                marker,
+                f"- **Agent**: {entry.get('agent', '')}",
+                f"- **Dir**: [{entry['id']}]({entry.get('experiment_dir', '')})",
+                f"- **Source script**: `{entry.get('source_script', '')}`",
+                f"- **Status**: {entry.get('status', 'launched')}",
+                f"- **Dataset**: `{dataset}`",
+                f"- **Training**: `{training}`",
+                f"- **Tested**: `{tested}`",
+                "",
+            ]
+        )
+        _atomic_write_bytes(REGISTRY_MD, (text.rstrip() + "\n" + block).encode("utf-8"))
 
 
 def _write_stub_readme(
@@ -127,7 +257,7 @@ def _write_stub_readme(
     path.write_text("\n".join(lines), encoding="utf-8")
 
 
-def _capture_git_state() -> dict[str, str | bool | None]:
+def capture_git_state() -> dict[str, str | bool | None]:
     """Capture current git commit, branch, and dirty status."""
 
     def _run(args: list[str]) -> str | None:
@@ -148,11 +278,18 @@ def _capture_git_state() -> dict[str, str | bool | None]:
     return {"commit": commit, "branch": branch, "dirty": dirty}
 
 
+_capture_git_state = capture_git_state
+
+
+def _is_credential_key(key: str) -> bool:
+    upper = key.upper()
+    return any(marker in upper for marker in _CREDENTIAL_MARKERS)
+
+
 def _capture_launch_environment() -> dict[str, str]:
-    prefixes = ("PRESTO_", "MODAL_", "PYTORCH_", "CUDA_")
     env: dict[str, str] = {}
     for key, value in os.environ.items():
-        if key.startswith(prefixes):
+        if key in REPRODUCIBLE_ENVIRONMENT_KEYS and not _is_credential_key(key):
             env[key] = value
     return dict(sorted(env.items()))
 
@@ -167,13 +304,21 @@ def write_reproducibility_bundle(
     source_script: str,
     argv: Sequence[str] | None = None,
     environment: Mapping[str, str] | None = None,
+    git_state: Mapping[str, str | bool | None] | None = None,
 ) -> Path:
+    resolved_git_state = dict(git_state) if git_state is not None else capture_git_state()
     reproduce_dir = out_dir / REPRO_DIRNAME
     reproduce_dir.mkdir(parents=True, exist_ok=True)
 
     launch_argv = list(argv or sys.argv)
-    launch_env = dict(environment or _capture_launch_environment())
-    git_state = _capture_git_state()
+    if environment is None:
+        launch_env = _capture_launch_environment()
+    else:
+        launch_env = {
+            key: str(value)
+            for key, value in sorted(environment.items())
+            if not _is_credential_key(key)
+        }
 
     metadata = {
         "created_at": datetime.now().isoformat(),
@@ -182,7 +327,7 @@ def write_reproducibility_bundle(
         "argv": launch_argv,
         "source_script": source_script,
         "environment": launch_env,
-        "git": git_state,
+        "git": resolved_git_state,
     }
     (reproduce_dir / "launch.json").write_text(
         json.dumps(metadata, indent=2, sort_keys=True),
@@ -191,12 +336,12 @@ def write_reproducibility_bundle(
 
     export_lines = [f"export {key}={_shell_quote(value)}" for key, value in launch_env.items()]
     cmd = " ".join([_shell_quote(sys.executable), *(_shell_quote(arg) for arg in launch_argv)])
-    dirty = git_state.get("dirty")
+    dirty = resolved_git_state.get("dirty")
     dirty_label = "unknown" if dirty is None else ("yes" if dirty else "no")
     git_comment_lines = [
         "# Git state at launch:",
-        f"#   commit: {git_state.get('commit') or 'unknown'}",
-        f"#   branch: {git_state.get('branch') or 'unknown'}",
+        f"#   commit: {resolved_git_state.get('commit') or 'unknown'}",
+        f"#   branch: {resolved_git_state.get('branch') or 'unknown'}",
         f"#   dirty: {dirty_label}",
     ]
     launch_script = "\n".join(
@@ -244,7 +389,9 @@ def initialize_experiment_dir(
     source_script: str,
     agent_label: str,
     metadata: Mapping[str, Any],
+    git_state: Mapping[str, str | bool | None] | None = None,
 ) -> Path:
+    resolved_git_state = dict(git_state) if git_state is not None else capture_git_state()
     target = (
         Path(out_dir)
         if str(out_dir).strip()
@@ -261,6 +408,7 @@ def initialize_experiment_dir(
     write_reproducibility_bundle(
         out_dir=target,
         source_script=source_script,
+        git_state=resolved_git_state,
     )
     entry = {
         "id": target.name,

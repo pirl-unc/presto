@@ -337,8 +337,9 @@ def summarize_strata(records, *, fields=("mhc_class", "assay_method", "study")):
     for row in records:
         provenance = row.get("observation", {}).get("provenance", {})
         raw = provenance.get("raw_record", {})
+        classes = sorted({cls if cls else "unknown" for cls in (row.get("mhc_classes") or ())})
         values = {
-            "mhc_class": ";".join(sorted(set(row.get("mhc_classes", [])))) or "unknown",
+            "mhc_class": ";".join(classes) or "unknown",
             "assay_method": raw.get("assay_method") or "unknown",
             "study": provenance.get("study_id")
             or raw.get("pmid")

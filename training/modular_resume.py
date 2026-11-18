@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from dataclasses import asdict
 from contextlib import contextmanager
-import fcntl
 import hashlib
 import json
 import os
@@ -12,6 +11,12 @@ from pathlib import Path
 import platform
 import random
 import sys
+import tempfile
+
+try:
+    import fcntl
+except ImportError:  # pragma: no cover - Windows
+    fcntl = None
 
 import numpy as np
 import torch
@@ -62,12 +67,17 @@ SOURCE_FILES = (
 def atomic_bytes(path, value):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    with temporary.open("wb") as stream:
-        stream.write(value)
-        stream.flush()
-        os.fsync(stream.fileno())
-    temporary.replace(path)
+    fd, raw_temp = tempfile.mkstemp(dir=path.parent, prefix=f".{path.name}.", suffix=".tmp")
+    temporary = Path(raw_temp)
+    try:
+        with os.fdopen(fd, "wb") as stream:
+            stream.write(value)
+            stream.flush()
+            os.fsync(stream.fileno())
+        temporary.replace(path)
+    except BaseException:
+        temporary.unlink(missing_ok=True)
+        raise
 
 
 def canonical(value):
@@ -85,10 +95,11 @@ def atomic_json(path, value):
     """Persist large evaluation caches without allocating another full JSON copy."""
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp")
+    fd, raw_temp = tempfile.mkstemp(dir=path.parent, prefix=f".{path.name}.", suffix=".tmp")
+    temporary = Path(raw_temp)
     encoder = json.JSONEncoder(indent=2, sort_keys=True, allow_nan=False)
     try:
-        with temporary.open("w", encoding="utf-8", newline="") as stream:
+        with os.fdopen(fd, "w", encoding="utf-8", newline="") as stream:
             for chunk in encoder.iterencode(value):
                 stream.write(chunk)
             stream.write("\n")
@@ -105,15 +116,29 @@ def run_lock(output):
     """A process exit releases the lock; stale lock files do not block resume."""
     output = Path(output)
     output.mkdir(parents=True, exist_ok=True)
-    with (output / ".training.lock").open("a") as stream:
-        try:
-            fcntl.flock(stream, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        except BlockingIOError as error:
-            raise ValueError("another trainer is active in this run directory") from error
-        try:
-            yield
-        finally:
-            fcntl.flock(stream, fcntl.LOCK_UN)
+    with (output / ".training.lock").open("a+b") as stream:
+        if fcntl is not None:
+            try:
+                fcntl.flock(stream.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except (BlockingIOError, OSError) as error:
+                raise ValueError("another trainer is active in this run directory") from error
+            try:
+                yield
+            finally:
+                fcntl.flock(stream.fileno(), fcntl.LOCK_UN)
+        else:  # pragma: no cover - Windows
+            import msvcrt
+
+            stream.seek(0)
+            try:
+                msvcrt.locking(stream.fileno(), msvcrt.LK_NBLCK, 1)
+            except OSError as error:
+                raise ValueError("another trainer is active in this run directory") from error
+            try:
+                yield
+            finally:
+                stream.seek(0)
+                msvcrt.locking(stream.fileno(), msvcrt.LK_UNLCK, 1)
 
 
 def execution_contract(index, config, training, scales, device):
@@ -197,33 +222,68 @@ def optimizer_names(model, optimizer):
 
 def rng_state(sampler, replay, device):
     numpy = np.random.get_state()
+    target = torch.device(device)
     return {
         "sampler": sampler.getstate(),
         "replay": replay.getstate(),
         "python": random.getstate(),
         "numpy": [numpy[0], numpy[1].tolist(), int(numpy[2]), int(numpy[3]), float(numpy[4])],
         "torch": torch.get_rng_state(),
-        "cuda": torch.cuda.get_rng_state_all() if torch.device(device).type == "cuda" else [],
-        "mps": torch.mps.get_rng_state() if torch.device(device).type == "mps" else None,
+        "cuda": torch.cuda.get_rng_state(target) if target.type == "cuda" else None,
+        "mps": torch.mps.get_rng_state() if target.type == "mps" else None,
     }
 
 
-def restore_rng(state, sampler, replay):
+def restore_rng(state, sampler, replay, device=None):
     sampler.setstate(state["sampler"])
     replay.setstate(state["replay"])
     random.setstate(state["python"])
     numpy = state["numpy"]
     np.random.set_state((numpy[0], np.asarray(numpy[1], dtype=np.uint32), *numpy[2:]))
     torch.set_rng_state(state["torch"].cpu())
-    if state["cuda"]:
-        torch.cuda.set_rng_state_all([value.cpu() for value in state["cuda"]])
-    if state["mps"] is not None:
-        torch.mps.set_rng_state(state["mps"].cpu())
+    cuda_state = state.get("cuda")
+    if isinstance(cuda_state, torch.Tensor):
+        target = torch.device(device) if device is not None else torch.device("cuda")
+        if target.type == "cuda":
+            torch.cuda.set_rng_state(cuda_state.cpu(), device=target)
+    elif isinstance(cuda_state, (list, tuple)) and cuda_state:
+        target = torch.device(device) if device is not None else torch.device("cuda")
+        if target.type == "cuda":
+            idx = (
+                target.index
+                if target.index is not None and 0 <= target.index < len(cuda_state)
+                else 0
+            )
+            torch.cuda.set_rng_state(cuda_state[idx].cpu(), device=target)
+    mps_state = state.get("mps")
+    if mps_state is not None:
+        target = torch.device(device) if device is not None else torch.device("mps")
+        if target.type == "mps":
+            torch.mps.set_rng_state(mps_state.cpu())
 
 
 def save_resume(
-    path, model, scales, optimizer, state, contract, sampler, replay, metadata, host=None
+    path,
+    model,
+    scales,
+    optimizer,
+    state,
+    contract,
+    sampler,
+    replay,
+    metadata,
+    host=None,
+    *,
+    device=None,
 ):
+    active_device = device
+    if active_device is None:
+        parameter = next(model.parameters(), None)
+        active_device = (
+            parameter.device
+            if parameter is not None
+            else (host or {}).get("device") or contract["device"]
+        )
     save_checkpoint(
         path,
         model,
@@ -235,7 +295,7 @@ def save_resume(
                 "contract": contract,
                 "host": host,
                 "optimizer_names": optimizer_names(model, optimizer),
-                "rng": rng_state(sampler, replay, contract["device"]),
+                "rng": rng_state(sampler, replay, active_device),
                 "state": state,
             },
         },

@@ -11917,3 +11917,30 @@ PR #158 is published; primary-checkout promotion and installed-package checks pa
 Initial PR CI passes. Final follow-up CI is attached to PR #158.
 Post-promotion checks: 92 pass; the agent
 metadata option is accepted and preserved in frozen launch commands.
+
+
+# Codex foundation review fixes — 2026-11-18
+
+Specification: `tasks/foundation_prs_and_mhctools_apc_retraining_spec.md` — address all 15 review
+findings (4 P1, 11 P2) across two stacked PRs (items 1–4 in PR 1, items 5–7 in PR 2), then run
+registered H100 retraining iterations improving shared class-I/II processing & presentation against
+all runnable `mhctools` models and validating APC KO / cytokine / overexpression semantics and
+conditioned vs unconditioned data fit.
+
+## Stage A — PR 1: Review fixes 1–4
+- [x] Allowlist reproducibility env vars, capture Git state pre-creation, and serialize `experiment_log.md` updates (`scripts/experiment_registry.py`, `training/modular_run.py`).
+- [x] Replace POSIX-only `fcntl` import with portable file locking, keep training-only modules off unrelated CLI paths, use unique temp files in atomic writes, and restore active GPU RNG onto the resume device (`training/modular_resume.py`, `training/__init__.py`, `training/modular_run.py`, `cli/`).
+- [x] Enforce declared manifest source `split` in `ObservationIndex` while keeping mixed-file manifests working, and emit both `kon` and `koff` in `affinity_observations` (`data/modular_sources.py`).
+- [x] Normalize missing MHC classes in `summarize_strata`, guard partial evaluation output directories, and stream `predict observations` in bounded batches (`training/modular_evaluation.py`, `cli/observations.py`).
+- [x] Add regression tests for items 1–4, verify focused suites + CLI import isolation + Ruff lint/format, and publish PR 1.
+
+## Stage B — PR 2: Review fixes 5–7
+- [ ] Fix external benchmark unit conversion, canonical `target_log10` censored scoring, and empty exact-row cohort handling (`evaluation/external_benchmark.py`).
+- [ ] Fix paired benchmark molecular/context alignment, publication-only study provenance, strict `>` lower bounds at cutoff, and performance-report split-to-dataset validation (`evaluation/paired_benchmark.py`, `evaluation/performance_report.py`).
+- [ ] Add regression tests for items 5–6 (completing all 15 items), verify focused suites + CLI import isolation + Ruff lint/format, and publish PR 2.
+
+## Stage C — Shared-mechanism retraining, `mhctools` benchmark & APC condition semantics
+- [ ] Inventory runnable `mhctools` class-I/II predictors and build unified evaluation harness across ordinary presentation, BA-matched processing, and APC-conditioned validation cohorts (`TEST` stays sealed).
+- [ ] Audit Hitlist v4 / prepared cohorts for gene KO/KD, cytokine, and overexpression/transduction/transfection contrasts and evaluate baseline Presto checkpoints (`1b601139`, `e4898af3`) vs `mhctools` and conditioned-vs-unconditioned controls.
+- [ ] Design, register, and run iterative H100 retraining cycles on corrected v4 + replay + matched-pair + counterfactual APC contrast supervision via shared class-I/II mechanisms.
+- [ ] Verify iterative improvements over prior checkpoints and `mhctools` across class I & II, verify conditioned > unconditioned/shuffled fit and biological KO/cytokine/OE directionality, and close all experiments in `experiments/experiment_log.md`.

@@ -992,7 +992,7 @@ def _fit_index(index, output_dir, *, device, resume):
             key: value for key, value in saved_payload["metadata"].items() if key != "resume"
         }
         # Construction/loading can consume RNG. Restore only after both are complete.
-        restore_rng(saved["rng"], rng, identity_rng)
+        restore_rng(saved["rng"], rng, identity_rng, device=device)
         _json(output_dir / "history.json", state["history"])
     elapsed_before = state["elapsed_seconds"]
     if pair_pool is not None:
@@ -1039,6 +1039,7 @@ def _fit_index(index, output_dir, *, device, resume):
             identity_rng,
             initial_metadata,
             host,
+            device=device,
         )
 
     if saved is None:
@@ -1466,6 +1467,7 @@ def _agent(args):
 def _register_run(index, output, args, registry):
     if output.exists():
         raise ValueError("experiment directory already exists; choose a fresh registered run")
+    git_state = registry.capture_git_state()
     output = registry.initialize_experiment_dir(
         out_dir=str(output),
         slug="modular-model-fit",
@@ -1477,6 +1479,7 @@ def _register_run(index, output, args, registry):
             "training": index.manifest.get("training", {}),
             "tested": ["one declared modular source/subset contract"],
         },
+        git_state=git_state,
     )
     # Freeze an executable manifest with absolute input references and exact hashes.
     # A replay creates a fresh experiment directory rather than overwriting evidence.
@@ -1518,6 +1521,7 @@ def _register_run(index, output, args, registry):
             "--agent",
             _agent(args),
         ],
+        git_state=git_state,
     )
     source_root = Path(__file__).resolve().parent.parent
     for path in SOURCE_FILES:
@@ -1634,19 +1638,25 @@ def run_manifest(args):
     )
     (output / "README.md").write_text(narrative + "\n" + _metric_table(summary))
     heading = f"\n#### Closure: {output.name}\n"
-    existing = registry.REGISTRY_MD.read_text() if registry.REGISTRY_MD.exists() else ""
-    if heading not in existing:
-        closure = (
-            f"\n#### Closure: {output.name}\n\n"
-            f"Agent: {agent}. Results: [{output.name}/summary.json]({output.name}/summary.json). "
-            f"Selected epoch {summary['selected_epoch']}; {summary['steps']} updates; "
-            f"{summary['elapsed_seconds']:.2f} seconds on {device}. "
-            "One tested condition; no comparative winner or biological qualification. "
-            f"Test policy `{summary['test_policy']}`; reason: "
-            f"{index.manifest.get('training', {}).get('no_test_reason')}.\n\n"
-            + _metric_table(summary)
+    with registry.registry_lock():
+        existing = (
+            registry.REGISTRY_MD.read_text(encoding="utf-8")
+            if registry.REGISTRY_MD.exists()
+            else ""
         )
-        atomic_bytes(registry.REGISTRY_MD, (existing + closure).encode())
+        if heading not in existing:
+            closure = (
+                f"\n#### Closure: {output.name}\n\n"
+                f"Agent: {agent}. Results: "
+                f"[{output.name}/summary.json]({output.name}/summary.json). "
+                f"Selected epoch {summary['selected_epoch']}; {summary['steps']} updates; "
+                f"{summary['elapsed_seconds']:.2f} seconds on {device}. "
+                "One tested condition; no comparative winner or biological qualification. "
+                f"Test policy `{summary['test_policy']}`; reason: "
+                f"{index.manifest.get('training', {}).get('no_test_reason')}.\n\n"
+                + _metric_table(summary)
+            )
+            atomic_bytes(registry.REGISTRY_MD, (existing + closure).encode("utf-8"))
     if gate_error is not None:
         raise gate_error
     return summary

@@ -2,14 +2,16 @@
 
 from dataclasses import replace
 import gzip
+from itertools import islice
 import json
 from pathlib import Path
+import shutil
 import tempfile
+import textwrap
 
 from ..data.modular import Observation
 from ..data.modular_context import project_apc_context
 from ..data.modular_sources import ObservationIndex, file_sha256
-from ..inference.modular import ModularPredictor
 
 
 def json_rows(path):
@@ -26,35 +28,68 @@ def write_json(path, value):
 
 
 def _checkpoint(args):
+    from ..inference.modular import ModularPredictor
+
     digest = file_sha256(args.checkpoint)
     if args.checkpoint_sha256 and digest != args.checkpoint_sha256:
         raise ValueError("checkpoint SHA-256 disagrees with the requested checkpoint")
     return ModularPredictor(args.checkpoint, device=args.device), digest
 
 
+def _batched_predict_rows(path, batch_size):
+    iterator = json_rows(path)
+    while True:
+        chunk = [Observation.from_dict(raw) for raw in islice(iterator, batch_size)]
+        if not chunk:
+            break
+        if any(
+            row.split != "predict" or row.value is not None or row.identity_labels for row in chunk
+        ):
+            raise ValueError("prediction inputs must be nonempty, label-free predict observations")
+        yield chunk
+
+
 def cmd_predict_observations(args):
+    batch_size = getattr(args, "batch_size", 64)
+    if batch_size < 1:
+        raise ValueError("prediction batch size must be positive")
     predictor, digest = _checkpoint(args)
-    rows = [Observation.from_dict(raw) for raw in json_rows(args.inputs)]
-    if not rows or any(
-        row.split != "predict" or row.value is not None or row.identity_labels for row in rows
-    ):
-        raise ValueError("prediction inputs must be nonempty, label-free predict observations")
-    predictions = predictor.predict(rows, unsupported_apc_policy=args.unsupported_apc_policy)
+    inputs_digest = file_sha256(args.inputs)
     output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)
-    with output.open("x") as stream:
-        json.dump(
-            {
-                "checkpoint_sha256": digest,
-                "inputs_sha256": file_sha256(args.inputs),
-                "unsupported_apc_policy": args.unsupported_apc_policy,
-                "predictions": predictions,
-            },
-            stream,
-            indent=2,
-            allow_nan=False,
-        )
-        stream.write("\n")
+    created = False
+    wrote_any = False
+    try:
+        with output.open("x", encoding="utf-8") as stream:
+            created = True
+            stream.write("{\n")
+            stream.write(f'  "checkpoint_sha256": {json.dumps(digest, allow_nan=False)},\n')
+            stream.write(f'  "inputs_sha256": {json.dumps(inputs_digest, allow_nan=False)},\n')
+            stream.write(
+                f'  "unsupported_apc_policy": '
+                f'{json.dumps(args.unsupported_apc_policy, allow_nan=False)},\n'
+            )
+            stream.write('  "predictions": [')
+            for batch in _batched_predict_rows(args.inputs, batch_size):
+                predictions = predictor.predict(
+                    batch, unsupported_apc_policy=args.unsupported_apc_policy
+                )
+                for item in predictions:
+                    stream.write(",\n" if wrote_any else "\n")
+                    stream.write(
+                        textwrap.indent(json.dumps(item, indent=2, allow_nan=False), "    ")
+                    )
+                    wrote_any = True
+                stream.flush()
+            if not wrote_any:
+                raise ValueError(
+                    "prediction inputs must be nonempty, label-free predict observations"
+                )
+            stream.write("\n  ]\n}\n")
+    except BaseException:
+        if created:
+            output.unlink(missing_ok=True)
+        raise
     return 0
 
 
@@ -116,29 +151,35 @@ def cmd_evaluate_observations(args):
             batch_size=args.batch_size,
             require_support=True,
         )
+    strata = summarize_strata(records)
+    pairs = paired_metrics(records)
     output = Path(args.output_dir)
     output.mkdir(parents=True, exist_ok=False)
-    predictions = output / "predictions.jsonl.gz"
-    with gzip.open(predictions, "wt") as stream:
-        for record in records:
-            stream.write(json.dumps(record, allow_nan=False) + "\n")
-    write_json(output / "metrics.json", metrics)
-    write_json(output / "strata.json", summarize_strata(records))
-    write_json(output / "pairs.json", paired_metrics(records))
-    write_json(
-        output / "receipt.json",
-        {
-            "checkpoint_sha256": digest,
-            "manifest_sha256": file_sha256(args.manifest),
-            "selected_sources": manifest["sources"],
-            "split": args.split,
-            "rows": len(rows),
-            "unsupported_apc_policy": args.unsupported_apc_policy,
-            "projected_rows": projected,
-            "predictions_sha256": file_sha256(predictions),
-            "test_accessed": args.split == "test",
-        },
-    )
+    try:
+        predictions = output / "predictions.jsonl.gz"
+        with gzip.open(predictions, "wt") as stream:
+            for record in records:
+                stream.write(json.dumps(record, allow_nan=False) + "\n")
+        write_json(output / "metrics.json", metrics)
+        write_json(output / "strata.json", strata)
+        write_json(output / "pairs.json", pairs)
+        write_json(
+            output / "receipt.json",
+            {
+                "checkpoint_sha256": digest,
+                "manifest_sha256": file_sha256(args.manifest),
+                "selected_sources": manifest["sources"],
+                "split": args.split,
+                "rows": len(rows),
+                "unsupported_apc_policy": args.unsupported_apc_policy,
+                "projected_rows": projected,
+                "predictions_sha256": file_sha256(predictions),
+                "test_accessed": args.split == "test",
+            },
+        )
+    except BaseException:
+        shutil.rmtree(output, ignore_errors=True)
+        raise
     return 0
 
 
@@ -218,6 +259,7 @@ def add_observation_commands(data, predict, evaluate):
         parser.add_argument(
             "--unsupported-apc-policy", choices=("error", "unknown"), default="error"
         )
+        parser.add_argument("--batch-size", type=int, default=64)
         if parent is predict:
             parser.add_argument("--inputs", required=True, help="Label-free JSONL or JSONL.gz")
             parser.add_argument("--output", required=True)
@@ -225,5 +267,4 @@ def add_observation_commands(data, predict, evaluate):
             parser.add_argument("--manifest", required=True)
             parser.add_argument("--split", choices=("validation", "test"), default="validation")
             parser.add_argument("--output-dir", required=True)
-            parser.add_argument("--batch-size", type=int, default=64)
         parser.set_defaults(func=handler)

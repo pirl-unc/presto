@@ -76,7 +76,10 @@ def affinity_observations(
             raise ValueError(f"unsupported measured endpoint: {record.measurement_type}")
         outcomes = [(names[record.measurement_type], record.value, record.unit, record.qualifier)]
     elif isinstance(record, KineticsRecord):
-        outcomes = [("koff", record.koff, "1/s", record.koff_qualifier)]
+        outcomes = [
+            ("kon", record.kon, "1/(M*s)", record.kon_qualifier),
+            ("koff", record.koff, "1/s", record.koff_qualifier),
+        ]
     elif isinstance(record, StabilityRecord):
         outcomes = [
             ("half_life", record.t_half, "h", record.t_half_qualifier),
@@ -284,6 +287,9 @@ class ObservationIndex:
             required = ("path", "sha256", "source", "population", "label_policy", "split_policy")
             if any(not source.get(key) for key in required):
                 raise ValueError("source manifest lacks hashes or population/label/split policy")
+            declared_split = source.get("split")
+            if declared_split is not None and declared_split not in ("train", "validation", "test"):
+                raise ValueError(f"unsupported declared source split: {declared_split!r}")
             path = (self.manifest_path.parent / source["path"]).resolve()
             if path in self.source_paths:
                 raise ValueError("duplicate source path")
@@ -304,6 +310,8 @@ class ObservationIndex:
                         )
                         if observation.source != source["source"]:
                             raise ValueError("row source disagrees with source manifest")
+                        if declared_split is not None and observation.split != declared_split:
+                            raise ValueError("row split disagrees with source manifest")
                         if observation.observation_id in ids:
                             raise ValueError("duplicate observation ID across admitted sources")
                         measurement = measurement_key(observation)

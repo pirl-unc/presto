@@ -1,13 +1,14 @@
 """Prediction CLI commands."""
 
+from __future__ import annotations
+
 from dataclasses import asdict
 import json
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import TYPE_CHECKING, Any, Dict, Optional
 
-from ..data import AlleleResolver
-from ..data.mhc_index import build_mhc_sequence_lookup, load_mhc_index
-from ..inference.predictor import Predictor
+if TYPE_CHECKING:
+    from ..inference.predictor import Predictor
 
 
 def _load_allele_sequences(
@@ -18,12 +19,16 @@ def _load_allele_sequences(
     sequences: Dict[str, str] = {}
 
     if imgt_fasta or ipd_mhc_dir:
+        from ..data import AlleleResolver
+
         resolver = AlleleResolver(imgt_fasta=imgt_fasta, ipd_mhc_dir=ipd_mhc_dir)
         sequences.update({name: record.sequence for name, record in resolver.records.items()})
         for alias, canonical in resolver._aliases.items():
             sequences[alias] = resolver.records[canonical].sequence
 
     if index_csv:
+        from ..data.mhc_index import build_mhc_sequence_lookup, load_mhc_index
+
         records = load_mhc_index(index_csv)
         sequences.update(build_mhc_sequence_lookup(records))
 
@@ -33,6 +38,8 @@ def _load_allele_sequences(
 
 
 def _build_predictor(args: Any) -> Predictor:
+    from ..inference.predictor import Predictor
+
     if not args.checkpoint:
         raise ValueError("Missing --checkpoint")
 
