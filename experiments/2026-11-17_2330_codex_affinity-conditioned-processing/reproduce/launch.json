@@ -1,0 +1,61 @@
+{
+  "experiment": "2026-11-17_2330_codex_affinity-conditioned-processing",
+  "status": "closed",
+  "agent": "Codex / GPT-6",
+  "source_branch": "codex/affinity-conditioned-processing-20261117",
+  "parent_commit": "255730a4473101a97599cac77f9c6629fa73fe7f",
+  "requested_gpu": "H100!",
+  "test_accessed": false,
+  "spec": "spec.md",
+  "data_authorization": "Prior explicit Modal upload approval plus current request to improve dataset/model",
+  "environment": {
+    "PRESTO_MODAL_GPU": "H100!"
+  },
+  "external_archive": {
+    "path": "artifacts/affinity-conditioned-processing/external-tools.tar.gz",
+    "licensing": "local licensed packages, not included in source commit",
+    "sha256": "e3986f5ef03524f1d60e60717e9b3b38e61448c74954584fa95fcdbdf207b3ba"
+  },
+  "scoring_v2": {
+    "app": "ap-CQoJrBcngEpaSoTThdJ8el",
+    "call": "fc-01M7NYGJKDFBCA3NR1HJV1GHZQ",
+    "probe": "results/package-probe-v2.json",
+    "maximum_workers": 16
+  },
+  "source_commit": "0c21bc4da1066ebfadf713dca478d655c31d4b8b",
+  "source_dirty": false,
+  "training": {
+    "arms": [
+      "continued",
+      "paired",
+      "paired-junction"
+    ],
+    "seeds": [
+      42,
+      43
+    ],
+    "steps": 2000,
+    "ordinary_batch": 64,
+    "learning_rate": 3e-05,
+    "weight_decay": 0.0001,
+    "pair_weight": 0.5,
+    "pairs_per_class": 4,
+    "freezing": [],
+    "selection": "class_study_mean presentation loss"
+  },
+  "integration": {
+    "arms": [
+      "continued",
+      "paired",
+      "paired-junction"
+    ],
+    "seeds": [
+      42
+    ],
+    "steps": 16
+  },
+  "integration_completed": true,
+  "integration_report": "results/fits-n16-completion.json",
+  "full_command": "PRESTO_MODAL_GPU='H100!' /Users/iskander/code/shared-virtual-env/bin/python experiments/2026-11-17_2330_codex_affinity-conditioned-processing/code/dns_transport.py --module modal run --detach experiments/2026-11-17_2330_codex_affinity-conditioned-processing/code/launch.py --arms continued,paired,paired-junction --seeds 42,43 --steps 2000",
+  "decision": "DECISION.md"
+}

@@ -1719,3 +1719,185 @@ Publication closure: all 23 public downloads, 48 archive members, 9,053 source/p
   Source, invocation, full module tables and loss/gradient evidence are preserved
   in the family. No new predictions, training, test selection or held-out metrics;
   see [the architecture/training report](../docs/model_training_audit.md).
+
+
+## 2026-11-16_1925_codex_harmonized-apc — shared APC state, both MHC classes
+
+Date: 2026-11-16. Agent/model: Codex / GPT-6, extending Claude's state-bottleneck code.
+Directory: [harmonized APC](2026-11-16_1925_codex_harmonized-apc/README.md).
+Implementation `23063189`, base `2d371d9e` dirty at launch; frozen runtime files match
+the committed source. Reproduction: directory `reproduce/launch.sh`, launch JSON,
+source snapshots, per-run manifests and input archive. No non-default environment
+overrides beyond explicit H100!, frozen PYTHONPATH and thread settings.
+
+Current Hitlist 2.1.9 metadata over the pinned older cache; nine PMIDs, source-resolved
+conditions and current MHC candidate sets. Explicit legacy lineage and HAP1 unknown-
+PTM sequence-only policy, no fabricated controls. Same-protein/length synthetic
+backgrounds, not measured negatives or affinity-matched decoys. Protein-separated
+TRAIN 10,634 rows and VALIDATION 2,240 rows; 180,116 protected identities embargoed,
+exact/core8/Hamming-1 separation independently verified. No quantitative abundance
+or matched expression targets. Detailed source counts/policies/hashes in the README.
+
+Canonical PR154 reference parent; no new pretraining. Staged binary elution loss
+weight 1; all 49 affinity dependency tensors frozen. Shared state width8 routes
+cell/expression/cytokine/gene/drug features through class masks to supply and
+MHC-dependent selection. 800 steps, batch32, AdamW3e-4, decay1e-4, seed42, class
+balance and equal-study validation-loss checkpoint selection. Requested H100!,
+observed H10080GB HBM3 (85,009,367,040 bytes). Seven valid fits, 147–347 seconds
+training each; one invalid shuffle attempt is retained/excluded with explanation.
+
+| Model | Pooled AUROC | Class I AUROC | Class II AUROC | Pair win |
+|---|---:|---:|---:|---:|
+| Frozen canonical reference | 0.883057 | 0.912308 | 0.678372 | 0.875893 |
+| Matched continuation, no APC state | 0.888882 | 0.911285 | 0.713403 | 0.883036 |
+| Harmonized APC state | 0.896948 | 0.918001 | 0.739341 | 0.886607 |
+| Interventions shuffled within study/cell/class | 0.896948 | 0.917937 | 0.740627 | 0.885714 |
+| Whole APC context shuffled within class | 0.893278 | 0.914775 | 0.729846 | 0.884821 |
+
+Real minus state-absent AUROC +0.008067 [0.005988,0.010161]; versus whole-context
+shuffle +0.003670 [0.002313,0.004978], paired protein bootstrap. Within-study/cell
+intervention shuffling ties, so isolated gene/drug benefits are not established.
+Within-pair ordering changes remain uncertain. Preferred experimental condition:
+harmonized; retain the mechanism, with no production/reference promotion claim.
+
+Validation-only affinity check: 2,536 rows, max decoded drift5.908819e-7 log10(nM),
+exact parameter equality. Full Spearman/Pearson/RMSE and500-nM threshold metrics
+are in affinity-summary.csv and per-run JSON. Software:441 tests, lint/format pass,
+qualified inference checks pass. Per-example presentation and affinity validation
+predictions retained locally and on Modal (artifact paths/hashes in artifacts.json).
+TEST stays sealed because this remains iterative development; no TEST metrics or
+predictions were produced. This is a within-cohort selected-model result, not
+independent study-transfer or causal severity confirmation.
+
+<!-- BEGIN SHARED-PRESENTATION-EXPANSION-20261117 -->
+
+
+## 2026-11-17 — Broad shared class-I/class-II presentation expansion
+
+- **Agent/model:** Codex / GPT-6. **Status: complete**; 12 end-to-end H100 fits, 12 selected and 12 fixed-terminal evaluations, context controls, independent verification and public inference.
+- **Experiment:** [2026-11-17_1155_codex_shared-presentation-expansion](./2026-11-17_1155_codex_shared-presentation-expansion/README.md). [Decision](./2026-11-17_1155_codex_shared-presentation-expansion/DECISION.md), [usage](./2026-11-17_1155_codex_shared-presentation-expansion/USAGE.md), [architecture](./2026-11-17_1155_codex_shared-presentation-expansion/ARCHITECTURE.md).
+- **Reproduction/source:** exact commands, overrides, app/call IDs and hashes in `reproduce/launch.json`, `launch.sh`, frozen source/runtime and detailed amendments in `reproduce/spec.md`. Clean core commits 2da11504 (original six) / 5f9bfe37 (six square-root fits), isolated branch `codex/harmonized-apc-20261116`; dirty unrelated root work preserved; no push or shared package change. Later artifact commits do not alter runtime identities.
+- **Dataset/curation:** pinned Hitlist 2.1.9 / 43e22662, cache SHA 0b34bd12471882eb28d4f9a1dad6cc48252fb93a3644f912f69a0a186228f847. Uncapped human native admission: 507,846 I / 329,576 II positives. Final native TRAIN: 209,695 I pairs (159 studies), 178,179 II pairs (42), 775,748 rows; concentration replay 159,796. Pilot retains 10,632 APC +65,629 broad TRAIN rows. Literal source lineage/typed candidate sets; known PTMs/contaminants/predicted-only restrictions excluded, unspecified PTMs explicitly sequence-only-unknown. DR alpha assumptions explicit; no fabricated DP/DQ partners, exposures or quantitative expression.
+- **Synthetic/background contract:** observed MS→`elution_observation=1`; same-length reference-source windows unobserved in Hitlist→0 with provenance. GENCODE v39 all occurrences, protein-family split, unanimous/ambiguous flanks, global observed and exact/shared8/Hamming≤1 exclusion. These are sampled backgrounds, not measured nonbinders or NetMHC training labels. All parent ancestry and sealed identity-only embargo included: audit 0 violations and new VAL 0 historical sequence/family exposures.
+- **Training/pretraining/assays/loss:** same canonical parent SHA 1d0d4122abf022830ea97fcc247b1d28c0645d7d42d206130cdf8a5d7762815a; shared d128/2-layer/4-head sequence model, candidate class-II 9-mer registers unchanged. All supported parameters train jointly; APC64 when enabled. 6,000 updates, batch64, AdamW lr/decay1e-4, warmup100/cosine floor.1, VAL every1,000. Draw mass50% concentration/25% I presentation/25% II. Literal IC50/EC50/KD/proxy families, qualifiers/censoring and standardized log10(nM) concentration losses retained; presentation BCE; no synthetic predictor or intervention-yield loss. Checkpoint selection is equal-class/equal-study presentation BCE, affinity evaluated separately. Original equal-study allocation excessively sampled tiny studies; registered `sqrt` follow-up allocates sqrt(TRAIN rows) mass within each class with all rows eligible. Finite draws are not full epochs.
+- **Actual APC data:** 23 cell types, 31 factors +IFNG→87 inputs→64 shared state; 326,031 positives have cell identity independent of arm attribution. Direct pathway masks preserve class scope; unknown differs from explicit absent. [Factor counts/PMIDs](./2026-11-17_1155_codex_shared-presentation-expansion/results/analysis/apc-training-support.md). HLA-DM class-II 69,992 positives lack clean controls; TAX1BP1 KD has610/control1,017. Drugs have assigned positive annotations but no fabricated absent controls. [Hitlist #905](https://github.com/pirl-unc/hitlist/issues/905) tracks curation requests.
+- **Hardware/runtime:** explicitly requested H100!; observed NVIDIA H10080GB HBM3 /85,009,367,040 bytes /torch2.14.1+cu130. Preparation2,519.89s, context refresh263.78s, audit245.76s. Preferred active fit4,902.47s; wall7,397.22s including network interruptions. Exact-state recovery preserved manifests/runtime/optimizer/RNG/order/selection and recorded host differences. All completed; final container inventory empty. Per-fit runtime/exposure table retained; equal updates do not imply equal FLOPs.
+
+**Loss-selected conditions** (`expanded` = broad native TRAIN; `none`/`state` = APC absent/APC64; `pathway` adds256 shared-processing class weights; transfer expands II while retaining prior I):
+
+| Recipe / seed | Selected update | New I AUROC | New II AUROC | Older APC I | Older APC II |
+| --- | --- | --- | --- | --- | --- |
+| expanded-ii-transfer-s42 | 1000 | 0.8528 | 0.7747 | 0.9136 | 0.7315 |
+| expanded-none-s42 | 4000 | 0.8617 | 0.8037 | 0.9123 | 0.7348 |
+| expanded-none-s43 | 4000 | 0.8650 | 0.8092 | 0.9126 | 0.7431 |
+| expanded-none-sqrt-s42 | 6000 | 0.8745 | 0.8235 | 0.9206 | 0.7748 |
+| expanded-none-sqrt-s43 | 5000 | 0.8731 | 0.8244 | 0.9202 | 0.7722 |
+| expanded-pathway-state-sqrt-s42 | 6000 | 0.8757 | 0.8374 | 0.9258 | 0.7740 |
+| expanded-pathway-state-sqrt-s43 | 4000 | 0.8729 | 0.8313 | 0.9239 | 0.7727 |
+| expanded-state-s42 | 1000 | 0.8602 | 0.7617 | 0.9132 | 0.7373 |
+| expanded-state-s43 | 4000 | 0.8658 | 0.8113 | 0.9161 | 0.7431 |
+| expanded-state-sqrt-s42 | 6000 | 0.8759 | 0.8373 | 0.9257 | 0.7742 |
+| expanded-state-sqrt-s43 | 4000 | 0.8730 | 0.8314 | 0.9239 | 0.7728 |
+| pilot-balanced-s42 | 1000 | 0.8391 | 0.6871 | 0.9167 | 0.7616 |
+
+Fixed 6,000-update comparisons cover every fit. Square-root terminal evaluation was registered before terminal outcomes; original terminal controls are retrospective. Selected and terminal checkpoints are not independent fits. Full cohort/affinity/matched metrics and per-example outputs remain in the experiment; no intermediate AUROC peak substituted for selection.
+
+**Preferred:** `expanded-state-sqrt-s42-n6000`, selected6,000, SHA256 1b6011396a563f52ea1d6da4bb1d4e69b8dbf0103148ba829225581c4d312f68; simpler shared APC with pathway option off. Two-seed pathway differences are negligible. Same-cohort previous-default comparisons:
+
+| cohort | class | rows | previous_AUROC | shared_AUROC | delta | paired_95CI | cluster |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| expanded | I | 780 | 0.8503 | 0.8759 | 0.0255 | [+0.0124, +0.0375] | protein |
+| expanded | II | 1194 | 0.6872 | 0.8373 | 0.1501 | [+0.0768, +0.1997] | protein |
+| apc | I | 1860 | 0.9239 | 0.9257 | 0.0018 | [-0.0026, +0.0064] | protein |
+| apc | II | 372 | 0.7627 | 0.7742 | 0.0115 | [-0.0173, +0.0373] | protein |
+| broad | I | 4830 | 0.9500 | 0.9532 | 0.0032 | [+0.0008, +0.0055] | condition |
+| matched | I | 680 | 0.6342 | 0.6142 | -0.0201 | [-0.0323, -0.0080] | protein |
+| matched | II | 316 | 0.5763 | 0.5692 | -0.0071 | [-0.0379, +0.0252] | protein |
+
+- **Affinity retention:** IC50 Spearman I/II .670499/.498009; RMSE1.048022/.828544 log10(nM). Original and ancestry-screened2,190-row cohorts pass operational guards (Spearman decrease≤.02/RMSE rise≤.03). Original affinity VAL has346 related/0 exact historical exposures; both scopes retained. Full Pearson, threshold≤500nM accuracy/balanced accuracy/precision/recall/F1/AUROC/AUPRC and losses are preserved.
+- **APC increment:** at matched6,000 updates, older APC I improves+.00512/+.00524 across seeds42/43 with positive protein/condition intervals. New II improves+.01373/+.01247; seed42 proteinCI[.00027,.02760], but conditionCI crosses0 and both seed43 intervals cross0. Most II improvement is broader training/sampling; incremental state evidence is qualified. Primary original/unknown/shuffled new AUROC I .875871/.869507/.876108; II .837274/.815479/.836098. Only72/780 I and90/1,194 II shuffled rows change state. No-state controls invariant. This does not identify isolated drug/KO effects or absolute yield.
+- **Matched/control limitations:** matched I regresses significantly versus previous default; matched II change unresolved. Frozen NetMHCpan4.2c/NetMHCIIpan4.3e BA define working-affinity pairs, EL are comparators. MHCflurry2.3.28 source/2.3.0 weights reused with exact cohort/hash verification. Training-screened MHCflurry retains106/340 I pairs; NetMHC retains6 I/1 II, below10-pair minimum. Full external comparison is descriptive, not comparator-unseen/latest-version superiority.
+- **Uncertainty/verification:** 1,000 paired protein or condition resamples; older broad I requires condition clusters because source pairs mostly incomplete and split groups are study components. Intervals exclude adaptive-selection/seed uncertainty. All12 selected+12terminal exports independently verify11,572 examples, outcomes, selection, hashes, coverage, full trainability and exposure. Core251 tests +6 focused pathway checks pass; bootstrap and resume tests pass; preferred CPU/public label-free I/II prediction verified.
+- **Held-out TEST:** intentionally unopened throughout adaptive validation development; no TEST metrics or prediction dumps. Identity-only embargo protects it. Ordinary VAL11,572 plus separate matched996 rows; raw per-example dumps and checkpoint receipts local in `results/fits`, `results/evaluation`, `results/context-ablation`, and Modal `presto-checkpoints:/2026-11-17_1155_codex_shared-presentation-expansion`. Collection receipts/omission manifest preserve exact paths/hashes; `code/collect.py` retrieves remote artifacts.
+- **Decision:** practical ordinary-presentation default improves both classes and retains measured affinity. Keep prior model as matched-affinity reference; isolated perturbation/absolute-yield claims remain unvalidated. Further independent confirmation must respect the sealed TEST policy.
+<!-- END SHARED-PRESENTATION-EXPANSION-20261117 -->
+
+<!-- BEGIN AFFINITY-CONDITIONED-PROCESSING-20261117 -->
+
+
+## 2026-11-17 — Both-class affinity matching and conditional processing training
+
+- **Date / agent:** 2026-11-17–18 UTC; Codex / GPT-6. [Experiment](2026-11-17_2330_codex_affinity-conditioned-processing/README.md), [complete decision](2026-11-17_2330_codex_affinity-conditioned-processing/DECISION.md), [CPU inference](2026-11-17_2330_codex_affinity-conditioned-processing/USAGE.md), [architecture](2026-11-17_2330_codex_affinity-conditioned-processing/ARCHITECTURE.md).
+- **Reproduction / source:** `reproduce/launch.sh`, `launch.json`, model-v2/evaluation-v2/controls-v1-v2 snapshots and 231-file frozen runtime. Core `0c21bc4da1066ebfadf713dca478d655c31d4b8b`, clean implementation at runtime freeze, isolated branch `codex/affinity-conditioned-processing-20261117`; unrelated root edits preserved. Subsequent Hitlist floor/semantic-tests commit `e20b84de` is separate from the trained runtime. Overrides: `PRESTO_MODAL_GPU=H100!`; process-local verified DNS transport for Modal; local Torch 2.15.0 versus pinned Modal 2.14.1+cu130.
+- **Dataset / curation:** Hitlist 2.1.9/43e22662 and GENCODE v39, unchanged ordinary TRAIN: 209,695 I / 178,179 II positive/background pairs from 159/42 studies. All 375,896 predictor-length-eligible positives considered without positive/study caps. Same-protein/length candidate pooling uses only previously protected native TRAIN identities; first eight options, adaptive up to 32 where unmatched. Final auxiliary set: 3,777 I / 9,114 II pairs from 76/28 studies. All pairs pass reference/context, split, biological MHC candidate, condition and score-lineage checks. Broad ordinary training is retained even without resolved interventions or an affinity match.
+- **Affinity matching:** pinned NetMHCpan 4.2c / NetMHCIIpan 4.3e BA, not EL. Same biological candidate set and best BA-rank candidate; every candidate within 0.5 percentile points AND 0.3 log10(rank+.01). Policy chosen on cached TRAIN balance/coverage before predictive outcomes. Flat 0.5-point matching left cached TRAIN-I BA AUROC .5714; hybrid .5086. Final auxiliary BA AUROC .5089/.5020, but BA pair wins .5743/.5558: balance is approximate. New VAL 209 I / 137 II pairs from 4/3 studies, all monoallelic. Historical 340 I / 158 II nM-matched pairs remain unchanged. This is not Claude's original 10,998-pair cohort. All historical validation candidate identities—not only selected pairs—were embargoed before parent training. TEST outcomes remain sealed; identity-only exclusions retained. Original concentration VAL has 346 ancestry-exposed rows and an ancestry-screened sensitivity is reported.
+- **Training / pretraining:** no new pretraining; common previous preferred parent SHA `1b6011396a563f52ea1d6da4bb1d4e69b8dbf0103148ba829225581c4d312f68`. Three arms × seeds 42/43 × 2,000 updates, preceded by three 16-update full-data integrations. AdamW lr 3e-5, decay 1e-4, warmup 100, cosine minimum fraction .1, validation every 500. All supported parameters jointly trainable. Ordinary batch 64: measured concentration 50%, class-I presentation 25%, class-II 25%; square-root study mass. Original six source manifests, scalers, literal endpoint/qualifier policies and ordinary draw order retained. Selection is equal-class mean of equal-study presentation losses; fixed terminal checkpoints evaluated separately.
+- **Assay / synthetic / loss contract:** literal measured IC50/EC50/KD concentration endpoints retain their declared assay-specific targets, transformations and censor behavior; no measured negative affinity labels are invented from predictors. Native MS observations are positives, unobserved same-source backgrounds are sampled controls. Ordinary canonical losses are unchanged. Paired arms add four complete pairs per class per update, weight .5 × mean `softplus(-(supply_positive-supply_background))`. Auxiliary rows are excluded from ordinary replay/ordinary TRAIN diagnostics; original positive identities are reused. Supply includes generic/APC processing and optional boundary correction, excluding intrinsic binding, register selection and MS-response offsets. A shared cut-relative N/C MLP adds 207,360 parameters, uses ordered residue states/class/side/terminus/APC64, and influences actual presentation before MHC aggregation. Intrinsic affinity has no flank/APC input. No new stability, causal intervention, or absolute-yield supervision is asserted.
+- **Hardware / runtime:** requested H100!; all observed NVIDIA H100 80GB HBM3 / 85,009,367,040 bytes. Full-fit per-worker wall times 1,930–3,311 seconds; sum 15,384.87 seconds. Thirteen independent evaluations total 2,175.95 seconds. These are summed worker durations, not family wall clock. External scoring: 282+249 successful CPU jobs and 800-query cache parity; exact scoring/control times and failed transport attempts preserved. All listed experiment apps stopped with zero tasks; one idle failed startup audit app explicitly closed.
+
+| Condition | Ordinary I / II AUROC | New matched I / II AUROC | New matched I / II pair wins |
+|---|---:|---:|---:|
+| Parent | .8759 / .8373 | .6263 / .5482 | .6890 / .5839 |
+| Continued, selected seed 42 | .8777 / .8436 | .6246 / .5476 | .6842 / .5620 |
+| Continued, selected seed 43 | .8761 / .8438 | .6229 / .5492 | .6842 / .5766 |
+| Paired supply, selected seed 42 | .8703 / .8358 | .6414 / .5581 | .7081 / .5985 |
+| Paired supply, selected seed 43 | .8723 / .8398 | .6417 / .5579 | .6890 / .5985 |
+| Paired + boundary, selected seed 42 | .8709 / .8373 | .6437 / .5605 | .7129 / .5839 |
+| Paired + boundary, selected seed 43 | .8718 / .8417 | .6431 / .5607 | .6986 / .5912 |
+| Paired + boundary, terminal seed 42 | .8723 / .8417 | .6616 / .5722 | .7321 / .5839 |
+| Paired + boundary, terminal seed 43 | .8707 / .8420 | .6552 / .5741 | .7321 / .5693 |
+
+All 13 checkpoints/parent are tabulated in the decision, including other terminal outcomes. Four checkpoints fail the operational ordinary-I AUROC guard; both selected boundary replicates pass all 13 retention guards. All affinity guards pass. Selected boundary seed-42 ancestry-screened IC50 Spearman/RMSE: I .68676/1.03526 versus parent .68141/1.04258; II .49483/.84218 versus .48996/.83597. Full exact regression, threshold ≤500-nM accuracy/balanced accuracy/precision/recall/F1/AUROC/AUPRC, endpoint losses, per-example predictions, both-class AUROC/AUPRC/pair wins, and decomposition are retained. **Held-out TEST metrics: intentionally absent because TEST remains sealed during development.**
+
+- **Uncertainty / controls:** 24 paired model contrasts, 2,000 protein-family and condition draws where valid; same IDs/targets and complete pairs verified. Selected boundary seed-42 minus parent condition-cluster AUROC CI: I +.01738 [.01041,.02507]; II +.01225 [-.00661,.03316]. Only eight II condition clusters. Five checkpoint input-control suites (147,350 records) preserve identities/labels/MHC and reproduce original predictions, with 20 paired control contrasts. Flanks/APC influence outputs, but role-preserving flank shuffle does not establish improved class-II peptide-specific ordering. All criteria/intervals are development evidence, conditional on fitted models; no selection uncertainty/multiplicity correction is implied.
+- **Preferred / decision:** retain prior general-purpose checkpoint; expose selected boundary seed-42 (`e4898af3a7a442a999177273687ea4e4ce5d4216e908f2e435b2d73226e56963`) as provisional processing candidate. Shared infrastructure and matched supply learning improve pooled conditional ranking; class-II pair ordering is not convincingly improved. No isolated drug/KO/OE or expression-yield claim. Actual admitted factor/PMID support is in `results/PROCESSING_CONTEXT.md`.
+- **Verification / artifacts:** 202 core tests, six analysis/control tests; all nine fits pass coverage; 1,066 independently reproduced numeric checks across 78 model/cohort combinations. CPU label-free I/II presentation and IC50 inference passes for default and candidate. Local `results/evaluation/` and `results/controls/` retain gzip per-example dumps; raw data/checkpoints also on Modal volume `presto-checkpoints`, root `/volume/2026-11-17_2330_codex_affinity-conditioned-processing/`. Source preservation manifest records omitted large artifacts and exact hashes; licensed predictor binaries are excluded. Figures are retained as verified PNG/PDF.
+- **Subsequent data refresh:** user requested Hitlist 2.1.12; dependency/runtime/remote floors and semantic tests aligned. Public-loader refresh reuses the unchanged built index and preserves reported/derived/donor_set annotations: 2,812,724 I / 1,328,975 II source rows and 807 samples; zero changed cells in previously exported fields, three refreshed serotype fields added. Main selector 90 tests / isolated implementation 110 tests pass. Existing shared-environment Varcode upper-bound conflicts remain explicitly reported; no downgrade or incompatible forced install. See [refresh record](../tasks/hitlist-2.1.12-refresh/README.md). Future fits must regenerate protected inputs; current experiment bytes are unchanged.
+
+<!-- END AFFINITY-CONDITIONED-PROCESSING-20261117 -->
+
+## 2026-11-18 — Consolidated shared-model foundation and corrected corpus admission
+
+- **Agent/model:** Codex / GPT-6. [Experiment and exact contracts](2026-11-18_0315_codex_foundation-integration/README.md).
+- **Reproduction:** `reproduce/launch.sh`, pinned wheel/request and independent
+  `reproduce/audit/launch.sh`. Base `16df727f`, integrated source `aaec9292`, dirty
+  at execution; exact executed wheels and input hashes are preserved.
+- **Data/curation:** Hitlist 2.1.12 public loaders on corrected corpus v4, native
+  manifest SHA `2318bc53cdae228285218991d58fbcc2bd7266327cec1dd3ed9a03b1c944a5b7`.
+  Both classes uncapped; native MS detection labels, explicit PTM/MHC admission,
+  unknown APC preserved, original measurement deduplication and complete declared
+  ancestry/fixed-validation/TEST identity protection. Reported/derived/donor_set
+  roles remain distinct. Source-protein backgrounds are not affinity negatives.
+- **Training/assay/loss contract:** no biological training or pretraining in this
+  family; no new loss terms/weights or checkpoint promotion. Artificial software
+  fixture: one optimizer update with IC50 nM labels through the normal endpoint
+  transform; its predictions and config are in `results/software/`. Existing
+  measured-affinity replay is included only in a declarative source composition.
+- **Hardware/runtime:** 8 CPUs, 65,536 MiB; no requested or observed GPU. Preparation
+  1,646.66 s (complete remote execution 1,816.39 s); independent audit 90.61 s.
+- **Synthetic contract:** unobserved same-length windows from possible source
+  proteins, paired with identical MHC/APC state; related held-out identities and
+  known observed peptides excluded. All completed pairs independently audited.
+
+| Prepared condition | Pairs | Studies |
+| --- | ---: | ---: |
+| Corrected TRAIN class I | 161,573 | 156 |
+| Corrected TRAIN class II | 134,127 | 42 |
+| New VALIDATION class I | 2 | 1 |
+| New VALIDATION class II | 0 | 0 |
+
+- **Held-out metrics:** no new biological predictions or performance estimates.
+  TEST outcomes intentionally sealed; only identity embargoes used. Eight
+  label-free both-class affinity/presentation requests reproduce retained and
+  provisional checkpoints exactly (maximum output difference 0).
+- **Verification:** 3,161 tests pass, 4 explicit skips; lint, strict docs, wheel/sdist,
+  installed both-class train/evaluate/predict and historical archive restoration
+  pass. Modal `pip check` passes. Shared laptop environment retains external
+  Varcode upper-bound conflicts; editable/local work preserved.
+- **Decision:** keep the retained checkpoint. Use corrected training sources plus
+  immutable measured-affinity replay and **existing fixed validation**; accumulated
+  ancestry leaves too little new validation to support class-balanced selection
+  alone. This consolidation does not establish new APC/intervention gains.
+- **Artifacts:** `results/verification.json`, `preparation.json`, `pair-audit.json`,
+  `training-sources.json`, software prediction dumps; raw prepared data on Modal
+  volume `presto-checkpoints/2026-11-18_0315_codex_foundation-integration/`.

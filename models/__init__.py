@@ -32,5 +32,4 @@ from .affinity import (
     binding_prob_from_kd_log10,
     normalize_binding_target_log10,
 )
-from .presto import Presto
-from .tcr_specificity import TCRSpecificityModel, functional_response_loss
+from .presto import Presto, PrestoConfig

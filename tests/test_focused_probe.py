@@ -9,8 +9,8 @@ from torch.utils.data import Dataset
 from presto.data import BindingRecord, PrestoDataset
 from presto.data.collate import PrestoCollator, PrestoSample
 from presto.data.tokenizer import Tokenizer
-from presto.models.presto import Presto
-from presto.scripts.focused_binding_probe import (
+from presto.legacy.presto import Presto
+from presto.legacy.scripts.focused_binding_probe import (
     CombinedSampleDataset,
     DatasetContract,
     ManualDropout,
@@ -121,15 +121,19 @@ def test_balance_alleles_preserves_non_target():
 
 def test_resolve_runtime_device_auto_prefers_mps_when_cuda_unavailable(monkeypatch):
     monkeypatch.setattr(
-        "presto.scripts.focused_binding_probe.torch.cuda.is_available", lambda: False
+        "presto.legacy.scripts.focused_binding_probe.torch.cuda.is_available", lambda: False
     )
-    monkeypatch.setattr("presto.scripts.focused_binding_probe._mps_is_available", lambda: True)
+    monkeypatch.setattr(
+        "presto.legacy.scripts.focused_binding_probe._mps_is_available", lambda: True
+    )
 
     assert _resolve_runtime_device("auto") == "mps"
 
 
 def test_resolve_runtime_device_explicit_mps_requires_availability(monkeypatch):
-    monkeypatch.setattr("presto.scripts.focused_binding_probe._mps_is_available", lambda: False)
+    monkeypatch.setattr(
+        "presto.legacy.scripts.focused_binding_probe._mps_is_available", lambda: False
+    )
 
     with pytest.raises(ValueError, match="Requested device 'mps'"):
         _resolve_runtime_device("mps")
@@ -613,7 +617,7 @@ def test_evaluate_probe_panel_exports_all_affinity_heads(monkeypatch):
         return SimpleNamespace(groove_half_1="A" * 91, groove_half_2="C" * 93)
 
     monkeypatch.setattr(
-        "presto.scripts.focused_binding_probe.prepare_mhc_input",
+        "presto.legacy.scripts.focused_binding_probe.prepare_mhc_input",
         _fake_prepare_mhc_input,
     )
 

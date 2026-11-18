@@ -6,20 +6,20 @@ from __future__ import annotations
 import pytest
 import torch
 
-from presto.scripts.distributional_ba.config import (
+from presto.legacy.scripts.distributional_ba.config import (
     CONDITIONS,
     ConditionSpec,
     build_model,
 )
-from presto.scripts.distributional_ba.config_v6 import CONDITIONS_V6_BY_ID
-from presto.scripts.distributional_ba.heads import (
+from presto.legacy.scripts.distributional_ba.config_v6 import CONDITIONS_V6_BY_ID
+from presto.legacy.scripts.distributional_ba.heads import (
     HEAD_REGISTRY,
     GaussianHead,
     HLGaussHead,
     QuantileHead,
     TwoHotHead,
 )
-from presto.scripts.distributional_ba.losses import (
+from presto.legacy.scripts.distributional_ba.losses import (
     censored_gaussian_nll,
     censored_pinball_loss,
     distributional_cross_entropy,
@@ -28,10 +28,10 @@ from presto.scripts.distributional_ba.losses import (
     mhcflurry_censored_loss,
     survival_nll,
 )
-from presto.scripts.distributional_ba.assay_context import (
+from presto.legacy.scripts.distributional_ba.assay_context import (
     AssayContextEncoder,
 )
-from presto.scripts.distributional_ba.metrics import point_metrics, calibration_metrics
+from presto.legacy.scripts.distributional_ba.metrics import point_metrics, calibration_metrics
 
 
 B, D, CTX = 4, 384, 32  # batch, encoder dim (3*128), context dim
@@ -227,7 +227,7 @@ def test_assay_context_encoder():
 
 @pytest.mark.parametrize("cond_id", [1, 5, 7, 13, 21, 29])
 def test_build_model_smoke(cond_id):
-    from presto.scripts.distributional_ba.config import CONDITIONS_BY_ID
+    from presto.legacy.scripts.distributional_ba.config import CONDITIONS_BY_ID
 
     spec = CONDITIONS_BY_ID[cond_id]
     model = build_model(spec)
@@ -452,7 +452,7 @@ def test_censored_pinball_right_censored():
 
 
 def test_v2_28_conditions():
-    from presto.scripts.distributional_ba.config_v2 import CONDITIONS_V2
+    from presto.legacy.scripts.distributional_ba.config_v2 import CONDITIONS_V2
 
     assert len(CONDITIONS_V2) == 28
     ids = [c.cond_id for c in CONDITIONS_V2]
@@ -460,8 +460,8 @@ def test_v2_28_conditions():
 
 
 def test_v2_build_model_smoke():
-    from presto.scripts.distributional_ba.config_v2 import CONDITIONS_V2_BY_ID
-    from presto.scripts.distributional_ba.config import build_model
+    from presto.legacy.scripts.distributional_ba.config_v2 import CONDITIONS_V2_BY_ID
+    from presto.legacy.scripts.distributional_ba.config import build_model
 
     # Test one of each new head type
     for cond_id in [1, 5, 9, 13, 21]:
@@ -482,7 +482,7 @@ def test_v2_build_model_smoke():
 
 def test_content_conditioned_assay_context():
     """AssayContextEncoder with repr_dim > 0 accepts binding logit + mol repr."""
-    from presto.scripts.distributional_ba.assay_context import AssayContextEncoder
+    from presto.legacy.scripts.distributional_ba.assay_context import AssayContextEncoder
 
     repr_dim = 384
     enc = AssayContextEncoder(ctx_dim=32, repr_dim=repr_dim)
@@ -644,7 +644,7 @@ def test_compute_binding_signal(head_type):
 
 
 def test_v5_conditions():
-    from presto.scripts.distributional_ba.config_v5 import CONDITIONS_V5
+    from presto.legacy.scripts.distributional_ba.config_v5 import CONDITIONS_V5
 
     assert len(CONDITIONS_V5) == 6
     dims = [c.embed_dim for c in CONDITIONS_V5]
@@ -658,7 +658,7 @@ def test_v5_conditions():
 
 def test_predict_all_combos_point():
     """predict_all_combos returns per-combo point predictions."""
-    from presto.scripts.distributional_ba.assay_combos import predict_all_combos
+    from presto.legacy.scripts.distributional_ba.assay_combos import predict_all_combos
 
     spec = ConditionSpec(cond_id=99, head_type="mhcflurry", assay_mode="additive", max_nM=50_000)
     model = build_model(spec, content_conditioned=True)
@@ -700,7 +700,7 @@ def test_predict_all_combos_point():
 
 def test_predict_all_combos_distributional():
     """predict_all_combos returns probs/edges for distributional heads."""
-    from presto.scripts.distributional_ba.assay_combos import predict_all_combos
+    from presto.legacy.scripts.distributional_ba.assay_combos import predict_all_combos
 
     spec = ConditionSpec(
         cond_id=99, head_type="hlgauss", assay_mode="d1_affine", max_nM=50_000, sigma_mult=0.75
@@ -735,7 +735,7 @@ def test_predict_all_combos_distributional():
 
 def test_predict_marginal_distributional():
     """predict_marginal produces a mixture distribution for distributional heads."""
-    from presto.scripts.distributional_ba.assay_combos import predict_marginal
+    from presto.legacy.scripts.distributional_ba.assay_combos import predict_marginal
 
     spec = ConditionSpec(
         cond_id=99, head_type="hlgauss", assay_mode="d1_affine", max_nM=50_000, sigma_mult=0.75

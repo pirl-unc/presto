@@ -50,11 +50,11 @@ class TestVersionParsing:
 
 
 class TestFloorEnforcement:
-    @pytest.mark.parametrize("raw", ["1.75.0", "1.78.0", "1.80.0", "2.0.0"])
+    @pytest.mark.parametrize("raw", ["2.1.12", "2.1.13", "2.2.0", "3.0.0"])
     def test_supported_versions_pass(self, raw):
         require_supported_hitlist(raw)
 
-    @pytest.mark.parametrize("raw", ["1.41", "1.45.0", "1.53.0", "1.74.9", "0.9"])
+    @pytest.mark.parametrize("raw", ["1.41", "1.75.0", "2.0.0", "2.1.9", "2.1.11"])
     def test_versions_below_the_floor_raise(self, raw):
         with pytest.raises(RuntimeError, match="too old"):
             require_supported_hitlist(raw)
@@ -65,6 +65,8 @@ class TestFloorEnforcement:
             require_supported_hitlist("1.45.0")
         message = str(excinfo.value)
         assert "apm_genes_perturbed" in message
+        assert "2.1.12" in message
+        assert "serotype" in message
         assert "1.53.0" in message
         assert "species-role provenance" in message
 
@@ -77,8 +79,8 @@ class TestFloorEnforcement:
         require_supported_hitlist(raw)
 
     def test_the_floor_matches_what_the_module_documents(self):
-        """Native species-role fields use the existing validated dependency floor."""
-        assert MINIMUM_HITLIST_VERSION == (1, 75, 0)
+        """Cached serotype refresh and empty-selection semantics require 2.1.12."""
+        assert MINIMUM_HITLIST_VERSION == (2, 1, 12)
 
 
 class TestDeclaredDependencyAgrees:
@@ -88,7 +90,14 @@ class TestDeclaredDependencyAgrees:
         from pathlib import Path
 
         wanted = ".".join(
-            map(str, max(MINIMUM_FROZEN_HITLIST_VERSION, MINIMUM_SCOPED_HITLIST_VERSION))
+            map(
+                str,
+                max(
+                    MINIMUM_HITLIST_VERSION,
+                    MINIMUM_FROZEN_HITLIST_VERSION,
+                    MINIMUM_SCOPED_HITLIST_VERSION,
+                ),
+            )
         )
         text = (Path(__file__).resolve().parents[1] / "pyproject.toml").read_text()
         assert f'"hitlist>={wanted}"' in text
@@ -98,10 +107,19 @@ class TestDeclaredDependencyAgrees:
         from pathlib import Path
 
         wanted = ".".join(
-            map(str, max(MINIMUM_FROZEN_HITLIST_VERSION, MINIMUM_SCOPED_HITLIST_VERSION))
+            map(
+                str,
+                max(
+                    MINIMUM_HITLIST_VERSION,
+                    MINIMUM_FROZEN_HITLIST_VERSION,
+                    MINIMUM_SCOPED_HITLIST_VERSION,
+                ),
+            )
         )
-        launcher = (Path(__file__).resolve().parents[1] / "scripts" / "train_remote.py").read_text()
-        assert f'"hitlist>={wanted}"' in launcher
+        launcher = (
+            Path(__file__).resolve().parents[1] / "legacy" / "scripts" / "train_remote.py"
+        ).read_text()
+        assert f'"hitlist=={wanted}"' in launcher
 
 
 class TestFrozenFloorEnforcement:

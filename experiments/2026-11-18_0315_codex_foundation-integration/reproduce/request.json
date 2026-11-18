@@ -1,0 +1,61 @@
+{
+  "commands": [
+    [
+      "data",
+      "prepare-presentation",
+      "--manifest",
+      "/volume/2026-11-18_0315_codex_foundation-integration/assets/preparation-manifest.json",
+      "--output-dir",
+      "/volume/2026-11-18_0315_codex_foundation-integration/prepared"
+    ]
+  ],
+  "assets": [
+    {
+      "local": "/Users/iskander/code/presto/data/presentation-corrected-v4-hitlist2112/hitlist-I.parquet",
+      "remote": "/2026-11-18_0315_codex_foundation-integration/assets/hitlist-I.parquet",
+      "sha256": "9b24906e197df9e1e5e543c14c6d74e36d46ca81d91f512b5b09db539481c827"
+    },
+    {
+      "local": "/Users/iskander/code/presto/data/presentation-corrected-v4-hitlist2112/hitlist-II.parquet",
+      "remote": "/2026-11-18_0315_codex_foundation-integration/assets/hitlist-II.parquet",
+      "sha256": "41e68d8804f48b85ef4c3cc4f6222105b4ec891bc84dd5036ee9d549faafbc50"
+    },
+    {
+      "local": "/Users/iskander/code/presto/data/presentation-corrected-v4-hitlist2112/samples.csv",
+      "remote": "/2026-11-18_0315_codex_foundation-integration/assets/samples.csv",
+      "sha256": "5dbcb45db85eeee0a830562be8d48aae78b0c22979e25683e99b7ab9a27aea79"
+    },
+    {
+      "local": "/Users/iskander/code/presto/data/presentation-corrected-v4-hitlist2112/observed-identities.parquet",
+      "remote": "/2026-11-18_0315_codex_foundation-integration/assets/observed-identities.parquet",
+      "sha256": "d87abec50c63d533569140579acc6c742045e0bbe5721d67ebec8258107f8836"
+    },
+    {
+      "local": "/Users/iskander/code/presto/data/shared-presentation-20261117/mhc-full-seqs.csv",
+      "remote": "/2026-11-18_0315_codex_foundation-integration/assets/mhc-full-seqs.csv",
+      "sha256": "0e26d38ed0c572692a3486e100272c56bd1134ce74d2b6122fa4be2f4c6b0a82"
+    },
+    {
+      "local": "/Users/iskander/code/presto/data/shared-presentation-20261117/proteins.fa.gz",
+      "remote": "/2026-11-18_0315_codex_foundation-integration/assets/proteins.fa.gz",
+      "sha256": "4f34c86f82caa43b3e0874ae44d9122c73dbf32adb69d1d8fa3bed54817ad6d2"
+    },
+    {
+      "local": "/Users/iskander/code/presto/data/shared-presentation-20261117/sealed-identity-embargo.txt.gz",
+      "remote": "/2026-11-18_0315_codex_foundation-integration/assets/sealed-identity-embargo.txt.gz",
+      "sha256": "1cfe25cfc6f3d636e0a49f1359b4eafb5fdf39ea7ec52a541629905c3c68ce57"
+    },
+    {
+      "local": "/Users/iskander/code/presto/artifacts/cleanup-foundation-source/experiments/2026-11-18_0315_codex_foundation-integration/reproduce/identity-sources.json",
+      "remote": "/2026-11-18_0315_codex_foundation-integration/assets/identity-sources.json",
+      "sha256": "bdbd3ba8fc8ba9c4d59e378411ba334c511bbfb9d9506ce1a3a11af7202ecb4c"
+    },
+    {
+      "local": "/Users/iskander/code/presto/artifacts/cleanup-foundation-source/experiments/2026-11-18_0315_codex_foundation-integration/reproduce/preparation-manifest.json",
+      "remote": "/2026-11-18_0315_codex_foundation-integration/assets/preparation-manifest.json",
+      "sha256": "a9316b4ca740be51a84cf3bd515fa392dcae8a523edc8ef233b70c4df0d24c29"
+    }
+  ],
+  "receipt_dir": "/volume/2026-11-18_0315_codex_foundation-integration/execution",
+  "gpu": false
+}

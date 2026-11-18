@@ -1,0 +1,132 @@
+{
+  "schema": "presto.modular.manifest.v1",
+  "sources": [
+    {
+      "path": "/volume/2026-11-17_1155_codex_shared-presentation-expansion/inputs/affinity-train.jsonl",
+      "sha256": "ca35795b1f444380beef3ce9165d937875c701d99c2d11a2f99b1232246c77c0",
+      "source": "hitlist-v4-iedb",
+      "population": "Measured concentration replay and source-reported presentation with declared sampled backgrounds",
+      "label_policy": "Literal assay/qualifier; MS detection vs unobserved same-possible-source background, unknown APC preserved; no predictor-derived labels",
+      "split_policy": "Frozen validation; protected sequence families; full uncapped native admission with source-family split and historical TRAIN exposure exclusions",
+      "split": "train"
+    },
+    {
+      "path": "/volume/2026-11-17_1155_codex_shared-presentation-expansion/fits/expanded-state-sqrt-s42-n6000/validation-inputs/affinity-validation.jsonl",
+      "sha256": "08e41a6c006274b5929142fc6bd4687a289a08df9cc5212edd92399f907f2f8a",
+      "source": "hitlist-v4-iedb",
+      "population": "Measured concentration replay and source-reported presentation with declared sampled backgrounds",
+      "label_policy": "Literal assay/qualifier; MS detection vs unobserved same-possible-source background, unknown APC preserved; no predictor-derived labels",
+      "split_policy": "Frozen validation; protected sequence families; full uncapped native admission with source-family split and historical TRAIN exposure exclusions",
+      "split": "validation"
+    },
+    {
+      "path": "/volume/2026-11-17_1155_codex_shared-presentation-expansion/fits/expanded-state-sqrt-s42-n6000/validation-inputs/apc-validation.jsonl",
+      "sha256": "61e749cba42adc4896b3038ea045dcb2023ac9036e204865d88e92a64e295d33",
+      "source": "hitlist_native_ms",
+      "population": "Measured concentration replay and source-reported presentation with declared sampled backgrounds",
+      "label_policy": "Literal assay/qualifier; MS detection vs unobserved same-possible-source background, unknown APC preserved; no predictor-derived labels",
+      "split_policy": "Frozen validation; protected sequence families; full uncapped native admission with source-family split and historical TRAIN exposure exclusions",
+      "split": "validation"
+    },
+    {
+      "path": "/volume/2026-11-17_1155_codex_shared-presentation-expansion/fits/expanded-state-sqrt-s42-n6000/validation-inputs/broad-validation.jsonl",
+      "sha256": "f58a60cf3e2201716c3da72954c27794453283bbff604b95b7055e8ec1c7be08",
+      "source": "carmen_v122",
+      "population": "Measured concentration replay and source-reported presentation with declared sampled backgrounds",
+      "label_policy": "Literal assay/qualifier; MS detection vs unobserved same-possible-source background, unknown APC preserved; no predictor-derived labels",
+      "split_policy": "Frozen validation; protected sequence families; full uncapped native admission with source-family split and historical TRAIN exposure exclusions",
+      "split": "validation"
+    },
+    {
+      "path": "/volume/2026-11-17_1155_codex_shared-presentation-expansion/fits/expanded-state-sqrt-s42-n6000/validation-inputs/expanded-validation.jsonl",
+      "sha256": "596f36dc4140d418ede65fbcc14c17e035943204b72a15232ebd91ebfd77fd3f",
+      "source": "hitlist_native_ms",
+      "population": "Measured concentration replay and source-reported presentation with declared sampled backgrounds",
+      "label_policy": "Literal assay/qualifier; MS detection vs unobserved same-possible-source background, unknown APC preserved; no predictor-derived labels",
+      "split_policy": "Frozen validation; protected sequence families; full uncapped native admission with source-family split and historical TRAIN exposure exclusions",
+      "split": "validation"
+    },
+    {
+      "path": "/volume/2026-11-18_0315_codex_foundation-integration/prepared/inputs/expanded-train.jsonl",
+      "sha256": "ddbd9bb4f135d53c1a14d33d840f5603b13f1fd348b574102c13fc983d4f3cd8",
+      "source": "hitlist_native_ms",
+      "split": "train",
+      "population": "source-admitted human presentation and declared replay",
+      "label_policy": "Reported MS detections and generated backgrounds; not binding negatives",
+      "split_policy": "Pinned ancestry/held-out identities; related sequences and source families"
+    },
+    {
+      "path": "/volume/2026-11-18_0315_codex_foundation-integration/prepared/inputs/expanded-validation.jsonl",
+      "sha256": "3c85ed3e0acc890f285d844353a0f10ae91c27ab3478a97d2c9f1e695ff213ec",
+      "source": "hitlist_native_ms",
+      "split": "validation",
+      "population": "source-admitted human presentation and declared replay",
+      "label_policy": "Reported MS detections and generated backgrounds; not binding negatives",
+      "split_policy": "Pinned ancestry/held-out identities; related sequences and source families"
+    }
+  ],
+  "model_context": {
+    "cell_types": [
+      "B-cell",
+      "Dendritic cell",
+      "Endothelial cell",
+      "Epithelial cell",
+      "Fibroblast",
+      "Glial cell",
+      "Lymph node cells",
+      "Lymphoblast",
+      "Lymphocyte",
+      "Macrophage",
+      "Melanocyte",
+      "Monocyte",
+      "Mononuclear cell",
+      "Myeloblast",
+      "Neuroblast",
+      "Osteoblast",
+      "PBMC",
+      "Pancreatic beta cell",
+      "Plasma cell",
+      "Splenocyte",
+      "T cell CD8+",
+      "T-cell",
+      "Thymocyte"
+    ],
+    "interventions": [
+      "background:ERAP1_hap10",
+      "drug:DMSO",
+      "drug:decitabine",
+      "drug:flucloxacillin",
+      "drug:tazemetostat",
+      "knockdown:ERAP1",
+      "knockdown:TAX1BP1",
+      "knockout:B2M",
+      "knockout:CALR",
+      "knockout:CANX",
+      "knockout:ERAP1",
+      "knockout:ERAP2",
+      "knockout:GANAB",
+      "knockout:HLA-A",
+      "knockout:HLA-B",
+      "knockout:HLA-C",
+      "knockout:IRF2",
+      "knockout:PDIA3",
+      "knockout:SPPL3",
+      "knockout:TAP1",
+      "knockout:TAP2",
+      "knockout:TAPBP",
+      "stimulation:LPS",
+      "stimulation:PMA",
+      "stimulation:biomaterial_contact",
+      "stimulation:dc_maturation",
+      "stimulation:ionomycin",
+      "transduction:CIITA",
+      "transduction:HIV Env",
+      "transduction:HLA-B",
+      "transfection:HLA-DM"
+    ],
+    "cytokines": [
+      "IFNG"
+    ]
+  },
+  "purpose": "Source composition only: corrected pairs + immutable measured-affinity replay and fixed validation. Choose explicit model/training configuration before fitting."
+}

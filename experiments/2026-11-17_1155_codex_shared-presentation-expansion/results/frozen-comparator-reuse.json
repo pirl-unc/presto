@@ -1,0 +1,43 @@
+{
+  "matched_source_sha256": "c8448287ac241af505e3e03b0ac31855109a7d6a423877db93d0f74ae2199822",
+  "same_matched_pairs": true,
+  "mhcflurry_rows_per_mode": 680,
+  "modes": [
+    "with_flanks",
+    "without_flanks"
+  ],
+  "files": [
+    {
+      "source": "experiments/2026-11-16_2035_codex_joint-apc-capacity/results/mhcflurry/receipt.json",
+      "target": "experiments/2026-11-17_1155_codex_shared-presentation-expansion/results/mhcflurry/receipt.json",
+      "sha256": "d53925ae4e5ffcee2e278ffb562e7da330045acdf881f41dc2b06f33c25ef764"
+    },
+    {
+      "source": "experiments/2026-11-16_2035_codex_joint-apc-capacity/results/mhcflurry/predictions.jsonl",
+      "target": "experiments/2026-11-17_1155_codex_shared-presentation-expansion/results/mhcflurry/predictions.jsonl",
+      "sha256": "8985d093323b0d13ec84598147d30bbdeb063a4208ed944e048b04f35d13b917"
+    },
+    {
+      "source": "experiments/2026-11-16_2035_codex_joint-apc-capacity/results/mhcflurry/training-overlap.json",
+      "target": "experiments/2026-11-17_1155_codex_shared-presentation-expansion/results/mhcflurry/training-overlap.json",
+      "sha256": "ac8eaa7e2a5a306da24359deb085c4ee70c628ff6da0b01d9b6425c113368c60"
+    },
+    {
+      "source": "experiments/2026-11-16_2035_codex_joint-apc-capacity/results/netmhc-training-overlap.json",
+      "target": "experiments/2026-11-17_1155_codex_shared-presentation-expansion/results/netmhc-training-overlap.json",
+      "sha256": "46db99cda2ae858717e108efcdc6e7f251644c3a9830bf5ee049e593b0a2c9e9"
+    },
+    {
+      "source": "experiments/2026-11-16_2035_codex_joint-apc-capacity/results/netmhc-overlap-by-label.json",
+      "target": "experiments/2026-11-17_1155_codex_shared-presentation-expansion/results/netmhc-overlap-by-label.json",
+      "sha256": "e35e70cbe6bf9c08583d6f7126160aa326a1ce64ed637869980e218aded8eaf2"
+    },
+    {
+      "source": "experiments/2026-11-16_2035_codex_joint-apc-capacity/results/netmhc-overlap-witness-verification.json",
+      "target": "experiments/2026-11-17_1155_codex_shared-presentation-expansion/results/netmhc-overlap-witness-verification.json",
+      "sha256": "7222983bba07c9a894ac416561228200bb8687eafc384393adcf5322a5efd8fe"
+    }
+  ],
+  "new_scoring_performed": false,
+  "test_accessed": false
+}

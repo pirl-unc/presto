@@ -5,7 +5,7 @@ from types import SimpleNamespace
 import pytest
 import torch
 
-from presto.scripts.groove_baseline_probe import (
+from presto.legacy.scripts.groove_baseline_probe import (
     GrooveBaselineModel,
     GrooveTransformerModel,
     _build_model,

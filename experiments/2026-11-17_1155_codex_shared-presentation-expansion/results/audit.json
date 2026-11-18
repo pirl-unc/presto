@@ -1,0 +1,42 @@
+{
+  "status": "passed",
+  "files": {
+    "affinity-train.jsonl": {
+      "rows": 159796,
+      "errors": {},
+      "examples": [],
+      "pair_audit": "not a paired native population"
+    },
+    "apc-train.jsonl": {
+      "rows": 10632,
+      "errors": {},
+      "examples": [],
+      "pair_audit": "all complete native pairs"
+    },
+    "broad-train.jsonl": {
+      "rows": 65629,
+      "errors": {},
+      "examples": [],
+      "pair_audit": "not a paired native population"
+    },
+    "expanded-train.jsonl": {
+      "rows": 775748,
+      "errors": {},
+      "examples": [],
+      "pair_audit": "all complete native pairs"
+    }
+  },
+  "new_validation_historical_exposure": {},
+  "new_validation_historical_family_exposure": [],
+  "new_validation_rows": 1974,
+  "protected_identity_count": 295335,
+  "seconds": 245.75792837100002,
+  "test_accessed": false,
+  "historical_source_hashes": {
+    "/volume/2026-11-07_1915_codex_unified-presentation/prepared-v2/presentation-train.jsonl": "6609ee375f6bb117f19035560daa6cf50a63b9c229fa46ae24e773afebdda2fc",
+    "/volume/2026-11-07_1915_codex_unified-presentation/prepared-v2/concentrations-s42-concentrations-s42-train.jsonl": "8593fbd416a489b46397c4fae288d5916ad55d2febec7f7798bc4bb3f788ec1c",
+    "/volume/2026-11-16_2035_codex_joint-apc-capacity/inputs/apc-train.jsonl": "7fb6794df84de0a044303ed09c6d0d6efdf1b9762b7f0f376e21ed88c2622411",
+    "/volume/2026-11-07_1720_codex_affinity-development/prepared/concentrations-s42-train.jsonl": "acc22d1481ce8e0b45a6df86ca9a62e70721752955070b7eb26b85e48361635d"
+  },
+  "method": "Exact/shared8mer plus position-deletion Hamming witnesses, independently implemented from preparation half-string indexing"
+}

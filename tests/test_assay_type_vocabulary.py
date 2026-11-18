@@ -5,7 +5,7 @@ import torch
 
 from presto.data.collate import PrestoCollator, PrestoSample
 from presto.data.vocab import BINDING_ASSAY_TYPES, IDX_TO_BINDING_ASSAY_TYPE
-from presto.models.presto import Presto
+from presto.legacy.presto import Presto
 
 MHC_A = "GSHSMRYFYT" * 4
 MHC_B = "IQRTPKIQVY" * 4

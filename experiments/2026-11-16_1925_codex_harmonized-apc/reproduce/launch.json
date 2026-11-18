@@ -1,0 +1,9 @@
+{
+  "agent": "Codex",
+  "source_base": "2d371d9e",
+  "branch": "codex/harmonized-apc-20261116",
+  "dirty": true,
+  "command": "PRESTO_MODAL_GPU=H100! modal run --detach code/fit.py",
+  "test_policy": "sealed",
+  "training": "canonical manifest trainer; 800 steps, batch32, lr3e-4; matched budgets; affinity dependencies frozen"
+}

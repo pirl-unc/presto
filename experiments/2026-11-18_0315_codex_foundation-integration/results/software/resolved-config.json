@@ -1,0 +1,79 @@
+{
+  "model": {
+    "acquisition_features": [],
+    "acquisition_units": {},
+    "assay_mode": "factorized",
+    "assay_tracks": [],
+    "auxiliary_context": [],
+    "cell_types": [],
+    "component_activity_units": {},
+    "components": [],
+    "context_species": [],
+    "cytokine_dose_units": {},
+    "cytokine_duration_features": [],
+    "cytokines": [],
+    "d_ff": 32,
+    "d_model": 16,
+    "dropout": 0,
+    "endpoints": [
+      "ic50"
+    ],
+    "enzymes": [],
+    "identity_tasks": [],
+    "identity_threshold": 0.8,
+    "interventions": [],
+    "machinery_profiles": {},
+    "machinery_references": [],
+    "max_length": 512,
+    "mhc_classes": [
+      "I",
+      "II"
+    ],
+    "n_heads": 2,
+    "n_layers": 1,
+    "observation_features": [],
+    "observation_units": {},
+    "ordinal_scales": {},
+    "peptide_context": "shared_core_context_v2",
+    "preparation_features": [],
+    "preparation_units": {},
+    "processing_pathways": [],
+    "quantity_domains": {},
+    "register_pooling": true,
+    "source_categories": [],
+    "source_context": false,
+    "species": [],
+    "species_defaults": true
+  },
+  "scales": {
+    "ic50": {
+      "exact_count": 4,
+      "floor": 0.001,
+      "mean": 2.0,
+      "scale": 1.0
+    }
+  },
+  "training": {
+    "balance_by": [],
+    "batch_size": 4,
+    "checkpoint_every_steps": 100,
+    "coverage_exception_reason": null,
+    "coverage_policy": "required",
+    "identity_batch_size": 64,
+    "identity_weight": 0.1,
+    "learning_rate": 0.0003,
+    "max_epochs": 1,
+    "max_steps": 1,
+    "min_epochs": 10,
+    "no_test_reason": "Artificial integration fixture; no biological TEST outcomes",
+    "patience": 15,
+    "seed": 42,
+    "selection_endpoint": null,
+    "selection_reduction": "observation_mean",
+    "stratum_weights": [],
+    "test_policy": "no_test_training_diagnostic",
+    "train_evaluation_max_rows": null,
+    "validation_every_steps": null,
+    "weight_decay": 0.0001
+  }
+}

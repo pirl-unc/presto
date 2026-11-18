@@ -17,7 +17,7 @@ from presto.data.frozen_partitions import (
 from presto.data.hitlist_source import load_records_from_hitlist
 from presto.data.loaders import PrestoDataset, BindingRecord
 from presto.data.source_lineage import generated_record
-from presto.scripts.train_iedb import (
+from presto.legacy.scripts.train_iedb import (
     augment_binding_records_with_synthetic_negatives,
     cascade_binding_negatives_to_downstream,
 )
@@ -301,9 +301,9 @@ def test_prediction_exports_keep_generated_parents_and_partition(frozen_bundle, 
     import csv
     from presto.data.collate import PrestoCollator
     from presto.data.source_lineage import source_lineage_fields
-    from presto.models.presto import Presto
+    from presto.legacy.presto import Presto
     from presto.training.holdout_eval import collect_holdout_predictions, write_holdout_artifacts
-    from presto.scripts.train_synthetic import (
+    from presto.legacy.scripts.train_synthetic import (
         LOSS_TASK_SPECS,
         _resolve_task_prediction,
         _get_batch_target,

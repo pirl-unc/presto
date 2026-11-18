@@ -1,0 +1,78 @@
+{
+  "core_tests_status": "passed",
+  "default_trace_unchanged": true,
+  "weighted_sampler_resume_exact": true,
+  "real_input_smoke": "passed",
+  "class_nonzero_gradient_parameters": {
+    "I": 52,
+    "II": 52
+  },
+  "predictive_fit_launched": true,
+  "predictive_gains_established": true,
+  "test_accessed": false,
+  "cell_identity_regression_tests": {
+    "passed": 61,
+    "log": "launch_logs/cell-identity-tests.log",
+    "source_commit": "65314976"
+  },
+  "context_refresh_check": {
+    "both_classes": true,
+    "unknown_treatments_preserved": true,
+    "all_other_fields_hash_equal": true,
+    "refuses_overwrite": true
+  },
+  "public_inference_check": {
+    "checkpoint": "previous-default",
+    "classes": [
+      "I",
+      "II"
+    ],
+    "affinity_context_delta": 0.0
+  },
+  "bootstrap_check": "39 draws match explicit row expansion with ties; chunking numerically exact",
+  "final_core_tests": {
+    "passed": 251,
+    "seconds": 28.08,
+    "log": "launch_logs/pathway-core-tests.log",
+    "source_commit": "5f9bfe37dfb5e82cecdf762ef1e59ff885668e40"
+  },
+  "context_refresh_actual": {
+    "passed": true,
+    "written_bytes_verified": true,
+    "all_other_fields_unchanged": true,
+    "seconds": 263.780863668,
+    "known_cell_positive_rows_before": 263038,
+    "known_cell_positive_rows_after": 326031
+  },
+  "projection_core_tests": {
+    "passed": 214,
+    "seconds": 29.33,
+    "source_commit": "2da11504f71f49c3d1780b4c982db07966d7063b",
+    "log": "launch_logs/core-tests-projection.log"
+  },
+  "corpus_audit": "passed",
+  "source_staging_check": {
+    "byte_and_order_identity": true,
+    "original_unchanged": true,
+    "refuses_overwrite": true,
+    "rejects_changed_source": true
+  },
+  "unpaired_clustered_auroc_check": "13 tied-score draws agree with explicit row expansion",
+  "short_fit": "results/full-data-short-fit-verification.json",
+  "historical_initial_core_tests": 177,
+  "core_tests": 251,
+  "predictive_gain_scope": "ordinary presentation, both classes, adaptive development validation; not matched-affinity or causal effects",
+  "independent_final_verification": {
+    "selected_checkpoints": 12,
+    "terminal_checkpoints": 12,
+    "ordinary_rows_per_checkpoint": 11572,
+    "files": [
+      "results/independent-verification.json",
+      "results/terminal-independent-verification.json"
+    ]
+  },
+  "preferred_checkpoint": "results/preferred-checkpoint.json",
+  "preferred_public_cpu_inference": "results/example-predictions.json",
+  "apc_controls": "results/context-ablation",
+  "final_running_containers": []
+}

@@ -1,0 +1,6 @@
+{
+  "status": "local_import_failed_before_remote_launch",
+  "error": "Local launcher eagerly imported Presto from a different checkout",
+  "fix": "Import model/data code inside the remote function using the frozen runtime",
+  "log": "launch_logs/modal-anchor-evaluation.log"
+}

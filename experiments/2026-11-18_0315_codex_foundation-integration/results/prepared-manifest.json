@@ -1,0 +1,87 @@
+{
+  "schema": "presto.modular.manifest.v1",
+  "sources": [
+    {
+      "path": "inputs/expanded-train.jsonl",
+      "sha256": "ddbd9bb4f135d53c1a14d33d840f5603b13f1fd348b574102c13fc983d4f3cd8",
+      "source": "hitlist_native_ms",
+      "split": "train",
+      "population": "source-admitted human presentation and declared replay",
+      "label_policy": "Reported MS detections and generated backgrounds; not binding negatives",
+      "split_policy": "Pinned ancestry/held-out identities; related sequences and source families"
+    },
+    {
+      "path": "inputs/expanded-validation.jsonl",
+      "sha256": "3c85ed3e0acc890f285d844353a0f10ae91c27ab3478a97d2c9f1e695ff213ec",
+      "source": "hitlist_native_ms",
+      "split": "validation",
+      "population": "source-admitted human presentation and declared replay",
+      "label_policy": "Reported MS detections and generated backgrounds; not binding negatives",
+      "split_policy": "Pinned ancestry/held-out identities; related sequences and source families"
+    }
+  ],
+  "preparation_manifest_sha256": "a9316b4ca740be51a84cf3bd515fa392dcae8a523edc8ef233b70c4df0d24c29",
+  "model_context": {
+    "cell_types": [
+      "B-cell",
+      "Dendritic cell",
+      "Endothelial cell",
+      "Epithelial cell",
+      "Fibroblast",
+      "Glial cell",
+      "Lymph node cells",
+      "Lymphoblast",
+      "Lymphocyte",
+      "Macrophage",
+      "Melanocyte",
+      "Monocyte",
+      "Mononuclear cell",
+      "Myeloblast",
+      "Neuroblast",
+      "Osteoblast",
+      "PBMC",
+      "Pancreatic beta cell",
+      "Plasma cell",
+      "Splenocyte",
+      "T cell CD8+",
+      "T-cell",
+      "Thymocyte"
+    ],
+    "interventions": [
+      "background:ERAP1_hap10",
+      "drug:DMSO",
+      "drug:decitabine",
+      "drug:flucloxacillin",
+      "drug:tazemetostat",
+      "knockdown:ERAP1",
+      "knockdown:TAX1BP1",
+      "knockout:B2M",
+      "knockout:CALR",
+      "knockout:CANX",
+      "knockout:ERAP1",
+      "knockout:ERAP2",
+      "knockout:GANAB",
+      "knockout:HLA-A",
+      "knockout:HLA-B",
+      "knockout:HLA-C",
+      "knockout:IRF2",
+      "knockout:PDIA3",
+      "knockout:SPPL3",
+      "knockout:TAP1",
+      "knockout:TAP2",
+      "knockout:TAPBP",
+      "stimulation:LPS",
+      "stimulation:PMA",
+      "stimulation:biomaterial_contact",
+      "stimulation:dc_maturation",
+      "stimulation:ionomycin",
+      "transduction:CIITA",
+      "transduction:HIV Env",
+      "transduction:HLA-B",
+      "transfection:HLA-DM"
+    ],
+    "cytokines": [
+      "IFNG"
+    ]
+  }
+}

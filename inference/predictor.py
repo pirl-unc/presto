@@ -9,7 +9,7 @@ from pathlib import Path
 
 import torch
 
-from ..models.presto import Presto
+from ..legacy.presto import LegacyPresto as Presto
 from ..models.pmhc import stable_noisy_or
 from ..models.affinity import (
     DEFAULT_BINDING_LOG10_SCALE,

@@ -1,0 +1,73 @@
+[test.sh] platform=macos cpus=10 cpu_cap=8 ram_free=? (probe unavailable) mem_cap=cpu_cap per_worker=1.5GB
+[test.sh] workers=2 → exec pytest -n 2 -o tmp_path_retention_policy=none
+============================= test session starts ==============================
+platform darwin -- Python 3.12.6, pytest-9.1.1, pluggy-1.6.0
+rootdir: /Users/iskander/code/presto/artifacts/cleanup-foundation-source
+configfile: pytest.ini
+testpaths: tests
+plugins: langsmith-0.14.0, cov-7.1.0, xdist-3.8.0, timeout-2.4.0, zarr-3.4.1, fast-array-utils-1.5.1, platformdirs-4.14.0, anyio-4.15.1
+created: 2/2 workers
+2 workers [3165 items]
+
+........................................................................ [  2%]
+........................................................................ [  4%]
+........................................................................ [  6%]
+........................................................................ [  9%]
+........................................................................ [ 11%]
+........................................................................ [ 13%]
+........................................................................ [ 15%]
+........................................................................ [ 18%]
+..............................ss........................................ [ 20%]
+........................................................................ [ 22%]
+..............s......................................................... [ 25%]
+........................................................................ [ 27%]
+........................................................................ [ 29%]
+........................................................................ [ 31%]
+........................................................................ [ 34%]
+........................................................................ [ 36%]
+........................................................................ [ 38%]
+........................................................................ [ 40%]
+........................................................................ [ 43%]
+........................................................................ [ 45%]
+........................................................................ [ 47%]
+........................................................................ [ 50%]
+........................................................................ [ 52%]
+........................................................................ [ 54%]
+........................................................................ [ 56%]
+........................................................................ [ 59%]
+........................................................................ [ 61%]
+........................................................................ [ 63%]
+........................................................................ [ 65%]
+........................................................................ [ 68%]
+........................................................................ [ 70%]
+........................................................................ [ 72%]
+........................................................................ [ 75%]
+........................................................................ [ 77%]
+..............................................................s......... [ 79%]
+........................................................................ [ 81%]
+........................................................................ [ 84%]
+........................................................................ [ 86%]
+........................................................................ [ 88%]
+........................................................................ [ 90%]
+........................................................................ [ 93%]
+........................................................................ [ 95%]
+........................................................................ [ 97%]
+.....................................................................    [100%]
+=============================== warnings summary ===============================
+tests/test_assay_ablation.py::TestForwardPass::test_all_variants_forward[a1]
+tests/test_distributional_ba.py::test_content_conditioned_different_inputs_different_bias
+  /Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/torch/nn/modules/transformer.py:533: UserWarning: The PyTorch API of nested tensors is in prototype stage and will change in the near future. We recommend specifying layout=torch.jagged when constructing a nested tensor, as this layout receives active development, has better operator coverage, and works with torch.compile. (Triggered internally at /Users/runner/work/pytorch/pytorch/aten/src/ATen/NestedTensorImpl.cpp:181.)
+    output = torch._nested_tensor_from_mask(
+
+tests/test_excision_window.py::TestZeroInitIsANoOp::test_added_positions_start_at_zero
+  /Users/iskander/code/presto/artifacts/cleanup-foundation-source/tests/test_excision_window.py:183: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+  Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:821.)
+    assert float(tensor.abs().sum()) == 0.0
+
+tests/test_curriculum_and_init.py::TestDeliberateInitSurvives::test_zero_init_embeddings_are_not_clobbered
+  /Users/iskander/code/presto/artifacts/cleanup-foundation-source/tests/test_curriculum_and_init.py:102: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+  Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:821.)
+    assert float(model.excision_head.length_preference.weight.abs().sum()) == 0.0
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========== 3161 passed, 4 skipped, 4 warnings in 262.58s (0:04:22) ============

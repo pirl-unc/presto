@@ -33,24 +33,51 @@ Useful flags:
 
 ## Training
 
-Canonical production path:
+All new training uses one manifest:
 
 ```bash
-python -m presto train unified --data-dir ./data --epochs 5 --checkpoint presto.pt
+python -m presto train --manifest /absolute/path/manifest.json --preflight
+python -m presto train --manifest /absolute/path/manifest.json \
+  --run-dir experiments/YYYY-MM-DD_HHMM_codex_description --device cpu
 ```
 
-Unified training defaults:
-- reads merged input from `./data/merged_deduped.tsv` (required by default),
-- uses balanced mini-batches (`--balanced-batches`) across assay/source/label/allele/synthetic strata,
-- uses `tqdm` with running loss + samples/sec.
+The manifest supplies model/optimizer settings and hash-pinned observation files.
+Use `--resume` with the same run directory and frozen manifest for continuation.
+The optional `unified`, `synthetic`, `pretrain` and `finetune` names are aliases;
+they do not select different code or generate inputs. Old training flags are
+rejected. See the [manifest schema](modular_model.md) and
+[migration guide](unified_training.md).
 
-Optional synthetic path:
+## Shared-model prediction and evaluation
 
 ```bash
-python -m presto train synthetic --epochs 5 --batch_size 16 --checkpoint presto.pt
+presto predict observations --checkpoint selected.pt --inputs queries.jsonl --output predictions.json
+presto evaluate observations --checkpoint selected.pt --manifest training.json --output-dir evaluation
 ```
 
-## Prediction
+Python callers use `presto.inference.ObservationPredictor(checkpoint).predict(observations)`.
+The canonical model format is shared-v7; historical formats dispatch to their
+versioned readers. Prediction requests must be label-free and declare `split: predict`.
+Evaluation selects explicitly declared source partitions before loading payloads.
+See [the current workflow](current_workflow.md) for support guards, APC projection,
+checkpoint hashes, output interpretation and Modal execution.
+
+## Pinned presentation data
+
+```bash
+presto data verify-corpus --corpus-dir /path/to/corrected-v4
+presto data export-presentation --corpus-dir /path/to/corrected-v4 --output-dir exported
+presto data freeze-identities --manifest identity-sources.json --output-dir protected
+presto data prepare-presentation --manifest preparation.json --output-dir prepared
+```
+
+See [the data contract](presentation_data.md). Corpus verification does not assign
+training membership. Neither the loader version nor export timestamp substitutes
+for a corpus generation pin.
+
+## Historical default-model prediction
+
+These commands read historical default-model checkpoints, not current shared-model files.
 
 ```bash
 python -m presto predict presentation \
@@ -77,7 +104,7 @@ The full role-specific biological context API remains pending; see the
 [model I/O contract](model_io_contract.md) for actual inputs, output units and
 the difference between implemented and desired behavior.
 
-## Evaluation
+## Historical default-model evaluation
 
 ```bash
 python -m presto evaluate synthetic --checkpoint presto.pt

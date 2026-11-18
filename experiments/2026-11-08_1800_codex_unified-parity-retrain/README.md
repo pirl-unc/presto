@@ -1,0 +1,229 @@
+# Newer-code unified parity-data retrain
+
+Date: 2026-11-08
+Agent/model: Codex / GPT-5
+Status: closed; both matched H100 fits, deterministic development evaluation,
+independent metric replay, and the preregistered parent decision are complete
+
+Specification:
+[`2026-11-08_unified-parity-retrain.md`](../agents/codex/plans/2026-11-08_unified-parity-retrain.md).
+
+This family restarts two matched Stage B fits from the same frozen Stage A
+checkpoint. The reference condition uses the four original
+affinity/presentation sources. The parity condition differs only by adding the
+verified NetMHCpan 4.2 and NetMHCIIpan 4.3 BA TRAIN projections as an
+unspecified-assay IC50 output.
+
+No TEST, locked confirmation, T-cell, PRIME, or model-mechanism change belongs
+to this first comparison. The full canonical common-loader preflight must pass
+and be independently verified before either requested `H100!` optimizer starts.
+
+## Primary preflight stop
+
+Frozen call `fc-01M6YPYAEWMTAAMWZ6C7XBCJRM` used 8 CPU / 32 GiB, no GPU,
+and blocked network access. The reference condition passed the complete common
+loader on 1,560,770 rows: 1,509,704 TRAIN and 51,066 development, zero TEST.
+Its pass took 1,227.21 seconds. The parity condition then stopped after 350.73
+seconds at byte zero of the first BA file because the projected row lacked the
+canonical original-measurement identity required for cross-source duplicate
+detection. Peak RSS was 4,729,880,576 bytes; no optimizer or prediction ran.
+
+This failed gate is preserved, not bypassed. The correction is preregistered in
+[`2026-11-08_ba-projection-lineage-continuation.md`](../agents/codex/plans/2026-11-08_ba-projection-lineage-continuation.md): add deterministic archive-native
+measurement lineage, extend the BA embargo to the complete Stage B development
+union, write immutable v2 artifacts, and rerun the full preflight before GPU use.
+
+Large inputs, checkpoints, and predictions remain on the `presto-checkpoints`
+Modal volume. Git contains the exact manifest template, launcher, receipts,
+summaries, evaluation code, and hashes only.
+
+## Corrected v2 preflight result
+
+The corrected projection adds canonical measurement lineage and complete Stage B
+development embargoes. Primary call `fc-01M6YSQBZ1AKY6WW2NN1ZBQD9N` under app
+`ap-dBDyzedkYeSHH7SCN0EKLT` hash-copied all six sources and the Stage A parent,
+then passed both complete canonical manifests:
+
+| Condition | TRAIN | development | total | loader seconds |
+|---|---:|---:|---:|---:|
+| reference | 1,509,704 | 51,066 | 1,560,770 | 493.59 |
+| parity data | 1,652,917 | 51,066 | 1,703,983 | 507.49 |
+
+The primary used 8 CPU / 32 GiB / 512 GiB scratch, no GPU, 1,010.20 seconds,
+and 4,817,805,312 bytes peak RSS. Receipt SHA-256 is
+`6efe6b3f64cbff080f9b03b9dce0ca1906a008d487fee3bd7d9eb8532ac6aaa2`.
+Returning the full Python object exceeded Modal's inline threshold and attempted
+a forbidden blob upload; the already committed receipt was recovered directly
+from the volume. No scientific work was rerun for that transport failure.
+
+The first independent call `fc-01M6YTYJTA4Z33FBNACMH886HY` was preempted after
+reference completion and parity-manifest creation. Its incomplete directory has
+no receipt and remains preserved. Atomic retry-safe call
+`fc-01M6YWM3TV4JF1CT6HACAQW0M7` under app
+`ap-FMlOBE4ADcMdKxRwETVd70` completed both manifests with the same row counts,
+partitions, manifest hashes, source hashes, and condition-level pass status.
+Runtime was 1,623.50 seconds and peak RSS 4,823,691,264 bytes.
+
+Its raw in-process comparison marked the receipt failed at `reference/model`
+because it compared a live Python structure containing tuple/list distinctions
+against the JSON-loaded primary receipt. The persisted model, training, scales,
+census, admission, row, partition, and manifest values are canonical-JSON
+identical. The failed raw receipt remains immutable at SHA-256
+`fdce01321abedf12f0e3aa961f0bd8ab93bade1896a101bc65530d6015178326`.
+
+CPU-only closure call `fc-01M6YYDWEEHT574AQTDNNQCRYT` under app
+`ap-KMHe8cOf1BqdxQ7c7acXTL` pinned both full receipts and canonical-JSON compared
+every preregistered scientific field plus every source-copy byte count/hash. It
+passed in 0.80 seconds; closure receipt SHA-256 is
+`b60d3f9343808b23fa67a6f636df0be01699f59475f7af596701c1ac00121c16`.
+
+Across primary and independent work: TEST and locked confirmation access are
+false; predictions are false; optimizer steps are zero; requested/observed GPU
+are null. The corrected H100 training gate is therefore open. This remains a
+development comparison and does not create independent superiority evidence.
+
+## Initial H100 packaging stop
+
+The first frozen fit submissions under app `ap-O6aCKv3NIhBIqQjIt6jjAm`,
+reference call `fc-01M6YZ10NHMN1FHFBRX8YRAQ91` and parity call
+`fc-01M6YZ10QXBK1RR2WCZ4QFC6EZ`, both stopped at the runtime-source-tree guard.
+The guard preceded volume reload, preflight-closure reading, source copying,
+parent loading, fit-directory creation, model construction, and optimization.
+They are packaging diagnostics with zero scientific steps, not failed fits.
+
+CPU mount probe `fc-01M6YZ6XQQZQ00JFADC534HBQW` under app
+`ap-VdvBuCHsMr0pFjDQEGWw8s` then inspected the same four local mounts with no
+data, model, optimizer, or GPU access. The clean local and remote inventories
+are exactly equal: 89 files, 1,711,245 bytes, aggregate SHA-256
+`3c3c39fc2c570bcb1ae68f5572889249770024648b00b3bc429162e98fb06d64`.
+The complete 89-row receipt is 14,741 bytes at SHA-256
+`b2c5406c375ad11342fa209c76b871b7e246da72024b0b2bf3eb5b33a6d0491f`.
+This rules out source-mount drift. A same-image CPU probe now measures the tree
+immediately before and after the exact fit imports; H100 continuation remains
+blocked until that root cause and a pre-import guard correction are frozen.
+
+Import-probe v1 call `fc-01M6YZMJ1FVR875D02722GRBPQ` under app
+`ap-n71agHZtH4WggiHQJgUXdx` completed its measurement but stopped while Modal
+packaged the duplicated full inventories: the return exceeded the inline limit,
+and the intentionally network-blocked worker could not upload the oversized blob.
+No volume was mounted and no data, checkpoint, model, or optimizer was touched.
+The preserved v2 continuation returns only aggregate identities and canonical
+path differences; combined with the full mount receipt above, that losslessly
+reconstructs the post-import tree while staying below the inline limit.
+
+Import-probe v2 call `fc-01M6YZT56SZ3CAJW0B0VDTEEYQ` under app
+`ap-UXDHVsmq7U4JyIz8o1uuBP` completed with a 946-byte inline payload. Before and
+after all four exact fit imports, the tree is the same 89 files / 1,711,245 bytes /
+SHA-256 `3c3c39fc2c570bcb1ae68f5572889249770024648b00b3bc429162e98fb06d64`;
+added, removed, and changed sets are all empty. Imports are therefore not the
+cause; local receipt SHA-256 is
+`88c933ce39f22e4df9cd7a42f84b1b93a85663ce4d7e0483138d47750199283f`,
+and the proposed guard reordering is rejected. A minimal H100 environment
+probe will now test the remaining GPU/container contract with the exact fit
+resources and volume mount but no volume read or scientific-state access.
+
+H100 probe `fc-01M6Z019GVD99NQJHT8G7P5A9M` under app
+`ap-QHyE2DqLr9a9e1BqQNfnyI` resolved requested `H100!` to an NVIDIA H100 80GB
+HBM3 (85,009,367,040 bytes; 81,559 MiB reported by `nvidia-smi`). With Torch
+2.14.1+cu130/CUDA 13.0, the before/after identities again match exactly and the
+canonical diff is empty. Receipt SHA-256 is
+`8de64679952aeda1f3325b9281992edb41483949f2bb357ec25787ccf86bbd60`.
+
+The failure was instead a deterministic schema bug: `training/launch.json`
+placed a descriptive `paths` string inside `runtime_tree`, but the runtime
+function returns only `files`, `bytes`, and `sha256`. Direct dictionary equality
+thus rejected the identical tree. A read-only volume listing also confirms the
+family `fits/` path does not exist, so the two stopped calls created no execution
+contract, checkpoint, or partial fit. Training-v2 compares only the three
+identity fields, keeps scope prose separate, and otherwise leaves every
+scientific input and training parameter unchanged.
+
+## Training-v2 active calls
+
+The corrected contract is frozen at source commit `0f00931a` and launch commit
+`fd32cb1e`. A machine comparison confirms the original and v2 preflight closure,
+parent, inputs, condition manifests/counts, training schedule, requirements,
+resources, concurrency, and outputs are equal. Only guard identity selection and
+its diagnostics changed.
+
+App `ap-dvE960vcRK3jSN6SPedzYN` submitted reference call
+`fc-01M6Z0B76ZWEY1GFPF8C4S2JT3` and parity call
+`fc-01M6Z0B798HD8Z8520Q7N605Q4`. Both passed the corrected runtime/closure gates
+and persisted their execution contract plus NVIDIA H100 hardware receipt before
+source copying/training. Final scientific status remains pending until both calls
+reach exactly 5,000 steps and their complete receipts are collected and verified.
+
+Both training-v2 calls later stopped symmetrically at zero optimizer steps and
+zero examples after the common-loader phase. `execution_contract()` correctly
+required `/runtime/presto/cli/train.py`, which the narrowed fit image had not
+mounted. The same declared resume-source set also requires
+`cli/training_sources.py` and `scripts/train_iedb.py`. Both failure receipts are
+206 bytes with SHA-256
+`6cf05c4c2be05c6fa64da8f582728ef8ee61812211bf4def567338c06b42a4cf`;
+complete execution, hardware, segment-end, and failure artifacts are preserved
+under `results/training-v2-failure/`. This is software evidence only—no model,
+optimizer, prediction, or TEST result exists. Training-v3 mounts and guards the
+entire declared resume-source set and uses a new `fits-v3` root.
+
+## Training-v3 completed calls
+
+The full-source fix is frozen at source commit `0211e722` and launch commit
+`e0ee1fb2`. Its remote runtime guard covers 94 files / 1,713,821 bytes / SHA-256
+`f75502f1b21c2ce1b765b28e49b0649890f9a0793e5a9b9f6ce7450d2f6abb7a`,
+and explicitly requires all 29 resume-fingerprint source paths before volume
+reload. App `ap-ba8CEsStF9Zd7lnDy1UGH3` submitted reference call
+`fc-01M6Z1KA29EZ4TAFTAT2JNQXPM` and parity call
+`fc-01M6Z1KA5C8GNCCYZ3CQR2CXGB`. Both passed that guard, persisted new
+`fits-v3` execution/H100 hardware contracts, and completed exactly 5,000
+optimizer steps / 640,000 examples. Requested `H100!` resolved in both cases to
+NVIDIA H100 80GB HBM3. Reference ran for 9,177.22 seconds and parity for
+9,171.69 seconds. Neither fit accessed TEST or locked confirmation rows.
+
+Reference selected checkpoint SHA-256 is
+`1d0d4122abf022830ea97fcc247b1d28c0645d7d42d206130cdf8a5d7762815a`;
+parity selected checkpoint SHA-256 is
+`02c9ccfc328be847bb674f7abc2112d1ce392e56a9cecd3e3d82be620203d81e`.
+Both coverage gates passed with no untrained selected parameters or assay
+tracks. Complete compact receipts and histories are under `results/training-v3/`;
+large raw checkpoints and per-example dumps remain hash-pinned on the Modal
+volume.
+
+## Matched development evaluation
+
+The frozen evaluator preserves EC50, IC50, KD-via-EC50, and KD-via-IC50 as
+distinct assay-aware outputs. Comparator affinity claims use exact IC50 only.
+The evaluation covers all 51,066 development rows and no TEST rows. Two runs
+produced byte-identical figures, tables, and prediction dumps; an independent
+SciPy/scikit-learn replay passed all 110 comparisons with maximum absolute
+delta `3.33e-16`.
+
+| Development comparison | Reference | Parity | External comparator |
+|---|---:|---:|---:|
+| MHC-I pooled exact-IC50 Spearman (169 rows) | 0.6697 | 0.7058 | NetMHCpan 4.2c: 0.7584 |
+| MHC-II pooled exact-IC50 Spearman (1,170 rows) | 0.4997 | 0.5060 | NetMHCIIpan 4.3e: 0.7779 |
+| presentation equal-study AUROC (3 studies) | 0.9520 | 0.9523 | MHCflurry 2.3.16: 0.9484 |
+| operational-processing equal-study AUROC (3 studies) | 0.9058 | 0.9068 | MHCflurry 2.3.16: 0.8057 |
+
+The processing advantage is decisive: parity minus MHCflurry equal-study AUROC
+is `+0.10114`, bootstrap 95% CI `[+0.07829, +0.14520]`. Presentation is similar,
+not superior: parity minus MHCflurry AUROC is `+0.00382`, CI
+`[-0.01193, +0.02070]`. These rows were matched after training and the complete
+Stage B development union was embargoed from the added BA data; no direct
+development-row, TEST, or locked-cohort leakage was found. The evidence is
+still development-only and spans only three presentation/processing studies.
+
+## Decision and next mechanism
+
+The data-only parity arm fails its preregistered MHC-II parent gate. Pooled
+MHC-II exact-IC50 Spearman changed by only `+0.00636`, below the required
+`+0.05`; equal-study Spearman changed by `-0.03648`, bootstrap 95% CI
+`[-0.08256, +0.00961]`. The reference checkpoint is therefore retained.
+
+The result isolates the class-II problem: more comparator-derived BA rows are
+not enough. The follow-on plan uses genuinely new whole-study-disjoint affinity
+data and one neutral-start class-II alpha/beta-chain interaction adapter, with
+unchanged assay-aware output semantics. Newly disjoint T-cell negatives and
+calibration, followed by PRIME evaluation through the now-working mhctools
+integration, remain gated on that affinity/mechanism comparison. See
+`results/decision.json` and
+`../agents/codex/plans/2026-11-08_disjoint-unified-qualification.md`.

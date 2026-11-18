@@ -12,7 +12,7 @@ and scrolled past.
 
 import pytest
 
-from presto.scripts.train_iedb import MHCResolutionError  # noqa: E402
+from presto.legacy.scripts.train_iedb import MHCResolutionError  # noqa: E402
 
 
 def _raise_if_zero(coverage):
@@ -109,7 +109,7 @@ class TestGuardMatchesTheImplementation:
     def test_run_contains_the_guard(self):
         import inspect
 
-        from presto.scripts import train_iedb
+        from presto.legacy.scripts import train_iedb
 
         source = inspect.getsource(train_iedb)
         assert "PRESTO_ALLOW_ZERO_MHC" in source
@@ -125,7 +125,7 @@ class TestGuardMatchesTheImplementation:
         """
         import inspect
 
-        from presto.scripts import train_iedb
+        from presto.legacy.scripts import train_iedb
 
         from source_probe import unique_index
 

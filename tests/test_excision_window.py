@@ -26,7 +26,7 @@ import pytest
 torch = pytest.importorskip("torch")
 
 from presto.data.vocab import AA_TO_IDX, AA_VOCAB  # noqa: E402
-from presto.models.presto import Presto  # noqa: E402
+from presto.legacy.presto import Presto  # noqa: E402
 
 MISSING = AA_TO_IDX["<MISSING>"]
 
@@ -252,7 +252,7 @@ class TestSubsitesAreReachable:
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         from test_gradient_coverage import _every_modality_batch
 
-        from presto.scripts.train_synthetic import compute_loss
+        from presto.legacy.scripts.train_synthetic import compute_loss
 
         torch.manual_seed(0)
         model = Presto(d_model=32, n_layers=2, n_heads=4)

@@ -1,0 +1,30 @@
+{
+  "regression": {
+    "passed": 3161,
+    "skipped": 4,
+    "seconds": 262.58,
+    "command": "TEST_SH_MAX=2 OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 ./test.sh -o tmp_path_retention_policy=none"
+  },
+  "lint": "passed",
+  "strict_docs": "passed",
+  "wheel_and_sdist_build": "passed",
+  "twine_check": "passed",
+  "isolated_wheel_both_class_cli": "passed",
+  "checkpoint_max_absolute_output_difference": 0.0,
+  "history_files_verified": 3096,
+  "independent_pair_audit": "passed",
+  "modal_dependency_check": "passed",
+  "shared_environment_dependency_check": "pre-existing external Varcode constraints; see environment.json",
+  "wheel_sha256": "4bce474467a09f39ab465b1c5701cade625f871874e006abebd1f2586be2035a",
+  "test_outcomes_accessed": false,
+  "full_regression_code_commit": "85f1e81ed024269680fb0fea9c9f3a7dfac2a8bb",
+  "post_promotion_targeted_checks": 92,
+  "followup": "Accept and freeze the advertised --agent metadata option; no model/numerical changes. Final full CI is attached to PR #158.",
+  "promoted_wheel_sha256": "d1e35d9706e80ca459eb9e99b295c20fb20a4640961ef7b35227ad18e92549f6",
+  "promoted_wheel_with_agent_option": "passed",
+  "initial_pr_ci": {
+    "commit": "85f1e81ed024269680fb0fea9c9f3a7dfac2a8bb",
+    "url": "https://github.com/pirl-unc/presto/actions/runs/44306329041",
+    "conclusion": "success"
+  }
+}

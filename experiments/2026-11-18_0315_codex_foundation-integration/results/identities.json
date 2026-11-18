@@ -1,0 +1,112 @@
+{
+  "manifest_sha256": "bdbd3ba8fc8ba9c4d59e378411ba334c511bbfb9d9506ce1a3a11af7202ecb4c",
+  "sources": [
+    {
+      "path": "/volume/2026-11-17_1155_codex_shared-presentation-expansion/inputs/affinity-train.jsonl",
+      "sha256": "ca35795b1f444380beef3ce9165d937875c701d99c2d11a2f99b1232246c77c0",
+      "split": "train",
+      "role": "ancestry",
+      "rows": 159796
+    },
+    {
+      "path": "/volume/2026-11-17_1155_codex_shared-presentation-expansion/inputs/apc-train.jsonl",
+      "sha256": "7fb6794df84de0a044303ed09c6d0d6efdf1b9762b7f0f376e21ed88c2622411",
+      "split": "train",
+      "role": "ancestry",
+      "rows": 10632
+    },
+    {
+      "path": "/volume/2026-11-17_1155_codex_shared-presentation-expansion/inputs/broad-train.jsonl",
+      "sha256": "270fb92d423c6a5b7df4956f1e29256e70d4ea2ded53d0a9859f79dcd79ad729",
+      "split": "train",
+      "role": "ancestry",
+      "rows": 65629
+    },
+    {
+      "path": "/volume/2026-11-17_1155_codex_shared-presentation-expansion/inputs/expanded-train.jsonl",
+      "sha256": "d0d07424cbb2e2b6583628be4d5f1be919a5e17fddeb6dbfad399b3c39f83657",
+      "split": "train",
+      "role": "ancestry",
+      "rows": 775748
+    },
+    {
+      "path": "/volume/2026-11-17_1155_codex_shared-presentation-expansion/inputs/affinity-validation.jsonl",
+      "sha256": "08e41a6c006274b5929142fc6bd4687a289a08df9cc5212edd92399f907f2f8a",
+      "split": "validation",
+      "role": "fixed_validation",
+      "rows": 2536
+    },
+    {
+      "path": "/volume/2026-11-17_1155_codex_shared-presentation-expansion/inputs/apc-validation.jsonl",
+      "sha256": "61e749cba42adc4896b3038ea045dcb2023ac9036e204865d88e92a64e295d33",
+      "split": "validation",
+      "role": "fixed_validation",
+      "rows": 2232
+    },
+    {
+      "path": "/volume/2026-11-17_1155_codex_shared-presentation-expansion/inputs/broad-validation.jsonl",
+      "sha256": "f58a60cf3e2201716c3da72954c27794453283bbff604b95b7055e8ec1c7be08",
+      "split": "validation",
+      "role": "fixed_validation",
+      "rows": 4830
+    },
+    {
+      "path": "/volume/2026-11-17_1155_codex_shared-presentation-expansion/inputs/expanded-validation.jsonl",
+      "sha256": "596f36dc4140d418ede65fbcc14c17e035943204b72a15232ebd91ebfd77fd3f",
+      "split": "validation",
+      "role": "fixed_validation",
+      "rows": 1974
+    },
+    {
+      "path": "/volume/2026-11-07_1915_codex_unified-presentation/prepared-v2/presentation-train.jsonl",
+      "sha256": "6609ee375f6bb117f19035560daa6cf50a63b9c229fa46ae24e773afebdda2fc",
+      "split": "train",
+      "role": "ancestry",
+      "rows": 1349378
+    },
+    {
+      "path": "/volume/2026-11-07_1915_codex_unified-presentation/prepared-v2/concentrations-s42-concentrations-s42-train.jsonl",
+      "sha256": "8593fbd416a489b46397c4fae288d5916ad55d2febec7f7798bc4bb3f788ec1c",
+      "split": "train",
+      "role": "ancestry",
+      "rows": 160326
+    },
+    {
+      "path": "/volume/2026-11-07_1720_codex_affinity-development/prepared/concentrations-s42-train.jsonl",
+      "sha256": "acc22d1481ce8e0b45a6df86ca9a62e70721752955070b7eb26b85e48361635d",
+      "split": "train",
+      "role": "ancestry",
+      "rows": 163854
+    },
+    {
+      "path": "/volume/2026-11-16_2035_codex_joint-apc-capacity/inputs/matching-candidates.jsonl",
+      "sha256": "60c2a9674874c367187e87e67b0e49bb1f9f9d214783b73e7ea501e7436cb869",
+      "role": "fixed_validation",
+      "split": "validation",
+      "kind": "candidate_options",
+      "rows": 1116
+    },
+    {
+      "path": "/volume/2026-11-17_2330_codex_affinity-conditioned-processing/inputs/rank-matched-validation.jsonl",
+      "sha256": "7a42da89bd89dab4a2dcd33d653165529bb564d147ad0fa97a2c3dab190393c3",
+      "role": "fixed_validation",
+      "split": "validation",
+      "rows": 692
+    }
+  ],
+  "identities": [
+    {
+      "role": "ancestry",
+      "path": "/__modal/volumes/vo-Q7Gbj9LRF6NTiyKSQvTq9U/2026-11-18_0315_codex_foundation-integration/prepared-identities/ancestry.txt.gz",
+      "sha256": "a2a94484e4f448f75e36fb933e546502dcea99d74c269a2e092ba5fd8661b978",
+      "peptides": 753947
+    },
+    {
+      "role": "fixed_validation",
+      "path": "/__modal/volumes/vo-Q7Gbj9LRF6NTiyKSQvTq9U/2026-11-18_0315_codex_foundation-integration/prepared-identities/fixed_validation.txt.gz",
+      "sha256": "07018e8ae3c39b169515e5717901f236989f97f9a97c6769daf844ea19578ae6",
+      "peptides": 119180
+    }
+  ],
+  "test_outcomes_accessed": false
+}

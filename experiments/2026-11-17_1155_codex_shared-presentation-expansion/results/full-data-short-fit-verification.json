@@ -1,0 +1,20 @@
+{
+  "checkpoint_hash_verified": true,
+  "validation_rows": 11572,
+  "recomputed_selection_loss": 0.741389594199984,
+  "recorded_selection_loss": 0.741389594199984,
+  "actual_draws": 1024,
+  "unique_rows": 997,
+  "public_inference_classes": [
+    "I",
+    "II"
+  ],
+  "public_context": "unknown software probe",
+  "public_logits": [
+    7.07056999206543,
+    0.7895694375038147
+  ],
+  "coverage_exception": "only pancreatic beta cell input unupdated after16 steps; all shared tensors changed, no untrained parameter tensors",
+  "status": "integration_passed_not_predictively_qualified",
+  "test_accessed": false
+}

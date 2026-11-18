@@ -1,0 +1,781 @@
+{
+  "status": "prepared",
+  "source_family": "2026-10-27_2255_codex_shared-multi-assay-scale",
+  "prior_training_observations": 134561,
+  "prior_source_files": [
+    {
+      "path": "data/ic50-original-train.jsonl",
+      "sha256": "79e44788883a4668fb790191e2079b46bb28e3ea06314e75ace3aa25c65b096c",
+      "source": "hitlist-v4-iedb",
+      "population": "original admitted human IC50 cohort; frozen unchanged",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "data/ec50-hitlist-v4-cedar-train.jsonl",
+      "sha256": "b5b79e882e2a2da4db8c2971b1cd4532a30a834d9680c92cdf6bd75e323815b1",
+      "source": "hitlist-v4-cedar",
+      "population": "literal purified human quantitative pMHC assays; canonical peptide and verified complete HLA pair",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "data/half_life-hitlist-v4-cedar-train.jsonl",
+      "sha256": "7dd0bf542ca4c968f22c807bc9f01da36fcede82eb0ff884d33519589f4c3108",
+      "source": "hitlist-v4-cedar",
+      "population": "literal purified human quantitative pMHC assays; canonical peptide and verified complete HLA pair",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "data/kd_via_ec50-hitlist-v4-iedb-train.jsonl",
+      "sha256": "9f9f713d20ea3f7a8a23799fbd7ab706ba1fac63bc4c36f4245a2a9d2fe60083",
+      "source": "hitlist-v4-iedb",
+      "population": "literal purified human quantitative pMHC assays; canonical peptide and verified complete HLA pair",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "data/kd_via_ic50-hitlist-v4-iedb-train.jsonl",
+      "sha256": "6c826b7e8accbb8eaf3d11ff884a4d1918831212e57a4f9967b165190c7e4ef0",
+      "source": "hitlist-v4-iedb",
+      "population": "literal purified human quantitative pMHC assays; canonical peptide and verified complete HLA pair",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "data/kd-hitlist-v4-iedb-train.jsonl",
+      "sha256": "4311d82911b70197d9d3d6bb57be57069a0c62fd03f93abf0380e84c8ccc1b48",
+      "source": "hitlist-v4-iedb",
+      "population": "literal purified human quantitative pMHC assays; canonical peptide and verified complete HLA pair",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "data/half_life-hitlist-v4-iedb-train.jsonl",
+      "sha256": "b7f19e8d5a045efaff52fab2738a602550db4371d3a9bba3a158e4059912a575",
+      "source": "hitlist-v4-iedb",
+      "population": "literal purified human quantitative pMHC assays; canonical peptide and verified complete HLA pair",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "data/ic50-hitlist-v4-iedb-train.jsonl",
+      "sha256": "ea4c7809ac88b89ecdc79539fd8157e74d55c69c45e81719003a1aadd388e1eb",
+      "source": "hitlist-v4-iedb",
+      "population": "literal purified human quantitative pMHC assays; canonical peptide and verified complete HLA pair",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "data/ec50-hitlist-v4-iedb-train.jsonl",
+      "sha256": "c6e1f1b81403c7bc52deb2470b181e7d74ed27751bffeb33065823e4718ae07d",
+      "source": "hitlist-v4-iedb",
+      "population": "literal purified human quantitative pMHC assays; canonical peptide and verified complete HLA pair",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    }
+  ],
+  "prior_source_root": "/Users/iskander/code/presto/.worktrees/shared-training/presto/artifacts/2026-10-27_2255_codex_shared-multi-assay-scale/upload/inputs",
+  "split_salt": "2026-10-28-assay-transfer-mechanisms-v1",
+  "component_count": 24792,
+  "largest_components": [
+    [
+      "e67ec1d75d6892005e46fa91b843bf3d2a3b7a2c911b7e8bdf53a1188317f5a7",
+      46
+    ],
+    [
+      "26184a8d224bdaacddc38f789577c3865252e6e833a1d81131b1a45fd949fc6b",
+      44
+    ],
+    [
+      "2d833c130ea5a62059b67708ca8bb60354bb0bdcc6d7e3c7d3d2ed203de24b8d",
+      40
+    ],
+    [
+      "24b6aa1fc530bb6fa53f571d756cab03ed0059ca0a7d0faa489ffff7e80691bf",
+      40
+    ],
+    [
+      "c91bbcd2075dc08aec539dac0299232b461bb371390feb2c58752558ebda9077",
+      39
+    ],
+    [
+      "f9dede6938e9bede09ced03dc0290b7a1844839bcee27ae622a1ace83c3d22ff",
+      39
+    ],
+    [
+      "1af3138e8d7e9e365ca3bdfe7e782da453eba189f3676be4a572eb9432a40a2b",
+      39
+    ],
+    [
+      "643774811889ea966c1da3e27dce6c778ff2d46c90d07f891e82f6f624ad81eb",
+      39
+    ],
+    [
+      "e864678dd923178a307f49618debfc8c67bafa84936a2830ea2263f8e5caac01",
+      39
+    ],
+    [
+      "62b375bb0a51dc0a2c5433d5e2a4a2fd9dc1b0789e7273ba59ef133c286af4c7",
+      38
+    ]
+  ],
+  "counts": [
+    {
+      "split": "test",
+      "endpoint": "ec50",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 27
+    },
+    {
+      "split": "test",
+      "endpoint": "ec50",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 2
+    },
+    {
+      "split": "test",
+      "endpoint": "half_life",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 815
+    },
+    {
+      "split": "test",
+      "endpoint": "half_life",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 3
+    },
+    {
+      "split": "test",
+      "endpoint": "ic50",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 1476
+    },
+    {
+      "split": "test",
+      "endpoint": "ic50",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 28
+    },
+    {
+      "split": "test",
+      "endpoint": "ic50",
+      "mhc_class": "I",
+      "qualifier": ">=",
+      "n": 12
+    },
+    {
+      "split": "test",
+      "endpoint": "ic50",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 683
+    },
+    {
+      "split": "test",
+      "endpoint": "ic50",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 89
+    },
+    {
+      "split": "test",
+      "endpoint": "kd",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 405
+    },
+    {
+      "split": "test",
+      "endpoint": "kd",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 1238
+    },
+    {
+      "split": "test",
+      "endpoint": "kd",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 35
+    },
+    {
+      "split": "test",
+      "endpoint": "kd",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 13
+    },
+    {
+      "split": "test",
+      "endpoint": "kd_via_ec50",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 972
+    },
+    {
+      "split": "test",
+      "endpoint": "kd_via_ec50",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 2218
+    },
+    {
+      "split": "test",
+      "endpoint": "kd_via_ec50",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 1211
+    },
+    {
+      "split": "test",
+      "endpoint": "kd_via_ec50",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 365
+    },
+    {
+      "split": "test",
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 4105
+    },
+    {
+      "split": "test",
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 243
+    },
+    {
+      "split": "test",
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 58
+    },
+    {
+      "split": "test",
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 6
+    },
+    {
+      "split": "train",
+      "endpoint": "ec50",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 243
+    },
+    {
+      "split": "train",
+      "endpoint": "ec50",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 17
+    },
+    {
+      "split": "train",
+      "endpoint": "half_life",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 6135
+    },
+    {
+      "split": "train",
+      "endpoint": "half_life",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 6
+    },
+    {
+      "split": "train",
+      "endpoint": "half_life",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 11
+    },
+    {
+      "split": "train",
+      "endpoint": "ic50",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 11466
+    },
+    {
+      "split": "train",
+      "endpoint": "ic50",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 606
+    },
+    {
+      "split": "train",
+      "endpoint": "ic50",
+      "mhc_class": "I",
+      "qualifier": ">=",
+      "n": 113
+    },
+    {
+      "split": "train",
+      "endpoint": "ic50",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 5955
+    },
+    {
+      "split": "train",
+      "endpoint": "ic50",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 837
+    },
+    {
+      "split": "train",
+      "endpoint": "kd",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 3311
+    },
+    {
+      "split": "train",
+      "endpoint": "kd",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 8290
+    },
+    {
+      "split": "train",
+      "endpoint": "kd",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 280
+    },
+    {
+      "split": "train",
+      "endpoint": "kd",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 46
+    },
+    {
+      "split": "train",
+      "endpoint": "kd_via_ec50",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 7270
+    },
+    {
+      "split": "train",
+      "endpoint": "kd_via_ec50",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 17020
+    },
+    {
+      "split": "train",
+      "endpoint": "kd_via_ec50",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 8941
+    },
+    {
+      "split": "train",
+      "endpoint": "kd_via_ec50",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 2248
+    },
+    {
+      "split": "train",
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 31726
+    },
+    {
+      "split": "train",
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 1644
+    },
+    {
+      "split": "train",
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "I",
+      "qualifier": ">=",
+      "n": 2
+    },
+    {
+      "split": "train",
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 774
+    },
+    {
+      "split": "train",
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 189
+    },
+    {
+      "split": "train",
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "II",
+      "qualifier": ">=",
+      "n": 2
+    },
+    {
+      "split": "validation",
+      "endpoint": "ec50",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 18
+    },
+    {
+      "split": "validation",
+      "endpoint": "half_life",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 700
+    },
+    {
+      "split": "validation",
+      "endpoint": "half_life",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 1
+    },
+    {
+      "split": "validation",
+      "endpoint": "ic50",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 1433
+    },
+    {
+      "split": "validation",
+      "endpoint": "ic50",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 103
+    },
+    {
+      "split": "validation",
+      "endpoint": "ic50",
+      "mhc_class": "I",
+      "qualifier": ">=",
+      "n": 9
+    },
+    {
+      "split": "validation",
+      "endpoint": "ic50",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 623
+    },
+    {
+      "split": "validation",
+      "endpoint": "ic50",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 78
+    },
+    {
+      "split": "validation",
+      "endpoint": "ic50",
+      "mhc_class": "II",
+      "qualifier": ">=",
+      "n": 1
+    },
+    {
+      "split": "validation",
+      "endpoint": "kd",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 381
+    },
+    {
+      "split": "validation",
+      "endpoint": "kd",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 1134
+    },
+    {
+      "split": "validation",
+      "endpoint": "kd",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 35
+    },
+    {
+      "split": "validation",
+      "endpoint": "kd",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 13
+    },
+    {
+      "split": "validation",
+      "endpoint": "kd_via_ec50",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 871
+    },
+    {
+      "split": "validation",
+      "endpoint": "kd_via_ec50",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 2277
+    },
+    {
+      "split": "validation",
+      "endpoint": "kd_via_ec50",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 1155
+    },
+    {
+      "split": "validation",
+      "endpoint": "kd_via_ec50",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 298
+    },
+    {
+      "split": "validation",
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 4004
+    },
+    {
+      "split": "validation",
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 216
+    },
+    {
+      "split": "validation",
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 54
+    },
+    {
+      "split": "validation",
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 21
+    }
+  ],
+  "shuffled_rows": 88155,
+  "changed_shuffled_rows": 59943,
+  "membership_sha256": "569ea6653e012148ed3cd6d6d7489e4f577b77f603074ea57162db2bd9a06b98",
+  "permutation_sha256": "988824f3216015268b97bbd707ded26b742cfb2766531878d61a84cddff42622",
+  "data_directory": "/Users/iskander/code/presto/.worktrees/shared-training/presto/data/modular_cohorts/2026-10-28-assay-transfer-mechanisms",
+  "files": [
+    {
+      "path": "ic50-train-measured.jsonl",
+      "sha256": "5a713d1c23bead1fabbf7779646a04354afd7f91025d725fbb1047e36a69f1f1",
+      "split": "train",
+      "endpoint": "ic50",
+      "variant": "measured",
+      "rows": 18977
+    },
+    {
+      "path": "kd-train-measured.jsonl",
+      "sha256": "74db786e0852062c6f877956c83a28b7371d30b4e641074f4181bb9c63eab275",
+      "split": "train",
+      "endpoint": "kd",
+      "variant": "measured",
+      "rows": 11927
+    },
+    {
+      "path": "kd-train-shuffled.jsonl",
+      "sha256": "221134f6638f495cbf60f6c216a7075bd348f2fe97cf2bde799bfc6682a5f23b",
+      "split": "train",
+      "endpoint": "kd",
+      "variant": "shuffled",
+      "rows": 11927
+    },
+    {
+      "path": "ec50-train-measured.jsonl",
+      "sha256": "d8d378f3dfe2c42261326a946b97ac10423947cdbd7ad4c6d2c2de305f0d4c21",
+      "split": "train",
+      "endpoint": "ec50",
+      "variant": "measured",
+      "rows": 260
+    },
+    {
+      "path": "ec50-train-shuffled.jsonl",
+      "sha256": "ae9cfba527794b92a28e56421215dea5342d86632b9dc253f4c8d6ac53148f7c",
+      "split": "train",
+      "endpoint": "ec50",
+      "variant": "shuffled",
+      "rows": 260
+    },
+    {
+      "path": "kd_via_ic50-train-measured.jsonl",
+      "sha256": "09e189957b3c691b272d15f73a86dbb82cc7d5c101aeb2b9b3f092e04d2ec4f4",
+      "split": "train",
+      "endpoint": "kd_via_ic50",
+      "variant": "measured",
+      "rows": 34337
+    },
+    {
+      "path": "kd_via_ic50-train-shuffled.jsonl",
+      "sha256": "db517e4c4a44802fb14dc6a80b09f30744373bb2d5fda3ceee6d8e8b78723ac6",
+      "split": "train",
+      "endpoint": "kd_via_ic50",
+      "variant": "shuffled",
+      "rows": 34337
+    },
+    {
+      "path": "kd_via_ec50-train-measured.jsonl",
+      "sha256": "86394c146d95b6441f6ec69ad1ae110046602e52429c807750cb77508963321e",
+      "split": "train",
+      "endpoint": "kd_via_ec50",
+      "variant": "measured",
+      "rows": 35479
+    },
+    {
+      "path": "kd_via_ec50-train-shuffled.jsonl",
+      "sha256": "b944d88b785956b6b67a175e6cdcf4640863c40b1cf1843d1f6b5325249c3748",
+      "split": "train",
+      "endpoint": "kd_via_ec50",
+      "variant": "shuffled",
+      "rows": 35479
+    },
+    {
+      "path": "half_life-train-measured.jsonl",
+      "sha256": "9a8bdb4afc4aa296f6a309c99f88ff549e5f99689908f090b4571623f0a42742",
+      "split": "train",
+      "endpoint": "half_life",
+      "variant": "measured",
+      "rows": 6152
+    },
+    {
+      "path": "half_life-train-shuffled.jsonl",
+      "sha256": "b5abbd6b2f83a8f761ce52c50034ff0cfb395a1e38529b2e981be4fdd8df62fe",
+      "split": "train",
+      "endpoint": "half_life",
+      "variant": "shuffled",
+      "rows": 6152
+    },
+    {
+      "path": "ic50-validation-measured.jsonl",
+      "sha256": "088ea77cc2f5c5e0bd752089a02ea9e78262669e070b3b8a782b1af108e651f1",
+      "split": "validation",
+      "endpoint": "ic50",
+      "variant": "measured",
+      "rows": 2247
+    },
+    {
+      "path": "kd-validation-measured.jsonl",
+      "sha256": "d83b7ef21c656fc134736a08a591fbc95a4450533e3ddcc16844332c2ec1d339",
+      "split": "validation",
+      "endpoint": "kd",
+      "variant": "measured",
+      "rows": 1563
+    },
+    {
+      "path": "ec50-validation-measured.jsonl",
+      "sha256": "101ee06c0bd21c5734814090c7e3ae257eb4ede45e25271f8bd5b0285ca16d3c",
+      "split": "validation",
+      "endpoint": "ec50",
+      "variant": "measured",
+      "rows": 18
+    },
+    {
+      "path": "kd_via_ic50-validation-measured.jsonl",
+      "sha256": "49e98b39cb0bbbf8744226325c1352fc14b83dee2b0eb2126a04ba00436f1ca7",
+      "split": "validation",
+      "endpoint": "kd_via_ic50",
+      "variant": "measured",
+      "rows": 4295
+    },
+    {
+      "path": "kd_via_ec50-validation-measured.jsonl",
+      "sha256": "945112c081922b5bfcbc64d30edd716b325cd0e2c94fef8cfa1b21762e72f34d",
+      "split": "validation",
+      "endpoint": "kd_via_ec50",
+      "variant": "measured",
+      "rows": 4601
+    },
+    {
+      "path": "half_life-validation-measured.jsonl",
+      "sha256": "109c94729b037c95292e255d1e42a824b6c97dc3845f55bfde81e546ade014c0",
+      "split": "validation",
+      "endpoint": "half_life",
+      "variant": "measured",
+      "rows": 701
+    },
+    {
+      "path": "ic50-test-measured.jsonl",
+      "sha256": "9623e4a24733f83c186f3ec9495428124279fbca4af64dac1f4cbbb442842675",
+      "split": "test",
+      "endpoint": "ic50",
+      "variant": "measured",
+      "rows": 2288
+    },
+    {
+      "path": "kd-test-measured.jsonl",
+      "sha256": "33517dbdaa4067e0cda85ccf876b6fa52a20dd93f9f7d6e7887ac8dca8aa2f58",
+      "split": "test",
+      "endpoint": "kd",
+      "variant": "measured",
+      "rows": 1691
+    },
+    {
+      "path": "ec50-test-measured.jsonl",
+      "sha256": "3d53f1a44665f546b38dc54c2d31506c3e71aaddd33656247a9d946bd8c8134b",
+      "split": "test",
+      "endpoint": "ec50",
+      "variant": "measured",
+      "rows": 29
+    },
+    {
+      "path": "kd_via_ic50-test-measured.jsonl",
+      "sha256": "84479395b46b2aae46d764dba193d50634dd68287e006c4df2b8ca59d13d9fe4",
+      "split": "test",
+      "endpoint": "kd_via_ic50",
+      "variant": "measured",
+      "rows": 4412
+    },
+    {
+      "path": "kd_via_ec50-test-measured.jsonl",
+      "sha256": "7f8343957c12946fd6dec00d426458a43c435f18b022a3c494c10a2a0313c1a9",
+      "split": "test",
+      "endpoint": "kd_via_ec50",
+      "variant": "measured",
+      "rows": 4766
+    },
+    {
+      "path": "half_life-test-measured.jsonl",
+      "sha256": "bd2342575f5e3832c0c0267ea2956e7c5e99ef3b68f785fc2d60fd94278b89ae",
+      "split": "test",
+      "endpoint": "half_life",
+      "variant": "measured",
+      "rows": 818
+    }
+  ],
+  "seconds": 21.819770374990185,
+  "scope": "New from-scratch development split of previously used training rows; original heldouts excluded; no external qualification."
+}

@@ -1,0 +1,36 @@
+{
+  "status": "interim_not_final_selection",
+  "steps": 1000,
+  "population": "combined fixed and new ordinary presentation validation",
+  "rows": {
+    "I": 7470,
+    "II": 1566
+  },
+  "auroc": {
+    "pilot-balanced-s42-n6000": {
+      "I": 0.930374265232975,
+      "II": 0.7046056934637549
+    },
+    "expanded-none-s42-n6000": {
+      "I": 0.9296010035842294,
+      "II": 0.760013635866897
+    },
+    "expanded-state-s42-n6000": {
+      "I": 0.9311989247311828,
+      "II": 0.7555607750261382
+    }
+  },
+  "source": "per-run raw/history.json read from live worker",
+  "not_used_to_change_running_recipes": true,
+  "test_accessed": false,
+  "same_population_anchors": {
+    "parent": {
+      "I": 0.9302356989247312,
+      "II": 0.6457936775900399
+    },
+    "previous-default": {
+      "I": 0.9335146953405018,
+      "II": 0.705057503886059
+    }
+  }
+}

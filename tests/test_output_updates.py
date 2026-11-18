@@ -8,9 +8,10 @@ import torch
 
 from presto.data.collate import PrestoCollator
 from presto.data.vocab import TCELL_ASSAY_METHODS
-from presto.models.presto import Presto
-from presto.scripts.train_synthetic import LOSS_TASK_NAMES, train_epoch
-from presto.training.losses import PCGrad, UncertaintyWeighting
+from presto.legacy.presto import Presto
+from presto.legacy.scripts.train_synthetic import LOSS_TASK_NAMES, train_epoch
+from presto.training.losses import UncertaintyWeighting
+from presto.legacy.pcgrad import PCGrad
 from presto.training.output_updates import OutputUpdateTracker
 from test_output_coverage import sample
 

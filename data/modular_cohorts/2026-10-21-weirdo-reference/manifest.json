@@ -1,0 +1,46 @@
+{
+  "model": {
+    "dropout": 0.1,
+    "endpoints": [],
+    "identity_tasks": [
+      "peptide_source"
+    ],
+    "source_categories": [
+      "archaea",
+      "bacteria",
+      "fungi",
+      "human",
+      "invertebrates",
+      "mammals",
+      "plants",
+      "rodents",
+      "vertebrates",
+      "viruses"
+    ]
+  },
+  "schema": "presto.modular.manifest.v1",
+  "sources": [
+    {
+      "label_policy": "ten independent pinned reference-division memberships; all selected labels reconstructed against every reference protein",
+      "path": "observations.jsonl",
+      "population": "label-blind 5000/1000/1000 eight-residue reference subset",
+      "sha256": "8cbd609b018cb7b8c7816de7289be368c6ac775ee92fe92932590018ad67c38e",
+      "source": "weirdo_swissprot_reference",
+      "split_policy": "source mnemonic-prefix CRC32 folds, no selected cross-fold occurrence; group IDs connect every shared source-family key; homology independence unverified"
+    }
+  ],
+  "training": {
+    "batch_size": 64,
+    "checkpoint_every_steps": 100,
+    "coverage_policy": "required",
+    "identity_weight": 0.1,
+    "learning_rate": 0.0003,
+    "max_epochs": 20,
+    "max_steps": null,
+    "min_epochs": 5,
+    "patience": 5,
+    "seed": 42,
+    "test_policy": "evaluate_selected_once",
+    "weight_decay": 0.0001
+  }
+}

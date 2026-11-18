@@ -1,0 +1,296 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "argv": [
+    "experiments/2026-10-26_1929_codex_mhc2-censor-refinement/code/launch.py",
+    "prepare"
+  ],
+  "code_hashes": {
+    "continue.py": "191c6a52a5e645c932f6ee038cd4cacf57a26daca2c49de3158f4e588f798bc6",
+    "launch.py": "dfd12c0134b7f8b94c0416f6d740cd55598637d32c2cdeed7d9f7e7b917420f7",
+    "verify.py": "523e04af45619f1aa193d2c44b2a12326719fb7d06ef7eb544c9669a84b2b468"
+  },
+  "device": "cpu",
+  "dirty_status": "?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/censor_refinement-manifest.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/exact_continuation-manifest.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/prepare-family-1793044070144727000.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/source/\n",
+  "environment": {
+    "MKL_NUM_THREADS": "2",
+    "OMP_NUM_THREADS": "2",
+    "OPENBLAS_NUM_THREADS": "2",
+    "PYTHONPATH": "/private/tmp/presto-mhc2-20261026:/private/tmp/presto-pr-completion-20261026/dependencies",
+    "PYTORCH_ENABLE_MPS_FALLBACK": "0"
+  },
+  "executable": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "git_commit": "37edb56560a65651da63b2d9ef95fa3fc014b1ac",
+  "interop_threads": 1,
+  "launcher_sha256": "dfd12c0134b7f8b94c0416f6d740cd55598637d32c2cdeed7d9f7e7b917420f7",
+  "limits": {
+    "disk_floor": 10737418240,
+    "ram_floor": 10737418240,
+    "rss": 4294967296,
+    "seconds": 7200,
+    "startup_disk": 16106127360,
+    "startup_ram": 13958643712
+  },
+  "manifests": {
+    "censor_refinement": {
+      "admission": {
+        "cell_types": [],
+        "census": {
+          "test:ic50:=": 2600,
+          "test:ic50:>": 188,
+          "test:ic50:>=": 15,
+          "train:ic50:=": 21636,
+          "train:ic50:>": 1779,
+          "train:ic50:>=": 140,
+          "validation:ic50:=": 2726,
+          "validation:ic50:>": 177,
+          "validation:ic50:>=": 22
+        },
+        "component_states": {},
+        "context_assertion_states": {
+          "intervention": {},
+          "pathway": {}
+        },
+        "cytokine_numeric": {},
+        "cytokine_states": {},
+        "frozen_parameters": [],
+        "frozen_targets": [],
+        "inherited_scalers": [
+          "ic50"
+        ],
+        "manifest_sha256": "823e8924f68228d4d93faf79eba6365045d032e419be3efee8952bc29bb05168",
+        "module_pruning": [],
+        "observed_numeric_features": {
+          "acquisition": [],
+          "observation": [],
+          "preparation": []
+        },
+        "source_label_values": {},
+        "training_labels": {
+          "ic50": 23555
+        }
+      },
+      "counts": {
+        "test:assay": 2803,
+        "train:assay": 23555,
+        "validation:assay": 2925
+      },
+      "model": {
+        "acquisition_features": [],
+        "acquisition_units": {},
+        "auxiliary_context": [],
+        "cell_types": [],
+        "component_activity_units": {},
+        "components": [],
+        "context_species": [],
+        "cytokine_dose_units": {},
+        "cytokine_duration_features": [],
+        "cytokines": [],
+        "dropout": 0.1,
+        "endpoints": [
+          "ic50"
+        ],
+        "enzymes": [],
+        "identity_tasks": [],
+        "identity_threshold": 0.8,
+        "interventions": [],
+        "machinery_profiles": {},
+        "machinery_references": [],
+        "max_length": 512,
+        "mhc_classes": [
+          "I",
+          "II"
+        ],
+        "observation_features": [],
+        "observation_units": {},
+        "preparation_features": [],
+        "preparation_units": {},
+        "processing_pathways": [],
+        "quantity_domains": {},
+        "register_pooling": true,
+        "source_categories": [],
+        "source_context": false,
+        "species": [
+          "human"
+        ],
+        "species_defaults": true
+      },
+      "path": "/private/tmp/presto-mhc2-20261026/presto/experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/censor_refinement-manifest.json",
+      "sha256": "823e8924f68228d4d93faf79eba6365045d032e419be3efee8952bc29bb05168",
+      "source_manifest_sha256": "7fd143e22082dc18c1b7332954f66608bb7b0840813e5e12d74b3c85806dfc7c"
+    },
+    "exact_continuation": {
+      "admission": {
+        "cell_types": [],
+        "census": {
+          "test:ic50:=": 2600,
+          "test:ic50:>": 188,
+          "test:ic50:>=": 15,
+          "train:ic50:=": 21636,
+          "validation:ic50:=": 2726,
+          "validation:ic50:>": 177,
+          "validation:ic50:>=": 22
+        },
+        "component_states": {},
+        "context_assertion_states": {
+          "intervention": {},
+          "pathway": {}
+        },
+        "cytokine_numeric": {},
+        "cytokine_states": {},
+        "frozen_parameters": [],
+        "frozen_targets": [],
+        "inherited_scalers": [
+          "ic50"
+        ],
+        "manifest_sha256": "4bf334209c6d0fa546982f2df497ecf220732ee0a717b1f1319ab125a6a31478",
+        "module_pruning": [],
+        "observed_numeric_features": {
+          "acquisition": [],
+          "observation": [],
+          "preparation": []
+        },
+        "source_label_values": {},
+        "training_labels": {
+          "ic50": 21636
+        }
+      },
+      "counts": {
+        "test:assay": 2803,
+        "train:assay": 21636,
+        "validation:assay": 2925
+      },
+      "model": {
+        "acquisition_features": [],
+        "acquisition_units": {},
+        "auxiliary_context": [],
+        "cell_types": [],
+        "component_activity_units": {},
+        "components": [],
+        "context_species": [],
+        "cytokine_dose_units": {},
+        "cytokine_duration_features": [],
+        "cytokines": [],
+        "dropout": 0.1,
+        "endpoints": [
+          "ic50"
+        ],
+        "enzymes": [],
+        "identity_tasks": [],
+        "identity_threshold": 0.8,
+        "interventions": [],
+        "machinery_profiles": {},
+        "machinery_references": [],
+        "max_length": 512,
+        "mhc_classes": [
+          "I",
+          "II"
+        ],
+        "observation_features": [],
+        "observation_units": {},
+        "preparation_features": [],
+        "preparation_units": {},
+        "processing_pathways": [],
+        "quantity_domains": {},
+        "register_pooling": true,
+        "source_categories": [],
+        "source_context": false,
+        "species": [
+          "human"
+        ],
+        "species_defaults": true
+      },
+      "path": "/private/tmp/presto-mhc2-20261026/presto/experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/exact_continuation-manifest.json",
+      "sha256": "4bf334209c6d0fa546982f2df497ecf220732ee0a717b1f1319ab125a6a31478",
+      "source_manifest_sha256": "914e0930283a9e5f7a41024576976f3e92e280f0719feda261ffcf48bf01d7be"
+    }
+  },
+  "metric_reference_sha256": "4dd77e02fe91632d92d28bdb9224a0105521521f02d9e5bc5f7604bd49a46e31",
+  "parent": {
+    "path": "/Users/iskander/code/presto/artifacts/2026-10-26_1610_codex_ic50-convergence/seed42/selected.pt",
+    "scales": {
+      "ic50": {
+        "exact_count": 21636,
+        "floor": 0.001,
+        "mean": 2.768232837778882,
+        "scale": 1.3434766242663534
+      }
+    },
+    "sha256": "db2585e63489cb5aac8c7a32fd7e522bcbc51035846c05f8cd2794c4449e3dc5",
+    "tensor_hashes": {
+      "encoder.embedding.weight": "43ed9f7d6378534a6fd4b47bd23f5d80b3dee6512bd6402ca2207973cbfec83c",
+      "encoder.norm.bias": "9553660333eb2e3584ba8a19529c5b2e35a1e3bb4ea619950e80a4a1f2349f70",
+      "encoder.norm.weight": "a1772834662653ca313521f1618c7f40dd774fc24c8ad18caf6c8e797568338c",
+      "encoder.pos_enc.pe": "6f80a3b057aaaee9c057c56876163a452e05115632166ca2dcd6fb9e7be73f1d",
+      "encoder.transformer.layers.0.linear1.bias": "536b973ba3522d9fc48004391711886016a1d7a9ee1d03018f40e62eb154d343",
+      "encoder.transformer.layers.0.linear1.weight": "778aa6392fc6b13399cc13954b8524e70a7232695d6acfec1889147fbfae0b72",
+      "encoder.transformer.layers.0.linear2.bias": "40364e4ff5bacdd758c260c535ed5d72e6d1b32373d88e1c3232def2a4c4df10",
+      "encoder.transformer.layers.0.linear2.weight": "d03bb65fb83d437e7b97baef36547e4ba28b67b454fa233a41cf84d7a7234005",
+      "encoder.transformer.layers.0.norm1.bias": "e9f50fb8eb5a2a59f33b06ce0af7c3f258027265c81c73572e43a3191b77a6d1",
+      "encoder.transformer.layers.0.norm1.weight": "924c810124028681dee776377771e93e2ae51f7788b4bec52ca09549b4a97df4",
+      "encoder.transformer.layers.0.norm2.bias": "6b91b0f28402548e0fa3882b7c1e380b314dc4675e44b8f193ff8cf39dfcc1f8",
+      "encoder.transformer.layers.0.norm2.weight": "a9291bb4e718af300c870c13a3f72047ef74e18dff0aaf8913f5f1311d566db1",
+      "encoder.transformer.layers.0.self_attn.in_proj_bias": "a801ac83e0f2df5600c5e6908c222ea8c04c15138a35ae9dc665496c257c5a07",
+      "encoder.transformer.layers.0.self_attn.in_proj_weight": "8bf7c62f0ad9cb6212cb50f1c2023d6f51b3bd52c56f4efaa13769e791fe90cd",
+      "encoder.transformer.layers.0.self_attn.out_proj.bias": "ea56c5202963c8683f3c82166927cf230e6ee6582e63e2fd8de46ea52dfcbe21",
+      "encoder.transformer.layers.0.self_attn.out_proj.weight": "541f7af29ed7b7128867af8ffe4bcd1d3d783f84da7c78adf373dbf24946463e",
+      "encoder.transformer.layers.1.linear1.bias": "784a59577eaf21e018362f6fe811df8b7ba59d07b177d55ff15291fcc72d0ff5",
+      "encoder.transformer.layers.1.linear1.weight": "b41b29132baf967ddae05ba5e533473f7eca9823d6068c1988eb274caef4db32",
+      "encoder.transformer.layers.1.linear2.bias": "3e27d3ab3c172226dd15cfb8261c13572458cc921ac4ce02450a8ab56897bde9",
+      "encoder.transformer.layers.1.linear2.weight": "d7d632d287fc8956e316ac2ead519f8102b35625ae81fab95befc06d1944c8f1",
+      "encoder.transformer.layers.1.norm1.bias": "b5edd640c7b73a526307a8f23e616c3a8db665fbda52267c6872e621afd0e152",
+      "encoder.transformer.layers.1.norm1.weight": "5421f063f7e1e8f6e786dab7b2eb996b61b3356eb8bd2dcdafb12cf2b9bdb474",
+      "encoder.transformer.layers.1.norm2.bias": "f64cde028df9bed15b04760adcea888a1f4a908fd55e2cf6d0fc18392bd7bb30",
+      "encoder.transformer.layers.1.norm2.weight": "71f97f0b5f490bee7f53e67dbd70f7ef207f114a889d80dc5ce6617e31dd77eb",
+      "encoder.transformer.layers.1.self_attn.in_proj_bias": "56d46565665c14a949034e8d32bc9585a7d42f0ccd05641b030317fb57770be6",
+      "encoder.transformer.layers.1.self_attn.in_proj_weight": "c475874bb0300c9a5d3383bb5f6aec3cda65fa559a9fdb0056f863fefc20c53c",
+      "encoder.transformer.layers.1.self_attn.out_proj.bias": "12ccb714c4cc6145e7a70ffd46cac99cb61cd631e8b21c65dc1a94cc029badcc",
+      "encoder.transformer.layers.1.self_attn.out_proj.weight": "7df11b7c255719d3216781c097651cf806ccca5e73aef6020de24ab9c4bc3e84",
+      "heads.ic50.bias": "e1ba8d99b934e20568bfd75eb0f4b8f85507dbaadc90c883ac0c61809adcbd49",
+      "heads.ic50.weight": "20ea115cf9c2cff2fda005199653a6c23918b745a041aa692be63446219ae1ed",
+      "pmhc_fusion.0.bias": "2bb371b2f6ff558ace529020d31fd460ce9a5d7cbbba7a33bd7ca089ec05e133",
+      "pmhc_fusion.0.weight": "e7002b83b785cfbe1f832a1e1c41a080936d39333dfd9d93c234e666e02172d3",
+      "register_score.weight": "6dc83976b1353f27d438526e5d74fa2156ffd3bbd897b9451b218a8dc3a7b519"
+    }
+  },
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "primary_checkpoint": "last.pt at update 1476",
+  "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "raw_artifacts": "/private/tmp/presto-mhc2-20261026/censor-refinement",
+  "requested_modal_gpu": null,
+  "runtime_hashes": {
+    "cli/training_sources.py": "2e70ddf79a30cbb01a039aa26b2093b3083b78c96e53fbbff8a5264312745471",
+    "data/modular.py": "688dbc2dc49098abc7e66f186d5889fcd76e3ae2729d3b29b4e5b732237f13e8",
+    "data/modular_auxiliary.py": "7e2f6e9f560fe62650809ec6be6a781c5d3040270c73b8ec02cfa4bdb4cdb34f",
+    "data/modular_context.py": "4bb7e5a2432462e33e9c2632e85a78445282a604c095b0bff2ee6596b6617dc0",
+    "data/modular_lineage.py": "c10e7151af1a4f76fbc106a6621db69b024750ac042488df93a7a7d11e0cc4b9",
+    "data/modular_preparation.py": "e0268e9a9f5a531af378158f164ef5bce99361f6923be74f39bcd1f97bfc6962",
+    "data/modular_quantitative.py": "751a66c8aa68fd697d395ec3fc63951e262278a0fb6c3f26c185e8963f7d148d",
+    "data/modular_sources.py": "1f179c5f3b7791f6c79df7e77aa1ceafe4940ae1fcda50fd6e43e9fb4d886edf",
+    "data/vocab.py": "ecc2e1c5154d25d80cddae4f0708317e2cf40e39c171d9eaeb777ad88541e4f7",
+    "models/encoders.py": "c49f2461052b308f89289a3c44072c62edd09a1c1d41fb55426a5679db2b14c2",
+    "models/modular.py": "df5464f933796bf8f101fdb7d50a522e423339477b06df358d38cdeda50f2a37",
+    "models/modular_dependencies.py": "17918102c6d7965e48b7c2c367e371da46d858624725fd81193d3a726a2b07a0",
+    "models/modular_support.py": "d3cb1cb165d5cee236409c51c8d0e93eaa7bb9ef430dd682e726d72889e9619d",
+    "scripts/train_iedb.py": "efb1fee90dfb7f9b475ea1fc6f5c7b8711c719681ee64dc3a43fc017d6f83704",
+    "training/modular.py": "aab95991b75b0460baeb2be60d43096fb1c278953c260ea8d86662f7d9b3ade6",
+    "training/modular_evaluation.py": "ca75a674691a27e8c34ddf195ff31c29b76d134ec852320fa09aeeb9e69789ab",
+    "training/modular_resume.py": "5887626321ad2ead4b48c4032d34cfb013b14a2a0a716dc35bb0f7e443d32bfb",
+    "training/modular_run.py": "132b09b19ce911ad96a04bc2f8894fb1f26de5293146f35feb1d3f3c133339a6"
+  },
+  "secondary_checkpoint": "canonical validation-selected checkpoint",
+  "threads": 2,
+  "torch": "2.14.1",
+  "training": {
+    "batch_size": 64,
+    "checkpoint_every_steps": 50,
+    "identity_weight": 0,
+    "learning_rate": 0.0001,
+    "max_epochs": 5,
+    "max_steps": 1476,
+    "min_epochs": 5,
+    "patience": 100,
+    "seed": 101,
+    "weight_decay": 0.0001
+  },
+  "utc": "2026-10-26T19:48:04.010038+00:00"
+}

@@ -1,0 +1,22 @@
+{
+  "kind": "small CPU read diagnostic, not a predictive benchmark",
+  "source": "Modal volume expanded-train.jsonl first10000 rows",
+  "requested_gpu": null,
+  "cpu_request": 8,
+  "runs": [
+    {
+      "buffer_bytes": 8192,
+      "rows": 10000,
+      "wall_seconds": 0.490841503,
+      "cpu_seconds": 0.46
+    },
+    {
+      "buffer_bytes": 1048576,
+      "rows": 10000,
+      "wall_seconds": 0.44912471,
+      "cpu_seconds": 0.4
+    }
+  ],
+  "limitations": "Sequential same-process probe with cache/order effects, not a controlled hardware benchmark. Does not measure full-corpus transfer or writes.",
+  "decision": "No I/O infrastructure change based on this probe."
+}

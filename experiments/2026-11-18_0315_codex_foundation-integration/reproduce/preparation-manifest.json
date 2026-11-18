@@ -1,0 +1,52 @@
+{
+  "schema": "presto.presentation-preparation.v1",
+  "files": {
+    "class_I": {
+      "path": "/volume/2026-11-18_0315_codex_foundation-integration/assets/hitlist-I.parquet",
+      "sha256": "9b24906e197df9e1e5e543c14c6d74e36d46ca81d91f512b5b09db539481c827"
+    },
+    "class_II": {
+      "path": "/volume/2026-11-18_0315_codex_foundation-integration/assets/hitlist-II.parquet",
+      "sha256": "41e68d8804f48b85ef4c3cc4f6222105b4ec891bc84dd5036ee9d549faafbc50"
+    },
+    "samples": {
+      "path": "/volume/2026-11-18_0315_codex_foundation-integration/assets/samples.csv",
+      "sha256": "5dbcb45db85eeee0a830562be8d48aae78b0c22979e25683e99b7ab9a27aea79"
+    },
+    "observed": {
+      "path": "/volume/2026-11-18_0315_codex_foundation-integration/assets/observed-identities.parquet",
+      "sha256": "d87abec50c63d533569140579acc6c742045e0bbe5721d67ebec8258107f8836"
+    },
+    "catalog": {
+      "path": "/volume/2026-11-18_0315_codex_foundation-integration/assets/mhc-full-seqs.csv",
+      "sha256": "0e26d38ed0c572692a3486e100272c56bd1134ce74d2b6122fa4be2f4c6b0a82"
+    },
+    "proteins": {
+      "path": "/volume/2026-11-18_0315_codex_foundation-integration/assets/proteins.fa.gz",
+      "sha256": "4f34c86f82caa43b3e0874ae44d9122c73dbf32adb69d1d8fa3bed54817ad6d2"
+    }
+  },
+  "identities": [
+    {
+      "role": "sealed",
+      "path": "/volume/2026-11-18_0315_codex_foundation-integration/assets/sealed-identity-embargo.txt.gz",
+      "sha256": "1cfe25cfc6f3d636e0a49f1359b4eafb5fdf39ea7ec52a541629905c3c68ce57"
+    }
+  ],
+  "identity_source_manifest": {
+    "path": "/volume/2026-11-18_0315_codex_foundation-integration/assets/identity-sources.json",
+    "sha256": "bdbd3ba8fc8ba9c4d59e378411ba334c511bbfb9d9506ce1a3a11af7202ecb4c"
+  },
+  "ancestry_complete": true,
+  "parent_checkpoint_sha256": "1b6011396a563f52ea1d6da4bb1d4e69b8dbf0103148ba829225581c4d312f68",
+  "corpus_manifest_sha256": "2318bc53cdae228285218991d58fbcc2bd7266327cec1dd3ed9a03b1c944a5b7",
+  "loader_version": "2.1.12",
+  "source_exclusions": [
+    {
+      "pmid": "33592498",
+      "mhc_class": "II",
+      "condition_id_contains": "parental",
+      "reason": "source_reported_untransfected_class_II_control"
+    }
+  ]
+}

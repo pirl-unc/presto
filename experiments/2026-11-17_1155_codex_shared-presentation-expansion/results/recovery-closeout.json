@@ -1,0 +1,121 @@
+{
+  "path": "/volume/2026-11-17_1155_codex_shared-presentation-expansion/recovery/closeout-1794953851260054564.json",
+  "calls": [
+    {
+      "run": "expanded-ii-transfer-s42-n6000",
+      "call": "fc-01M7NQNWTG32F2FQYTKED5T6PP"
+    },
+    {
+      "run": "expanded-state-sqrt-s42-n6000",
+      "call": "fc-01M7NQNWWNHKX5THR871M91DMW"
+    },
+    {
+      "run": "expanded-pathway-state-sqrt-s42-n6000",
+      "call": "fc-01M7NQNWYFG8BXH7RXHA6AEG4E"
+    },
+    {
+      "run": "expanded-none-sqrt-s43-n6000",
+      "call": "fc-01M7NQNX06KRYCESNSNQR5X347"
+    },
+    {
+      "run": "expanded-state-sqrt-s43-n6000",
+      "call": "fc-01M7NQNX1R4WC5PS9NV7E7ZEN5"
+    },
+    {
+      "run": "expanded-pathway-state-sqrt-s43-n6000",
+      "call": "fc-01M7NQNX3GVC4Q1HCQENTEKZZH"
+    }
+  ],
+  "outcomes": {
+    "expanded-ii-transfer-s42-n6000": {
+      "evaluation_call": "fc-01M7NSCEEGSPPYPK1VW7BANWV2",
+      "results": {
+        "expanded-ii-transfer-s42-n6000": {
+          "reused_completed": true,
+          "checkpoint_sha256": "d7981e7d9c60833635c50e5c14a5f7063f62641c6b32518ed575aca2eac06354"
+        },
+        "expanded-ii-transfer-s42-n6000-terminal": {
+          "reused_completed": true,
+          "checkpoint_sha256": "2dc9575e8aca2a37744c1a90c86c904345d08a08a5d13862d268c35b26cd52a8"
+        }
+      }
+    },
+    "expanded-none-sqrt-s43-n6000": {
+      "evaluation_call": "fc-01M7NSCEEAMFEDSX62WNREMDED",
+      "results": {
+        "expanded-none-sqrt-s43-n6000": {
+          "run": "expanded-none-sqrt-s43-n6000",
+          "seconds": 26.038080903,
+          "checkpoint_sha256": "37a77be7d2b450815cab1ab92f2f62bcba0384a40b91a8e5ce7a73a6ad3c16a4"
+        },
+        "expanded-none-sqrt-s43-n6000-terminal": {
+          "run": "expanded-none-sqrt-s43-n6000-terminal",
+          "seconds": 104.229724739,
+          "checkpoint_sha256": "da229bc3093aa45ca373d246386d3ae6838021ef8627ffc606e265004c01ea8f"
+        }
+      }
+    },
+    "expanded-state-sqrt-s43-n6000": {
+      "evaluation_call": "fc-01M7NSCEECFS3R3VDEY0HBY9XE",
+      "results": {
+        "expanded-state-sqrt-s43-n6000": {
+          "run": "expanded-state-sqrt-s43-n6000",
+          "seconds": 30.368936059,
+          "checkpoint_sha256": "dbd7f9c8e65b59d03b7cc8aad3a635704b42e733f2a61ce4e0bdfdde58699f6c"
+        },
+        "expanded-state-sqrt-s43-n6000-terminal": {
+          "run": "expanded-state-sqrt-s43-n6000-terminal",
+          "seconds": 189.27959517,
+          "checkpoint_sha256": "7a98439a58e28f1f535162bb0753c92b171f27d89460bc1e6099c1defbef7bcf"
+        }
+      }
+    },
+    "expanded-pathway-state-sqrt-s42-n6000": {
+      "evaluation_call": "fc-01M7NSX22DXXQTFV1C0Z7W3DJ2",
+      "results": {
+        "expanded-pathway-state-sqrt-s42-n6000": {
+          "run": "expanded-pathway-state-sqrt-s42-n6000",
+          "seconds": 35.297678614,
+          "checkpoint_sha256": "2a538ac7dfb4c2b365b2c841f3ace77ca794c93fdea3325832c32f5b367ee889"
+        },
+        "expanded-pathway-state-sqrt-s42-n6000-terminal": {
+          "run": "expanded-pathway-state-sqrt-s42-n6000-terminal",
+          "seconds": 154.842104185,
+          "checkpoint_sha256": "2e8a30ff4bc11550dc66e87492ea557d37ab4c3837b760c3c9df1b89b4dd65d6"
+        }
+      }
+    },
+    "expanded-pathway-state-sqrt-s43-n6000": {
+      "evaluation_call": "fc-01M7NSXN1VFR104NHJRRANGJNH",
+      "results": {
+        "expanded-pathway-state-sqrt-s43-n6000": {
+          "run": "expanded-pathway-state-sqrt-s43-n6000",
+          "seconds": 31.630011905,
+          "checkpoint_sha256": "6f9009aaeb76936ebae1f2d56b845dfa8e65278b5d4275d9cb9fa95ab1bde07e"
+        },
+        "expanded-pathway-state-sqrt-s43-n6000-terminal": {
+          "run": "expanded-pathway-state-sqrt-s43-n6000-terminal",
+          "seconds": 161.822723694,
+          "checkpoint_sha256": "7384fca07f8b440025bb4b6a9892b6b14b0618813cfc5d3f791f0ef9a1a6ba18"
+        }
+      }
+    },
+    "expanded-state-sqrt-s42-n6000": {
+      "evaluation_call": "fc-01M7NTK52X7MBYZ6R212JVA1WE",
+      "results": {
+        "expanded-state-sqrt-s42-n6000": {
+          "run": "expanded-state-sqrt-s42-n6000",
+          "seconds": 34.947524757000004,
+          "checkpoint_sha256": "1b6011396a563f52ea1d6da4bb1d4e69b8dbf0103148ba829225581c4d312f68"
+        },
+        "expanded-state-sqrt-s42-n6000-terminal": {
+          "run": "expanded-state-sqrt-s42-n6000-terminal",
+          "seconds": 195.129695254,
+          "checkpoint_sha256": "c9e40aa3f8b9a90f107117f2dbbf7fea50978e09fa43dfadace97f5c4d909903"
+        }
+      }
+    }
+  },
+  "errors": {},
+  "status": "completed"
+}

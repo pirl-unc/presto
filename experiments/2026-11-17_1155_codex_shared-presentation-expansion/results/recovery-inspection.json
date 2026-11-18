@@ -1,0 +1,119 @@
+{
+  "path": "/volume/2026-11-17_1155_codex_shared-presentation-expansion/recovery/inspection-1794951986373989715.json",
+  "runs": [
+    {
+      "run": "expanded-ii-transfer-s42-n6000",
+      "completed": false,
+      "snapshot_sha256": "c0959f6d8d32ec77bfde16e8da3f62c230f47366ea246c77269146d213d415ff",
+      "snapshot_bytes": 23156307,
+      "manifest_sha256": "352f67bf09b8f3aa0220f2b14fdd1c0869b9acded99e39d6b82f35a463e43837",
+      "execution_manifest_sha256": "4afb9adc4ec8ba11935c812b9dede05340d2d93f027a65be4b22ebb4ba4a3d02",
+      "state": {
+        "steps": 5000,
+        "position": 320000,
+        "epoch": 1,
+        "phase": "training",
+        "last_epoch": 1,
+        "best": 0.5835767720352971,
+        "best_epoch": 1,
+        "elapsed_seconds": 4826.004296196,
+        "validation_pending": false
+      }
+    },
+    {
+      "run": "expanded-state-sqrt-s42-n6000",
+      "completed": false,
+      "snapshot_sha256": "c7d7794058d0270ece303bb674b265b56f055cc39635489256afce5061eefeac",
+      "snapshot_bytes": 23214355,
+      "manifest_sha256": "4790d3c6a32ff863cbf90313c89f3bb1ac388d542fee88059f2cf9f63c5b66e7",
+      "execution_manifest_sha256": "016464699c7ac16790198d58f0f9970106cbea5ff9bd98a1c7da3c5855670b0f",
+      "state": {
+        "steps": 3000,
+        "position": 192000,
+        "epoch": 1,
+        "phase": "training",
+        "last_epoch": 1,
+        "best": 0.543536078337857,
+        "best_epoch": 1,
+        "elapsed_seconds": 2354.5778835759997,
+        "validation_pending": false
+      }
+    },
+    {
+      "run": "expanded-pathway-state-sqrt-s42-n6000",
+      "completed": false,
+      "snapshot_sha256": "99ea1eb59bc8276ce5f6d2eb1e44b91e7739cefea15542055c9d314916937617",
+      "snapshot_bytes": 23226633,
+      "manifest_sha256": "ec5bee71ef8b737ff0cf15e37c24b913bebdc8732c5ba64847e6a84741e7c559",
+      "execution_manifest_sha256": "6238b96d464e3fe6387ebf45ffe37cff5dc616c04d2e91c0a4087f5b6892eed2",
+      "state": {
+        "steps": 3000,
+        "position": 192000,
+        "epoch": 1,
+        "phase": "training",
+        "last_epoch": 1,
+        "best": 0.5434789988728124,
+        "best_epoch": 1,
+        "elapsed_seconds": 2356.689725852,
+        "validation_pending": false
+      }
+    },
+    {
+      "run": "expanded-none-sqrt-s43-n6000",
+      "completed": false,
+      "snapshot_sha256": "ef7e83b22b0d120c746d9dcef97a0d65cedd40892697f1834b8dbbe08d396f3a",
+      "snapshot_bytes": 21983167,
+      "manifest_sha256": "6f38a151fac4e8066b0dbf0cf99b75065f19ac4b488d5e8f1f21aca82eb1a2e2",
+      "execution_manifest_sha256": "15674e69a16baf4fc1263954da4075fc78171f90c3c90435c7db52e3540b5516",
+      "state": {
+        "steps": 4000,
+        "position": 256000,
+        "epoch": 1,
+        "phase": "training",
+        "last_epoch": 1,
+        "best": 0.5533093488443706,
+        "best_epoch": 1,
+        "elapsed_seconds": 2272.147722833,
+        "validation_pending": false
+      }
+    },
+    {
+      "run": "expanded-state-sqrt-s43-n6000",
+      "completed": false,
+      "snapshot_sha256": "3d2e857849e7515d1682a95f158a09cbb99c734d7ab5d8d0acfa20ae226bd17c",
+      "snapshot_bytes": 23226387,
+      "manifest_sha256": "2e58bcc38e7f0e8cde26859d5431d2dd6bc9d2a2d52eaab1755d96b1bef668dc",
+      "execution_manifest_sha256": "a87e89fef97c12734e6539154fbd348a75d5a0e61145069498a8f6b86d1e859a",
+      "state": {
+        "steps": 4000,
+        "position": 256000,
+        "epoch": 1,
+        "phase": "training",
+        "last_epoch": 1,
+        "best": 0.5442055079773039,
+        "best_epoch": 1,
+        "elapsed_seconds": 2273.1104308579997,
+        "validation_pending": false
+      }
+    },
+    {
+      "run": "expanded-pathway-state-sqrt-s43-n6000",
+      "completed": false,
+      "snapshot_sha256": "6bed92c440fc42b706f59a2ce50bdfeaafeb6e2ca43223ff4c24476808f895f3",
+      "snapshot_bytes": 23234441,
+      "manifest_sha256": "401aa9cfddbb3849a20c72aa2020015312cbcd1bdae06a193f75402366c83478",
+      "execution_manifest_sha256": "577bd00a2e9271c515edbe8756a0fd3858c90428c4cd0c95c76c76b30e28bb86",
+      "state": {
+        "steps": 4000,
+        "position": 256000,
+        "epoch": 1,
+        "phase": "training",
+        "last_epoch": 1,
+        "best": 0.5441678924539712,
+        "best_epoch": 1,
+        "elapsed_seconds": 2376.808865609,
+        "validation_pending": false
+      }
+    }
+  ]
+}

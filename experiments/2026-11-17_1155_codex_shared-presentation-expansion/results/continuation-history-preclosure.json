@@ -1,0 +1,241 @@
+{
+  "phase": "Five original fits verified, seven fits still active; square-root early ranking gains, fixed terminal comparison registered",
+  "core_commit": "2da11504f71f49c3d1780b4c982db07966d7063b",
+  "source_worktree": "/Users/iskander/code/presto/artifacts/harmonized-apc-source",
+  "primary": {
+    "app": "ap-JWaqHTZOePcj44uCRX3iSb",
+    "local_session": 96304,
+    "log": "launch_logs/modal-stage-a-s42-n6000.log",
+    "containers": {
+      "pilot-balanced-s42-n6000": "ta-01M7NG5PJ7WC4S3057BTD130XR",
+      "expanded-none-s42-n6000": "ta-01M7NG5PSKJJ8ZRR5K3TFVKG4R",
+      "expanded-state-s42-n6000": "ta-01M7NG5PSKBV1TZSE1M778DJZR"
+    }
+  },
+  "replication": {
+    "app": "ap-vSlCRSbbe1Q13FYvwC4OZe",
+    "local_session": 68613,
+    "log": "launch_logs/modal-replication-s43-n6000.log",
+    "containers": [
+      "ta-01M7NGJEBFMVZ8BYVDFGC2J3BR",
+      "ta-01M7NGJF1CAKHJMKN9Z1QWHTHR"
+    ]
+  },
+  "remaining": [
+    "Finish all original and six square-root runs; preserve declared selected checkpoints",
+    "Collect fit/evaluation artifacts; use evaluate_pathway.py for square-root runs",
+    "Collect --context-controls for original43 and evaluate input association controls; report changed signatures and no-state invariance",
+    "Independent loss/hash/coverage verification; paired protein and condition bootstrap; affinity guards",
+    "Compare ordinary cohorts and matched pairs separately; avoid claiming intervention causality",
+    "Verify usable checkpoint and finish README/registry/USAGE",
+    "Evaluate all six fixed terminal6000 checkpoints via evaluate_terminal.py, collect --evaluation run-terminal; analyzer handles validation file automatically"
+  ],
+  "unchanged_contracts": [
+    "TEST sealed",
+    "No predictor-derived TRAIN labels",
+    "All parameters trainable",
+    "Class-balanced study-balanced presentation selection",
+    "Native source adapter and observed interventions only"
+  ],
+  "notes": [
+    "Full-data16-step pipeline verified including independent11572-row selection agreement and CPUpublicI/II inference; only pancreatic beta cell feature unupdated, diagnostic notqualified",
+    "Short fit collected with collect.py --unstaged; long runs use staged local input copies",
+    "StageA original frozen wrapper differs from later optional-transfer vocabulary helper only for that unlaunched arm; replication frozen separately",
+    "Hitlist#899\u2013905remainopen",
+    "Comparator4.3e frozen; official4.3k newer; literature notes record limitation, no scoring/model/data changes"
+  ],
+  "interim": "results/interim-1000-s42.json",
+  "transfer_control": {
+    "app": "ap-XJgB2sWcNQfQAP12sx7xfs",
+    "local_session": 8664,
+    "log": "launch_logs/modal-transfer-s42-n6000.log",
+    "run": "expanded-ii-transfer-s42-n6000",
+    "container": "ta-01M7NHE0YDARRXC1D3CM3RRPRR"
+  },
+  "source_head": "5f9bfe37dfb5e82cecdf762ef1e59ff885668e40",
+  "active_experiment_runtime_commit": "2da11504f71f49c3d1780b4c982db07966d7063b",
+  "pathway_followup": {
+    "status": "implemented_and_tested_not_predictively_validated",
+    "core_commit": "5f9bfe37dfb5e82cecdf762ef1e59ff885668e40",
+    "source_worktree": "/Users/iskander/code/presto/artifacts/harmonized-apc-source",
+    "current_experiment_runtime_unchanged": "2da11504f71f49c3d1780b4c982db07966d7063b",
+    "regression_tests": 251,
+    "focused_tests_after_additional_gene_scope_case": 6,
+    "default_public_parity": "results/pathway-default-compatibility.json",
+    "spec": "experiments/agents/codex/plans/2026-11-17_shared-pathway-processing.md",
+    "predictive_launch": "six square-root-study fits active; paired state/no-state/pathway contrast, both seeds",
+    "test_accessed": false
+  },
+  "pathway_preflight": {
+    "app": "ap-QS7m0uGpL3AihCEbT38ZzQ",
+    "local_session": 89271,
+    "log": "launch_logs/pathway-preflight-n16.log",
+    "run": "expanded-pathway-state-s42-n16",
+    "container": "ta-01M7NJG52JGEEA35NK4XNJRFJR",
+    "status": "complete, integration verification passed; not predictively qualified"
+  },
+  "square_root_stage": {
+    "42": {
+      "app": "ap-AMbwfUsrQJmRYfgoIsbAjd",
+      "local_session": 39344,
+      "log": "launch_logs/sqrt-stage-s42-n6000.log",
+      "arms": [
+        "expanded-none-sqrt",
+        "expanded-state-sqrt",
+        "expanded-pathway-state-sqrt"
+      ],
+      "seed": 42,
+      "steps": 6000,
+      "calls": [
+        "fc-01M7NKGY12K4M0HJXVN3VJ7KD1",
+        "fc-01M7NKGY3D7J2DWSFEATQGYKTX",
+        "fc-01M7NKGY64Q37KFMNT938FC4XP"
+      ],
+      "core_commit": "5f9bfe37dfb5e82cecdf762ef1e59ff885668e40"
+    },
+    "43": {
+      "app": "ap-zGtTVaqZ4od1LRtE5mSXT5",
+      "local_session": 95505,
+      "log": "launch_logs/sqrt-stage-s43-n6000.log",
+      "arms": [
+        "expanded-none-sqrt",
+        "expanded-state-sqrt",
+        "expanded-pathway-state-sqrt"
+      ],
+      "seed": 43,
+      "steps": 6000,
+      "calls": [
+        "fc-01M7NKH1XDA357HW0N9V2ESMEK",
+        "fc-01M7NKH204KQE56ZWY9K45W4DC",
+        "fc-01M7NKH22702PD5SABCSZHDXM4"
+      ],
+      "core_commit": "5f9bfe37dfb5e82cecdf762ef1e59ff885668e40"
+    }
+  },
+  "completed_original": [
+    "expanded-none-s42-n6000",
+    "expanded-none-s43-n6000",
+    "expanded-state-s42-n6000",
+    "expanded-state-s43-n6000",
+    "pilot-balanced-s42-n6000"
+  ],
+  "inference_runtime": "reproduce/runtime-pathway (old2da checkpoints supported; CPUstate42 four-query smoke passes)",
+  "analysis_correction": "results/analysis-correction: skip falsely named protein clusters and incomplete-pair broad metrics; code/test_analysis.py 4 tests pass",
+  "component_analysis": "results/analysis/monoallelic-component-metrics.csv: additive decomposition checked, descriptive only",
+  "context_controls": {
+    "app": "ap-uiws73lz4OFDVyXPRb7iFq",
+    "local_session": 70989,
+    "runs": [
+      "expanded-none-s43-n6000",
+      "expanded-state-s43-n6000"
+    ],
+    "status": "completed, collected, independently verified; no-state invariant, shared state pooled association but within-study shuffle little change",
+    "log": "launch_logs/context-controls-original43.log",
+    "analysis": "results/context-ablation/<run>/analysis/report.md"
+  },
+  "fixed_terminal_comparison": {
+    "registered": "reproduce/launch.json fixed_terminal_comparison",
+    "runs": "all six sqrt variants at exactly6000",
+    "launcher": "code/evaluate_terminal.py",
+    "status": "frozen, not launched; await completed fit receipts",
+    "artifacts": "evaluation/<run>-terminal; preserve original selected checkpoints"
+  },
+  "terminal_integration": "collector --evaluation run-terminal, analyzer, verifier, report, slices and components now support terminal artifacts; actual verification awaits completed fits",
+  "frozen_comparators": "results/frozen-comparator-reuse.json verifies exact matching hash/IDs and restores MHCflurry plus overlap audits; all major models now included in analysis",
+  "terminal_comparison_original": {
+    "scope": "all six original recipes, retrospective controls; added after their history outcomes were known",
+    "first_app": "ap-Qki6O2q39M8Aq1e2myvW6j",
+    "first_run": "expanded-state-s43-n6000",
+    "first_local_session": 94314,
+    "first_log": "launch_logs/terminal-original-state43.log",
+    "remaining_after_preflight": [
+      "pilot-balanced-s42-n6000",
+      "expanded-none-s42-n6000",
+      "expanded-none-s43-n6000",
+      "expanded-state-s42-n6000",
+      "expanded-ii-transfer-s42-n6000"
+    ]
+  },
+  "network_recovery": {
+    "status": "all six recovered fits completed",
+    "original_apps_stopped": true,
+    "first_recovery_attempt_stopped": true,
+    "inspection": "/volume/2026-11-17_1155_codex_shared-presentation-expansion/recovery/inspection-1794951986373989715.json",
+    "transport": "single remote coordinator owns six calls",
+    "wrapper": "reproduce/coordinator-recovery-wrapper-manifest.json",
+    "app": "ap-xXTAm5pdpT4pAfrJNvyyka",
+    "coordinator": "/volume/2026-11-17_1155_codex_shared-presentation-expansion/recovery/coordinator-1794952065843893129.json",
+    "log": "launch_logs/resume-coordinated.log",
+    "local_session": 75734,
+    "restart_workers": false
+  },
+  "latest_verification": {
+    "selected": 9,
+    "terminal": 9,
+    "analysis_refreshed": true,
+    "sqrt_selected_controls": "state43 and none43 completed, collected, independently checked"
+  },
+  "sqrt_none42_terminal": {
+    "app": "ap-5lwE0DqgUoHurq7KouSZVS",
+    "local_session": 57790,
+    "status": "collected_verified",
+    "selected_also_terminal": true,
+    "selected_steps": 6000
+  },
+  "recovery_closeout": {
+    "status": "completed_no_errors",
+    "app": "ap-Fl1ODe8KXytBtmnWMJYZC2",
+    "session": 33699,
+    "path": "/volume/2026-11-17_1155_codex_shared-presentation-expansion/recovery/closeout-1794953851260054564.json",
+    "wrapper": "reproduce/async-closeout-wrapper-manifest.json"
+  },
+  "local_connectivity": {
+    "status": "process-local HTTPS DNS fallback verified for Modal API; numeric OS address resolution added for artifact downloads",
+    "source": "code/dns_transport.py",
+    "system_settings_changed": false
+  },
+  "latest_remote_progress": {
+    "time": "2026-11-17T22:43:24Z",
+    "completed": [
+      "expanded-ii-transfer-s42-n6000",
+      "expanded-none-sqrt-s43-n6000",
+      "expanded-state-sqrt-s43-n6000"
+    ],
+    "remaining": [],
+    "log": "launch_logs/progress-doh-v2.log",
+    "completed_count": 12
+  },
+  "sqrt_terminal_state43_controls": {
+    "app": "ap-xMATUPQWGuA50H5fu3TOun",
+    "session": 81248,
+    "status": "completed_collected_independently_verified"
+  },
+  "closure_pending": [
+    "last three fits and evaluations",
+    "collect all recovery receipts",
+    "final paired/model/affinity comparison",
+    "choose qualified inference checkpoint",
+    "final registry, reproducibility and source packaging"
+  ],
+  "primary_controls": {
+    "status": "completed_collecting",
+    "app": "ap-7rV0ka87q15kSQFxmWhk87"
+  },
+  "status": "all_compute_complete; final_local_verification_analysis_documentation_pending",
+  "primary_model": "expanded-state-sqrt-s42-n6000",
+  "primary_sha256": "1b6011396a563f52ea1d6da4bb1d4e69b8dbf0103148ba829225581c4d312f68",
+  "all_selected_terminal_and_controls_collected": true,
+  "final_sessions": {
+    "verification": 71885,
+    "analysis_with_protein_bootstrap": 20169
+  },
+  "next_steps": [
+    "wait final verification/analysis (12 selected +12 terminal)",
+    "run condition bootstrap for primary; refresh state43 bootstraps against full matrix if needed",
+    "analyze primary APC controls and report.py",
+    "run decision.py --preferred expanded-state-sqrt-s42-n6000 (asserts guards and all cohort gains)",
+    "default predict_example.py (CPU hash-checked inference)",
+    "final plots and coherent README/USAGE/registry/tasks",
+    "package compact reproducibility/results in isolated branch preserving raw remote artifacts; no push"
+  ]
+}

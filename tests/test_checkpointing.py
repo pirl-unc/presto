@@ -5,7 +5,7 @@ import torch
 
 
 def test_save_model_checkpoint_contains_model_config(tmp_path):
-    from presto.models.presto import Presto
+    from presto.legacy.presto import Presto
     from presto.training.checkpointing import save_model_checkpoint
 
     model = Presto(
@@ -33,7 +33,7 @@ def test_save_model_checkpoint_contains_model_config(tmp_path):
 
 
 def test_load_model_from_checkpoint_uses_embedded_config(tmp_path):
-    from presto.models.presto import Presto
+    from presto.legacy.presto import Presto
     from presto.training.checkpointing import load_model_from_checkpoint, save_model_checkpoint
 
     model = Presto(
@@ -68,7 +68,7 @@ def test_legacy_dead_module_keys_are_no_longer_dropped(tmp_path):
     checkpoint compat half-alive in a second file, so both are gone now and a
     stale key is an error like any other.
     """
-    from presto.models.presto import Presto
+    from presto.legacy.presto import Presto
     from presto.training.checkpointing import load_model_from_checkpoint
 
     model = Presto(d_model=64, n_layers=1, n_heads=4)
@@ -78,7 +78,7 @@ def test_legacy_dead_module_keys_are_no_longer_dropped(tmp_path):
     payload = {
         "checkpoint_format": "presto.v2",
         "checkpoint_format_version": 2,
-        "model_class": "presto.models.presto.Presto",
+        "model_class": "presto.legacy.presto.Presto",
         "model_config": {"d_model": 64, "n_layers": 1, "n_heads": 4},
         "model_state_dict": state,
     }
@@ -102,7 +102,7 @@ def test_renamed_head_keys_are_no_longer_remapped(tmp_path):
 
     A stale key is now an error, which is the honest outcome.
     """
-    from presto.models.presto import Presto
+    from presto.legacy.presto import Presto
     from presto.training.checkpointing import load_model_from_checkpoint
 
     model = Presto(d_model=64, n_layers=1, n_heads=4)
@@ -113,7 +113,7 @@ def test_renamed_head_keys_are_no_longer_remapped(tmp_path):
     payload = {
         "checkpoint_format": "presto.v2",
         "checkpoint_format_version": 2,
-        "model_class": "presto.models.presto.Presto",
+        "model_class": "presto.legacy.presto.Presto",
         "model_config": {"d_model": 64, "n_layers": 1, "n_heads": 4},
         "model_state_dict": state,
     }

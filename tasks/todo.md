@@ -11886,3 +11886,34 @@ Review so far:
   no releases. Analysis repositories point back to controlled access; a small
   15-record derivative is not a full cohort. See `tasks/tcrvdb_discovery.md`.
   No TCRvdb file, training run or qualified receptor predictions are claimed.
+
+
+# Consolidated foundation — 2026-11-18 UTC
+
+Spec: `tasks/cleanup-foundation-spec.md`. One PR authorized.
+
+- [x] Inventory/preserve source branches and reconcile upstream.
+- [x] Integrate shared model and ordinary package workflow.
+- [x] Centralize preparation/evaluation/inference; pin corrected corpus admission.
+- [x] Align defaults/docs, installed package and dependency metadata.
+- [x] Run behavioral, package, regression and retained-checkpoint checks.
+- [x] Review/publish one PR and document recovery/results.
+
+Resumed after the user cleared the exhausted temporary test directory. About
+12 GiB is available. Remaining implementation: separate the installed package's
+source root from the caller's experiment workspace, verify the entire wheel CLI
+workflow, retain regression dependencies, and close the remote data preparation.
+Rerun the complete suite with temporary-directory retention disabled. The earlier
+storage-exhausted run is not a passing verification result.
+
+Foundation verification: 3,161 passed, 4 skipped; strict docs/lint, wheel+sdist and
+installed both-class train/evaluate/predict pass. Both retained/candidate checkpoint
+CPU outputs exactly match prior evidence. Corrected-corpus pairs pass independent
+source/identity audit. Historical archives round-trip 3,096 files without overwriting
+conflicting local work. The strong ancestry embargo leaves only two new validation
+pairs: retained fixed validation remains mandatory. Shared environment's external
+Varcode constraints are recorded; no editable work or dependency bounds were forced.
+PR #158 is published; primary-checkout promotion and installed-package checks pass.
+Initial PR CI passes. Final follow-up CI is attached to PR #158.
+Post-promotion checks: 92 pass; the agent
+metadata option is accepted and preserved in frozen launch commands.

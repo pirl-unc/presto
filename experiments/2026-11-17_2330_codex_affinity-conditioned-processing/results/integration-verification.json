@@ -1,0 +1,80 @@
+{
+  "status": "passed",
+  "test_accessed": false,
+  "fits": [
+    {
+      "run": "continued-s42-n16",
+      "steps": 16,
+      "selected_steps": 16,
+      "checkpoint_sha256": "3b14773989d82adb6d3d33d446e5a2ce5132bef367b96a36ec5e6269424e0ac3",
+      "coverage": "passed",
+      "frozen_parameters": [],
+      "source_scaler_replay_contract_verified": true,
+      "auxiliary_exposure": null,
+      "hardware": {
+        "requested_gpu": "H100!",
+        "name": "NVIDIA H100 80GB HBM3",
+        "memory_bytes": 85009367040,
+        "torch": "2.14.1+cu130"
+      },
+      "seconds": 762.460366414
+    },
+    {
+      "run": "paired-s42-n16",
+      "steps": 16,
+      "selected_steps": 16,
+      "checkpoint_sha256": "5d1c868c58cc21ae8a735c02b21023ea455da46851346b6742365d2e1dfe1712",
+      "coverage": "passed",
+      "frozen_parameters": [],
+      "source_scaler_replay_contract_verified": true,
+      "auxiliary_exposure": {
+        "I": {
+          "draws": 64,
+          "unique_pairs": 62,
+          "studies": 37
+        },
+        "II": {
+          "draws": 64,
+          "unique_pairs": 63,
+          "studies": 16
+        }
+      },
+      "hardware": {
+        "requested_gpu": "H100!",
+        "name": "NVIDIA H100 80GB HBM3",
+        "memory_bytes": 85009367040,
+        "torch": "2.14.1+cu130"
+      },
+      "seconds": 836.3071100379999
+    },
+    {
+      "run": "paired-junction-s42-n16",
+      "steps": 16,
+      "selected_steps": 16,
+      "checkpoint_sha256": "53e9605843cda34f48b2f2c4fecb9d191a05629e61efd2b878910e5ad8bd1bbd",
+      "coverage": "passed",
+      "frozen_parameters": [],
+      "source_scaler_replay_contract_verified": true,
+      "auxiliary_exposure": {
+        "I": {
+          "draws": 64,
+          "unique_pairs": 62,
+          "studies": 37
+        },
+        "II": {
+          "draws": 64,
+          "unique_pairs": 63,
+          "studies": 16
+        }
+      },
+      "hardware": {
+        "requested_gpu": "H100!",
+        "name": "NVIDIA H100 80GB HBM3",
+        "memory_bytes": 85009367040,
+        "torch": "2.14.1+cu130"
+      },
+      "seconds": 1116.916714692
+    }
+  ],
+  "ordinary_exposure_equal_across_arms": true
+}

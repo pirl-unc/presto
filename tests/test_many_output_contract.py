@@ -8,7 +8,7 @@ import pytest
 
 torch = pytest.importorskip("torch")
 
-from presto.models.presto import Presto  # noqa: E402
+from presto.legacy.presto import Presto  # noqa: E402
 
 
 @pytest.fixture(scope="module")
@@ -102,7 +102,7 @@ class TestTCellIsContextInvariant:
     def test_training_loop_does_not_supply_tcell_context(self):
         import inspect
 
-        from presto.scripts import train_synthetic
+        from presto.legacy.scripts import train_synthetic
 
         from source_probe import region_between
 

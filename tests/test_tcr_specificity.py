@@ -6,7 +6,8 @@ import pytest
 import torch
 
 from presto.data.tcr_specificity import TCRSpecificityRecord, load_tcr_specificity_csv
-from presto.models import Presto, TCRSpecificityModel, functional_response_loss
+from presto.legacy.presto import Presto
+from presto.legacy.tcr_specificity import TCRSpecificityModel, functional_response_loss
 
 
 @pytest.fixture
