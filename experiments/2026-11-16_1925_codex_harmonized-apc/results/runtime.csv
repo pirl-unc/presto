@@ -1,0 +1,8 @@
+cohort,model,steps,seconds,coverage,requested_gpu,observed_gpu,memory_bytes
+pilot,harmonized-s42,800,220.43630568499998,passed,H100!,NVIDIA H100 80GB HBM3,85009367040
+pilot,shuffled-s42,800,242.173647141,passed,H100!,NVIDIA H100 80GB HBM3,85009367040
+pilot,state_absent-s42,800,147.00339037900002,passed,H100!,NVIDIA H100 80GB HBM3,85009367040
+expanded,harmonized-s42,800,281.13380532400004,passed,H100!,NVIDIA H100 80GB HBM3,85009367040
+expanded,shuffled-s42,800,227.396496741,passed,H100!,NVIDIA H100 80GB HBM3,85009367040
+expanded,shuffled_global_fixed-s42,800,346.952550997,passed,H100!,NVIDIA H100 80GB HBM3,85009367040
+expanded,state_absent-s42,800,180.618282095,passed,H100!,NVIDIA H100 80GB HBM3,85009367040

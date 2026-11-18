@@ -335,8 +335,8 @@ def test_frozen_measurements_reach_prediction_exports(frozen_bundle, tmp_path):
     from presto.data.collate import PrestoCollator
     from presto.data.loaders import PrestoDataset
     from presto.data.source_lineage import source_lineage_fields
-    from presto.models.presto import Presto
-    from presto.scripts.train_synthetic import (
+    from presto.legacy.presto import Presto
+    from presto.legacy.scripts.train_synthetic import (
         LOSS_TASK_SPECS,
         _get_batch_mask,
         _get_batch_qual,
@@ -402,30 +402,28 @@ def test_conflicting_values_for_one_observation_are_rejected(mapped_bundle, incl
 
 def test_frozen_input_cli_options_and_training_guard(tmp_path, monkeypatch):
     from presto.cli.main import create_parser
-    from presto.scripts.train_iedb import run
+    from presto.legacy.scripts.train_iedb import run
 
-    parser = create_parser()
-    args = parser.parse_args(
-        [
-            "train",
-            "unified",
-            "--data-source",
-            "hitlist",
-            "--data-dir",
-            str(tmp_path),
-            "--hitlist-bundle",
-            str(tmp_path / "bundle"),
-            "--hitlist-bundle-sha256",
-            "a" * 64,
-        ]
+    from argparse import Namespace
+    from presto.legacy.scripts.train_iedb import _resolve_run_args
+
+    with pytest.raises(SystemExit, match="2"):
+        create_parser().parse_args(
+            ["train", "--manifest", "fixture.json", "--data-source", "hitlist"]
+        )
+    args = _resolve_run_args(
+        Namespace(
+            data_source="hitlist",
+            data_dir=str(tmp_path),
+            hitlist_bundle=str(tmp_path / "bundle"),
+            hitlist_bundle_sha256="a" * 64,
+        )
     )
     assert args.hitlist_bundle_sha256 == "a" * 64
     assert args.hitlist_component_allocation == "relative_deficit_v2"
-    legacy = parser.parse_args(
-        ["train", "unified", "--hitlist-component-allocation", "absolute_deficit_v1"]
-    )
-    assert legacy.hitlist_component_allocation == "absolute_deficit_v1"
-    monkeypatch.setattr("presto.scripts.train_iedb._assert_mhcseqs_importable", lambda: None)
+    historical = _resolve_run_args(Namespace(hitlist_component_allocation="absolute_deficit_v1"))
+    assert historical.hitlist_component_allocation == "absolute_deficit_v1"
+    monkeypatch.setattr("presto.legacy.scripts.train_iedb._assert_mhcseqs_importable", lambda: None)
     args.hitlist_bundle = None
     with pytest.raises(ValueError, match="requires --hitlist-bundle"):
         run(args)
@@ -445,9 +443,9 @@ def test_frozen_input_cli_options_and_training_guard(tmp_path, monkeypatch):
 )
 def test_frozen_run_rejects_unfrozen_auxiliary_sources(tmp_path, monkeypatch, options, reason):
     from argparse import Namespace
-    from presto.scripts.train_iedb import run
+    from presto.legacy.scripts.train_iedb import run
 
-    monkeypatch.setattr("presto.scripts.train_iedb._assert_mhcseqs_importable", lambda: None)
+    monkeypatch.setattr("presto.legacy.scripts.train_iedb._assert_mhcseqs_importable", lambda: None)
     values = dict(
         config=None,
         profile="full",

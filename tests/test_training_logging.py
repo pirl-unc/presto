@@ -15,7 +15,7 @@ def _assert_metric_artifacts(run_dir):
 
 
 def test_train_synthetic_writes_metrics_artifacts(tmp_path):
-    from presto.scripts.train_synthetic import run
+    from presto.legacy.scripts.train_synthetic import run
 
     run_dir = tmp_path / "synthetic_run"
     args = SimpleNamespace(

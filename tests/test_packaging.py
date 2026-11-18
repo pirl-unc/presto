@@ -5,11 +5,10 @@
 that mapping -- discovery reports `cli`, `data`, ... as top-level packages and
 `import presto` stops working -- so the package list is enumerated by hand.
 
-Hand-enumerated lists drift, and this one had: `presto.scripts.distributional_ba`
-and `presto.scripts.distributional_ba.heads` both have `__init__.py` and were
-both missing. Editable installs hide it, because the path hook makes the whole
-tree importable regardless; a wheel or sdist ships without those modules and
-`from presto.scripts.distributional_ba.heads import ...` fails at import.
+Hand-enumerated lists drift. Historical distributional modules once were missing
+from built distributions even though editable installs exposed them. These modules
+now live under `presto.legacy.scripts.distributional_ba`; both that package and its
+`.heads` subpackage must still ship for checkpoint/reproduction support.
 
 CI installs with `-e .`, so CI could never have caught it.
 """
@@ -143,8 +142,8 @@ def test_pytest_uses_importlib_mode(pytestconfig):
 @pytest.mark.parametrize(
     "module",
     [
-        "presto.scripts.distributional_ba",
-        "presto.scripts.distributional_ba.heads",
+        "presto.legacy.scripts.distributional_ba",
+        "presto.legacy.scripts.distributional_ba.heads",
     ],
 )
 def test_the_previously_missing_packages_import(module):

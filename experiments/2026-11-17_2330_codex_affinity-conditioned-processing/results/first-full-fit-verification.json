@@ -1,0 +1,69 @@
+{
+  "status": "passed",
+  "test_accessed": false,
+  "fits": [
+    {
+      "run": "continued-s42-n2000",
+      "steps": 2000,
+      "selected_steps": 1000,
+      "checkpoint_sha256": "06f90132d487bd53240706bce68123e50f354b261acd86827f76ab9e3ce45c28",
+      "coverage": "passed",
+      "frozen_parameters": [],
+      "source_scaler_replay_contract_verified": true,
+      "auxiliary_exposure": null,
+      "hardware": {
+        "requested_gpu": "H100!",
+        "name": "NVIDIA H100 80GB HBM3",
+        "memory_bytes": 85009367040,
+        "torch": "2.14.1+cu130"
+      },
+      "seconds": 2076.557506593
+    },
+    {
+      "run": "continued-s43-n2000",
+      "steps": 2000,
+      "selected_steps": 1500,
+      "checkpoint_sha256": "495b0773b767faa8025f9eaf4c8c96bccbd35d9733a4a1280f9e6b31b66f5efc",
+      "coverage": "passed",
+      "frozen_parameters": [],
+      "source_scaler_replay_contract_verified": true,
+      "auxiliary_exposure": null,
+      "hardware": {
+        "requested_gpu": "H100!",
+        "name": "NVIDIA H100 80GB HBM3",
+        "memory_bytes": 85009367040,
+        "torch": "2.14.1+cu130"
+      },
+      "seconds": 1930.451906251
+    },
+    {
+      "run": "paired-s43-n2000",
+      "steps": 2000,
+      "selected_steps": 500,
+      "checkpoint_sha256": "ca9747f36d260f67e3e32d7700f1a17a8aca1210b3fa178fb1fe63406a668a52",
+      "coverage": "passed",
+      "frozen_parameters": [],
+      "source_scaler_replay_contract_verified": true,
+      "auxiliary_exposure": {
+        "I": {
+          "draws": 8000,
+          "unique_pairs": 3040,
+          "studies": 76
+        },
+        "II": {
+          "draws": 8000,
+          "unique_pairs": 4703,
+          "studies": 28
+        }
+      },
+      "hardware": {
+        "requested_gpu": "H100!",
+        "name": "NVIDIA H100 80GB HBM3",
+        "memory_bytes": 85009367040,
+        "torch": "2.14.1+cu130"
+      },
+      "seconds": 2428.253653202
+    }
+  ],
+  "ordinary_exposure_equal_across_arms": true
+}

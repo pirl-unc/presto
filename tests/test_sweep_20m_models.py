@@ -1,6 +1,6 @@
 import math
 
-from presto.scripts.sweep_20m_models import (
+from presto.legacy.scripts.sweep_20m_models import (
     generate_candidates,
     summarize_loss_series,
 )

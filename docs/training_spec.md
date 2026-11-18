@@ -1,5 +1,13 @@
 # Training guide
 
+> **Historical specification.** This page documents the former default model,
+> its APIs or proposed extensions. New training uses the
+> [shared observation model](modular_model.md) and
+> [one manifest interface](unified_training.md). Statements about a default,
+> canonical path or runnable training command below apply to the historical
+> implementation at commit `9dd71348124faa49a4c6a60872385c86895d50b0`, not new training.
+
+
 The authoritative desired model semantics are in
 [model_io_contract.md](model_io_contract.md). This guide describes the current
 canonical training path and its remaining limitations; it does not define a

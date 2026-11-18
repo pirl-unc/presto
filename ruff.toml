@@ -21,6 +21,8 @@ extend-exclude = [
   # Frozen snapshots of scripts as they ran; editing them to satisfy a linter
   # would falsify the experiment record.
   "experiments/",
+  # Archived evidence from a retired worktree; never imported or linted.
+  "archive/",
 ]
 
 # Exclusions must hold for an explicitly-named path, not only for traversal.
@@ -35,7 +37,7 @@ force-exclude = true
 # formatter output is not stable across ruff minors, so a contributor on a
 # newer ruff and a CI on an older one disagree about files neither of them
 # touched. CI installs this exact version; so does the dev extra.
-required-version = "0.16.0"
+required-version = "0.16.10"
 
 [format]
 # Preserve the existing quote style: the goal was to get lines under the limit,

@@ -1,0 +1,20 @@
+{
+  "regression": {
+    "passed": 3161,
+    "skipped": 4,
+    "seconds": 262.58,
+    "command": "TEST_SH_MAX=2 OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 ./test.sh -o tmp_path_retention_policy=none"
+  },
+  "lint": "passed",
+  "strict_docs": "passed",
+  "wheel_and_sdist_build": "passed",
+  "twine_check": "passed",
+  "isolated_wheel_both_class_cli": "passed",
+  "checkpoint_max_absolute_output_difference": 0.0,
+  "history_files_verified": 3096,
+  "independent_pair_audit": "passed",
+  "modal_dependency_check": "passed",
+  "shared_environment_dependency_check": "pre-existing external Varcode constraints; see environment.json",
+  "wheel_sha256": "4bce474467a09f39ab465b1c5701cade625f871874e006abebd1f2586be2035a",
+  "test_outcomes_accessed": false
+}

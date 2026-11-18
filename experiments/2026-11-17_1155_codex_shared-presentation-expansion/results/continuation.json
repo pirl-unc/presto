@@ -1,0 +1,27 @@
+{
+  "status": "completed_verified",
+  "closed_utc": "2026-11-17T22:55:56.582030+00:00",
+  "core_commit": "5f9bfe37dfb5e82cecdf762ef1e59ff885668e40",
+  "source_worktree": "artifacts/harmonized-apc-source",
+  "branch": "codex/harmonized-apc-20261116",
+  "fits_complete": 12,
+  "selected_evaluations_verified": 12,
+  "terminal_evaluations_verified": 12,
+  "selected_checkpoint": "results/preferred-checkpoint.json",
+  "controls": "results/context-ablation/",
+  "inference": "results/example-predictions.json",
+  "registry": "../experiment_log.md",
+  "test_accessed": false,
+  "active_modal_containers": [],
+  "scientific_next_steps": [],
+  "remaining_closure": [],
+  "history": "results/continuation-history-preclosure.json",
+  "limitations": [
+    "Adaptive development validation, TEST sealed",
+    "Affinity-matched class-I discrimination regresses",
+    "Class-II APC increment seed/cluster-sensitive",
+    "Isolated gene/drug and absolute-yield effects unvalidated"
+  ],
+  "no_push": true,
+  "source_package": "results/source-preservation.json"
+}

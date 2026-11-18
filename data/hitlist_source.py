@@ -267,7 +267,8 @@ COLUMNS_BY_EVIDENCE: Dict[str, Tuple[str, ...]] = {
 #: and reports nothing -- 816,023 observations (18.4%) carry the wrong
 #: perturbation label, 716,992 of them genuinely-unperturbed rows wearing their
 #: study's panel. That is why this is an assertion and not a comment.
-MINIMUM_HITLIST_VERSION = (1, 75, 0)
+#: 2.1.12 refreshes cached serotypes and preserves empty-selection semantics.
+MINIMUM_HITLIST_VERSION = (2, 1, 12)
 
 
 def _parse_version(raw: Optional[str]) -> Optional[Tuple[int, ...]]:
@@ -310,6 +311,8 @@ def require_supported_hitlist(raw_version: Optional[str]) -> None:
             "so a row whose arm could not be resolved is indistinguishable "
             "from a control. Training would succeed and the labels would be "
             "wrong either way. "
+            "Before 2.1.12 cached derived serotypes can be stale and an empty "
+            "serotype selection can incorrectly return unfiltered rows. "
             "Upgrade with `pip install -U 'hitlist>=" + wanted + "'`."
         )
 

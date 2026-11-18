@@ -1,5 +1,7 @@
 """Tests for allele resolver module."""
 
+from pathlib import Path
+import csv
 import types
 import tempfile
 import os
@@ -231,6 +233,19 @@ class TestMHCGnomesIntegration:
         assert module.parse("HLA-A*02:01") == "parsed:HLA-A*02:01"
 
 
+@pytest.fixture(scope="module")
+def dra_reference_index(tmp_path_factory):
+    """Resolve all checked-in DRA records without parsing 55k unrelated grooves."""
+    source = Path(__file__).resolve().parents[1] / "data" / "mhc_index.csv"
+    target = tmp_path_factory.mktemp("dra-index") / "index.csv"
+    with source.open() as stream, target.open("w") as output:
+        reader = csv.DictReader(stream)
+        writer = csv.DictWriter(output, fieldnames=reader.fieldnames)
+        writer.writeheader()
+        writer.writerows(row for row in reader if row["gene"] == "DRA")
+    return target
+
+
 class TestDefaultDRAlphaMapping:
     """Tests for native DRA default pairing support."""
 
@@ -248,16 +263,20 @@ class TestDefaultDRAlphaMapping:
         assert class_ii_default_dra_allele(species="HLA") == "HLA-DRA*01:01"
         assert class_ii_default_dra_allele(species="SLA") == "SLA-DRA*01:01"
 
-    def test_default_dra_prefix_mapping_alleles_exist_in_index(self):
+    def test_default_dra_prefix_mapping_alleles_exist_in_index(self, dra_reference_index):
         resolved = resolve_alleles(
-            "data/mhc_index.csv", DEFAULT_DR_ALPHA_BY_PREFIX.values(), include_sequence=False
+            dra_reference_index,
+            DEFAULT_DR_ALPHA_BY_PREFIX.values(),
+            include_sequence=False,
         )
         missing = [row["input"] for row in resolved if not row["found"]]
         assert missing == []
 
-    def test_default_dra_mapping_alleles_exist_in_index(self):
+    def test_default_dra_mapping_alleles_exist_in_index(self, dra_reference_index):
         resolved = resolve_alleles(
-            "data/mhc_index.csv", DEFAULT_DR_ALPHA_BY_SPECIES.values(), include_sequence=False
+            dra_reference_index,
+            DEFAULT_DR_ALPHA_BY_SPECIES.values(),
+            include_sequence=False,
         )
         missing = [row["input"] for row in resolved if not row["found"]]
         assert missing == []

@@ -1,31 +1,27 @@
 # Lessons
 
-## 2026-10-16
+## 2026-11-16
 
-- Copy optimizer and scheduler names from the pinned trainer when writing a
-  prospective experiment plan. A base learning rate is not a constant schedule,
-  and AdamW should not be shortened to Adam. Preserve any original published
-  plan and timestamp corrections; never imply that prose changes alter the
-  already frozen executable recipe.
+- User explicitly asks for upstream curation issues followed by completed Presto
+  work: file actionable source-backed requests, then implement and validate the
+  central mechanism with available data. Do not stop at issue filing or wait
+  for upstream source expansion when independent integration can proceed.
 
-- Before carrying a prospective contract across software releases, inspect every
-  embedded artifact fingerprint. Producer-version receipts can change while
-  observations and membership stay identical. Declare the expected metadata
-  delta explicitly and require canonical recomputation; never silently accept a
-  drifted source contract or confuse receipt identity with biological membership.
+- Before designing an expanded processing representation, inventory actual
+  Hitlist sample records and their matched controls for every proposed gene,
+  chemical and cytokine. A vocabulary entry or generic biological prior is not
+  data support. Tie the implementation scope and validation matrix to that
+  inventory; user explicitly rejected abstract feature expansion.
 
-- Before launching a real-data fit, execute every active target transformation on
-  the frozen raw labels and compare physical values, censor boundaries and units.
-  Coverage counts and preserved source columns do not prove that effective targets
-  equal the original measurements. Baseline target space must be declared before
-  predictions; a discovered mismatch requires a preserved stop and a new contract.
-
-## 2026-10-14
-
-- When the user requests review, iteration and deployment, keep ownership through
-  passing final-head checks, merge, clean-main build and verified publication.
-  A draft PR or running CI is an intermediate checkpoint, not completion.
-  Check the actual package namespace and release destination before publishing.
+- When the user accepts NetMHCpan BA as the working affinity estimate, use that
+  assumption for matched-decoy development. Retain its provenance and scope, but
+  do not keep making independent affinity truth a prerequisite for the requested
+  antigen-processing work.
+- Treat APC cell type, expression, exposures, and concurrent gene interventions
+  as inputs to one processing-state model with class-appropriate effects. Inspect
+  existing branches and experiments before duplicating an already implemented
+  state representation, and require held-out prediction gains rather than only
+  hard-coded biological sign checks.
 
 ## 2026-09-07
 
@@ -445,44 +441,148 @@
   `git status --untracked-files=all` and the staged file list for every linked
   script and generated summary; verify the links from a checkout-visible path.
 
-## 2026-10-15
+## 2026-09-16
 
-- The user explicitly deferred MHCflurry and authorized a Hitlist/Presto PR
-  series. Respect that scope. Use datacache for shared immutable input artifacts,
-  retain citable sources and distinct cell/MHC/condition/assay fields, and deliver
-  actual hashes, label policies, partitions, coverage and leakage reports. Software
-  tests alone do not qualify a corpus or establish biological independence.
+- When asked to open a promised aggregate artifact that is missing, create it
+  from the available completed work and open it. A status response offering to
+  create the file leaves the user's immediate objective unfinished. Include
+  aggregate exports in the generator so future bundles have them automatically.
+- Visual inspection must assess usefulness at ordinary viewing size, not merely
+  absence of clipping. Give each figure one question, use short titles and large
+  labels, and split dense architecture/data composites into independent pages.
+  A retention chart must encode retention in mark length or position; equal-length
+  connectors plus percentages are not a quantitative retention visualization.
+- Stage names and zeros need explicit denominators and scope. Label pre-MHC
+  filtering counts as such, not "Loaded", and distinguish zero direct assay
+  labels in one snapshot from a missing model component or no indirect training.
+- Preserve input identity when simplifying architecture: distinct flanks and
+  class-correct groove segments belong in the overview, even when detailed
+  downstream biology is split into another figure. For presentation charts,
+  omit no-data rows when requested; retain zeros in auditable data files instead
+  of making empty supervision categories compete for visual attention.
+- A log-transform epsilon is a numerical safeguard, not an assay measurement.
+  Validate raw positive-only labels before transforming; retain documented
+  positive censor bounds and mask unsupported zeros/nonfinite values per target.
+  Audit the analogous affinity, rate, ranking, census and export paths together.
+  Do not infer "below detection" from zero or from a qualitative negative alone.
+- Once the user explicitly authorizes the proposed bounded training run, launch
+  it after required verification; do not keep offering another approval gate.
+  Live training curves require flushed metrics and periodic remote publication,
+  not merely files that are written/committed when the process exits.
+- Test the exact public command used by a cloud launcher, not just a standalone
+  trainer parser. This repository has separate argument registries; new flags
+  must be wired and exercised through `presto train unified` (and its alias)
+  before freezing source or paying for a remote preflight.
+- When a user expects training on the available millions of MS observations,
+  explicitly distinguish a capped pipeline-validation run from full-corpus
+  training. State source inventory, post-curation population, sampling caps,
+  observed versus generated examples, and distinct-peptide versus row counts;
+  do not let a total including decoys imply large-scale biological coverage.
 
-- Never put a GitHub closing keyword directly before an issue reference, even in
-  a negated sentence. GitHub closed #115 from a negated phrase in #121. Use
-  "leaves #115 open", and inspect closing events after merges.
-- When adapting an audit recipe, scope replacements to one syntax location and
-  inspect every changed call. Exercise snapshot/publication paths before freezing
-  a real-source run. Preserve failed executed recipes and logs as separate attempts.
+## 2026-10-25 — Explicit artifact requests need working defaults
 
-## 2026-10-16 — source qualification priority
+- An artifact-retention flag must not silently become a no-op because a separate
+  optional path is unset. Prefer a unique default run directory, retain explicit
+  path precedence, and record/announce the resolved destination. Test the actual
+  startup path after config merging, not only parser acceptance or mocked dispatch.
 
-Prioritize source lineage and donor/specimen independence before more fitting when
-the user identifies those as blockers. Interpret missing context against the assay:
-a purified-MHC binding reaction does not require a cellular processing assignment.
-Keep applicability reporting separate from model features and the measured label.
-# 2026-10-20
+## 2026-10-26 — PR completion includes the agreed scientific gates
 
-- “Validated VDJdb” can refer to independent functional re-testing (TCRvdb),
-  not a VDJdb confidence-score threshold. Resolve the cited source before
-  defining the training cohort; preserve non-validation's assay scope.
-- Distinguish installed package freshness from frozen data-export freshness.
-  A newer software version does not imply a newer training bundle, and a
-  narrowly varying predictor that fails on training needs an optimization
-  diagnostic before collecting more rows.
-- For a requested research dataset, inspect author and downstream public
-  repositories before declaring acquisition blocked. A small derived subset
-  or structure archive does not establish access to the complete functional
-  labels and QC table.
-- Distinguish shared representations from their scalar readout heads when
-  describing training. Downstream presentation gradients can train a processing
-  latent while leaving the returned processing score at initialization.
-- Audit actual loss aliases, generic target reuse and active-task normalization
-  before calling a model an IC50 fit. Source endpoint preservation is not proof
-  of independent endpoint supervision; a successful forward pass does not
-  establish that every returned output was trained.
+- When a research PR explicitly retains scientific completion criteria, do not
+  replace them with software-only merge readiness. The user confirmed that #131
+  must remain draft until its scientific milestones pass. Preserve failed gates,
+  external-data blockers and the full accepted scope while making independent
+  progress; passing CI does not authorize biological promotion or early merge.
+
+## 2026-10-26 — Follow scientific work through its terminal evidence
+
+- When asked to finish research work, do not stop after queuing experiments and
+  reporting progress while independent authorized work remains. Follow terminal
+  runs through verification and closure, address failures, and use waiting time
+  for the next qualified source or integration requirement. An external blocker
+  for one assay does not block the rest of the accepted scope.
+
+
+## 2026-10-27 — Use authorized compute and avoid arbitrary startup blockers
+
+- The user explicitly reauthorized Modal, overriding the earlier local-only
+  preference. Use requested H100! and record hardware, rather than delaying
+  prediction runs behind invented laptop RAM caps. Keep active useful work running,
+  show actual metrics promptly, and distinguish CPU references from GPU comparisons.
+
+## 2026-11-07 — Verify complete remote execution bundles
+
+- A successful import or optimizer step does not verify a training bundle. Include
+  packaged data files and every file in the canonical resume SOURCE_FILES contract.
+  Run a complete short fit, checkpoint selection, receipt serialization and final
+  evaluation from the exact frozen bundle in a neutral directory before GPU launch.
+- Preserve failed launch sources/call IDs and outputs, then reuse verified prepared
+  data when only transport changes. Never overwrite failed attempts or label a
+  startup failure as completed training.
+- Parent projection may move split assignments without renaming source files. Use
+  each observation's split, skip TEST before outcome processing, and test mixed
+  files plus nested-peptide embargoes before allocating GPUs.
+
+## 2026-11-16 — Ground APC modeling in usable source evidence
+
+- Enumerate current Hitlist peptide-to-arm assignments and matched controls before
+  claiming support for genetic, drug or cytokine effects. Curated sample metadata
+  alone does not establish training-ready observations.
+- Upstream curation requests are one step, not completion of the model task. Continue
+  through a centralized admission path, core implementation and empirical validation
+  using the evidence available now; do not make every upstream improvement a blocker.
+- Reusable sequence/flank proposals can be shared across human studies when their
+  reference context is verified. Retain current source-specific conditions, candidate
+  MHC sets and lineage; do not inherit the old proposal table's biological labels.
+- Distinguish software support, predictive associations and isolated intervention
+  effects. Missing exposure, unassigned arms and absent quantitative targets must not
+  silently become controls or calibrated gene-effect labels.
+- Carry the user's working-affinity matching contract across MHC classes: use
+  NetMHCpan BA for class I and NetMHCIIpan BA for class II when evaluating processing
+  beyond predicted binding. Source MS detections remain positives; predictor scores
+  select matched sampled backgrounds, not biological positive/negative truth. A
+  same-protein/length-only evaluation cannot replace this control. Keep EL outputs
+  as presentation comparators rather than using them to match away processing.
+- A frozen-backbone APC pilot is an ablation, not completion of the requested
+  integrated model. Make end-to-end multi-task training the main recipe, retaining
+  measured affinity supervision and biologically scoped inputs. Parameter
+  invariance is not a substitute for held-out affinity performance.
+- Do not present an inherited eight-dimensional latent as an evidence-based
+  capacity choice. Report its actual parameter cost and compare wider states under
+  a common data/training contract. Distinguish input vocabulary, independent
+  condition contrasts and latent dimensionality.
+
+
+## 2026-11-17
+
+- Do not carry pilot row caps, a proposal whitelist, or resolved-intervention requirements into broad class-I/II presentation training. Admit valid ordinary presentation with unknown APC state; limit causal claims, not unrelated supervision.
+- A completed experiment family is not completion of the predictive goal. Verify gains separately for both requested classes and distinguish APC increments from gains due to additional data or training.
+- Explicitly balance the presentation classes in checkpoint selection; pooled task metrics can improve while the underrepresented class regresses. Audit the actual selection weights before allocating a capacity sweep.
+
+- Before restarting a mutating remote job, require a successful stop command and confirm its worker is gone. A CLI confirmation prompt is not a completed stop. Inspect exit status before dependent launches; use unique temporary output names and verify written-byte hashes before replacing prepared sources.
+
+- For paired validation analysis, verify every retained pair has exactly one positive and one background; a nonblank pair identifier is insufficient after row filtering. Verify resampling group semantics from the source: study-component split groups are not protein clusters. Report condition/sample uncertainty when appropriate, and do not emit undefined intervals.
+
+- Launch long Modal experiments with `--detach`; an attached local client heartbeat can cancel healthy remote training after a laptop/network interruption. Before recovery, verify the old app is stopped and no worker survives, then use canonical exact-state resume with original manifests/runtime and separately recorded transport/hardware.
+
+- Detached local fan-out is insufficient: Modal retains only the last triggered local-entrypoint function after disconnection. Use one remote coordinator that owns/waits for the entire sweep, or one detached app per run. Confirm lifecycle semantics before describing a sweep as disconnect-resilient.
+
+- After a fit finishes, read the selected checkpoint metadata and final history before quoting its selected step or pooled metrics. The last interim snapshot can be superseded at the final validation; verify checkpoint predictions rather than carrying forward a live-status number.
+
+- Modal detached local entrypoints must invoke persistent coordinators with `.spawn().get()`, not `.remote()`. The installed direct-function CLI applies this rewrite, local entrypoints do not. A detached app can retain asynchronously spawned workers while a synchronous coordinator input is canceled after connection loss; inspect surviving workers before any restart.
+
+- Report affinity-matched benchmarks for class I and class II together. Distinguish BA nM calipers, allele-specific BA percentile-point calipers and EL ranks; do not imply they are equivalent or omit the second class when the user requests a shared mechanism. Verify actual flank population/routing and processing influence, not only config flags.
+
+- A Hitlist version bump does not refresh already frozen exports. Reuse built indexes through the current public loaders, preserve reported/derived/donor_set roles, and issue a new hashed export generation. Pin the next remote environment and align packaging, runtime guards and loader-level regression tests; preserve prior experiment bytes.
+
+- Before reusing a built Hitlist index, compare its manifest, build date and curation provenance with available newer corpus releases. Loader freshness and corpus freshness are separate checks: refreshing annotations on the September index did not adopt the published October corrected corpus. Pin the chosen corpus explicitly and rerun admission/leakage checks before assigning it training membership.
+- A unified implementation in an isolated checkout does not establish a unified installed product. Verify the ordinary package import, CLI, checkpoint defaults and documentation against the intended implementation before describing integration as complete; report the remaining checkout/release gap explicitly.
+
+## 2026-11-18 — Keep verification bounded by available storage
+
+- Large model regression suites retain checkpoint directories unless pytest's
+  temporary retention is disabled. Check free disk before full-suite runs and
+  use `-o tmp_path_retention_policy=none` when only final logs are required.
+- A full disk can prevent the approval infrastructure itself from starting.
+  Preserve the failed run's log; do not misreport storage errors as model failures
+  or try alternate deletion mechanisms to bypass a failed approval review.

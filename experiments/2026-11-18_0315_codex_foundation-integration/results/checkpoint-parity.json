@@ -1,0 +1,34 @@
+{
+  "implementation": "/Users/iskander/code/presto/artifacts/cleanup-foundation-source/__init__.py",
+  "checks": [
+    {
+      "family": "2026-11-17_1155_codex_shared-presentation-expansion",
+      "checkpoint_sha256": "1b6011396a563f52ea1d6da4bb1d4e69b8dbf0103148ba829225581c4d312f68",
+      "rows": 4,
+      "classes": [
+        "I",
+        "II"
+      ],
+      "endpoints": [
+        "elution_observation",
+        "ic50"
+      ],
+      "max_absolute_output_difference": 0.0
+    },
+    {
+      "family": "2026-11-17_2330_codex_affinity-conditioned-processing",
+      "checkpoint_sha256": "e4898af3a7a442a999177273687ea4e4ce5d4216e908f2e435b2d73226e56963",
+      "rows": 4,
+      "classes": [
+        "I",
+        "II"
+      ],
+      "endpoints": [
+        "elution_observation",
+        "ic50"
+      ],
+      "max_absolute_output_difference": 0.0
+    }
+  ],
+  "test_outcomes_accessed": false
+}

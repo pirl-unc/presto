@@ -1,0 +1,86 @@
+[
+  {
+    "cohort": "pilot",
+    "model": "harmonized-s42",
+    "checkpoint": "/Users/iskander/code/presto/experiments/2026-11-16_1925_codex_harmonized-apc/results/runs/harmonized-s42/raw/selected.pt",
+    "sha256": "d3b89068d7a79c4067acd4436d9ca4ffb294d4b14637e6e5ba6e5b3873222f04",
+    "modal_volume": "presto-checkpoints",
+    "modal_prefix": "2026-11-16_1925_codex_harmonized-apc",
+    "prediction_files": [
+      "/Users/iskander/code/presto/experiments/2026-11-16_1925_codex_harmonized-apc/results/runs/harmonized-s42/validation-predictions.json",
+      "/Users/iskander/code/presto/experiments/2026-11-16_1925_codex_harmonized-apc/results/runs/harmonized-s42/affinity-predictions.json"
+    ]
+  },
+  {
+    "cohort": "pilot",
+    "model": "shuffled-s42",
+    "checkpoint": "/Users/iskander/code/presto/experiments/2026-11-16_1925_codex_harmonized-apc/results/runs/shuffled-s42/raw/selected.pt",
+    "sha256": "982b050e5772e665a997b44838b04e4cb7f8c0c4738ccb834c6682cb6284b7a6",
+    "modal_volume": "presto-checkpoints",
+    "modal_prefix": "2026-11-16_1925_codex_harmonized-apc",
+    "prediction_files": [
+      "/Users/iskander/code/presto/experiments/2026-11-16_1925_codex_harmonized-apc/results/runs/shuffled-s42/validation-predictions.json",
+      "/Users/iskander/code/presto/experiments/2026-11-16_1925_codex_harmonized-apc/results/runs/shuffled-s42/affinity-predictions.json"
+    ]
+  },
+  {
+    "cohort": "pilot",
+    "model": "state_absent-s42",
+    "checkpoint": "/Users/iskander/code/presto/experiments/2026-11-16_1925_codex_harmonized-apc/results/runs/state_absent-s42/raw/selected.pt",
+    "sha256": "86996ce935d0567f256ad0f402a7864c9d43b5afa206092d6fe8536e8d3725eb",
+    "modal_volume": "presto-checkpoints",
+    "modal_prefix": "2026-11-16_1925_codex_harmonized-apc",
+    "prediction_files": [
+      "/Users/iskander/code/presto/experiments/2026-11-16_1925_codex_harmonized-apc/results/runs/state_absent-s42/validation-predictions.json",
+      "/Users/iskander/code/presto/experiments/2026-11-16_1925_codex_harmonized-apc/results/runs/state_absent-s42/affinity-predictions.json"
+    ]
+  },
+  {
+    "cohort": "expanded",
+    "model": "harmonized-s42",
+    "checkpoint": "/Users/iskander/code/presto/experiments/2026-11-16_1925_codex_harmonized-apc/results/runs-v2/harmonized-s42/raw/selected.pt",
+    "sha256": "558e1fb7b7a7c8874a2a79f4a30b0f747b03869f7587be0602b04c209cabe7a4",
+    "modal_volume": "presto-checkpoints",
+    "modal_prefix": "2026-11-16_1925_codex_harmonized-apc-v2",
+    "prediction_files": [
+      "/Users/iskander/code/presto/experiments/2026-11-16_1925_codex_harmonized-apc/results/runs-v2/harmonized-s42/validation-predictions.json",
+      "/Users/iskander/code/presto/experiments/2026-11-16_1925_codex_harmonized-apc/results/runs-v2/harmonized-s42/affinity-predictions.json"
+    ]
+  },
+  {
+    "cohort": "expanded",
+    "model": "shuffled-s42",
+    "checkpoint": "/Users/iskander/code/presto/experiments/2026-11-16_1925_codex_harmonized-apc/results/runs-v2/shuffled-s42/raw/selected.pt",
+    "sha256": "e330bdd7fa9a4a8ee87e36abc691f7cbd8595f37b615f214e5b8d51a90f25ead",
+    "modal_volume": "presto-checkpoints",
+    "modal_prefix": "2026-11-16_1925_codex_harmonized-apc-v2",
+    "prediction_files": [
+      "/Users/iskander/code/presto/experiments/2026-11-16_1925_codex_harmonized-apc/results/runs-v2/shuffled-s42/validation-predictions.json",
+      "/Users/iskander/code/presto/experiments/2026-11-16_1925_codex_harmonized-apc/results/runs-v2/shuffled-s42/affinity-predictions.json"
+    ]
+  },
+  {
+    "cohort": "expanded",
+    "model": "shuffled_global_fixed-s42",
+    "checkpoint": "/Users/iskander/code/presto/experiments/2026-11-16_1925_codex_harmonized-apc/results/runs-v2/shuffled_global_fixed-s42/raw/selected.pt",
+    "sha256": "3655c5b2b153fe66278d4ddd88720d9438ae254f102f9e3cc9291acd5221130d",
+    "modal_volume": "presto-checkpoints",
+    "modal_prefix": "2026-11-16_1925_codex_harmonized-apc-v2",
+    "prediction_files": [
+      "/Users/iskander/code/presto/experiments/2026-11-16_1925_codex_harmonized-apc/results/runs-v2/shuffled_global_fixed-s42/validation-predictions.json",
+      "/Users/iskander/code/presto/experiments/2026-11-16_1925_codex_harmonized-apc/results/runs-v2/shuffled_global_fixed-s42/affinity-predictions.json"
+    ]
+  },
+  {
+    "cohort": "expanded",
+    "model": "state_absent-s42",
+    "checkpoint": "/Users/iskander/code/presto/experiments/2026-11-16_1925_codex_harmonized-apc/results/runs-v2/state_absent-s42/raw/selected.pt",
+    "sha256": "e161772a6ca4ba86ca231250aaf5074f5da33e0149cf61b13fa6e89e762a9c6f",
+    "modal_volume": "presto-checkpoints",
+    "modal_prefix": "2026-11-16_1925_codex_harmonized-apc-v2",
+    "prediction_files": [
+      "/Users/iskander/code/presto/experiments/2026-11-16_1925_codex_harmonized-apc/results/runs-v2/state_absent-s42/validation-predictions.json",
+      "/Users/iskander/code/presto/experiments/2026-11-16_1925_codex_harmonized-apc/results/runs-v2/state_absent-s42/affinity-predictions.json"
+    ]
+  }
+]

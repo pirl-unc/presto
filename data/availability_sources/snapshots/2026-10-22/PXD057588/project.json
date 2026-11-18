@@ -1,0 +1,172 @@
+{
+  "accession" : "PXD057588",
+  "title" : "Quantitative cell type specific immunopeptidome analysis during macrophage and tumor co-evolution reveals therapeutic MHC-I restricted peptides in glioblastoma",
+  "additionalAttributes" : [ ],
+  "projectDescription" : "Glioblastoma treatment by immunotherapy is limited by the immunosuppresive tumor microenvironment, in part created by GBM associated macrophages. To uncover targetable MHC-I peptides for targeted immunotherapy, we performed cell type specific immunopeptidome analysis on primary macrophages and GBM tumor cells in a co-culture system to profile antigen presentation at the tumor:macrophage interface. Profiling the MHC-I restricted peptides revealed systematic antigen presentation alteration in both GBM tumors and macrophages during their co-evolution. We selected co-culture induced significantly altered peptides (CIVS peptides) which can serve as potential immunotherapy targets, and developed an mRNA vaccine encoding six selected CIVS peptides from GAMs and GBM tumor cells. Two doses of mRNA vaccination generated antigen specific immune response, significantly delayed GBM tumor growth, and in some cases eradicated tumor, demonstrating the translational potential of CIVS peptides as therapeutic targets for GBM/GAM targeting vaccines.",
+  "sampleProcessingProtocol" : "Macrophages and GBM tumor cells after co-culture were separated using CD45 labeled magnetic beads. Each collected cell type was lysed with CHAPs containing lysis buffer and MHC-I complex was enriched with murine anti-H2-Kb and H2-Db antibodies immobilized to ProteinA Sepharose beads. MHC-I associated peptides were eluted from the beads using 10% acetic acid, and separated using size exclusion filters. Samples were lyophilized, TMT labeled and fractionated using homemade fractionation column. Mass spectrometry data was acquired on Orbitrap Exploris 480 mass spectrometer (Thermo Scientific) coupled with an UltiMate 3000 RSLC Nano LC system (Dionex), Nanospray Flex ion source (Thermo Scientific), and column oven heater (Sonation)in data dependent acquisition mode.",
+  "dataProcessingProtocol" : "All mass spectra from DDA MS were analyzed with Proteome Discoverer (PD, version 3.0), searched using Sequest against the mouse database (v2022-06-14), and rescored using INFERYS. No enzyme was used, variable modifications included oxidized methionine for all analyses, and static modifications included Carbamidomethyl, TMTpro on Lysine and N-terminus. All analyses were filtered with the following criteria: search engine rank = 1, length between 8 and 12 amino acids, q value ≤ 0.05.",
+  "projectTags" : [ ],
+  "keywords" : [ "Tumor associated macrophage", "Mhc-i restricted peptides", "Glioblastoma", "Immunopeptidome" ],
+  "doi" : "10.6019/PXD057588",
+  "submissionType" : "COMPLETE",
+  "license" : "Creative Commons Public Domain (CC0)",
+  "submissionDate" : "2024-11-06",
+  "publicationDate" : "2025-09-03",
+  "submitters" : [ {
+    "title" : "Ms",
+    "firstName" : "Yufei",
+    "lastName" : "Cui",
+    "identifier" : "3497913",
+    "affiliation" : "MIT",
+    "email" : "yufeicui@mit.edu",
+    "country" : "United States",
+    "orcid" : "0000-0003-3014-813X",
+    "name" : "Yufei Cui",
+    "id" : "3497913"
+  } ],
+  "labPIs" : [ {
+    "title" : "Dr",
+    "firstName" : "Forest",
+    "lastName" : "M.",
+    "identifier" : "3043147",
+    "affiliation" : "Department of Biological Engineering, Massachusetts Institute of Technology",
+    "email" : "fwhite@mit.edu",
+    "country" : "",
+    "orcid" : "",
+    "name" : "Forest M.",
+    "id" : "3043147"
+  } ],
+  "instruments" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "MS",
+    "accession" : "MS:1003028",
+    "name" : "Orbitrap Exploris 480"
+  } ],
+  "softwares" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "MS",
+    "accession" : "MS:1000650",
+    "name" : "Proteome Discoverer"
+  } ],
+  "experimentTypes" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "PRIDE",
+    "accession" : "PRIDE:0000428",
+    "name" : "Bottom-up proteomics"
+  }, {
+    "@type" : "CvParam",
+    "cvLabel" : "PRIDE",
+    "accession" : "PRIDE:0000627",
+    "name" : "Data-dependent acquisition"
+  } ],
+  "quantificationMethods" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "PRIDE",
+    "accession" : "PRIDE:0000314",
+    "name" : "TMT"
+  } ],
+  "countries" : [ "United States" ],
+  "sampleAttributes" : [ {
+    "@type" : "Tuple",
+    "key" : {
+      "cvLabel" : "EFO",
+      "accession" : "EFO:0000635",
+      "name" : "organism part"
+    },
+    "value" : [ {
+      "cvLabel" : "BTO",
+      "accession" : "BTO:0000214",
+      "name" : "cell culture"
+    }, {
+      "cvLabel" : "CL",
+      "accession" : "CL:0000235",
+      "name" : "macrophage"
+    }, {
+      "cvLabel" : "CL",
+      "accession" : "CL:0001063",
+      "name" : "neoplastic cell"
+    } ]
+  }, {
+    "@type" : "Tuple",
+    "key" : {
+      "cvLabel" : "EFO",
+      "accession" : "OBI:0100026",
+      "name" : "organism"
+    },
+    "value" : [ {
+      "cvLabel" : "NEWT",
+      "accession" : "NEWT:10090",
+      "name" : "Mus musculus (Mouse)"
+    } ]
+  }, {
+    "@type" : "Tuple",
+    "key" : {
+      "cvLabel" : "EFO",
+      "accession" : "EFO:0000408",
+      "name" : "disease"
+    },
+    "value" : [ {
+      "cvLabel" : "DOID",
+      "accession" : "DOID:1319",
+      "name" : "brain cancer"
+    }, {
+      "cvLabel" : "DOID",
+      "accession" : "DOID:3073",
+      "name" : "brain glioblastoma multiforme"
+    } ]
+  } ],
+  "organisms" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "NEWT",
+    "accession" : "NEWT:10090",
+    "name" : "Mus musculus (mouse)"
+  } ],
+  "organismParts" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "CL",
+    "accession" : "CL:0000235",
+    "name" : "Macrophage"
+  }, {
+    "@type" : "CvParam",
+    "cvLabel" : "BTO",
+    "accession" : "BTO:0000214",
+    "name" : "Cell culture"
+  }, {
+    "@type" : "CvParam",
+    "cvLabel" : "CL",
+    "accession" : "CL:0001063",
+    "name" : "Neoplastic cell"
+  } ],
+  "diseases" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "DOID",
+    "accession" : "DOID:3073",
+    "name" : "Brain glioblastoma multiforme"
+  }, {
+    "@type" : "CvParam",
+    "cvLabel" : "DOID",
+    "accession" : "DOID:1319",
+    "name" : "Brain cancer"
+  } ],
+  "references" : [ ],
+  "identifiedPTMStrings" : [ {
+    "@type" : "CvParam",
+    "cvLabel" : "MOD",
+    "accession" : "MOD:00425",
+    "name" : "monohydroxylated residue"
+  }, {
+    "@type" : "CvParam",
+    "cvLabel" : "MOD",
+    "accession" : "MOD:00696",
+    "name" : "phosphorylated residue"
+  }, {
+    "@type" : "CvParam",
+    "cvLabel" : "MOD",
+    "accession" : "MOD:00397",
+    "name" : "iodoacetamide derivatized residue"
+  } ],
+  "totalFileDownloads" : 609,
+  "botCount" : 151,
+  "hubCount" : 440,
+  "organicCount" : 18
+}

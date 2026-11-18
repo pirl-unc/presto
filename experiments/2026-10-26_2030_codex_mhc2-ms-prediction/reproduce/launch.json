@@ -1,0 +1,52 @@
+{
+  "utc": "2026-10-26T20:33:55.600967+00:00",
+  "agent_model": "Codex / GPT-6",
+  "status": "failed",
+  "argv": [
+    "experiments/2026-10-26_2030_codex_mhc2-ms-prediction/code/prepare.py"
+  ],
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "git_commit": "aa5eb5ed41e2916b8f94c9e4a30e9d069bf3a5fc",
+  "dirty_status": " M experiments/2026-10-26_1929_codex_mhc2-censor-refinement/README.md\n M experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/continuation-state.json\n M experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/fit-exact_continuation-1793044126975529000.json\n M experiments/experiment_log.md\n M tasks/mhc2_active_runs.json\n M tasks/todo.md\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/code/recover.py\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/code/recover_attempt03.py\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/code/resume_censor.py\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/code/resume_censor_attempt03.py\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/fit-censor_refinement-1793045035192116000.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/interruption01.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/recover.sh\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/recover_attempt03.sh\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/recovery-attempt02-contract-diff.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/recovery-launch-attempt02.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/recovery-launch-attempt03.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/recovery-plan-attempt03.md\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/recovery-plan.md\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/recovery-state-attempt02.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/recovery-state-attempt03.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/resume-censor-refinement-attempt02-1793046019686482000.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/resume-censor-refinement-attempt03-1793046271185216000.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/score-exact_continuation-1793045003405002000.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/source/recover.py\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/source/recover_attempt03.py\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/source/resume_censor.py\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/source/resume_censor_attempt03.py\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/results/exact_continuation-fit.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/results/exact_continuation/\n?? experiments/2026-10-26_1954_codex_mhc2-ms-transfer-cohort/\n?? experiments/2026-10-26_2030_codex_mhc2-ms-prediction/\n?? experiments/agents/codex/plans/2026-10-26_mhc2-ms-prediction.md\n?? experiments/agents/codex/plans/2026-10-26_mhc2-ms-transfer-cohort.md\n?? tests/test_mhc2_ms_prediction_cohort.py\n",
+  "code_hashes": {
+    "cohort_rules.py": "f413ad8e8a539195366ae8950e858785a123568ba1a8d628ae418277d5bb5836",
+    "prepare.py": "7cb48781938bfaf92a19f02707664e2c57fee17d61f25bb5c7d7a748087c0a29"
+  },
+  "environment": {
+    "PYTHONPATH": "/private/tmp/presto-mhc2-20261026:/private/tmp/presto-pr-completion-20261026/dependencies",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "requested_modal_gpu": null,
+  "device": "cpu",
+  "startup_ram": 16531816448,
+  "limits": {
+    "seconds": 300,
+    "rss": 2147483648,
+    "ram_floor": 10737418240
+  },
+  "inputs": {
+    "admitted": {
+      "contributor-links.parquet": "e783eef7969d19de5689f0ca584197d7a4d9fea090df7d59a30b7c9cca47b6c5",
+      "contributor-summary.parquet": "0b5075387af4e210560aa2d9f8a7a208bd8cd13750292bfbbca2b83fb164540e",
+      "dispositions.parquet": "9c65fcd9ac3f73c42225c2888bafbe390f944813fb3323f48ada1d32085429b8",
+      "observations.jsonl": "532977c4a5e9b6530fca36d039b73a3b832c7b15197dc7a6def0bd66191aecef"
+    },
+    "native": {
+      "path": "/private/tmp/presto-mhc2-20261026/ms-source/training.parquet",
+      "sha256": "f902341e90c1c57defc93f4bc540ffcbea1b41061afb4492ddd8aaa7642c65bd"
+    },
+    "affinity_manifest": {
+      "path": "/private/tmp/presto-mhc2-20261026/presto/experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/exact_continuation-manifest.json",
+      "sha256": "4bf334209c6d0fa546982f2df497ecf220732ee0a717b1f1319ab125a6a31478"
+    },
+    "parent": {
+      "path": "/Users/iskander/code/presto/artifacts/2026-10-26_1610_codex_ic50-convergence/seed42/selected.pt",
+      "sha256": "db2585e63489cb5aac8c7a32fd7e522bcbc51035846c05f8cd2794c4449e3dc5"
+    }
+  },
+  "error": "ValueError('no valid background after1000 attempts for positive hash 6f9f84c09a5950e1ea7888f17922a69e5292dcbcb1e682ddfc977a9b4ea1a8c0')",
+  "elapsed_seconds": 8.395189041999402,
+  "peak_rss_bytes": 863846400
+}

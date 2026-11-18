@@ -1,0 +1,9 @@
+{
+  "app": "ap-ge7OQjm7vaJ7kYXwRSWnUH",
+  "status": "completed but scientifically invalid; excluded from all comparisons",
+  "reason": "Global-shuffle preparation mutated source context dictionaries through shared references. Corrected version deep-copies donor contexts and verifies complete context histograms and pair identity.",
+  "preserved_inputs": "results/cohort-v2-global-invalid",
+  "corrected_arm": "shuffled_global_fixed",
+  "log": "launch_logs/fit-global-s42.log",
+  "termination_check": "modal app stop --yes reports already stopped, finished 2026-11-16 14:46:40-05:00"
+}

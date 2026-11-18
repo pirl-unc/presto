@@ -1,0 +1,25 @@
+{
+  "model": {
+    "endpoints": [],
+    "identity_tasks": [
+      "mhc_species"
+    ],
+    "species": [
+      "human",
+      "mouse",
+      "rat",
+      "rhesus_macaque"
+    ]
+  },
+  "schema": "presto.modular.manifest.v1",
+  "sources": [
+    {
+      "label_policy": "one reference species annotation per unique slot/sequence with source aliases; conflicts deferred",
+      "path": "observations.jsonl",
+      "population": "all domains passing the prospectively frozen four-taxon reference contract",
+      "sha256": "5ba2ef6f40b047ddc256c61fb06e802c82bc2a400830a178d44a0a82455ef510",
+      "source": "mhc_reference_domains",
+      "split_policy": "exact-domain and original-reference-chain connected components; fixed SHA25670/15/15; homology independence unverified"
+    }
+  ]
+}

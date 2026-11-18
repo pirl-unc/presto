@@ -13,9 +13,9 @@ from presto.data.vocab import (
     BINDING_ASSAY_READOUT_TO_IDX,
     BINDING_ASSAY_TYPE_TO_IDX,
 )
-from presto.models.presto import Presto
-from presto.scripts.train_iedb import load_records_from_merged_tsv
-from presto.scripts.train_synthetic import compute_loss
+from presto.legacy.presto import Presto
+from presto.legacy.scripts.train_iedb import load_records_from_merged_tsv
+from presto.legacy.scripts.train_synthetic import compute_loss
 
 
 def _load(tmp_path, **fields):

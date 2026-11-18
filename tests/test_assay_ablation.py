@@ -8,7 +8,7 @@ Verifies that each of the 8 ablation variants (a1-a8) can:
 import pytest
 import torch
 
-from presto.scripts.assay_ablation_probe import (
+from presto.legacy.scripts.assay_ablation_probe import (
     build_ablation_model,
     VARIANT_NAMES,
     TYPED_VARIANTS,

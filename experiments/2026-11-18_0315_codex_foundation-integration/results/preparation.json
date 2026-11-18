@@ -1,0 +1,5413 @@
+{
+  "status": "prepared",
+  "test_accessed": false,
+  "contract": {
+    "schema": "presto.presentation-preparation.v1",
+    "files": {
+      "class_I": {
+        "path": "/volume/2026-11-18_0315_codex_foundation-integration/assets/hitlist-I.parquet",
+        "sha256": "9b24906e197df9e1e5e543c14c6d74e36d46ca81d91f512b5b09db539481c827"
+      },
+      "class_II": {
+        "path": "/volume/2026-11-18_0315_codex_foundation-integration/assets/hitlist-II.parquet",
+        "sha256": "41e68d8804f48b85ef4c3cc4f6222105b4ec891bc84dd5036ee9d549faafbc50"
+      },
+      "samples": {
+        "path": "/volume/2026-11-18_0315_codex_foundation-integration/assets/samples.csv",
+        "sha256": "5dbcb45db85eeee0a830562be8d48aae78b0c22979e25683e99b7ab9a27aea79"
+      },
+      "observed": {
+        "path": "/volume/2026-11-18_0315_codex_foundation-integration/assets/observed-identities.parquet",
+        "sha256": "d87abec50c63d533569140579acc6c742045e0bbe5721d67ebec8258107f8836"
+      },
+      "catalog": {
+        "path": "/volume/2026-11-18_0315_codex_foundation-integration/assets/mhc-full-seqs.csv",
+        "sha256": "0e26d38ed0c572692a3486e100272c56bd1134ce74d2b6122fa4be2f4c6b0a82"
+      },
+      "proteins": {
+        "path": "/volume/2026-11-18_0315_codex_foundation-integration/assets/proteins.fa.gz",
+        "sha256": "4f34c86f82caa43b3e0874ae44d9122c73dbf32adb69d1d8fa3bed54817ad6d2"
+      }
+    },
+    "identities": [
+      {
+        "role": "sealed",
+        "path": "/volume/2026-11-18_0315_codex_foundation-integration/assets/sealed-identity-embargo.txt.gz",
+        "sha256": "1cfe25cfc6f3d636e0a49f1359b4eafb5fdf39ea7ec52a541629905c3c68ce57"
+      },
+      {
+        "role": "ancestry",
+        "path": "/__modal/volumes/vo-Q7Gbj9LRF6NTiyKSQvTq9U/2026-11-18_0315_codex_foundation-integration/prepared-identities/ancestry.txt.gz",
+        "sha256": "a2a94484e4f448f75e36fb933e546502dcea99d74c269a2e092ba5fd8661b978",
+        "peptides": 753947
+      },
+      {
+        "role": "fixed_validation",
+        "path": "/__modal/volumes/vo-Q7Gbj9LRF6NTiyKSQvTq9U/2026-11-18_0315_codex_foundation-integration/prepared-identities/fixed_validation.txt.gz",
+        "sha256": "07018e8ae3c39b169515e5717901f236989f97f9a97c6769daf844ea19578ae6",
+        "peptides": 119180
+      }
+    ],
+    "identity_source_manifest": {
+      "path": "/volume/2026-11-18_0315_codex_foundation-integration/assets/identity-sources.json",
+      "sha256": "bdbd3ba8fc8ba9c4d59e378411ba334c511bbfb9d9506ce1a3a11af7202ecb4c"
+    },
+    "ancestry_complete": true,
+    "parent_checkpoint_sha256": "1b6011396a563f52ea1d6da4bb1d4e69b8dbf0103148ba829225581c4d312f68",
+    "corpus_manifest_sha256": "2318bc53cdae228285218991d58fbcc2bd7266327cec1dd3ed9a03b1c944a5b7",
+    "loader_version": "2.1.12",
+    "source_exclusions": [
+      {
+        "pmid": "33592498",
+        "mhc_class": "II",
+        "condition_id_contains": "parental",
+        "reason": "source_reported_untransfected_class_II_control"
+      }
+    ],
+    "derived_identity_receipt_sha256": "3caf36dfafcaca4b57ecca054c9e5b9d77b642746c731f01b5e08505ecdc720e"
+  },
+  "source_policy": "Uncapped native MS; unknown APC and unspecified PTMs remain unknown",
+  "counts": {
+    "source_rows": 4250871,
+    "admitted:I": 509295,
+    "protected_exact:I": 1588911,
+    "protected_shared8mer:I": 350850,
+    "admission:unresolved_candidate_scope:I": 255054,
+    "missing_study": 1991,
+    "admission:unsupported_peptide:I": 217,
+    "protected_hamming1:I": 14048,
+    "admission:modified_peptidoform:I": 69991,
+    "admission:unresolved_catalog_name:I": 11177,
+    "admission:unresolved_sample_genotype:I": 33950,
+    "admission:flagged_contaminant:I": 6574,
+    "protected_shared8mer:II": 724372,
+    "protected_exact:II": 49846,
+    "admission:unresolved_candidate_scope:II": 249779,
+    "admitted:II": 305528,
+    "admission:modified_peptidoform:II": 23145,
+    "protected_hamming1:II": 55,
+    "admission:unsupported_peptide:II": 202,
+    "admission:unresolved_sample_genotype:II": 7714,
+    "admission:missing_explicit_mhc_partner:II": 6998,
+    "admission:predicted_restriction:II": 40971,
+    "source_exclusion:source_reported_untransfected_class_II_control": 203,
+    "junction:unanimous_reference_junction:validation": 2,
+    "unmapped_train_candidate": 79972,
+    "junction:unanimous_reference_junction:train": 246039,
+    "held_source_family": 439151,
+    "junction:ambiguous_reference_junction:train": 49661
+  },
+  "source_files": {
+    "class_I": "9b24906e197df9e1e5e543c14c6d74e36d46ca81d91f512b5b09db539481c827",
+    "class_II": "41e68d8804f48b85ef4c3cc4f6222105b4ec891bc84dd5036ee9d549faafbc50",
+    "samples": "5dbcb45db85eeee0a830562be8d48aae78b0c22979e25683e99b7ab9a27aea79",
+    "observed": "d87abec50c63d533569140579acc6c742045e0bbe5721d67ebec8258107f8836",
+    "catalog": "0e26d38ed0c572692a3486e100272c56bd1134ce74d2b6122fa4be2f4c6b0a82",
+    "proteins": "4f34c86f82caa43b3e0874ae44d9122c73dbf32adb69d1d8fa3bed54817ad6d2"
+  },
+  "admitted_studies": [
+    {
+      "pmid": "10203015",
+      "class": "I",
+      "rows": 3
+    },
+    {
+      "pmid": "10380706",
+      "class": "I",
+      "rows": 1
+    },
+    {
+      "pmid": "10513815",
+      "class": "I",
+      "rows": 13
+    },
+    {
+      "pmid": "10518571",
+      "class": "I",
+      "rows": 3
+    },
+    {
+      "pmid": "10562307",
+      "class": "II",
+      "rows": 32
+    },
+    {
+      "pmid": "10760807",
+      "class": "I",
+      "rows": 3
+    },
+    {
+      "pmid": "10843661",
+      "class": "I",
+      "rows": 1
+    },
+    {
+      "pmid": "11466336",
+      "class": "I",
+      "rows": 1
+    },
+    {
+      "pmid": "11557759",
+      "class": "I",
+      "rows": 7
+    },
+    {
+      "pmid": "11875071",
+      "class": "I",
+      "rows": 5
+    },
+    {
+      "pmid": "12010981",
+      "class": "I",
+      "rows": 3
+    },
+    {
+      "pmid": "12042320",
+      "class": "I",
+      "rows": 9
+    },
+    {
+      "pmid": "12122005",
+      "class": "I",
+      "rows": 3
+    },
+    {
+      "pmid": "12391225",
+      "class": "II",
+      "rows": 34
+    },
+    {
+      "pmid": "12431390",
+      "class": "I",
+      "rows": 4
+    },
+    {
+      "pmid": "12816978",
+      "class": "I",
+      "rows": 4
+    },
+    {
+      "pmid": "12919753",
+      "class": "II",
+      "rows": 1
+    },
+    {
+      "pmid": "12939341",
+      "class": "I",
+      "rows": 10
+    },
+    {
+      "pmid": "1448153",
+      "class": "I",
+      "rows": 1
+    },
+    {
+      "pmid": "14671086",
+      "class": "II",
+      "rows": 1
+    },
+    {
+      "pmid": "14978097",
+      "class": "I",
+      "rows": 25
+    },
+    {
+      "pmid": "15004565",
+      "class": "I",
+      "rows": 8
+    },
+    {
+      "pmid": "15104674",
+      "class": "I",
+      "rows": 56
+    },
+    {
+      "pmid": "15116427",
+      "class": "I",
+      "rows": 1
+    },
+    {
+      "pmid": "15118850",
+      "class": "I",
+      "rows": 9
+    },
+    {
+      "pmid": "15240697",
+      "class": "II",
+      "rows": 64
+    },
+    {
+      "pmid": "15275975",
+      "class": "I",
+      "rows": 2
+    },
+    {
+      "pmid": "15777939",
+      "class": "II",
+      "rows": 11
+    },
+    {
+      "pmid": "15843563",
+      "class": "II",
+      "rows": 10
+    },
+    {
+      "pmid": "15944288",
+      "class": "I",
+      "rows": 25
+    },
+    {
+      "pmid": "16112985",
+      "class": "I",
+      "rows": 7
+    },
+    {
+      "pmid": "16115862",
+      "class": "I",
+      "rows": 14
+    },
+    {
+      "pmid": "16185891",
+      "class": "I",
+      "rows": 3
+    },
+    {
+      "pmid": "17145369",
+      "class": "I",
+      "rows": 17
+    },
+    {
+      "pmid": "17308301",
+      "class": "I",
+      "rows": 1
+    },
+    {
+      "pmid": "17697703",
+      "class": "I",
+      "rows": 24
+    },
+    {
+      "pmid": "17934211",
+      "class": "I",
+      "rows": 3
+    },
+    {
+      "pmid": "17975675",
+      "class": "II",
+      "rows": 31
+    },
+    {
+      "pmid": "18160138",
+      "class": "I",
+      "rows": 22
+    },
+    {
+      "pmid": "18292551",
+      "class": "II",
+      "rows": 67
+    },
+    {
+      "pmid": "18299564",
+      "class": "I",
+      "rows": 5
+    },
+    {
+      "pmid": "18446792",
+      "class": "I",
+      "rows": 7
+    },
+    {
+      "pmid": "18507432",
+      "class": "II",
+      "rows": 74
+    },
+    {
+      "pmid": "18512783",
+      "class": "II",
+      "rows": 118
+    },
+    {
+      "pmid": "18794202",
+      "class": "I",
+      "rows": 1
+    },
+    {
+      "pmid": "18802091",
+      "class": "I",
+      "rows": 6
+    },
+    {
+      "pmid": "18941228",
+      "class": "I",
+      "rows": 11
+    },
+    {
+      "pmid": "18987854",
+      "class": "II",
+      "rows": 4
+    },
+    {
+      "pmid": "18991276",
+      "class": "I",
+      "rows": 111
+    },
+    {
+      "pmid": "19122146",
+      "class": "I",
+      "rows": 13
+    },
+    {
+      "pmid": "19443418",
+      "class": "I",
+      "rows": 3
+    },
+    {
+      "pmid": "19494351",
+      "class": "II",
+      "rows": 4
+    },
+    {
+      "pmid": "19531498",
+      "class": "I",
+      "rows": 3
+    },
+    {
+      "pmid": "19531498",
+      "class": "II",
+      "rows": 36
+    },
+    {
+      "pmid": "19553306",
+      "class": "I",
+      "rows": 4
+    },
+    {
+      "pmid": "19615748",
+      "class": "I",
+      "rows": 118
+    },
+    {
+      "pmid": "19748539",
+      "class": "I",
+      "rows": 13
+    },
+    {
+      "pmid": "20081153",
+      "class": "I",
+      "rows": 10
+    },
+    {
+      "pmid": "20112406",
+      "class": "I",
+      "rows": 352
+    },
+    {
+      "pmid": "20220067",
+      "class": "I",
+      "rows": 21
+    },
+    {
+      "pmid": "20707881",
+      "class": "I",
+      "rows": 2
+    },
+    {
+      "pmid": "20934997",
+      "class": "I",
+      "rows": 92
+    },
+    {
+      "pmid": "21037588",
+      "class": "II",
+      "rows": 11
+    },
+    {
+      "pmid": "21136679",
+      "class": "I",
+      "rows": 1
+    },
+    {
+      "pmid": "21209280",
+      "class": "I",
+      "rows": 30
+    },
+    {
+      "pmid": "21654843",
+      "class": "II",
+      "rows": 196
+    },
+    {
+      "pmid": "21872626",
+      "class": "I",
+      "rows": 38
+    },
+    {
+      "pmid": "21993680",
+      "class": "I",
+      "rows": 25
+    },
+    {
+      "pmid": "22009320",
+      "class": "I",
+      "rows": 9
+    },
+    {
+      "pmid": "22031944",
+      "class": "I",
+      "rows": 11
+    },
+    {
+      "pmid": "22235280",
+      "class": "I",
+      "rows": 2
+    },
+    {
+      "pmid": "22246683",
+      "class": "I",
+      "rows": 5
+    },
+    {
+      "pmid": "22299025",
+      "class": "II",
+      "rows": 8
+    },
+    {
+      "pmid": "22424782",
+      "class": "I",
+      "rows": 85
+    },
+    {
+      "pmid": "22522618",
+      "class": "I",
+      "rows": 1
+    },
+    {
+      "pmid": "22544926",
+      "class": "I",
+      "rows": 74
+    },
+    {
+      "pmid": "22617051",
+      "class": "I",
+      "rows": 7
+    },
+    {
+      "pmid": "22645359",
+      "class": "I",
+      "rows": 281
+    },
+    {
+      "pmid": "22706990",
+      "class": "I",
+      "rows": 84
+    },
+    {
+      "pmid": "22722860",
+      "class": "I",
+      "rows": 4
+    },
+    {
+      "pmid": "23372163",
+      "class": "II",
+      "rows": 8
+    },
+    {
+      "pmid": "23430249",
+      "class": "I",
+      "rows": 2
+    },
+    {
+      "pmid": "23475216",
+      "class": "I",
+      "rows": 17
+    },
+    {
+      "pmid": "23481700",
+      "class": "I",
+      "rows": 2858
+    },
+    {
+      "pmid": "23543059",
+      "class": "I",
+      "rows": 167
+    },
+    {
+      "pmid": "23555621",
+      "class": "I",
+      "rows": 40
+    },
+    {
+      "pmid": "23646949",
+      "class": "I",
+      "rows": 25
+    },
+    {
+      "pmid": "23719902",
+      "class": "II",
+      "rows": 179
+    },
+    {
+      "pmid": "23739916",
+      "class": "II",
+      "rows": 23
+    },
+    {
+      "pmid": "23762485",
+      "class": "I",
+      "rows": 5
+    },
+    {
+      "pmid": "23783831",
+      "class": "I",
+      "rows": 13
+    },
+    {
+      "pmid": "23867464",
+      "class": "I",
+      "rows": 3
+    },
+    {
+      "pmid": "24029068",
+      "class": "I",
+      "rows": 13
+    },
+    {
+      "pmid": "24108701",
+      "class": "II",
+      "rows": 7
+    },
+    {
+      "pmid": "24366607",
+      "class": "I",
+      "rows": 790
+    },
+    {
+      "pmid": "24397554",
+      "class": "I",
+      "rows": 90
+    },
+    {
+      "pmid": "24714562",
+      "class": "I",
+      "rows": 724
+    },
+    {
+      "pmid": "24971174",
+      "class": "I",
+      "rows": 13
+    },
+    {
+      "pmid": "25135637",
+      "class": "II",
+      "rows": 1
+    },
+    {
+      "pmid": "25418920",
+      "class": "I",
+      "rows": 4965
+    },
+    {
+      "pmid": "25469497",
+      "class": "I",
+      "rows": 89
+    },
+    {
+      "pmid": "25502872",
+      "class": "II",
+      "rows": 8558
+    },
+    {
+      "pmid": "25505266",
+      "class": "I",
+      "rows": 523
+    },
+    {
+      "pmid": "25516468",
+      "class": "II",
+      "rows": 12
+    },
+    {
+      "pmid": "25548167",
+      "class": "I",
+      "rows": 45
+    },
+    {
+      "pmid": "25576301",
+      "class": "I",
+      "rows": 5218
+    },
+    {
+      "pmid": "25576336",
+      "class": "I",
+      "rows": 21
+    },
+    {
+      "pmid": "25645385",
+      "class": "I",
+      "rows": 2269
+    },
+    {
+      "pmid": "25646416",
+      "class": "I",
+      "rows": 12
+    },
+    {
+      "pmid": "25802875",
+      "class": "I",
+      "rows": 125
+    },
+    {
+      "pmid": "25810538",
+      "class": "I",
+      "rows": 308
+    },
+    {
+      "pmid": "25837513",
+      "class": "I",
+      "rows": 8
+    },
+    {
+      "pmid": "25880248",
+      "class": "I",
+      "rows": 1200
+    },
+    {
+      "pmid": "25892735",
+      "class": "I",
+      "rows": 2121
+    },
+    {
+      "pmid": "26024233",
+      "class": "I",
+      "rows": 71
+    },
+    {
+      "pmid": "26041704",
+      "class": "II",
+      "rows": 6
+    },
+    {
+      "pmid": "26154972",
+      "class": "I",
+      "rows": 99
+    },
+    {
+      "pmid": "26261890",
+      "class": "I",
+      "rows": 2
+    },
+    {
+      "pmid": "26360328",
+      "class": "I",
+      "rows": 401
+    },
+    {
+      "pmid": "26375851",
+      "class": "I",
+      "rows": 709
+    },
+    {
+      "pmid": "26579122",
+      "class": "I",
+      "rows": 59
+    },
+    {
+      "pmid": "26707565",
+      "class": "II",
+      "rows": 14
+    },
+    {
+      "pmid": "26718497",
+      "class": "II",
+      "rows": 4
+    },
+    {
+      "pmid": "26728094",
+      "class": "I",
+      "rows": 379
+    },
+    {
+      "pmid": "26740625",
+      "class": "II",
+      "rows": 1961
+    },
+    {
+      "pmid": "26754738",
+      "class": "I",
+      "rows": 10
+    },
+    {
+      "pmid": "26758079",
+      "class": "I",
+      "rows": 114
+    },
+    {
+      "pmid": "26768311",
+      "class": "I",
+      "rows": 653
+    },
+    {
+      "pmid": "26783342",
+      "class": "I",
+      "rows": 5205
+    },
+    {
+      "pmid": "26811146",
+      "class": "I",
+      "rows": 749
+    },
+    {
+      "pmid": "26824387",
+      "class": "I",
+      "rows": 176
+    },
+    {
+      "pmid": "26929215",
+      "class": "I",
+      "rows": 436
+    },
+    {
+      "pmid": "26992070",
+      "class": "I",
+      "rows": 3640
+    },
+    {
+      "pmid": "27058226",
+      "class": "I",
+      "rows": 12
+    },
+    {
+      "pmid": "27090790",
+      "class": "II",
+      "rows": 3
+    },
+    {
+      "pmid": "27397612",
+      "class": "I",
+      "rows": 131
+    },
+    {
+      "pmid": "27452731",
+      "class": "II",
+      "rows": 222
+    },
+    {
+      "pmid": "27503676",
+      "class": "I",
+      "rows": 6
+    },
+    {
+      "pmid": "27543614",
+      "class": "I",
+      "rows": 119
+    },
+    {
+      "pmid": "27600516",
+      "class": "I",
+      "rows": 108
+    },
+    {
+      "pmid": "27841757",
+      "class": "I",
+      "rows": 4926
+    },
+    {
+      "pmid": "27846572",
+      "class": "I",
+      "rows": 1724
+    },
+    {
+      "pmid": "27861808",
+      "class": "II",
+      "rows": 11
+    },
+    {
+      "pmid": "27862975",
+      "class": "I",
+      "rows": 777
+    },
+    {
+      "pmid": "27869121",
+      "class": "I",
+      "rows": 109
+    },
+    {
+      "pmid": "27920218",
+      "class": "I",
+      "rows": 4866
+    },
+    {
+      "pmid": "28063628",
+      "class": "I",
+      "rows": 1303
+    },
+    {
+      "pmid": "28159928",
+      "class": "I",
+      "rows": 4
+    },
+    {
+      "pmid": "28188227",
+      "class": "I",
+      "rows": 38613
+    },
+    {
+      "pmid": "28218747",
+      "class": "I",
+      "rows": 5607
+    },
+    {
+      "pmid": "28228285",
+      "class": "I",
+      "rows": 5936
+    },
+    {
+      "pmid": "28254787",
+      "class": "I",
+      "rows": 22
+    },
+    {
+      "pmid": "28329770",
+      "class": "II",
+      "rows": 2
+    },
+    {
+      "pmid": "28352266",
+      "class": "I",
+      "rows": 11
+    },
+    {
+      "pmid": "28422163",
+      "class": "II",
+      "rows": 26
+    },
+    {
+      "pmid": "28446606",
+      "class": "I",
+      "rows": 154
+    },
+    {
+      "pmid": "28489076",
+      "class": "II",
+      "rows": 20
+    },
+    {
+      "pmid": "28514659",
+      "class": "I",
+      "rows": 3619
+    },
+    {
+      "pmid": "28649982",
+      "class": "I",
+      "rows": 830
+    },
+    {
+      "pmid": "28811980",
+      "class": "I",
+      "rows": 6
+    },
+    {
+      "pmid": "28819312",
+      "class": "II",
+      "rows": 305
+    },
+    {
+      "pmid": "28834231",
+      "class": "I",
+      "rows": 3053
+    },
+    {
+      "pmid": "28855257",
+      "class": "I",
+      "rows": 1097
+    },
+    {
+      "pmid": "28860189",
+      "class": "I",
+      "rows": 22
+    },
+    {
+      "pmid": "28871256",
+      "class": "II",
+      "rows": 238
+    },
+    {
+      "pmid": "28904123",
+      "class": "I",
+      "rows": 9348
+    },
+    {
+      "pmid": "29093164",
+      "class": "I",
+      "rows": 53
+    },
+    {
+      "pmid": "29308320",
+      "class": "I",
+      "rows": 17
+    },
+    {
+      "pmid": "29314611",
+      "class": "II",
+      "rows": 46
+    },
+    {
+      "pmid": "29317506",
+      "class": "II",
+      "rows": 948
+    },
+    {
+      "pmid": "29331515",
+      "class": "I",
+      "rows": 637
+    },
+    {
+      "pmid": "29371260",
+      "class": "I",
+      "rows": 34
+    },
+    {
+      "pmid": "29393594",
+      "class": "I",
+      "rows": 15162
+    },
+    {
+      "pmid": "29435138",
+      "class": "I",
+      "rows": 11
+    },
+    {
+      "pmid": "29437277",
+      "class": "I",
+      "rows": 3458
+    },
+    {
+      "pmid": "29507109",
+      "class": "II",
+      "rows": 6
+    },
+    {
+      "pmid": "29508533",
+      "class": "I",
+      "rows": 498
+    },
+    {
+      "pmid": "29603667",
+      "class": "I",
+      "rows": 17
+    },
+    {
+      "pmid": "29632046",
+      "class": "I",
+      "rows": 4125
+    },
+    {
+      "pmid": "29769354",
+      "class": "I",
+      "rows": 1827
+    },
+    {
+      "pmid": "29774024",
+      "class": "II",
+      "rows": 110
+    },
+    {
+      "pmid": "29789417",
+      "class": "I",
+      "rows": 3
+    },
+    {
+      "pmid": "29974988",
+      "class": "II",
+      "rows": 7
+    },
+    {
+      "pmid": "30001391",
+      "class": "I",
+      "rows": 16
+    },
+    {
+      "pmid": "30078552",
+      "class": "I",
+      "rows": 77
+    },
+    {
+      "pmid": "30114007",
+      "class": "I",
+      "rows": 17
+    },
+    {
+      "pmid": "30128813",
+      "class": "I",
+      "rows": 6
+    },
+    {
+      "pmid": "30192525",
+      "class": "I",
+      "rows": 1409
+    },
+    {
+      "pmid": "30315122",
+      "class": "I",
+      "rows": 21836
+    },
+    {
+      "pmid": "30410026",
+      "class": "I",
+      "rows": 3561
+    },
+    {
+      "pmid": "30484775",
+      "class": "I",
+      "rows": 370
+    },
+    {
+      "pmid": "30524438",
+      "class": "I",
+      "rows": 1182
+    },
+    {
+      "pmid": "30568303",
+      "class": "I",
+      "rows": 9
+    },
+    {
+      "pmid": "30573663",
+      "class": "II",
+      "rows": 3024
+    },
+    {
+      "pmid": "30626607",
+      "class": "II",
+      "rows": 488
+    },
+    {
+      "pmid": "30629447",
+      "class": "II",
+      "rows": 14
+    },
+    {
+      "pmid": "30778243",
+      "class": "I",
+      "rows": 44
+    },
+    {
+      "pmid": "30784271",
+      "class": "I",
+      "rows": 1
+    },
+    {
+      "pmid": "30817223",
+      "class": "I",
+      "rows": 15
+    },
+    {
+      "pmid": "30833945",
+      "class": "I",
+      "rows": 1494
+    },
+    {
+      "pmid": "30912293",
+      "class": "I",
+      "rows": 24
+    },
+    {
+      "pmid": "31020640",
+      "class": "II",
+      "rows": 657
+    },
+    {
+      "pmid": "31039795",
+      "class": "I",
+      "rows": 11
+    },
+    {
+      "pmid": "31092671",
+      "class": "I",
+      "rows": 815
+    },
+    {
+      "pmid": "31217245",
+      "class": "I",
+      "rows": 5250
+    },
+    {
+      "pmid": "31276466",
+      "class": "I",
+      "rows": 67
+    },
+    {
+      "pmid": "31276466",
+      "class": "II",
+      "rows": 5
+    },
+    {
+      "pmid": "31495665",
+      "class": "I",
+      "rows": 2709
+    },
+    {
+      "pmid": "31495665",
+      "class": "II",
+      "rows": 18539
+    },
+    {
+      "pmid": "31527070",
+      "class": "I",
+      "rows": 8
+    },
+    {
+      "pmid": "31530632",
+      "class": "I",
+      "rows": 4704
+    },
+    {
+      "pmid": "31540894",
+      "class": "I",
+      "rows": 2
+    },
+    {
+      "pmid": "31556206",
+      "class": "II",
+      "rows": 2035
+    },
+    {
+      "pmid": "31844290",
+      "class": "I",
+      "rows": 64211
+    },
+    {
+      "pmid": "31869419",
+      "class": "I",
+      "rows": 389
+    },
+    {
+      "pmid": "31873306",
+      "class": "II",
+      "rows": 4
+    },
+    {
+      "pmid": "31908851",
+      "class": "I",
+      "rows": 43
+    },
+    {
+      "pmid": "31908851",
+      "class": "II",
+      "rows": 50
+    },
+    {
+      "pmid": "31998317",
+      "class": "I",
+      "rows": 756
+    },
+    {
+      "pmid": "32161166",
+      "class": "I",
+      "rows": 5742
+    },
+    {
+      "pmid": "32162841",
+      "class": "II",
+      "rows": 12
+    },
+    {
+      "pmid": "32218997",
+      "class": "II",
+      "rows": 402
+    },
+    {
+      "pmid": "32265295",
+      "class": "I",
+      "rows": 2807
+    },
+    {
+      "pmid": "32357974",
+      "class": "I",
+      "rows": 10529
+    },
+    {
+      "pmid": "32387766",
+      "class": "I",
+      "rows": 16790
+    },
+    {
+      "pmid": "32488085",
+      "class": "I",
+      "rows": 3236
+    },
+    {
+      "pmid": "32502341",
+      "class": "I",
+      "rows": 3277
+    },
+    {
+      "pmid": "32561536",
+      "class": "I",
+      "rows": 5497
+    },
+    {
+      "pmid": "32897882",
+      "class": "I",
+      "rows": 4106
+    },
+    {
+      "pmid": "32938616",
+      "class": "I",
+      "rows": 31502
+    },
+    {
+      "pmid": "32983136",
+      "class": "I",
+      "rows": 740
+    },
+    {
+      "pmid": "33091337",
+      "class": "II",
+      "rows": 886
+    },
+    {
+      "pmid": "33123756",
+      "class": "I",
+      "rows": 173
+    },
+    {
+      "pmid": "33141586",
+      "class": "I",
+      "rows": 1829
+    },
+    {
+      "pmid": "33238185",
+      "class": "I",
+      "rows": 6
+    },
+    {
+      "pmid": "33298915",
+      "class": "I",
+      "rows": 9837
+    },
+    {
+      "pmid": "33392160",
+      "class": "I",
+      "rows": 800
+    },
+    {
+      "pmid": "33537174",
+      "class": "I",
+      "rows": 292
+    },
+    {
+      "pmid": "33592498",
+      "class": "I",
+      "rows": 4413
+    },
+    {
+      "pmid": "33592498",
+      "class": "II",
+      "rows": 19472
+    },
+    {
+      "pmid": "33633747",
+      "class": "I",
+      "rows": 724
+    },
+    {
+      "pmid": "33691108",
+      "class": "I",
+      "rows": 1147
+    },
+    {
+      "pmid": "33731925",
+      "class": "I",
+      "rows": 713
+    },
+    {
+      "pmid": "33731925",
+      "class": "II",
+      "rows": 322
+    },
+    {
+      "pmid": "33858848",
+      "class": "I",
+      "rows": 30775
+    },
+    {
+      "pmid": "33858848",
+      "class": "II",
+      "rows": 75518
+    },
+    {
+      "pmid": "33912179",
+      "class": "I",
+      "rows": 10640
+    },
+    {
+      "pmid": "33968037",
+      "class": "I",
+      "rows": 15248
+    },
+    {
+      "pmid": "34006841",
+      "class": "I",
+      "rows": 124
+    },
+    {
+      "pmid": "34093574",
+      "class": "I",
+      "rows": 9
+    },
+    {
+      "pmid": "34166618",
+      "class": "I",
+      "rows": 97
+    },
+    {
+      "pmid": "34211107",
+      "class": "I",
+      "rows": 484
+    },
+    {
+      "pmid": "34405274",
+      "class": "I",
+      "rows": 389
+    },
+    {
+      "pmid": "34433824",
+      "class": "II",
+      "rows": 2675
+    },
+    {
+      "pmid": "34509645",
+      "class": "I",
+      "rows": 5139
+    },
+    {
+      "pmid": "34561969",
+      "class": "I",
+      "rows": 3285
+    },
+    {
+      "pmid": "34638844",
+      "class": "I",
+      "rows": 62
+    },
+    {
+      "pmid": "34725257",
+      "class": "I",
+      "rows": 5
+    },
+    {
+      "pmid": "35051231",
+      "class": "I",
+      "rows": 1765
+    },
+    {
+      "pmid": "35051231",
+      "class": "II",
+      "rows": 32
+    },
+    {
+      "pmid": "35080970",
+      "class": "I",
+      "rows": 7
+    },
+    {
+      "pmid": "35154160",
+      "class": "II",
+      "rows": 12750
+    },
+    {
+      "pmid": "35251023",
+      "class": "II",
+      "rows": 21632
+    },
+    {
+      "pmid": "35255101",
+      "class": "I",
+      "rows": 232
+    },
+    {
+      "pmid": "35298559",
+      "class": "I",
+      "rows": 1
+    },
+    {
+      "pmid": "35318648",
+      "class": "I",
+      "rows": 1267
+    },
+    {
+      "pmid": "35379743",
+      "class": "I",
+      "rows": 4
+    },
+    {
+      "pmid": "35474673",
+      "class": "I",
+      "rows": 10
+    },
+    {
+      "pmid": "35484264",
+      "class": "I",
+      "rows": 5
+    },
+    {
+      "pmid": "35526384",
+      "class": "I",
+      "rows": 112
+    },
+    {
+      "pmid": "35561310",
+      "class": "I",
+      "rows": 255
+    },
+    {
+      "pmid": "35561310",
+      "class": "II",
+      "rows": 337
+    },
+    {
+      "pmid": "35580925",
+      "class": "I",
+      "rows": 19018
+    },
+    {
+      "pmid": "35623660",
+      "class": "I",
+      "rows": 470
+    },
+    {
+      "pmid": "35728869",
+      "class": "I",
+      "rows": 8
+    },
+    {
+      "pmid": "35878026",
+      "class": "I",
+      "rows": 14
+    },
+    {
+      "pmid": "36010968",
+      "class": "I",
+      "rows": 2240
+    },
+    {
+      "pmid": "36215666",
+      "class": "II",
+      "rows": 3304
+    },
+    {
+      "pmid": "36241641",
+      "class": "I",
+      "rows": 2397
+    },
+    {
+      "pmid": "36589698",
+      "class": "I",
+      "rows": 19
+    },
+    {
+      "pmid": "36605211",
+      "class": "II",
+      "rows": 1453
+    },
+    {
+      "pmid": "37301199",
+      "class": "II",
+      "rows": 128207
+    },
+    {
+      "pmid": "37662941",
+      "class": "I",
+      "rows": 120
+    },
+    {
+      "pmid": "37938771",
+      "class": "I",
+      "rows": 7
+    },
+    {
+      "pmid": "38117652",
+      "class": "II",
+      "rows": 275
+    },
+    {
+      "pmid": "38412034",
+      "class": "II",
+      "rows": 1
+    },
+    {
+      "pmid": "38446892",
+      "class": "I",
+      "rows": 15
+    },
+    {
+      "pmid": "38480730",
+      "class": "I",
+      "rows": 14882
+    },
+    {
+      "pmid": "38920720",
+      "class": "I",
+      "rows": 37
+    },
+    {
+      "pmid": "39111711",
+      "class": "I",
+      "rows": 3
+    },
+    {
+      "pmid": "39394480",
+      "class": "I",
+      "rows": 4
+    },
+    {
+      "pmid": "40113210",
+      "class": "I",
+      "rows": 42619
+    },
+    {
+      "pmid": "7594476",
+      "class": "I",
+      "rows": 1
+    },
+    {
+      "pmid": "7865457",
+      "class": "II",
+      "rows": 10
+    },
+    {
+      "pmid": "7878657",
+      "class": "I",
+      "rows": 1
+    },
+    {
+      "pmid": "8760827",
+      "class": "I",
+      "rows": 1
+    },
+    {
+      "pmid": "8892091",
+      "class": "II",
+      "rows": 2
+    },
+    {
+      "pmid": "8981922",
+      "class": "I",
+      "rows": 2
+    },
+    {
+      "pmid": "9045906",
+      "class": "I",
+      "rows": 1
+    },
+    {
+      "pmid": "9177214",
+      "class": "I",
+      "rows": 1
+    },
+    {
+      "pmid": "9321428",
+      "class": "II",
+      "rows": 1
+    },
+    {
+      "pmid": "9366419",
+      "class": "II",
+      "rows": 2
+    },
+    {
+      "pmid": "9382929",
+      "class": "I",
+      "rows": 3
+    },
+    {
+      "pmid": "9751018",
+      "class": "I",
+      "rows": 1
+    },
+    {
+      "pmid": "9823325",
+      "class": "I",
+      "rows": 1
+    }
+  ],
+  "unique_admitted_peptides": 441657,
+  "conflicting_original_ids": 0,
+  "stage": "complete",
+  "seconds": 1646.6648741959998,
+  "mapped_unique_admitted_peptides": 382941,
+  "reference_proteins": 107341,
+  "reference_families": 9364,
+  "historical_train_families": 9085,
+  "fixed_validation_families": 1714,
+  "new_validation_candidate_peptides": 2,
+  "census": [
+    {
+      "split": "train",
+      "study": "10203015",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 1
+    },
+    {
+      "split": "train",
+      "study": "10513815",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 1
+    },
+    {
+      "split": "train",
+      "study": "11875071",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 2
+    },
+    {
+      "split": "train",
+      "study": "12042320",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 2
+    },
+    {
+      "split": "train",
+      "study": "12391225",
+      "class": "II",
+      "condition": "",
+      "positive_pairs": 17
+    },
+    {
+      "split": "train",
+      "study": "12816978",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 1
+    },
+    {
+      "split": "train",
+      "study": "12939341",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 2
+    },
+    {
+      "split": "train",
+      "study": "14978097",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 9
+    },
+    {
+      "split": "train",
+      "study": "15004565",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 3
+    },
+    {
+      "split": "train",
+      "study": "15104674",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 10
+    },
+    {
+      "split": "train",
+      "study": "15118850",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 3
+    },
+    {
+      "split": "train",
+      "study": "15240697",
+      "class": "II",
+      "condition": "",
+      "positive_pairs": 3
+    },
+    {
+      "split": "train",
+      "study": "15275975",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 1
+    },
+    {
+      "split": "train",
+      "study": "15944288",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 9
+    },
+    {
+      "split": "train",
+      "study": "16112985",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 2
+    },
+    {
+      "split": "train",
+      "study": "16115862",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 4
+    },
+    {
+      "split": "train",
+      "study": "17145369",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 8
+    },
+    {
+      "split": "train",
+      "study": "17308301",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 1
+    },
+    {
+      "split": "train",
+      "study": "17697703",
+      "class": "I",
+      "condition": "c1r_soluble_hla_b_15_02",
+      "positive_pairs": 10
+    },
+    {
+      "split": "train",
+      "study": "17975675",
+      "class": "II",
+      "condition": "",
+      "positive_pairs": 13
+    },
+    {
+      "split": "train",
+      "study": "18160138",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 6
+    },
+    {
+      "split": "train",
+      "study": "18292551",
+      "class": "II",
+      "condition": "",
+      "positive_pairs": 30
+    },
+    {
+      "split": "train",
+      "study": "18446792",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 3
+    },
+    {
+      "split": "train",
+      "study": "18507432",
+      "class": "II",
+      "condition": "",
+      "positive_pairs": 30
+    },
+    {
+      "split": "train",
+      "study": "18512783",
+      "class": "II",
+      "condition": "ben_dr10_ebv_lcl",
+      "positive_pairs": 51
+    },
+    {
+      "split": "train",
+      "study": "18802091",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 1
+    },
+    {
+      "split": "train",
+      "study": "18991276",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 41
+    },
+    {
+      "split": "train",
+      "study": "19531498",
+      "class": "II",
+      "condition": "",
+      "positive_pairs": 11
+    },
+    {
+      "split": "train",
+      "study": "19615748",
+      "class": "I",
+      "condition": "mcf_7_breast_carcinoma",
+      "positive_pairs": 20
+    },
+    {
+      "split": "train",
+      "study": "19615748",
+      "class": "I",
+      "condition": "panc_1_pancreatic_carcinoma",
+      "positive_pairs": 25
+    },
+    {
+      "split": "train",
+      "study": "19748539",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 4
+    },
+    {
+      "split": "train",
+      "study": "20112406",
+      "class": "I",
+      "condition": "soluble_hla_b_27_05_chondrocytic_hela_producer",
+      "positive_pairs": 153
+    },
+    {
+      "split": "train",
+      "study": "20220067",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 3
+    },
+    {
+      "split": "train",
+      "study": "20934997",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 22
+    },
+    {
+      "split": "train",
+      "study": "21136679",
+      "class": "I",
+      "condition": "sk_hep_1_liver_neoplasm_endothelial_origin",
+      "positive_pairs": 1
+    },
+    {
+      "split": "train",
+      "study": "21209280",
+      "class": "I",
+      "condition": "transfected_cells_expressing_patr_al",
+      "positive_pairs": 7
+    },
+    {
+      "split": "train",
+      "study": "21654843",
+      "class": "II",
+      "condition": "dr8_homozygous_ebv_lcl",
+      "positive_pairs": 75
+    },
+    {
+      "split": "train",
+      "study": "21872626",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 17
+    },
+    {
+      "split": "train",
+      "study": "21993680",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 10
+    },
+    {
+      "split": "train",
+      "study": "22009320",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 5
+    },
+    {
+      "split": "train",
+      "study": "22299025",
+      "class": "II",
+      "condition": "",
+      "positive_pairs": 3
+    },
+    {
+      "split": "train",
+      "study": "22424782",
+      "class": "I",
+      "condition": "secreted_hla_a_02_01_shla",
+      "positive_pairs": 44
+    },
+    {
+      "split": "train",
+      "study": "22544926",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 31
+    },
+    {
+      "split": "train",
+      "study": "22617051",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 1
+    },
+    {
+      "split": "train",
+      "study": "22645359",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 114
+    },
+    {
+      "split": "train",
+      "study": "22706990",
+      "class": "I",
+      "condition": "721_221_transfectant_hla_b_44_09",
+      "positive_pairs": 29
+    },
+    {
+      "split": "train",
+      "study": "22722860",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 1
+    },
+    {
+      "split": "train",
+      "study": "23372163",
+      "class": "II",
+      "condition": "",
+      "positive_pairs": 8
+    },
+    {
+      "split": "train",
+      "study": "23430249",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 1
+    },
+    {
+      "split": "train",
+      "study": "23475216",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 2
+    },
+    {
+      "split": "train",
+      "study": "23481700",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 591
+    },
+    {
+      "split": "train",
+      "study": "23481700",
+      "class": "I",
+      "condition": "hhc_ebv_lcl",
+      "positive_pairs": 405
+    },
+    {
+      "split": "train",
+      "study": "23555621",
+      "class": "I",
+      "condition": "t2_hla_a_02_01_native",
+      "positive_pairs": 10
+    },
+    {
+      "split": "train",
+      "study": "23555621",
+      "class": "I",
+      "condition": "t2_hla_b_27_05_transfectant",
+      "positive_pairs": 11
+    },
+    {
+      "split": "train",
+      "study": "23646949",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 4
+    },
+    {
+      "split": "train",
+      "study": "23719902",
+      "class": "II",
+      "condition": "",
+      "positive_pairs": 88
+    },
+    {
+      "split": "train",
+      "study": "23739916",
+      "class": "II",
+      "condition": "bls_dr2a_drb5_01_01",
+      "positive_pairs": 1
+    },
+    {
+      "split": "train",
+      "study": "23739916",
+      "class": "II",
+      "condition": "bls_dr2b_drb1_15_01",
+      "positive_pairs": 5
+    },
+    {
+      "split": "train",
+      "study": "23783831",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 2
+    },
+    {
+      "split": "train",
+      "study": "24029068",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 4
+    },
+    {
+      "split": "train",
+      "study": "24108701",
+      "class": "II",
+      "condition": "",
+      "positive_pairs": 7
+    },
+    {
+      "split": "train",
+      "study": "24366607",
+      "class": "I",
+      "condition": "c1r_hla_b_40_02",
+      "positive_pairs": 331
+    },
+    {
+      "split": "train",
+      "study": "24397554",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 35
+    },
+    {
+      "split": "train",
+      "study": "24714562",
+      "class": "I",
+      "condition": "ebv_lcls_from_mhc_identical_siblings",
+      "positive_pairs": 286
+    },
+    {
+      "split": "train",
+      "study": "25418920",
+      "class": "I",
+      "condition": "c1r_hla_b_27_02",
+      "positive_pairs": 463
+    },
+    {
+      "split": "train",
+      "study": "25418920",
+      "class": "I",
+      "condition": "c1r_hla_b_27_03",
+      "positive_pairs": 95
+    },
+    {
+      "split": "train",
+      "study": "25418920",
+      "class": "I",
+      "condition": "c1r_hla_b_27_04",
+      "positive_pairs": 181
+    },
+    {
+      "split": "train",
+      "study": "25418920",
+      "class": "I",
+      "condition": "c1r_hla_b_27_05",
+      "positive_pairs": 216
+    },
+    {
+      "split": "train",
+      "study": "25418920",
+      "class": "I",
+      "condition": "c1r_hla_b_27_06",
+      "positive_pairs": 184
+    },
+    {
+      "split": "train",
+      "study": "25418920",
+      "class": "I",
+      "condition": "c1r_hla_b_27_07",
+      "positive_pairs": 312
+    },
+    {
+      "split": "train",
+      "study": "25418920",
+      "class": "I",
+      "condition": "c1r_hla_b_27_08",
+      "positive_pairs": 332
+    },
+    {
+      "split": "train",
+      "study": "25418920",
+      "class": "I",
+      "condition": "c1r_hla_b_27_09",
+      "positive_pairs": 331
+    },
+    {
+      "split": "train",
+      "study": "25469497",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 42
+    },
+    {
+      "split": "train",
+      "study": "25502872",
+      "class": "II",
+      "condition": "ebv_lcls_dq2_5_dq2_2_dq7_5",
+      "positive_pairs": 4253
+    },
+    {
+      "split": "train",
+      "study": "25505266",
+      "class": "I",
+      "condition": "ebv_lcl_hla_a_02_01_donor",
+      "positive_pairs": 197
+    },
+    {
+      "split": "train",
+      "study": "25516468",
+      "class": "II",
+      "condition": "",
+      "positive_pairs": 12
+    },
+    {
+      "split": "train",
+      "study": "25548167",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 8
+    },
+    {
+      "split": "train",
+      "study": "25576301",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 1
+    },
+    {
+      "split": "train",
+      "study": "25576301",
+      "class": "I",
+      "condition": "fib_primary_fibroblasts",
+      "positive_pairs": 460
+    },
+    {
+      "split": "train",
+      "study": "25576301",
+      "class": "I",
+      "condition": "hcc1143_basal_like_breast_cancer",
+      "positive_pairs": 896
+    },
+    {
+      "split": "train",
+      "study": "25576301",
+      "class": "I",
+      "condition": "hcc1937_basal_like_breast_cancer_brca1_mutant",
+      "positive_pairs": 2
+    },
+    {
+      "split": "train",
+      "study": "25576301",
+      "class": "I",
+      "condition": "hct116_colorectal_carcinoma",
+      "positive_pairs": 602
+    },
+    {
+      "split": "train",
+      "study": "25576336",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 5
+    },
+    {
+      "split": "train",
+      "study": "25645385",
+      "class": "I",
+      "condition": "melanoma_cell_lines_3_lines",
+      "positive_pairs": 603
+    },
+    {
+      "split": "train",
+      "study": "25802875",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 54
+    },
+    {
+      "split": "train",
+      "study": "25810538",
+      "class": "I",
+      "condition": "jurkat_mva_hivconsv",
+      "positive_pairs": 47
+    },
+    {
+      "split": "train",
+      "study": "25880248",
+      "class": "I",
+      "condition": "c1r_hla_a_01_01",
+      "positive_pairs": 498
+    },
+    {
+      "split": "train",
+      "study": "25892735",
+      "class": "I",
+      "condition": "c1r_hla_a_29_02_erap1_variant_comparison",
+      "positive_pairs": 823
+    },
+    {
+      "split": "train",
+      "study": "26024233",
+      "class": "I",
+      "condition": "c1r_b57_transfectant_hla_b_57_01",
+      "positive_pairs": 25
+    },
+    {
+      "split": "train",
+      "study": "26154972",
+      "class": "I",
+      "condition": "multiple_cell_lines_jy_b721_221_etc",
+      "positive_pairs": 30
+    },
+    {
+      "split": "train",
+      "study": "26154972",
+      "class": "I",
+      "condition": "primary_pbmcs_healthy_donors",
+      "positive_pairs": 4
+    },
+    {
+      "split": "train",
+      "study": "26360328",
+      "class": "I",
+      "condition": "721_221_transfectant_hla_b_51_01",
+      "positive_pairs": 159
+    },
+    {
+      "split": "train",
+      "study": "26375851",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 289
+    },
+    {
+      "split": "train",
+      "study": "26728094",
+      "class": "I",
+      "condition": "ebv_lcls",
+      "positive_pairs": 113
+    },
+    {
+      "split": "train",
+      "study": "26740625",
+      "class": "II",
+      "condition": "dcs_from_lymph_nodes_hla_dr1_transgenic_mouse",
+      "positive_pairs": 202
+    },
+    {
+      "split": "train",
+      "study": "26754738",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 3
+    },
+    {
+      "split": "train",
+      "study": "26758079",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 46
+    },
+    {
+      "split": "train",
+      "study": "26768311",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 146
+    },
+    {
+      "split": "train",
+      "study": "26783342",
+      "class": "I",
+      "condition": "hela_shla_hla_a_01_01",
+      "positive_pairs": 275
+    },
+    {
+      "split": "train",
+      "study": "26783342",
+      "class": "I",
+      "condition": "hela_shla_hla_a_02_01",
+      "positive_pairs": 490
+    },
+    {
+      "split": "train",
+      "study": "26783342",
+      "class": "I",
+      "condition": "hela_shla_hla_a_24_02",
+      "positive_pairs": 485
+    },
+    {
+      "split": "train",
+      "study": "26783342",
+      "class": "I",
+      "condition": "hela_shla_hla_b_07_02",
+      "positive_pairs": 357
+    },
+    {
+      "split": "train",
+      "study": "26783342",
+      "class": "I",
+      "condition": "hela_shla_hla_b_51_01",
+      "positive_pairs": 86
+    },
+    {
+      "split": "train",
+      "study": "26811146",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 28
+    },
+    {
+      "split": "train",
+      "study": "26811146",
+      "class": "I",
+      "condition": "cell_line_expressing_hla_b_27_05",
+      "positive_pairs": 282
+    },
+    {
+      "split": "train",
+      "study": "26929215",
+      "class": "I",
+      "condition": "c1r_transfectant_hla_b_27_02",
+      "positive_pairs": 33
+    },
+    {
+      "split": "train",
+      "study": "26929215",
+      "class": "I",
+      "condition": "c1r_transfectant_hla_b_27_03",
+      "positive_pairs": 36
+    },
+    {
+      "split": "train",
+      "study": "26929215",
+      "class": "I",
+      "condition": "c1r_transfectant_hla_b_27_04",
+      "positive_pairs": 24
+    },
+    {
+      "split": "train",
+      "study": "26929215",
+      "class": "I",
+      "condition": "c1r_transfectant_hla_b_27_05",
+      "positive_pairs": 8
+    },
+    {
+      "split": "train",
+      "study": "26929215",
+      "class": "I",
+      "condition": "c1r_transfectant_hla_b_27_06",
+      "positive_pairs": 41
+    },
+    {
+      "split": "train",
+      "study": "26929215",
+      "class": "I",
+      "condition": "c1r_transfectant_hla_b_27_07",
+      "positive_pairs": 6
+    },
+    {
+      "split": "train",
+      "study": "26929215",
+      "class": "I",
+      "condition": "c1r_transfectant_hla_b_27_08",
+      "positive_pairs": 35
+    },
+    {
+      "split": "train",
+      "study": "26929215",
+      "class": "I",
+      "condition": "c1r_transfectant_hla_b_27_09",
+      "positive_pairs": 12
+    },
+    {
+      "split": "train",
+      "study": "26992070",
+      "class": "I",
+      "condition": "ca46_b_cell_lymphoma",
+      "positive_pairs": 374
+    },
+    {
+      "split": "train",
+      "study": "26992070",
+      "class": "I",
+      "condition": "maver_1_mantle_cell_lymphoma",
+      "positive_pairs": 730
+    },
+    {
+      "split": "train",
+      "study": "26992070",
+      "class": "I",
+      "condition": "thp_1_acute_monocytic_leukemia",
+      "positive_pairs": 332
+    },
+    {
+      "split": "train",
+      "study": "27058226",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 4
+    },
+    {
+      "split": "train",
+      "study": "27397612",
+      "class": "I",
+      "condition": "cholangiocarcinoma_patient_tumor",
+      "positive_pairs": 57
+    },
+    {
+      "split": "train",
+      "study": "27452731",
+      "class": "II",
+      "condition": "",
+      "positive_pairs": 74
+    },
+    {
+      "split": "train",
+      "study": "27543614",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 35
+    },
+    {
+      "split": "train",
+      "study": "27600516",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 23
+    },
+    {
+      "split": "train",
+      "study": "27600516",
+      "class": "I",
+      "condition": "fm_82_melanoma",
+      "positive_pairs": 3
+    },
+    {
+      "split": "train",
+      "study": "27600516",
+      "class": "I",
+      "condition": "fm_93_2_melanoma",
+      "positive_pairs": 1
+    },
+    {
+      "split": "train",
+      "study": "27600516",
+      "class": "I",
+      "condition": "mel_624_melanoma",
+      "positive_pairs": 14
+    },
+    {
+      "split": "train",
+      "study": "27600516",
+      "class": "I",
+      "condition": "mewo_melanoma",
+      "positive_pairs": 7
+    },
+    {
+      "split": "train",
+      "study": "27600516",
+      "class": "I",
+      "condition": "sk_mel_5_melanoma",
+      "positive_pairs": 7
+    },
+    {
+      "split": "train",
+      "study": "27841757",
+      "class": "I",
+      "condition": "ebv_lcls_multiple_donors",
+      "positive_pairs": 1932
+    },
+    {
+      "split": "train",
+      "study": "27846572",
+      "class": "I",
+      "condition": "c1r_parental_b_lymphoblastoid",
+      "positive_pairs": 319
+    },
+    {
+      "split": "train",
+      "study": "27846572",
+      "class": "I",
+      "condition": "t2_tap_deficient_lymphoblastoid",
+      "positive_pairs": 16
+    },
+    {
+      "split": "train",
+      "study": "27861808",
+      "class": "II",
+      "condition": "",
+      "positive_pairs": 6
+    },
+    {
+      "split": "train",
+      "study": "27862975",
+      "class": "I",
+      "condition": "healthy_donor_plasma",
+      "positive_pairs": 157
+    },
+    {
+      "split": "train",
+      "study": "27862975",
+      "class": "I",
+      "condition": "healthy_donor_serum",
+      "positive_pairs": 167
+    },
+    {
+      "split": "train",
+      "study": "27869121",
+      "class": "I",
+      "condition": "melanoma_metastasis_tissue_class_i",
+      "positive_pairs": 47
+    },
+    {
+      "split": "train",
+      "study": "27920218",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 1947
+    },
+    {
+      "split": "train",
+      "study": "28063628",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 571
+    },
+    {
+      "split": "train",
+      "study": "28188227",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 4045
+    },
+    {
+      "split": "train",
+      "study": "28218747",
+      "class": "I",
+      "condition": "cell_lines",
+      "positive_pairs": 2392
+    },
+    {
+      "split": "train",
+      "study": "28228285",
+      "class": "I",
+      "condition": "721_221_hla_a_01_01",
+      "positive_pairs": 102
+    },
+    {
+      "split": "train",
+      "study": "28228285",
+      "class": "I",
+      "condition": "721_221_hla_a_02_01",
+      "positive_pairs": 128
+    },
+    {
+      "split": "train",
+      "study": "28228285",
+      "class": "I",
+      "condition": "721_221_hla_a_02_03",
+      "positive_pairs": 227
+    },
+    {
+      "split": "train",
+      "study": "28228285",
+      "class": "I",
+      "condition": "721_221_hla_a_02_04",
+      "positive_pairs": 150
+    },
+    {
+      "split": "train",
+      "study": "28228285",
+      "class": "I",
+      "condition": "721_221_hla_a_02_07",
+      "positive_pairs": 475
+    },
+    {
+      "split": "train",
+      "study": "28228285",
+      "class": "I",
+      "condition": "721_221_hla_a_03_01",
+      "positive_pairs": 125
+    },
+    {
+      "split": "train",
+      "study": "28228285",
+      "class": "I",
+      "condition": "721_221_hla_a_24_02",
+      "positive_pairs": 122
+    },
+    {
+      "split": "train",
+      "study": "28228285",
+      "class": "I",
+      "condition": "721_221_hla_a_29_02",
+      "positive_pairs": 67
+    },
+    {
+      "split": "train",
+      "study": "28228285",
+      "class": "I",
+      "condition": "721_221_hla_a_31_01",
+      "positive_pairs": 172
+    },
+    {
+      "split": "train",
+      "study": "28228285",
+      "class": "I",
+      "condition": "721_221_hla_a_68_02",
+      "positive_pairs": 234
+    },
+    {
+      "split": "train",
+      "study": "28228285",
+      "class": "I",
+      "condition": "721_221_hla_b_35_01",
+      "positive_pairs": 49
+    },
+    {
+      "split": "train",
+      "study": "28228285",
+      "class": "I",
+      "condition": "721_221_hla_b_44_02",
+      "positive_pairs": 73
+    },
+    {
+      "split": "train",
+      "study": "28228285",
+      "class": "I",
+      "condition": "721_221_hla_b_44_03",
+      "positive_pairs": 34
+    },
+    {
+      "split": "train",
+      "study": "28228285",
+      "class": "I",
+      "condition": "721_221_hla_b_51_01",
+      "positive_pairs": 110
+    },
+    {
+      "split": "train",
+      "study": "28228285",
+      "class": "I",
+      "condition": "721_221_hla_b_54_01",
+      "positive_pairs": 199
+    },
+    {
+      "split": "train",
+      "study": "28228285",
+      "class": "I",
+      "condition": "721_221_hla_b_57_01",
+      "positive_pairs": 102
+    },
+    {
+      "split": "train",
+      "study": "28254787",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 10
+    },
+    {
+      "split": "train",
+      "study": "28352266",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 5
+    },
+    {
+      "split": "train",
+      "study": "28446606",
+      "class": "I",
+      "condition": "bch_30_lcl_hla_b_51_08_hap10_erap1",
+      "positive_pairs": 62
+    },
+    {
+      "split": "train",
+      "study": "28489076",
+      "class": "II",
+      "condition": "",
+      "positive_pairs": 9
+    },
+    {
+      "split": "train",
+      "study": "28514659",
+      "class": "I",
+      "condition": "721_221_transfectant_shla_b_15_01",
+      "positive_pairs": 1019
+    },
+    {
+      "split": "train",
+      "study": "28514659",
+      "class": "I",
+      "condition": "721_221_transfectant_shla_b_46_01",
+      "positive_pairs": 360
+    },
+    {
+      "split": "train",
+      "study": "28514659",
+      "class": "I",
+      "condition": "721_221_transfectant_shla_c_01_02",
+      "positive_pairs": 54
+    },
+    {
+      "split": "train",
+      "study": "28649982",
+      "class": "I",
+      "condition": "721_221_transfectant_hla_c_05_01",
+      "positive_pairs": 241
+    },
+    {
+      "split": "train",
+      "study": "28649982",
+      "class": "I",
+      "condition": "721_221_transfectant_hla_c_07_02",
+      "positive_pairs": 62
+    },
+    {
+      "split": "train",
+      "study": "28819312",
+      "class": "II",
+      "condition": "",
+      "positive_pairs": 127
+    },
+    {
+      "split": "train",
+      "study": "28834231",
+      "class": "I",
+      "condition": "hek293_embryonic_kidney",
+      "positive_pairs": 511
+    },
+    {
+      "split": "train",
+      "study": "28834231",
+      "class": "I",
+      "condition": "maver_1_mantle_cell_lymphoma",
+      "positive_pairs": 700
+    },
+    {
+      "split": "train",
+      "study": "28855257",
+      "class": "I",
+      "condition": "c1r_hla_c_06_02",
+      "positive_pairs": 461
+    },
+    {
+      "split": "train",
+      "study": "28860189",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 12
+    },
+    {
+      "split": "train",
+      "study": "28871256",
+      "class": "II",
+      "condition": "bls_dr2a_drb5_01_01",
+      "positive_pairs": 12
+    },
+    {
+      "split": "train",
+      "study": "28871256",
+      "class": "II",
+      "condition": "bls_dr2b_drb1_15_01",
+      "positive_pairs": 102
+    },
+    {
+      "split": "train",
+      "study": "28904123",
+      "class": "I",
+      "condition": "c1r_hla_c_01_02",
+      "positive_pairs": 187
+    },
+    {
+      "split": "train",
+      "study": "28904123",
+      "class": "I",
+      "condition": "c1r_hla_c_02_02",
+      "positive_pairs": 221
+    },
+    {
+      "split": "train",
+      "study": "28904123",
+      "class": "I",
+      "condition": "c1r_hla_c_03_03",
+      "positive_pairs": 99
+    },
+    {
+      "split": "train",
+      "study": "28904123",
+      "class": "I",
+      "condition": "c1r_hla_c_03_04",
+      "positive_pairs": 289
+    },
+    {
+      "split": "train",
+      "study": "28904123",
+      "class": "I",
+      "condition": "c1r_hla_c_04_01",
+      "positive_pairs": 250
+    },
+    {
+      "split": "train",
+      "study": "28904123",
+      "class": "I",
+      "condition": "c1r_hla_c_05_01",
+      "positive_pairs": 374
+    },
+    {
+      "split": "train",
+      "study": "28904123",
+      "class": "I",
+      "condition": "c1r_hla_c_06_02",
+      "positive_pairs": 132
+    },
+    {
+      "split": "train",
+      "study": "28904123",
+      "class": "I",
+      "condition": "c1r_hla_c_07_01",
+      "positive_pairs": 45
+    },
+    {
+      "split": "train",
+      "study": "28904123",
+      "class": "I",
+      "condition": "c1r_hla_c_07_02",
+      "positive_pairs": 45
+    },
+    {
+      "split": "train",
+      "study": "28904123",
+      "class": "I",
+      "condition": "c1r_hla_c_08_02",
+      "positive_pairs": 679
+    },
+    {
+      "split": "train",
+      "study": "28904123",
+      "class": "I",
+      "condition": "c1r_hla_c_12_03",
+      "positive_pairs": 144
+    },
+    {
+      "split": "train",
+      "study": "28904123",
+      "class": "I",
+      "condition": "c1r_hla_c_14_02",
+      "positive_pairs": 333
+    },
+    {
+      "split": "train",
+      "study": "28904123",
+      "class": "I",
+      "condition": "c1r_hla_c_15_02",
+      "positive_pairs": 269
+    },
+    {
+      "split": "train",
+      "study": "28904123",
+      "class": "I",
+      "condition": "c1r_hla_c_16_01",
+      "positive_pairs": 420
+    },
+    {
+      "split": "train",
+      "study": "28904123",
+      "class": "I",
+      "condition": "c1r_hla_c_17_01",
+      "positive_pairs": 70
+    },
+    {
+      "split": "train",
+      "study": "29314611",
+      "class": "II",
+      "condition": "nhl_patient_plasma_shla",
+      "positive_pairs": 18
+    },
+    {
+      "split": "train",
+      "study": "29317506",
+      "class": "II",
+      "condition": "hla_dr_immunopeptidome_citrullinated_peptides",
+      "positive_pairs": 478
+    },
+    {
+      "split": "train",
+      "study": "29331515",
+      "class": "I",
+      "condition": "breast_cancer_cell_lines_bcc_panel",
+      "positive_pairs": 242
+    },
+    {
+      "split": "train",
+      "study": "29371260",
+      "class": "I",
+      "condition": "sw480_cancer_stem_cell_like_subpopulation",
+      "positive_pairs": 10
+    },
+    {
+      "split": "train",
+      "study": "29393594",
+      "class": "I",
+      "condition": "hla_b27_transgenic_rat_spleens_lys_p2",
+      "positive_pairs": 2125
+    },
+    {
+      "split": "train",
+      "study": "29393594",
+      "class": "I",
+      "condition": "human_cells_expressing_hla_b27",
+      "positive_pairs": 610
+    },
+    {
+      "split": "train",
+      "study": "29437277",
+      "class": "I",
+      "condition": "cells_expressing_hla_b_57_01_hiv_env",
+      "positive_pairs": 1456
+    },
+    {
+      "split": "train",
+      "study": "29508533",
+      "class": "I",
+      "condition": "primary_cll_cells",
+      "positive_pairs": 151
+    },
+    {
+      "split": "train",
+      "study": "29632046",
+      "class": "I",
+      "condition": "c1r_hla_b_27_multiple_erap1_variants",
+      "positive_pairs": 1702
+    },
+    {
+      "split": "train",
+      "study": "29769354",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 730
+    },
+    {
+      "split": "train",
+      "study": "29774024",
+      "class": "II",
+      "condition": "t2_dr3_hla_dr3_transduced",
+      "positive_pairs": 53
+    },
+    {
+      "split": "train",
+      "study": "29789417",
+      "class": "I",
+      "condition": "crc_tumor_tissue",
+      "positive_pairs": 3
+    },
+    {
+      "split": "train",
+      "study": "30001391",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 6
+    },
+    {
+      "split": "train",
+      "study": "30078552",
+      "class": "I",
+      "condition": "ecn90_non_malignant_beta_cell_line",
+      "positive_pairs": 11
+    },
+    {
+      "split": "train",
+      "study": "30078552",
+      "class": "I",
+      "condition": "primary_human_islet_cells_ex_vivo_healthy_t1d_do",
+      "positive_pairs": 2
+    },
+    {
+      "split": "train",
+      "study": "30192525",
+      "class": "I",
+      "condition": "hct116_colon_cancer",
+      "positive_pairs": 576
+    },
+    {
+      "split": "train",
+      "study": "30315122",
+      "class": "I",
+      "condition": "c1r_hla_a_01_01",
+      "positive_pairs": 64
+    },
+    {
+      "split": "train",
+      "study": "30315122",
+      "class": "I",
+      "condition": "c1r_hla_a_02_03",
+      "positive_pairs": 7
+    },
+    {
+      "split": "train",
+      "study": "30315122",
+      "class": "I",
+      "condition": "c1r_hla_a_02_04",
+      "positive_pairs": 109
+    },
+    {
+      "split": "train",
+      "study": "30315122",
+      "class": "I",
+      "condition": "c1r_hla_a_02_07",
+      "positive_pairs": 228
+    },
+    {
+      "split": "train",
+      "study": "30315122",
+      "class": "I",
+      "condition": "c1r_hla_a_03_01",
+      "positive_pairs": 101
+    },
+    {
+      "split": "train",
+      "study": "30315122",
+      "class": "I",
+      "condition": "c1r_hla_a_24_02",
+      "positive_pairs": 89
+    },
+    {
+      "split": "train",
+      "study": "30315122",
+      "class": "I",
+      "condition": "c1r_hla_a_31_01",
+      "positive_pairs": 126
+    },
+    {
+      "split": "train",
+      "study": "30315122",
+      "class": "I",
+      "condition": "c1r_hla_a_68_02",
+      "positive_pairs": 60
+    },
+    {
+      "split": "train",
+      "study": "30315122",
+      "class": "I",
+      "condition": "c1r_hla_b_07_02",
+      "positive_pairs": 129
+    },
+    {
+      "split": "train",
+      "study": "30315122",
+      "class": "I",
+      "condition": "c1r_hla_b_08_01",
+      "positive_pairs": 370
+    },
+    {
+      "split": "train",
+      "study": "30315122",
+      "class": "I",
+      "condition": "c1r_hla_b_15_02",
+      "positive_pairs": 205
+    },
+    {
+      "split": "train",
+      "study": "30315122",
+      "class": "I",
+      "condition": "c1r_hla_b_27_05",
+      "positive_pairs": 264
+    },
+    {
+      "split": "train",
+      "study": "30315122",
+      "class": "I",
+      "condition": "c1r_hla_b_44_02",
+      "positive_pairs": 26
+    },
+    {
+      "split": "train",
+      "study": "30315122",
+      "class": "I",
+      "condition": "c1r_hla_b_51_01",
+      "positive_pairs": 67
+    },
+    {
+      "split": "train",
+      "study": "30315122",
+      "class": "I",
+      "condition": "c1r_hla_b_57_01",
+      "positive_pairs": 1476
+    },
+    {
+      "split": "train",
+      "study": "30315122",
+      "class": "I",
+      "condition": "c1r_hla_b_57_03",
+      "positive_pairs": 296
+    },
+    {
+      "split": "train",
+      "study": "30315122",
+      "class": "I",
+      "condition": "c1r_hla_b_58_01",
+      "positive_pairs": 265
+    },
+    {
+      "split": "train",
+      "study": "30410026",
+      "class": "I",
+      "condition": "c1r_hla_b_57_01",
+      "positive_pairs": 397
+    },
+    {
+      "split": "train",
+      "study": "30410026",
+      "class": "I",
+      "condition": "c1r_hla_b_57_03",
+      "positive_pairs": 544
+    },
+    {
+      "split": "train",
+      "study": "30410026",
+      "class": "I",
+      "condition": "c1r_hla_b_58_01",
+      "positive_pairs": 450
+    },
+    {
+      "split": "train",
+      "study": "30484775",
+      "class": "I",
+      "condition": "cells_tapbpr_manipulation",
+      "positive_pairs": 151
+    },
+    {
+      "split": "train",
+      "study": "30524438",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 312
+    },
+    {
+      "split": "train",
+      "study": "30573663",
+      "class": "II",
+      "condition": "",
+      "positive_pairs": 1324
+    },
+    {
+      "split": "train",
+      "study": "30626607",
+      "class": "II",
+      "condition": "",
+      "positive_pairs": 202
+    },
+    {
+      "split": "train",
+      "study": "30817223",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 14
+    },
+    {
+      "split": "train",
+      "study": "30833945",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 567
+    },
+    {
+      "split": "train",
+      "study": "31020640",
+      "class": "II",
+      "condition": "sup_t1_hhv_6b_hla_dr",
+      "positive_pairs": 252
+    },
+    {
+      "split": "train",
+      "study": "31092671",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 316
+    },
+    {
+      "split": "train",
+      "study": "31217245",
+      "class": "I",
+      "condition": "721_221_hla_c_12_02_hiv_1",
+      "positive_pairs": 1906
+    },
+    {
+      "split": "train",
+      "study": "31495665",
+      "class": "I",
+      "condition": "maptac_hla_a_02_01",
+      "positive_pairs": 154
+    },
+    {
+      "split": "train",
+      "study": "31495665",
+      "class": "I",
+      "condition": "maptac_hla_a_11_01",
+      "positive_pairs": 175
+    },
+    {
+      "split": "train",
+      "study": "31495665",
+      "class": "I",
+      "condition": "maptac_hla_a_32_01",
+      "positive_pairs": 101
+    },
+    {
+      "split": "train",
+      "study": "31495665",
+      "class": "I",
+      "condition": "maptac_hla_b_07_02",
+      "positive_pairs": 100
+    },
+    {
+      "split": "train",
+      "study": "31495665",
+      "class": "I",
+      "condition": "maptac_hla_b_45_01",
+      "positive_pairs": 242
+    },
+    {
+      "split": "train",
+      "study": "31495665",
+      "class": "I",
+      "condition": "maptac_hla_b_52_01",
+      "positive_pairs": 140
+    },
+    {
+      "split": "train",
+      "study": "31495665",
+      "class": "I",
+      "condition": "maptac_hla_c_03_03",
+      "positive_pairs": 58
+    },
+    {
+      "split": "train",
+      "study": "31495665",
+      "class": "I",
+      "condition": "maptac_hla_c_06_02",
+      "positive_pairs": 108
+    },
+    {
+      "split": "train",
+      "study": "31495665",
+      "class": "II",
+      "condition": "",
+      "positive_pairs": 408
+    },
+    {
+      "split": "train",
+      "study": "31495665",
+      "class": "II",
+      "condition": "maptac_hla_drb1_07_01",
+      "positive_pairs": 1279
+    },
+    {
+      "split": "train",
+      "study": "31495665",
+      "class": "II",
+      "condition": "maptac_hla_drb1_11_01",
+      "positive_pairs": 2394
+    },
+    {
+      "split": "train",
+      "study": "31495665",
+      "class": "II",
+      "condition": "maptac_hla_drb1_15_01",
+      "positive_pairs": 588
+    },
+    {
+      "split": "train",
+      "study": "31495665",
+      "class": "II",
+      "condition": "silac_dcs_cross_presenting_tumor_antigens",
+      "positive_pairs": 3710
+    },
+    {
+      "split": "train",
+      "study": "31530632",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 1827
+    },
+    {
+      "split": "train",
+      "study": "31556206",
+      "class": "II",
+      "condition": "",
+      "positive_pairs": 2032
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 4514
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_a_02_03",
+      "positive_pairs": 346
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_a_02_04",
+      "positive_pairs": 178
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_a_02_05",
+      "positive_pairs": 297
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_a_02_06",
+      "positive_pairs": 205
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_a_02_07",
+      "positive_pairs": 509
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_a_02_11",
+      "positive_pairs": 182
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_a_11_01",
+      "positive_pairs": 508
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_a_11_02",
+      "positive_pairs": 140
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_a_23_01",
+      "positive_pairs": 215
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_a_24_07",
+      "positive_pairs": 77
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_a_25_01",
+      "positive_pairs": 164
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_a_26_01",
+      "positive_pairs": 149
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_a_29_02",
+      "positive_pairs": 75
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_a_30_01",
+      "positive_pairs": 295
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_a_30_02",
+      "positive_pairs": 217
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_a_31_01",
+      "positive_pairs": 193
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_a_33_01",
+      "positive_pairs": 547
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_a_33_03",
+      "positive_pairs": 602
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_a_34_01",
+      "positive_pairs": 385
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_a_34_02",
+      "positive_pairs": 613
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_a_36_01",
+      "positive_pairs": 416
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_a_66_01",
+      "positive_pairs": 303
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_a_68_02",
+      "positive_pairs": 202
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_a_74_01",
+      "positive_pairs": 523
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_07_02",
+      "positive_pairs": 92
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_07_04",
+      "positive_pairs": 164
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_08_01",
+      "positive_pairs": 45
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_13_01",
+      "positive_pairs": 704
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_14_02",
+      "positive_pairs": 113
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_15_02",
+      "positive_pairs": 171
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_15_03",
+      "positive_pairs": 269
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_15_10",
+      "positive_pairs": 265
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_15_17",
+      "positive_pairs": 232
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_18_01",
+      "positive_pairs": 154
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_35_01",
+      "positive_pairs": 44
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_35_07",
+      "positive_pairs": 99
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_37_01",
+      "positive_pairs": 350
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_38_02",
+      "positive_pairs": 406
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_40_01",
+      "positive_pairs": 265
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_40_06",
+      "positive_pairs": 560
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_42_01",
+      "positive_pairs": 387
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_44_02",
+      "positive_pairs": 64
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_44_03",
+      "positive_pairs": 25
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_45_01",
+      "positive_pairs": 332
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_46_01",
+      "positive_pairs": 137
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_49_01",
+      "positive_pairs": 814
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_50_01",
+      "positive_pairs": 166
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_51_01",
+      "positive_pairs": 120
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_52_01",
+      "positive_pairs": 324
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_53_01",
+      "positive_pairs": 283
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_54_01",
+      "positive_pairs": 205
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_55_01",
+      "positive_pairs": 165
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_55_02",
+      "positive_pairs": 187
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_57_01",
+      "positive_pairs": 96
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_57_03",
+      "positive_pairs": 300
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_58_01",
+      "positive_pairs": 254
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_b_58_02",
+      "positive_pairs": 153
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_c_03_02",
+      "positive_pairs": 165
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_c_04_03",
+      "positive_pairs": 131
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_c_05_01",
+      "positive_pairs": 175
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_c_07_01",
+      "positive_pairs": 93
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_c_07_02",
+      "positive_pairs": 108
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_c_07_04",
+      "positive_pairs": 138
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_c_08_01",
+      "positive_pairs": 227
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_c_08_02",
+      "positive_pairs": 584
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_c_12_02",
+      "positive_pairs": 188
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_c_12_03",
+      "positive_pairs": 240
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_c_14_02",
+      "positive_pairs": 163
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_c_14_03",
+      "positive_pairs": 381
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_c_15_02",
+      "positive_pairs": 577
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_c_16_01",
+      "positive_pairs": 564
+    },
+    {
+      "split": "train",
+      "study": "31844290",
+      "class": "I",
+      "condition": "721_221_hla_c_17_01",
+      "positive_pairs": 152
+    },
+    {
+      "split": "train",
+      "study": "31998317",
+      "class": "I",
+      "condition": "braf_transduced_cell_lines",
+      "positive_pairs": 284
+    },
+    {
+      "split": "train",
+      "study": "32161166",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 964
+    },
+    {
+      "split": "train",
+      "study": "32161166",
+      "class": "I",
+      "condition": "hela_abc_ko_hla_b_51_01_control_shrna",
+      "positive_pairs": 564
+    },
+    {
+      "split": "train",
+      "study": "32161166",
+      "class": "I",
+      "condition": "hela_abc_ko_hla_b_51_01_erap1_shrna",
+      "positive_pairs": 463
+    },
+    {
+      "split": "train",
+      "study": "32218997",
+      "class": "II",
+      "condition": "",
+      "positive_pairs": 1
+    },
+    {
+      "split": "train",
+      "study": "32265295",
+      "class": "I",
+      "condition": "cells_hla_b_27_05_wt_vs_erap2_ko",
+      "positive_pairs": 1183
+    },
+    {
+      "split": "train",
+      "study": "32357974",
+      "class": "I",
+      "condition": "ebv_lcls_healthy_donors",
+      "positive_pairs": 3688
+    },
+    {
+      "split": "train",
+      "study": "32387766",
+      "class": "I",
+      "condition": "thp_1_aml",
+      "positive_pairs": 3834
+    },
+    {
+      "split": "train",
+      "study": "32488085",
+      "class": "I",
+      "condition": "ipc_298_ifng",
+      "positive_pairs": 105
+    },
+    {
+      "split": "train",
+      "study": "32488085",
+      "class": "I",
+      "condition": "ipc_298_palbociclib_10um",
+      "positive_pairs": 79
+    },
+    {
+      "split": "train",
+      "study": "32488085",
+      "class": "I",
+      "condition": "ipc_298_palbociclib_1um",
+      "positive_pairs": 10
+    },
+    {
+      "split": "train",
+      "study": "32488085",
+      "class": "I",
+      "condition": "mda_mb_231_quantification",
+      "positive_pairs": 438
+    },
+    {
+      "split": "train",
+      "study": "32488085",
+      "class": "I",
+      "condition": "sk_mel_28_ifng",
+      "positive_pairs": 112
+    },
+    {
+      "split": "train",
+      "study": "32488085",
+      "class": "I",
+      "condition": "sk_mel_28_palbociclib_10um",
+      "positive_pairs": 53
+    },
+    {
+      "split": "train",
+      "study": "32488085",
+      "class": "I",
+      "condition": "sk_mel_28_palbociclib_1um",
+      "positive_pairs": 13
+    },
+    {
+      "split": "train",
+      "study": "32488085",
+      "class": "I",
+      "condition": "sk_mel_2_ifng",
+      "positive_pairs": 126
+    },
+    {
+      "split": "train",
+      "study": "32488085",
+      "class": "I",
+      "condition": "sk_mel_2_palbociclib_10um",
+      "positive_pairs": 12
+    },
+    {
+      "split": "train",
+      "study": "32488085",
+      "class": "I",
+      "condition": "sk_mel_2_palbociclib_1um",
+      "positive_pairs": 23
+    },
+    {
+      "split": "train",
+      "study": "32488085",
+      "class": "I",
+      "condition": "sk_mel_5_ifng",
+      "positive_pairs": 126
+    },
+    {
+      "split": "train",
+      "study": "32488085",
+      "class": "I",
+      "condition": "sk_mel_5_palbociclib_10um",
+      "positive_pairs": 28
+    },
+    {
+      "split": "train",
+      "study": "32488085",
+      "class": "I",
+      "condition": "sk_mel_5_palbociclib_1um",
+      "positive_pairs": 24
+    },
+    {
+      "split": "train",
+      "study": "32502341",
+      "class": "I",
+      "condition": "b_all_10h080_xenograft",
+      "positive_pairs": 735
+    },
+    {
+      "split": "train",
+      "study": "32502341",
+      "class": "I",
+      "condition": "b_lcl_tmt",
+      "positive_pairs": 406
+    },
+    {
+      "split": "train",
+      "study": "32561536",
+      "class": "I",
+      "condition": "tumor_tissues_cell_lines",
+      "positive_pairs": 42
+    },
+    {
+      "split": "train",
+      "study": "32897882",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 532
+    },
+    {
+      "split": "train",
+      "study": "32897882",
+      "class": "I",
+      "condition": "bv173_b_all_cml_blast_crisis",
+      "positive_pairs": 965
+    },
+    {
+      "split": "train",
+      "study": "32938616",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 4190
+    },
+    {
+      "split": "train",
+      "study": "32938616",
+      "class": "I",
+      "condition": "lm_mel_33_ifn_gamma",
+      "positive_pairs": 183
+    },
+    {
+      "split": "train",
+      "study": "32938616",
+      "class": "I",
+      "condition": "lm_mel_33_untreated",
+      "positive_pairs": 331
+    },
+    {
+      "split": "train",
+      "study": "32938616",
+      "class": "I",
+      "condition": "lm_mel_44_ifn_gamma",
+      "positive_pairs": 3509
+    },
+    {
+      "split": "train",
+      "study": "32938616",
+      "class": "I",
+      "condition": "lm_mel_44_untreated",
+      "positive_pairs": 1316
+    },
+    {
+      "split": "train",
+      "study": "32983136",
+      "class": "I",
+      "condition": "cd8_t_cells_activated",
+      "positive_pairs": 302
+    },
+    {
+      "split": "train",
+      "study": "33091337",
+      "class": "II",
+      "condition": "",
+      "positive_pairs": 238
+    },
+    {
+      "split": "train",
+      "study": "33091337",
+      "class": "II",
+      "condition": "primary_b_cells",
+      "positive_pairs": 156
+    },
+    {
+      "split": "train",
+      "study": "33123756",
+      "class": "I",
+      "condition": "ovarian_carcinoma_patient_tumor",
+      "positive_pairs": 59
+    },
+    {
+      "split": "train",
+      "study": "33141586",
+      "class": "I",
+      "condition": "monocytic_leukemia_cell_line_likely_thp_1",
+      "positive_pairs": 789
+    },
+    {
+      "split": "train",
+      "study": "33298915",
+      "class": "I",
+      "condition": "ebv_lcls",
+      "positive_pairs": 3640
+    },
+    {
+      "split": "train",
+      "study": "33392160",
+      "class": "I",
+      "condition": "thp_1_biomaterial_contact",
+      "positive_pairs": 267
+    },
+    {
+      "split": "train",
+      "study": "33537174",
+      "class": "I",
+      "condition": "hct_15_2m_colorectal_carcinoma",
+      "positive_pairs": 111
+    },
+    {
+      "split": "train",
+      "study": "33592498",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 440
+    },
+    {
+      "split": "train",
+      "study": "33592498",
+      "class": "I",
+      "condition": "hrog02_ciita_transduced_class_i",
+      "positive_pairs": 343
+    },
+    {
+      "split": "train",
+      "study": "33592498",
+      "class": "I",
+      "condition": "hrog02_parental_class_i",
+      "positive_pairs": 63
+    },
+    {
+      "split": "train",
+      "study": "33592498",
+      "class": "I",
+      "condition": "hrog17_ciita_transduced_class_i",
+      "positive_pairs": 449
+    },
+    {
+      "split": "train",
+      "study": "33592498",
+      "class": "I",
+      "condition": "hrog17_parental_class_i",
+      "positive_pairs": 142
+    },
+    {
+      "split": "train",
+      "study": "33592498",
+      "class": "I",
+      "condition": "ra_ciita_transduced_class_i",
+      "positive_pairs": 107
+    },
+    {
+      "split": "train",
+      "study": "33592498",
+      "class": "I",
+      "condition": "ra_parental_class_i",
+      "positive_pairs": 42
+    },
+    {
+      "split": "train",
+      "study": "33592498",
+      "class": "II",
+      "condition": "hrog02_ciita_transduced_class_ii",
+      "positive_pairs": 2162
+    },
+    {
+      "split": "train",
+      "study": "33592498",
+      "class": "II",
+      "condition": "hrog17_ciita_transduced_class_ii",
+      "positive_pairs": 2036
+    },
+    {
+      "split": "train",
+      "study": "33592498",
+      "class": "II",
+      "condition": "ra_ciita_transduced_class_ii",
+      "positive_pairs": 2298
+    },
+    {
+      "split": "train",
+      "study": "33633747",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 83
+    },
+    {
+      "split": "train",
+      "study": "33633747",
+      "class": "I",
+      "condition": "cells_flucloxacillin",
+      "positive_pairs": 119
+    },
+    {
+      "split": "train",
+      "study": "33633747",
+      "class": "I",
+      "condition": "cells_untreated",
+      "positive_pairs": 32
+    },
+    {
+      "split": "train",
+      "study": "33691108",
+      "class": "I",
+      "condition": "dlbcl_cell_lines_3_lines",
+      "positive_pairs": 399
+    },
+    {
+      "split": "train",
+      "study": "33858848",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 7368
+    },
+    {
+      "split": "train",
+      "study": "33858848",
+      "class": "I",
+      "condition": "aut01_dn04_autopsy_class_i",
+      "positive_pairs": 696
+    },
+    {
+      "split": "train",
+      "study": "33858848",
+      "class": "I",
+      "condition": "aut01_dn08_autopsy_class_i",
+      "positive_pairs": 89
+    },
+    {
+      "split": "train",
+      "study": "33858848",
+      "class": "I",
+      "condition": "aut01_dn09_autopsy_class_i",
+      "positive_pairs": 199
+    },
+    {
+      "split": "train",
+      "study": "33858848",
+      "class": "I",
+      "condition": "aut01_dn11_autopsy_class_i",
+      "positive_pairs": 777
+    },
+    {
+      "split": "train",
+      "study": "33858848",
+      "class": "I",
+      "condition": "aut01_dn13_autopsy_class_i",
+      "positive_pairs": 512
+    },
+    {
+      "split": "train",
+      "study": "33858848",
+      "class": "I",
+      "condition": "aut01_dn17_autopsy_class_i",
+      "positive_pairs": 520
+    },
+    {
+      "split": "train",
+      "study": "33858848",
+      "class": "I",
+      "condition": "ova01_dn278_ovary_class_i",
+      "positive_pairs": 187
+    },
+    {
+      "split": "train",
+      "study": "33858848",
+      "class": "I",
+      "condition": "ova01_dn281_ovary_class_i",
+      "positive_pairs": 159
+    },
+    {
+      "split": "train",
+      "study": "33858848",
+      "class": "I",
+      "condition": "thy01_dn1_thymus_class_i",
+      "positive_pairs": 76
+    },
+    {
+      "split": "train",
+      "study": "33858848",
+      "class": "I",
+      "condition": "thy01_dn3_thymus_class_i",
+      "positive_pairs": 247
+    },
+    {
+      "split": "train",
+      "study": "33858848",
+      "class": "I",
+      "condition": "thy01_dn4_thymus_class_i",
+      "positive_pairs": 144
+    },
+    {
+      "split": "train",
+      "study": "33858848",
+      "class": "I",
+      "condition": "thy01_dn5_thymus_class_i",
+      "positive_pairs": 14
+    },
+    {
+      "split": "train",
+      "study": "33858848",
+      "class": "I",
+      "condition": "thy01_dn6_thymus_class_i",
+      "positive_pairs": 97
+    },
+    {
+      "split": "train",
+      "study": "33858848",
+      "class": "II",
+      "condition": "",
+      "positive_pairs": 28937
+    },
+    {
+      "split": "train",
+      "study": "33858848",
+      "class": "II",
+      "condition": "aut01_dn03_autopsy_class_ii",
+      "positive_pairs": 510
+    },
+    {
+      "split": "train",
+      "study": "33858848",
+      "class": "II",
+      "condition": "aut01_dn06_autopsy_class_ii",
+      "positive_pairs": 845
+    },
+    {
+      "split": "train",
+      "study": "33858848",
+      "class": "II",
+      "condition": "aut01_dn08_autopsy_class_ii",
+      "positive_pairs": 508
+    },
+    {
+      "split": "train",
+      "study": "33858848",
+      "class": "II",
+      "condition": "aut01_dn11_autopsy_class_ii",
+      "positive_pairs": 265
+    },
+    {
+      "split": "train",
+      "study": "33858848",
+      "class": "II",
+      "condition": "aut01_dn12_autopsy_class_ii",
+      "positive_pairs": 528
+    },
+    {
+      "split": "train",
+      "study": "33858848",
+      "class": "II",
+      "condition": "ova01_dn278_ovary_class_ii",
+      "positive_pairs": 109
+    },
+    {
+      "split": "train",
+      "study": "33858848",
+      "class": "II",
+      "condition": "thy01_dn1_thymus_class_ii",
+      "positive_pairs": 388
+    },
+    {
+      "split": "train",
+      "study": "33858848",
+      "class": "II",
+      "condition": "thy01_dn4_thymus_class_ii",
+      "positive_pairs": 529
+    },
+    {
+      "split": "train",
+      "study": "33858848",
+      "class": "II",
+      "condition": "thy01_dn6_thymus_class_ii",
+      "positive_pairs": 659
+    },
+    {
+      "split": "train",
+      "study": "33912179",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 4043
+    },
+    {
+      "split": "train",
+      "study": "33968037",
+      "class": "I",
+      "condition": "mda_mb_231_ifn_gamma_class_i",
+      "positive_pairs": 4479
+    },
+    {
+      "split": "train",
+      "study": "33968037",
+      "class": "I",
+      "condition": "mda_mb_231_untreated",
+      "positive_pairs": 830
+    },
+    {
+      "split": "train",
+      "study": "34093574",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 4
+    },
+    {
+      "split": "train",
+      "study": "34211107",
+      "class": "I",
+      "condition": "jy_ebv_lcl_whole_cell_ev_fraction",
+      "positive_pairs": 190
+    },
+    {
+      "split": "train",
+      "study": "34405274",
+      "class": "I",
+      "condition": "um_uc_3_bladder_carcinoma",
+      "positive_pairs": 167
+    },
+    {
+      "split": "train",
+      "study": "34433824",
+      "class": "II",
+      "condition": "hla_dq8_immunopeptidome_component",
+      "positive_pairs": 1328
+    },
+    {
+      "split": "train",
+      "study": "34509645",
+      "class": "I",
+      "condition": "thp_1_aml",
+      "positive_pairs": 1336
+    },
+    {
+      "split": "train",
+      "study": "34561969",
+      "class": "I",
+      "condition": "721_221_hla_a_33_03",
+      "positive_pairs": 1115
+    },
+    {
+      "split": "train",
+      "study": "35051231",
+      "class": "I",
+      "condition": "modc_cross_presentation_wisconsin_infected_a549",
+      "positive_pairs": 656
+    },
+    {
+      "split": "train",
+      "study": "35154160",
+      "class": "II",
+      "condition": "ebv_lcls_multiple_hla_dr_genotypes",
+      "positive_pairs": 6080
+    },
+    {
+      "split": "train",
+      "study": "35251023",
+      "class": "II",
+      "condition": "cell_lines_multiple_hla_dp_genotypes",
+      "positive_pairs": 10366
+    },
+    {
+      "split": "train",
+      "study": "35318648",
+      "class": "I",
+      "condition": "breast_cancer_melanoma_myeloma_cell_lines",
+      "positive_pairs": 473
+    },
+    {
+      "split": "train",
+      "study": "35379743",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 4
+    },
+    {
+      "split": "train",
+      "study": "35484264",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 3
+    },
+    {
+      "split": "train",
+      "study": "35526384",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 40
+    },
+    {
+      "split": "train",
+      "study": "35561310",
+      "class": "I",
+      "condition": "db_ifng",
+      "positive_pairs": 13
+    },
+    {
+      "split": "train",
+      "study": "35561310",
+      "class": "I",
+      "condition": "db_ifng_dac",
+      "positive_pairs": 4
+    },
+    {
+      "split": "train",
+      "study": "35561310",
+      "class": "I",
+      "condition": "db_ifng_dac_taz",
+      "positive_pairs": 30
+    },
+    {
+      "split": "train",
+      "study": "35561310",
+      "class": "I",
+      "condition": "db_ifng_taz",
+      "positive_pairs": 11
+    },
+    {
+      "split": "train",
+      "study": "35561310",
+      "class": "I",
+      "condition": "su_dhl_4_ifng",
+      "positive_pairs": 1
+    },
+    {
+      "split": "train",
+      "study": "35561310",
+      "class": "I",
+      "condition": "su_dhl_4_ifng_dac",
+      "positive_pairs": 3
+    },
+    {
+      "split": "train",
+      "study": "35561310",
+      "class": "I",
+      "condition": "su_dhl_4_ifng_dac_taz",
+      "positive_pairs": 1
+    },
+    {
+      "split": "train",
+      "study": "35561310",
+      "class": "I",
+      "condition": "su_dhl_4_ifng_taz",
+      "positive_pairs": 30
+    },
+    {
+      "split": "train",
+      "study": "35561310",
+      "class": "I",
+      "condition": "su_dhl_6_ifng_dac",
+      "positive_pairs": 1
+    },
+    {
+      "split": "train",
+      "study": "35561310",
+      "class": "I",
+      "condition": "su_dhl_6_ifng_dac_taz",
+      "positive_pairs": 2
+    },
+    {
+      "split": "train",
+      "study": "35561310",
+      "class": "I",
+      "condition": "su_dhl_6_ifng_taz",
+      "positive_pairs": 3
+    },
+    {
+      "split": "train",
+      "study": "35561310",
+      "class": "II",
+      "condition": "db_ifng_dac",
+      "positive_pairs": 1
+    },
+    {
+      "split": "train",
+      "study": "35561310",
+      "class": "II",
+      "condition": "db_ifng_taz",
+      "positive_pairs": 2
+    },
+    {
+      "split": "train",
+      "study": "35561310",
+      "class": "II",
+      "condition": "su_dhl_4_dmso",
+      "positive_pairs": 1
+    },
+    {
+      "split": "train",
+      "study": "35561310",
+      "class": "II",
+      "condition": "su_dhl_4_ifng",
+      "positive_pairs": 4
+    },
+    {
+      "split": "train",
+      "study": "35561310",
+      "class": "II",
+      "condition": "su_dhl_4_ifng_dac",
+      "positive_pairs": 9
+    },
+    {
+      "split": "train",
+      "study": "35561310",
+      "class": "II",
+      "condition": "su_dhl_4_ifng_dac_taz",
+      "positive_pairs": 18
+    },
+    {
+      "split": "train",
+      "study": "35561310",
+      "class": "II",
+      "condition": "su_dhl_4_ifng_taz",
+      "positive_pairs": 7
+    },
+    {
+      "split": "train",
+      "study": "35561310",
+      "class": "II",
+      "condition": "su_dhl_6_dmso",
+      "positive_pairs": 14
+    },
+    {
+      "split": "train",
+      "study": "35561310",
+      "class": "II",
+      "condition": "su_dhl_6_ifng",
+      "positive_pairs": 11
+    },
+    {
+      "split": "train",
+      "study": "35561310",
+      "class": "II",
+      "condition": "su_dhl_6_ifng_dac",
+      "positive_pairs": 37
+    },
+    {
+      "split": "train",
+      "study": "35561310",
+      "class": "II",
+      "condition": "su_dhl_6_ifng_dac_taz",
+      "positive_pairs": 43
+    },
+    {
+      "split": "train",
+      "study": "35561310",
+      "class": "II",
+      "condition": "su_dhl_6_ifng_taz",
+      "positive_pairs": 7
+    },
+    {
+      "split": "train",
+      "study": "35580925",
+      "class": "I",
+      "condition": "p10_pleural_effusion_lung_adenocarcinoma",
+      "positive_pairs": 36
+    },
+    {
+      "split": "train",
+      "study": "35580925",
+      "class": "I",
+      "condition": "p11_pleural_effusion_lung_adenocarcinoma",
+      "positive_pairs": 237
+    },
+    {
+      "split": "train",
+      "study": "35580925",
+      "class": "I",
+      "condition": "p12_pleural_effusion_lung_adenocarcinoma",
+      "positive_pairs": 16
+    },
+    {
+      "split": "train",
+      "study": "35580925",
+      "class": "I",
+      "condition": "p13_pleural_effusion_lung_adenocarcinoma",
+      "positive_pairs": 823
+    },
+    {
+      "split": "train",
+      "study": "35580925",
+      "class": "I",
+      "condition": "p14_pleural_effusion_lung_adenocarcinoma",
+      "positive_pairs": 386
+    },
+    {
+      "split": "train",
+      "study": "35580925",
+      "class": "I",
+      "condition": "p1_pleural_effusion_heart_failure",
+      "positive_pairs": 45
+    },
+    {
+      "split": "train",
+      "study": "35580925",
+      "class": "I",
+      "condition": "p2_pleural_effusion_lung_adenocarcinoma",
+      "positive_pairs": 268
+    },
+    {
+      "split": "train",
+      "study": "35580925",
+      "class": "I",
+      "condition": "p3_pleural_effusion_lung_adenocarcinoma",
+      "positive_pairs": 185
+    },
+    {
+      "split": "train",
+      "study": "35580925",
+      "class": "I",
+      "condition": "p4_pleural_effusion_endometrioid_carcinoma",
+      "positive_pairs": 168
+    },
+    {
+      "split": "train",
+      "study": "35580925",
+      "class": "I",
+      "condition": "p5_pleural_effusion_heart_and_kidney_failure",
+      "positive_pairs": 59
+    },
+    {
+      "split": "train",
+      "study": "35580925",
+      "class": "I",
+      "condition": "p6_pleural_effusion_squamous_cell_carcinoma",
+      "positive_pairs": 3478
+    },
+    {
+      "split": "train",
+      "study": "35580925",
+      "class": "I",
+      "condition": "p7_pleural_effusion_heart_and_kidney_failure",
+      "positive_pairs": 30
+    },
+    {
+      "split": "train",
+      "study": "35580925",
+      "class": "I",
+      "condition": "p8_pleural_effusion_heart_failure",
+      "positive_pairs": 96
+    },
+    {
+      "split": "train",
+      "study": "35580925",
+      "class": "I",
+      "condition": "p9_pleural_effusion_kidney_failure",
+      "positive_pairs": 51
+    },
+    {
+      "split": "train",
+      "study": "35878026",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 14
+    },
+    {
+      "split": "train",
+      "study": "36010968",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 719
+    },
+    {
+      "split": "train",
+      "study": "36215666",
+      "class": "II",
+      "condition": "hela_ciita_control_sirna",
+      "positive_pairs": 201
+    },
+    {
+      "split": "train",
+      "study": "36215666",
+      "class": "II",
+      "condition": "hela_ciita_mock",
+      "positive_pairs": 633
+    },
+    {
+      "split": "train",
+      "study": "36215666",
+      "class": "II",
+      "condition": "hela_ciita_t6bp_sirna",
+      "positive_pairs": 487
+    },
+    {
+      "split": "train",
+      "study": "36241641",
+      "class": "I",
+      "condition": "hct_116_colon_carcinoma_listeria_infected",
+      "positive_pairs": 1005
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dpa1_02_01_dpb1_01_01",
+      "positive_pairs": 1798
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dpa1_02_01_dpb1_05_01",
+      "positive_pairs": 1908
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dpa1_02_01_dpb1_09_01",
+      "positive_pairs": 961
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dpa1_02_01_dpb1_10_01",
+      "positive_pairs": 1136
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dpa1_02_01_dpb1_11_01",
+      "positive_pairs": 1821
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dpa1_02_01_dpb1_13_01",
+      "positive_pairs": 942
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dpa1_02_01_dpb1_14_01",
+      "positive_pairs": 812
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dpa1_02_01_dpb1_17_01",
+      "positive_pairs": 846
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dpa1_02_02_dpb1_02_01",
+      "positive_pairs": 592
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dpa1_02_02_dpb1_02_02",
+      "positive_pairs": 580
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dpa1_02_02_dpb1_03_01",
+      "positive_pairs": 1774
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dpa1_02_02_dpb1_05_01",
+      "positive_pairs": 1031
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dpa1_02_02_dpb1_14_01",
+      "positive_pairs": 1791
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dqa1_01_01_dqb1_05_01",
+      "positive_pairs": 768
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dqa1_01_01_dqb1_05_02",
+      "positive_pairs": 408
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dqa1_01_02_dqb1_03_02",
+      "positive_pairs": 183
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dqa1_01_02_dqb1_05_02",
+      "positive_pairs": 1732
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dqa1_01_02_dqb1_06_01",
+      "positive_pairs": 1058
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dqa1_01_03_dqb1_06_01",
+      "positive_pairs": 1133
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dqa1_01_03_dqb1_06_03",
+      "positive_pairs": 2267
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dqa1_01_04_dqb1_05_03",
+      "positive_pairs": 623
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dqa1_02_01_dqb1_02_01",
+      "positive_pairs": 2472
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dqa1_02_01_dqb1_02_02",
+      "positive_pairs": 1531
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dqa1_02_01_dqb1_03_03",
+      "positive_pairs": 1679
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dqa1_03_01_dqb1_03_02",
+      "positive_pairs": 472
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dqa1_03_01_dqb1_03_03",
+      "positive_pairs": 514
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dqa1_03_01_dqb1_04_01",
+      "positive_pairs": 711
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dqa1_03_03_dqb1_03_01",
+      "positive_pairs": 552
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dqa1_04_01_dqb1_04_02",
+      "positive_pairs": 1056
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dqa1_05_01_dqb1_02_01",
+      "positive_pairs": 625
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dqa1_05_01_dqb1_03_01",
+      "positive_pairs": 992
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dqa1_05_05_dqb1_03_01",
+      "positive_pairs": 303
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_dqa1_06_01_dqb1_03_01",
+      "positive_pairs": 404
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_drb1_04_06",
+      "positive_pairs": 1863
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_drb1_04_11",
+      "positive_pairs": 2879
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_drb1_11_01",
+      "positive_pairs": 371
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_drb1_13_04",
+      "positive_pairs": 3711
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_drb1_14_02",
+      "positive_pairs": 3575
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_drb1_14_04",
+      "positive_pairs": 1874
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_drb1_14_05",
+      "positive_pairs": 1620
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_drb1_14_06",
+      "positive_pairs": 3463
+    },
+    {
+      "split": "train",
+      "study": "37301199",
+      "class": "II",
+      "condition": "strepii_hla_drb1_16_02",
+      "positive_pairs": 1998
+    },
+    {
+      "split": "train",
+      "study": "37938771",
+      "class": "I",
+      "condition": "neuroblastoma_cell_lines_patient_tumors",
+      "positive_pairs": 1
+    },
+    {
+      "split": "train",
+      "study": "38480730",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 3202
+    },
+    {
+      "split": "train",
+      "study": "38480730",
+      "class": "I",
+      "condition": "hela_cervical_carcinoma",
+      "positive_pairs": 970
+    },
+    {
+      "split": "train",
+      "study": "38480730",
+      "class": "I",
+      "condition": "jy_ebv_lcl_titration_series",
+      "positive_pairs": 883
+    },
+    {
+      "split": "train",
+      "study": "38480730",
+      "class": "I",
+      "condition": "sk_mel_37_melanoma",
+      "positive_pairs": 614
+    },
+    {
+      "split": "train",
+      "study": "39394480",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 1
+    },
+    {
+      "split": "train",
+      "study": "40113210",
+      "class": "I",
+      "condition": "hap1_b2m_ko",
+      "positive_pairs": 26
+    },
+    {
+      "split": "train",
+      "study": "40113210",
+      "class": "I",
+      "condition": "hap1_calr_ko",
+      "positive_pairs": 2377
+    },
+    {
+      "split": "train",
+      "study": "40113210",
+      "class": "I",
+      "condition": "hap1_canx_ko",
+      "positive_pairs": 2190
+    },
+    {
+      "split": "train",
+      "study": "40113210",
+      "class": "I",
+      "condition": "hap1_erap1_ko",
+      "positive_pairs": 1065
+    },
+    {
+      "split": "train",
+      "study": "40113210",
+      "class": "I",
+      "condition": "hap1_ganab_ko",
+      "positive_pairs": 1368
+    },
+    {
+      "split": "train",
+      "study": "40113210",
+      "class": "I",
+      "condition": "hap1_irf2_ko",
+      "positive_pairs": 538
+    },
+    {
+      "split": "train",
+      "study": "40113210",
+      "class": "I",
+      "condition": "hap1_pdia3_ko",
+      "positive_pairs": 894
+    },
+    {
+      "split": "train",
+      "study": "40113210",
+      "class": "I",
+      "condition": "hap1_sppl3_ko",
+      "positive_pairs": 1938
+    },
+    {
+      "split": "train",
+      "study": "40113210",
+      "class": "I",
+      "condition": "hap1_tap1_ko",
+      "positive_pairs": 1147
+    },
+    {
+      "split": "train",
+      "study": "40113210",
+      "class": "I",
+      "condition": "hap1_tap2_ko",
+      "positive_pairs": 339
+    },
+    {
+      "split": "train",
+      "study": "40113210",
+      "class": "I",
+      "condition": "hap1_tapbp_ko",
+      "positive_pairs": 542
+    },
+    {
+      "split": "train",
+      "study": "40113210",
+      "class": "I",
+      "condition": "hap1_wildtype",
+      "positive_pairs": 2601
+    },
+    {
+      "split": "train",
+      "study": "7865457",
+      "class": "II",
+      "condition": "",
+      "positive_pairs": 1
+    },
+    {
+      "split": "train",
+      "study": "7878657",
+      "class": "I",
+      "condition": "",
+      "positive_pairs": 1
+    },
+    {
+      "split": "train",
+      "study": "9321428",
+      "class": "II",
+      "condition": "",
+      "positive_pairs": 1
+    },
+    {
+      "split": "train",
+      "study": "9366419",
+      "class": "II",
+      "condition": "",
+      "positive_pairs": 1
+    },
+    {
+      "split": "validation",
+      "study": "32502341",
+      "class": "I",
+      "condition": "b_all_10h080_xenograft",
+      "positive_pairs": 2
+    }
+  ],
+  "context_counts": {
+    "cell_types": {
+      "B-cell": 88869,
+      "Epithelial cell": 74945,
+      "Lymphocyte": 14,
+      "Endothelial cell": 2,
+      "Lymphoblast": 8478,
+      "Splenocyte": 9424,
+      "PBMC": 2271,
+      "Thymocyte": 5265,
+      "Fibroblast": 513,
+      "Plasma cell": 263,
+      "Melanocyte": 11460,
+      "Macrophage": 24,
+      "Dendritic cell": 2254,
+      "Monocyte": 5851,
+      "Pancreatic beta cell": 3,
+      "Lymph node cells": 1366,
+      "Glial cell": 8082,
+      "T cell CD8+": 302,
+      "Myeloblast": 25887,
+      "Osteoblast": 719,
+      "Neuroblast": 1,
+      "T-cell": 252,
+      "Mononuclear cell": 238
+    },
+    "interventions": {
+      "background:ERAP1_hap10": 62,
+      "transduction:HIV Env": 1456,
+      "knockout:HLA-A": 1027,
+      "knockout:HLA-B": 1027,
+      "knockout:HLA-C": 1027,
+      "knockdown:ERAP1": 1027,
+      "transduction:HLA-B": 1027,
+      "knockout:ERAP2": 1183,
+      "stimulation:LPS": 267,
+      "stimulation:biomaterial_contact": 267,
+      "drug:flucloxacillin": 119,
+      "transduction:CIITA": 8963,
+      "stimulation:dc_maturation": 656,
+      "stimulation:PMA": 302,
+      "stimulation:ionomycin": 302,
+      "drug:decitabine": 149,
+      "drug:tazemetostat": 154,
+      "knockout:B2M": 2627,
+      "knockout:CALR": 4978,
+      "knockout:CANX": 4791,
+      "knockout:ERAP1": 3666,
+      "knockout:GANAB": 3969,
+      "knockout:IRF2": 3139,
+      "knockout:PDIA3": 3495,
+      "knockout:SPPL3": 4539,
+      "knockout:TAP1": 3748,
+      "knockout:TAP2": 2940,
+      "knockout:TAPBP": 3143,
+      "drug:DMSO": 15,
+      "knockdown:TAX1BP1": 1321,
+      "transfection:HLA-DM": 56829
+    },
+    "cytokines": {
+      "IFNG": 8409
+    }
+  },
+  "model_context": {
+    "cell_types": [
+      "B-cell",
+      "Dendritic cell",
+      "Endothelial cell",
+      "Epithelial cell",
+      "Fibroblast",
+      "Glial cell",
+      "Lymph node cells",
+      "Lymphoblast",
+      "Lymphocyte",
+      "Macrophage",
+      "Melanocyte",
+      "Monocyte",
+      "Mononuclear cell",
+      "Myeloblast",
+      "Neuroblast",
+      "Osteoblast",
+      "PBMC",
+      "Pancreatic beta cell",
+      "Plasma cell",
+      "Splenocyte",
+      "T cell CD8+",
+      "T-cell",
+      "Thymocyte"
+    ],
+    "interventions": [
+      "background:ERAP1_hap10",
+      "drug:DMSO",
+      "drug:decitabine",
+      "drug:flucloxacillin",
+      "drug:tazemetostat",
+      "knockdown:ERAP1",
+      "knockdown:TAX1BP1",
+      "knockout:B2M",
+      "knockout:CALR",
+      "knockout:CANX",
+      "knockout:ERAP1",
+      "knockout:ERAP2",
+      "knockout:GANAB",
+      "knockout:HLA-A",
+      "knockout:HLA-B",
+      "knockout:HLA-C",
+      "knockout:IRF2",
+      "knockout:PDIA3",
+      "knockout:SPPL3",
+      "knockout:TAP1",
+      "knockout:TAP2",
+      "knockout:TAPBP",
+      "stimulation:LPS",
+      "stimulation:PMA",
+      "stimulation:biomaterial_contact",
+      "stimulation:dc_maturation",
+      "stimulation:ionomycin",
+      "transduction:CIITA",
+      "transduction:HIV Env",
+      "transduction:HLA-B",
+      "transfection:HLA-DM"
+    ],
+    "cytokines": [
+      "IFNG"
+    ]
+  },
+  "new_validation_sequences": 4,
+  "new_validation_families": 2,
+  "files": {
+    "expanded-train.jsonl": {
+      "sha256": "ddbd9bb4f135d53c1a14d33d840f5603b13f1fd348b574102c13fc983d4f3cd8",
+      "bytes": 3503198096,
+      "rows": 591400
+    },
+    "expanded-validation.jsonl": {
+      "sha256": "3c85ed3e0acc890f285d844353a0f10ae91c27ab3478a97d2c9f1e695ff213ec",
+      "bytes": 23610,
+      "rows": 4
+    }
+  }
+}

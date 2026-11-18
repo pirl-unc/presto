@@ -1,126 +1,77 @@
 # Presto
 
-Unified immunoinformatics for pMHC presentation and T-cell recognition.
+One shared observation model for MHC class-I/class-II affinity and presentation,
+with scoped APC state and source-protein context.
 
-## Installation
+## Install and use
 
-Install a wheel from this repository's [GitHub releases](https://github.com/pirl-unc/presto/releases).
-The PyPI name `presto` belongs to the unrelated Immcantation repertoire toolkit;
-use a separate environment for these projects. For the 0.1.1 release:
+From this checkout:
 
-```bash
-python -m pip install https://github.com/pirl-unc/presto/releases/download/v0.1.1/presto-0.1.1-py3-none-any.whl
-```
-
-Release artifacts are built after CI runs `./lint.sh` and `./test.sh`. CI installs
-the wheel outside the checkout to verify packaged B2M resources and the bulk
-loader's missing-label masks. Publish the wheel and source archive from the
-successful merged-main run, together with their SHA-256 hashes and source commit.
-The source archive builds the tested wheel; no training datasets or model weights
-are included. A software release does not certify the training data or model quality.
-
-CI cancels superseded updates within the same pull request or feature-branch push.
-PR and push checks have separate groups, and both final-head validations gate merge.
-Each main-push and immutable-tag run has its own protected group, so neither running
-nor pending release validation can be displaced by a later update. Distribution
-still requires successful checks on the exact merged-main commit.
-
-## Quickstart
+Requires Python 3.11 or newer.
 
 ```bash
+python -m pip install -e '.[hitlist,dev]'
 python -m presto --help
-python -m presto data list
-python -m presto train unified --data-dir ./data --epochs 5 --checkpoint presto.pt
-python -m presto predict presentation --checkpoint presto.pt --peptide SIINFEKL --allele HLA-A*02:01
+python -c 'import presto; print(presto.__file__, presto.__version__)'
 ```
 
-## Canonical Docs
-
-- Single authoritative input/output design: [model I/O contract](docs/model_io_contract.md)
-- Current architecture guide: [design](docs/design.md)
-- Assay policy summary: [assay modeling](docs/assay_modeling_contract.md)
-- Assay source inventory and supervision map: `docs/assay_learning_scheme.md`
-- Training and batch construction spec: `docs/training_spec.md`
-- CLI usage: `docs/cli.md`
-- Repo inventory and retention guide: [repo inventory](docs/repo_inventory.md)
-- Implementation status audit: `TODO.md`
-
-## Repo At A Glance
-
-What is intentionally committed:
-- source code, tests, and canonical docs
-- compact reusable reference data under `data/`
-- experiment history under `experiments/`
-
-What is intentionally local-only and ignored:
-- `artifacts/`
-- `modal_runs/`
-- large regenerable derived datasets such as `data/merged_deduped.tsv`
-- transient launch logs and caches
-
-## Canonical Assay Rule
-
-Presto uses sequence-only encoding with scoped downstream biological context.
-APC state, interventions and cytokines are allowed biological inputs. Presenting
-MHC and repertoire-selection MHC, and APC/MHC/TCR/repertoire/antigen species,
-are distinct roles. Assay identity only selects fixed output tracks and losses.
-
-The full role-specific schema is not implemented yet. The
-[I/O contract](docs/model_io_contract.md) separates target design, actual outputs
-and remaining gaps; [issue #46](https://github.com/pirl-unc/presto/issues/46)
-tracks implementation. Receptor evidence is currently pMHC-only, not matching
-against a supplied TCR.
-
-## Mouse MHC Overlay (IMGT + UniProt, Provenance Tracked)
-
-Build a mouse MHC sequence overlay into `data/ipd_mhc/`:
+The PyPI name `presto` belongs to another project. Use this repository or its
+GitHub release wheels. Historical release interfaces and checkpoint readers remain
+available; the current workflow uses the shared observation model below.
 
 ```bash
-python -m presto data mhc-index mouse-overlay --datadir ./data
-python -m presto data mhc-index refresh --datadir ./data
+presto data verify-corpus --corpus-dir /path/to/corrected-v4
+presto data export-presentation --corpus-dir /path/to/corrected-v4 --output-dir exported
+presto data prepare-presentation --manifest preparation.json --output-dir prepared
+presto train --manifest training.json --preflight
+presto train --manifest training.json --run-dir experiments/YOUR_RUN --device cpu
+presto evaluate observations --checkpoint selected.pt --manifest training.json --output-dir evaluation
+presto predict observations --checkpoint selected.pt --inputs queries.jsonl --output predictions.json
 ```
 
-Outputs:
-- `data/ipd_mhc/mouse_uniprot_overlay.csv`: per-protein provenance catalog
-- `data/ipd_mhc/mouse_uniprot_overlay.fasta`: selected allele-sequence overlay
+Preparation emits pinned source files and a source manifest. A training manifest
+adds the explicit model, optimizer, checkpoint-selection and parent-checkpoint
+settings; see the [current workflow](docs/current_workflow.md). Evaluation sources
+declare their split, allowing validation evaluation to avoid opening TEST files.
+Prediction accepts label-free observations and returns endpoint units and support
+diagnostics. Neither command imports a frozen experiment runtime.
 
-The catalog includes explicit source columns per emitted protein:
-- `imgt_source_url`
-- `uniprot_gene_query`
-- `uniprot_accession`
-- `uniprot_record_url`
-- `allele_derivation_rule`
+## Architecture and evidence
 
-## Synthetic Negatives (Default: Enabled)
+- [Current architecture, interfaces and checkpoint decision](docs/current_workflow.md)
+- [Model and observation schema](docs/modular_model.md)
+- [Training controls and compatibility](docs/unified_training.md)
+- [Affinity-conditioned processing](docs/affinity_conditioned_processing.md)
+- [Corpus generations and preparation](docs/presentation_data.md)
+- [CLI](docs/cli.md)
 
-Canonical unified training defaults enable all synthetic-negative categories.
+Class I and II share the encoder, pMHC interaction, APC-state representation and
+trainer. Class II enumerates binding registers. Source flanks and cellular context
+enter processing/presentation; intrinsic affinity does not consume those inputs.
+All supported parameters can train jointly. Independent assay supervision and
+held-out checks are necessary to interpret component scores biologically.
 
-These are synthetic hypotheses, not measured negatives. In particular,
-`no_mhc_beta` currently deletes the second groove segment (class-I alpha2),
-not beta2m. Its assembly interpretation and missing-sequence priors are known
-design drift tracked in #46, not scientifically validated defaults.
-
-| Category | Modes | Default control (unified) | Primary target effect |
-|---|---|---|---|
-| pMHC negatives | `peptide_scramble`, `peptide_random`, `mhc_scramble`, `mhc_random`, `no_mhc_alpha`, `no_mhc_beta` | `--synthetic-pmhc-negative-ratio 1.0` and `--synthetic-class-i-no-mhc-beta-negative-ratio 0.25` | Drive weak/non-binder supervision (`binding`/`affinity`) and low downstream presentation |
-| Elution negatives | `peptide_random_mhc_real`, `peptide_real_mhc_random`, `peptide_random_mhc_random`, plus data-conditional hard-pair negatives | Derived from `--synthetic-pmhc-negative-ratio` (`0.5x` scale) | Drive low elution/presentation for implausible peptide:MHC pairs |
-| Processing negatives | `flank_shuffle`, `peptide_scramble` | `--synthetic-processing-negative-ratio 0.5` | Drive low processing probability for corrupted cleavage/context inputs |
-| Cascade negatives | binding->elution, binding->tcell projection | Derived from `--synthetic-pmhc-negative-ratio` (`0.5x` each for elution/tcell) | Enforce biological cascade consistency across tasks |
-
-Semantics:
-- `random` = de novo generation/sampling.
-- `scramble` = permutation of existing sequence content.
-
-Reference: [training guide](docs/training_spec.md).
+The retained broad-presentation checkpoint is the current development default.
+The newer boundary-aware processing candidate is provisional. TEST remains sealed;
+isolated gene/drug effects and absolute surface-abundance calibration are unproven.
+See the workflow page for exact checkpoint hashes and evidence.
 
 ## Development
 
 ```bash
-./develop.sh
-./lint.sh          # ruff check + ruff format --check
-ruff format .      # apply formatting (lint.sh only *checks* it)
+./lint.sh
 ./test.sh
+python -m build
+python scripts/check_wheel.py dist/*.whl
+mkdocs build --strict
 ```
 
-Verified bulk proteomics: see [scoped inputs](docs/scoped_proteomics.md) for the
-PXD013455 Python adapter, frozen source hashes, evidence classes and limitations.
+Active runtime code belongs in `models/`, `data/`, `training/`, `inference/`,
+`evaluation/` and `cli/`. `legacy/` contains historical implementations.
+Shared orchestration belongs in `scripts/`; experiment-specific launchers and
+immutable results belong in `experiments/`. New work follows
+[the experiment workflow](experiments/EXPERIMENT_WORKFLOW.md).
+
+Keep raw datasets, checkpoints, local build outputs and caches out of source
+commits. Preserve their hashes and recovery locations in the experiment registry.
+Historical evidence is retained; it does not define the current installed model.

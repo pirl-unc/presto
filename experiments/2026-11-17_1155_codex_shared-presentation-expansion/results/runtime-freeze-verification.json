@@ -1,0 +1,254 @@
+{
+  "stage-a-wrapper-manifest.json": {
+    "entries": 15,
+    "manifest_sha256": "e11501dcec9e651d8db52b9e586d71e8b57d07524a2100fdd473ec211258b7a4",
+    "all_source_hashes_located": true,
+    "frozen_sources": {
+      "code/verify_results.py": [
+        "reproduce/source/transfer-verify_results.py",
+        "reproduce/source/verify_results-e0f70f638225.py"
+      ],
+      "code/collect.py": [
+        "reproduce/source/collect-bce305f6c734.py",
+        "reproduce/source/transfer-collect.py"
+      ],
+      "code/fit.py": [
+        "reproduce/source/fit-19d0265c2985.py"
+      ],
+      "code/audit.py": [
+        "reproduce/source/audit-e76e3549ef56.py",
+        "reproduce/source/transfer-audit.py"
+      ],
+      "code/local_preflight.py": [
+        "reproduce/source/local_preflight-fb0cc10c6df3.py",
+        "reproduce/source/transfer-local_preflight.py"
+      ],
+      "code/audit_mapping.py": [
+        "reproduce/source/audit_mapping-1801ebb2b657.py",
+        "reproduce/source/transfer-audit_mapping.py"
+      ],
+      "code/io_probe.py": [
+        "reproduce/source/io_probe-ec03b70aeb98.py",
+        "reproduce/source/transfer-io_probe.py"
+      ],
+      "code/refresh_context.py": [
+        "reproduce/source/refresh_context-a1e880a465c6.py",
+        "reproduce/source/transfer-refresh_context.py"
+      ],
+      "code/launch.py": [
+        "reproduce/source/context-support-launch.py",
+        "reproduce/source/launch-f046e24a3ae4.py",
+        "reproduce/source/pathway-preflight-launch.py",
+        "reproduce/source/transfer-launch.py"
+      ],
+      "code/project_context.py": [
+        "reproduce/source/pathway-preflight-project_context.py",
+        "reproduce/source/project_context-40a150a3fef1.py",
+        "reproduce/source/transfer-project_context.py"
+      ],
+      "code/evaluate.py": [
+        "reproduce/source/evaluate-68c6026d0eb4.py",
+        "reproduce/source/transfer-evaluate.py"
+      ],
+      "code/diagnose_class_ii.py": [
+        "reproduce/source/diagnose_class_ii-9db02ddab2b3.py",
+        "reproduce/source/transfer-diagnose_class_ii.py"
+      ],
+      "code/prepare.py": [
+        "reproduce/source/pathway-preflight-prepare.py",
+        "reproduce/source/prepare-1f0e83e060e1.py",
+        "reproduce/source/transfer-prepare.py"
+      ],
+      "code/analyze.py": [
+        "reproduce/source/analyze-0510c313c288.py",
+        "reproduce/source/transfer-analyze.py"
+      ],
+      "code/export_inputs.py": [
+        "reproduce/source/export_inputs-7477c6855733.py",
+        "reproduce/source/transfer-export_inputs.py"
+      ]
+    }
+  },
+  "replication-wrapper-manifest.json": {
+    "entries": 15,
+    "manifest_sha256": "3da51880fe3e87f1219e360e5a045d786761cebf702b1bc0edce5cd09e8df36a",
+    "all_source_hashes_located": true,
+    "frozen_sources": {
+      "code/verify_results.py": [
+        "reproduce/source/transfer-verify_results.py",
+        "reproduce/source/verify_results-e0f70f638225.py"
+      ],
+      "code/collect.py": [
+        "reproduce/source/collect-bce305f6c734.py",
+        "reproduce/source/transfer-collect.py"
+      ],
+      "code/fit.py": [
+        "reproduce/source/fit-cc1d8afbce50.py",
+        "reproduce/source/transfer-fit.py"
+      ],
+      "code/audit.py": [
+        "reproduce/source/audit-e76e3549ef56.py",
+        "reproduce/source/transfer-audit.py"
+      ],
+      "code/local_preflight.py": [
+        "reproduce/source/local_preflight-fb0cc10c6df3.py",
+        "reproduce/source/transfer-local_preflight.py"
+      ],
+      "code/audit_mapping.py": [
+        "reproduce/source/audit_mapping-1801ebb2b657.py",
+        "reproduce/source/transfer-audit_mapping.py"
+      ],
+      "code/io_probe.py": [
+        "reproduce/source/io_probe-ec03b70aeb98.py",
+        "reproduce/source/transfer-io_probe.py"
+      ],
+      "code/refresh_context.py": [
+        "reproduce/source/refresh_context-a1e880a465c6.py",
+        "reproduce/source/transfer-refresh_context.py"
+      ],
+      "code/launch.py": [
+        "reproduce/source/context-support-launch.py",
+        "reproduce/source/launch-f046e24a3ae4.py",
+        "reproduce/source/pathway-preflight-launch.py",
+        "reproduce/source/transfer-launch.py"
+      ],
+      "code/project_context.py": [
+        "reproduce/source/pathway-preflight-project_context.py",
+        "reproduce/source/project_context-40a150a3fef1.py",
+        "reproduce/source/transfer-project_context.py"
+      ],
+      "code/evaluate.py": [
+        "reproduce/source/evaluate-68c6026d0eb4.py",
+        "reproduce/source/transfer-evaluate.py"
+      ],
+      "code/diagnose_class_ii.py": [
+        "reproduce/source/diagnose_class_ii-9db02ddab2b3.py",
+        "reproduce/source/transfer-diagnose_class_ii.py"
+      ],
+      "code/prepare.py": [
+        "reproduce/source/pathway-preflight-prepare.py",
+        "reproduce/source/prepare-1f0e83e060e1.py",
+        "reproduce/source/transfer-prepare.py"
+      ],
+      "code/analyze.py": [
+        "reproduce/source/analyze-0510c313c288.py",
+        "reproduce/source/transfer-analyze.py"
+      ],
+      "code/export_inputs.py": [
+        "reproduce/source/export_inputs-7477c6855733.py",
+        "reproduce/source/transfer-export_inputs.py"
+      ]
+    }
+  },
+  "transfer-wrapper-manifest.json": {
+    "entries": 16,
+    "manifest_sha256": "9df26b4e5b03c1e01a73da6ad10ce8dcaa0324a49dfd28dd3f50d7c9a58939ff",
+    "all_source_hashes_located": true,
+    "frozen_sources": {
+      "code/analyze.py": [
+        "reproduce/source/analyze-0510c313c288.py",
+        "reproduce/source/transfer-analyze.py"
+      ],
+      "code/audit.py": [
+        "reproduce/source/audit-e76e3549ef56.py",
+        "reproduce/source/transfer-audit.py"
+      ],
+      "code/audit_mapping.py": [
+        "reproduce/source/audit_mapping-1801ebb2b657.py",
+        "reproduce/source/transfer-audit_mapping.py"
+      ],
+      "code/collect.py": [
+        "reproduce/source/collect-bce305f6c734.py",
+        "reproduce/source/transfer-collect.py"
+      ],
+      "code/diagnose_class_ii.py": [
+        "reproduce/source/diagnose_class_ii-9db02ddab2b3.py",
+        "reproduce/source/transfer-diagnose_class_ii.py"
+      ],
+      "code/evaluate.py": [
+        "reproduce/source/evaluate-68c6026d0eb4.py",
+        "reproduce/source/transfer-evaluate.py"
+      ],
+      "code/export_inputs.py": [
+        "reproduce/source/export_inputs-7477c6855733.py",
+        "reproduce/source/transfer-export_inputs.py"
+      ],
+      "code/fit.py": [
+        "reproduce/source/fit-cc1d8afbce50.py",
+        "reproduce/source/transfer-fit.py"
+      ],
+      "code/io_probe.py": [
+        "reproduce/source/io_probe-ec03b70aeb98.py",
+        "reproduce/source/transfer-io_probe.py"
+      ],
+      "code/launch.py": [
+        "reproduce/source/context-support-launch.py",
+        "reproduce/source/launch-f046e24a3ae4.py",
+        "reproduce/source/pathway-preflight-launch.py",
+        "reproduce/source/transfer-launch.py"
+      ],
+      "code/local_preflight.py": [
+        "reproduce/source/local_preflight-fb0cc10c6df3.py",
+        "reproduce/source/transfer-local_preflight.py"
+      ],
+      "code/prepare.py": [
+        "reproduce/source/pathway-preflight-prepare.py",
+        "reproduce/source/prepare-1f0e83e060e1.py",
+        "reproduce/source/transfer-prepare.py"
+      ],
+      "code/progress.py": [
+        "reproduce/source/transfer-progress.py"
+      ],
+      "code/project_context.py": [
+        "reproduce/source/pathway-preflight-project_context.py",
+        "reproduce/source/project_context-40a150a3fef1.py",
+        "reproduce/source/transfer-project_context.py"
+      ],
+      "code/refresh_context.py": [
+        "reproduce/source/refresh_context-a1e880a465c6.py",
+        "reproduce/source/transfer-refresh_context.py"
+      ],
+      "code/verify_results.py": [
+        "reproduce/source/transfer-verify_results.py",
+        "reproduce/source/verify_results-e0f70f638225.py"
+      ]
+    }
+  },
+  "pathway-preflight-wrapper-manifest.json": {
+    "entries": 5,
+    "manifest_sha256": "8407f0dd451f5ffce695b4694e7a8118741186f345fc25a87cd321ed0787fe91",
+    "all_source_hashes_located": true,
+    "frozen_sources": {
+      "code/launch.py": [
+        "reproduce/source/context-support-launch.py",
+        "reproduce/source/launch-f046e24a3ae4.py",
+        "reproduce/source/pathway-preflight-launch.py",
+        "reproduce/source/transfer-launch.py"
+      ],
+      "code/launch_pathway.py": [
+        "reproduce/source/pathway-preflight-launch_pathway.py"
+      ],
+      "code/fit_pathway.py": [
+        "reproduce/source/pathway-preflight-fit_pathway.py"
+      ],
+      "code/project_context.py": [
+        "reproduce/source/pathway-preflight-project_context.py",
+        "reproduce/source/project_context-40a150a3fef1.py",
+        "reproduce/source/transfer-project_context.py"
+      ],
+      "code/prepare.py": [
+        "reproduce/source/pathway-preflight-prepare.py",
+        "reproduce/source/prepare-1f0e83e060e1.py",
+        "reproduce/source/transfer-prepare.py"
+      ]
+    }
+  },
+  "runtime-manifest.json": {
+    "verified_files": 228,
+    "all_hashes_match": true
+  },
+  "runtime-pathway-manifest.json": {
+    "verified_files": 228,
+    "all_hashes_match": true
+  }
+}

@@ -1,0 +1,152 @@
+{
+  "run": "expanded-state-sqrt-s42-n6000",
+  "local_checkpoint": "results/fits/expanded-state-sqrt-s42-n6000/raw/selected.pt",
+  "sha256": "1b6011396a563f52ea1d6da4bb1d4e69b8dbf0103148ba829225581c4d312f68",
+  "remote_checkpoint": "2026-11-17_1155_codex_shared-presentation-expansion/fits/expanded-state-sqrt-s42-n6000/raw/selected.pt",
+  "modal_volume": "presto-checkpoints",
+  "core_commit": "5f9bfe37dfb5e82cecdf762ef1e59ff885668e40",
+  "selected_step": 6000,
+  "selection": "equal-class/equal-study presentation BCE",
+  "scope": "Working ordinary-presentation checkpoint for both classes; adaptive development validation",
+  "architecture_choice": "Shared APC64, no optional pathway projection; no supported parameter frozen",
+  "replication": "expanded-state-sqrt-s43-n6000",
+  "test_accessed": false,
+  "limitations": [
+    "Affinity-matched class-I discrimination regresses versus previous default",
+    "Within-study APC shuffling does not establish isolated gene/drug effects",
+    "No quantitative expression or absolute presentation-yield training targets",
+    "Validation is reused for development; sealed TEST confirmation absent"
+  ],
+  "comparison": [
+    {
+      "cohort": "expanded",
+      "class": "I",
+      "rows": 780,
+      "previous_AUROC": 0.8503418803418803,
+      "shared_AUROC": 0.8758711374095991,
+      "delta": 0.025529257067718802,
+      "paired_95CI": "[+0.0124, +0.0375]",
+      "cluster": "protein",
+      "previous_pair_win": 0.8564102564102564,
+      "shared_pair_win": 0.8743589743589744
+    },
+    {
+      "cohort": "expanded",
+      "class": "II",
+      "rows": 1194,
+      "previous_AUROC": 0.6871880339722061,
+      "shared_AUROC": 0.8372740306782377,
+      "delta": 0.15008599670603162,
+      "paired_95CI": "[+0.0768, +0.1997]",
+      "cluster": "protein",
+      "previous_pair_win": 0.6917922948073701,
+      "shared_pair_win": 0.8157453936348409
+    },
+    {
+      "cohort": "apc",
+      "class": "I",
+      "rows": 1860,
+      "previous_AUROC": 0.9239403399236905,
+      "shared_AUROC": 0.9257382356341772,
+      "delta": 0.0017978957104867188,
+      "paired_95CI": "[-0.0026, +0.0064]",
+      "cluster": "protein",
+      "previous_pair_win": 0.9118279569892473,
+      "shared_pair_win": 0.921505376344086
+    },
+    {
+      "cohort": "apc",
+      "class": "II",
+      "rows": 372,
+      "previous_AUROC": 0.7626893282460401,
+      "shared_AUROC": 0.7742224534628281,
+      "delta": 0.011533125216788065,
+      "paired_95CI": "[-0.0173, +0.0373]",
+      "cluster": "protein",
+      "previous_pair_win": 0.7634408602150538,
+      "shared_pair_win": 0.7580645161290323
+    },
+    {
+      "cohort": "broad",
+      "class": "I",
+      "rows": 4830,
+      "previous_AUROC": 0.9500435528120714,
+      "shared_AUROC": 0.9532153635116598,
+      "delta": 0.0031718106995883844,
+      "paired_95CI": "[+0.0008, +0.0055]",
+      "cluster": "condition",
+      "previous_pair_win": NaN,
+      "shared_pair_win": NaN
+    },
+    {
+      "cohort": "matched",
+      "class": "I",
+      "rows": 680,
+      "previous_AUROC": 0.6342387543252594,
+      "shared_AUROC": 0.6141522491349481,
+      "delta": -0.0200865051903113,
+      "paired_95CI": "[-0.0323, -0.0080]",
+      "cluster": "protein",
+      "previous_pair_win": 0.6735294117647059,
+      "shared_pair_win": 0.6588235294117647
+    },
+    {
+      "cohort": "matched",
+      "class": "II",
+      "rows": 316,
+      "previous_AUROC": 0.5763098862361802,
+      "shared_AUROC": 0.5692196763339209,
+      "delta": -0.007090209902259281,
+      "paired_95CI": "[-0.0379, +0.0252]",
+      "cluster": "protein",
+      "previous_pair_win": 0.569620253164557,
+      "shared_pair_win": 0.6075949367088608
+    }
+  ],
+  "affinity_retention": [
+    {
+      "model": "expanded-state-sqrt-s42-n6000",
+      "population": "affinity",
+      "class": "I",
+      "exact_n": 169,
+      "spearman": 0.6704992275462575,
+      "rmse_log10_nm": 1.0480222259482854,
+      "delta_spearman": 0.0006526417073072777,
+      "delta_rmse": -0.0005553666812490032,
+      "operational_guard_passed": true
+    },
+    {
+      "model": "expanded-state-sqrt-s42-n6000",
+      "population": "affinity",
+      "class": "II",
+      "exact_n": 1170,
+      "spearman": 0.4980092067233611,
+      "rmse_log10_nm": 0.8285442010575327,
+      "delta_spearman": 0.005028547335365341,
+      "delta_rmse": -0.016723609352777502,
+      "operational_guard_passed": true
+    },
+    {
+      "model": "expanded-state-sqrt-s42-n6000",
+      "population": "affinity_ancestry_screened",
+      "class": "I",
+      "exact_n": 108,
+      "spearman": 0.6814128520267101,
+      "rmse_log10_nm": 1.0425775997640268,
+      "delta_spearman": -0.000333444481554368,
+      "delta_rmse": -0.0008552387935316652,
+      "operational_guard_passed": true
+    },
+    {
+      "model": "expanded-state-sqrt-s42-n6000",
+      "population": "affinity_ancestry_screened",
+      "class": "II",
+      "exact_n": 1113,
+      "spearman": 0.4899624259458327,
+      "rmse_log10_nm": 0.8359707088982938,
+      "delta_spearman": 0.002817171917908312,
+      "delta_rmse": -0.016201584166640748,
+      "operational_guard_passed": true
+    }
+  ]
+}

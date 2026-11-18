@@ -1,0 +1,88 @@
+{
+  "fits": [
+    {
+      "arm": "continued",
+      "seed": 42,
+      "steps": 2000,
+      "runtime": {
+        "manifest_seconds": 5.652807923,
+        "admission_index_seconds": 140.180858249,
+        "local_staging_seconds": 5.983654323000001,
+        "canonical_trainer_including_preflight_seconds": 1916.6031718039999,
+        "training_and_evaluation_seconds": 1651.834217389,
+        "total_wall_seconds": 2076.557506593
+      }
+    },
+    {
+      "arm": "paired",
+      "seed": 42,
+      "steps": 2000,
+      "runtime": {
+        "manifest_seconds": 5.77050032,
+        "admission_index_seconds": 163.444167429,
+        "local_staging_seconds": 4.889049772000002,
+        "canonical_trainer_including_preflight_seconds": 2806.933107226,
+        "training_and_evaluation_seconds": 2378.5634314050003,
+        "total_wall_seconds": 2989.6756842560003
+      }
+    },
+    {
+      "arm": "paired-junction",
+      "seed": 42,
+      "steps": 2000,
+      "runtime": {
+        "manifest_seconds": 5.965034655000001,
+        "admission_index_seconds": 148.44397865599998,
+        "local_staging_seconds": 6.126867528999998,
+        "canonical_trainer_including_preflight_seconds": 2479.805834188,
+        "training_and_evaluation_seconds": 2075.21128619,
+        "total_wall_seconds": 2648.9987880800004
+      }
+    },
+    {
+      "arm": "continued",
+      "seed": 43,
+      "steps": 2000,
+      "runtime": {
+        "manifest_seconds": 5.19009994,
+        "admission_index_seconds": 128.332267022,
+        "local_staging_seconds": 5.380687330000001,
+        "canonical_trainer_including_preflight_seconds": 1784.158536563,
+        "training_and_evaluation_seconds": 1538.1437651390002,
+        "total_wall_seconds": 1930.451906251
+      }
+    },
+    {
+      "arm": "paired",
+      "seed": 43,
+      "steps": 2000,
+      "runtime": {
+        "manifest_seconds": 5.530156313000001,
+        "admission_index_seconds": 151.16686709,
+        "local_staging_seconds": 5.839639532000001,
+        "canonical_trainer_including_preflight_seconds": 2257.52376084,
+        "training_and_evaluation_seconds": 1854.6956676529999,
+        "total_wall_seconds": 2428.253653202
+      }
+    },
+    {
+      "arm": "paired-junction",
+      "seed": 43,
+      "steps": 2000,
+      "runtime": {
+        "manifest_seconds": 5.308835236,
+        "admission_index_seconds": 161.238076312,
+        "local_staging_seconds": 4.337888109,
+        "canonical_trainer_including_preflight_seconds": 3131.479154358,
+        "training_and_evaluation_seconds": 2691.599600061,
+        "total_wall_seconds": 3310.9310639580003
+      }
+    }
+  ],
+  "full_fit_worker_wall_seconds_sum": 15384.86860234,
+  "evaluation_workers": 13,
+  "evaluation_seconds_sum": 2175.953884689,
+  "controls_collected": 5,
+  "control_seconds_sum": 1480.969034616,
+  "scope": "Summed per-worker durations, not elapsed experiment wall clock; excludes failed startup attempts and scoring. Requested H100!, observed NVIDIA H100 80GB HBM3 / 85009367040 bytes."
+}

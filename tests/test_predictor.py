@@ -13,7 +13,7 @@ from presto.inference.predictor import (
     RecognitionResult,
     TiledPresentationResult,
 )
-from presto.models.presto import Presto
+from presto.legacy.presto import Presto
 
 
 class TestPresentationResult:

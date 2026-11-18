@@ -1,0 +1,350 @@
+{
+  "status": "completed_verified",
+  "experiment": "2026-11-17_1155_codex_shared-presentation-expansion",
+  "agent": "Codex / GPT-6",
+  "source": "artifacts/harmonized-apc-source",
+  "initial_commit": "8551cc2e29fcc32de8d01c2be799673b73887d2d",
+  "requested_gpu": "H100!",
+  "test_policy": "sealed; identity embargo only",
+  "spec": "spec.md",
+  "argv": [
+    "modal",
+    "run",
+    "--detach",
+    "experiments/2026-11-17_1155_codex_shared-presentation-expansion/code/launch.py",
+    "--action",
+    "prepare"
+  ],
+  "environment": {
+    "PRESTO_MODAL_GPU": "H100!"
+  },
+  "source_dirty": true,
+  "runtime_manifest": "runtime-manifest.json",
+  "registered_commands": [
+    [
+      "reproduce/launch.sh",
+      "--action",
+      "prepare"
+    ],
+    [
+      "reproduce/launch.sh",
+      "--action",
+      "refresh-context"
+    ],
+    [
+      "reproduce/launch.sh",
+      "--action",
+      "audit"
+    ],
+    [
+      "reproduce/launch.sh",
+      "--action",
+      "fit",
+      "--arms",
+      "pilot-balanced,expanded-none,expanded-state",
+      "--seed",
+      "42",
+      "--steps",
+      "6000"
+    ]
+  ],
+  "attempted_launch_rejected": true,
+  "upload_authorization": {
+    "user_reply": "Yes please",
+    "scope": "Upload Hitlist-derived tables, references, identity-only exclusions and source snapshot to Modal; continue controlled experiments",
+    "recorded_utc": "2026-11-17T18:00:14.665271+00:00"
+  },
+  "fit_source_dirty": false,
+  "native_admission_runtime_manifest": "runtime-native-admission-manifest.json",
+  "preparation_runtime": "runtime-native-admission",
+  "fit_runtime": "runtime",
+  "context_refresh_required": true,
+  "context_projection": {
+    "core_commit": "2da11504f71f49c3d1780b4c982db07966d7063b",
+    "wrapper_manifest": "reproduce/projection-preflight-wrapper-manifest.json",
+    "source_claims_preserved": true,
+    "validation_vocab_learned": false
+  },
+  "short_fit": {
+    "app": "ap-0HGDcNwaEPRpstXCbMRq3I",
+    "arm": "expanded-state",
+    "seed": 42,
+    "steps": 16,
+    "requested_gpu": "H100!",
+    "log": "launch_logs/modal-fit-preflight-n16.log"
+  },
+  "anchor_rescore": {
+    "app": "ap-oAwignnkEgQ37iRFUADb7M",
+    "run": "previous-default",
+    "log": "launch_logs/modal-anchor-evaluation-r3.log"
+  },
+  "stage_a_source_staging": {
+    "policy": "verified worker-local byte copies; unchanged canonical per-row source checks",
+    "manifest": "manifest.json",
+    "execution_manifest": "execution-manifest.json",
+    "receipt": "source-staging.json",
+    "wrapper_manifest": "reproduce/stage-a-wrapper-manifest.json"
+  },
+  "stage_a": {
+    "app": "https://modal.com/apps/iskandr/main/ap-JWaqHTZOePcj44uCRX3iSb",
+    "arms": [
+      "pilot-balanced",
+      "expanded-none",
+      "expanded-state"
+    ],
+    "seed": 42,
+    "steps": 6000,
+    "requested_gpu": "H100!",
+    "calls": [
+      "fc-01M7NG5P88A8S5AZK3K0E4GE6Y",
+      "fc-01M7NG5PE5KVC1MH50S8VBX1Y2",
+      "fc-01M7NG5PM0BAB47JYMMZ42ES82"
+    ],
+    "log": "launch_logs/modal-stage-a-s42-n6000.log",
+    "wrapper_manifest": "reproduce/stage-a-wrapper-manifest.json",
+    "core_commit": "2da11504f71f49c3d1780b4c982db07966d7063b"
+  },
+  "replication": {
+    "app": "https://modal.com/apps/iskandr/main/ap-vSlCRSbbe1Q13FYvwC4OZe",
+    "arms": [
+      "expanded-none",
+      "expanded-state"
+    ],
+    "seed": 43,
+    "steps": 6000,
+    "requested_gpu": "H100!",
+    "calls": [
+      "fc-01M7NGJCH2Z0NK50NDJTMBXC9J",
+      "fc-01M7NGJCKDA9J6GP7XV85T5WF8"
+    ],
+    "log": "launch_logs/modal-replication-s43-n6000.log",
+    "wrapper_manifest": "reproduce/replication-wrapper-manifest.json",
+    "scheduled_before_stage_a_outcomes": true
+  },
+  "transfer_control": {
+    "arm": "expanded-ii-transfer",
+    "seed": 42,
+    "steps": 6000,
+    "status": "completed_collected_verified",
+    "adaptive": true,
+    "reason": "Replicated early class-II gains with class-I retention unresolved",
+    "wrapper_manifest": "transfer-wrapper-manifest.json",
+    "command": "PRESTO_MODAL_GPU='H100!' /Users/iskander/code/shared-virtual-env/bin/modal run code/launch.py --action fit --arms expanded-ii-transfer --seed 42 --steps 6000",
+    "app_id": "ap-XJgB2sWcNQfQAP12sx7xfs",
+    "call_ids": [
+      "fc-01M7NHE0KZRK1XGP6F6EN2E1D8"
+    ],
+    "local_session": 8664,
+    "status_at_registration": "running"
+  },
+  "conditional_support_audit": {
+    "app_id": "ap-CAjMk2q6yE3av3IMMxkX9E",
+    "status": "completed",
+    "cpu_only": true,
+    "seconds": 43.537655628,
+    "artifact": "results/context-conditional-support.json",
+    "command": "PRESTO_MODAL_GPU='H100!' modal run code/context_support.py",
+    "wrapper_manifest": "context-support-wrapper-manifest.json"
+  },
+  "pathway_preflight": {
+    "status": "completed_integration_only",
+    "steps": 16,
+    "seed": 42,
+    "arm": "expanded-pathway-state",
+    "predictive_comparison": false,
+    "runtime_manifest": "runtime-pathway-manifest.json",
+    "wrapper_manifest": "pathway-preflight-wrapper-manifest.json",
+    "command": "PRESTO_MODAL_GPU='H100!' modal run code/launch_pathway.py --seed 42 --steps 16",
+    "app_id": "ap-QS7m0uGpL3AihCEbT38ZzQ",
+    "call_id": "fc-01M7NJG4KSHQCD8GBDS202NEEA",
+    "container": "ta-01M7NJG52JGEEA35NK4XNJRFJR",
+    "local_session": 89271
+  },
+  "sqrt_stage": {
+    "status": "completed_collected_verified",
+    "arms": [
+      "expanded-none-sqrt",
+      "expanded-state-sqrt",
+      "expanded-pathway-state-sqrt"
+    ],
+    "seeds": [
+      42,
+      43
+    ],
+    "steps": 6000,
+    "runtime_manifest": "runtime-pathway-manifest.json",
+    "wrapper_manifest": "sqrt-stage-wrapper-manifest.json",
+    "data": "same prepared hashes as StageA",
+    "changed_training": "sqrt study mass within unchanged task/class proportions; selection unchanged",
+    "preflight": "results/pathway-preflight-verification.json",
+    "commands": [
+      "PRESTO_MODAL_GPU='H100!' modal run code/launch_pathway.py --arms expanded-none-sqrt,expanded-state-sqrt,expanded-pathway-state-sqrt --seed 42 --steps 6000",
+      "PRESTO_MODAL_GPU='H100!' modal run code/launch_pathway.py --arms expanded-none-sqrt,expanded-state-sqrt,expanded-pathway-state-sqrt --seed 43 --steps 6000"
+    ],
+    "apps": {
+      "42": {
+        "app": "ap-AMbwfUsrQJmRYfgoIsbAjd",
+        "local_session": 39344,
+        "log": "launch_logs/sqrt-stage-s42-n6000.log",
+        "arms": [
+          "expanded-none-sqrt",
+          "expanded-state-sqrt",
+          "expanded-pathway-state-sqrt"
+        ],
+        "seed": 42,
+        "steps": 6000,
+        "calls": [
+          "fc-01M7NKGY12K4M0HJXVN3VJ7KD1",
+          "fc-01M7NKGY3D7J2DWSFEATQGYKTX",
+          "fc-01M7NKGY64Q37KFMNT938FC4XP"
+        ],
+        "core_commit": "5f9bfe37dfb5e82cecdf762ef1e59ff885668e40"
+      },
+      "43": {
+        "app": "ap-zGtTVaqZ4od1LRtE5mSXT5",
+        "local_session": 95505,
+        "log": "launch_logs/sqrt-stage-s43-n6000.log",
+        "arms": [
+          "expanded-none-sqrt",
+          "expanded-state-sqrt",
+          "expanded-pathway-state-sqrt"
+        ],
+        "seed": 43,
+        "steps": 6000,
+        "calls": [
+          "fc-01M7NKH1XDA357HW0N9V2ESMEK",
+          "fc-01M7NKH204KQE56ZWY9K45W4DC",
+          "fc-01M7NKH22702PD5SABCSZHDXM4"
+        ],
+        "core_commit": "5f9bfe37dfb5e82cecdf762ef1e59ff885668e40"
+      }
+    },
+    "status_at_registration": "running"
+  },
+  "context_controls": {
+    "core": "5f9bfe37",
+    "runs": [
+      "expanded-none-s43-n6000",
+      "expanded-state-s43-n6000"
+    ],
+    "modes": [
+      "original",
+      "unknown",
+      "within-study-shuffle"
+    ],
+    "seed": 20261117,
+    "gpu": "H100!",
+    "command": "PRESTO_MODAL_GPU='H100!' modal run code/context_ablation.py --runs expanded-none-s43-n6000,expanded-state-s43-n6000",
+    "interpretation": "inference association/sensitivity; not a trained-shuffle or causal contrast"
+  },
+  "fixed_terminal_comparison": {
+    "registered_utc": "2026-11-17T21:06:34.645729+00:00",
+    "runs": [
+      "expanded-none-sqrt-s42-n6000",
+      "expanded-state-sqrt-s42-n6000",
+      "expanded-pathway-state-sqrt-s42-n6000",
+      "expanded-none-sqrt-s43-n6000",
+      "expanded-state-sqrt-s43-n6000",
+      "expanded-pathway-state-sqrt-s43-n6000"
+    ],
+    "checkpoint": "raw/last.pt",
+    "step": 6000,
+    "scope": "all ordinary/affinity/matched validation; retain original selected checkpoints",
+    "status": "completed_collected_verified",
+    "retrospective_original_controls": [
+      "pilot-balanced-s42-n6000",
+      "expanded-none-s42-n6000",
+      "expanded-none-s43-n6000",
+      "expanded-state-s42-n6000",
+      "expanded-state-s43-n6000",
+      "expanded-ii-transfer-s42-n6000"
+    ],
+    "status_at_registration": "registered_before_terminal_outcomes"
+  },
+  "network_recovery": {
+    "inspection": "results/recovery-inspection.json",
+    "stopped_apps": "launch_logs/apps-after-network-error.json",
+    "zero_surviving_workers": "launch_logs/containers-after-network-error.json",
+    "core_runtime_by_arm": {
+      "transfer": "2da11504",
+      "sqrt": "5f9bfe37"
+    },
+    "launch_mode": "--detach",
+    "resume": "canonical fit_index resume=True; checkpoint SHA guarded; original manifests unchanged",
+    "wrapper_manifest": "reproduce/recovery-wrapper-manifest.json"
+  },
+  "network_recovery_coordinator": {
+    "runs": [
+      "expanded-ii-transfer-s42-n6000",
+      "expanded-state-sqrt-s42-n6000",
+      "expanded-pathway-state-sqrt-s42-n6000",
+      "expanded-none-sqrt-s43-n6000",
+      "expanded-state-sqrt-s43-n6000",
+      "expanded-pathway-state-sqrt-s43-n6000"
+    ],
+    "command": "PRESTO_MODAL_GPU='H100!' modal run --detach code/resume.py --action resume --runs expanded-ii-transfer-s42-n6000,expanded-state-sqrt-s42-n6000,expanded-pathway-state-sqrt-s42-n6000,expanded-none-sqrt-s43-n6000,expanded-state-sqrt-s43-n6000,expanded-pathway-state-sqrt-s43-n6000",
+    "wrapper": "reproduce/coordinator-recovery-wrapper-manifest.json",
+    "snapshot_inspection": "/volume/2026-11-17_1155_codex_shared-presentation-expansion/recovery/inspection-1794951986373989715.json",
+    "preceding_attempt_stopped": "ap-2vIlJRBuQWm5DhNyny7qfQ",
+    "verified_no_workers": "launch_logs/containers-before-coordinator.json"
+  },
+  "recovery_closeout": {
+    "command": "PRESTO_MODAL_GPU='H100!' modal run --detach code/closeout.py --calls-file reproduce/coordinated-recovery-calls.json",
+    "app": "ap-EHOLYouNwp2gSkpPaXmYA5",
+    "wrapper": "reproduce/closeout-wrapper-manifest.json"
+  },
+  "recovery_closeout_async": {
+    "command": "PRESTO_MODAL_GPU='H100!' python code/dns_transport.py --module modal run --detach code/closeout.py --calls-file reproduce/coordinated-recovery-calls.json",
+    "app": "ap-Fl1ODe8KXytBtmnWMJYZC2",
+    "wrapper": "reproduce/async-closeout-wrapper-manifest.json"
+  },
+  "sqrt_apc_controls": {
+    "runs": [
+      "expanded-state-sqrt-s43-n6000",
+      "expanded-none-sqrt-s43-n6000"
+    ],
+    "one_app_per_run": true,
+    "command": "PRESTO_MODAL_GPU='H100!' python code/dns_transport.py --module modal run --detach code/context_ablation.py --runs RUN",
+    "wrapper": "reproduce/qualified-controls-wrapper-manifest.json",
+    "additional_runs": [
+      "expanded-state-sqrt-s43-n6000-terminal",
+      "expanded-state-sqrt-s42-n6000"
+    ],
+    "apps": [
+      "ap-oBNtabDsAJdfxej2QBZo72",
+      "ap-QZulngvNkNRBvbTVCeqvFs",
+      "ap-xMATUPQWGuA50H5fu3TOun",
+      "ap-7rV0ka87q15kSQFxmWhk87"
+    ]
+  },
+  "initial_status": "context_refresh_running",
+  "closed_utc": "2026-11-17T22:55:56.582030+00:00",
+  "initial_fit_source_commit": "65314976",
+  "fit_core_commits": [
+    "2da11504f71f49c3d1780b4c982db07966d7063b",
+    "5f9bfe37dfb5e82cecdf762ef1e59ff885668e40"
+  ],
+  "preferred_core_commit": "5f9bfe37dfb5e82cecdf762ef1e59ff885668e40",
+  "final_commands": [
+    "python code/verify_results.py",
+    "python code/analyze.py --preferred expanded-state-sqrt-s42-n6000",
+    "python code/analyze.py --preferred expanded-state-sqrt-s42-n6000 --bootstrap-only --bootstrap-cluster condition",
+    "python code/components.py",
+    "python code/diagnose_class_ii.py",
+    "python code/report.py",
+    "python code/decision.py --preferred expanded-state-sqrt-s42-n6000",
+    "python code/predict_example.py",
+    "python code/plot_comparison.py --model expanded-state-sqrt-s42-n6000",
+    "python code/plot_progress.py --family sqrt"
+  ],
+  "final_artifacts": [
+    "results/preferred-checkpoint.json",
+    "results/independent-verification.json",
+    "results/terminal-independent-verification.json",
+    "results/example-predictions.json",
+    "results/analysis/metrics.csv",
+    "results/analysis/report.md",
+    "results/containers-closed.json"
+  ],
+  "raw_source_reproduction": "Exact local repo-level data/shared-presentation-20261117 is required to rebuild from source; it is retained outside git. Prepared source artifacts already exist under the registered Modal experiment. Checkpoint/prediction retrieval uses code/collect.py and needs no raw Hitlist export."
+}

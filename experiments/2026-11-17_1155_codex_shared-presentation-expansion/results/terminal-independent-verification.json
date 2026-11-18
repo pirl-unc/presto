@@ -1,0 +1,230 @@
+[
+  {
+    "run": "expanded-ii-transfer-s42-n6000-terminal",
+    "validation_rows": 11572,
+    "steps": 6000,
+    "final_history_auroc": {
+      "I": 0.9345300358422939,
+      "II": 0.7928718342687603
+    },
+    "class_study_bce": {
+      "I": 0.5595801677889927,
+      "II": 0.6834383440802639
+    },
+    "equal_class_study_bce": 0.6215092559346282,
+    "overall_validation_loss": 0.41427297627385873,
+    "selected_checkpoint_preserved": true,
+    "coverage_superset_verified": true,
+    "checkpoint_hash_verified": true,
+    "test_accessed": false
+  },
+  {
+    "run": "expanded-none-s42-n6000-terminal",
+    "validation_rows": 11572,
+    "steps": 6000,
+    "final_history_auroc": {
+      "I": 0.929762724014337,
+      "II": 0.7893356429490661
+    },
+    "class_study_bce": {
+      "I": 0.49621460483816887,
+      "II": 0.6870762827542554
+    },
+    "equal_class_study_bce": 0.5916454437962121,
+    "overall_validation_loss": 0.4164470415066495,
+    "selected_checkpoint_preserved": true,
+    "coverage_superset_verified": true,
+    "checkpoint_hash_verified": true,
+    "test_accessed": false
+  },
+  {
+    "run": "expanded-none-s43-n6000-terminal",
+    "validation_rows": 11572,
+    "steps": 6000,
+    "final_history_auroc": {
+      "I": 0.9301189247311829,
+      "II": 0.796633115257328
+    },
+    "class_study_bce": {
+      "I": 0.484373864087056,
+      "II": 0.6746027880029521
+    },
+    "equal_class_study_bce": 0.5794883260450041,
+    "overall_validation_loss": 0.4133137024885438,
+    "selected_checkpoint_preserved": true,
+    "coverage_superset_verified": true,
+    "checkpoint_hash_verified": true,
+    "test_accessed": false
+  },
+  {
+    "run": "expanded-none-sqrt-s42-n6000-terminal",
+    "validation_rows": 11572,
+    "steps": 6000,
+    "final_history_auroc": {
+      "I": 0.9377784946236558,
+      "II": 0.8113879061604432
+    },
+    "class_study_bce": {
+      "I": 0.46647661186825573,
+      "II": 0.6341258152880975
+    },
+    "equal_class_study_bce": 0.5503012135781766,
+    "overall_validation_loss": 0.3941044046323403,
+    "selected_checkpoint_preserved": true,
+    "coverage_superset_verified": true,
+    "checkpoint_hash_verified": true,
+    "test_accessed": false
+  },
+  {
+    "run": "expanded-none-sqrt-s43-n6000-terminal",
+    "validation_rows": 11572,
+    "steps": 6000,
+    "final_history_auroc": {
+      "I": 0.9361588530465951,
+      "II": 0.8112476328885365
+    },
+    "class_study_bce": {
+      "I": 0.4601098704370587,
+      "II": 0.6509123534583828
+    },
+    "equal_class_study_bce": 0.5555111119477207,
+    "overall_validation_loss": 0.3954142479634709,
+    "selected_checkpoint_preserved": true,
+    "coverage_superset_verified": true,
+    "checkpoint_hash_verified": true,
+    "test_accessed": false
+  },
+  {
+    "run": "expanded-pathway-state-sqrt-s42-n6000-terminal",
+    "validation_rows": 11572,
+    "steps": 6000,
+    "final_history_auroc": {
+      "I": 0.9384077419354839,
+      "II": 0.8226831667180459
+    },
+    "class_study_bce": {
+      "I": 0.46119393469508385,
+      "II": 0.6142736826675678
+    },
+    "equal_class_study_bce": 0.5377338086813258,
+    "overall_validation_loss": 0.39048055271051063,
+    "selected_checkpoint_preserved": true,
+    "coverage_superset_verified": true,
+    "checkpoint_hash_verified": true,
+    "test_accessed": false
+  },
+  {
+    "run": "expanded-pathway-state-sqrt-s43-n6000-terminal",
+    "validation_rows": 11572,
+    "steps": 6000,
+    "final_history_auroc": {
+      "I": 0.9366768458781363,
+      "II": 0.8217420309286254
+    },
+    "class_study_bce": {
+      "I": 0.45924832487535544,
+      "II": 0.6364715903548761
+    },
+    "equal_class_study_bce": 0.5478599576151157,
+    "overall_validation_loss": 0.3917382850187235,
+    "selected_checkpoint_preserved": true,
+    "coverage_superset_verified": true,
+    "checkpoint_hash_verified": true,
+    "test_accessed": false
+  },
+  {
+    "run": "expanded-state-s42-n6000-terminal",
+    "validation_rows": 11572,
+    "steps": 6000,
+    "final_history_auroc": {
+      "I": 0.9307593548387096,
+      "II": 0.7908509205025698
+    },
+    "class_study_bce": {
+      "I": 0.4923866002753899,
+      "II": 0.6574254517446436
+    },
+    "equal_class_study_bce": 0.5749060260100167,
+    "overall_validation_loss": 0.4096090130590552,
+    "selected_checkpoint_preserved": true,
+    "coverage_superset_verified": true,
+    "checkpoint_hash_verified": true,
+    "test_accessed": false
+  },
+  {
+    "run": "expanded-state-s43-n6000-terminal",
+    "validation_rows": 11572,
+    "steps": 6000,
+    "final_history_auroc": {
+      "I": 0.9313674910394265,
+      "II": 0.7983783757333764
+    },
+    "class_study_bce": {
+      "I": 0.48041475790806987,
+      "II": 0.6556944411635995
+    },
+    "equal_class_study_bce": 0.5680545995358347,
+    "overall_validation_loss": 0.40641906589288024,
+    "selected_checkpoint_preserved": true,
+    "coverage_superset_verified": true,
+    "checkpoint_hash_verified": true,
+    "test_accessed": false
+  },
+  {
+    "run": "expanded-state-sqrt-s42-n6000-terminal",
+    "validation_rows": 11572,
+    "steps": 6000,
+    "final_history_auroc": {
+      "I": 0.9384023655913977,
+      "II": 0.8226423896041193
+    },
+    "class_study_bce": {
+      "I": 0.46133073741410574,
+      "II": 0.6144066564234639
+    },
+    "equal_class_study_bce": 0.5378686969187848,
+    "overall_validation_loss": 0.39053521118235396,
+    "selected_checkpoint_preserved": true,
+    "coverage_superset_verified": true,
+    "checkpoint_hash_verified": true,
+    "test_accessed": false
+  },
+  {
+    "run": "expanded-state-sqrt-s43-n6000-terminal",
+    "validation_rows": 11572,
+    "steps": 6000,
+    "final_history_auroc": {
+      "I": 0.9366789964157706,
+      "II": 0.8218545757630622
+    },
+    "class_study_bce": {
+      "I": 0.4595289994575708,
+      "II": 0.6364336647485462
+    },
+    "equal_class_study_bce": 0.5479813321030585,
+    "overall_validation_loss": 0.39177841034294714,
+    "selected_checkpoint_preserved": true,
+    "coverage_superset_verified": true,
+    "checkpoint_hash_verified": true,
+    "test_accessed": false
+  },
+  {
+    "run": "pilot-balanced-s42-n6000-terminal",
+    "validation_rows": 11572,
+    "steps": 6000,
+    "final_history_auroc": {
+      "I": 0.9297288172043011,
+      "II": 0.7230614152268269
+    },
+    "class_study_bce": {
+      "I": 0.6179841373971219,
+      "II": 1.0193862557817468
+    },
+    "equal_class_study_bce": 0.8186851965894344,
+    "overall_validation_loss": 0.45612426076870494,
+    "selected_checkpoint_preserved": true,
+    "coverage_superset_verified": true,
+    "checkpoint_hash_verified": true,
+    "test_accessed": false
+  }
+]

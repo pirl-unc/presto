@@ -1,5 +1,13 @@
 # Model information flow and executed training audit
 
+> **Historical specification.** This page documents the former default model,
+> its APIs or proposed extensions. New training uses the
+> [shared observation model](modular_model.md) and
+> [one manifest interface](unified_training.md). Statements about a default,
+> canonical path or runnable training command below apply to the historical
+> implementation at commit `9dd71348124faa49a4c6a60872385c86895d50b0`, not new training.
+
+
 Audited 2026-10-20 by Codex / GPT-6 against PR #129 at
 `4be42102b8b6477d4abc9ecb7570a68184f468e5`. The canonical model implementation is
 identical to the failed fit's v0.1.16 implementation except for a docstring.

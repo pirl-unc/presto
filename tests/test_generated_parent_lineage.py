@@ -8,7 +8,7 @@ import pytest
 from presto.data.collate import PrestoCollator
 from presto.data.loaders import BindingRecord, ElutionRecord, PrestoDataset, ProcessingRecord
 from presto.data.source_lineage import generated_record, record_lineage_id
-from presto.scripts.train_iedb import (
+from presto.legacy.scripts.train_iedb import (
     augment_binding_records_with_synthetic_negatives,
     augment_elution_records_with_synthetic_negatives,
     augment_processing_records_with_synthetic_negatives,

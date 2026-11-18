@@ -1,5 +1,8 @@
 # Verified scoped proteomics inputs
 
+New datasets must preserve comparable study, sample, assay and measurement
+metadata under the shared [study curation contract](study_curation_contract.md).
+
 The Python adapter accepts Hitlist's published PXD013455 HeLa Trypsin/P search
 scope. Install `presto[hitlist]` with Hitlist >=1.75.0, then:
 

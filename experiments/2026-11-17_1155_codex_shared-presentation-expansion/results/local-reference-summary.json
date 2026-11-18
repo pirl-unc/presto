@@ -1,0 +1,26 @@
+{
+  "status": "mapped",
+  "purpose": "source eligibility only; final family partitions also incorporate historical training and validation identities",
+  "unique_peptides_by_class": {
+    "I": 273166,
+    "II": 195579
+  },
+  "junction_counts": {
+    "I": {
+      "unanimous_reference_junction": 181936,
+      "ambiguous_reference_junction": 38422,
+      "unmapped": 52808
+    },
+    "II": {
+      "unanimous_reference_junction": 160589,
+      "unmapped": 5865,
+      "ambiguous_reference_junction": 29125
+    }
+  },
+  "proteins": 107341,
+  "families": 11122,
+  "mapped_peptides": 406030,
+  "mapping_sha256": "9ab034107ca952723e9c04b7dfee3ad6eed6d7355d2921778c13103afd50e421",
+  "seconds": 30.110331707983278,
+  "test_accessed": false
+}

@@ -1,0 +1,25 @@
+{
+  "request": {
+    "gpu": false,
+    "receipt_dir": "/volume/2026-11-18_0315_codex_foundation-integration/audit-execution",
+    "commands": [
+      [
+        "data",
+        "audit-presentation",
+        "--prepared-dir",
+        "/volume/2026-11-18_0315_codex_foundation-integration/prepared",
+        "--output",
+        "/volume/2026-11-18_0315_codex_foundation-integration/pair-audit.json"
+      ]
+    ],
+    "assets": [],
+    "request_sha256": "68caa1c6e7650e24f2b33ae9b8ae3d935a4f07dd1eda8fd72aab0426dc4c6895",
+    "wheel_sha256": "d8cd8e7ee24b0ed3d0fb8bb3a2ad069993e0df03200334fa5399984e40122a31",
+    "wheel_filename": "presto-0.1.22-py3-none-any.whl"
+  },
+  "presto_version": "0.1.22",
+  "presto_import": "/usr/local/lib/python3.12/site-packages/presto/__init__.py",
+  "status": "complete",
+  "requested_gpu": null,
+  "seconds": 90.61062833
+}

@@ -10,7 +10,7 @@ prevent.
 import pytest
 import torch
 
-from presto.models.presto import Presto
+from presto.legacy.presto import Presto
 
 BATCH = 2
 PEP_LEN = 11
@@ -87,13 +87,15 @@ class TestTopologyConstruction:
         import inspect
         from pathlib import Path
 
-        from presto.scripts import train_iedb
+        from presto.legacy.scripts import train_iedb
 
         signature = inspect.signature(Presto.__init__)
         assert signature.parameters["latent_topology"].default == "expanded"
         assert train_iedb.IEDB_DEFAULTS["latent_topology"] == "expanded"
 
-        launcher = (Path(__file__).resolve().parents[1] / "scripts" / "train_remote.py").read_text()
+        launcher = (
+            Path(__file__).resolve().parents[1] / "legacy" / "scripts" / "train_remote.py"
+        ).read_text()
         assert '"PRESTO_LATENT_TOPOLOGY", "expanded"' in launcher
 
     def test_expanded_has_one_query_per_cross_attention_latent(self):

@@ -1,0 +1,321 @@
+{
+  "policy": "reported_or_curated_row_identity_independent_of_condition_arm",
+  "files": {
+    "expanded-train.jsonl": {
+      "discarded_incomplete_legacy_bytes": 313709616,
+      "rows": 775748,
+      "changed_cell_type": 125986,
+      "known_cell_type": 652062,
+      "before_sha256": "87b7923e5be64fc53537ccc897e5228746eaa27863351c8258ce28fc427e2791",
+      "after_sha256": "d0d07424cbb2e2b6583628be4d5f1be919a5e17fddeb6dbfad399b3c39f83657",
+      "all_other_fields_sha256": "4fe305e691e61974dd7dcb33c279572e371f5c971982de9cc391819a201fcbc9",
+      "all_other_fields_unchanged": true,
+      "written_bytes_verified": true
+    },
+    "expanded-validation.jsonl": {
+      "rows": 1974,
+      "changed_cell_type": 238,
+      "known_cell_type": 1722,
+      "before_sha256": "76b1f1a7d030e341cc267eb328a4aef5be9cd177c221c4cf7efc960658fcbb44",
+      "after_sha256": "596f36dc4140d418ede65fbcc14c17e035943204b72a15232ebd91ebfd77fd3f",
+      "all_other_fields_sha256": "718e7e3705f210b63c419746a2b8d388083a43c7ae81fd599f783bce5f4613c0",
+      "all_other_fields_unchanged": true,
+      "written_bytes_verified": true
+    },
+    "expanded-II-train.jsonl": {
+      "rows": 356358,
+      "changed_cell_type": 27546,
+      "known_cell_type": 273504,
+      "before_sha256": "30b0f6458456b7d39c24bc1257589710019bcc2eef6788cbf94fe0e4f60655a3",
+      "after_sha256": "ebfb85bd995d51a369facaf9df9ae937eb0e2b1667f6c5d9f773037aa87df0bf",
+      "all_other_fields_sha256": "f3437fd680bef60eb112e20cc9b49c94308f656c136f4542fbe0c6178144e948",
+      "all_other_fields_unchanged": true,
+      "written_bytes_verified": true
+    }
+  },
+  "test_accessed": false,
+  "class_context_census": [
+    {
+      "class": "I",
+      "feature": "cytokines:IFNG:present",
+      "positive_rows": 10833
+    },
+    {
+      "class": "I",
+      "feature": "interventions:background:ERAP1_hap10:present",
+      "positive_rows": 79
+    },
+    {
+      "class": "I",
+      "feature": "interventions:drug:decitabine:present",
+      "positive_rows": 55
+    },
+    {
+      "class": "I",
+      "feature": "interventions:drug:flucloxacillin:present",
+      "positive_rows": 153
+    },
+    {
+      "class": "I",
+      "feature": "interventions:drug:tazemetostat:present",
+      "positive_rows": 95
+    },
+    {
+      "class": "I",
+      "feature": "interventions:knockdown:ERAP1:absent",
+      "positive_rows": 740
+    },
+    {
+      "class": "I",
+      "feature": "interventions:knockdown:ERAP1:present",
+      "positive_rows": 611
+    },
+    {
+      "class": "I",
+      "feature": "interventions:knockout:B2M:absent",
+      "positive_rows": 3432
+    },
+    {
+      "class": "I",
+      "feature": "interventions:knockout:B2M:present",
+      "positive_rows": 31
+    },
+    {
+      "class": "I",
+      "feature": "interventions:knockout:CALR:absent",
+      "positive_rows": 3432
+    },
+    {
+      "class": "I",
+      "feature": "interventions:knockout:CALR:present",
+      "positive_rows": 3169
+    },
+    {
+      "class": "I",
+      "feature": "interventions:knockout:CANX:absent",
+      "positive_rows": 3432
+    },
+    {
+      "class": "I",
+      "feature": "interventions:knockout:CANX:present",
+      "positive_rows": 2892
+    },
+    {
+      "class": "I",
+      "feature": "interventions:knockout:ERAP1:absent",
+      "positive_rows": 3432
+    },
+    {
+      "class": "I",
+      "feature": "interventions:knockout:ERAP1:present",
+      "positive_rows": 1433
+    },
+    {
+      "class": "I",
+      "feature": "interventions:knockout:ERAP2:present",
+      "positive_rows": 1516
+    },
+    {
+      "class": "I",
+      "feature": "interventions:knockout:GANAB:absent",
+      "positive_rows": 3432
+    },
+    {
+      "class": "I",
+      "feature": "interventions:knockout:GANAB:present",
+      "positive_rows": 1838
+    },
+    {
+      "class": "I",
+      "feature": "interventions:knockout:HLA-A:present",
+      "positive_rows": 1351
+    },
+    {
+      "class": "I",
+      "feature": "interventions:knockout:HLA-B:present",
+      "positive_rows": 1351
+    },
+    {
+      "class": "I",
+      "feature": "interventions:knockout:HLA-C:present",
+      "positive_rows": 1351
+    },
+    {
+      "class": "I",
+      "feature": "interventions:knockout:IRF2:absent",
+      "positive_rows": 3432
+    },
+    {
+      "class": "I",
+      "feature": "interventions:knockout:IRF2:present",
+      "positive_rows": 737
+    },
+    {
+      "class": "I",
+      "feature": "interventions:knockout:PDIA3:absent",
+      "positive_rows": 3432
+    },
+    {
+      "class": "I",
+      "feature": "interventions:knockout:PDIA3:present",
+      "positive_rows": 1217
+    },
+    {
+      "class": "I",
+      "feature": "interventions:knockout:SPPL3:absent",
+      "positive_rows": 3432
+    },
+    {
+      "class": "I",
+      "feature": "interventions:knockout:SPPL3:present",
+      "positive_rows": 2567
+    },
+    {
+      "class": "I",
+      "feature": "interventions:knockout:TAP1:absent",
+      "positive_rows": 3432
+    },
+    {
+      "class": "I",
+      "feature": "interventions:knockout:TAP1:present",
+      "positive_rows": 1548
+    },
+    {
+      "class": "I",
+      "feature": "interventions:knockout:TAP2:absent",
+      "positive_rows": 3432
+    },
+    {
+      "class": "I",
+      "feature": "interventions:knockout:TAP2:present",
+      "positive_rows": 458
+    },
+    {
+      "class": "I",
+      "feature": "interventions:knockout:TAPBP:absent",
+      "positive_rows": 3432
+    },
+    {
+      "class": "I",
+      "feature": "interventions:knockout:TAPBP:present",
+      "positive_rows": 736
+    },
+    {
+      "class": "I",
+      "feature": "interventions:stimulation:LPS:present",
+      "positive_rows": 361
+    },
+    {
+      "class": "I",
+      "feature": "interventions:stimulation:PMA:present",
+      "positive_rows": 373
+    },
+    {
+      "class": "I",
+      "feature": "interventions:stimulation:biomaterial_contact:present",
+      "positive_rows": 361
+    },
+    {
+      "class": "I",
+      "feature": "interventions:stimulation:dc_maturation:present",
+      "positive_rows": 831
+    },
+    {
+      "class": "I",
+      "feature": "interventions:stimulation:ionomycin:present",
+      "positive_rows": 373
+    },
+    {
+      "class": "I",
+      "feature": "interventions:transduction:CIITA:absent",
+      "positive_rows": 342
+    },
+    {
+      "class": "I",
+      "feature": "interventions:transduction:CIITA:present",
+      "positive_rows": 1201
+    },
+    {
+      "class": "I",
+      "feature": "interventions:transduction:HIV Env:present",
+      "positive_rows": 1759
+    },
+    {
+      "class": "I",
+      "feature": "interventions:transduction:HLA-B:present",
+      "positive_rows": 1351
+    },
+    {
+      "class": "I",
+      "feature": "known_cell_type",
+      "positive_rows": 189279
+    },
+    {
+      "class": "I",
+      "feature": "positive_rows",
+      "positive_rows": 209695
+    },
+    {
+      "class": "I",
+      "feature": "resolved_arm",
+      "positive_rows": 152546
+    },
+    {
+      "class": "II",
+      "feature": "cytokines:IFNG:present",
+      "positive_rows": 186
+    },
+    {
+      "class": "II",
+      "feature": "interventions:drug:DMSO:present",
+      "positive_rows": 15
+    },
+    {
+      "class": "II",
+      "feature": "interventions:drug:decitabine:present",
+      "positive_rows": 142
+    },
+    {
+      "class": "II",
+      "feature": "interventions:drug:tazemetostat:present",
+      "positive_rows": 98
+    },
+    {
+      "class": "II",
+      "feature": "interventions:knockdown:TAX1BP1:absent",
+      "positive_rows": 1017
+    },
+    {
+      "class": "II",
+      "feature": "interventions:knockdown:TAX1BP1:present",
+      "positive_rows": 610
+    },
+    {
+      "class": "II",
+      "feature": "interventions:transduction:CIITA:present",
+      "positive_rows": 10245
+    },
+    {
+      "class": "II",
+      "feature": "interventions:transfection:HLA-DM:present",
+      "positive_rows": 69992
+    },
+    {
+      "class": "II",
+      "feature": "known_cell_type",
+      "positive_rows": 136752
+    },
+    {
+      "class": "II",
+      "feature": "positive_rows",
+      "positive_rows": 178179
+    },
+    {
+      "class": "II",
+      "feature": "resolved_arm",
+      "positive_rows": 135368
+    }
+  ],
+  "seconds": 263.780863668,
+  "status": "passed"
+}

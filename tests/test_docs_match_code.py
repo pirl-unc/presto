@@ -19,7 +19,7 @@ import pytest
 
 torch = pytest.importorskip("torch")
 
-from presto.models.presto import Presto  # noqa: E402
+from presto.legacy.presto import Presto  # noqa: E402
 
 DOCS = Path(__file__).resolve().parent.parent / "docs"
 

@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "scope": "integration only; not a qualified predictive checkpoint",
+  "validation_rows": 11572,
+  "recomputed_selection_loss": 0.7414043903885337,
+  "checkpoint_sha256": "d819ed3181b2698b82782c20e15352590efdb4e2d2466eece8938c1c8c84affb",
+  "both_pathway_columns_updated": true,
+  "untrained_parameter_tensors": [],
+  "diagnostic_unupdated_context_features": {
+    "apm_state.encoder.weight": [
+      "cell_type:Pancreatic beta cell"
+    ]
+  },
+  "public_logits": [
+    9.095613479614258,
+    4.531250476837158
+  ],
+  "test_accessed": false
+}

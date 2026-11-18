@@ -1,0 +1,20 @@
+{
+  "rows": 10000,
+  "sha256": "8f435d9224a5d0fd991187202fdeef9e0f4151de24ff52d2b98a7fdc64085893",
+  "runs": [
+    {
+      "buffer_bytes": 8192,
+      "bytes": 44269469,
+      "wall_seconds": 3.050917,
+      "cpu_seconds": 0.1
+    },
+    {
+      "buffer_bytes": 1048576,
+      "bytes": 44269469,
+      "wall_seconds": 0.068944956,
+      "cpu_seconds": 0.03
+    }
+  ],
+  "limitations": "Single same-volume probe during the refresh; ordered/cache effects possible. Exact output-byte parity checked.",
+  "decision": "Use 1MiB buffering for context-refresh writes."
+}

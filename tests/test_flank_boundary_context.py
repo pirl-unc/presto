@@ -30,7 +30,7 @@ from presto.data.hitlist_source import (  # noqa: E402
     flank_context,
 )
 from presto.data.vocab import AA_TO_IDX, AA_VOCAB  # noqa: E402
-from presto.models.presto import Presto  # noqa: E402
+from presto.legacy.presto import Presto  # noqa: E402
 
 UNKNOWN_FLANK = AA_TO_IDX["?"]
 BOUNDARY = AA_TO_IDX["X"]
@@ -52,7 +52,7 @@ class TestTheFlankAlphabetIsDistinct:
         """Start and end need no separate symbols. The N and C junctions are
         scored by different tensors, each with a position axis, so which
         boundary was hit is already encoded by which parameter is indexed."""
-        from presto.models.presto import Presto
+        from presto.legacy.presto import Presto
 
         head = Presto(d_model=32, n_layers=2, n_heads=4).excision_head
         assert head.invivo_profile_n.shape == head.invivo_profile_c.shape

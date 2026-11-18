@@ -1,0 +1,13 @@
+{
+  "presto_version": "0.1.22",
+  "hitlist_version": "2.1.12",
+  "shared_environment_pip_check": "fails on existing external constraints",
+  "conflicts": [
+    "varlens 1.0.0 requires varcode>=10.14.0,<11; installed editable varcode 11.4.1",
+    "topiary 5.108.4 requires varcode>=4.18.0,<11; installed editable varcode 11.4.1",
+    "vaxrank 3.48.3 requires varcode>=10.20.2,<11.0.0; installed editable varcode 11.4.1"
+  ],
+  "constraint": "Varlens has local edits including its dependency declaration. A mutually compatible stack cannot retain both its declared <11 requirement and this editable Varcode 11 checkout. No dependency constraints or unrelated packages were forced or downgraded.",
+  "modal_image_pip_check": "No broken requirements found.",
+  "editable_presto_source": "artifacts/cleanup-foundation-source"
+}

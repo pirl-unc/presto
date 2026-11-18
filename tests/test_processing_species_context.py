@@ -9,7 +9,7 @@ from presto.data.loaders import BindingRecord, PrestoDataset
 from presto.data.source_lineage import generated_record
 from presto.data.species_context import native_species_context, processing_species_context
 from presto.data.vocab import normalize_single_species, normalize_species
-from presto.models.presto import _processing_species_idx_tensor
+from presto.legacy.presto import _processing_species_idx_tensor
 from presto.training.output_contract import build_output_contract
 from presto.training.output_coverage import OutputCoverageCensus
 from presto.training.supported_outputs import evaluate_supported_outputs

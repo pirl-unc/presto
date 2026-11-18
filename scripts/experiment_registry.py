@@ -14,7 +14,11 @@ from typing import Any, Mapping, Sequence
 import json
 
 
-ROOT = Path(__file__).resolve().parent.parent
+SOURCE_ROOT = Path(__file__).resolve().parent.parent
+# Results belong to the caller's workspace, including with an installed wheel.
+# Never write experiments into site-packages or infer the destination from the
+# editable installation's location.
+ROOT = Path(os.environ.get("PRESTO_WORKSPACE", Path.cwd())).resolve()
 EXPERIMENTS_ROOT = ROOT / "experiments"
 REGISTRY_MD = EXPERIMENTS_ROOT / "experiment_log.md"
 REPRO_DIRNAME = "reproduce"
@@ -130,7 +134,7 @@ def _capture_git_state() -> dict[str, str | bool | None]:
         try:
             return subprocess.check_output(
                 args,
-                cwd=str(ROOT),
+                cwd=str(SOURCE_ROOT),
                 stderr=subprocess.DEVNULL,
                 text=True,
             ).strip()
@@ -139,17 +143,8 @@ def _capture_git_state() -> dict[str, str | bool | None]:
 
     commit = _run(["git", "rev-parse", "HEAD"])
     branch = _run(["git", "rev-parse", "--abbrev-ref", "HEAD"])
-    dirty_rc = (
-        subprocess.call(
-            ["git", "diff", "--stat", "--exit-code"],
-            cwd=str(ROOT),
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-        )
-        if commit is not None
-        else None
-    )
-    dirty = dirty_rc != 0 if dirty_rc is not None else None
+    status = _run(["git", "status", "--porcelain", "--untracked-files=normal"])
+    dirty = bool(status) if status is not None else None
     return {"commit": commit, "branch": branch, "dirty": dirty}
 
 
@@ -219,7 +214,7 @@ def write_reproducibility_bundle(
     launch_path.write_text(launch_script, encoding="utf-8")
     launch_path.chmod(0o755)
 
-    source_path = ROOT / source_script
+    source_path = SOURCE_ROOT / source_script
     if source_path.exists():
         snapshot_dir = reproduce_dir / "source"
         snapshot_dir.mkdir(parents=True, exist_ok=True)
