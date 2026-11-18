@@ -190,6 +190,10 @@ def validate_manifest(manifest: dict, manifest_path: Path) -> None:
         _require(artifact["id"] not in prediction_ids, f"duplicate prediction id {artifact['id']}")
         prediction_ids.add(artifact["id"])
         _require(artifact.get("split") in ROLES - {"train"}, f"{field}.split")
+        _require(
+            artifact["split"] in roles,
+            f"{field}.split has no matching dataset role in data.datasets",
+        )
         _validate_artifact(artifact, field, manifest_path.parent)
 
     supplemental = manifest.get("supplemental_artifacts", [])
@@ -231,6 +235,10 @@ def validate_manifest(manifest: dict, manifest_path: Path) -> None:
             f"{field}.method_output_id",
         )
         _require(metric["split"] in ROLES - {"train", "calibration"}, f"{field}.split")
+        _require(
+            metric["split"] in roles,
+            f"{field}.split has no matching dataset role in data.datasets",
+        )
         _require(
             isinstance(metric.get("value"), (int, float)) and math.isfinite(metric["value"]),
             f"{field}.value",

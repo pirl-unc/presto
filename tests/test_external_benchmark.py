@@ -221,3 +221,112 @@ def test_detector_falls_back_to_raw_assay_method():
     assert eb.extract_record(row)["detector"] == "radioactivity"
     row["observation"]["assay_method"] = {"detector": "fluorescence"}
     assert eb.extract_record(row)["detector"] == "fluorescence"
+
+
+def test_extract_record_converts_concentration_units():
+    def make_row(raw_value, raw_unit, target=None, endpoint="ic50"):
+        return {
+            "endpoint": endpoint,
+            "observation_id": f"u-{raw_unit}",
+            "peptide": "SIINFEKL",
+            "mhc_classes": ["I"],
+            "qualifier": "=",
+            "raw_value": raw_value,
+            "raw_unit": raw_unit,
+            "target": target,
+            "prediction": 2.0,
+            "observation": {
+                "mhc": [{"provenance": {"catalog_alleles": ["HLA-A*02:01"]}}],
+                "provenance": {"study_id": "s"},
+            },
+        }
+
+    assert eb.extract_record(make_row(0.5, "uM", target=np.log10(500.0)))[
+        "raw_nM"
+    ] == pytest.approx(500.0)
+    assert eb.extract_record(make_row(0.5, "\u00b5M", target=None))[
+        "target_log10"
+    ] == pytest.approx(np.log10(500.0))
+    assert eb.extract_record(make_row(1e-7, "M", target=2.0))["raw_nM"] == pytest.approx(100.0)
+    assert eb.extract_record(make_row(250.0, "pM", target=np.log10(0.25)))[
+        "raw_nM"
+    ] == pytest.approx(0.25)
+    assert eb.extract_record(make_row(None, None, target=3.0))["raw_nM"] == pytest.approx(1000.0)
+    qual = eb.extract_record(make_row(1.0, "binary", target=1.0, endpoint="qualitative_binding"))
+    assert np.isnan(qual["raw_nM"]) and np.isnan(qual["target_log10"])
+
+
+def test_censored_metrics_use_canonical_target_log10():
+    frame = pd.DataFrame(
+        {
+            "mhc_class": "I",
+            "endpoint": "ic50",
+            "detector": "fluorescence",
+            "study_id": "s",
+            "qualifier": [">", ">", "<="],
+            "bound_source": "explicit",
+            "raw_nM": [np.nan, np.nan, np.nan],
+            "target_log10": [3.0, 3.0, 2.0],
+            "presto": [2.0, 4.0, 2.5],
+            "train_mean": 3.0,
+            "pred_netmhcpan41": [4.0, 4.0, 1.5],
+            "pred_mhcflurry": [4.0, 4.0, 1.5],
+        }
+    )
+    table = eb.censored_metrics(frame)
+    lower = table[(table["method"] == "presto") & (table["direction"] == "lower_bound")].iloc[0]
+    assert lower["bound_threshold_median_nM"] == pytest.approx(1000.0)
+    assert lower["satisfied"] == pytest.approx(0.5)
+    assert lower["median_violation_log10"] == pytest.approx(1.0)
+    upper = table[(table["method"] == "presto") & (table["direction"] == "upper_bound")].iloc[0]
+    assert upper["bound_threshold_median_nM"] == pytest.approx(100.0)
+    assert upper["satisfied"] == pytest.approx(0.0)
+    assert upper["mean_violation_log10"] == pytest.approx(0.5)
+
+
+def test_score_dump_handles_empty_exact_cohort_and_empty_dump(tmp_path):
+    import gzip
+    import json
+
+    empty_gz = tmp_path / "empty.jsonl.gz"
+    with gzip.open(empty_gz, "wt") as handle:
+        handle.write(json.dumps({"endpoint": "elution_observation", "observation_id": "e1"}) + "\n")
+    empty_frame = eb.extract_records(empty_gz)
+    assert empty_frame.empty
+    assert list(empty_frame.columns) == list(eb.RECORD_COLUMNS)
+
+    # Censored-only eligible cohort (zero exact rows): must not raise KeyError('n').
+    censored_only = pd.DataFrame(
+        [
+            {
+                "observation_id": "c1",
+                "peptide": "SIINFEKL",
+                "mhc_class": "I",
+                "endpoint": "ic50",
+                "detector": "fluorescence",
+                "study_id": "s1",
+                "qualifier": ">",
+                "raw_value": 10.0,
+                "raw_nM": 10000.0,
+                "target_log10": 4.0,
+                "presto": 4.5,
+                "train_mean": 3.0,
+                "pred_netmhcpan41": 4.2,
+                "pred_mhcflurry": 4.1,
+                "n_mhc_entries": 1,
+                "catalog_alleles": "HLA-A*02:01",
+                "bound_source": "explicit",
+                "exclusion": None,
+            }
+        ]
+    )
+    tables = eb.score_dump(censored_only, row_draws=10, draws=10)
+    assert tables["units"].empty and "n" in tables["units"].columns
+    assert tables["pooled"].empty and "mean_of_study" in tables["pooled"].columns
+    assert tables["qualitative"].empty and "auroc" in tables["qualitative"].columns
+    assert len(tables["censored"]) == 4
+
+    all_empty = eb.score_dump(
+        empty_frame.assign(exclusion=pd.Series(dtype=object)), row_draws=10, draws=10
+    )
+    assert all(table.empty for table in all_empty.values())
