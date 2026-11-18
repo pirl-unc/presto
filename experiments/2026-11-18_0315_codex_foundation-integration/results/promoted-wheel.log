@@ -1,0 +1,37 @@
+WARNING: The directory '/Users/iskander/Library/Caches/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.
+Processing /private/tmp/presto-foundation-promoted-distributions/presto-0.1.22-py3-none-any.whl
+Installing collected packages: presto
+Successfully installed presto-0.1.22
+Installed wheel version, B2M resources, bulk loader and masks verified.
+Installed shared model: capacity, candidate rules and support guard verified.
+usage: presto [-h] [--version] {data,weights,train,predict,evaluate} ...
+
+Presto - Peptide-Receptor Embedding for Shared T-cell Ontology
+
+positional arguments:
+  {data,weights,train,predict,evaluate}
+                        Available commands
+    data                Data management: download, list, and process datasets
+    weights             List and download pretrained model checkpoints
+    train               Train the shared Presto model from an observation
+                        manifest
+    predict             Model inference (presentation, recognition, or chain
+                        classification)
+    evaluate            Evaluation workflows
+
+options:
+  -h, --help            show this help message and exit
+  --version             show program's version number and exit
+{
+  "status": "passed",
+  "kind": "artificial software fixture",
+  "classes": [
+    "I",
+    "II"
+  ],
+  "optimizer_steps": 1,
+  "validation_rows": 4,
+  "label_free_prediction_rows": 4,
+  "checkpoint_sha256": "d97bd18e99ccef9637953009fcf3fe7c76e730e756dc3ce428cf24a8645227ca",
+  "test_outcomes_accessed": false
+}

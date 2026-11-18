@@ -251,7 +251,8 @@ def test_registered_launcher_freezes_manifest_and_closes_software_fixture(tmp_pa
             modular_preflight=False,
             run_dir=str(output),
             device="cpu",
-            _explicit_cli_dests=set(),
+            agent="codex",
+            _explicit_cli_dests={"agent"},
         )
     )
     assert summary["qualification"] == "not_qualified"
@@ -260,6 +261,7 @@ def test_registered_launcher_freezes_manifest_and_closes_software_fixture(tmp_pa
     launch = json.loads((output / "reproduce/launch.json").read_text())
     assert str(output / "reproduce/source-manifest.json") in launch["argv"]
     assert "--run-dir" not in launch["argv"]
+    assert launch["argv"][launch["argv"].index("--agent") + 1] == "codex"
     assert "| test | ic50 |" in (output / "README.md").read_text()
     assert "Closure:" in registry.REGISTRY_MD.read_text()
     assert (output / "reproduce/source/models/modular.py").exists()

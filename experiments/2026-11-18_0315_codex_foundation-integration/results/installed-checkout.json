@@ -1,0 +1,46 @@
+{
+  "installed": {
+    "import": "/Users/iskander/code/presto/__init__.py",
+    "version": "0.1.22",
+    "class_I_and_II": true,
+    "predictions": 4,
+    "parity": "exact",
+    "test_outcomes_accessed": false,
+    "stale_checkout_egg_info": "preserved and regenerated from current pyproject"
+  },
+  "migration": {
+    "status": "promoted",
+    "previous_branch": "claude/matched-decoy-auroc",
+    "previous_head": "9a70bc33496f61a35f69e797369a985313da10d4",
+    "new_branch": "codex/consolidated-foundation-20261118",
+    "source_head": "85f1e81ed024269680fb0fea9c9f3a7dfac2a8bb",
+    "collision_count": 220,
+    "stash_commit": "fed1035453a14810ea4a18a1b662d029892d0b5f",
+    "root_head": "85f1e81ed024269680fb0fea9c9f3a7dfac2a8bb",
+    "tracked_status": "",
+    "legacy_sources_retained_in_recovery_only": [
+      "scripts/distributional_ba/assay_combos.py",
+      "scripts/distributional_ba/assay_context.py",
+      "scripts/distributional_ba/config.py",
+      "scripts/distributional_ba/config_v2.py",
+      "scripts/distributional_ba/config_v3.py",
+      "scripts/distributional_ba/config_v4.py",
+      "scripts/distributional_ba/config_v5.py",
+      "scripts/distributional_ba/config_v6.py",
+      "scripts/distributional_ba/encoders.py",
+      "scripts/distributional_ba/evaluate.py",
+      "scripts/distributional_ba/heads/__init__.py",
+      "scripts/distributional_ba/heads/base.py",
+      "scripts/distributional_ba/heads/distributional.py",
+      "scripts/distributional_ba/heads/gaussian.py",
+      "scripts/distributional_ba/heads/hlgauss.py",
+      "scripts/distributional_ba/heads/quantile.py",
+      "scripts/distributional_ba/heads/regression.py",
+      "scripts/distributional_ba/heads/twohot.py",
+      "scripts/distributional_ba/losses.py",
+      "scripts/distributional_ba/metrics.py"
+    ]
+  },
+  "recovery_directory": "/Users/iskander/code/presto/artifacts/workspace-preservation-20261118",
+  "targeted_checks_after_promotion": 92
+}

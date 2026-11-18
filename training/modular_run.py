@@ -1515,6 +1515,8 @@ def _register_run(index, output, args, registry):
             str(frozen_path),
             "--device",
             getattr(args, "device", None) or "cpu",
+            "--agent",
+            _agent(args),
         ],
     )
     source_root = Path(__file__).resolve().parent.parent
@@ -1534,6 +1536,7 @@ def run_manifest(args):
         "modular_resume",
         "run_dir",
         "device",
+        "agent",
     }
     explicit = set(getattr(args, "_explicit_cli_dests", ()) or ())
     if explicit - allowed - {"func", "command", "train_command"}:

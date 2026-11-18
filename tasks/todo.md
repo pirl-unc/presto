@@ -11893,11 +11893,11 @@ Review so far:
 Spec: `tasks/cleanup-foundation-spec.md`. One PR authorized.
 
 - [x] Inventory/preserve source branches and reconcile upstream.
-- [ ] Integrate shared model and ordinary package workflow.
-- [ ] Centralize preparation/evaluation/inference; pin corrected corpus admission.
-- [ ] Align defaults/docs, installed package and dependency metadata.
-- [ ] Run behavioral, package, regression and retained-checkpoint checks.
-- [ ] Review/publish one PR, verify CI and document recovery/results.
+- [x] Integrate shared model and ordinary package workflow.
+- [x] Centralize preparation/evaluation/inference; pin corrected corpus admission.
+- [x] Align defaults/docs, installed package and dependency metadata.
+- [x] Run behavioral, package, regression and retained-checkpoint checks.
+- [x] Review/publish one PR and document recovery/results.
 
 Resumed after the user cleared the exhausted temporary test directory. About
 12 GiB is available. Remaining implementation: separate the installed package's
@@ -11913,4 +11913,7 @@ source/identity audit. Historical archives round-trip 3,096 files without overwr
 conflicting local work. The strong ancestry embargo leaves only two new validation
 pairs: retained fixed validation remains mandatory. Shared environment's external
 Varcode constraints are recorded; no editable work or dependency bounds were forced.
-PR publication and primary-checkout promotion are the remaining closure steps.
+PR #158 is published; primary-checkout promotion and installed-package checks pass.
+Initial PR CI passes. Final follow-up CI is attached to PR #158.
+Post-promotion checks: 92 pass; the agent
+metadata option is accepted and preserved in frozen launch commands.

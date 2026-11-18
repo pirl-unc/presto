@@ -101,6 +101,8 @@ def run_smoke(directory):
         run,
         "--device",
         "cpu",
+        "--agent",
+        "codex",
     )
     checkpoint = run / "selected.pt"
     assert checkpoint.is_file()
