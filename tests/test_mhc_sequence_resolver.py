@@ -229,3 +229,191 @@ def test_resolve_class_i_groove_halves_falls_back_to_sequence_map(monkeypatch):
     )
 
     assert resolved == ("A" * 90, "B" * 93)
+
+
+_HLA_B2705_SEQ = (
+    "MRVTAPRTLLLLLWGAVALTETWAGSHSMRYFHTSVSRPGRGEPRFITVGYVDDTLFVRFDSDAASPREEPRAPWIEQEGPEYWDRETQICKA"
+    "KAQTDREDLRTLLRYYNQSEAGSHTLQNMYGCDVGPDGRLLRGYHQDAYDGKDYIALNEDLSSWTAADTAAQITQRKWEAARVAEQLRAYLEG"
+    "ECVEWLRRYLENGKETLQRADPPKTHVTHHPISDHEATLRCWALGFYPAEITLTWQRDGEDQTQDTELVETRPAGDRTFQKWAAVVVPSGEEQ"
+    "RYTCHVQHEGLPKPLTLRWEPSSQSTVPIVGIVAGLAVLAVVVIGAVVAAVMCRRKSSGGKGGSYSQAACSDSAQGSDVSLTA"
+)
+_HLA_B2705_G1 = (
+    "GSHSMRYFHTSVSRPGRGEPRFITVGYVDDTLFVRFDSDAASPREEPRAPWIEQEGPEYWDRETQICKAKAQTDREDLRTLLRYYNQSEA"
+)
+_HLA_B2705_G2 = (
+    "GSHTLQNMYGCDVGPDGRLLRGYHQDAYDGKDYIALNEDLSSWTAADTAAQITQRKWEAARVAEQLRAYLEGECVEWLRRYLENGKETLQRAD"
+)
+
+_H2_KB_SEQ = (
+    "MVPCTLLLLLAAALAPTQTRAGPHSLRYFVTAVSRPGLGEPRYMEVGYVDDTEFVRFDSDAENPRYEPRARWMEQEGPEYWERETQKAKGNEQ"
+    "SFRVDLRTLLGYYNQSKGGSHTIQVISGCEVGSDGRLLRGYQQYAYDGCDYIALNEDLKTWTAADMAALITKHKWEQAGEAERLRAYLEGTCV"
+    "EWLRRYLKNGNATLLRTDSPKAHVTHHSRPEDKVTLRCWALGFYPADITLTWQLNGEELIQDMELVETRPAGDGTFQKWASVVVPLGKEQYYT"
+    "CHVYHQGLPEPLTLRWEPPPSTVSNMATVAVLVVLGAAIVTGAVVAFVMKMRRRNTGGKGGDYALAPGSQTSDLSLPDCKVMVHDPHSLA"
+)
+_H2_KB_G1 = (
+    "GPHSLRYFVTAVSRPGLGEPRYMEVGYVDDTEFVRFDSDAENPRYEPRARWMEQEGPEYWERETQKAKGNEQSFRVDLRTLLGYYNQSKG"
+)
+_H2_KB_G2 = (
+    "GSHTIQVISGCEVGSDGRLLRGYQQYAYDGCDYIALNEDLKTWTAADMAALITKHKWEQAGEAERLRAYLEGTCVEWLRRYLKNGNATLLRTD"
+)
+
+_HLA_DRA0101_SEQ = (
+    "MAISGVPVLGFFIIAVLMSAQESWAIKEEHVIIQAEFYLNPDQSGEFMFDFDGDEIFHVDMAKKETVWRLEEFGRFASFEAQGALANIAVDKA"
+    "NLEIMTKRSNYTPITNVPPEVTVLTNSPVELREPNVLICFIDKFTPPVVNVTWLRNGKPVTTGVSETVFLPREDHLFRKFHYLPFLPSTEDVY"
+    "DCRVEHWGLDEPLLKHWEFDAPSPLPETTENVVCALGLTVGLVGIIIGTIFIIKGVRKSNAAERRGPL"
+)
+_HLA_DRA0101_G1 = (
+    "IKEEHVIIQAEFYLNPDQSGEFMFDFDGDEIFHVDMAKKETVWRLEEFGRFASFEAQGALANIAVDKANLEIMTKRSNYTPIT"
+)
+
+_HLA_DRB1_0101_SEQ = (
+    "MVCLKLPGGSCMTALTVTLMVLSSPLALAGDTRPRFLWQLKFECHFFNGTERVRLLERCIYNQEESVRFDSDVGEYRAVTELGRPDAEYWNSQ"
+    "KDLLEQRRAAVDTYCRHNYGVGESFTVQRRVEPKVTVYPSKTQPLQHHNLLVCSVSGFYPGSIEVRWFRNGQEEKAGVVSTGLIQNGDWTFQT"
+    "LVMLETVPRSGEVYTCQVEHPSVTSPLTVEWRARSESAQSKMLSGVGGFVLGLLFLGAGLFIYFRNQKGHSGLQPTGFLS"
+)
+_HLA_DRB1_0101_G2 = (
+    "GDTRPRFLWQLKFECHFFNGTERVRLLERCIYNQEESVRFDSDVGEYRAVTELGRPDAEYWNSQKDLLEQRRAAVDTYCRHNYGVGESFTVQR"
+)
+
+
+def _mutant_fixture_lookup():
+    entries = [
+        ExactMHCInput(
+            allele="HomoSapiens-B*27:05",
+            sequence=_HLA_B2705_SEQ,
+            groove1=_HLA_B2705_G1,
+            groove2=_HLA_B2705_G2,
+            mhc_class="I",
+            chain="alpha",
+            groove_status="ok",
+            source="mhcseqs",
+        ),
+        ExactMHCInput(
+            allele="MusMusculus-K*b",
+            sequence=_H2_KB_SEQ,
+            groove1=_H2_KB_G1,
+            groove2=_H2_KB_G2,
+            mhc_class="I",
+            chain="alpha",
+            groove_status="ok",
+            source="mhcseqs",
+        ),
+        ExactMHCInput(
+            allele="HomoSapiens-DRA*01:01",
+            sequence=_HLA_DRA0101_SEQ,
+            groove1=_HLA_DRA0101_G1,
+            groove2="",
+            mhc_class="II",
+            chain="alpha",
+            groove_status="ok",
+            source="mhcseqs",
+        ),
+        ExactMHCInput(
+            allele="HomoSapiens-DRB1*01:01",
+            sequence=_HLA_DRB1_0101_SEQ,
+            groove1="",
+            groove2=_HLA_DRB1_0101_G2,
+            mhc_class="II",
+            chain="beta",
+            groove_status="ok",
+            source="mhcseqs",
+        ),
+    ]
+    lookup = {}
+    for rec in entries:
+        lookup[rec.allele] = rec
+        lookup[rec.allele.upper()] = rec
+    return lookup
+
+
+def test_lookup_exact_mhc_input_resolves_class_i_point_mutant(monkeypatch):
+    monkeypatch.setattr(
+        resolver,
+        "_load_mhcseqs_input_lookup",
+        lambda search_dir=None: _mutant_fixture_lookup(),
+    )
+
+    resolved = resolver.lookup_exact_mhc_input("HLA-B*27:05 C67S mutant")
+
+    assert resolved is not None
+    assert resolved.allele == "HLA-B*27:05 C67S mutant"
+    assert resolved.source == "mhcseqs_mutant"
+    assert resolved.mhc_class == "I"
+    assert len(resolved.groove1) == len(_HLA_B2705_G1)
+    assert resolved.groove1[66] == "S"
+    assert _HLA_B2705_G1[66] == "C"
+    assert sum(a != b for a, b in zip(_HLA_B2705_G1, resolved.groove1)) == 1
+    assert resolved.groove2 == _HLA_B2705_G2
+
+    halves = resolver.resolve_class_i_groove_halves(allele="HLA-B*27:05 C67S mutant")
+    assert halves == (resolved.groove1, resolved.groove2)
+
+
+def test_lookup_exact_mhc_input_resolves_multi_mutant_mouse_class_i(monkeypatch):
+    monkeypatch.setattr(
+        resolver,
+        "_load_mhcseqs_input_lookup",
+        lambda search_dir=None: _mutant_fixture_lookup(),
+    )
+
+    resolved = resolver.lookup_exact_mhc_input("H2-Kb Y22F M23I E24S D30N mutant")
+
+    assert resolved is not None
+    assert resolved.source == "mhcseqs_mutant"
+    assert resolved.groove1[21] == "F"
+    assert resolved.groove1[22] == "I"
+    assert resolved.groove1[23] == "S"
+    assert resolved.groove1[29] == "N"
+    assert sum(a != b for a, b in zip(_H2_KB_G1, resolved.groove1)) == 4
+    assert resolved.groove2 == _H2_KB_G2
+
+
+def test_lookup_exact_mhc_input_resolves_class_ii_chain_and_pair_mutants(monkeypatch):
+    monkeypatch.setattr(
+        resolver,
+        "_load_mhcseqs_input_lookup",
+        lambda search_dir=None: _mutant_fixture_lookup(),
+    )
+
+    beta_mut = resolver.lookup_exact_mhc_input("HLA-DRB1*01:01 C30S mutant")
+    assert beta_mut is not None
+    assert beta_mut.source == "mhcseqs_mutant"
+    assert beta_mut.groove1 == ""
+    assert beta_mut.groove2[29] == "S"
+    assert _HLA_DRB1_0101_G2[29] == "C"
+    assert sum(a != b for a, b in zip(_HLA_DRB1_0101_G2, beta_mut.groove2)) == 1
+
+    pair_beta_mut = resolver.lookup_exact_mhc_input("HLA-DRA*01:01/DRB1*01:01 C30S mutant")
+    assert pair_beta_mut is not None
+    assert pair_beta_mut.source == "mhcseqs_mutant"
+    assert pair_beta_mut.mhc_class == "II"
+    assert pair_beta_mut.chain == "pair"
+    assert pair_beta_mut.groove1 == _HLA_DRA0101_G1
+    assert pair_beta_mut.groove2 == beta_mut.groove2
+
+    pair_alpha_mut = resolver.lookup_exact_mhc_input("HLA-DRA*01:01 F54C mutant/DRB1*01:01")
+    assert pair_alpha_mut is not None
+    assert pair_alpha_mut.source == "mhcseqs_mutant"
+    assert pair_alpha_mut.groove1[53] == "C"
+    assert _HLA_DRA0101_G1[53] == "F"
+    assert sum(a != b for a, b in zip(_HLA_DRA0101_G1, pair_alpha_mut.groove1)) == 1
+    assert pair_alpha_mut.groove2 == _HLA_DRB1_0101_G2
+
+    pair_wt = resolver.lookup_exact_mhc_input("HLA-DRA*01:01/DRB1*01:01")
+    assert pair_wt is not None
+    assert pair_wt.source == "mhcseqs_pair"
+    assert pair_wt.groove1 == _HLA_DRA0101_G1
+    assert pair_wt.groove2 == _HLA_DRB1_0101_G2
+
+
+def test_lookup_exact_mhc_input_rejects_mismatched_or_out_of_range_mutant(monkeypatch):
+    monkeypatch.setattr(
+        resolver,
+        "_load_mhcseqs_input_lookup",
+        lambda search_dir=None: _mutant_fixture_lookup(),
+    )
+
+    # Mature pos 67 in HLA-B*27:05 is C, not A — must fail closed rather than mis-mutate.
+    assert resolver.lookup_exact_mhc_input("HLA-B*27:05 A67S mutant") is None
+    assert resolver.lookup_exact_mhc_input("HLA-B*27:05 C999S mutant") is None
+    assert resolver.lookup_exact_mhc_input("HLA-B*99:99 C67S mutant") is None

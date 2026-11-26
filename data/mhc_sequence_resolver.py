@@ -13,6 +13,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any, Dict, Mapping, Optional, Sequence, Tuple
 
+from .allele_resolver import normalize_mhc_class, parse_allele_name
 from .groove import prepare_mhc_input
 from .mhc_index import resolve_alleles
 
@@ -93,6 +94,148 @@ def _load_mhcseqs_sequence_lookup(search_dir: Optional[str] = None) -> Dict[str,
     return {key: value.sequence for key, value in lookup.items() if value.sequence}
 
 
+def _resolve_direct_mhcseqs_input(
+    query: str,
+    *,
+    lookup: Mapping[str, ExactMHCInput],
+    mhcseqs: Any,
+    extra_candidates: Sequence[str] = (),
+) -> Optional[ExactMHCInput]:
+    candidates = [query, query.upper()]
+    try:
+        normalized = mhcseqs.normalize_allele_name(query)
+    except Exception:
+        normalized = ""
+    if normalized:
+        candidates.extend([normalized, normalized.upper()])
+    for token in extra_candidates:
+        cleaned = str(token or "").strip()
+        if cleaned:
+            candidates.extend([cleaned, cleaned.upper()])
+    for token in candidates:
+        record = lookup.get(token)
+        if record:
+            return record
+    return None
+
+
+def _canonical_two_field_token(parsed: Any) -> str:
+    restrict_fn = getattr(parsed, "restrict_allele_fields", None)
+    restricted = restrict_fn(2) if callable(restrict_fn) else parsed
+    to_string = getattr(restricted, "to_string", None)
+    return str(to_string()) if callable(to_string) else str(restricted)
+
+
+def _apply_mutations_to_mhcseqs_input(
+    wt_record: ExactMHCInput,
+    parsed_allele: Any,
+    *,
+    mhcseqs: Any,
+) -> Optional[ExactMHCInput]:
+    if not wt_record.sequence:
+        return None
+    extract_groove = getattr(mhcseqs, "extract_groove", None)
+    if not callable(extract_groove):
+        return None
+    mutations = tuple(getattr(parsed_allele, "mutations", ()) or ())
+    if not mutations:
+        return wt_record
+    mhc_class = (
+        wt_record.mhc_class
+        or normalize_mhc_class(getattr(parsed_allele, "mhc_class", None), default="")
+        or ""
+    )
+    try:
+        mutated = extract_groove(
+            wt_record.sequence,
+            mhc_class=mhc_class,
+            chain=wt_record.chain or None,
+            allele=wt_record.allele,
+            mutations=mutations,
+        )
+    except (ValueError, TypeError):
+        return None
+    if not getattr(mutated, "ok", False):
+        return None
+    return ExactMHCInput(
+        allele=_canonical_two_field_token(parsed_allele),
+        sequence=str(getattr(mutated, "sequence", "") or "").strip().upper(),
+        groove1=str(getattr(mutated, "groove1", "") or "").strip().upper(),
+        groove2=str(getattr(mutated, "groove2", "") or "").strip().upper(),
+        mhc_class=str(wt_record.mhc_class or getattr(mutated, "mhc_class", "") or "")
+        .strip()
+        .upper(),
+        chain=str(wt_record.chain or getattr(mutated, "chain", "") or "").strip().lower(),
+        groove_status=str(getattr(mutated, "status", "") or "").strip(),
+        source="mhcseqs_mutant",
+    )
+
+
+def _resolve_parsed_mhcseqs_input(
+    parsed: Any,
+    *,
+    lookup: Mapping[str, ExactMHCInput],
+    mhcseqs: Any,
+) -> Optional[ExactMHCInput]:
+    parsed_type = type(parsed).__name__
+    if parsed_type == "Allele":
+        mutations = tuple(getattr(parsed, "mutations", ()) or ())
+        if getattr(parsed, "is_mutant", False) and mutations:
+            copy_fn = getattr(parsed, "copy", None)
+            if not callable(copy_fn):
+                return None
+            wt_parsed = copy_fn(mutations=())
+            wt_query = str(wt_parsed.to_string())
+            wt_two_field = _canonical_two_field_token(wt_parsed)
+            wt_record = _resolve_direct_mhcseqs_input(
+                wt_query,
+                lookup=lookup,
+                mhcseqs=mhcseqs,
+                extra_candidates=(wt_two_field,),
+            )
+            if wt_record is None:
+                return None
+            return _apply_mutations_to_mhcseqs_input(wt_record, parsed, mhcseqs=mhcseqs)
+        raw_token = str(parsed.to_string())
+        two_field = _canonical_two_field_token(parsed)
+        return _resolve_direct_mhcseqs_input(
+            raw_token,
+            lookup=lookup,
+            mhcseqs=mhcseqs,
+            extra_candidates=(two_field,),
+        )
+
+    if parsed_type == "Pair":
+        alpha = getattr(parsed, "alpha", None)
+        beta = getattr(parsed, "beta", None)
+        if alpha is None or beta is None:
+            return None
+        alpha_record = _resolve_parsed_mhcseqs_input(alpha, lookup=lookup, mhcseqs=mhcseqs)
+        beta_record = _resolve_parsed_mhcseqs_input(beta, lookup=lookup, mhcseqs=mhcseqs)
+        if alpha_record is None or beta_record is None:
+            return None
+        groove1 = str(alpha_record.groove1 or "").strip().upper()
+        groove2 = str(beta_record.groove2 or "").strip().upper()
+        if not groove1 or not groove2:
+            return None
+        is_mut = bool(getattr(parsed, "is_mutant", False))
+        status_a = str(alpha_record.groove_status or "").strip()
+        status_b = str(beta_record.groove_status or "").strip()
+        groove_status = status_a if status_a == status_b else f"{status_a}/{status_b}".strip("/")
+        return ExactMHCInput(
+            allele=_canonical_two_field_token(parsed),
+            sequence="",
+            groove1=groove1,
+            groove2=groove2,
+            mhc_class="II",
+            chain="pair",
+            groove_status=groove_status,
+            source="mhcseqs_mutant" if is_mut else "mhcseqs_pair",
+        )
+
+    return None
+
+
 def _resolve_input_via_mhcseqs(
     allele: str,
     *,
@@ -103,18 +246,16 @@ def _resolve_input_via_mhcseqs(
         return None
     lookup = _load_mhcseqs_input_lookup(search_dir=search_dir)
     mhcseqs = _require_mhcseqs()
-    candidates = [query, query.upper()]
+    direct = _resolve_direct_mhcseqs_input(query, lookup=lookup, mhcseqs=mhcseqs)
+    if direct is not None:
+        return direct
     try:
-        normalized = mhcseqs.normalize_allele_name(query)
+        parsed = parse_allele_name(query)
     except Exception:
-        normalized = ""
-    if normalized:
-        candidates.extend([normalized, normalized.upper()])
-    for token in candidates:
-        record = lookup.get(token)
-        if record:
-            return record
-    return None
+        return None
+    if parsed is None:
+        return None
+    return _resolve_parsed_mhcseqs_input(parsed, lookup=lookup, mhcseqs=mhcseqs)
 
 
 def lookup_exact_mhc_input(
