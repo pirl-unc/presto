@@ -24,11 +24,19 @@ CONTROL_DEFAULTS = {
     "endpoint_loss_weights": {},
     "schedule": [],
     "lr_schedule": None,
+    "new_module_lr_scale": None,
     "grad_clip_norm": None,
     "ema_decay": None,
     "within_group_ranking_loss": None,
     "state_contrast_loss": None,
     "processing_pair_training": None,
+    "apc_contrast_training": None,
+    "allele_swap_training": None,
+    "allele_diff_training": None,
+    "tcell_ranking_weight": 0.0,
+    "amp_bfloat16": False,
+    "elution_pmhc_residual_l2_weight": 0.0,
+    "ms_response_elution_l2_weight": 0.0,
     "cell_batching": None,
     "selection_metric": "validation_loss",
     "selection_spearman_endpoints": [],
@@ -53,9 +61,23 @@ def validate_controls(training, config, balance_by):
     """Reject malformed or contradictory options; mirrors `preflight` strictness."""
     pairs = control(training, "processing_pair_training")
     if pairs is not None:
-        _check_options(pairs, {"weight", "pairs_per_class"}, "processing_pair_training")
+        _check_options(
+            pairs,
+            {"weight", "pairs_per_class", "logit_weight", "selection_weight", "margin"},
+            "processing_pair_training",
+        )
         if not _number(pairs.get("weight")) or pairs["weight"] <= 0:
             raise ValueError("processing_pair_training requires positive finite weight")
+        if "logit_weight" in pairs and (
+            not _number(pairs["logit_weight"]) or pairs["logit_weight"] < 0
+        ):
+            raise ValueError("processing_pair_training logit_weight must be nonnegative finite")
+        if "selection_weight" in pairs and (
+            not _number(pairs["selection_weight"]) or pairs["selection_weight"] < 0
+        ):
+            raise ValueError("processing_pair_training selection_weight must be nonnegative finite")
+        if "margin" in pairs and (not _number(pairs["margin"]) or pairs["margin"] < 0):
+            raise ValueError("processing_pair_training margin must be nonnegative finite")
         if type(pairs.get("pairs_per_class")) is not int or pairs["pairs_per_class"] <= 0:
             raise ValueError("processing_pair_training requires positive integer pairs_per_class")
         if (
@@ -65,6 +87,112 @@ def validate_controls(training, config, balance_by):
             raise ValueError(
                 "processing_pair_training requires staged presentation and weighted_steps"
             )
+    if type(control(training, "amp_bfloat16")) is not bool:
+        raise ValueError("amp_bfloat16 must be boolean")
+    for reg_key in (
+        "elution_pmhc_residual_l2_weight",
+        "ms_response_elution_l2_weight",
+        "tcell_ranking_weight",
+    ):
+        val = control(training, reg_key)
+        if not _number(val) or val < 0:
+            raise ValueError(f"{reg_key} must be nonnegative finite")
+    allele_swap = control(training, "allele_swap_training")
+    if allele_swap is not None:
+        _check_options(
+            allele_swap,
+            {"weight", "anchors_per_class", "negatives_per_anchor", "temperature", "max_buffer"},
+            "allele_swap_training",
+        )
+        if not _number(allele_swap.get("weight")) or allele_swap["weight"] <= 0:
+            raise ValueError("allele_swap_training requires positive finite weight")
+        for int_k in ("anchors_per_class", "negatives_per_anchor", "max_buffer"):
+            if int_k in allele_swap and (
+                type(allele_swap[int_k]) is not int or allele_swap[int_k] <= 0
+            ):
+                raise ValueError(f"allele_swap_training {int_k} must be a positive integer")
+        if "temperature" in allele_swap and (
+            not _number(allele_swap["temperature"]) or allele_swap["temperature"] <= 0
+        ):
+            raise ValueError("allele_swap_training temperature must be positive finite")
+    allele_diff = control(training, "allele_diff_training")
+    if allele_diff is not None:
+        _check_options(
+            allele_diff,
+            {
+                "weight",
+                "pairs_per_class",
+                "hard_close_fraction",
+                "beta",
+                "min_diff_log10",
+                "close_identity_threshold",
+                "max_pairs_per_group",
+            },
+            "allele_diff_training",
+        )
+        if not _number(allele_diff.get("weight")) or allele_diff["weight"] <= 0:
+            raise ValueError("allele_diff_training requires positive finite weight")
+        for int_k in ("pairs_per_class", "max_pairs_per_group"):
+            if int_k in allele_diff and (
+                type(allele_diff[int_k]) is not int or allele_diff[int_k] <= 0
+            ):
+                raise ValueError(f"allele_diff_training {int_k} must be a positive integer")
+        for pos_k in ("beta", "min_diff_log10"):
+            if pos_k in allele_diff and (
+                not _number(allele_diff[pos_k]) or allele_diff[pos_k] <= 0
+            ):
+                raise ValueError(f"allele_diff_training {pos_k} must be positive finite")
+        for frac_k in ("hard_close_fraction", "close_identity_threshold"):
+            if frac_k in allele_diff and (
+                not _number(allele_diff[frac_k]) or not 0.0 <= allele_diff[frac_k] <= 1.0
+            ):
+                raise ValueError(f"allele_diff_training {frac_k} must be in [0, 1]")
+    apc_contrast = control(training, "apc_contrast_training")
+    if apc_contrast is not None:
+        _check_options(
+            apc_contrast,
+            {
+                "weight",
+                "selectivity_per_step",
+                "yield_per_step",
+                "yield_weight",
+                "margin",
+                "quant_per_step",
+                "quant_weight",
+                "quant_rank_weight",
+                "quant_scale",
+            },
+            "apc_contrast_training",
+        )
+        if not _number(apc_contrast.get("weight")) or apc_contrast["weight"] <= 0:
+            raise ValueError("apc_contrast_training requires positive finite weight")
+        sel_n = apc_contrast.get("selectivity_per_step", 4)
+        yld_n = apc_contrast.get("yield_per_step", 4)
+        qnt_n = apc_contrast.get("quant_per_step", 0)
+        if (
+            type(sel_n) is not int
+            or sel_n < 0
+            or type(yld_n) is not int
+            or yld_n < 0
+            or type(qnt_n) is not int
+            or qnt_n < 0
+        ):
+            raise ValueError("apc_contrast_training draw counts must be nonnegative integers")
+        if sel_n == 0 and yld_n == 0 and qnt_n == 0:
+            raise ValueError("apc_contrast_training requires at least one active contrast draw")
+        for opt_key in (
+            "yield_weight",
+            "margin",
+            "quant_weight",
+            "quant_rank_weight",
+            "quant_scale",
+        ):
+            if opt_key in apc_contrast and (
+                not _number(apc_contrast[opt_key]) or apc_contrast[opt_key] < 0
+            ):
+                raise ValueError(f"apc_contrast_training {opt_key} must be nonnegative finite")
+        if config.elution_staging != "affinity_downstream":
+            raise ValueError("apc_contrast_training requires staged presentation")
     if control(training, "loss_normalization") not in ("observation_mean", "per_endpoint"):
         raise ValueError("unsupported loss_normalization")
     weights = control(training, "endpoint_loss_weights")
@@ -108,6 +236,9 @@ def validate_controls(training, config, balance_by):
             raise ValueError("cosine decay needs decay_steps or max_steps")
         if decay == "cosine" and span is None and training["max_steps"] <= warmup:
             raise ValueError("max_steps must exceed warmup_steps for cosine decay")
+    lr_scale = control(training, "new_module_lr_scale")
+    if lr_scale is not None and (not _number(lr_scale) or lr_scale <= 0):
+        raise ValueError("new_module_lr_scale must be positive and finite or null")
     clip = control(training, "grad_clip_norm")
     if clip is not None and (not _number(clip) or clip <= 0):
         raise ValueError("grad_clip_norm must be positive and finite or null")
@@ -123,7 +254,13 @@ def validate_controls(training, config, balance_by):
 
     ranking = control(training, "within_group_ranking_loss")
     if ranking is not None:
-        _check_options(ranking, {"weight", "endpoints", "grouping"}, "within_group_ranking_loss")
+        _check_options(
+            ranking,
+            {"weight", "endpoints", "grouping", "include_censored"},
+            "within_group_ranking_loss",
+        )
+        if "include_censored" in ranking and type(ranking["include_censored"]) is not bool:
+            raise ValueError("ranking include_censored must be boolean")
         if ranking.get("grouping", "study") not in ("study", "assay_allele"):
             raise ValueError("unsupported ranking grouping")
         endpoints = ranking.get("endpoints")
@@ -330,24 +467,48 @@ class _EMAWeights:
             parameters[name].copy_(self.raw[name])
 
 
-def ranking_loss(rows, outputs, endpoints, *, grouping="study"):
-    """RankNet-style pairwise logistic loss within same-cell exact rows of one batch.
+def ranking_loss(rows, outputs, endpoints, *, grouping="study", include_censored=False):
+    """RankNet-style pairwise logistic loss within same-cell rows of one batch.
 
     Returns (mean loss or None, pair count). Only training rows/labels are touched.
+    When `include_censored=True`, also pairs exact/left-censored binders against
+    strictly weaker right-censored non-binders within the same cell.
     """
     cells = defaultdict(list)
     for row, output in zip(rows, outputs, strict=True):
-        if row.endpoint in endpoints and row.qualifier == "=" and row.value is not None:
-            key = cell_key(row, grouping)
-            if key is not None:
-                cells[key].append((observation_target(row), output.value))
+        if row.endpoint not in endpoints or row.value is None:
+            continue
+        if not include_censored and row.qualifier != "=":
+            continue
+        if row.qualifier not in ("=", "<", "<=", ">", ">="):
+            continue
+        key = cell_key(row, grouping)
+        if key is not None:
+            cells[key].append((observation_target(row), row.qualifier, output.value))
     losses = []
     for members in cells.values():
         if len(members) < 2:
             continue
-        targets = torch.tensor([target for target, _ in members])
-        scores = torch.stack([score for _, score in members])
-        lower = targets[:, None] < targets[None, :]
+        targets = torch.tensor([target for target, _, _ in members])
+        scores = torch.stack([score for _, _, score in members])
+        if not include_censored:
+            lower = targets[:, None] < targets[None, :]
+        else:
+            n = len(members)
+            lower = torch.zeros((n, n), dtype=torch.bool)
+            for i in range(n):
+                ti, qi, _ = members[i]
+                for j in range(n):
+                    if i == j:
+                        continue
+                    tj, qj, _ = members[j]
+                    if qi == "=" and qj == "=" and ti < tj:
+                        lower[i, j] = True
+                    elif qi in ("=", "<", "<=") and qj in (">", ">="):
+                        if ti < tj or (ti == tj and (qi == "<" or qj == ">")):
+                            lower[i, j] = True
+                    elif qi in ("<", "<=") and qj == "=" and ti < tj:
+                        lower[i, j] = True
         difference = scores[:, None] - scores[None, :]
         if lower.any():
             losses.append(F.softplus(difference[lower]))
@@ -355,6 +516,46 @@ def ranking_loss(rows, outputs, endpoints, *, grouping="study"):
         return None, 0
     losses = torch.cat(losses)
     return losses.mean(), int(losses.numel())
+
+
+def tcell_ranking_loss(rows, outputs):
+    """Pairwise AUROC ranking loss for binary `tcell_response` observations.
+
+    Scores `output.components["tcell_recognition"]` when staged (track-free biological
+    immunogenicity) or `output.value` otherwise, contrasting positive (`1.0`) vs negative
+    (`0.0`) rows within each `(mhc_class, track_family)` group (and within-study when present).
+    """
+    by_family = defaultdict(list)
+    by_study = defaultdict(list)
+    for row, output in zip(rows, outputs, strict=True):
+        if row.endpoint != "tcell_response" or row.value is None:
+            continue
+        if row.value not in (0.0, 1.0):
+            continue
+        mhc_cls = (row.mhc[0].class_override or row.mhc[0].mhc_class) if row.mhc else "none"
+        score = output.components.get("tcell_recognition", output.value)
+        if score is None:
+            continue
+        fam = row.tcell_track.family if row.tcell_track is not None else "default"
+        by_family[(mhc_cls, fam)].append((float(row.value), score))
+        study = study_of(row.provenance)
+        if study is not None:
+            by_study[(mhc_cls, str(study))].append((float(row.value), score))
+
+    losses = []
+    for bucket in (*by_study.values(), *by_family.values()):
+        pos = [sc for y, sc in bucket if y == 1.0]
+        neg = [sc for y, sc in bucket if y == 0.0]
+        if not pos or not neg:
+            continue
+        p_t = torch.stack(pos)
+        n_t = torch.stack(neg)
+        diff = n_t[:, None] - p_t[None, :]
+        losses.append(F.softplus(diff).reshape(-1))
+    if not losses:
+        return None, 0
+    all_pairs = torch.cat(losses)
+    return all_pairs.mean(), int(all_pairs.numel())
 
 
 def spearman_cells(records, endpoints, minimum):

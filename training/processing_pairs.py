@@ -53,7 +53,13 @@ def validate_pair(positive, background):
 
     def condition(r):
         return replace(
-            r.context, source_n=None, source_c=None, n_terminus=None, c_terminus=None, provenance={}
+            r.context,
+            source_n=None,
+            source_c=None,
+            n_terminus=None,
+            c_terminus=None,
+            candidate_junctions=(),
+            provenance={},
         )
 
     if condition(positive) != condition(background):
@@ -63,9 +69,8 @@ def validate_pair(positive, background):
         raise ValueError("versioned affinity-match provenance required")
     cls = next(iter(classes))
     predictor = record.get("predictor", {})
-    if predictor.get("name") != ("NetMHCpan" if cls == "I" else "NetMHCIIpan") or not predictor.get(
-        "version"
-    ):
+    allowed_predictors = ("NetMHCpan", "Presto") if cls == "I" else ("NetMHCIIpan", "Presto")
+    if predictor.get("name") not in allowed_predictors or not predictor.get("version"):
         raise ValueError("class-appropriate BA predictor/version provenance required")
     if not record.get("source_sha256") or not record.get("score_sha256"):
         raise ValueError("immutable source and score lineage required")
@@ -96,13 +101,57 @@ def processing_supply(output):
     return torch.stack(values).mean()
 
 
-def pair_loss(outputs):
+def processing_selection(output):
+    """Detached-affinity-pooled shared selection term (zero gradient into binding/MS)."""
+    candidates = output.diagnostics.get("candidates", ())
+    if not candidates:
+        raise ValueError("processing supervision requires staged presentation diagnostics")
+    values = []
+    for candidate in candidates:
+        terms = [
+            r["class_probability"]
+            * r["elution_terms"]
+            .get("shared_processing", {})
+            .get("selection_detached_pool", r["elution_terms"]["processing"].new_zeros(()))
+            for r in candidate["registers"]
+        ]
+        values.append(torch.stack(terms).sum())
+    return torch.stack(values).mean()
+
+
+def pair_loss(
+    outputs,
+    *,
+    logit_weight: float = 0.0,
+    selection_weight: float = 0.0,
+    margin: float = 0.0,
+):
     if not outputs or len(outputs) % 2:
         raise ValueError("processing loss needs complete ordered positive/background pairs")
-    scores = [processing_supply(o) for o in outputs]
-    return torch.stack(
-        [F.softplus(-(scores[i] - scores[i + 1])) for i in range(0, len(scores), 2)]
+    if selection_weight:
+        scores = [
+            processing_supply(o) + selection_weight * processing_selection(o) for o in outputs
+        ]
+    else:
+        scores = [processing_supply(o) for o in outputs]
+    if margin > 0.0:
+        supply = torch.stack(
+            [
+                F.relu(margin - (scores[i] - scores[i + 1]))
+                + 0.10 * F.softplus(margin - (scores[i] - scores[i + 1]), beta=3.0)
+                for i in range(0, len(scores), 2)
+            ]
+        ).mean()
+    else:
+        supply = torch.stack(
+            [F.softplus(-(scores[i] - scores[i + 1])) for i in range(0, len(scores), 2)]
+        ).mean()
+    if not logit_weight:
+        return supply
+    logits = torch.stack(
+        [F.softplus(-(outputs[i].value - outputs[i + 1].value)) for i in range(0, len(outputs), 2)]
     ).mean()
+    return supply + logit_weight * logits
 
 
 class PairPool:

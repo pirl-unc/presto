@@ -250,6 +250,30 @@ class MachineryProfile:
 
 
 @dataclass(frozen=True)
+class SourceJunction:
+    source_n: str | None = None
+    source_c: str | None = None
+    n_terminus: bool | None = None
+    c_terminus: bool | None = None
+    weight: float | None = None
+
+    def validate(self, max_length: int = 512) -> None:
+        for value in (self.source_n, self.source_c):
+            if value is not None:
+                sequence(value, required=False, max_length=max_length)
+        for flag in (self.n_terminus, self.c_terminus):
+            if flag is not None and type(flag) is not bool:
+                raise ValueError("junction terminus flag must be boolean or None")
+        if self.weight is not None and (
+            isinstance(self.weight, bool)
+            or not isinstance(self.weight, (int, float))
+            or not math.isfinite(self.weight)
+            or self.weight <= 0.0
+        ):
+            raise ValueError("candidate junction weight must be positive finite or None")
+
+
+@dataclass(frozen=True)
 class Context:
     species: dict[str, str] = field(default_factory=dict)
     species_overrides: dict[str, str] = field(default_factory=dict)
@@ -259,6 +283,7 @@ class Context:
     source_c: str | None = None
     n_terminus: bool | None = None
     c_terminus: bool | None = None
+    candidate_junctions: tuple[SourceJunction, ...] = ()
     enzyme: str | None = None
     delivery: str = "unknown"
     coreceptor: str = "unknown"
@@ -327,6 +352,10 @@ class Context:
         for value in (self.source_n, self.source_c):
             if value is not None:
                 sequence(value, required=False, max_length=max_length)
+        for item in self.candidate_junctions:
+            if not isinstance(item, SourceJunction):
+                raise ValueError("candidate_junctions must contain SourceJunction records")
+            item.validate(max_length)
         for features in (self.acquisition, self.observation, self.preparation):
             if any(not math.isfinite(value) for value in features.values()):
                 raise ValueError("nonfinite context covariate")
@@ -430,12 +459,14 @@ class Observation:
 
     def to_dict(self) -> dict[str, Any]:
         data = asdict(self)
-        # Preserve byte-for-byte legacy row serialization when no fixed T-cell
-        # output is declared.
+        # Preserve byte-for-byte legacy row serialization when optional fields
+        # are absent.
         if self.tcell_track is None:
             del data["tcell_track"]
         if self.tcell_intensity is None:
             del data["tcell_intensity"]
+        if not self.context.candidate_junctions:
+            del data["context"]["candidate_junctions"]
         return data
 
     @classmethod
@@ -449,6 +480,11 @@ class Observation:
             data["tcell_track"] = TCellTrack(**data["tcell_track"])
         data["mhc"] = tuple(MHCInput(**candidate) for candidate in data.get("mhc", ()))
         context = dict(data.get("context", {}))
+        if "candidate_junctions" in context:
+            context["candidate_junctions"] = tuple(
+                j if isinstance(j, SourceJunction) else SourceJunction(**j)
+                for j in (context.get("candidate_junctions") or ())
+            )
         for key in ("components", "component_overrides"):
             context[key] = {
                 name: Component(**value) for name, value in context.get(key, {}).items()
