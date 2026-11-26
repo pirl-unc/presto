@@ -207,7 +207,11 @@ def _canonicalize_parsed_allele(parsed: Any, allele_fields: int = 2) -> str:
     return str(parsed)
 
 
-def parse_allele_name(allele: Optional[str]) -> Optional[Any]:
+def parse_allele_name(
+    allele: Optional[str],
+    *,
+    use_allele_aliases: bool = False,
+) -> Optional[Any]:
     """Parse an allele string with mhcgnomes.
 
     Tries the raw token first, then a lightly coerced allele-like form when the
@@ -228,7 +232,11 @@ def parse_allele_name(allele: Optional[str]) -> Optional[Any]:
     if raw not in candidates:
         candidates.append(raw)
     for candidate in candidates:
-        parsed = parse_fn(candidate)
+        parsed = (
+            parse_fn(candidate, use_allele_aliases=True)
+            if use_allele_aliases
+            else parse_fn(candidate)
+        )
         if parsed is not None:
             return parsed
     return None

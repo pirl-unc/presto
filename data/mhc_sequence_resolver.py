@@ -252,10 +252,22 @@ def _resolve_input_via_mhcseqs(
     try:
         parsed = parse_allele_name(query)
     except Exception:
+        parsed = None
+    if parsed is not None:
+        resolved = _resolve_parsed_mhcseqs_input(parsed, lookup=lookup, mhcseqs=mhcseqs)
+        if resolved is not None:
+            return resolved
+    # Fallback for historical IPD/NetMHC allele aliases (e.g. Mamu-A*01 ->
+    # Mamu-A1*001:01, Mafa-DRB*W501 -> Mafa-DRB*W005:01, Gaga-BF2*13:01 ->
+    # Gaga-BF2*004:01:01). Kept as a fallback so canonical tokens and
+    # normalize_allele_name() display forms stay unchanged.
+    try:
+        aliased = parse_allele_name(query, use_allele_aliases=True)
+    except Exception:
         return None
-    if parsed is None:
+    if aliased is None or (parsed is not None and aliased == parsed):
         return None
-    return _resolve_parsed_mhcseqs_input(parsed, lookup=lookup, mhcseqs=mhcseqs)
+    return _resolve_parsed_mhcseqs_input(aliased, lookup=lookup, mhcseqs=mhcseqs)
 
 
 def lookup_exact_mhc_input(
