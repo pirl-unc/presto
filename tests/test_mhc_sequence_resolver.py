@@ -417,3 +417,130 @@ def test_lookup_exact_mhc_input_rejects_mismatched_or_out_of_range_mutant(monkey
     assert resolver.lookup_exact_mhc_input("HLA-B*27:05 A67S mutant") is None
     assert resolver.lookup_exact_mhc_input("HLA-B*27:05 C999S mutant") is None
     assert resolver.lookup_exact_mhc_input("HLA-B*99:99 C67S mutant") is None
+
+
+def test_lookup_exact_mhc_input_resolves_historical_allele_aliases(monkeypatch):
+    entries = [
+        ExactMHCInput(
+            allele="MacacaMulatta-A1*001:01",
+            sequence="M" * 365,
+            groove1="A" * 90,
+            groove2="B" * 92,
+            mhc_class="I",
+            chain="alpha",
+            groove_status="ok",
+            source="mhcseqs",
+        ),
+        ExactMHCInput(
+            allele="MacacaFascicularis-DRA*01:01",
+            sequence="D" * 254,
+            groove1="C" * 84,
+            groove2="",
+            mhc_class="II",
+            chain="alpha",
+            groove_status="ok",
+            source="mhcseqs",
+        ),
+        ExactMHCInput(
+            allele="MacacaFascicularis-DRB*W005:01",
+            sequence="E" * 266,
+            groove1="",
+            groove2="F" * 94,
+            mhc_class="II",
+            chain="beta",
+            groove_status="ok",
+            source="mhcseqs",
+        ),
+        ExactMHCInput(
+            allele="GallusGallus-BF2*004:01",
+            sequence="G" * 355,
+            groove1="H" * 88,
+            groove2="I" * 92,
+            mhc_class="I",
+            chain="alpha",
+            groove_status="ok",
+            source="mhcseqs",
+        ),
+    ]
+    lookup = {}
+    for rec in entries:
+        lookup[rec.allele] = rec
+        lookup[rec.allele.upper()] = rec
+    monkeypatch.setattr(resolver, "_load_mhcseqs_input_lookup", lambda search_dir=None: lookup)
+
+    mamu = resolver.lookup_exact_mhc_input("Mamu-A*01")
+    assert mamu is not None
+    assert mamu.allele == "MacacaMulatta-A1*001:01"
+
+    mafa_drb = resolver.lookup_exact_mhc_input("Mafa-DRB*W501")
+    assert mafa_drb is not None
+    assert mafa_drb.allele == "MacacaFascicularis-DRB*W005:01"
+
+    mafa_pair = resolver.lookup_exact_mhc_input("Mafa-DRA*01:01/DRB*W501")
+    assert mafa_pair is not None
+    assert mafa_pair.source == "mhcseqs_pair"
+    assert mafa_pair.groove1 == "C" * 84
+    assert mafa_pair.groove2 == "F" * 94
+
+    gaga = resolver.lookup_exact_mhc_input("Gaga-BF2*13:01")
+    assert gaga is not None
+    assert gaga.allele == "GallusGallus-BF2*004:01"
+
+
+def test_lookup_exact_mhc_input_resolves_dpa_alias_and_mouse_ab1_unification(monkeypatch):
+    entries = [
+        ExactMHCInput(
+            allele="HomoSapiens-DPA1*01:03",
+            sequence="P" * 260,
+            groove1="P" * 84,
+            groove2="",
+            mhc_class="II",
+            chain="alpha",
+            groove_status="ok",
+            source="mhcseqs",
+        ),
+        ExactMHCInput(
+            allele="MusMusculus-AA*b",
+            sequence="Q" * 256,
+            groove1="Q" * 85,
+            groove2="",
+            mhc_class="II",
+            chain="alpha",
+            groove_status="ok",
+            source="mhcseqs",
+        ),
+        ExactMHCInput(
+            allele="MusMusculus-AB*b",
+            sequence="R" * 264,
+            groove1="",
+            groove2="R" * 95,
+            mhc_class="II",
+            chain="beta",
+            groove_status="ok",
+            source="mhcseqs",
+        ),
+    ]
+    lookup = {}
+    for rec in entries:
+        lookup[rec.allele] = rec
+        lookup[rec.allele.upper()] = rec
+    monkeypatch.setattr(resolver, "_load_mhcseqs_input_lookup", lambda search_dir=None: lookup)
+
+    dpa = resolver.lookup_exact_mhc_input("HLA-DPA*01:03")
+    assert dpa is not None
+    assert dpa.allele == "HomoSapiens-DPA1*01:03"
+
+    ab1 = resolver.lookup_exact_mhc_input("H2-Ab1*b")
+    assert ab1 is not None
+    assert ab1.allele == "MusMusculus-AB*b"
+
+    pair_ab1 = resolver.lookup_exact_mhc_input("H2-AA*b/Ab1*b")
+    assert pair_ab1 is not None
+    assert pair_ab1.source == "mhcseqs_pair"
+    assert pair_ab1.groove1 == "Q" * 85
+    assert pair_ab1.groove2 == "R" * 95
+
+    pair_ab = resolver.lookup_exact_mhc_input("H2-AA*b/AB*b")
+    assert pair_ab is not None
+    assert pair_ab.groove1 == "Q" * 85
+    assert pair_ab.groove2 == "R" * 95

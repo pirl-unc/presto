@@ -1,6 +1,7 @@
 """Tests for data CLI helpers and command wiring."""
 
 from pathlib import Path
+import re
 from types import SimpleNamespace
 
 from presto.cli import data as data_cli
@@ -11,7 +12,8 @@ from presto.data.mhc_index import MHCIndexError
 def test_pyproject_has_mhcgnomes_dependency():
     pyproject = Path(__file__).resolve().parents[1] / "pyproject.toml"
     text = pyproject.read_text(encoding="utf-8")
-    assert '"mhcgnomes"' in text
+    assert re.search(r'"mhcgnomes(?:[<>!=~][^"]*)?"', text)
+    assert re.search(r'"mhcseqs(?:[<>!=~][^"]*)?"', text)
 
 
 def test_parser_wires_mhc_index_build_command():

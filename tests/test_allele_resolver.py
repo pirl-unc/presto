@@ -242,7 +242,12 @@ class TestDefaultDRAlphaMapping:
     def test_default_dra_mapping_resolves_from_beta_allele(self):
         assert class_ii_default_dra_allele(beta_allele="HLA-DRB1*04:01") == "HLA-DRA*01:01"
         assert class_ii_default_dra_allele(beta_allele="Mamu-DRB1*03:03") == "Mamu-DRA*01:01"
+        assert class_ii_default_dra_allele(beta_allele="Mafa-DRB*W501") == "Mafa-DRA*01:01:01:01"
+        assert class_ii_default_dra_allele(beta_allele="BoLA-DRB3*010:01") == "BoLA-DRA*001:01"
         assert class_ii_default_dra_allele(beta_allele="SLA-DRB1*04:02") == "SLA-DRA*01:01"
+        assert class_ii_default_dra_allele(beta_allele="Eqca-DRB1*001:01") == "Eqca-DRA*001:01"
+        assert class_ii_default_dra_allele(beta_allele="Patr-DRB1*03:01") == "Patr-DRA*01:01"
+        assert class_ii_default_dra_allele(beta_allele="Ovar-DRB1*01:01") == "Ovar-DRA*01:01"
 
     def test_default_dra_mapping_resolves_from_prefix(self):
         assert class_ii_default_dra_allele(species="HLA") == "HLA-DRA*01:01"
