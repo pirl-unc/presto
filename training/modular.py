@@ -1183,6 +1183,32 @@ def initialize_from_checkpoint(
                 model.trained_elements[name][:, new_slot * d : (new_slot + 1) * d] = old_mask[
                     :, old_slot * d : (old_slot + 1) * d
                 ]
+        elif (
+            allow_interaction_expansion
+            and pocket_scheme_upgraded
+            and name.startswith("direct_pocket_bilinear.by_class.")
+            and (name.endswith(".mhc_v") or name.endswith(".mhc_bias"))
+            and old_mask.shape != model.trained_elements[name].shape
+        ):
+            model.trained_elements[name] = model.trained_elements[name].to(model.device)
+            model.trained_elements[name].zero_()
+            for old_s, new_s in pocket_overlap:
+                model.trained_elements[name][new_s] = old_mask[old_s]
+        elif (
+            allow_interaction_expansion
+            and pocket_scheme_upgraded
+            and name.startswith("direct_pocket_bilinear.by_class.")
+            and (name.endswith(".linear_energy.weight") or name.endswith(".mlp.0.weight"))
+            and old_mask.shape != model.trained_elements[name].shape
+        ):
+            model.trained_elements[name] = model.trained_elements[name].to(model.device)
+            model.trained_elements[name].zero_()
+            for p in range(9):
+                for old_s, new_s in pocket_overlap:
+                    model.trained_elements[name][:, p * new_n_pockets + new_s] = old_mask[
+                        :, p * old_n_pockets + old_s
+                    ]
+            model.trained_elements[name][:, -3:] = old_mask[:, -3:]
         else:
             model.trained_elements[name] = old_mask.clone()
     for category, values in previous.source_label_support.items():

@@ -24,6 +24,7 @@ from presto.training.modular import (
     initialize_from_checkpoint,
     load_checkpoint,
     save_checkpoint,
+    train_step,
 )
 
 MISSING_9_SLOTS = (
@@ -222,3 +223,25 @@ def test_legacy58_checkpoint_autodetects_and_migrates_to_union46(tmp_path):
             float(grad_lin[:, p * 46 + s].abs().sum()) for p in range(9) for s in new_only_indices
         )
         assert new_slot_grad > 0.0
+
+    # Verify a real train_step updates trained_elements without shape mismatch (regression test)
+    train_obs = [
+        Observation(
+            observation_id=o.observation_id,
+            endpoint=o.endpoint,
+            source=o.source,
+            peptide=o.peptide,
+            mhc=o.mhc,
+            context=o.context,
+            value=100.0,
+            unit="nM",
+            qualifier="=",
+            split="train",
+        )
+        for o in obs
+    ]
+    opt = torch.optim.AdamW(new_model.parameters(), lr=1e-3)
+    step_out = train_step(new_model, opt, train_obs, {"ic50": TargetScale(0.0, 1.0, 10)})
+    assert step_out["loss"] >= 0.0
+    for name, p in new_model.named_parameters():
+        assert new_model.trained_elements[name].shape == p.shape
