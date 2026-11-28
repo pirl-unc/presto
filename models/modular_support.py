@@ -43,6 +43,24 @@ def feature_layout(model):
         result["elution_pathway.weight"] = (1, ["processing_class:I", "processing_class:II"])
     if hasattr(model, "elution_junction"):
         result["elution_junction.input.weight"] = (1, model.elution_junction.feature_names())
+    if hasattr(model, "elution_shared"):
+        result["elution_shared.boundary_input.weight"] = (
+            1,
+            model.elution_shared.boundary_feature_names(),
+        )
+        result["elution_shared.length_input.weight"] = (
+            1,
+            model.elution_shared.length_feature_names(),
+        )
+        result["elution_shared.register_input.weight"] = (
+            1,
+            model.elution_shared.register_feature_names(),
+        )
+        if model.elution_shared.apc_columns:
+            result["elution_shared.apc_encoder.weight"] = (
+                1,
+                model.elution_shared.apc_feature_names(),
+            )
     if model.has_context or staged:
         names = []
         if model.has_tcr:

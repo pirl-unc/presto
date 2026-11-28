@@ -57,11 +57,37 @@ class AssayMeasurementLayer(nn.Module):
         return OUTPUT_POLARITY.get(endpoint, 1) * value
 
     def forward(self, hidden, endpoint):
-        return {
-            track.key: self.score(hidden, endpoint, track)
-            for track in self.tracks
-            if track.endpoint == endpoint
-        }
+        endpoint_tracks = [track for track in self.tracks if track.endpoint == endpoint]
+        if not endpoint_tracks:
+            return {}
+        if torch.is_grad_enabled() or len(endpoint_tracks) == 1:
+            return {track.key: self.score(hidden, endpoint, track) for track in endpoint_tracks}
+        ep_vec = self.factors["endpoint"][endpoint]
+        track_vecs = torch.stack(
+            [
+                torch.cat(
+                    [
+                        ep_vec,
+                        self.factors["preparation"][track.preparation],
+                        self.factors["mechanism"][track.mechanism],
+                        self.factors["detector"][track.detector],
+                    ],
+                    dim=-1,
+                )
+                for track in endpoint_tracks
+            ],
+            dim=0,
+        )
+        t_count = len(endpoint_tracks)
+        h_exp = hidden.unsqueeze(0).expand(t_count, *hidden.shape)
+        tv_exp = track_vecs.view(t_count, *((1,) * (hidden.ndim - 1)), track_vecs.shape[-1]).expand(
+            t_count, *hidden.shape[:-1], track_vecs.shape[-1]
+        )
+        values = self.decoder(torch.cat([h_exp, tv_exp], dim=-1)).squeeze(-1)
+        polarity = OUTPUT_POLARITY.get(endpoint, 1)
+        if polarity != 1:
+            values = polarity * values
+        return {track.key: values[idx] for idx, track in enumerate(endpoint_tracks)}
 
     def dependencies(self, endpoint):
         names = {f"assay_layer.decoder.{name}" for name, _ in self.decoder.named_parameters()}

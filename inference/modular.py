@@ -45,6 +45,9 @@ class ModularPredictor:
                         cytokines=config.cytokines,
                         processing_pathways=config.processing_pathways,
                         interventions=config.interventions,
+                        shared_gene_perturbations=getattr(
+                            config, "elution_shared_processing", False
+                        ),
                     ),
                 )
                 for row in rows
@@ -198,3 +201,54 @@ class ModularPredictor:
         ]
         results = self.predict(requests)
         return sorted(results, key=lambda result: (-result["score"], result["observation_id"]))
+
+
+class ModularEnsemblePredictor:
+    """Multi-checkpoint ensemble predictor averaging calibrated logits and regression values."""
+
+    def __init__(self, checkpoints: Sequence, *, device="cpu"):
+        if not checkpoints:
+            raise ValueError("ModularEnsemblePredictor requires at least one checkpoint")
+        self.predictors = [ModularPredictor(ckpt, device=device) for ckpt in checkpoints]
+
+    def predict(
+        self, rows: Sequence[Observation], *, unsupported_apc_policy: str = "error"
+    ) -> list[dict]:
+        member_outputs = [
+            p.predict(rows, unsupported_apc_policy=unsupported_apc_policy) for p in self.predictors
+        ]
+        n = len(member_outputs)
+        merged = []
+        for idx, row in enumerate(rows):
+            items = [out[idx] for out in member_outputs]
+            base = dict(items[0])
+            base["ensemble_size"] = n
+            if "logit" in base:
+                mean_logit = sum(float(it["logit"]) for it in items) / n
+                base["logit"] = mean_logit
+                base["score"] = 1.0 / (1.0 + math.exp(-max(-60.0, min(60.0, mean_logit))))
+                base["member_logits"] = [float(it["logit"]) for it in items]
+            elif "transformed_value" in base:
+                mean_tv = sum(float(it["transformed_value"]) for it in items) / n
+                base["transformed_value"] = mean_tv
+                base["member_transformed_values"] = [float(it["transformed_value"]) for it in items]
+                spec = endpoint_spec(row.endpoint)
+                if not spec.quantitative:
+                    try:
+                        phys = 10.0**mean_tv if spec.log10 else mean_tv
+                    except OverflowError:
+                        phys = None
+                    base["value"] = phys if phys is not None and math.isfinite(phys) else None
+            if base.get("component_scores"):
+                comp = {}
+                for k in base["component_scores"]:
+                    vals = [
+                        float(it["component_scores"][k])
+                        for it in items
+                        if k in it.get("component_scores", {})
+                    ]
+                    if vals:
+                        comp[k] = sum(vals) / len(vals)
+                base["component_scores"] = comp
+            merged.append(base)
+        return merged

@@ -14,13 +14,44 @@ def staged_elution_parameters(model):
                 "elution_processing.",
                 "elution_pathway.",
                 "elution_junction.",
+                "elution_shared.",
+                "elution_pmhc_mlp.",
+                "elution_mhc_abundance_",
+                "elution_binding_",
+                "groove_segment.",
+                "imgt_slot_embedding.",
+                "imgt_pocket_cross.",
+                "direct_pocket_bilinear.",
+                "groove_self_attn.",
+                "groove_self_norm.",
+                "groove_self_gate",
+                "query_n_anchor.",
+                "query_c_anchor.",
+                "query_class_emb.",
+                "groove_pocket_",
                 "pmhc_fusion.",
+                "pmhc_pfr_mlp.",
+                "pmhc_refine.",
                 "residue_interaction.",
+                "residue_interaction_2.",
+                "interaction_ffn.",
+                "interaction_ffn_norm.",
+                "interaction_self_attn.",
+                "interaction_self_norm.",
+                "interaction_self_gate",
+                "interaction_norm_2.",
+                "interaction_anchor_proj.",
+                "interaction_anchor_norm.",
                 "apm_state.",
             )
         )
         or name.startswith("interaction_norm.")
-        or name in ("elution_affinity_weight", "elution_stability_weight")
+        or name
+        in (
+            "elution_affinity_weight",
+            "elution_stability_weight",
+            "elution_stability_class_weight",
+        )
         or (model.elution_stability and name.startswith("heads.half_life."))
     }
     if hasattr(model, "register_score"):
@@ -36,7 +67,35 @@ def parameter_dependencies(model, target):
     exact = set()
 
     def pmhc(contextual=False, receptor=False):
-        prefixes.update(("pmhc_fusion.", "residue_interaction.", "interaction_norm."))
+        prefixes.update(
+            (
+                "groove_segment.",
+                "imgt_slot_embedding.",
+                "imgt_pocket_cross.",
+                "direct_pocket_bilinear.",
+                "groove_self_attn.",
+                "groove_self_norm.",
+                "groove_self_gate",
+                "query_n_anchor.",
+                "query_c_anchor.",
+                "query_class_emb.",
+                "groove_pocket_",
+                "pmhc_fusion.",
+                "pmhc_pfr_mlp.",
+                "pmhc_refine.",
+                "residue_interaction.",
+                "residue_interaction_2.",
+                "interaction_norm.",
+                "interaction_norm_2.",
+                "interaction_ffn.",
+                "interaction_ffn_norm.",
+                "interaction_self_attn.",
+                "interaction_self_norm.",
+                "interaction_self_gate",
+                "interaction_anchor_proj.",
+                "interaction_anchor_norm.",
+            )
+        )
         if hasattr(model, "register_score"):
             prefixes.add("register_score.")
         if contextual:
@@ -91,8 +150,16 @@ def parameter_dependencies(model, target):
                     ordinal=model.config.tcell_ordinal_loss_weight > 0
                 )
             )
+            if getattr(model.config, "tcell_staged", False):
+                exact.update(model.tcell_staged_head.dependencies())
         elif target in getattr(model, "assay_endpoints", ()):
             exact.update(model.assay_layer.dependencies(target))
+            if hasattr(model, "direct_pocket_bilinear"):
+                prefixes.add("direct_pocket_bilinear.")
+            if hasattr(model, "assay_class_offset"):
+                for cls_key in (f"{target}__I", f"{target}__II"):
+                    if cls_key in model.assay_class_offset:
+                        exact.add(f"assay_class_offset.{cls_key}")
         else:
             prefixes.add(f"heads.{target}.")
     elif target.startswith("component:"):

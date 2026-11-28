@@ -16,6 +16,105 @@ from .modular import (
 )
 from .modular_ordinal import OrdinalScale, OrdinalValue
 
+PERTURBATION_KINDS = (
+    "knockout",
+    "knockdown",
+    "overexpression",
+    "transduction",
+    "transfection",
+)
+
+HLA_LOCUS_GENES = frozenset({"HLA-A", "HLA-B", "HLA-C", "HLA-E", "HLA-F", "HLA-G"})
+
+APM_HOST_GENES = HLA_LOCUS_GENES | frozenset(
+    {
+        "B2M",
+        "BATF3",
+        "CALR",
+        "CANX",
+        "CD74",
+        "CIITA",
+        "CTSB",
+        "CTSL",
+        "CTSS",
+        "CYBB",
+        "ERAP1",
+        "ERAP2",
+        "GANAB",
+        "HLA-DM",
+        "HLA-DO",
+        "HLA-DPA1",
+        "HLA-DPB1",
+        "HLA-DQA1",
+        "HLA-DQB1",
+        "HLA-DRA",
+        "HLA-DRB1",
+        "IFI30",
+        "IRF2",
+        "LGMN",
+        "NLRC5",
+        "PDIA3",
+        "PSMB5",
+        "PSMB8",
+        "PSMB9",
+        "PSMB10",
+        "PSME1",
+        "PSME2",
+        "SEC22B",
+        "SEC61",
+        "SPPL3",
+        "TAP1",
+        "TAP2",
+        "TAPBP",
+        "TAPBPL",
+        "TAX1BP1",
+    }
+)
+
+
+def canonical_perturbation_gene(raw_gene: str) -> str | None:
+    """Return canonical host APM/HLA gene token, or None for non-host constructs."""
+    token = raw_gene.strip()
+    if not token:
+        return None
+    upper_hyphen = token.upper().replace("_", "-")
+    alias = {
+        "TAPBPR": "TAPBPL",
+        "ERAAP": "ERAP1",
+        "GILT": "IFI30",
+    }.get(upper_hyphen, upper_hyphen)
+    return alias if alias in APM_HOST_GENES else None
+
+
+def parse_gene_perturbation(claim_name: str) -> tuple[str, str] | None:
+    """Parse `<kind>:<gene>` into `(kind, canonical_gene)` if it names a host APM/HLA gene."""
+    if ":" not in claim_name:
+        return None
+    kind, rest = claim_name.split(":", 1)
+    if kind not in PERTURBATION_KINDS:
+        return None
+    gene = canonical_perturbation_gene(rest)
+    if gene is None:
+        return None
+    return kind, gene
+
+
+def supported_perturbation_genes(interventions: Sequence[str]) -> tuple[str, ...]:
+    """Return sorted canonical host APM/HLA genes backed by configured interventions."""
+    genes = set()
+    for item in interventions:
+        parsed = parse_gene_perturbation(item)
+        if parsed is not None:
+            genes.add(parsed[1])
+    return tuple(sorted(genes))
+
+
+def is_supported_gene_perturbation(
+    claim_name: str, supported_genes: Sequence[str] | set[str] | frozenset[str]
+) -> bool:
+    parsed = parse_gene_perturbation(claim_name)
+    return parsed is not None and parsed[1] in supported_genes
+
 
 @dataclass(frozen=True)
 class ResolvedField:
@@ -187,6 +286,7 @@ def project_apc_context(
     cytokines: Sequence[str] = (),
     processing_pathways: Sequence[str] = (),
     interventions: Sequence[str] = (),
+    shared_gene_perturbations: bool = False,
 ) -> Context:
     """Explicitly omit unrepresented APC categories, retaining their source claims.
 
@@ -195,6 +295,11 @@ def project_apc_context(
     Apply to original source context for each checkpoint, not a previous projection.
     """
     omitted, changes = {}, {}
+    supported_genes = (
+        frozenset(supported_perturbation_genes(interventions))
+        if shared_gene_perturbations
+        else frozenset()
+    )
     effective = context.cell_type_override or context.cell_type
     if effective is not None and effective not in cell_types:
         # An unsupported override cannot expose a superseded supplied identity.
@@ -206,12 +311,23 @@ def project_apc_context(
         ("processing_pathways", "pathway_overrides", processing_pathways),
         ("interventions", "intervention_overrides", interventions),
     ):
+        is_interv = supplied == "interventions"
         for name in (supplied, override):
             values = getattr(context, name)
-            unsupported = {k: asdict(v) for k, v in values.items() if k not in vocabulary}
+            unsupported = {
+                k: asdict(v)
+                for k, v in values.items()
+                if k not in vocabulary
+                and not (is_interv and is_supported_gene_perturbation(k, supported_genes))
+            }
             if unsupported:
                 omitted[name] = unsupported
-                changes[name] = {k: v for k, v in values.items() if k in vocabulary}
+                changes[name] = {
+                    k: v
+                    for k, v in values.items()
+                    if k in vocabulary
+                    or (is_interv and is_supported_gene_perturbation(k, supported_genes))
+                }
     if not omitted:
         return context
     previous = context.provenance.get("unrepresented_apc_context", [])
@@ -227,17 +343,45 @@ def project_apc_context(
     )
 
 
-def _assertions(supplied, overrides, vocabulary, *, family, strict, ignored):
-    unsupported = (set(supplied) | set(overrides)) - set(vocabulary)
+def _assertions(
+    supplied,
+    overrides,
+    vocabulary,
+    *,
+    family,
+    strict,
+    ignored,
+    supported_genes: frozenset[str] = frozenset(),
+):
+    raw_unsupported = (set(supplied) | set(overrides)) - set(vocabulary)
+    unsupported = {
+        name
+        for name in raw_unsupported
+        if not (family == "intervention" and is_supported_gene_perturbation(name, supported_genes))
+    }
     if strict and vocabulary and unsupported:
         raise ValueError(f"{family} outside checkpoint vocabulary: {sorted(unsupported)}")
     ignored.extend(f"{family}:{name}" for name in sorted(unsupported))
     values, sources = {}, {}
+    vocab_set = set(vocabulary)
     for name in vocabulary:
-        values[name] = overrides.get(name) or supplied.get(name) or ContextAssertion()
-        sources[name] = (
-            "override" if name in overrides else "supplied" if name in supplied else "unknown"
-        )
+        direct = overrides.get(name) or supplied.get(name)
+        if direct is not None:
+            values[name] = direct
+            sources[name] = "override" if name in overrides else "supplied"
+            continue
+        # Complete knockout entails loss-of-function for knockdown-only discrete slots
+        if family == "intervention" and supported_genes and name.startswith("knockdown:"):
+            parsed = parse_gene_perturbation(name)
+            if parsed is not None:
+                ko_key = f"knockout:{parsed[1]}"
+                ko_claim = overrides.get(ko_key) or supplied.get(ko_key)
+                if ko_key not in vocab_set and ko_claim is not None and ko_claim.state == "present":
+                    values[name] = ContextAssertion("present")
+                    sources[name] = "override" if ko_key in overrides else "supplied"
+                    continue
+        values[name] = ContextAssertion()
+        sources[name] = "unknown"
     return values, sources
 
 
@@ -252,6 +396,7 @@ def resolve_cell_context(
     processing_pathways: Sequence[str] = (),
     interventions: Sequence[str] = (),
     ordinal_scales: Mapping[str, OrdinalScale] | None = None,
+    shared_gene_perturbations: bool = False,
 ) -> ResolvedCellContext:
     """Resolve annotations without treating missing exposures as negative controls."""
     cell = resolve_field(
@@ -293,6 +438,11 @@ def resolve_cell_context(
         strict=strict,
         ignored=ignored,
     )
+    supported_genes = (
+        frozenset(supported_perturbation_genes(interventions))
+        if shared_gene_perturbations
+        else frozenset()
+    )
     factors, factor_sources = _assertions(
         context.interventions,
         context.intervention_overrides,
@@ -300,6 +450,7 @@ def resolve_cell_context(
         family="intervention",
         strict=strict,
         ignored=ignored,
+        supported_genes=supported_genes,
     )
     ordinal_scales = ordinal_scales or {}
     unsupported = (set(context.ordinal_values) | set(context.ordinal_overrides)) - set(

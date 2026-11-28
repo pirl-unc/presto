@@ -12,8 +12,8 @@ dependencies = [
   "torch>=2.1.0",
   "numpy>=1.24.0",
   "pyyaml>=6.0",
-  "mhcgnomes",
-  "mhcseqs",
+  "mhcgnomes>=3.92.0",
+  "mhcseqs>=2.26.0",
   "tqdm>=4.66.0",
   # Used by the probe/plot paths in scripts/ and data/cross_source_dedup.py.
   # Previously undeclared, which is why the plot tests failed in a clean

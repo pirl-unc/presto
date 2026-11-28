@@ -130,8 +130,12 @@ def initialized_model(config, index, *, device="cpu"):
             "sha256",
             "allow_task_removal",
             "allow_apc_expansion",
+            "allow_apc_vocab_expansion",
             "allow_pathway_expansion",
             "allow_junction_expansion",
+            "allow_shared_processing_expansion",
+            "allow_interaction_expansion",
+            "allow_tcell_staging_expansion",
             "freeze",
         }:
             raise ValueError("unknown pretrained transfer option")
@@ -139,10 +143,18 @@ def initialized_model(config, index, *, device="cpu"):
             raise ValueError("allow_task_removal must be boolean")
         if type(reference.get("allow_apc_expansion", False)) is not bool:
             raise ValueError("allow_apc_expansion must be boolean")
+        if type(reference.get("allow_apc_vocab_expansion", False)) is not bool:
+            raise ValueError("allow_apc_vocab_expansion must be boolean")
         if type(reference.get("allow_pathway_expansion", False)) is not bool:
             raise ValueError("allow_pathway_expansion must be boolean")
         if type(reference.get("allow_junction_expansion", False)) is not bool:
             raise ValueError("allow_junction_expansion must be boolean")
+        if type(reference.get("allow_shared_processing_expansion", False)) is not bool:
+            raise ValueError("allow_shared_processing_expansion must be boolean")
+        if type(reference.get("allow_interaction_expansion", False)) is not bool:
+            raise ValueError("allow_interaction_expansion must be boolean")
+        if type(reference.get("allow_tcell_staging_expansion", False)) is not bool:
+            raise ValueError("allow_tcell_staging_expansion must be boolean")
         targets = reference.get("freeze", [])
         if not isinstance(targets, list) or any(not isinstance(value, str) for value in targets):
             raise ValueError("pretrained freeze must be a list of dependency targets")
@@ -154,8 +166,14 @@ def initialized_model(config, index, *, device="cpu"):
             path,
             allow_task_removal=reference.get("allow_task_removal", False),
             allow_apc_expansion=reference.get("allow_apc_expansion", False),
+            allow_apc_vocab_expansion=reference.get("allow_apc_vocab_expansion", False),
             allow_pathway_expansion=reference.get("allow_pathway_expansion", False),
             allow_junction_expansion=reference.get("allow_junction_expansion", False),
+            allow_shared_processing_expansion=reference.get(
+                "allow_shared_processing_expansion", False
+            ),
+            allow_interaction_expansion=reference.get("allow_interaction_expansion", False),
+            allow_tcell_staging_expansion=reference.get("allow_tcell_staging_expansion", False),
         )
         freeze_dependencies(model, targets)
     return model, inherited
@@ -321,6 +339,7 @@ def preflight(index: ObservationIndex):
     spearman_rows = defaultdict(int)
     spearman_targets = defaultdict(set)
     counts, label_values, feature_states = Counter(), defaultdict(set), defaultdict(set)
+    component_activities = defaultdict(set)
     source_label_values = defaultdict(set)
     observed_features = {"acquisition": set(), "observation": set(), "preparation": set()}
     preparation_values = defaultdict(set)
@@ -339,6 +358,25 @@ def preflight(index: ObservationIndex):
                     "auxiliary processing backgrounds require explicit TRAIN pair control"
                 )
             # These are auxiliary contrasts, not additional ordinary supervised rows.
+            continue
+        if "apc_quantitative_contrast" in row.provenance:
+            if row.split != "train" or control(training, "apc_contrast_training") is None:
+                raise ValueError(
+                    "auxiliary quantitative APC contrasts require TRAIN apc_contrast_training"
+                )
+            qmeta = row.provenance["apc_quantitative_contrast"]
+            for k, v in row.context.interventions.items():
+                if k in config.interventions:
+                    assertion_states["intervention"][k].add(v.state)
+            for k, state in (qmeta.get("control_interventions") or {}).items():
+                if k in config.interventions:
+                    assertion_states["intervention"][k].add(state)
+            for k, v in row.context.cytokines.items():
+                if k in config.cytokines:
+                    cytokine_states[k].add(v.state)
+            for k, state in (qmeta.get("control_cytokines") or {}).items():
+                if k in config.cytokines:
+                    cytokine_states[k].add(state)
             continue
         if row.endpoint not in inherited_scales:
             scale_fitter.add(row)
@@ -408,6 +446,7 @@ def preflight(index: ObservationIndex):
                     processing_pathways=config.processing_pathways,
                     interventions=config.interventions,
                     ordinal_scales=config.ordinal_scales,
+                    shared_gene_perturbations=config.elution_shared_processing,
                 )
                 if row.split == "train":
                     for name, value in cell.ordinal_values.items():
@@ -475,6 +514,12 @@ def preflight(index: ObservationIndex):
                             name
                         ) or row.context.components.get(name)
                         feature_states[name].add(component.state if component else "unknown")
+                        if (
+                            component is not None
+                            and component.activity is not None
+                            and math.isfinite(component.activity)
+                        ):
+                            component_activities[name].add(round(float(component.activity), 6))
     if spearman_enabled:
         for name in control(training, "selection_spearman_endpoints"):
             if frozen_output(validator, name):
@@ -555,7 +600,14 @@ def preflight(index: ObservationIndex):
         )
     )
     for name, states in feature_states.items():
-        if len(states - {"unknown", "reference"}) < 2 and not context_frozen:
+        has_activity_contrast = (
+            name in config.component_activity_units and len(component_activities[name]) >= 2
+        )
+        if (
+            len(states - {"unknown", "reference"}) < 2
+            and not has_activity_contrast
+            and not context_frozen
+        ):
             raise ValueError(f"component effect lacks contrasted training states: {name}")
     missing_cells = set(config.cell_types) - cell_types
     if missing_cells and not context_frozen:
@@ -920,9 +972,54 @@ def _fit_index(index, output_dir, *, device, resume):
         raise ValueError(
             "no trainable parameters; use checkpoint inference for a fully frozen model"
         )
-    optimizer = torch.optim.AdamW(
-        trainable, lr=training["learning_rate"], weight_decay=training["weight_decay"]
-    )
+    new_lr_scale = control(training, "new_module_lr_scale")
+    if new_lr_scale is not None:
+        fast_prefixes = (
+            "elution_shared.",
+            "elution_junction.",
+            "elution_pmhc_mlp.",
+            "elution_binding_",
+            "heads.half_life.",
+            "offsets.half_life.",
+            "elution_stability_weight",
+            "elution_stability_class_weight",
+            "groove_segment.",
+            "imgt_slot_embedding.",
+            "imgt_pocket_cross.",
+            "direct_pocket_bilinear.",
+            "elution_mhc_abundance_",
+            "assay_class_offset.",
+            "tcell_staged_head.tcr_norm_ii.",
+            "tcell_staged_head.tcr_mlp_ii.",
+            "interaction_anchor_proj.",
+            "interaction_anchor_norm.",
+        )
+        mid_prefixes = ("apm_state.", "elution_processing.", "tcell_staged_head.")
+        backbone_params, mid_params, fast_params = [], [], []
+        for name, parameter in model.named_parameters():
+            if not parameter.requires_grad:
+                continue
+            if name.startswith(fast_prefixes):
+                fast_params.append(parameter)
+            elif name.startswith(mid_prefixes):
+                mid_params.append(parameter)
+            else:
+                backbone_params.append(parameter)
+        mid_scale = math.sqrt(float(new_lr_scale))
+        param_groups = [
+            {"params": group_params, "lr": training["learning_rate"] * scale, "lr_scale": scale}
+            for group_params, scale in (
+                (backbone_params, 1.0),
+                (mid_params, mid_scale),
+                (fast_params, float(new_lr_scale)),
+            )
+            if group_params
+        ]
+        optimizer = torch.optim.AdamW(param_groups, weight_decay=training["weight_decay"])
+    else:
+        optimizer = torch.optim.AdamW(
+            trainable, lr=training["learning_rate"], weight_decay=training["weight_decay"]
+        )
     if saved is not None:
         if saved["optimizer_names"] != optimizer_names(model, optimizer):
             raise ValueError("resume optimizer parameter order or membership changed")
@@ -938,6 +1035,47 @@ def _fit_index(index, output_dir, *, device, resume):
             raise ValueError("processing pair training requires an unfrozen model")
         pair_pool = PairPool(index)
         base_indices = [i for i in base_indices if i not in pair_pool.auxiliary_indices]
+    apc_options = control(training, "apc_contrast_training")
+    apc_pool = None
+    if apc_options is not None:
+        from .apc_contrasts import APCContrastPool
+
+        if model.frozen_parameters:
+            raise ValueError("APC contrast training requires an unfrozen model")
+        apc_pool = APCContrastPool(index, config)
+        if apc_pool.auxiliary_indices:
+            base_indices = [i for i in base_indices if i not in apc_pool.auxiliary_indices]
+    allele_swap_options = control(training, "allele_swap_training")
+    allele_swap_pool = None
+    if allele_swap_options is not None:
+        from .allele_swap import AlleleSwapPool
+
+        if model.frozen_parameters:
+            raise ValueError("allele swap training requires an unfrozen model")
+        allele_swap_pool = AlleleSwapPool(
+            max_buffer_per_class=int(allele_swap_options.get("max_buffer", 512))
+        )
+    allele_diff_options = control(training, "allele_diff_training")
+    allele_diff_pool = None
+    if allele_diff_options is not None:
+        from .allele_diff import AlleleDiffPool
+
+        if model.frozen_parameters:
+            raise ValueError("allele diff training requires an unfrozen model")
+        quant_train_rows = [
+            index[i]
+            for i in trainable_assays
+            if index.metadata(i).endpoint in ("ic50", "kd_via_ic50", "kd_via_ec50", "kd")
+        ]
+        allele_diff_pool = AlleleDiffPool.from_observations(
+            quant_train_rows,
+            min_diff_log10=float(allele_diff_options.get("min_diff_log10", 0.15)),
+            close_identity_threshold=float(
+                allele_diff_options.get("close_identity_threshold", 0.78)
+            ),
+            max_pairs_per_group=int(allele_diff_options.get("max_pairs_per_group", 12)),
+        )
+        logging.info("allele_diff_pool initialized: %s", allele_diff_pool.counts)
     replay_indices = trainable_identity if trainable_assays else []
     if not base_indices:
         raise ValueError("no observations with a trainable supervised loss")
@@ -1007,12 +1145,8 @@ def _fit_index(index, output_dir, *, device, resume):
         if control(training, "ema_decay") is not None
         else None
     )
-    # Deterministic row -> comparison-cell map; reads training rows only, never RNG.
-    cell_keys = (
-        {i: cell_key(index[i], batching.get("grouping", "study")) for i in base_indices}
-        if batching
-        else {}
-    )
+    # Lazily populated row -> comparison-cell map (only touches rows actually drawn in `order`).
+    cell_keys = {}
     extra_step_options = {}
     if control(training, "loss_normalization") != "observation_mean":
         extra_step_options["normalization"] = control(training, "loss_normalization")
@@ -1021,8 +1155,24 @@ def _fit_index(index, output_dir, *, device, resume):
         extra_step_options["ranking"] = ranking
     if state_contrast is not None:
         extra_step_options["state_contrast"] = state_contrast
+    if control(training, "amp_bfloat16"):
+        extra_step_options["amp_bfloat16"] = True
+        if str(device).startswith("cuda"):
+            torch.set_float32_matmul_precision("high")
     if control(training, "grad_clip_norm") is not None:
         extra_step_options["grad_clip_norm"] = control(training, "grad_clip_norm")
+    if control(training, "elution_pmhc_residual_l2_weight") > 0:
+        extra_step_options["elution_pmhc_residual_l2_weight"] = float(
+            control(training, "elution_pmhc_residual_l2_weight")
+        )
+    if control(training, "ms_response_elution_l2_weight") > 0:
+        extra_step_options["ms_response_elution_l2_weight"] = float(
+            control(training, "ms_response_elution_l2_weight")
+        )
+    if control(training, "tcell_ranking_weight") > 0:
+        extra_step_options["tcell_ranking_weight"] = float(
+            control(training, "tcell_ranking_weight")
+        )
 
     def snapshot():
         state["elapsed_seconds"] = elapsed_before + time.monotonic() - start_time
@@ -1069,6 +1219,10 @@ def _fit_index(index, output_dir, *, device, resume):
                     index, base_indices, training["balance_by"], rng, weights
                 )
             if batching:
+                grouping = batching.get("grouping", "study")
+                for i in set(state["order"]):
+                    if i not in cell_keys:
+                        cell_keys[i] = cell_key(index[i], grouping)
                 state["order"] = cell_blocks(
                     state["order"], cell_keys, batching["rows_per_cell"], rng
                 )
@@ -1096,10 +1250,40 @@ def _fit_index(index, output_dir, *, device, resume):
                     training["learning_rate"], lr_schedule, state["steps"], training["max_steps"]
                 )
                 for group in optimizer.param_groups:
-                    group["lr"] = rate
+                    group["lr"] = rate * group.get("lr_scale", 1.0)
             processing_pairs = (
                 pair_pool.draw(index, rng, pair_options["pairs_per_class"])
                 if pair_pool is not None
+                else ()
+            )
+            apc_contrasts = (
+                apc_pool.draw(
+                    index,
+                    rng,
+                    apc_options.get("selectivity_per_step", 4),
+                    apc_options.get("yield_per_step", 4),
+                    apc_options.get("quant_per_step", 0),
+                )
+                if apc_pool is not None
+                else None
+            )
+            allele_swap_groups = (
+                allele_swap_pool.sample_groups(
+                    rows,
+                    rng,
+                    anchors_per_class=int(allele_swap_options.get("anchors_per_class", 12)),
+                    negatives_per_anchor=int(allele_swap_options.get("negatives_per_anchor", 16)),
+                )
+                if allele_swap_pool is not None
+                else ()
+            )
+            allele_diff_pairs = (
+                allele_diff_pool.sample_pairs(
+                    rng,
+                    pairs_per_class=int(allele_diff_options.get("pairs_per_class", 12)),
+                    hard_close_fraction=float(allele_diff_options.get("hard_close_fraction", 0.65)),
+                )
+                if allele_diff_pool is not None
                 else ()
             )
             step = train_step(
@@ -1113,8 +1297,41 @@ def _fit_index(index, output_dir, *, device, resume):
                     {
                         "processing_pairs": processing_pairs,
                         "processing_pair_weight": pair_options["weight"],
+                        "processing_pair_logit_weight": pair_options.get("logit_weight", 0.0),
+                        "processing_pair_selection_weight": pair_options.get(
+                            "selection_weight", 0.0
+                        ),
+                        "processing_pair_margin": pair_options.get("margin", 0.0),
                     }
                     if pair_pool is not None
+                    else {}
+                ),
+                **(
+                    {
+                        "apc_contrasts": apc_contrasts,
+                        "apc_contrast_options": apc_options,
+                    }
+                    if apc_pool is not None
+                    else {}
+                ),
+                **(
+                    {
+                        "allele_swap_groups": allele_swap_groups,
+                        "allele_swap_weight": float(allele_swap_options["weight"]),
+                        "allele_swap_temperature": float(
+                            allele_swap_options.get("temperature", 0.5)
+                        ),
+                    }
+                    if allele_swap_pool is not None
+                    else {}
+                ),
+                **(
+                    {
+                        "allele_diff_pairs": allele_diff_pairs,
+                        "allele_diff_weight": float(allele_diff_options["weight"]),
+                        "allele_diff_beta": float(allele_diff_options.get("beta", 0.5)),
+                    }
+                    if allele_diff_pool is not None
                     else {}
                 ),
                 **extra_step_options,
@@ -1223,6 +1440,17 @@ def _fit_index(index, output_dir, *, device, resume):
                             if pair_pool is not None
                             else {}
                         ),
+                        **(
+                            {
+                                "apc_contrast_training": {
+                                    "options": apc_options,
+                                    "pool": apc_pool.counts,
+                                    "draw_steps": state["steps"],
+                                }
+                            }
+                            if apc_pool is not None
+                            else {}
+                        ),
                         "coverage": coverage,
                         "selection_metric": score,
                         **(
@@ -1292,12 +1520,17 @@ def _fit_index(index, output_dir, *, device, resume):
     atomic_bytes(output_dir / "selected.pt", state["selected_bytes"])
     selected, scales, payload = load_checkpoint(output_dir / "selected.pt", device=device)
     metrics, overall_losses, evaluation_populations = {}, {}, {}
+    aux_all = set()
+    if pair_pool is not None:
+        aux_all.update(pair_pool.auxiliary_indices)
+    if apc_pool is not None:
+        aux_all.update(apc_pool.auxiliary_indices)
     for split in ("train", "validation", "test"):
         indices, evaluation_populations[split] = evaluation_indices(
             index,
             split,
             training,
-            auxiliary_indices=pair_pool.auxiliary_indices if pair_pool is not None else (),
+            auxiliary_indices=aux_all,
         )
         metrics[split], records = cached_evaluation(
             output_dir,
@@ -1327,12 +1560,22 @@ def _fit_index(index, output_dir, *, device, resume):
         }
     # Qualification requires scientific gates beyond these software/training reports.
     selected_coverage = payload["metadata"]["coverage"]
-    intentionally_inactive = (
-        selected.tcell_assay_layer.dependencies(ordinal=True)
-        - selected.tcell_assay_layer.dependencies(ordinal=False)
-        if selected.config.tcell_tracks and selected.config.tcell_ordinal_loss_weight == 0
-        else set()
-    )
+    intentionally_inactive: set[str] = set()
+    if selected.config.tcell_tracks:
+        if selected.config.tcell_ordinal_loss_weight == 0:
+            intentionally_inactive.update(
+                selected.tcell_assay_layer.dependencies(ordinal=True)
+                - selected.tcell_assay_layer.dependencies(ordinal=False)
+            )
+        if getattr(selected.config, "tcell_staged", False):
+            # Under tcell_staged=True, positivity is routed through tcell_staged_head;
+            # rare legacy tcell_assay_layer factor embeddings may see zero ordinal draws
+            # in shorter/early checkpoints even though all tracks are trained in staged head.
+            intentionally_inactive.update(
+                f"tcell_assay_layer.{pname}"
+                for pname, _ in selected.tcell_assay_layer.named_parameters()
+                if pname.startswith("factors.")
+            )
     unsupported = [
         name
         for name, evidence in selected_coverage.items()
@@ -1410,6 +1653,12 @@ def _fit_index(index, output_dir, *, device, resume):
             "draw_ids": "processing-pair-draws.json",
         }
         _json(output_dir / "processing-pair-draws.json", state["processing_pair_draws"])
+    if apc_pool is not None:
+        summary["apc_contrast_training"] = {
+            "options": apc_options,
+            "pool": apc_pool.counts,
+            "draw_steps": state["steps"],
+        }
     _json(output_dir / "summary.json", summary)
     _json(
         output_dir / "coverage.json",

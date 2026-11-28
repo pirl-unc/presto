@@ -4,6 +4,7 @@ from collections import defaultdict
 import math
 import sys
 
+from ..data.modular import endpoint_spec
 from ..data.modular_sources import ObservationMetadata
 
 
@@ -33,9 +34,12 @@ def stratum(row, fields):
                 if isinstance(row, ObservationMetadata)
                 else {mhc.class_override or mhc.mhc_class for mhc in row.mhc}
             )
-            if len(classes) != 1 or not classes <= {"I", "II"}:
+            if not classes and endpoint_spec(row.endpoint).route in ("bulk", "digest", "detector"):
+                values.append("none")
+            elif len(classes) != 1 or not classes <= {"I", "II"}:
                 raise ValueError("balanced mhc_class sampling requires one explicit class per row")
-            values.append(next(iter(classes)))
+            else:
+                values.append(next(iter(classes)))
         elif field == "group_id":
             if not row.group_id:
                 raise ValueError("balanced group_id sampling requires a frozen group identity")

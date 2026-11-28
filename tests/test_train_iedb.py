@@ -1024,11 +1024,15 @@ def test_resolve_mhc_sequences_from_index_maps_input_alleles(tmp_path, monkeypat
 
 def test_probe_specs_resolve_missing_alleles_from_mhcseqs_without_index(monkeypatch):
     calls = []
+    a0201_seq = (
+        "GSHSMRYFFTSVSRPGRGEPRFIAVGYVDDTQFVRFDSDAASQRMEPRAPWIEQEGPEYWDGETRKVKAHSQTHRVDLGTLRGYYNQSEA"
+        "GSHTVQRMYGCDVGSDWRFLRGYHQYAYDGKDYIALKEDLRSWTAADMAAQTTKHKWEAAHVAEQLRAYLEGTCVEWLRRYLENGKETLQRTD"
+    )
 
     def _resolve(*, index_csv, alleles):
         calls.append((index_csv, tuple(alleles)))
         return (
-            {"HLA-A*02:01": "A" * 181},
+            {"HLA-A*02:01": a0201_seq},
             {
                 "total": 1,
                 "resolved": 1,
@@ -1235,9 +1239,13 @@ def test_filter_records_to_resolved_mhc_drops_unresolved_and_trims_elution_allel
     assert len(elution_out) == 1
     assert elution_out[0].alleles == ["H2-K*b"]
     assert elution_out[0].source_alleles == ("H2-K*b", "H2-K*zzz")
+    h2kb_seq = (
+        "GPHSLRYFVTAVSRPGLGEPRYMEVGYVDDTEFVRFDSDAENPRYEPRARWMEQEGPEYWERETQKAKGNEQSFRVDLRTLLGYYNQSKG"
+        "GSHTIQVISGCEVGSDGRLLRGYQQYAYDGCDYIALNEDLKTWTAADMAALITKHKWEQAGEAERLRAYLEGTCVEWLRRYLKNGNATLLRTD"
+    )
     dataset = PrestoDataset(
         elution_records=elution_out,
-        mhc_sequences={"H2-K*b": "A" * 181},
+        mhc_sequences={"H2-K*b": h2kb_seq},
         strict_mhc_resolution=False,
     )
     assert dataset[0].source_mhc_alleles == ("H2-K*b", "H2-K*zzz")

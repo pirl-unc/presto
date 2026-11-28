@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections import Counter
+import contextlib
 from dataclasses import asdict
 import os
 from pathlib import Path
@@ -20,8 +21,18 @@ from ..data.modular import (
     identity_vocabulary,
     has_identity_input,
 )
-from .modular_controls import ranking_loss, state_contrast_loss
+from .allele_diff import allele_diff_loss
+from .allele_swap import allele_swap_loss
+from .apc_contrasts import apc_contrast_loss
+from .modular_controls import ranking_loss, state_contrast_loss, tcell_ranking_loss
 from .processing_pairs import pair_loss, validate_pair
+from ..models.imgt_groove import (
+    NUM_LEGACY_POCKET_SLOTS,
+    POCKET_SLOT_SCHEME_LEGACY58,
+    POCKET_SLOT_SCHEME_UNION46,
+    pocket_slot_overlap_mapping,
+    pocket_slot_specs,
+)
 from ..models.modular import MODEL_VERSION, ModularConfig, ModularPresto, Prediction
 from ..models.modular_support import feature_inputs, record_feature_updates
 from ..models.modular_dependencies import (
@@ -180,7 +191,22 @@ def train_step(
     state_contrast: dict[str, Any] | None = None,
     processing_pairs: Sequence[tuple[Observation, Observation]] = (),
     processing_pair_weight: float = 1.0,
+    processing_pair_logit_weight: float = 0.0,
+    processing_pair_selection_weight: float = 0.0,
+    processing_pair_margin: float = 0.0,
+    apc_contrasts: tuple[Sequence[Any], Sequence[Any]] | None = None,
+    apc_contrast_options: dict[str, Any] | None = None,
+    allele_swap_groups: Sequence[Any] = (),
+    allele_swap_weight: float = 0.0,
+    allele_swap_temperature: float = 0.5,
+    allele_diff_pairs: Sequence[Any] = (),
+    allele_diff_weight: float = 0.0,
+    allele_diff_beta: float = 0.5,
+    tcell_ranking_weight: float = 0.0,
     grad_clip_norm: float | None = None,
+    amp_bfloat16: bool = False,
+    elution_pmhc_residual_l2_weight: float = 0.0,
+    ms_response_elution_l2_weight: float = 0.0,
 ) -> dict[str, Any]:
     """One measured vote per row/bag; identity replay is a separate mean CE."""
     if type(model) is not ModularPresto:
@@ -211,24 +237,85 @@ def train_step(
     validate_freezing(model)
     model.train()
     optimizer.zero_grad(set_to_none=True)
-    with feature_inputs(model):
+    use_amp = bool(amp_bfloat16) and model.device.type == "cuda"
+    amp_ctx = (
+        torch.amp.autocast("cuda", dtype=torch.bfloat16) if use_amp else contextlib.nullcontext()
+    )
+    with feature_inputs(model), amp_ctx:
         outputs = model(rows)
-        loss, counts = batch_loss(
-            model,
-            rows,
-            outputs,
-            scales,
-            normalization=normalization,
-            endpoint_weights=endpoint_weights,
-        )
+    loss, counts = batch_loss(
+        model,
+        rows,
+        outputs,
+        scales,
+        normalization=normalization,
+        endpoint_weights=endpoint_weights,
+    )
     loss_parts = {"primary": float(loss.detach())}
     if processing_pairs:
-        with feature_inputs(model):
-            paired_loss = pair_loss(model([r for pair in processing_pairs for r in pair]))
+        with feature_inputs(model), amp_ctx:
+            pair_outputs = model([r for pair in processing_pairs for r in pair])
+        paired_loss = pair_loss(
+            pair_outputs,
+            logit_weight=processing_pair_logit_weight,
+            selection_weight=processing_pair_selection_weight,
+            margin=processing_pair_margin,
+        )
         loss = loss + processing_pair_weight * paired_loss
         loss_parts["processing_pairs"] = len(processing_pairs)
         loss_parts["processing_pair_loss"] = float(paired_loss.detach())
         loss_parts["processing_pair_weight"] = processing_pair_weight
+        if processing_pair_logit_weight:
+            loss_parts["processing_pair_logit_weight"] = processing_pair_logit_weight
+        if processing_pair_selection_weight:
+            loss_parts["processing_pair_selection_weight"] = processing_pair_selection_weight
+        if processing_pair_margin:
+            loss_parts["processing_pair_margin"] = processing_pair_margin
+    if apc_contrasts is not None and apc_contrast_options is not None:
+        if len(apc_contrasts) == 3:
+            sel_draws, yld_draws, quant_draws = apc_contrasts
+        else:
+            sel_draws, yld_draws = apc_contrasts
+            quant_draws = ()
+        if sel_draws or yld_draws or quant_draws:
+            with feature_inputs(model), amp_ctx:
+                apc_term, apc_parts = apc_contrast_loss(
+                    model,
+                    sel_draws,
+                    yld_draws,
+                    quant_draws=quant_draws,
+                    yield_weight=apc_contrast_options.get("yield_weight", 0.5),
+                    margin=apc_contrast_options.get("margin", 0.25),
+                    quant_weight=apc_contrast_options.get("quant_weight", 0.5),
+                    quant_rank_weight=apc_contrast_options.get("quant_rank_weight", 0.5),
+                    quant_scale=apc_contrast_options.get("quant_scale", 0.40),
+                )
+            if apc_term is not None:
+                loss = loss + apc_contrast_options["weight"] * apc_term.float()
+                loss_parts["apc_contrast_loss"] = float(apc_term.detach())
+                loss_parts.update(apc_parts)
+    if allele_swap_groups and allele_swap_weight > 0:
+        with feature_inputs(model), amp_ctx:
+            swap_term, swap_parts = allele_swap_loss(
+                model, allele_swap_groups, temperature=allele_swap_temperature
+            )
+        if swap_term is not None:
+            loss = loss + float(allele_swap_weight) * swap_term.float()
+            loss_parts.update(swap_parts)
+    if allele_diff_pairs and allele_diff_weight > 0:
+        with feature_inputs(model), amp_ctx:
+            diff_term, diff_parts = allele_diff_loss(
+                model, allele_diff_pairs, scales, beta=allele_diff_beta
+            )
+        if diff_term is not None:
+            loss = loss + float(allele_diff_weight) * diff_term.float()
+            loss_parts.update(diff_parts)
+    if tcell_ranking_weight > 0:
+        tc_rank, tc_pairs = tcell_ranking_loss(rows, outputs)
+        if tc_rank is not None:
+            loss = loss + float(tcell_ranking_weight) * tc_rank.float()
+            loss_parts["tcell_ranking_loss"] = float(tc_rank.detach())
+            loss_parts["tcell_ranking_pairs"] = tc_pairs
     tcell_binary, tcell_ordinal = [], []
     for row, output in zip(rows, outputs, strict=True):
         if row.endpoint != "tcell_response" or row.value is None:
@@ -244,7 +331,11 @@ def train_step(
         loss_parts["tcell_ordinal_weight"] = model.config.tcell_ordinal_loss_weight
     if ranking is not None:
         pairwise, pairs = ranking_loss(
-            rows, outputs, ranking["endpoints"], grouping=ranking.get("grouping", "study")
+            rows,
+            outputs,
+            ranking["endpoints"],
+            grouping=ranking.get("grouping", "study"),
+            include_censored=bool(ranking.get("include_censored", False)),
         )
         if pairwise is not None:
             loss = loss + ranking["weight"] * pairwise
@@ -257,15 +348,39 @@ def train_step(
             loss = loss + state_contrast["weight"] * contrast
             loss_parts["state_contrast"] = float(contrast.detach())
         loss_parts["state_contrast_rows"] = contrast_rows
+    if elution_pmhc_residual_l2_weight > 0:
+        res_terms = []
+        for row, output in zip(rows, outputs, strict=True):
+            if row.endpoint != "elution_observation":
+                continue
+            for cand in output.diagnostics.get("candidates", ()):
+                for reg in cand.get("registers", ()):
+                    et = reg.get("elution_terms")
+                    if et and "pmhc_residual" in et:
+                        res_terms.append(et["pmhc_residual"].float().pow(2))
+        if res_terms:
+            res_l2 = torch.stack(res_terms).mean()
+            loss = loss + float(elution_pmhc_residual_l2_weight) * res_l2
+            loss_parts["pmhc_residual_l2"] = float(res_l2.detach())
+    if ms_response_elution_l2_weight > 0:
+        ms_terms = [
+            output.components["ms_response"].float().pow(2)
+            for row, output in zip(rows, outputs, strict=True)
+            if row.endpoint == "elution_observation" and "ms_response" in output.components
+        ]
+        if ms_terms:
+            ms_l2 = torch.stack(ms_terms).mean()
+            loss = loss + float(ms_response_elution_l2_weight) * ms_l2
+            loss_parts["ms_response_elution_l2"] = float(ms_l2.detach())
     if identity_rows and identity_weight > 0:
-        with feature_inputs(model):
-            identity_loss, identity_counts = batch_loss(
-                model, identity_rows, model(identity_rows), scales
-            )
+        with feature_inputs(model), amp_ctx:
+            id_outputs = model(identity_rows)
+        identity_loss, identity_counts = batch_loss(model, identity_rows, id_outputs, scales)
         loss = loss + identity_weight * identity_loss
         loss_parts["identity"] = float(identity_loss.detach())
         if identity_weight > 0:
             counts = dict(Counter(counts) + Counter(identity_counts))
+    loss = loss.float()
     if not torch.isfinite(loss):
         raise ValueError("nonfinite training loss")
     if not loss.requires_grad:
@@ -484,7 +599,20 @@ def load_checkpoint(
 
         model = HistoricalPresto(HistoricalConfig.from_dict(payload["config"])).to(device)
     elif payload.get("format") == MODEL_VERSION:
-        model = ModularPresto(ModularConfig.from_dict(payload["config"])).to(device)
+        cfg_data = dict(payload["config"])
+        if (
+            cfg_data.get("imgt_pocket_cross") or cfg_data.get("direct_pocket_bilinear")
+        ) and "imgt_pocket_slot_scheme" not in cfg_data:
+            sd = payload.get("state_dict") or {}
+            dpb_v = sd.get("direct_pocket_bilinear.by_class.I.mhc_v")
+            if dpb_v is None:
+                dpb_v = sd.get("direct_pocket_bilinear.by_class.II.mhc_v")
+            ipc_ln = sd.get("imgt_pocket_cross.direct_mlp.0.weight")
+            if (dpb_v is not None and dpb_v.shape[0] == NUM_LEGACY_POCKET_SLOTS) or (
+                ipc_ln is not None and ipc_ln.shape[0] == (9 + NUM_LEGACY_POCKET_SLOTS) * 16 + 2
+            ):
+                cfg_data["imgt_pocket_slot_scheme"] = POCKET_SLOT_SCHEME_LEGACY58
+        model = ModularPresto(ModularConfig.from_dict(cfg_data)).to(device)
     else:
         raise ValueError("incompatible checkpoint format")
     model.load_state_dict(payload["state_dict"], strict=True)
@@ -589,8 +717,12 @@ def initialize_from_checkpoint(
     *,
     allow_task_removal: bool = False,
     allow_apc_expansion: bool = False,
+    allow_apc_vocab_expansion: bool = False,
     allow_pathway_expansion: bool = False,
     allow_junction_expansion: bool = False,
+    allow_shared_processing_expansion: bool = False,
+    allow_interaction_expansion: bool = False,
+    allow_tcell_staging_expansion: bool = False,
 ) -> dict[str, Any]:
     """Transfer compatible tasks; retained scalers keep learned output meanings."""
     previous, scales, payload = load_checkpoint(path, device=str(model.device))
@@ -600,6 +732,128 @@ def initialize_from_checkpoint(
             "not warm-start"
         )
     old, new = asdict(previous.config), asdict(model.config)
+    if type(allow_interaction_expansion) is not bool:
+        raise ValueError("allow_interaction_expansion must be boolean")
+    old_im = old.get("interaction_mode", "mean")
+    new_im = new.get("interaction_mode", "mean")
+    old_gse = bool(old.get("groove_segment_embedding", False))
+    new_gse = bool(new.get("groove_segment_embedding", False))
+    old_imgt = bool(old.get("imgt_groove_embedding", False))
+    new_imgt = bool(new.get("imgt_groove_embedding", False))
+    old_ipc = bool(old.get("imgt_pocket_cross", False))
+    new_ipc = bool(new.get("imgt_pocket_cross", False))
+    old_pss = str(old.get("imgt_pocket_slot_scheme", POCKET_SLOT_SCHEME_UNION46))
+    new_pss = str(new.get("imgt_pocket_slot_scheme", POCKET_SLOT_SCHEME_UNION46))
+    pocket_scheme_upgraded = (
+        (old_ipc or bool(old.get("direct_pocket_bilinear", False)))
+        and old_pss == POCKET_SLOT_SCHEME_LEGACY58
+        and new_pss == POCKET_SLOT_SCHEME_UNION46
+    )
+    old_ema = bool(old.get("elution_mhc_abundance", False))
+    new_ema = bool(new.get("elution_mhc_abundance", False))
+    old_c1o = bool(old.get("class1_overhang_registers", False))
+    new_c1o = bool(new.get("class1_overhang_registers", False))
+    old_tcst = bool(old.get("tcell_class_specific_tcr", False))
+    new_tcst = bool(new.get("tcell_class_specific_tcr", False))
+    old_tras = bool(old.get("tcell_register_aligned_supply", False))
+    new_tras = bool(new.get("tcell_register_aligned_supply", False))
+    old_ccao = bool(old.get("class_conditioned_assay_offset", False))
+    new_ccao = bool(new.get("class_conditioned_assay_offset", False))
+    old_dpb = bool(old.get("direct_pocket_bilinear", False))
+    new_dpb = bool(new.get("direct_pocket_bilinear", False))
+    old_gcc = bool(old.get("groove_cross_chain", False))
+    new_gcc = bool(new.get("groove_cross_chain", False))
+    old_qae = bool(old.get("query_anchor_embedding", False))
+    new_qae = bool(new.get("query_anchor_embedding", False))
+    old_gpp = bool(old.get("groove_pocket_pool", False))
+    new_gpp = bool(new.get("groove_pocket_pool", False))
+    old_coop = bool(old.get("interaction_cooperativity", False))
+    new_coop = bool(new.get("interaction_cooperativity", False))
+    old_pfr = bool(old.get("pmhc_pfr_conditioning", False))
+    new_pfr = bool(new.get("pmhc_pfr_conditioning", False))
+    old_ref = bool(old.get("pmhc_refine", False))
+    new_ref = bool(new.get("pmhc_refine", False))
+    old_rpm = old.get("register_pooling_mode", "normalized")
+    new_rpm = new.get("register_pooling_mode", "normalized")
+    interaction_expanded = (
+        (old_im == "anchor_v2" and new_im == "anchor_v3")
+        or (not old_gse and new_gse)
+        or (not old_imgt and new_imgt)
+        or (not old_ipc and new_ipc)
+        or pocket_scheme_upgraded
+        or (not old_ema and new_ema)
+        or (not old_c1o and new_c1o)
+        or (not old_tcst and new_tcst)
+        or (not old_tras and new_tras)
+        or (not old_ccao and new_ccao)
+        or (not old_dpb and new_dpb)
+        or (not old_gcc and new_gcc)
+        or (not old_qae and new_qae)
+        or (not old_gpp and new_gpp)
+        or (not old_coop and new_coop)
+        or (not old_pfr and new_pfr)
+        or (not old_ref and new_ref)
+        or (old_rpm == "normalized" and new_rpm == "thermodynamic")
+    )
+    if old_im != new_im and not (old_im == "anchor_v2" and new_im == "anchor_v3"):
+        raise ValueError(f"unsupported interaction_mode migration: {old_im} -> {new_im}")
+    if old_gse and not new_gse:
+        raise ValueError("cannot remove pretrained groove_segment_embedding")
+    if old_imgt and not new_imgt:
+        raise ValueError("cannot remove pretrained imgt_groove_embedding")
+    if old_ipc and not new_ipc:
+        raise ValueError("cannot remove pretrained imgt_pocket_cross")
+    if (old_ipc or old_dpb) and old_pss != new_pss and not pocket_scheme_upgraded:
+        raise ValueError(f"unsupported imgt_pocket_slot_scheme migration: {old_pss} -> {new_pss}")
+    if old_ema and not new_ema:
+        raise ValueError("cannot remove pretrained elution_mhc_abundance")
+    if old_c1o and not new_c1o:
+        raise ValueError("cannot remove pretrained class1_overhang_registers")
+    if old_tcst and not new_tcst:
+        raise ValueError("cannot remove pretrained tcell_class_specific_tcr")
+    if old_tras and not new_tras:
+        raise ValueError("cannot remove pretrained tcell_register_aligned_supply")
+    if old_ccao and not new_ccao:
+        raise ValueError("cannot remove pretrained class_conditioned_assay_offset")
+    if old_dpb and not new_dpb:
+        raise ValueError("cannot remove pretrained direct_pocket_bilinear")
+    if old_gcc and not new_gcc:
+        raise ValueError("cannot remove pretrained groove_cross_chain")
+    if old_qae and not new_qae:
+        raise ValueError("cannot remove pretrained query_anchor_embedding")
+    if old_gpp and not new_gpp:
+        raise ValueError("cannot remove pretrained groove_pocket_pool")
+    if old_coop and not new_coop:
+        raise ValueError("cannot remove pretrained interaction_cooperativity")
+    if old_pfr and not new_pfr:
+        raise ValueError("cannot remove pretrained pmhc_pfr_conditioning")
+    if old_ref and not new_ref:
+        raise ValueError("cannot remove pretrained pmhc_refine")
+    if old_rpm != new_rpm and not (old_rpm == "normalized" and new_rpm == "thermodynamic"):
+        raise ValueError(f"unsupported register_pooling_mode migration: {old_rpm} -> {new_rpm}")
+    if allow_interaction_expansion != interaction_expanded:
+        raise ValueError(
+            "expanding pMHC interaction/readout architecture requires explicit "
+            "allow_interaction_expansion"
+        )
+    if type(allow_tcell_staging_expansion) is not bool:
+        raise ValueError("allow_tcell_staging_expansion must be boolean")
+    old_tcs = bool(old.get("tcell_staged", False))
+    new_tcs = bool(new.get("tcell_staged", False))
+    tcell_staging_added = not old_tcs and new_tcs
+    if old_tcs and not new_tcs:
+        raise ValueError("cannot remove pretrained tcell_staged head")
+    if allow_tcell_staging_expansion != tcell_staging_added:
+        raise ValueError("enabling tcell_staged requires explicit allow_tcell_staging_expansion")
+    if type(allow_shared_processing_expansion) is not bool:
+        raise ValueError("allow_shared_processing_expansion must be boolean")
+    shared_added = not old["elution_shared_processing"] and new["elution_shared_processing"]
+    if allow_shared_processing_expansion != shared_added:
+        raise ValueError(
+            "adding shared processing requires explicit allow_shared_processing_expansion"
+        )
+    if old["elution_shared_processing"] and not new["elution_shared_processing"]:
+        raise ValueError("cannot remove pretrained shared processing")
     if type(allow_junction_expansion) is not bool:
         raise ValueError("allow_junction_expansion must be boolean")
     junction_added = not old["elution_junction_processing"] and new["elution_junction_processing"]
@@ -626,6 +880,10 @@ def initialize_from_checkpoint(
         "processing_pathways",
         "interventions",
     }
+    if type(allow_apc_vocab_expansion) is not bool:
+        raise ValueError("allow_apc_vocab_expansion must be boolean")
+    if allow_apc_expansion and allow_apc_vocab_expansion:
+        raise ValueError("allow_apc_expansion and allow_apc_vocab_expansion are mutually exclusive")
     if allow_apc_expansion and (
         not getattr(model, "harmonized_apc", False)
         or previous.config.state_bottleneck
@@ -634,6 +892,16 @@ def initialize_from_checkpoint(
         raise ValueError(
             "APC expansion requires a context-unallocated parent and harmonized target"
         )
+    if allow_apc_vocab_expansion:
+        if not getattr(model, "harmonized_apc", False):
+            raise ValueError("APC vocabulary expansion requires harmonized APC target")
+        for k in apc_keys:
+            ov, nv = old[k], new[k]
+            if isinstance(ov, dict):
+                if not isinstance(nv, dict) or any(nv.get(dk) != dv for dk, dv in ov.items()):
+                    raise ValueError(f"APC vocabulary expansion must preserve existing {k}")
+            elif not (set(ov) <= set(nv)):
+                raise ValueError(f"APC vocabulary expansion must be a superset for {k}")
     # Endpoint/identity unions may grow; feature slots may not silently change meaning.
     shared_contract = {
         "assay_mode",
@@ -713,7 +981,7 @@ def initialize_from_checkpoint(
         )
         old, new = ({"elution_staging": "legacy_joint", **side} for side in (old, new))
     for key in shared_contract:
-        if allow_apc_expansion and key in apc_keys:
+        if (allow_apc_expansion or allow_apc_vocab_expansion) and key in apc_keys:
             continue
         if old[key] != new[key]:
             raise ValueError(f"incompatible pretrained feature contract: {key}")
@@ -733,10 +1001,27 @@ def initialize_from_checkpoint(
     if removed_tasks and not allow_task_removal:
         raise ValueError("pretrained task removal requires an explicit migration")
     current = {name: value.clone() for name, value in model.state_dict().items()}
+    pocket_overlap = pocket_slot_overlap_mapping(old_pss, new_pss) if pocket_scheme_upgraded else []
+    old_n_pockets = len(pocket_slot_specs(old_pss)) if pocket_scheme_upgraded else 0
+    new_n_pockets = len(pocket_slot_specs(new_pss)) if pocket_scheme_upgraded else 0
     inherited, projected = [], {}
     for name, value in previous.state_dict().items():
+        if pocket_scheme_upgraded and name.startswith("imgt_pocket_cross.direct_mlp."):
+            # Re-init direct_mlp cleanly (final layer is zero-init -> exact 0.0 step-0 shift).
+            continue
         if name not in current:
-            if allow_task_removal:
+            if (
+                allow_task_removal
+                or (
+                    allow_tcell_staging_expansion
+                    and name.startswith("tcell_assay_layer.positivity_decoder.")
+                )
+                or (
+                    allow_interaction_expansion
+                    and name == "tcell_staged_head.stab_weight_raw.II"
+                    and new_tcst
+                )
+            ):
                 continue
             raise ValueError(f"incompatible pretrained module: {name}")
         old_layout, new_layout = previous.feature_layout.get(name), model.feature_layout.get(name)
@@ -766,6 +1051,11 @@ def initialize_from_checkpoint(
             if any(not label.startswith(tuple(removable_prefixes)) for label in removed):
                 raise ValueError(f"retained function loses active input features: {name}")
             old_positions = {label: index for index, label in enumerate(old_labels)}
+            if allow_apc_vocab_expansion and name in (
+                "apm_state.encoder.weight",
+                "elution_shared.apc_encoder.weight",
+            ):
+                current[name].zero_()
             copied = []
             for j, label in enumerate(new_labels):
                 if label not in old_positions:
@@ -782,10 +1072,70 @@ def initialize_from_checkpoint(
                 "removed": sorted(set(old_labels) - set(new_labels)),
             }
         elif current[name].shape != value.shape:
-            raise ValueError(f"incompatible pretrained module: {name}")
+            if allow_apc_vocab_expansion and name in (
+                "apm_state.mask_i",
+                "apm_state.mask_ii",
+                "elution_shared.apc_mask_i",
+                "elution_shared.apc_mask_ii",
+                "elution_shared.pan_yield_caps",
+            ):
+                pass
+            elif (
+                allow_apc_vocab_expansion
+                and name == "elution_shared.yield_theta"
+                and hasattr(previous, "elution_shared")
+                and hasattr(model, "elution_shared")
+            ):
+                old_pan = {
+                    col[0]: idx for idx, col in enumerate(previous.elution_shared.pan_columns)
+                }
+                current[name].zero_()
+                for j, col in enumerate(model.elution_shared.pan_columns):
+                    if col[0] in old_pan:
+                        current[name][j] = value[old_pan[col[0]]]
+            elif (
+                allow_interaction_expansion
+                and name == "interaction_anchor_proj.weight"
+                and old_im == "anchor_v2"
+                and new_im == "anchor_v3"
+            ):
+                d = model.config.d_model
+                current[name].zero_()
+                for old_slot, new_slot in ((0, 0), (1, 1), (2, 4), (3, 7), (4, 8)):
+                    current[name][:, new_slot * d : (new_slot + 1) * d] = value[
+                        :, old_slot * d : (old_slot + 1) * d
+                    ]
+            elif (
+                allow_interaction_expansion
+                and pocket_scheme_upgraded
+                and name.startswith("direct_pocket_bilinear.by_class.")
+                and (name.endswith(".mhc_v") or name.endswith(".mhc_bias"))
+            ):
+                for old_s, new_s in pocket_overlap:
+                    current[name][new_s] = value[old_s]
+            elif (
+                allow_interaction_expansion
+                and pocket_scheme_upgraded
+                and name.startswith("direct_pocket_bilinear.by_class.")
+                and (name.endswith(".linear_energy.weight") or name.endswith(".mlp.0.weight"))
+            ):
+                current[name].zero_()
+                for p in range(9):
+                    for old_s, new_s in pocket_overlap:
+                        current[name][:, p * new_n_pockets + new_s] = value[
+                            :, p * old_n_pockets + old_s
+                        ]
+                current[name][:, -3:] = value[:, -3:]
+            else:
+                raise ValueError(f"incompatible pretrained module: {name}")
         else:
             current[name] = value
         inherited.append(name)
+    if (
+        "elution_stability_weight" in current
+        and "elution_stability_weight" not in previous.state_dict()
+    ):
+        current["elution_stability_weight"].zero_()
     model.load_state_dict(current, strict=True)
     model.assay_support = {key: previous.assay_support.get(key, 0) for key in model.assay_support}
     model.tcell_support = {
@@ -811,6 +1161,54 @@ def initialize_from_checkpoint(
                     model.trained_elements[name][:, j] = old_mask[:, i]
                 else:
                     model.trained_elements[name][j] = old_mask[i]
+        elif (
+            allow_apc_vocab_expansion
+            and name == "elution_shared.yield_theta"
+            and old_mask.shape != model.trained_elements[name].shape
+        ):
+            model.trained_elements[name] = model.trained_elements[name].to(model.device)
+            old_pan = {col[0]: idx for idx, col in enumerate(previous.elution_shared.pan_columns)}
+            for j, col in enumerate(model.elution_shared.pan_columns):
+                if col[0] in old_pan:
+                    model.trained_elements[name][j] = old_mask[old_pan[col[0]]]
+        elif (
+            allow_interaction_expansion
+            and name == "interaction_anchor_proj.weight"
+            and old_mask.shape != model.trained_elements[name].shape
+        ):
+            d = model.config.d_model
+            model.trained_elements[name] = model.trained_elements[name].to(model.device)
+            model.trained_elements[name].zero_()
+            for old_slot, new_slot in ((0, 0), (1, 1), (2, 4), (3, 7), (4, 8)):
+                model.trained_elements[name][:, new_slot * d : (new_slot + 1) * d] = old_mask[
+                    :, old_slot * d : (old_slot + 1) * d
+                ]
+        elif (
+            allow_interaction_expansion
+            and pocket_scheme_upgraded
+            and name.startswith("direct_pocket_bilinear.by_class.")
+            and (name.endswith(".mhc_v") or name.endswith(".mhc_bias"))
+            and old_mask.shape != model.trained_elements[name].shape
+        ):
+            model.trained_elements[name] = model.trained_elements[name].to(model.device)
+            model.trained_elements[name].zero_()
+            for old_s, new_s in pocket_overlap:
+                model.trained_elements[name][new_s] = old_mask[old_s]
+        elif (
+            allow_interaction_expansion
+            and pocket_scheme_upgraded
+            and name.startswith("direct_pocket_bilinear.by_class.")
+            and (name.endswith(".linear_energy.weight") or name.endswith(".mlp.0.weight"))
+            and old_mask.shape != model.trained_elements[name].shape
+        ):
+            model.trained_elements[name] = model.trained_elements[name].to(model.device)
+            model.trained_elements[name].zero_()
+            for p in range(9):
+                for old_s, new_s in pocket_overlap:
+                    model.trained_elements[name][:, p * new_n_pockets + new_s] = old_mask[
+                        :, p * old_n_pockets + old_s
+                    ]
+            model.trained_elements[name][:, -3:] = old_mask[:, -3:]
         else:
             model.trained_elements[name] = old_mask.clone()
     for category, values in previous.source_label_support.items():
