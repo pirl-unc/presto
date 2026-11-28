@@ -1482,7 +1482,7 @@ class Presto(nn.Module):
         return math.log(10.0) if self.config.register_pooling_mode == "thermodynamic" else 1.0
 
     @staticmethod
-    def _pool_registers(scores, direction, *, mode: str = "normalized"):
+    def _pool_registers_impl(scores, direction, *, mode: str = "normalized"):
         """Pool candidate binding registers (`normalized` or physical `thermodynamic`).
 
         In `thermodynamic` mode, uses physical log10 partition-function pooling
@@ -1501,8 +1501,20 @@ class Presto(nn.Module):
             value = direction * (torch.logsumexp(signed, 0) - math.log(len(scores)))
         return value, weights
 
+    class _PoolRegistersBinding:
+        def __get__(self, instance, owner=None):
+            if instance is None:
+                return owner._pool_registers_impl
+            return lambda scores, direction, *, mode=None: owner._pool_registers_impl(
+                scores,
+                direction,
+                mode=instance.config.register_pooling_mode if mode is None else mode,
+            )
+
+    _pool_registers = _PoolRegistersBinding()
+
     def _pool_model_registers(self, scores, direction):
-        return self._pool_registers(scores, direction, mode=self.config.register_pooling_mode)
+        return self._pool_registers_impl(scores, direction, mode=self.config.register_pooling_mode)
 
     def _pfr_features(self, peptide: str, register_candidates, token_states):
         """Peptide-only PFR_N, PFR_C (up to 3 residues each) and length/overhang geometry."""
