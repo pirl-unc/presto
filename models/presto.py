@@ -1481,7 +1481,8 @@ class Presto(nn.Module):
     def _register_beta(self) -> float:
         return math.log(10.0) if self.config.register_pooling_mode == "thermodynamic" else 1.0
 
-    def _pool_registers(self, scores, direction):
+    @staticmethod
+    def _pool_registers(scores, direction, *, mode: str = "normalized"):
         """Pool candidate binding registers (`normalized` or physical `thermodynamic`).
 
         In `thermodynamic` mode, uses physical log10 partition-function pooling
@@ -1489,16 +1490,19 @@ class Presto(nn.Module):
         unphysical `-log(R)` penalty against longer peptides; Class I singletons
         (`R == 1`) are exact identities under both modes.
         """
-        beta = self._register_beta()
+        beta = math.log(10.0) if mode == "thermodynamic" else 1.0
         signed = direction * scores * beta
         weights = signed.softmax(0)
         if len(scores) == 1:
             return scores[0], weights
-        if self.config.register_pooling_mode == "thermodynamic":
+        if mode == "thermodynamic":
             value = direction * torch.logsumexp(signed, 0) / beta
         else:
             value = direction * (torch.logsumexp(signed, 0) - math.log(len(scores)))
         return value, weights
+
+    def _pool_model_registers(self, scores, direction):
+        return self._pool_registers(scores, direction, mode=self.config.register_pooling_mode)
 
     def _pfr_features(self, peptide: str, register_candidates, token_states):
         """Peptide-only PFR_N, PFR_C (up to 3 residues each) and length/overhang geometry."""
@@ -1854,7 +1858,7 @@ class Presto(nn.Module):
         )
         if precomputed_affinity is None and self.config.elution_detach_affinity:
             affinity = affinity.detach()
-        pooled, attention = self._pool_registers(
+        pooled, attention = self._pool_model_registers(
             affinity, endpoint_spec(affinity_endpoint).register_direction
         )
         if self.config.elution_pmhc_residual:
@@ -1896,7 +1900,7 @@ class Presto(nn.Module):
             total = total + terms["selection"]
             attention = (log_weights + selection).softmax(0)
         if self.elution_stability:
-            stability, _ = self._pool_registers(
+            stability, _ = self._pool_model_registers(
                 self.heads["half_life"](hidden).squeeze(-1),
                 endpoint_spec("half_life").register_direction,
             )
@@ -2293,12 +2297,14 @@ class Presto(nn.Module):
                     )
                     if self.config.tcell_register_aligned_supply:
                         if det_aff is not None:
-                            pooled_aff, aff_attn = self._pool_registers(det_aff, -1)
+                            pooled_aff, aff_attn = self._pool_model_registers(det_aff, -1)
                         else:
                             pooled_aff = None
                             aff_attn = hidden.new_full((len(hidden),), 1.0 / max(1, len(hidden)))
                         pooled_stab = (
-                            self._pool_registers(det_stab, 1)[0] if det_stab is not None else None
+                            self._pool_model_registers(det_stab, 1)[0]
+                            if det_stab is not None
+                            else None
                         )
                         pooled_pres = None
                         if self.staged_elution and self.has_cellular:
@@ -2381,7 +2387,7 @@ class Presto(nn.Module):
                             positivity = pos_by_track[key]
                             ordinal = torch.stack(
                                 [
-                                    self._pool_registers(
+                                    self._pool_model_registers(
                                         values["conditional_intensity"][:, level],
                                         spec.register_direction,
                                     )[0]
@@ -2418,24 +2424,30 @@ class Presto(nn.Module):
                             )
                         )
                         scores = recog_scores
-                        value, attention = self._pool_registers(scores, spec.register_direction)
-                        recog_pooled, _ = self._pool_registers(
+                        value, attention = self._pool_model_registers(
+                            scores, spec.register_direction
+                        )
+                        recog_pooled, _ = self._pool_model_registers(
                             recog_scores, spec.register_direction
                         )
-                        tcr_pooled, _ = self._pool_registers(tcr_scores, spec.register_direction)
-                        sup_pooled, _ = self._pool_registers(sup_scores, spec.register_direction)
+                        tcr_pooled, _ = self._pool_model_registers(
+                            tcr_scores, spec.register_direction
+                        )
+                        sup_pooled, _ = self._pool_model_registers(
+                            sup_scores, spec.register_direction
+                        )
                         terms = {
                             "tcell_recognition": recog_pooled,
                             "tcr_bulge_propensity": tcr_pooled,
                             "tcell_pmhc_supply": sup_pooled,
                         }
                         for key, values in track_outputs.items():
-                            positivity, _ = self._pool_registers(
+                            positivity, _ = self._pool_model_registers(
                                 pos_by_track[key], spec.register_direction
                             )
                             ordinal = torch.stack(
                                 [
-                                    self._pool_registers(
+                                    self._pool_model_registers(
                                         values["conditional_intensity"][:, level],
                                         spec.register_direction,
                                     )[0]
@@ -2449,14 +2461,14 @@ class Presto(nn.Module):
                     # output descriptor cannot alter biological computation or attention.
                     diagnostic_key = next(iter(tcell_panel))
                     scores = track_outputs[diagnostic_key]["positivity"]
-                    value, attention = self._pool_registers(scores, spec.register_direction)
+                    value, attention = self._pool_model_registers(scores, spec.register_direction)
                     for key, values in track_outputs.items():
-                        positivity, _ = self._pool_registers(
+                        positivity, _ = self._pool_model_registers(
                             values["positivity"], spec.register_direction
                         )
                         ordinal = torch.stack(
                             [
-                                self._pool_registers(
+                                self._pool_model_registers(
                                     values["conditional_intensity"][:, level],
                                     spec.register_direction,
                                 )[0]
@@ -2482,7 +2494,7 @@ class Presto(nn.Module):
                     and cls_off_key in self.assay_class_offset
                 ):
                     scores = scores + self.assay_class_offset[cls_off_key]
-                value, attention = self._pool_registers(scores, spec.register_direction)
+                value, attention = self._pool_model_registers(scores, spec.register_direction)
             if not tcell_panel or selected_tcell is not None:
                 pooled.append(weight * value)
             if panel:
@@ -2500,7 +2512,9 @@ class Presto(nn.Module):
                         assay_scores = assay_scores + direct_dg
                     if cls_off is not None:
                         assay_scores = assay_scores + cls_off
-                    track_value, _ = self._pool_registers(assay_scores, spec.register_direction)
+                    track_value, _ = self._pool_model_registers(
+                        assay_scores, spec.register_direction
+                    )
                     panel[key].append(weight * track_value)
             register_info.append(
                 {

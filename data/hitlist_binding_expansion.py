@@ -202,7 +202,7 @@ class FastGrooveResolver:
                 species=row.get("species", ""),
             )
             return rec if (rec and rec.ok) else None
-        except Exception:  # noqa: BLE001
+        except (ValueError, KeyError, TypeError, AttributeError):
             return None
 
     def _safe_lookup(self, name: str) -> Any:
@@ -214,7 +214,7 @@ class FastGrooveResolver:
             norm = self._mhcseqs.normalize_allele_name(query)
             if norm and norm not in candidates:
                 candidates.append(norm)
-        except Exception:  # noqa: BLE001
+        except (ValueError, KeyError, TypeError, AttributeError):
             pass
         # Canis lupus familiaris (dog) alleles appear as DLA-* in mhcseqs>=2.12/mhcgnomes>=3.74
         # and as CanisSp-* in older catalogs; map Calu-/CanisLupus-/CanisSp- aliases cleanly.

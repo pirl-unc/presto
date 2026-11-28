@@ -1,9 +1,9 @@
 """Pan-class 202-slot IMGT structural groove coordinate mapping and direct pocket interaction.
 
-Uses `mhcseqs >= 2.17.0` (`IMGT_PAN_CLASS_GROOVE_SLOTS`, 100 HALF1 + 102 HALF2 = 202 slots;
+Uses `mhcseqs >= 2.26.0` (`IMGT_PAN_CLASS_GROOVE_SLOTS`, 100 HALF1 + 102 HALF2 = 202 slots;
 `IMGT_PAN_CLASS_POCKET_SLOTS`, exact 3D-verified 46-slot NetMHCpan-34 ∪ NetMHCIIpan-34 union;
-`IMGT_PAN_CLASS_NETMHCPAN_SLOTS`, 34 Class I contacts; and `IMGT_PAN_CLASS_NETMHCIIPAN_SLOTS`,
-34 Class II contacts) to:
+`IMGT_PAN_CLASS_NETMHCPAN_SLOTS`, 34 Class I contacts; `IMGT_PAN_CLASS_NETMHCIIPAN_SLOTS`,
+34 Class II contacts; and order-preserving pan-class alignments) to:
   1. Map every residue of `(groove1, groove2, mhc_class)` onto its exact 3D-homologous IMGT
      slot (`0..201`, `202` overflow), eliminating indel frame shifts across HLA-A/B/C/E/F/G,
      HLA-DR/DP/DQ (e.g., `DQA1*05:01`'s `55->61` helix deletion), and non-human MHC.

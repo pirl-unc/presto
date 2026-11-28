@@ -60,9 +60,8 @@ class AssayMeasurementLayer(nn.Module):
         endpoint_tracks = [track for track in self.tracks if track.endpoint == endpoint]
         if not endpoint_tracks:
             return {}
-        if len(endpoint_tracks) == 1:
-            track = endpoint_tracks[0]
-            return {track.key: self.score(hidden, endpoint, track)}
+        if torch.is_grad_enabled() or len(endpoint_tracks) == 1:
+            return {track.key: self.score(hidden, endpoint, track) for track in endpoint_tracks}
         ep_vec = self.factors["endpoint"][endpoint]
         track_vecs = torch.stack(
             [

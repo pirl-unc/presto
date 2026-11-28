@@ -11,7 +11,7 @@ from presto.data.mhc_index import MHCIndexError
 def test_pyproject_has_mhcgnomes_dependency():
     pyproject = Path(__file__).resolve().parents[1] / "pyproject.toml"
     text = pyproject.read_text(encoding="utf-8")
-    assert '"mhcgnomes"' in text
+    assert '"mhcgnomes' in text
 
 
 def test_parser_wires_mhc_index_build_command():
